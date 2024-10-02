@@ -14,7 +14,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.6.2.162",
+    "IDEVersion":"2024.8.1.171",
   },
   "name":"Hexdustry",
   "resources":[
@@ -33,6 +33,7 @@
     {"id":{"name":"mover","path":"scripts/mover/mover.yy",},},
     {"id":{"name":"next_to","path":"scripts/next_to/next_to.yy",},},
     {"id":{"name":"spr_agua","path":"sprites/spr_agua/spr_agua.yy",},},
+    {"id":{"name":"spr_arena","path":"sprites/spr_arena/spr_arena.yy",},},
     {"id":{"name":"spr_base","path":"sprites/spr_base/spr_base.yy",},},
     {"id":{"name":"spr_camino","path":"sprites/spr_camino/spr_camino.yy",},},
     {"id":{"name":"spr_carbon","path":"sprites/spr_carbon/spr_carbon.yy",},},
@@ -44,6 +45,7 @@
     {"id":{"name":"spr_hexagono_5","path":"sprites/spr_hexagono_5/spr_hexagono_5.yy",},},
     {"id":{"name":"spr_hexagono_6","path":"sprites/spr_hexagono_6/spr_hexagono_6.yy",},},
     {"id":{"name":"spr_hexagono","path":"sprites/spr_hexagono/spr_hexagono.yy",},},
+    {"id":{"name":"spr_horno_encendido","path":"sprites/spr_horno_encendido/spr_horno_encendido.yy",},},
     {"id":{"name":"spr_horno","path":"sprites/spr_horno/spr_horno.yy",},},
     {"id":{"name":"spr_invernadero","path":"sprites/spr_invernadero/spr_invernadero.yy",},},
     {"id":{"name":"spr_item_bronce","path":"sprites/spr_item_bronce/spr_item_bronce.yy",},},

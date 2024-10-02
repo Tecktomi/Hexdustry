@@ -20,6 +20,7 @@ null_edificio = {
 	carga_output : [false],
 	carga_id : 0,
 	carga_total : 0,
+	fuel : 0,
 	waiting : false,
 	idle : false
 }
@@ -41,7 +42,7 @@ for(var a = 0; a < xsize; a++)
 		temp_hexagono.b = b
 	}
 //Data
-terreno_sprite = [spr_hexagono, spr_pasto, spr_agua]
+terreno_sprite = [spr_hexagono, spr_pasto, spr_agua, spr_arena]
 ore_sprite = [spr_cobre, spr_carbon]
 ore_item_sprite = [spr_item_cobre, spr_item_carbon, spr_item_bronce]
 ore_name = ["Cobre", "Carbon", "Bronce"]

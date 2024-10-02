@@ -14,6 +14,7 @@ function add_edificio(index, dir, a, b){
 		carga_output : [true],
 		carga_id : 0,
 		carga_total : 0,
+		fuel : 0,
 		waiting : false,
 		idle : false
 	}

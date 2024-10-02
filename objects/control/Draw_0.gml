@@ -30,8 +30,12 @@ for(var a = 0; a < xsize; a++)
 					draw_sprite(ore_item_sprite[temp_edificio.carga_id], 0, temp_complex.a + c * cos(d), temp_complex.b - c * sin(d))
 				}
 			}
-			else
-				draw_sprite_ext(edificio_sprite[temp_edificio.index], image_index / 4, temp_complex.a, temp_complex.b, 1, 1, temp_edificio.dir * 60, c_white, 1)
+			else{
+				if temp_edificio.index = 4 and temp_edificio.fuel > 0
+					draw_sprite_ext(spr_horno_encendido, image_index / 4, temp_complex.a, temp_complex.b, 1, 1, temp_edificio.dir * 60, c_white, 1)
+				else
+					draw_sprite_ext(edificio_sprite[temp_edificio.index], image_index / 4, temp_complex.a, temp_complex.b, 1, 1, temp_edificio.dir * 60, c_white, 1)
+			}
 			if temp_edificio.waiting{
 				draw_set_color(c_yellow)
 				draw_circle(temp_complex.a, temp_complex.b, 4, false)
@@ -191,7 +195,7 @@ if build_index > 0{
 	}
 }
 //Romper
-else if mouse_check_button(mb_right) and prev_change and temp_hexagono != noone and temp_terreno.edificio_bool and temp_edificio.index != 0
+else if ((mouse_check_button(mb_right) and prev_change) or mouse_check_button_pressed(mb_right)) and temp_hexagono != noone and temp_terreno.edificio_bool and temp_edificio.index != 0
 	delete_edificio(temp_edificio)
 //Ciclo edificios
 for(var a=0; a<ds_list_size(edificios); a++){
@@ -235,12 +239,17 @@ for(var a=0; a<ds_list_size(edificios); a++){
 				temp_edificio.waiting = not mover(temp_edificio)
 			}
 		}
-		if temp_edificio.index = 4 and temp_edificio.carga[0] > 0 and temp_edificio.carga[1] > 0 and temp_edificio.carga[2] < 2{
+		if temp_edificio.index = 4 and temp_edificio.carga[0] > 0 and (temp_edificio.carga[1] > 0 or temp_edificio.fuel > 0) and temp_edificio.carga[2] < 2{
+			if temp_edificio.fuel = 0{
+				temp_edificio.fuel = 300
+				temp_edificio.carga[1]--
+				temp_edificio.carga_total--}
+			else
+				temp_edificio.fuel--
 			temp_edificio.proceso++
 			if temp_edificio.proceso = edificio_proceso[4]{
 				temp_edificio.proceso = 0
 				temp_edificio.carga[0]--
-				temp_edificio.carga[1]--
 				temp_edificio.carga[2]++
 				temp_edificio.carga_total--
 				temp_edificio.waiting = not mover(temp_edificio)
