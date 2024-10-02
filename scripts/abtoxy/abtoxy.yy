@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"abtoxy",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"abtoxy",
+  "parent":{
+    "name":"Hexdustry",
+    "path":"Hexdustry.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

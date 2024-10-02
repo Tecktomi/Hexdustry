@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"complex_equal",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"complex_equal",
+  "parent":{
+    "name":"Hexdustry",
+    "path":"Hexdustry.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ds_list_remove",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ds_list_remove",
+  "parent":{
+    "name":"Hexdustry",
+    "path":"Hexdustry.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

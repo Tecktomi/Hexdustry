@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"get_size",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"get_size",
+  "parent":{
+    "name":"Hexdustry",
+    "path":"Hexdustry.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

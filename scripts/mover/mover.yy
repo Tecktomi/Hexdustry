@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"mover",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"mover",
+  "parent":{
+    "name":"Hexdustry",
+    "path":"Hexdustry.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

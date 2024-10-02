@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"add_edificio",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"add_edificio",
+  "parent":{
+    "name":"Hexdustry",
+    "path":"Hexdustry.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

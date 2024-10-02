@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"next_to",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"next_to",
+  "parent":{
+    "name":"Hexdustry",
+    "path":"Hexdustry.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

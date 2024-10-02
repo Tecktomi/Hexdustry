@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"delete_edificio",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"delete_edificio",
+  "parent":{
+    "name":"Hexdustry",
+    "path":"Hexdustry.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

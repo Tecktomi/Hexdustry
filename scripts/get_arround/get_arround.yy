@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"get_arround",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"get_arround",
+  "parent":{
+    "name":"Hexdustry",
+    "path":"Hexdustry.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
