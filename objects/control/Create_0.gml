@@ -1,6 +1,9 @@
 randomize()
 xsize = 28
 ysize = 51
+prev_x = 0
+prev_y = 0
+prev_change = true
 background = spr_hexagono
 null_edificio = {
 	index : 0,
@@ -13,6 +16,8 @@ null_edificio = {
 	output_index : 0,
 	proceso : 0,
 	carga : [0],
+	carga_max : [0],
+	carga_output : [false],
 	carga_id : 0,
 	carga_total : 0,
 	waiting : false,
@@ -38,8 +43,8 @@ for(var a = 0; a < xsize; a++)
 //Data
 terreno_sprite = [spr_hexagono, spr_pasto, spr_agua]
 ore_sprite = [spr_cobre, spr_carbon]
-ore_item_sprite = [spr_item_cobre, spr_item_carbon]
-ore_name = ["Cobre", "Carbon"]
+ore_item_sprite = [spr_item_cobre, spr_item_carbon, spr_item_bronce]
+ore_name = ["Cobre", "Carbon", "Bronce"]
 ore_max = array_length(ore_name)
 edificio_sprite = [spr_base, spr_taladro, spr_camino, spr_enrutador, spr_horno, spr_invernadero, spr_silo]
 edificio_nombre = ["Nucleo", "Taladro", "Cinta transportadora", "Enrutador", "Horno", "Invernadero", "Silo"]
@@ -47,6 +52,11 @@ edificio_size = [3, 2, 1, 1, 2, 4, 5]
 edificio_receptor = [true, false, true, true, true, false, true]
 edificio_emisor = [false, true, true, true, true, true, false]
 edificio_carga_max = [0, 10, 1, 1, 10, 20, 100]
+edificio_input_all = [true, true, true, true, false, true, true]
+edificio_input_index = [[0], [0], [0], [0], [0, 1], [0], [0]]
+edificio_input_num = [[0], [0], [0], [0], [2, 2], [0], [0]]
+edificio_output_all = [true, true, true, true, false, true, true]
+edificio_output_index = [0, 0, 0, 0, 2, 0, 0]
 edificio_proceso = [0, 100, 20, 20, 150, 120, 0]
 size_size = [1, 3, 7, 12, 19, 27]
 size_borde = [6, 9, 12, 15, 18, 21]
@@ -84,7 +94,7 @@ repeat(4){
 repeat(5){
 	var a = irandom(xsize - 1)
 	var b = irandom(ysize - 1)
-	var c = irandom(array_length(ore_name) - 1)
+	var c = irandom(1)
 	repeat(15){
 		if terreno[a, b].terreno != 2{
 			if terreno[a, b].ore != c

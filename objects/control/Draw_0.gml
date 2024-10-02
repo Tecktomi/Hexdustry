@@ -47,6 +47,12 @@ var temp_hexagono = instance_position(mouse_x, mouse_y, obj_hexagono), mx = 0, m
 if temp_hexagono != noone{
 	mx = temp_hexagono.a
 	my = temp_hexagono.b
+	prev_change = false
+	if mx != prev_x or my != prev_y{
+		prev_x = mx
+		prev_y = my
+		prev_change = true
+	}
 }
 var temp_terreno = terreno[mx, my]
 var temp_edificio = temp_terreno.edificio
@@ -81,6 +87,17 @@ if temp_hexagono != noone{
 		temp_text += "Output_index: " + string(temp_edificio.output_index) + "/" + string(ds_list_size(temp_edificio.outputs)) + "\n"
 		if temp_edificio.idle and in(temp_edificio.index, 1)
 			temp_text += "Sin recursos\n"
+		if edificio_receptor[temp_edificio.index]{
+			temp_text += "Acepta: \n"
+			for(var a = 0; a < ore_max; a++)
+				temp_text += ore_name[a] + ": " + string(temp_edificio.carga_max[a]) + "\n"
+		}
+		if edificio_emisor[temp_edificio.index]{
+			temp_text += "Entrega: \n"
+			for(var a = 0; a < ore_max; a++)
+				if temp_edificio.carga_output[a]
+					temp_text += ore_name[a] + "\n"
+		}
 	}
 	draw_set_color(c_white)
 	draw_text(0, 0, temp_text)
@@ -174,7 +191,7 @@ if build_index > 0{
 	}
 }
 //Romper
-else if mouse_check_button_pressed(mb_right) and temp_hexagono != noone and temp_terreno.edificio_bool and temp_edificio.index != 0
+else if mouse_check_button(mb_right) and prev_change and temp_hexagono != noone and temp_terreno.edificio_bool and temp_edificio.index != 0
 	delete_edificio(temp_edificio)
 //Ciclo edificios
 for(var a=0; a<ds_list_size(edificios); a++){
@@ -215,6 +232,17 @@ for(var a=0; a<ds_list_size(edificios); a++){
 			temp_edificio.proceso++
 			if temp_edificio.proceso = 20{
 				temp_edificio.proceso = 0
+				temp_edificio.waiting = not mover(temp_edificio)
+			}
+		}
+		if temp_edificio.index = 4 and temp_edificio.carga[0] > 0 and temp_edificio.carga[1] > 0 and temp_edificio.carga[2] < 2{
+			temp_edificio.proceso++
+			if temp_edificio.proceso = edificio_proceso[4]{
+				temp_edificio.proceso = 0
+				temp_edificio.carga[0]--
+				temp_edificio.carga[1]--
+				temp_edificio.carga[2]++
+				temp_edificio.carga_total--
 				temp_edificio.waiting = not mover(temp_edificio)
 			}
 		}

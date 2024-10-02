@@ -46,6 +46,7 @@
     {"id":{"name":"spr_hexagono","path":"sprites/spr_hexagono/spr_hexagono.yy",},},
     {"id":{"name":"spr_horno","path":"sprites/spr_horno/spr_horno.yy",},},
     {"id":{"name":"spr_invernadero","path":"sprites/spr_invernadero/spr_invernadero.yy",},},
+    {"id":{"name":"spr_item_bronce","path":"sprites/spr_item_bronce/spr_item_bronce.yy",},},
     {"id":{"name":"spr_item_carbon","path":"sprites/spr_item_carbon/spr_item_carbon.yy",},},
     {"id":{"name":"spr_item_cobre","path":"sprites/spr_item_cobre/spr_item_cobre.yy",},},
     {"id":{"name":"spr_pasto","path":"sprites/spr_pasto/spr_pasto.yy",},},

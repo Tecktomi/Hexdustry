@@ -10,14 +10,36 @@ function add_edificio(index, dir, a, b){
 		output_index : 0,
 		proceso : 0,
 		carga : [0],
+		carga_max : [0],
+		carga_output : [true],
 		carga_id : 0,
 		carga_total : 0,
 		waiting : false,
 		idle : false
 	}
 	var temp_terreno, temp_complex, temp_list
-	for(var c = 0; c < control.ore_max; c++)
-		new_edificio.carga[a] = 0
+	for(var c = 0; c < control.ore_max; c++){
+		new_edificio.carga[c] = 0
+		if control.edificio_input_all[index]
+			new_edificio.carga_max[c] = control.edificio_carga_max[index]
+		if control.edificio_output_all[index]
+			new_edificio.carga_output[c] = true
+	}
+	if not control.edificio_input_all[index]{
+		var d = 0
+		for(var c = 0; c < control.ore_max; c++)
+			if d < array_length(control.edificio_input_index[index]) and c = control.edificio_input_index[index, d]{
+				new_edificio.carga_max[c] = control.edificio_input_num[index, d]
+				d++
+			}
+			else
+				new_edificio.carga_max[c] = 0
+	}
+	if not control.edificio_output_all[index]{
+		for(var c = 0; c < control.ore_max; c++)
+			new_edificio.carga_output[c] = false
+		new_edificio.carga_output[control.edificio_output_index[index]] = true
+	}
 	//Añadir coordenadas
 	temp_terreno = control.terreno[a, b]
 	temp_terreno.edificio_draw = true
