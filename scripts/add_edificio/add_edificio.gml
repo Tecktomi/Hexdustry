@@ -62,15 +62,18 @@ function add_edificio(index, dir, a, b){
 			temp_terreno = control.terreno[temp_complex.a, temp_complex.b]
 			if temp_terreno.edificio_bool{
 				var temp_edificio = temp_terreno.edificio
-				if control.edificio_receptor[temp_edificio.index] and control.edificio_emisor[index] and ds_list_find_index(new_edificio.outputs, temp_edificio) = -1{
+				//OUTPUTS del nuevo edificio
+				if control.edificio_receptor[temp_edificio.index] and control.edificio_emisor[index] and (ds_list_find_index(new_edificio.outputs, temp_edificio) = -1){
 					var flag = true
-					if index = 2 and not complex_equal(temp_complex, next_to(a, b, dir))
+					if in(index, 2) and not complex_equal(temp_complex, next_to(a, b, dir))
 						flag = false
-					if flag and temp_edificio.index = 2 and complex_equal(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), {a : a, b : b})
+					if flag and in(temp_edificio.index, 2) and complex_equal(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), {a : a, b : b})
 						flag = false
-					if index = 3 and not (complex_equal(temp_complex, next_to(a, b, (dir + 5) mod 6)) or complex_equal(temp_complex, next_to(a, b, dir)) or complex_equal(temp_complex, next_to(a, b, (dir + 1) mod 6)))
+					if flag and in(index, 3) and not (complex_equal(temp_complex, next_to(a, b, (dir + 5) mod 6)) or
+						complex_equal(temp_complex, next_to(a, b, dir)) or
+						complex_equal(temp_complex, next_to(a, b, (dir + 1) mod 6)))
 						flag = false
-					if flag and temp_edificio.index = 3 and (complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 5) mod 6), {a : a, b : b}) or
+					if flag and in(temp_edificio.index, 3) and (complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 5) mod 6), {a : a, b : b}) or
 						complex_equal(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), {a : a, b : b}) or
 						complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 1) mod 6), {a : a, b : b}))
 						flag = false
@@ -79,15 +82,18 @@ function add_edificio(index, dir, a, b){
 						ds_list_add(new_edificio.outputs, temp_edificio)
 					}
 				}
-				if control.edificio_emisor[temp_edificio.index] and control.edificio_receptor[index] and ds_list_find_index(new_edificio.inputs, temp_edificio) = -1{
+				//INPUTS del nuevo edificio
+				if control.edificio_emisor[temp_edificio.index] and control.edificio_receptor[index] and (ds_list_find_index(new_edificio.inputs, temp_edificio) = -1){
 					var flag = true
-					if index = 2 and complex_equal(temp_complex, next_to(a, b, dir))
+					if in(index, 2) and complex_equal(temp_complex, next_to(a, b, dir))
 						flag = false
-					if flag and temp_edificio.index = 2 and not complex_equal(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), {a : a, b : b})
+					if flag and in(temp_edificio.index, 2) and not complex_equal(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), {a : a, b : b})
 						flag = false
-					if index = 3 and (complex_equal(temp_complex, next_to(a, b, (dir + 5) mod 6)) or complex_equal(temp_complex, next_to(a, b, dir)) or complex_equal(temp_complex, next_to(a, b, (dir + 1) mod 6)))
+					if flag and in(index, 3) and (complex_equal(temp_complex, next_to(a, b, (dir + 5) mod 6)) or
+						complex_equal(temp_complex, next_to(a, b, dir)) or
+						complex_equal(temp_complex, next_to(a, b, (dir + 1) mod 6)))
 						flag = false
-					if flag and temp_edificio.index = 3 and not (complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 5) mod 6), {a : a, b : b}) or
+					if flag and in(temp_edificio.index, 3) and not (complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 5) mod 6), {a : a, b : b}) or
 						complex_equal(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), {a : a, b : b}) or
 						complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 1) mod 6), {a : a, b : b}))
 						flag = false

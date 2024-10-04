@@ -9,12 +9,15 @@
     "name":"Default",
   },
   "defaultScriptType":1,
-  "Folders":[],
+  "Folders":[
+    {"$GMFolder":"","%Name":"SPRITES","folderPath":"folders/SPRITES.yy","name":"SPRITES","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"SCRIPTS","folderPath":"folders/SCRIPTS.yy","name":"SCRIPTS","resourceType":"GMFolder","resourceVersion":"2.0",},
+  ],
   "IncludedFiles":[],
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.8.1.171",
+    "IDEVersion":"2024.6.2.162",
   },
   "name":"Hexdustry",
   "resources":[
@@ -25,7 +28,6 @@
     {"id":{"name":"add_edificio","path":"scripts/add_edificio/add_edificio.yy",},},
     {"id":{"name":"complex_equal","path":"scripts/complex_equal/complex_equal.yy",},},
     {"id":{"name":"delete_edificio","path":"scripts/delete_edificio/delete_edificio.yy",},},
-    {"id":{"name":"ds_list_choose","path":"scripts/ds_list_choose/ds_list_choose.yy",},},
     {"id":{"name":"ds_list_remove","path":"scripts/ds_list_remove/ds_list_remove.yy",},},
     {"id":{"name":"get_arround","path":"scripts/get_arround/get_arround.yy",},},
     {"id":{"name":"get_size","path":"scripts/get_size/get_size.yy",},},

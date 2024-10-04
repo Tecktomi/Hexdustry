@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":0,
   "parent":{
-    "name":"Hexdustry",
-    "path":"Hexdustry.yyp",
+    "name":"SPRITES",
+    "path":"folders/SPRITES.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

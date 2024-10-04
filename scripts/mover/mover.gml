@@ -19,7 +19,7 @@ function mover(edificio = control.null_edificio){
 		}
 	}
 	if flag{
-		if edificio.carga = 0
+		if edificio.carga_total = 0
 			edificio.waiting = false
 		if control.edificio_receptor[edificio.index]
 			for(var a = 0; a < ds_list_size(edificio.inputs); a++){
