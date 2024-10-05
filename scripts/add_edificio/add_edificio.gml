@@ -37,9 +37,15 @@ function add_edificio(index, dir, a, b){
 				new_edificio.carga_max[c] = 0
 	}
 	if not control.edificio_output_all[index]{
-		for(var c = 0; c < control.ore_max; c++)
-			new_edificio.carga_output[c] = false
-		new_edificio.carga_output[control.edificio_output_index[index]] = true
+		var d = 0
+		for(var c = 0; c < control.ore_max; c++){
+			if control.edificio_output_index[index, d] = c{
+				new_edificio.carga_output[c] = true
+				d++
+			}
+			else
+				new_edificio.carga_output[c] = false
+		}
 	}
 	//Añadir coordenadas
 	temp_terreno = control.terreno[a, b]
@@ -67,7 +73,7 @@ function add_edificio(index, dir, a, b){
 					var flag = true
 					if in(index, 2) and not complex_equal(temp_complex, next_to(a, b, dir))
 						flag = false
-					if flag and in(temp_edificio.index, 2) and complex_equal(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), {a : a, b : b})
+					if flag and in(temp_edificio.index, 2) and next_to_build(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), new_edificio)
 						flag = false
 					if flag and in(index, 3) and not (complex_equal(temp_complex, next_to(a, b, (dir + 5) mod 6)) or
 						complex_equal(temp_complex, next_to(a, b, dir)) or
@@ -87,7 +93,7 @@ function add_edificio(index, dir, a, b){
 					var flag = true
 					if in(index, 2) and complex_equal(temp_complex, next_to(a, b, dir))
 						flag = false
-					if flag and in(temp_edificio.index, 2) and not complex_equal(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), {a : a, b : b})
+					if flag and in(temp_edificio.index, 2) and not next_to_build(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), new_edificio)
 						flag = false
 					if flag and in(index, 3) and (complex_equal(temp_complex, next_to(a, b, (dir + 5) mod 6)) or
 						complex_equal(temp_complex, next_to(a, b, dir)) or

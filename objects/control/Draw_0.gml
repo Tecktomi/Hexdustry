@@ -106,8 +106,9 @@ if temp_hexagono != noone{
 					temp_array[a] = 0
 				for(var a = 0; a < ds_list_size(temp_edificio.coordenadas); a++){
 					temp_complex = ds_list_find_value(temp_edificio.coordenadas, a)
-					if terreno[temp_complex.a, temp_complex.b].ore >= 0
-						temp_array[terreno[temp_complex.a, temp_complex.b].ore] += terreno[temp_complex.a, temp_complex.b].ore_amount
+					var temp_terreno_2 = terreno[temp_complex.a, temp_complex.b]
+					if temp_terreno_2.ore >= 0
+						temp_array[ore_recurso[temp_terreno_2.ore]] += temp_terreno_2.ore_amount
 				}
 				for(var a = 0; a < ore_max; a++)
 					if temp_array[a] > 0
@@ -241,10 +242,13 @@ if build_index > 0{
 				var b = 0
 				for(var a = 0; a < ds_list_size(build_list); a++){
 					temp_complex_2 = ds_list_find_value(build_list, a)
-					if temp_complex_2.a >= 0 and temp_complex_2.b >= 0 and temp_complex_2.a < xsize and temp_complex_2.b < ysize and terreno[temp_complex_2.a, temp_complex_2.b].ore >= 0{
-						temp_array[terreno[temp_complex_2.a, temp_complex_2.b].ore]++
-						temp_array_2[terreno[temp_complex_2.a, temp_complex_2.b].ore] += terreno[temp_complex_2.a, temp_complex_2.b].ore_amount
-						b++
+					if temp_complex_2.a >= 0 and temp_complex_2.b >= 0 and temp_complex_2.a < xsize and temp_complex_2.b < ysize{
+						var temp_terreno_2 = terreno[temp_complex_2.a, temp_complex_2.b]
+						if temp_terreno_2.ore >= 0{
+							temp_array[ore_recurso[temp_terreno_2.ore]]++
+							temp_array_2[ore_recurso[temp_terreno_2.ore]] += temp_terreno_2.ore_amount
+							b++
+						}
 					}
 				}
 				var temp_text = ""
@@ -309,7 +313,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 					temp_terreno = terreno[temp_complex_2.a, temp_complex_2.b]
 					ds_list_delete(temp_list, 0)
 					if temp_terreno.ore >= 0{
-						temp_edificio.carga[temp_terreno.ore]++
+						temp_edificio.carga[ore_recurso[temp_terreno.ore]]++
 						temp_edificio.carga_total++
 						temp_terreno.ore_amount--
 						if temp_terreno.ore_amount = 0{
@@ -335,8 +339,8 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 				temp_edificio.waiting = not mover(temp_edificio)
 			}
 		}
-		//Accion horno
-		if temp_edificio.index = 4 and temp_edificio.carga[0] > 0 and (temp_edificio.carga[1] > 0 or temp_edificio.fuel > 0){
+		//Acción horno
+		if temp_edificio.index = 4 and (temp_edificio.carga[0] > 0 or temp_edificio.carga[3] > 0) and (temp_edificio.carga[1] > 0 or temp_edificio.fuel > 0){
 			if temp_edificio.fuel > 0
 				temp_edificio.fuel--
 			if temp_edificio.carga[2] < 2{
@@ -348,8 +352,14 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 				temp_edificio.proceso++
 				if temp_edificio.proceso = edificio_proceso[4]{
 					temp_edificio.proceso = 0
-					temp_edificio.carga[0]--
-					temp_edificio.carga[2]++
+					if temp_edificio.carga[3] > 0{
+						temp_edificio.carga[3]--
+						temp_edificio.carga[4]++
+					}
+					else{
+						temp_edificio.carga[0]--
+						temp_edificio.carga[2]++
+					}
 					temp_edificio.waiting = not mover(temp_edificio)
 				}
 			}
