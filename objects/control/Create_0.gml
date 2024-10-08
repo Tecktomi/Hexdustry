@@ -31,6 +31,7 @@ null_edificio = {
 	carga_total : 0,
 	fuel : 0,
 	select : -1,
+	mode : false,
 	waiting : false,
 	idle : false
 }

@@ -3,9 +3,10 @@ function mover(edificio = control.null_edificio){
 	//Selección de recursos
 	for(out = 0; out < control.ore_max; out++)
 		if edificio.carga[out] > 0 and edificio.carga_output[out]{
-			//Output direccional
+			//Output selector
 			if in(edificio.index, 4){
-				if edificio.carga_id = edificio.select{
+				//Output selector frontal
+				if (edificio.carga_id = edificio.select xor not edificio.mode){
 					var temp_complex = next_to(edificio.a, edificio.b, edificio.dir)
 					var temp_terreno = control.terreno[temp_complex.a, temp_complex.b]
 					if temp_terreno.edificio_bool{
@@ -16,6 +17,7 @@ function mover(edificio = control.null_edificio){
 						}
 					}
 				}
+				//Output selector lateral
 				else for(var a = 0; a < 2; a++){
 					if edificio.output_index = 0
 						a = a
@@ -42,8 +44,8 @@ function mover(edificio = control.null_edificio){
 					break
 				}
 			}
-		if flag
-			break
+			if flag
+				break
 		}
 	//Movimiento de recursos
 	if flag{
