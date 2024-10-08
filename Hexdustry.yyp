@@ -17,7 +17,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.6.2.162",
+    "IDEVersion":"2024.8.1.171",
   },
   "name":"Hexdustry",
   "resources":[
@@ -58,6 +58,8 @@
     {"id":{"name":"spr_item_cobre","path":"sprites/spr_item_cobre/spr_item_cobre.yy",},},
     {"id":{"name":"spr_item_hierro","path":"sprites/spr_item_hierro/spr_item_hierro.yy",},},
     {"id":{"name":"spr_pasto","path":"sprites/spr_pasto/spr_pasto.yy",},},
+    {"id":{"name":"spr_selector_color","path":"sprites/spr_selector_color/spr_selector_color.yy",},},
+    {"id":{"name":"spr_selector","path":"sprites/spr_selector/spr_selector.yy",},},
     {"id":{"name":"spr_silo","path":"sprites/spr_silo/spr_silo.yy",},},
     {"id":{"name":"spr_taladro","path":"sprites/spr_taladro/spr_taladro.yy",},},
   ],
