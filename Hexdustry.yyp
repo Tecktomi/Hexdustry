@@ -57,6 +57,7 @@
     {"id":{"name":"spr_item_carbon","path":"sprites/spr_item_carbon/spr_item_carbon.yy",},},
     {"id":{"name":"spr_item_cobre","path":"sprites/spr_item_cobre/spr_item_cobre.yy",},},
     {"id":{"name":"spr_item_hierro","path":"sprites/spr_item_hierro/spr_item_hierro.yy",},},
+    {"id":{"name":"spr_overflow","path":"sprites/spr_overflow/spr_overflow.yy",},},
     {"id":{"name":"spr_pasto","path":"sprites/spr_pasto/spr_pasto.yy",},},
     {"id":{"name":"spr_selector_color","path":"sprites/spr_selector_color/spr_selector_color.yy",},},
     {"id":{"name":"spr_selector","path":"sprites/spr_selector/spr_selector.yy",},},

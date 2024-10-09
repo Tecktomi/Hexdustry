@@ -23,19 +23,19 @@ for(var a = 0; a < xsize; a++)
 		var temp_complex = abtoxy(a, b)
 		if temp_terreno.edificio_draw{
 			//Dibujo caminos
-			if in(temp_edificio.index, 2, 3, 4){
+			if edificio_camino[temp_edificio.index]{
 				draw_sprite_ext(edificio_sprite[temp_edificio.index], image_index / 4, temp_complex.a, temp_complex.b, 1, 1, (temp_edificio.dir - 1) * 60, c_white, 1)
 				if temp_edificio.carga_total > 0{
 					var c = 1.2 * (max(temp_edificio.proceso, temp_edificio.waiting * 20) - 10)
 					var d = temp_edificio.dir * pi / 3 + pi / 6
 					draw_sprite(ore_item_sprite[temp_edificio.carga_id], 0, temp_complex.a + c * cos(d), temp_complex.b - c * sin(d))
 				}
-				if in(temp_edificio.index, 4) and temp_edificio.select >= 0
+				if edificio_nombre[temp_edificio.index] = "Selector" and temp_edificio.select >= 0
 					draw_sprite_ext(edificio_sprite_2[temp_edificio.index], image_index / 4, temp_complex.a, temp_complex.b, 1, 1, (temp_edificio.dir - 1) * 60, ore_item_color[temp_edificio.select], 1)
 			}
 			else{
 				//Dibujo hornos
-				if in(temp_edificio.index, 4) and temp_edificio.fuel > 0
+				if edificio_nombre[temp_edificio.index] = "Horno" and temp_edificio.fuel > 0
 					draw_sprite_ext(spr_horno_encendido, image_index / 4, temp_complex.a, temp_complex.b, 1, 1, temp_edificio.dir * 60, c_white, 1)
 				else
 					draw_sprite_ext(edificio_sprite[temp_edificio.index], image_index / 4, temp_complex.a, temp_complex.b, 1, 1, temp_edificio.dir * 60, c_white, 1)
@@ -55,23 +55,41 @@ var flag = true
 //Seleccionar recurso
 if show_menu{
 	draw_set_color(c_gray)
-	draw_rectangle(show_menu_x, show_menu_y, show_menu_x + 32 * min(5, ore_max), show_menu_y + 28 * (1 + floor((ore_max - 1.) / 5)), false)
+	draw_rectangle(show_menu_x, show_menu_y, show_menu_x + 160, show_menu_y + 28, false)
+	if edificio_nombre[show_menu_build.index] = "Selector"
+		draw_rectangle(show_menu_x, show_menu_y + 28, show_menu_x + 160, show_menu_y + 28 * (2 + floor((ore_max - 1) / 5)), false)
 	draw_set_color(c_dkgray)
-	draw_rectangle(show_menu_x, show_menu_y, show_menu_x + 32 * min(5, ore_max), show_menu_y + 28 * (1 + floor((ore_max - 1.) / 5)), true)
-	for(var a = 0; a < ore_max; a++)
-		draw_sprite(ore_item_sprite[a], 0, show_menu_x + 32 * a + 16, show_menu_y + 14)
-	if mouse_x > show_menu_x and mouse_y > show_menu_y and mouse_x < show_menu_x + 32 * min(5, ore_max) and mouse_y < show_menu_y + 28 * (1 + floor((ore_max - 1) / 5)){
-		var a = floor((mouse_x - show_menu_x) / 32) + 5 * floor((mouse_y - show_menu_y) / 28)
-		flag = false
-		if a >= 0 and a < ore_max{
-			draw_set_color(c_white)
-			draw_set_valign(fa_bottom)
-			draw_text(show_menu_x + 20, show_menu_y, ore_name[a])
-			draw_set_valign(fa_top)
+	draw_rectangle(show_menu_x, show_menu_y, show_menu_x + 160, show_menu_y + 28, true)
+	if edificio_nombre[show_menu_build.index] = "Selector"
+		draw_rectangle(show_menu_x, show_menu_y + 28, show_menu_x + 160, show_menu_y + 28 * (2 + floor((ore_max - 1) / 5)), true)
+	draw_text(show_menu_x, show_menu_y, "Invertir")
+	if edificio_nombre[show_menu_build.index] = "Selector"
+		for(var a = 0; a < ore_max; a++)
+			draw_sprite(ore_item_sprite[a], 0, show_menu_x + 32 * a + 16, show_menu_y + 28 * (1 + floor(a / 5)) + 14)
+	if mouse_x > show_menu_x and mouse_y > show_menu_y and mouse_x < show_menu_x + 160{
+		//Invertir
+		if mouse_y > show_menu_y and mouse_y < show_menu_y + 28{
+			flag = false
 			if mouse_check_button_pressed(mb_left){
 				mouse_clear(mb_left)
 				show_menu = false
-				show_menu_build.select = a
+				show_menu_build.mode = not show_menu_build.mode
+			}
+		}
+		//Elegir recurso
+		else if mouse_y > show_menu_y + 28 and mouse_y < show_menu_y + 28 * (2 + floor((ore_max - 1) / 5)) and edificio_nombre[show_menu_build.index] = "Selector"{
+			var a = floor((mouse_x - show_menu_x) / 32) + 5 * floor((mouse_y - show_menu_y) / 28 - 1)
+			flag = false
+			if a >= 0 and a < ore_max{
+				draw_set_color(c_white)
+				draw_set_valign(fa_bottom)
+				draw_text(show_menu_x + 20, show_menu_y, ore_name[a])
+				draw_set_valign(fa_top)
+				if mouse_check_button_pressed(mb_left){
+					mouse_clear(mb_left)
+					show_menu = false
+					show_menu_build.select = a
+				}
 			}
 		}
 	}
@@ -102,7 +120,7 @@ if temp_hexagono != noone and flag{
 		//Seleccionar edificios
 		if mouse_check_button_pressed(mb_left) and build_index = 0{
 			mouse_clear(mb_left)
-			if in(temp_edificio.index, 4){
+			if in(edificio_nombre[temp_edificio.index], "Selector", "Overflow"){
 				show_menu = true
 				show_menu_build = temp_edificio
 				show_menu_x = abtoxy(temp_edificio.a, temp_edificio.b).a
@@ -134,7 +152,7 @@ if temp_hexagono != noone and flag{
 					temp_text += "  " + ore_name[a] + ": " + string(temp_edificio.carga[a]) + "\n"
 		}
 		//Mostrar recursos subterraneos
-		if in(temp_edificio.index, 1)
+		if in(edificio_nombre[temp_edificio.index], "Taladro")
 			if temp_edificio.idle
 				temp_text += "Sin recursos\n"
 			else{
@@ -154,7 +172,7 @@ if temp_hexagono != noone and flag{
 					temp_text += "Recursos disponibles:\n" + temp_text_2
 			}
 		//Mostrar combustión
-		if in(temp_edificio.index, 4)
+		if in(edificio_nombre[temp_edificio.index], "Horno")
 			temp_text += "Combustion: " + string(floor(temp_edificio.fuel / 30)) + "/10" + "\n"
 		//Mostrar inputs
 		if edificio_receptor[temp_edificio.index]{
@@ -181,24 +199,8 @@ if temp_hexagono != noone and flag{
 }
 //Construir
 flag = false
-if keyboard_check_pressed(ord(1)){
-	build_index = 1
-	flag = true
-}
-if keyboard_check_pressed(ord(2)){
-	build_index = 2
-	flag = true
-}
-if keyboard_check_pressed(ord(3)){
-	build_index = 3
-	flag = true
-}
-if keyboard_check_pressed(ord(4)){
-	build_index = 4
-	flag = true
-}
-if keyboard_check_pressed(ord(5)){
-	build_index = 5
+if keyboard_check_pressed(vk_anykey) and real(keyboard_lastkey) >= 49 and real(keyboard_lastkey) <= 54{
+	build_index = real(keyboard_lastkey) - 48
 	flag = true
 }
 if (mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape)) and (build_index > 0 or show_menu){
@@ -226,7 +228,7 @@ if build_index > 0{
 		var temp_array, temp_array_2
 		flag = true
 		//Vista previa edificios arrastrables
-		if in(build_index, 2, 3, 4){
+		if edificio_camino[build_index]{
 			//Iniciar arrastre
 			if mouse_check_button_pressed(mb_left){
 				mx_clic = mx
@@ -280,7 +282,7 @@ if build_index > 0{
 			var temp_complex_2 = abtoxy(mx, my)
 			draw_sprite_ext(edificio_sprite[build_index], 0, temp_complex_2.a, temp_complex_2.b, 1, 1, build_dir * 60, c_white, 0.5)
 			//Visión previa taladro
-			if in(build_index, 1){
+			if in(edificio_nombre[build_index], "Taladro"){
 				for(var a = 0; a < array_length(ore_name); a++){
 					temp_array[a] = 0
 					temp_array_2[a] = 0
@@ -315,18 +317,18 @@ if build_index > 0{
 				var bb = temp_complex_2.b
 				var temp_terreno = terreno[aa, bb]
 				//Checkear coliciones
-				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or (temp_terreno.edificio_bool and not (in(build_index, 2, 3, 4) and temp_terreno.edificio.index = build_index)) or in(temp_terreno.terreno, 2){
+				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or (temp_terreno.edificio_bool and not (edificio_camino[build_index] and temp_terreno.edificio.index = build_index)) or in(temp_terreno.terreno, 2){
 					flag = false
 					break
 				}
 				//Reemplazar caminos
-				if temp_terreno.edificio_bool and in(build_index, 2, 3, 4) and temp_terreno.edificio.index = build_index
+				if temp_terreno.edificio_bool and edificio_camino[build_index] and temp_terreno.edificio.index = build_index
 					delete_edificio(temp_terreno.edificio)
 				//Checkear minerales
-				if in(build_index, 1) and temp_terreno.ore >= 0
+				if in(edificio_nombre[build_index], "Taladro") and temp_terreno.ore >= 0
 					flag_2 = true
 			}
-			if in(build_index, 1) and not flag_2
+			if in(edificio_nombre[build_index], "Taladro") and not flag_2
 				flag = false
 			if flag
 				add_edificio(build_index, build_dir, mx, my)
@@ -346,7 +348,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 	temp_edificio = ds_list_find_value(edificios, a)
 	if not temp_edificio.idle{
 		//Accion taladro
-		if in(temp_edificio.index, 1) and temp_edificio.carga_total < edificio_carga_max[temp_edificio.index]{
+		if in(edificio_nombre[temp_edificio.index], "Taladro") and temp_edificio.carga_total < edificio_carga_max[temp_edificio.index]{
 			temp_edificio.proceso++
 			if temp_edificio.proceso = edificio_proceso[temp_edificio.index]{
 				temp_edificio.proceso = 0
@@ -378,7 +380,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 			}
 		}
 		//Accion caminos
-		if in(temp_edificio.index, 2, 3, 4) and temp_edificio.carga_total > 0{
+		if edificio_camino[temp_edificio.index] and temp_edificio.carga_total > 0{
 			temp_edificio.proceso++
 			if temp_edificio.proceso = 20{
 				temp_edificio.proceso = 0
@@ -386,7 +388,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 			}
 		}
 		//Acción horno
-		if temp_edificio.index = 4 and (temp_edificio.carga[0] > 0 or temp_edificio.carga[3] > 0) and (temp_edificio.carga[1] > 0 or temp_edificio.fuel > 0){
+		if edificio_nombre[temp_edificio.index] = "Horno" and (temp_edificio.carga[0] > 0 or temp_edificio.carga[3] > 0) and (temp_edificio.carga[1] > 0 or temp_edificio.fuel > 0){
 			if temp_edificio.fuel > 0
 				temp_edificio.fuel--
 			if temp_edificio.carga[2] < 2{

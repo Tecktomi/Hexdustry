@@ -77,11 +77,11 @@ function add_edificio(index, dir, a, b){
 						flag = false
 					if flag and in(temp_edificio.index, 2) and next_to_build(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), new_edificio)
 						flag = false
-					if flag and in(index, 3, 4) and not (complex_equal(temp_complex, next_to(a, b, (dir + 5) mod 6)) or
+					if flag and in(index, 3, 4, 5) and not (complex_equal(temp_complex, next_to(a, b, (dir + 5) mod 6)) or
 						complex_equal(temp_complex, next_to(a, b, dir)) or
 						complex_equal(temp_complex, next_to(a, b, (dir + 1) mod 6)))
 						flag = false
-					if flag and in(temp_edificio.index, 3, 4) and (complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 5) mod 6), {a : a, b : b}) or
+					if flag and in(temp_edificio.index, 3, 4, 5) and (complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 5) mod 6), {a : a, b : b}) or
 						complex_equal(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), {a : a, b : b}) or
 						complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 1) mod 6), {a : a, b : b}))
 						flag = false
@@ -97,11 +97,11 @@ function add_edificio(index, dir, a, b){
 						flag = false
 					if flag and in(temp_edificio.index, 2) and not next_to_build(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), new_edificio)
 						flag = false
-					if flag and in(index, 3, 4) and (complex_equal(temp_complex, next_to(a, b, (dir + 5) mod 6)) or
+					if flag and in(index, 3, 4, 5) and (complex_equal(temp_complex, next_to(a, b, (dir + 5) mod 6)) or
 						complex_equal(temp_complex, next_to(a, b, dir)) or
 						complex_equal(temp_complex, next_to(a, b, (dir + 1) mod 6)))
 						flag = false
-					if flag and in(temp_edificio.index, 3, 4) and not (complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 5) mod 6), {a : a, b : b}) or
+					if flag and in(temp_edificio.index, 3, 4, 5) and not (complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 5) mod 6), {a : a, b : b}) or
 						complex_equal(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), {a : a, b : b}) or
 						complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 1) mod 6), {a : a, b : b}))
 						flag = false
