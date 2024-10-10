@@ -22,6 +22,7 @@ function add_edificio(index, dir, a, b){
 		link : control.null_edificio
 	}
 	var temp_terreno, temp_complex, temp_list
+	//Carga máxima y output general
 	for(var c = 0; c < control.rss_max; c++){
 		new_edificio.carga[c] = 0
 		if control.edificio_input_all[index]
@@ -29,6 +30,7 @@ function add_edificio(index, dir, a, b){
 		if control.edificio_output_all[index]
 			new_edificio.carga_output[c] = true
 	}
+	//Inputs y carga máxima particular
 	if not control.edificio_input_all[index]{
 		var d = 0
 		for(var c = 0; c < control.rss_max; c++)
@@ -39,6 +41,7 @@ function add_edificio(index, dir, a, b){
 			else
 				new_edificio.carga_max[c] = 0
 	}
+	//output particular
 	if not control.edificio_output_all[index]{
 		var d = 0
 		for(var c = 0; c < control.rss_max; c++){
