@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"next_to_build",
   "parent":{
-    "name":"Hexdustry",
-    "path":"Hexdustry.yyp",
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

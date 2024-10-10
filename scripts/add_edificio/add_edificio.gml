@@ -21,7 +21,7 @@ function add_edificio(index, dir, a, b){
 		idle : false
 	}
 	var temp_terreno, temp_complex, temp_list
-	for(var c = 0; c < control.ore_max; c++){
+	for(var c = 0; c < control.rss_max; c++){
 		new_edificio.carga[c] = 0
 		if control.edificio_input_all[index]
 			new_edificio.carga_max[c] = control.edificio_carga_max[index]
@@ -30,7 +30,7 @@ function add_edificio(index, dir, a, b){
 	}
 	if not control.edificio_input_all[index]{
 		var d = 0
-		for(var c = 0; c < control.ore_max; c++)
+		for(var c = 0; c < control.rss_max; c++)
 			if d < array_length(control.edificio_input_index[index]) and c = control.edificio_input_index[index, d]{
 				new_edificio.carga_max[c] = control.edificio_input_num[index, d]
 				d++
@@ -40,8 +40,8 @@ function add_edificio(index, dir, a, b){
 	}
 	if not control.edificio_output_all[index]{
 		var d = 0
-		for(var c = 0; c < control.ore_max; c++){
-			if control.edificio_output_index[index, d] = c{
+		for(var c = 0; c < control.rss_max; c++){
+			if d < array_length(control.edificio_output_index[index]) and control.edificio_output_index[index, d] = c{
 				new_edificio.carga_output[c] = true
 				d++
 			}

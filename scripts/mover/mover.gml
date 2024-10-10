@@ -1,7 +1,7 @@
 function mover(edificio = control.null_edificio){
 	var flag = false, out = 0, temp_edificio
 	//Selección de recursos
-	for(out = 0; out < control.ore_max; out++)
+	for(out = 0; out < control.rss_max; out++)
 		if edificio.carga[out] > 0 and edificio.carga_output[out]{
 			//Output selector
 			if in(control.edificio_nombre[edificio.index], "Selector"){
