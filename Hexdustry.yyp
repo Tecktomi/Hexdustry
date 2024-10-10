@@ -17,7 +17,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.8.1.171",
+    "IDEVersion":"2024.6.2.162",
   },
   "name":"Hexdustry",
   "resources":[
@@ -63,6 +63,8 @@
     {"id":{"name":"spr_selector","path":"sprites/spr_selector/spr_selector.yy",},},
     {"id":{"name":"spr_silo","path":"sprites/spr_silo/spr_silo.yy",},},
     {"id":{"name":"spr_taladro","path":"sprites/spr_taladro/spr_taladro.yy",},},
+    {"id":{"name":"spr_tunel_view","path":"sprites/spr_tunel_view/spr_tunel_view.yy",},},
+    {"id":{"name":"spr_tunel","path":"sprites/spr_tunel/spr_tunel.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",

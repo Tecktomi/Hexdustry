@@ -33,8 +33,10 @@ null_edificio = {
 	select : -1,
 	mode : false,
 	waiting : false,
-	idle : false
+	idle : false,
+	link : undefined
 }
+null_edificio.link = null_edificio
 //Crear plantilla de fondo
 for(var a = 0; a < xsize; a++)
 	for(var b = 0; b < ysize; b++){
@@ -64,28 +66,31 @@ rss_item_color =	[c_orange,			c_black,			c_red,				c_gray,				c_ltgray]
 rss_combustion =	[false,				true,				false,				false,				false]
 rss_max = array_length(rss_name)
 //EDIFICIOS
-edificio_sprite =		[spr_base,	spr_taladro,	spr_camino,				spr_enrutador,	spr_selector,		spr_overflow,	spr_horno]
-edificio_sprite_2 =		[spr_base,	spr_taladro,	spr_camino,				spr_enrutador,	spr_selector_color,	spr_overflow,	spr_horno_encendido]
-edificio_nombre =		["Nucleo",	"Taladro",		"Cinta transportadora",	"Enrutador",	"Selector",			"Overflow",		"Horno"]
-edificio_size =			[3,			2,				1,						1,				1,					1,				2]
-edificio_receptor =		[true,		false,			true,					true,			true,				true,			true]
-edificio_emisor =		[false,		true,			true,					true,			true,				true,			true]
-edificio_carga_max =	[0,			10,				1,						1,				1,					1,				10]
-edificio_input_all =	[true,		true,			true,					true,			true,				true,			false]
-edificio_input_index =	[[0],		[0],			[0],					[0],			[0],				[0],			[0, 1, 3]]
-edificio_input_num =	[[0],		[0],			[0],					[0],			[0],				[0],			[2, 2, 2]]
-edificio_output_all =	[true,		false,			true,					true,			true,				true,			false]
-edificio_output_index = [[0],		[0, 1, 3],		[0],					[0],			[0],				[0],			[2, 4]]
-edificio_proceso =		[0,			100,			20,						20,				20,					20,				150]
-edificio_combutable =	[false,		false,			false,					false,			false,				false,			true]
-edificio_combustion =	[0,			0,				0,						0,				0,					0,				360]
-edificio_camino =		[false,		false,			true,					true,			true,				true,			false]
+edificio_sprite =		[spr_base,	spr_taladro,	spr_camino,				spr_enrutador,	spr_selector,		spr_overflow,	spr_tunel,	spr_horno]
+edificio_sprite_2 =		[spr_base,	spr_taladro,	spr_camino,				spr_enrutador,	spr_selector_color,	spr_overflow,	spr_tunel,	spr_horno_encendido]
+edificio_nombre =		["Nucleo",	"Taladro",		"Cinta transportadora",	"Enrutador",	"Selector",			"Overflow",		"Tunel",	"Horno"]
+edificio_size =			[3,			2,				1,						1,				1,					1,				1,			2]
+edificio_receptor =		[true,		false,			true,					true,			true,				true,			true,		true]
+edificio_emisor =		[false,		true,			true,					true,			true,				true,			true,		true]
+edificio_carga_max =	[0,			10,				1,						1,				1,					1,				1,			10]
+edificio_input_all =	[true,		true,			true,					true,			true,				true,			true,		false]
+edificio_input_index =	[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[0, 1, 3]]
+edificio_input_num =	[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[2, 2, 2]]
+edificio_output_all =	[true,		false,			true,					true,			true,				true,			true,		false]
+edificio_output_index = [[0],		[0, 1, 3],		[0],					[0],			[0],				[0],			[0],		[2, 4]]
+edificio_proceso =		[0,			100,			20,						20,				20,					20,				20,			150]
+edificio_combutable =	[false,		false,			false,					false,			false,				false,			false,		true]
+edificio_combustion =	[0,			0,				0,						0,				0,					0,				0,			360]
+edificio_camino =		[false,		false,			true,					true,			true,				true,			false,		false]
+edificio_max = array_length(edificio_nombre)
 size_size = [1, 3, 7, 12, 19, 27]
 size_borde = [6, 9, 12, 15, 18, 21]
 carga_max = [0, 10, 3, 20, 100]
 edificios = ds_list_create()
 build_index = 0
 build_dir = 0
+build_able = false
+build_target = null_edificio
 last_mx = -1
 last_my = -1
 build_list = get_size(0, 0, 0, 0)

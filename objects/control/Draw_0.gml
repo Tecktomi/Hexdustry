@@ -23,7 +23,7 @@ for(var a = 0; a < xsize; a++)
 		var temp_complex = abtoxy(a, b)
 		if temp_terreno.edificio_draw{
 			//Dibujo caminos
-			if edificio_camino[temp_edificio.index]{
+			if edificio_camino[temp_edificio.index] or edificio_nombre[temp_edificio.index] = "Tunel"{
 				draw_sprite_ext(edificio_sprite[temp_edificio.index], image_index / 4, temp_complex.a, temp_complex.b, 1, 1, (temp_edificio.dir - 1) * 60, c_white, 1)
 				if temp_edificio.carga_total > 0{
 					var c = 1.2 * (max(temp_edificio.proceso, temp_edificio.waiting * 20) - 10)
@@ -199,7 +199,7 @@ if temp_hexagono != noone and flag{
 }
 //Construir
 flag = false
-if keyboard_check_pressed(vk_anykey) and real(keyboard_lastkey) >= 49 and real(keyboard_lastkey) <= 54{
+if keyboard_check_pressed(vk_anykey) and real(keyboard_lastkey) >= 49 and real(keyboard_lastkey) < 49 + edificio_max{
 	build_index = real(keyboard_lastkey) - 48
 	flag = true
 }
@@ -277,6 +277,43 @@ if build_index > 0{
 					build_index = 0
 			}
 		}
+		//Vista previa tuneles
+		else if edificio_nombre[build_index] = "Tunel"{
+			var temp_complex_2 = abtoxy(mx, my), flag_2 = false
+			draw_sprite_ext(edificio_sprite[build_index], 0, temp_complex_2.a, temp_complex_2.b, 1, 1, (build_dir - 1) * 60, c_white, 0.5)
+			var a = mx, b = my, c = 0
+			//Evaluar si es construible
+			build_able = false
+			repeat(10){
+				c++
+				temp_complex_2 = next_to(a, b, build_dir)
+				a = temp_complex_2.a
+				b = temp_complex_2.b
+				if a < 0 or b < 0 or a >= xsize or b >= ysize
+					break
+				var temp_terreno_2 = terreno[a, b]
+				if temp_terreno_2.edificio_bool{
+					var temp_edificio_2 = temp_terreno_2.edificio
+					if temp_edificio_2.index = build_index and temp_edificio_2.dir = (build_dir + 3) mod 6{
+						build_target = temp_edificio_2
+						build_able = true
+						break
+					}
+				}
+			}
+			//Dibujar vista previa
+			if build_able{
+				a = mx
+				b = my
+				repeat(c - 1){
+					temp_complex_2 = next_to(a, b, build_dir)
+					a = temp_complex_2.a
+					b = temp_complex_2.b
+					temp_complex_2 = abtoxy(a, b)
+					draw_sprite_ext(spr_tunel_view, 0, temp_complex_2.a, temp_complex_2.b, 1, 1, (build_dir - 1) * 60, c_white, 0.5)
+				}
+			}
+		}
 		//Vista previo edificios no arrastrables
 		else{
 			var temp_complex_2 = abtoxy(mx, my)
@@ -310,7 +347,7 @@ if build_index > 0{
 		}
 		//Construir
 		function f1(build_index, build_dir, mx, my){
-			var flag = true, flag_2 = false, build_list = get_size(mx, my, build_dir, edificio_size[build_index])
+			var flag = true, flag_2 = false, build_list = get_size(mx, my, build_dir, edificio_size[build_index]), temp_edificio
 			for(var a = 0; a < ds_list_size(build_list); a++){
 				var temp_complex_2 = ds_list_find_value(build_list, a)
 				var aa = temp_complex_2.a
@@ -331,7 +368,20 @@ if build_index > 0{
 			if in(edificio_nombre[build_index], "Taladro") and not flag_2
 				flag = false
 			if flag
-				add_edificio(build_index, build_dir, mx, my)
+				temp_edificio = add_edificio(build_index, build_dir, mx, my)
+			//Algoritmo link de tuneles
+			if edificio_nombre[build_index] = "Tunel"{
+				temp_edificio.idle = not build_able
+				if build_able{
+					build_target.idle = false
+					ds_list_add(temp_edificio.inputs, build_target)
+					ds_list_add(build_target.outputs, temp_edificio)
+					temp_edificio.link = build_target
+					build_target.link = temp_edificio
+					if build_target.waiting
+						mover(build_target)
+				}
+			}
 		}
 		if mouse_check_button_released(mb_left) and not temp_terreno.edificio_bool and flag{
 			f1(build_index, build_dir, mx, my)
@@ -380,7 +430,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 			}
 		}
 		//Accion caminos
-		if edificio_camino[temp_edificio.index] and temp_edificio.carga_total > 0{
+		if (edificio_camino[temp_edificio.index] or edificio_nombre[temp_edificio.index] = "Tunel") and temp_edificio.carga_total > 0{
 			temp_edificio.proceso++
 			if temp_edificio.proceso = 20{
 				temp_edificio.proceso = 0

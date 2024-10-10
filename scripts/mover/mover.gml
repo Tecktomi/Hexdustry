@@ -1,5 +1,5 @@
 function mover(edificio = control.null_edificio){
-	var flag = false, out = 0, temp_edificio
+	var flag = false, out = 0, temp_edificio, b
 	//Selección de recursos
 	for(out = 0; out < control.rss_max; out++)
 		if edificio.carga[out] > 0 and edificio.carga_output[out]{
@@ -19,7 +19,6 @@ function mover(edificio = control.null_edificio){
 				}
 				//Output selector lateral
 				else for(var a = 0; a < 2; a++){
-					var b
 					if edificio.output_index = 0
 						b = a
 					else
@@ -53,7 +52,6 @@ function mover(edificio = control.null_edificio){
 				}
 				//Output lateral
 				for(var a = 0; a < 2; a++){
-					var b
 					if edificio.output_index = 0
 						b = a
 					else

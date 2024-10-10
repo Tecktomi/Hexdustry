@@ -9,6 +9,9 @@ function delete_edificio(edificio = control.null_edificio){
 		temp_terreno_2.edificio_draw = false
 	}
 	ds_list_destroy(edificio.coordenadas)
+	//Eliminar tuneles
+	if control.edificio_nombre[edificio.index] = "Tunel" and not edificio.idle
+		edificio.link.idle = true
 	//Cancelar outputs
 	for(var a = 0; a < ds_list_size(edificio.outputs); a++){
 		var temp_edificio = ds_list_find_value(edificio.outputs, a)
