@@ -34,7 +34,11 @@ null_edificio = {
 	mode : false,
 	waiting : false,
 	idle : false,
-	link : undefined
+	link : undefined,
+	red : undefined,
+	energy_output : 0,
+	energy_input : 0,
+	energy_storage : 0
 }
 null_edificio.link = null_edificio
 //Crear plantilla de fondo
@@ -55,7 +59,7 @@ for(var a = 0; a < xsize; a++)
 		temp_hexagono.b = b
 	}
 //Data
-terreno_sprite = [spr_hexagono, spr_pasto, spr_agua, spr_arena]
+terreno_sprite = [spr_piedra, spr_pasto, spr_agua, spr_arena]
 terreno_name = ["Piedra", "Pasto", "Agua", "Arena"]
 ore_sprite = [spr_cobre, spr_carbon, spr_hierro]
 ore_recurso = [0, 1, 3]
@@ -64,29 +68,44 @@ rss_item_sprite =	[spr_item_cobre,	spr_item_carbon,	spr_item_bronce,	spr_item_hi
 rss_name =			["Cobre",			"Carbon",			"Bronce",			"Hierro",			"Acero"]
 rss_item_color =	[c_orange,			c_black,			c_red,				c_gray,				c_ltgray]
 rss_combustion =	[false,				true,				false,				false,				false]
+rss_comb_time =		[0,					300,				0,					0,					0]
 rss_max = array_length(rss_name)
 //EDIFICIOS
-edificio_sprite =		[spr_base,	spr_taladro,	spr_camino,				spr_enrutador,	spr_selector,		spr_overflow,	spr_tunel,	spr_horno]
-edificio_sprite_2 =		[spr_base,	spr_taladro,	spr_camino,				spr_enrutador,	spr_selector_color,	spr_overflow,	spr_tunel,	spr_horno_encendido]
-edificio_nombre =		["Nucleo",	"Taladro",		"Cinta transportadora",	"Enrutador",	"Selector",			"Overflow",		"Tunel",	"Horno"]
-edificio_size =			[3,			2,				1,						1,				1,					1,				1,			2]
-edificio_receptor =		[true,		false,			true,					true,			true,				true,			true,		true]
-edificio_emisor =		[false,		true,			true,					true,			true,				true,			true,		true]
-edificio_carga_max =	[0,			10,				1,						1,				1,					1,				1,			10]
-edificio_input_all =	[true,		true,			true,					true,			true,				true,			true,		false]
-edificio_input_index =	[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[0, 1, 3]]
-edificio_input_num =	[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[2, 2, 2]]
-edificio_output_all =	[true,		false,			true,					true,			true,				true,			true,		false]
-edificio_output_index = [[0],		[0, 1, 3],		[0],					[0],			[0],				[0],			[0],		[2, 4]]
-edificio_proceso =		[0,			100,			20,						20,				20,					20,				20,			150]
-edificio_combutable =	[false,		false,			false,					false,			false,				false,			false,		true]
-edificio_combustion =	[0,			0,				0,						0,				0,					0,				0,			360]
-edificio_camino =		[false,		false,			true,					true,			true,				true,			false,		false]
+edificio_sprite =		[spr_base,	spr_taladro,	spr_camino,				spr_enrutador,	spr_selector,		spr_overflow,	spr_tunel,	spr_horno,				spr_generador,				spr_cable]//Sprite
+edificio_sprite_2 =		[spr_base,	spr_taladro,	spr_camino,				spr_enrutador,	spr_selector_color,	spr_overflow,	spr_tunel,	spr_horno_encendido,	spr_generador_encendido,	spr_cable]//Sprite 2
+edificio_nombre =		["Nucleo",	"Taladro",		"Cinta transportadora",	"Enrutador",	"Selector",			"Overflow",		"Tunel",	"Horno",				"Generador",				"Cable"]//Nombre
+edificio_size =			[3,			2,				1,						1,				1,					1,				1,			2,						1,							1]//Size
+edificio_receptor =		[true,		false,			true,					true,			true,				true,			true,		true,					true,						false]//Receptor
+edificio_emisor =		[false,		true,			true,					true,			true,				true,			true,		true,					false,						false]//Emisor
+edificio_carga_max =	[0,			10,				1,						1,				1,					1,				1,			10,						10,							0]//Carga max
+edificio_input_all =	[true,		true,			true,					true,			true,				true,			true,		false,					false,						false]//Input: all
+edificio_input_index =	[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[0, 1, 3],				[1],						[0]]//Input: index
+edificio_input_num =	[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[2, 2, 2],				[10],						[0]]//Input: num
+edificio_output_all =	[true,		false,			true,					true,			true,				true,			true,		false,					false,						false]//Output: all
+edificio_output_index = [[0],		[0, 1, 3],		[0],					[0],			[0],				[0],			[0],		[2, 4],					[0],						[0]]//Output: index
+edificio_proceso =		[0,			100,			20,						20,				20,					20,				20,			150,					0,							0]//Steps proceso
+edificio_combutable =	[false,		false,			false,					false,			false,				false,			false,		true,					true,						false]//Combustable
+edificio_camino =		[false,		false,			true,					true,			true,				true,			false,		false,					false,						false]//Es camino?
+edificio_electricidad = [false,		false,			false,					false,			false,				false,			false,		false,					true,						true]//Se conecta a la red electrica?
+edificio_elec_consumo = [0,			0,				0,						0,				0,					0,				0,			0,						-60,						1]//Consumo electrico (negativos para generadores)
 edificio_max = array_length(edificio_nombre)
 size_size = [1, 3, 7, 12, 19, 27]
 size_borde = [6, 9, 12, 15, 18, 21]
 carga_max = [0, 10, 3, 20, 100]
+edificios_cable = ds_list_create()
 edificios = ds_list_create()
+red_null = {
+	edificios : ds_list_create(),
+	generacion: 0,
+	consumo : 0,
+	bateria : 0
+}
+null_edificio.red = red_null
+ds_list_add(red_null.edificios, null_edificio)
+ds_list_clear(red_null.edificios)
+redes = ds_list_create()
+ds_list_add(redes, red_null)
+ds_list_clear(redes)
 build_index = 0
 build_dir = 0
 build_able = false
@@ -123,16 +142,31 @@ repeat(5){
 	var b = irandom(ysize - 1)
 	var c = irandom(2)
 	repeat(15){
-		if terreno[a, b].terreno != 2{
-			if terreno[a, b].ore != c
-				terreno[a, b].ore_amount = 0
-			terreno[a, b].ore = c
-			terreno[a, b].ore_amount += irandom_range(20, 50)
-			var d = irandom(5)
-			var temp_complex = next_to(a, b, d)
-			a = min(max(0, temp_complex.a), xsize - 1)
-			b = min(max(0, temp_complex.b), ysize - 1)
+		var temp_terreno = terreno[a, b]
+		if temp_terreno.terreno != 2{
+			if temp_terreno.ore != c
+				temp_terreno.ore_amount = 0
+			temp_terreno.ore = c
+			temp_terreno.ore_amount += irandom_range(20, 50)
 		}
+		for(var d = 0; d < 6; d++){
+			var temp_complex = next_to(a, b, d)
+			var aa = temp_complex.a
+			var bb = temp_complex.b
+			if aa > 0 and bb > 0 and aa < xsize - 1 and bb < ysize - 1{
+				temp_terreno = terreno[aa, bb]
+				if temp_terreno.terreno != 2{
+					if temp_terreno.ore != c
+						temp_terreno.ore_amount = 0
+					temp_terreno.ore = c
+					temp_terreno.ore_amount += irandom_range(20, 50)
+				}
+			}
+		}
+		var d = irandom(5)
+		var temp_complex = next_to(a, b, d)
+		a = min(max(0, temp_complex.a), xsize - 1)
+		b = min(max(0, temp_complex.b), ysize - 1)
 	}
 }
 var temp_edificio = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))

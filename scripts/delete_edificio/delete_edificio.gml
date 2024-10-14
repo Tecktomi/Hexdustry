@@ -25,6 +25,11 @@ function delete_edificio(edificio = control.null_edificio){
 		if temp_edificio.output_index >= ds_list_size(temp_edificio.outputs)
 			temp_edificio.output_index = 0
 	}
+	//Cancelar red
+	if control.edificio_electricidad[edificio.index]{
+		var temp_red = edificio.red
+		ds_list_remove(temp_red.edificios, edificio)
+	}
 	ds_list_destroy(edificio.inputs)
 	delete(edificio)
 }

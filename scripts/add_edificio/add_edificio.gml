@@ -19,7 +19,11 @@ function add_edificio(index, dir, a, b){
 		mode : false,
 		waiting : false,
 		idle : false,
-		link : control.null_edificio
+		link : control.null_edificio,
+		red : control.red_null,
+		energy_output : 0,
+		energy_input : 0,
+		energy_storage : 0
 	}
 	var temp_terreno, temp_complex, temp_list
 	//Carga máxima y output general
@@ -136,6 +140,59 @@ function add_edificio(index, dir, a, b){
 				}
 			}
 		}
+	}
+	//Añadir a la red electrica
+	if control.edificio_electricidad[index]{
+		temp_complex = abtoxy(a, b)
+		//Detectar otras redes cerca
+		var temp_list_redes = ds_list_create()
+		for(var c = 0; c < ds_list_size(control.edificios_cable); c++){
+			var temp_edificio = ds_list_find_value(control.edificios_cable, c)
+			var temp_complex_2 = abtoxy(temp_edificio.a, temp_edificio.b)
+			if sqrt(sqr(temp_complex.a - temp_complex_2.a) + sqr(temp_complex.b - temp_complex_2.b)) < 100 and not ds_list_in(temp_list_redes, temp_edificio.red)
+				ds_list_add(temp_list_redes, temp_edificio.red)
+		}
+		//Añadir red
+		if in(control.edificio_nombre[index], "Generador", "Bateria", "Cable")
+			ds_list_add(control.edificios_cable, new_edificio)
+		var temp_red;
+		//Crear nueva red si no hay redes cerca
+		if ds_list_empty(temp_list_redes){
+			temp_red = {
+				edificios: ds_list_create(),
+				generacion: 0,
+				consumo: 0,
+				bateria: 0,
+			}
+			ds_list_add(control.redes, temp_red)
+		}
+		//Combinar otras redes si las hay cerca
+		else{
+			temp_red = ds_list_find_value(temp_list_redes, 0)
+			while ds_list_size(temp_list_redes) > 1{
+				var temp_red_2 = ds_list_find_value(temp_list_redes, 1)
+				for(var c = 0; c < ds_list_size(temp_red_2.edificios); c++){
+					var temp_edificio_2 = ds_list_find_value(temp_red_2.edificios, c)
+					temp_edificio_2.red = temp_red
+					ds_list_add(temp_red.edificios, temp_edificio_2)
+				}
+				ds_list_destroy(temp_red_2.edificios)
+				temp_red.consumo += temp_red_2.consumo
+				temp_red.generacion += temp_red_2.generacion
+				temp_red.bateria += temp_red_2.bateria
+				ds_list_delete(temp_list_redes, 0)
+				ds_list_remove(control.redes, temp_red_2)
+				delete(temp_red_2)
+			}
+			ds_list_destroy(temp_list_redes)
+		}
+		//Modificar valores de la red resultante
+		if control.edificio_elec_consumo[index] > 0
+			temp_red.consumo += control.edificio_elec_consumo[index]
+		else
+			temp_red.generacion -= control.edificio_elec_consumo[index]
+		new_edificio.red = temp_red
+		ds_list_add(temp_red.edificios, new_edificio)
 	}
 	ds_list_destroy(temp_list)
 	return new_edificio
