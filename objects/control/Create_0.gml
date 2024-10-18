@@ -38,9 +38,12 @@ null_edificio = {
 	red : undefined,
 	energy_output : 0,
 	energy_input : 0,
-	energy_storage : 0
+	energy_storage : 0,
+	energy_link : ds_list_create()
 }
 null_edificio.link = null_edificio
+ds_list_add(null_edificio.energy_link, null_edificio)
+ds_list_clear(null_edificio.energy_link)
 //Crear plantilla de fondo
 for(var a = 0; a < xsize; a++)
 	for(var b = 0; b < ysize; b++){

@@ -44,7 +44,6 @@ function mover(edificio = control.null_edificio){
 					if temp_terreno.edificio_bool{
 						temp_edificio = temp_terreno.edificio
 						if (temp_edificio.carga_total < control.edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
-							show_debug_message(1)
 							flag = true
 							break
 						}
@@ -61,7 +60,6 @@ function mover(edificio = control.null_edificio){
 					if temp_terreno.edificio_bool{
 						temp_edificio = temp_terreno.edificio
 						if (temp_edificio.carga_total < control.edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
-							show_debug_message(2)
 							flag = true
 							edificio.output_index = 1 - b
 							break
@@ -75,7 +73,6 @@ function mover(edificio = control.null_edificio){
 					if temp_terreno.edificio_bool{
 						temp_edificio = temp_terreno.edificio
 						if (temp_edificio.carga_total < control.edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
-							show_debug_message(3)
 							flag = true
 							break
 						}

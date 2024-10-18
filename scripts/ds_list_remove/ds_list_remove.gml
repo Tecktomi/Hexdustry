@@ -1,6 +1,6 @@
 function ds_list_remove(lista, elemento){
 	if ds_list_find_index(lista, elemento) = -1{
-		show_debug_message("Error en ds_list_remove(" + string(lista) + ", " + string(elemento) + ")")
+		show_error("ERROR\nIntentando eliminar un elemento que no existe en la lista", true)
 		return
 	}
 	else

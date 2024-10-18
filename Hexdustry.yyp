@@ -13,8 +13,8 @@
     {"$GMFolder":"","%Name":"SCRIPTS","folderPath":"folders/SCRIPTS.yy","name":"SCRIPTS","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"SPRITES","folderPath":"folders/SPRITES.yy","name":"SPRITES","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Edificios","folderPath":"folders/SPRITES/Edificios.yy","name":"Edificios","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"Terreno","folderPath":"folders/SPRITES/Terreno.yy","name":"Terreno","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Items","folderPath":"folders/SPRITES/Items.yy","name":"Items","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Terreno","folderPath":"folders/SPRITES/Terreno.yy","name":"Terreno","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
   "IncludedFiles":[],
   "isEcma":false,
@@ -24,7 +24,6 @@
   },
   "name":"Hexdustry",
   "resources":[
-    {"id":{"name":"Note1","path":"notes/Note1/Note1.yy",},},
     {"id":{"name":"control","path":"objects/control/control.yy",},},
     {"id":{"name":"obj_hexagono","path":"objects/obj_hexagono/obj_hexagono.yy",},},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},

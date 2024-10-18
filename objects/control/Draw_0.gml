@@ -57,10 +57,23 @@ for(var a = 0; a < xsize; a++)
 		var temp_terreno = terreno[a, b]
 		var temp_edificio = terreno[a, b].edificio
 		var temp_complex = abtoxy(a, b)
-		if temp_terreno.edificio_draw and (edificio_camino[temp_edificio.index] or edificio_nombre[temp_edificio.index] = "Tunel") and temp_edificio.carga_total > 0{
-			var c = 1.2 * (max(temp_edificio.proceso, temp_edificio.waiting * 20) - 10)
-			var d = temp_edificio.dir * pi / 3 + pi / 6
-			draw_sprite(rss_item_sprite[temp_edificio.carga_id], 0, temp_complex.a + c * cos(d), temp_complex.b - c * sin(d))
+		if temp_terreno.edificio_draw{
+			//Dibujo de items en los caminos
+			if (edificio_camino[temp_edificio.index] or edificio_nombre[temp_edificio.index] = "Tunel") and temp_edificio.carga_total > 0{
+				var c = 1.2 * (max(temp_edificio.proceso, temp_edificio.waiting * 20) - 10)
+				var d = temp_edificio.dir * pi / 3 + pi / 6
+				draw_sprite(rss_item_sprite[temp_edificio.carga_id], 0, temp_complex.a + c * cos(d), temp_complex.b - c * sin(d))
+			}
+			//Dibujo de los links eléctricos
+			else if edificio_electricidad[temp_edificio.index]{
+				draw_set_color(c_yellow)
+				for(var c = 0; c < ds_list_size(temp_edificio.energy_link); c++){
+					var temp_edificio_2 = ds_list_find_value(temp_edificio.energy_link, c)
+					var temp_complex_2 = abtoxy(temp_edificio.a, temp_edificio.b)
+					var temp_complex_3 = abtoxy(temp_edificio_2.a, temp_edificio_2.b)
+					draw_line(temp_complex_2.a, temp_complex_2.b, temp_complex_3.a, temp_complex_3.b)
+				}
+			}
 		}
 	}
 var flag = true
@@ -203,6 +216,19 @@ if temp_hexagono != noone and flag{
 					temp_text_2 += "  " + rss_name[a] + "\n"
 			if temp_text_2 != ""
 				temp_text += "Entrega:\n" + temp_text_2
+		}
+		//Mostrar red electrica
+		if edificio_electricidad[temp_edificio.index]{
+			var temp_red = temp_edificio.red
+			temp_text += "Red " + string(ds_list_find_index(redes, temp_red)) + "\n"
+			temp_text += "  Consumo: " + string(temp_red.consumo) + "\n"
+			temp_text += "  Generacion: " + string(temp_red.generacion) + "\n"
+			temp_text += "  Bateria: " + string(temp_red.bateria) + "\n"
+			temp_text += "  Edificios:\n"
+			for(var a = 0; a < ds_list_size(temp_red.edificios); a++){
+				var temp_edificio_2 = ds_list_find_value(temp_red.edificios, a)
+				temp_text += "    " + string(edificio_nombre[temp_edificio_2.index]) + "\n"
+			}
 		}
 		temp_text += "___________________\n"
 	}
@@ -495,6 +521,7 @@ if keyboard_check_pressed(ord("R"))
 if keyboard_check(ord("L")){
 	var temp_text = ""
 	for(var a = 0; a < ds_list_size(redes); a++){
+		draw_set_color(make_color_hsv(a * 40, 255, 255))
 		var temp_red = ds_list_find_value(redes, a)
 		temp_text += "Red " + string(a) + ":\n"
 		temp_text += "  Consumo: " + string(temp_red.consumo) + "\n"
@@ -504,7 +531,14 @@ if keyboard_check(ord("L")){
 		for(var b = 0; b < ds_list_size(temp_red.edificios); b++){
 			temp_edificio = ds_list_find_value(temp_red.edificios, b)
 			temp_text += "    " + string(edificio_nombre[temp_edificio.index]) + "\n"
+			var temp_complex = abtoxy(temp_edificio.a, temp_edificio.b)
+			for(var c = 0; c < ds_list_size(temp_edificio.energy_link); c++){
+				var temp_edificio_2 = ds_list_find_value(temp_edificio.energy_link, c)
+				var temp_complex_2 = abtoxy(temp_edificio_2.a, temp_edificio_2.b)
+				draw_line(temp_complex.a, temp_complex.b, temp_complex_2.a, temp_complex_2.b)
+			}
 		}
 	}
-	draw_text(0, 200, temp_text)
+	draw_set_color(c_white)
+	draw_text(0, 20, temp_text)
 }
