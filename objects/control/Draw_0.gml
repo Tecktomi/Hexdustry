@@ -424,6 +424,11 @@ if build_index > 0{
 			if edificio_nombre[build_index] = "Tunel"{
 				temp_edificio.idle = not build_able
 				if build_able{
+					if not build_target.idle{
+						build_target.link.idle = true
+						ds_list_remove(build_target.outputs, build_target.link)
+						ds_list_remove(build_target.link.inputs, build_target)
+					}
 					build_target.idle = false
 					ds_list_add(temp_edificio.inputs, build_target)
 					ds_list_add(build_target.outputs, temp_edificio)
