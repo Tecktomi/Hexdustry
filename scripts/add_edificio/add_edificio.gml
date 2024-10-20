@@ -160,13 +160,14 @@ function add_edificio(index, dir, a, b){
 			}
 		}
 		//Añadir red
-		if in(control.edificio_nombre[index], "Generador", "Bateria", "Cable")
+		if control.edificio_electricidad[index]
 			ds_list_add(control.edificios_cable, new_edificio)
 		var temp_red = {
 			edificios: ds_list_create(),
 			generacion: 0,
 			consumo: 0,
-			bateria: 0
+			bateria: 0,
+			bateria_max : 0
 		}
 		ds_list_add(control.redes, temp_red)
 		//Combinar otras redes si las hay cerca
@@ -181,6 +182,7 @@ function add_edificio(index, dir, a, b){
 				temp_red.consumo += temp_red_2.consumo
 				temp_red.generacion += temp_red_2.generacion
 				temp_red.bateria += temp_red_2.bateria
+				temp_red.bateria_max += temp_red_2.bateria_max
 				ds_list_destroy(temp_red_2.edificios)
 				ds_list_remove(control.redes, temp_red_2)
 				delete(temp_red_2)
@@ -192,6 +194,8 @@ function add_edificio(index, dir, a, b){
 			temp_red.consumo += control.edificio_elec_consumo[index]
 		else
 			temp_red.generacion -= control.edificio_elec_consumo[index]
+		if in(control.edificio_nombre[index], "Bateria")
+			temp_red.bateria_max += 1000
 		new_edificio.red = temp_red
 		ds_list_add(temp_red.edificios, new_edificio)
 	}

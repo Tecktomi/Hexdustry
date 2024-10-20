@@ -43,16 +43,23 @@ function delete_edificio(edificio = control.null_edificio){
 		}
 		//Revisar nuevo estado de red
 		else{
+			var red_bateria = 0
+			for(var a = 0; a < ds_list_size(temp_red.edificios); a++){
+				var temp_edificio = ds_list_find_value(temp_red.edificios, a)
+				if in(control.edificio_nombre[temp_edificio.index], "Bateria")
+					red_bateria++}
 			var visitado = ds_list_create(), agregado = ds_list_create()
 			while not ds_list_empty(temp_red.edificios){
 				var nodo = ds_list_find_value(temp_red.edificios, 0)
 				if not ds_list_in(visitado, nodo){
-					var isla = ds_list_create()
+					var isla = ds_list_create(), isla_bateria = 0
 					var pila = ds_stack_create()
 					ds_stack_push(pila, nodo)
 					ds_list_add(agregado, nodo)
 					while not ds_stack_empty(pila){
 						nodo = ds_stack_pop(pila)
+						if in(control.edificio_nombre[nodo.index], "Bateria")
+							isla_bateria ++
 						ds_list_add(isla, nodo)
 						ds_list_remove(temp_red.edificios, nodo)
 						if not ds_list_in(visitado, nodo){
@@ -71,7 +78,8 @@ function delete_edificio(edificio = control.null_edificio){
 						edificios : isla,
 						generacion: 0,
 						consumo: 0,
-						bateria: 0
+						bateria: floor(temp_red.bateria * isla_bateria / red_bateria),
+						bateria_max : 0
 					}
 					for(var a = 0; a < ds_list_size(isla); a++){
 						var temp_edificio = ds_list_find_value(isla, a)
@@ -80,6 +88,8 @@ function delete_edificio(edificio = control.null_edificio){
 							temp_red_2.consumo += control.edificio_elec_consumo[temp_edificio.index]
 						else
 							temp_red_2.generacion -= control.edificio_elec_consumo[temp_edificio.index]
+						if in(control.edificio_nombre[temp_edificio.index], "Bateria")
+							temp_red_2.bateria_max += 1000
 					}
 					ds_list_add(control.redes, temp_red_2)
 				}

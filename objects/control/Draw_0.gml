@@ -37,6 +37,8 @@ for(var a = 0; a < xsize; a++)
 				//Dibujo edificios con horno
 				if in(edificio_nombre[temp_edificio.index], "Horno", "Generador") and temp_edificio.fuel > 0
 					draw_sprite_ext(edificio_sprite_2[temp_edificio.index], image_index / 4, temp_complex.a, temp_complex.b, 1, 1, temp_edificio.dir * 60, c_white, 1)
+				else if in(edificio_nombre[temp_edificio.index], "Bateria")
+					draw_sprite_ext(edificio_sprite[temp_edificio.index], floor(10 * temp_edificio.red.bateria / temp_edificio.red.bateria_max), temp_complex.a, temp_complex.b, 1, 1, temp_edificio.dir * 60, c_white, 1)
 				else
 					draw_sprite_ext(edificio_sprite[temp_edificio.index], image_index / 4, temp_complex.a, temp_complex.b, 1, 1, temp_edificio.dir * 60, c_white, 1)
 			}
@@ -177,7 +179,7 @@ if temp_hexagono != noone and flag{
 					temp_text += "  " + rss_name[a] + ": " + string(temp_edificio.carga[a]) + "\n"
 		}
 		//Mostrar recursos subterraneos
-		if in(edificio_nombre[temp_edificio.index], "Taladro")
+		if in(edificio_nombre[temp_edificio.index], "Taladro", "Taladro electrico")
 			if temp_edificio.idle
 				temp_text += "Sin recursos\n"
 			else{
@@ -220,6 +222,8 @@ if temp_hexagono != noone and flag{
 		//Mostrar red electrica
 		if edificio_electricidad[temp_edificio.index]{
 			var temp_red = temp_edificio.red
+			if edificio_elec_consumo[temp_edificio.index] > 0 and temp_red.consumo > temp_red.generacion and temp_red.bateria = 0
+				temp_text += "Funcionando al " + string(floor(100 * temp_red.generacion / temp_red.consumo)) + "% de su capacidad\n"
 			temp_text += "Red " + string(ds_list_find_index(redes, temp_red)) + "\n"
 			temp_text += "  Consumo: " + string(temp_red.consumo) + "\n"
 			temp_text += "  Generacion: " + string(temp_red.generacion) + "\n"
@@ -237,8 +241,12 @@ if temp_hexagono != noone and flag{
 }
 //Construir
 flag = false
-if keyboard_check_pressed(vk_anykey) and real(keyboard_lastkey) >= 49 and real(keyboard_lastkey) < 49 + edificio_max{
-	build_index = real(keyboard_lastkey) - 48
+if keyboard_check_pressed(vk_anykey) and real(keyboard_lastkey) >= 48 and real(keyboard_lastkey) < 49 + edificio_max{
+	build_index = real(keyboard_lastkey) - 47
+	flag = true
+}
+if keyboard_check_pressed(vk_anykey) and real(keyboard_lastkey) = 219{
+	build_index = 11
 	flag = true
 }
 if (mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape)) and (build_index > 0 or show_menu){
@@ -247,12 +255,14 @@ if (mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape)) a
 	show_menu = false
 }
 if build_index > 0{
+	if flag and not edificio_rotable[build_index]
+		build_dir = 0
 	//Rotar
-	if mouse_wheel_up(){
+	if mouse_wheel_up() and edificio_rotable[build_index]{
 		build_dir = (build_dir + 1) mod 6
 		flag = true
 	}
-	if mouse_wheel_down(){
+	if mouse_wheel_down() and edificio_rotable[build_index]{
 		build_dir = build_dir - 1 + 6 * (build_dir = 0)
 		flag = true
 	}
@@ -357,7 +367,7 @@ if build_index > 0{
 			var temp_complex_2 = abtoxy(mx, my)
 			draw_sprite_ext(edificio_sprite[build_index], 0, temp_complex_2.a, temp_complex_2.b, 1, 1, build_dir * 60, c_white, 0.5)
 			//Visión previa taladro
-			if in(edificio_nombre[build_index], "Taladro"){
+			if in(edificio_nombre[build_index], "Taladro", "Taladro electrico"){
 				for(var a = 0; a < rss_max; a++){
 					temp_array[a] = 0
 					temp_array_2[a] = 0
@@ -383,7 +393,7 @@ if build_index > 0{
 				draw_text(mouse_x + 20, mouse_y, temp_text)
 			}
 			//Vista previa Cables
-			else if in(edificio_nombre[build_index], "Generador", "Bateria", "Cable")
+			else if edificio_electricidad[build_index]
 				draw_circle(temp_complex_2.a, temp_complex_2.b, 100, true)
 		}
 		//Construir
@@ -403,10 +413,10 @@ if build_index > 0{
 				if temp_terreno.edificio_bool and edificio_camino[build_index] and temp_terreno.edificio.index = build_index
 					delete_edificio(temp_terreno.edificio)
 				//Checkear minerales
-				if in(edificio_nombre[build_index], "Taladro") and temp_terreno.ore >= 0
+				if in(edificio_nombre[build_index], "Taladro", "Taladro electrico") and temp_terreno.ore >= 0
 					flag_2 = true
 			}
-			if in(edificio_nombre[build_index], "Taladro") and not flag_2
+			if in(edificio_nombre[build_index], "Taladro", "Taladro electrico") and not flag_2
 				flag = false
 			if flag
 				temp_edificio = add_edificio(build_index, build_dir, mx, my)
@@ -439,9 +449,12 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 	temp_edificio = ds_list_find_value(edificios, a)
 	if not temp_edificio.idle{
 		//Accion taladro
-		if in(edificio_nombre[temp_edificio.index], "Taladro") and temp_edificio.carga_total < edificio_carga_max[temp_edificio.index]{
-			temp_edificio.proceso++
-			if temp_edificio.proceso = edificio_proceso[temp_edificio.index]{
+		if in(edificio_nombre[temp_edificio.index], "Taladro", "Taladro electrico") and temp_edificio.carga_total < edificio_carga_max[temp_edificio.index]{
+			if in(edificio_nombre[temp_edificio.index], "Taladro electrico") and temp_edificio.red.generacion < temp_edificio.red.consumo and temp_edificio.red.bateria = 0
+				temp_edificio.proceso += temp_edificio.red.generacion / temp_edificio.red.consumo
+			else
+				temp_edificio.proceso++
+			if temp_edificio.proceso >= edificio_proceso[temp_edificio.index]{
 				temp_edificio.proceso = 0
 				var temp_list = ds_list_create(), temp_complex_2 = {a : 0, b : 0}
 				flag = false
@@ -516,6 +529,11 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 		}
 	}
 }
+//Ciclo de redes
+for(var a = 0; a < ds_list_size(redes); a++){
+	var temp_red = ds_list_find_value(redes, a)
+	temp_red.bateria = min(max(temp_red.bateria + (temp_red.generacion - temp_red.consumo) / 30, 0), temp_red.bateria_max)
+}
 if keyboard_check_pressed(ord("R"))
 	game_restart()
 if keyboard_check(ord("L")){
@@ -526,7 +544,7 @@ if keyboard_check(ord("L")){
 		temp_text += "Red " + string(a) + ":\n"
 		temp_text += "  Consumo: " + string(temp_red.consumo) + "\n"
 		temp_text += "  Generacion: " + string(temp_red.generacion) + "\n"
-		temp_text += "  Bateria: " + string(temp_red.bateria) + "\n"
+		temp_text += "  Bateria: " + string(temp_red.bateria) + "/" + string(temp_red.bateria_max) + "\n"
 		temp_text += "  Edificios:\n"
 		for(var b = 0; b < ds_list_size(temp_red.edificios); b++){
 			temp_edificio = ds_list_find_value(temp_red.edificios, b)
