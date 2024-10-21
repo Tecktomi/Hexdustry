@@ -73,6 +73,7 @@
     {"id":{"name":"spr_silo","path":"sprites/spr_silo/spr_silo.yy",},},
     {"id":{"name":"spr_taladro_electrico","path":"sprites/spr_taladro_electrico/spr_taladro_electrico.yy",},},
     {"id":{"name":"spr_taladro","path":"sprites/spr_taladro/spr_taladro.yy",},},
+    {"id":{"name":"spr_tunel_salida","path":"sprites/spr_tunel_salida/spr_tunel_salida.yy",},},
     {"id":{"name":"spr_tunel_view","path":"sprites/spr_tunel_view/spr_tunel_view.yy",},},
     {"id":{"name":"spr_tunel","path":"sprites/spr_tunel/spr_tunel.yy",},},
   ],

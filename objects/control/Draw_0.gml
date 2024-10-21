@@ -418,8 +418,11 @@ if build_index > 0{
 			}
 			if in(edificio_nombre[build_index], "Taladro", "Taladro electrico") and not flag_2
 				flag = false
-			if flag
+			if flag{
+				if edificio_nombre[build_index] = "Tunel" and build_able
+					build_index = 12
 				temp_edificio = add_edificio(build_index, build_dir, mx, my)
+			}
 			//Algoritmo link de tuneles
 			if edificio_nombre[build_index] = "Tunel"{
 				temp_edificio.idle = not build_able
