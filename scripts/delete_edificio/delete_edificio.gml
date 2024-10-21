@@ -78,16 +78,18 @@ function delete_edificio(edificio = control.null_edificio){
 						edificios : isla,
 						generacion: 0,
 						consumo: 0,
-						bateria: floor(temp_red.bateria * isla_bateria / red_bateria),
+						bateria: 0,
 						bateria_max : 0
 					}
+					if red_bateria > 0
+						temp_red_2.bateria = floor(temp_red.bateria * isla_bateria / red_bateria)
 					for(var a = 0; a < ds_list_size(isla); a++){
 						var temp_edificio = ds_list_find_value(isla, a)
 						temp_edificio.red = temp_red_2
 						if control.edificio_elec_consumo[temp_edificio.index] > 0
 							temp_red_2.consumo += control.edificio_elec_consumo[temp_edificio.index]
 						else
-							temp_red_2.generacion -= control.edificio_elec_consumo[temp_edificio.index]
+							temp_red_2.generacion += temp_edificio.energy_output
 						if in(control.edificio_nombre[temp_edificio.index], "Bateria")
 							temp_red_2.bateria_max += 1000
 					}

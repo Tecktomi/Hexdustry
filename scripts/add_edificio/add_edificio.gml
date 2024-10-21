@@ -22,7 +22,6 @@ function add_edificio(index, dir, a, b){
 		link : control.null_edificio,
 		red : control.red_null,
 		energy_output : 0,
-		energy_input : 0,
 		energy_storage : 0,
 		energy_link : ds_list_create()
 	}
@@ -146,6 +145,8 @@ function add_edificio(index, dir, a, b){
 	}
 	//Añadir a la red electrica
 	if control.edificio_electricidad[index]{
+		if in(control.edificio_nombre[index], "Panel solar")
+			new_edificio.energy_output = -control.edificio_elec_consumo[index]
 		temp_complex = abtoxy(a, b)
 		//Detectar otras redes cerca
 		var temp_list_redes = ds_list_create()
@@ -193,7 +194,7 @@ function add_edificio(index, dir, a, b){
 		if control.edificio_elec_consumo[index] > 0
 			temp_red.consumo += control.edificio_elec_consumo[index]
 		else
-			temp_red.generacion -= control.edificio_elec_consumo[index]
+			temp_red.generacion += new_edificio.energy_output
 		if in(control.edificio_nombre[index], "Bateria")
 			temp_red.bateria_max += 1000
 		new_edificio.red = temp_red

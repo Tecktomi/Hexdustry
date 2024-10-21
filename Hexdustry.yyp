@@ -66,6 +66,7 @@
     {"id":{"name":"spr_item_cobre","path":"sprites/spr_item_cobre/spr_item_cobre.yy",},},
     {"id":{"name":"spr_item_hierro","path":"sprites/spr_item_hierro/spr_item_hierro.yy",},},
     {"id":{"name":"spr_overflow","path":"sprites/spr_overflow/spr_overflow.yy",},},
+    {"id":{"name":"spr_panel_solar","path":"sprites/spr_panel_solar/spr_panel_solar.yy",},},
     {"id":{"name":"spr_pasto","path":"sprites/spr_pasto/spr_pasto.yy",},},
     {"id":{"name":"spr_piedra","path":"sprites/spr_piedra/spr_piedra.yy",},},
     {"id":{"name":"spr_selector_color","path":"sprites/spr_selector_color/spr_selector_color.yy",},},

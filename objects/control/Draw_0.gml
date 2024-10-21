@@ -249,6 +249,10 @@ if keyboard_check_pressed(vk_anykey) and real(keyboard_lastkey) = 219{
 	build_index = 11
 	flag = true
 }
+if keyboard_check_pressed(ord("Q")){
+	build_index = 12
+	flag = true
+}
 if (mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape)) and (build_index > 0 or show_menu){
 	mouse_clear(mb_right)
 	build_index = 0
@@ -487,8 +491,10 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 				ds_list_destroy(temp_list)
 				if flag
 					temp_edificio.waiting = not mover(temp_edificio)
-				else
+				else{
 					temp_edificio.idle = true
+					temp_edificio.red.consumo -= abs(edificio_elec_consumo[temp_edificio.index])
+				}
 			}
 		}
 		//Accion caminos
@@ -528,11 +534,17 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 		if edificio_nombre[temp_edificio.index] = "Generador"{
 			if temp_edificio.fuel > 0
 				temp_edificio.fuel--
-			if temp_edificio.fuel = 0 and temp_edificio.carga[1] > 0{
-				temp_edificio.fuel = rss_comb_time[1]
-				temp_edificio.carga[1]--
-				temp_edificio.carga_total--
-				mover(temp_edificio)
+			if temp_edificio.fuel = 0{
+				temp_edificio.red.generacion -= temp_edificio.energy_output
+				temp_edificio.energy_output = 0
+				if temp_edificio.carga[1] > 0{
+					temp_edificio.energy_output = abs(edificio_elec_consumo[temp_edificio.index])
+					temp_edificio.red.generacion += temp_edificio.energy_output
+					temp_edificio.fuel = rss_comb_time[1]
+					temp_edificio.carga[1]--
+					temp_edificio.carga_total--
+					mover(temp_edificio)
+				}
 			}
 		}
 	}
