@@ -53,6 +53,7 @@ for(var a = 0; a < xsize; a++)
 			terreno : 0,
 			ore : -1,
 			ore_amount : 0,
+			ore_random : irandom(1),
 			edificio_bool : false,
 			edificio_draw : false,
 			edificio : null_edificio
@@ -60,12 +61,13 @@ for(var a = 0; a < xsize; a++)
 		temp_hexagono.a = a
 		temp_hexagono.b = b
 	}
-//Data
-terreno_sprite =	[spr_piedra,	spr_pasto,	spr_agua,	spr_arena]
-terreno_name =		["Piedra",		"Pasto",	"Agua",		"Arena"]
+//Terrenos
+terreno_sprite =	[spr_piedra,	spr_pasto,	spr_agua,	spr_arena,	spr_agua_profunda]
+terreno_name =		["Piedra",		"Pasto",	"Agua",		"Arena",	"Agua profunda"]
+//Ores
 ore_sprite =	[spr_cobre,		spr_carbon,		spr_hierro]
 ore_recurso =	[0,				1,				3]
-ore_amount =	[8,				6,				5]
+ore_amount =	[80,			60,				50]
 //RSS
 rss_item_sprite =	[spr_item_cobre,	spr_item_carbon,	spr_item_bronce,	spr_item_hierro,	spr_item_acero]
 rss_name =			["Cobre",			"Carbon",			"Bronce",			"Hierro",			"Acero"]
@@ -96,7 +98,6 @@ edificio_max = array_length(edificio_nombre)
 size_size = [1, 3, 7, 12, 19, 27]
 size_borde = [6, 9, 12, 15, 18, 21]
 carga_max = [0, 10, 3, 20, 100]
-edificios_cable = ds_list_create()
 edificios = ds_list_create()
 red_null = {
 	edificios : ds_list_create(),
@@ -118,37 +119,81 @@ build_target = null_edificio
 last_mx = -1
 last_my = -1
 build_list = get_size(0, 0, 0, 0)
-//Pasto
+//Terreno
+var e = 1
 repeat(4){
 	var a = irandom(xsize - 1)
 	var b = irandom(ysize - 1)
-	var e = irandom_range(1, 2)
+	var c = 0
+	if e <= 2
+		c = e++
+	else
+		c = irandom_range(1, 2)
 	repeat(20){
-		if terreno[a, b] != 2
-			terreno[a, b].terreno = e
+		if terreno[a, b].terreno != 2
+			terreno[a, b].terreno = c
 		for(var d = 0; d < 6; d++){
 			var temp_complex = next_to(a, b, d)
 			var aa = min(max(0, temp_complex.a), xsize - 1)
 			var bb = min(max(0, temp_complex.b), ysize - 1)
-			if terreno[aa, bb] != 2
-				terreno[aa, bb].terreno = e
+			if terreno[aa, bb].terreno != 2
+				terreno[aa, bb].terreno = c
 		}
 		repeat(2){
-			var c = irandom(5)
-			var temp_complex = next_to(a, b, c)
+			var d = irandom(5)
+			var temp_complex = next_to(a, b, d)
 			a = min(max(0, temp_complex.a), xsize - 1)
 			b = min(max(0, temp_complex.b), ysize - 1)
 		}
 	}
 }
+//Añadir arena / agua profunda
+for(var a = 0; a < xsize; a++)
+	for(var b = 0; b < ysize; b++){
+		//Añadir arena
+		if terreno[a, b].terreno = 2 or (terreno[a, b].terreno = 3 and random(1) < 0.2)
+			for(var c = 0; c < 6; c++){
+				var temp_complex = next_to(a, b, c)
+				var aa = temp_complex.a
+				var bb = temp_complex.b
+				if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
+					var temp_terreno = terreno[aa, bb]
+					if not in(temp_terreno.terreno, 2, 4)
+						temp_terreno.terreno = 3
+				}
+			}
+		//Añadir agua profunda
+		if terreno[a, b].terreno = 2{
+			var flag = true
+			for(var c = 0; c < 6; c++){
+				var temp_complex = next_to(a, b, c)
+				var aa = temp_complex.a
+				var bb = temp_complex.b
+				if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
+					var temp_terreno = terreno[aa, bb]
+					if not in(temp_terreno.terreno, 2, 4){
+						flag = false
+						break
+					}
+				}
+			}
+			if flag
+				terreno[a, b].terreno = 4
+		}
+	}
 //Natural Ores
-repeat(5){
+e = 0
+repeat(6){
 	var a = irandom(xsize - 1)
 	var b = irandom(ysize - 1)
-	var c = irandom(2)
+	var c = 0
+	if e < array_length(ore_recurso)
+		c = e++
+	else
+		c = irandom(array_length(ore_recurso) - 1)
 	repeat(15){
 		var temp_terreno = terreno[a, b]
-		if temp_terreno.terreno != 2{
+		if not in(temp_terreno.terreno, 2, 4){
 			if temp_terreno.ore != c
 				temp_terreno.ore_amount = 0
 			temp_terreno.ore = c
@@ -158,9 +203,9 @@ repeat(5){
 			var temp_complex = next_to(a, b, d)
 			var aa = temp_complex.a
 			var bb = temp_complex.b
-			if aa > 0 and bb > 0 and aa < xsize - 1 and bb < ysize - 1{
+			if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
 				temp_terreno = terreno[aa, bb]
-				if temp_terreno.terreno != 2{
+				if not in(temp_terreno.terreno, 2, 4){
 					if temp_terreno.ore != c
 						temp_terreno.ore_amount = 0
 					temp_terreno.ore = c
@@ -178,4 +223,5 @@ var temp_edificio = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
 for(var a = 0; a < ds_list_size(temp_edificio.coordenadas); a++){
 	var temp_complex = temp_edificio.coordenadas[|a]
 	terreno[temp_complex.a, temp_complex.b].terreno = 0
+	terreno[temp_complex.a, temp_complex.b].ore = -1
 }

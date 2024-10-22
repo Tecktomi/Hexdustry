@@ -8,7 +8,7 @@ if background = spr_hexagono{
 			var temp_complex = abtoxy(a, b)
 			draw_sprite(terreno_sprite[temp_terreno.terreno], 0, temp_complex.a, temp_complex.b)
 			if temp_terreno.ore >= 0
-				draw_sprite(ore_sprite[temp_terreno.ore], (temp_terreno.ore_amount < 50), temp_complex.a, temp_complex.b)
+				draw_sprite(ore_sprite[temp_terreno.ore], temp_terreno.ore_random + 2 * (temp_terreno.ore_amount < 50), temp_complex.a, temp_complex.b)
 		}
 	background = sprite_create_from_surface(temp_surf, 0, 0, room_width, room_height, false, false, 0, 0)
 	surface_reset_target()
@@ -227,7 +227,7 @@ if temp_hexagono != noone and flag{
 			temp_text += "Red " + string(ds_list_find_index(redes, temp_red)) + "\n"
 			temp_text += "  Consumo: " + string(temp_red.consumo) + "\n"
 			temp_text += "  Generacion: " + string(temp_red.generacion) + "\n"
-			temp_text += "  Bateria: " + string(temp_red.bateria) + "\n"
+			temp_text += "  Bateria: " + string(floor(temp_red.bateria)) + "/" + string(temp_red.bateria_max) + "\n"
 			temp_text += "  Edificios:\n"
 			for(var a = 0; a < ds_list_size(temp_red.edificios); a++){
 				var temp_edificio_2 = ds_list_find_value(temp_red.edificios, a)
@@ -398,7 +398,7 @@ if build_index > 0{
 			}
 			//Vista previa Cables
 			else if edificio_electricidad[build_index]
-				draw_circle(temp_complex_2.a, temp_complex_2.b, 100, true)
+				draw_circle(temp_complex_2.a, temp_complex_2.b, 70, true)
 		}
 		//Construir
 		function f1(build_index, build_dir, mx, my){
@@ -409,13 +409,13 @@ if build_index > 0{
 				var bb = temp_complex_2.b
 				var temp_terreno = terreno[aa, bb]
 				//Checkear coliciones
-				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or (temp_terreno.edificio_bool and not (edificio_camino[build_index] and temp_terreno.edificio.index = build_index)) or in(temp_terreno.terreno, 2){
+				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or (temp_terreno.edificio_bool and not (edificio_camino[build_index] and temp_terreno.edificio.index = build_index)) or in(temp_terreno.terreno, 2, 4){
 					flag = false
 					break
 				}
 				//Reemplazar caminos
 				if temp_terreno.edificio_bool and edificio_camino[build_index] and temp_terreno.edificio.index = build_index
-					delete_edificio(temp_terreno.edificio)
+					delete_edificio(aa, bb)
 				//Checkear minerales
 				if in(edificio_nombre[build_index], "Taladro", "Taladro electrico") and temp_terreno.ore >= 0
 					flag_2 = true
@@ -442,7 +442,7 @@ if build_index > 0{
 					temp_edificio.link = build_target
 					build_target.link = temp_edificio
 					if build_target.waiting
-						mover(build_target)
+						mover(build_target.a, build_target.b)
 				}
 			}
 		}
@@ -455,7 +455,7 @@ if build_index > 0{
 }
 //Romper
 else if ((mouse_check_button(mb_right) and prev_change) or mouse_check_button_pressed(mb_right)) and temp_hexagono != noone and temp_terreno.edificio_bool and temp_edificio.index != 0
-	delete_edificio(temp_edificio)
+	delete_edificio(mx, my)
 //Ciclo edificios
 for(var a = 0; a < ds_list_size(edificios); a++){
 	temp_edificio = ds_list_find_value(edificios, a)
@@ -480,7 +480,9 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 						temp_edificio.carga[ore_recurso[temp_terreno.ore]]++
 						temp_edificio.carga_total++
 						temp_terreno.ore_amount--
-						if temp_terreno.ore_amount = 0{
+						if temp_terreno.ore_amount = 50
+							background = spr_hexagono
+						else if temp_terreno.ore_amount = 0{
 							temp_terreno.ore = -1
 							background = spr_hexagono
 						}
@@ -490,7 +492,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 				}
 				ds_list_destroy(temp_list)
 				if flag
-					temp_edificio.waiting = not mover(temp_edificio)
+					temp_edificio.waiting = not mover(temp_edificio.a, temp_edificio.b)
 				else{
 					temp_edificio.idle = true
 					temp_edificio.red.consumo -= abs(edificio_elec_consumo[temp_edificio.index])
@@ -502,7 +504,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 			temp_edificio.proceso++
 			if temp_edificio.proceso = 20{
 				temp_edificio.proceso = 0
-				temp_edificio.waiting = not mover(temp_edificio)
+				temp_edificio.waiting = not mover(temp_edificio.a, temp_edificio.b)
 			}
 		}
 		//Acción horno
@@ -526,7 +528,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 						temp_edificio.carga[0]--
 						temp_edificio.carga[2]++
 					}
-					temp_edificio.waiting = not mover(temp_edificio)
+					temp_edificio.waiting = not mover(temp_edificio.a, temp_edificio.b)
 				}
 			}
 		}
@@ -543,7 +545,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 					temp_edificio.fuel = rss_comb_time[1]
 					temp_edificio.carga[1]--
 					temp_edificio.carga_total--
-					mover(temp_edificio)
+					mover(temp_edificio.a, temp_edificio.b)
 				}
 			}
 		}
@@ -564,7 +566,7 @@ if keyboard_check(ord("L")){
 		temp_text += "Red " + string(a) + ":\n"
 		temp_text += "  Consumo: " + string(temp_red.consumo) + "\n"
 		temp_text += "  Generacion: " + string(temp_red.generacion) + "\n"
-		temp_text += "  Bateria: " + string(temp_red.bateria) + "/" + string(temp_red.bateria_max) + "\n"
+		temp_text += "  Bateria: " + string(floor(temp_red.bateria)) + "/" + string(temp_red.bateria_max) + "\n"
 		temp_text += "  Edificios:\n"
 		for(var b = 0; b < ds_list_size(temp_red.edificios); b++){
 			temp_edificio = ds_list_find_value(temp_red.edificios, b)

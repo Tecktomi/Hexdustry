@@ -39,6 +39,7 @@
     {"id":{"name":"mover","path":"scripts/mover/mover.yy",},},
     {"id":{"name":"next_to_build","path":"scripts/next_to_build/next_to_build.yy",},},
     {"id":{"name":"next_to","path":"scripts/next_to/next_to.yy",},},
+    {"id":{"name":"spr_agua_profunda","path":"sprites/spr_agua_profunda/spr_agua_profunda.yy",},},
     {"id":{"name":"spr_agua","path":"sprites/spr_agua/spr_agua.yy",},},
     {"id":{"name":"spr_arena","path":"sprites/spr_arena/spr_arena.yy",},},
     {"id":{"name":"spr_base","path":"sprites/spr_base/spr_base.yy",},},

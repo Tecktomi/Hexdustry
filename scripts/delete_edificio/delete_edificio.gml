@@ -1,4 +1,9 @@
-function delete_edificio(edificio = control.null_edificio){
+function delete_edificio(aa, bb){
+	var terreno = control.terreno[aa, bb]
+	if terreno.edificio_bool
+		var edificio = terreno.edificio
+	else
+		exit
 	ds_list_remove(control.edificios, edificio)
 	//Cancelar coordenadas
 	for(var a = 0; a < ds_list_size(edificio.coordenadas); a++){
@@ -101,7 +106,6 @@ function delete_edificio(edificio = control.null_edificio){
 			ds_list_remove(control.redes, temp_red)
 			delete(temp_red)
 		}
-		ds_list_remove(control.edificios_cable, edificio)
 	}
 	ds_list_destroy(edificio.inputs)
 	delete(edificio)

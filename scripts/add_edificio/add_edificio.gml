@@ -137,7 +137,7 @@ function add_edificio(index, dir, a, b){
 						ds_list_add(temp_edificio.outputs, new_edificio)
 						ds_list_add(new_edificio.inputs, temp_edificio)
 						if temp_edificio.waiting
-							mover(temp_edificio)
+							mover(temp_edificio.a, temp_edificio.b)
 					}
 				}
 			}
@@ -149,20 +149,24 @@ function add_edificio(index, dir, a, b){
 			new_edificio.energy_output = -control.edificio_elec_consumo[index]
 		temp_complex = abtoxy(a, b)
 		//Detectar otras redes cerca
+		temp_list = get_size(a, b, dir, 5)
 		var temp_list_redes = ds_list_create()
-		for(var c = 0; c < ds_list_size(control.edificios_cable); c++){
-			var temp_edificio_2 = ds_list_find_value(control.edificios_cable, c)
-			var temp_complex_2 = abtoxy(temp_edificio_2.a, temp_edificio_2.b)
-			if sqrt(sqr(temp_complex.a - temp_complex_2.a) + sqr(temp_complex.b - temp_complex_2.b)) < 100{
-				ds_list_add(new_edificio.energy_link, temp_edificio_2)
-				ds_list_add(temp_edificio_2.energy_link, new_edificio)
-				if not ds_list_in(temp_list_redes, temp_edificio_2.red)
-					ds_list_add(temp_list_redes, temp_edificio_2.red)
+		for(var c = 0; c < ds_list_size(temp_list); c++){
+			temp_complex = ds_list_find_value(temp_list, c)
+			if temp_complex.a != a or temp_complex.b != b{
+				temp_terreno = control.terreno[temp_complex.a, temp_complex.b]
+				if temp_terreno.edificio_bool{
+					var temp_edificio = temp_terreno.edificio
+					if (control.edificio_nombre[index] = "Cable" and control.edificio_electricidad[temp_edificio.index]) or (control.edificio_nombre[temp_edificio.index] = "Cable" and control.edificio_electricidad[index]){
+						ds_list_add(new_edificio.energy_link, temp_edificio)
+						ds_list_add(temp_edificio.energy_link, new_edificio)
+						if not ds_list_in(temp_list_redes, temp_edificio.red)
+							ds_list_add(temp_list_redes, temp_edificio.red)
+					}
+				}
 			}
 		}
 		//Añadir red
-		if control.edificio_electricidad[index]
-			ds_list_add(control.edificios_cable, new_edificio)
 		var temp_red = {
 			edificios: ds_list_create(),
 			generacion: 0,

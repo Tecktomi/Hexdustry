@@ -1,4 +1,9 @@
-function mover(edificio = control.null_edificio){
+function mover(aa, bb){
+	var terreno = control.terreno[aa, bb]
+	if terreno.edificio_bool
+		var edificio = terreno.edificio
+	else
+		exit
 	var flag = false, out = 0, temp_edificio, b
 	//Selección de recursos
 	for(out = 0; out < control.rss_max; out++)
@@ -103,7 +108,7 @@ function mover(edificio = control.null_edificio){
 		if control.edificio_receptor[edificio.index]
 			for(var a = 0; a < ds_list_size(edificio.inputs); a++){
 				temp_edificio = ds_list_find_value(edificio.inputs, a)
-				if temp_edificio.waiting and mover(temp_edificio) and temp_edificio.carga = 0
+				if temp_edificio.waiting and mover(temp_edificio.a, temp_edificio.b) and temp_edificio.carga = 0
 					temp_edificio.waiting = false
 			}
 	}
