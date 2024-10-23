@@ -81,8 +81,17 @@ function add_edificio(index, dir, a, b){
 			if temp_terreno.edificio_bool{
 				var temp_edificio = temp_terreno.edificio
 				//OUTPUTS del nuevo edificio
-				if control.edificio_receptor[temp_edificio.index] and control.edificio_emisor[index] and (ds_list_find_index(new_edificio.outputs, temp_edificio) = -1){
-					var flag = true
+				var flag = false
+				if edificio_input_all[temp_edificio.index] or edificio_output_all[index]
+					flag = true
+				else for(var d = 0; d < array_length(edificio_input_index[temp_edificio.index]); d++)
+					for(var e = 0; e < array_length(edificio_output_index[index]); e++)
+						if edificio_input_index[temp_edificio.index, d] = edificio_output_index[index, e]{
+							flag = true
+							break
+						}
+				if control.edificio_receptor[temp_edificio.index] and control.edificio_emisor[index] and (ds_list_find_index(new_edificio.outputs, temp_edificio) = -1) and flag{
+					flag = true
 					if in(control.edificio_nombre[index], "Cinta transportadora") and not
 						complex_equal(temp_complex, next_to(a, b, dir))
 						flag = false
@@ -110,8 +119,17 @@ function add_edificio(index, dir, a, b){
 					}
 				}
 				//INPUTS del nuevo edificio
-				if control.edificio_emisor[temp_edificio.index] and control.edificio_receptor[index] and (ds_list_find_index(new_edificio.inputs, temp_edificio) = -1){
-					var flag = true
+				flag = false
+				if edificio_output_all[temp_edificio.index] or edificio_input_all[index]
+					flag = true
+				else for(var d = 0; d < array_length(edificio_output_index[temp_edificio.index]); d++)
+					for(var e = 0; e < array_length(edificio_input_index[index]); e++)
+						if edificio_output_index[temp_edificio.index, d] = edificio_input_index[index, e]{
+							flag = true
+							break
+						}
+				if control.edificio_emisor[temp_edificio.index] and control.edificio_receptor[index] and (ds_list_find_index(new_edificio.inputs, temp_edificio) = -1) and flag{
+					flag = true
 					if in(control.edificio_nombre[index], "Cinta transportadora") and
 						complex_equal(temp_complex, next_to(a, b, dir))
 						flag = false

@@ -591,7 +591,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 			if temp_edificio.fuel > 0
 				temp_edificio.fuel--
 			if temp_edificio.carga[2] < 2 and temp_edificio.carga[4] < 2{
-				if temp_edificio.fuel = 0{
+				if temp_edificio.fuel = 0 and temp_edificio.carga[1] > 0{
 					temp_edificio.fuel = rss_comb_time[1]
 					temp_edificio.carga[1]--
 					temp_edificio.carga_total--

@@ -224,8 +224,11 @@ repeat(6){
 	}
 }
 nucleo = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
-nucleo.carga[0] = 50
-nucleo.carga_total = 50
+nucleo.carga[0] = 500
+nucleo.carga[2] = 500
+nucleo.carga[3] = 500
+nucleo.carga[4] = 500
+nucleo.carga_total = 2000
 for(var a = 0; a < ds_list_size(nucleo.coordenadas); a++){
 	var temp_complex = ds_list_find_value(nucleo.coordenadas, a)
 	var aa = temp_complex.a, bb = temp_complex.b
