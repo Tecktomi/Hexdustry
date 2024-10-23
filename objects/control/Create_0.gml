@@ -94,6 +94,9 @@ edificio_combutable =	[false,		false,			false,					false,			false,				false,			f
 edificio_camino =		[false,		false,			true,					true,			true,				true,			false,		false,					false,						false,		false,			false,					false]//Es camino?
 edificio_electricidad = [false,		false,			false,					false,			false,				false,			false,		false,					true,						true,		true,			true,					true]//Se conecta a la red electrica?
 edificio_elec_consumo = [0,			0,				0,						0,				0,					0,				0,			0,						-20,						1,			0,				75,						-5]//Consumo electrico (negativos para generadores)
+edificio_precio_index = [[0],		[0],			[0],					[0],			[0],				[0],			[0, 3],		[0, 3],					[0, 3],						[0, 3],		[0, 2],			[0, 2, 4],				[0, 2, 4]]//Edificio_precio: index
+edificio_precio_num =	[[0],		[10],			[1],					[2],			[2],				[2],			[4, 4],		[20, 15],				[20, 5],					[5, 1],		[20, 5],		[20, 10, 25],			[40, 10, 10]]//Edificio_precio: num
+edificio_key =			[0,			ord("Q"),		ord(1),					ord(2),			ord(3),				ord(4),			ord(5),		ord("W"),				ord("A"),					ord("S"),	ord("D"),		ord("E"),				ord("F")]
 edificio_max = array_length(edificio_nombre)
 size_size = [1, 3, 7, 12, 19, 27]
 size_borde = [6, 9, 12, 15, 18, 21]
@@ -119,6 +122,7 @@ build_target = null_edificio
 last_mx = -1
 last_my = -1
 build_list = get_size(0, 0, 0, 0)
+build_menu = 0
 //Terreno
 var e = 1
 repeat(4){
@@ -219,9 +223,12 @@ repeat(6){
 		b = min(max(0, temp_complex.b), ysize - 1)
 	}
 }
-var temp_edificio = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
-for(var a = 0; a < ds_list_size(temp_edificio.coordenadas); a++){
-	var temp_complex = temp_edificio.coordenadas[|a]
-	terreno[temp_complex.a, temp_complex.b].terreno = 0
-	terreno[temp_complex.a, temp_complex.b].ore = -1
+nucleo = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
+nucleo.carga[0] = 50
+nucleo.carga_total = 50
+for(var a = 0; a < ds_list_size(nucleo.coordenadas); a++){
+	var temp_complex = ds_list_find_value(nucleo.coordenadas, a)
+	var aa = temp_complex.a, bb = temp_complex.b
+	terreno[aa, bb].terreno = 0
+	terreno[aa, bb].ore = -1
 }
