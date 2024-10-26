@@ -19,9 +19,9 @@ draw_sprite(background, 0, 0, 0)
 for(var a = 0; a < xsize; a++)
 	for(var b = 0; b < ysize; b++){
 		var temp_terreno = terreno[a, b]
-		var temp_edificio = terreno[a, b].edificio
-		var temp_complex = abtoxy(a, b)
 		if temp_terreno.edificio_draw{
+			var temp_edificio = terreno[a, b].edificio
+			var temp_complex = abtoxy(a, b)
 			//Dibujo caminos
 			if edificio_camino[temp_edificio.index] or edificio_nombre[temp_edificio.index] = "Tunel"{
 				draw_sprite_ext(edificio_sprite[temp_edificio.index], image_index / 4, temp_complex.a, temp_complex.b, 1, 1, (temp_edificio.dir - 1) * 60, c_white, 1)
@@ -202,33 +202,45 @@ if temp_hexagono != noone and flag{
 					var temp_terreno_2 = terreno[temp_complex.a, temp_complex.b]
 					if temp_terreno_2.ore >= 0
 						temp_array[ore_recurso[temp_terreno_2.ore]] += temp_terreno_2.ore_amount
+					else if terreno_rss[temp_terreno_2.terreno] and in(edificio_nombre[temp_edificio.index], "Taladro electrico")
+						temp_array[terreno_rss_id[temp_terreno_2.terreno]] = -1
 				}
 				for(var a = 0; a < rss_max; a++)
 					if temp_array[a] > 0
 						temp_text_2 += "  " + rss_name[a] + ": " + string(temp_array[a]) + "\n"
+					else if temp_array[a] = -1
+						temp_text_2 += "  " + rss_name[a] + "\n"
 				if temp_text_2 != ""
 					temp_text += "Recursos disponibles:\n" + temp_text_2
 			}
 		//Mostrar combustión
 		if in(edificio_nombre[temp_edificio.index], "Horno", "Generador")
-			temp_text += "Combustion: " + string(floor(temp_edificio.fuel / 30)) + "/10" + "\n"
+			temp_text += "Combustion: " + string(floor(temp_edificio.fuel / 30)) + "[s]\n"
 		//Mostrar inputs
 		if edificio_receptor[temp_edificio.index]{
-			var temp_text_2 = ""
-			for(var a = 0; a < rss_max; a++)
-				if temp_edificio.carga_max[a] > 0
-					temp_text_2 += "  " + rss_name[a] + ": " + string(temp_edificio.carga_max[a]) + "\n"
-			if temp_text_2 != ""
-				temp_text += "Acepta:\n" + temp_text_2
+			if edificio_input_all[temp_edificio.index]
+				temp_text += "Acepta todo\n"
+			else{
+				var temp_text_2 = ""
+				for(var a = 0; a < rss_max; a++)
+					if temp_edificio.carga_max[a] > 0
+						temp_text_2 += "  " + rss_name[a] + ": " + string(temp_edificio.carga_max[a]) + "\n"
+				if temp_text_2 != ""
+					temp_text += "Acepta:\n" + temp_text_2
+			}
 		}
 		//Mostrar outputs
 		if edificio_emisor[temp_edificio.index]{
-			var temp_text_2 = ""
-			for(var a = 0; a < rss_max; a++)
-				if temp_edificio.carga_output[a]
-					temp_text_2 += "  " + rss_name[a] + "\n"
-			if temp_text_2 != ""
-				temp_text += "Entrega:\n" + temp_text_2
+			if edificio_output_all[temp_edificio.index]
+				temp_text += "Entrega todo\n"
+			else{
+				var temp_text_2 = ""
+				for(var a = 0; a < rss_max; a++)
+					if temp_edificio.carga_output[a]
+						temp_text_2 += "  " + rss_name[a] + "\n"
+				if temp_text_2 != ""
+					temp_text += "Entrega:\n" + temp_text_2
+			}
 		}
 		//Mostrar red electrica
 		if edificio_electricidad[temp_edificio.index]{
@@ -467,16 +479,42 @@ if build_index > 0{
 							temp_array_2[ore_recurso[temp_terreno_2.ore]] += temp_terreno_2.ore_amount
 							b++
 						}
+						else if terreno_rss[temp_terreno_2.terreno] and in(edificio_nombre[build_index], "Taladro electrico"){
+							temp_array[terreno_rss_id[temp_terreno_2.terreno]]++
+							temp_array_2[terreno_rss_id[temp_terreno_2.terreno]] = -1
+							b++
+						}
 					}
 				}
 				var flag_2 = false
-				for(var a = 0; a < rss_max; a++)
-					if temp_array[a] > 0{
+				for(var a = 0; a < rss_max; a++){
+					if temp_array_2[a] > 0{
 						flag_2 = true
 						temp_text += rss_name[a] + ": " + string(temp_array_2[a]) + "(" + string(temp_array[a] * 100 / b) + "%)\n"
 					}
+					else if temp_array_2[a] = -1{
+						flag_2 = true
+						temp_text += rss_name[a] + "(" + string(temp_array[a] * 100 / b) + "%)\n"
+					}
+				}
 				if not flag_2
 					temp_text += "Necesita recursos"
+			}
+			if in(edificio_nombre[build_index], "Bomba hidraulica"){
+				var flag_2 = true
+				for(var a = 0; a < ds_list_size(build_list); a++){
+					var temp_complex_3 = ds_list_find_value(build_list, a)
+					var aa = temp_complex_3.a, bb = temp_complex_3.b
+					if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
+						var temp_terreno_2 = terreno[aa, bb]
+						if not in(terreno_name[temp_terreno_2.terreno], "Agua", "Agua profunda"){
+							flag_2 = false
+							break
+						}
+					}
+				}
+				if not flag_2
+					temp_text += "Debe ser construido sobre agua"
 			}
 			//Vista previa Cables
 			if in(edificio_nombre[build_index], "Cable")
@@ -492,7 +530,7 @@ if build_index > 0{
 				var bb = temp_complex_2.b
 				var temp_terreno = terreno[aa, bb]
 				//Checkear coliciones
-				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or (temp_terreno.edificio_bool and not (edificio_camino[build_index] and temp_terreno.edificio.index = build_index)) or in(temp_terreno.terreno, 2, 4){
+				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or (temp_terreno.edificio_bool and not (edificio_camino[build_index] and temp_terreno.edificio.index = build_index)) or (not in(edificio_nombre[build_index], "Bomba hidraulica") and in(terreno_name[temp_terreno.terreno], "Agua", "Agua profunda")){
 					flag = false
 					break
 				}
@@ -502,14 +540,17 @@ if build_index > 0{
 				//Checkear minerales
 				if in(edificio_nombre[build_index], "Taladro", "Taladro electrico") and temp_terreno.ore >= 0
 					flag_2 = true
+				//Checkear minerales
+				if in(edificio_nombre[build_index], "Taladro electrico") and terreno_rss[temp_terreno.terreno]
+					flag_2 = true
+				//Checkear agua
+				if in(edificio_nombre[build_index], "Bomba hidraulica") and not in(terreno_name[temp_terreno.terreno], "Agua", "Agua profunda")
+					flag = false
 			}
 			if in(edificio_nombre[build_index], "Taladro", "Taladro electrico") and not flag_2
 				flag = false
-			if flag{
-				if edificio_nombre[build_index] = "Tunel" and build_able
-					build_index = 12
+			if flag
 				temp_edificio = add_edificio(build_index, build_dir, mx, my)
-			}
 			//Algoritmo link de tuneles
 			if edificio_nombre[build_index] = "Tunel"{
 				temp_edificio.idle = not build_able
@@ -529,10 +570,11 @@ if build_index > 0{
 				}
 			}
 			//Actualizar recursos
-			for(var a = 0; a < array_length(edificio_precio_index[build_index]); a++){
-				nucleo.carga[edificio_precio_index[build_index, a]] -= edificio_precio_num[build_index, a]
-				nucleo.carga_total -= edificio_precio_num[build_index, a]
-			}
+			if not cheat
+				for(var a = 0; a < array_length(edificio_precio_index[build_index]); a++){
+					nucleo.carga[edificio_precio_index[build_index, a]] -= edificio_precio_num[build_index, a]
+					nucleo.carga_total -= edificio_precio_num[build_index, a]
+				}
 		}
 		if mouse_check_button_released(mb_left) and not temp_terreno.edificio_bool and flag and comprable{
 			f1(build_index, build_dir, mx, my)
@@ -577,6 +619,12 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 						flag = true
 						break
 					}
+					else if terreno_rss[temp_terreno.terreno] and in(edificio_nombre[temp_edificio.index], "Taladro electrico"){
+						temp_edificio.carga[terreno_rss_id[temp_terreno.terreno]]++
+						temp_edificio.carga_total++
+						flag = true
+						break
+					}
 				}
 				ds_list_destroy(temp_list)
 				if flag
@@ -596,19 +644,23 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 			}
 		}
 		//Acción horno
-		if edificio_nombre[temp_edificio.index] = "Horno" and (temp_edificio.carga[0] > 0 or temp_edificio.carga[3] > 0) and (temp_edificio.carga[1] > 0 or temp_edificio.fuel > 0){
+		if edificio_nombre[temp_edificio.index] = "Horno" and (temp_edificio.carga[0] > 0 or temp_edificio.carga[3] > 0 or temp_edificio.carga[5] > 0) and (temp_edificio.carga[1] > 0 or temp_edificio.fuel > 0){
 			if temp_edificio.fuel > 0
 				temp_edificio.fuel--
-			if temp_edificio.carga[2] < 2 and temp_edificio.carga[4] < 2{
+			if temp_edificio.carga[2] < 2 and temp_edificio.carga[4] < 2 and temp_edificio.carga[7] < 2{
 				if temp_edificio.fuel = 0 and temp_edificio.carga[1] > 0{
 					temp_edificio.fuel = rss_comb_time[1]
 					temp_edificio.carga[1]--
 					temp_edificio.carga_total--
 				}
 				temp_edificio.proceso++
-				if temp_edificio.proceso = edificio_proceso[temp_edificio.index]{
-					temp_edificio.proceso = 0
-					if temp_edificio.carga[3] > 0{
+				if temp_edificio.proceso >= edificio_proceso[temp_edificio.index]{
+					temp_edificio.proceso -= edificio_proceso[temp_edificio.index]
+					if temp_edificio.carga[5] > 0{
+						temp_edificio.carga[5]--
+						temp_edificio.carga[7]++
+					}
+					else if temp_edificio.carga[3] > 0{
 						temp_edificio.carga[3]--
 						temp_edificio.carga[4]++
 					}
@@ -639,12 +691,35 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 		}
 		//Acción de la bomba hidraulica
 		if in(edificio_nombre[temp_edificio.index], "Bomba hidraulica"){
-			temp_edificio.flujo.generacion -= temp_edificio.proceso
+			for(var b = 0; b < ds_list_size(temp_edificio.flujo); b++){
+				var temp_flujo = ds_list_find_value(temp_edificio.flujo, b)
+				temp_flujo.generacion -= temp_edificio.proceso
+				if temp_edificio.red.generacion < temp_edificio.red.consumo and temp_edificio.red.bateria = 0
+					temp_edificio.proceso = temp_edificio.red.generacion / temp_edificio.red.consumo
+				else
+					temp_edificio.proceso = 1
+				temp_flujo.generacion += temp_edificio.proceso
+			}
+		}
+		//Acción de triturador
+		if in(edificio_nombre[temp_edificio.index], "Triturador") and temp_edificio.carga[6] > 0{
+			if temp_edificio.proceso < 0{
+				temp_edificio.red.consumo += abs(edificio_elec_consumo[temp_edificio.index])
+				temp_edificio.proceso++
+			}
 			if temp_edificio.red.generacion < temp_edificio.red.consumo and temp_edificio.red.bateria = 0
-				temp_edificio.proceso = temp_edificio.red.generacion / temp_edificio.red.consumo
+				temp_edificio.proceso += temp_edificio.red.generacion / temp_edificio.red.consumo
 			else
-				temp_edificio.proceso = 1
-			temp_edificio.flujo.generacion += temp_edificio.proceso
+				temp_edificio.proceso++
+			if temp_edificio.proceso >= edificio_proceso[temp_edificio.index]{
+				temp_edificio.proceso -= edificio_proceso[temp_edificio.index] + 1
+				if temp_edificio.carga[6] > 0{
+					temp_edificio.carga[6]--
+					temp_edificio.carga[5]++
+				}
+				temp_edificio.waiting = not mover(temp_edificio.a, temp_edificio.b)
+				temp_edificio.red.consumo -= abs(edificio_elec_consumo[temp_edificio.index])
+			}
 		}
 	}
 }
@@ -693,11 +768,8 @@ if keyboard_check(ord("O")){
 		temp_text += "  Consumo: " + string(temp_flujo.consumo) + "\n"
 		temp_text += "  Almacenado: " + string(floor(temp_flujo.cantidad)) + "/" + string(temp_flujo.cantidad_max) + "\n"
 		temp_text += "  Edificios:\n"
-		/*
-		UWU
-		*/
-		for(var b = 0; b < ds_list_size(temp_red.edificios); b++){
-			temp_edificio = ds_list_find_value(temp_red.edificios, b)
+		for(var b = 0; b < ds_list_size(temp_flujo.edificios); b++){
+			temp_edificio = ds_list_find_value(temp_flujo.edificios, b)
 			temp_text += "    " + string(edificio_nombre[temp_edificio.index]) + "\n"
 			var temp_complex = abtoxy(temp_edificio.a, temp_edificio.b)
 			for(var c = 0; c < ds_list_size(temp_edificio.energy_link); c++){
@@ -714,3 +786,5 @@ if string_ends_with(keyboard_string, "cheat"){
 	keyboard_string = ""
 	cheat = not cheat
 }
+if keyboard_check_pressed(vk_f4)
+	window_set_fullscreen(not window_get_fullscreen())

@@ -33,7 +33,7 @@ function add_edificio(index, dir, a, b){
 	ds_list_clear(new_edificio.flujo)
 	ds_list_add(new_edificio.flujo_link, control.null_edificio)
 	ds_list_clear(new_edificio.flujo_link)
-	var temp_terreno, temp_complex, temp_list
+	var temp_terreno, temp_complex
 	//Carga máxima y output general
 	for(var c = 0; c < control.rss_max; c++){
 		new_edificio.carga[c] = 0
@@ -69,7 +69,7 @@ function add_edificio(index, dir, a, b){
 	temp_terreno = control.terreno[a, b]
 	temp_terreno.edificio_draw = true
 	ds_list_add(control.edificios, new_edificio)
-	temp_list = get_size(a, b, dir, control.edificio_size[index])
+	var temp_list = get_size(a, b, dir, control.edificio_size[index])
 	for(var c = 0; c < ds_list_size(temp_list); c++){
 		temp_complex = ds_list_find_value(temp_list, c)
 		temp_terreno = control.terreno[temp_complex.a, temp_complex.b]
@@ -79,9 +79,9 @@ function add_edificio(index, dir, a, b){
 	}
 	ds_list_destroy(temp_list)
 	//Añadir inputs y outputs
-	temp_list = get_arround(a, b, dir, control.edificio_size[index])
-	for(var c = 0; c < ds_list_size(temp_list); c++){
-		temp_complex = ds_list_find_value(temp_list, c)
+	var temp_list_2 = get_arround(a, b, dir, control.edificio_size[index])
+	for(var c = 0; c < ds_list_size(temp_list_2); c++){
+		temp_complex = ds_list_find_value(temp_list_2, c)
 		if temp_complex.a >= 0 and temp_complex.b >= 0 and temp_complex.a < control.xsize and temp_complex.b < control.ysize{
 			temp_terreno = control.terreno[temp_complex.a, temp_complex.b]
 			if temp_terreno.edificio_bool{
@@ -167,16 +167,17 @@ function add_edificio(index, dir, a, b){
 			}
 		}
 	}
+	ds_list_destroy(temp_list_2)
 	//Añadir a la red electrica
 	if control.edificio_electricidad[index]{
 		if in(control.edificio_nombre[index], "Panel solar")
 			new_edificio.energy_output = -control.edificio_elec_consumo[index]
 		temp_complex = abtoxy(a, b)
 		//Detectar otras redes cerca
-		temp_list = get_size(a, b, dir, 7)
+		var temp_list_3 = get_size(a, b, dir, 7)
 		var temp_list_redes = ds_list_create()
-		for(var c = 0; c < ds_list_size(temp_list); c++){
-			temp_complex = ds_list_find_value(temp_list, c)
+		for(var c = 0; c < ds_list_size(temp_list_3); c++){
+			temp_complex = ds_list_find_value(temp_list_3, c)
 			if temp_complex.a != a or temp_complex.b != b{
 				temp_terreno = control.terreno[temp_complex.a, temp_complex.b]
 				if temp_terreno.edificio_bool{
@@ -190,6 +191,7 @@ function add_edificio(index, dir, a, b){
 				}
 			}
 		}
+		ds_list_destroy(temp_list_3)
 		//Añadir red
 		var temp_red = {
 			edificios: ds_list_create(),
@@ -230,9 +232,10 @@ function add_edificio(index, dir, a, b){
 	}
 	//Redes de cañerias
 	if control.edificio_flujo[index]{
-		temp_list = get_arround(a, b, dir, control.edificio_size[index])
-		for(var c = 0; c < ds_list_size(temp_list); c++){
-			temp_terreno = ds_list_find_value(temp_list, c)
+		var temp_list_4 = get_arround(a, b, dir, control.edificio_size[index])
+		for(var c = 0; c < ds_list_size(temp_list_4); c++){
+			temp_complex = ds_list_find_value(temp_list_4, c)
+			temp_terreno = control.terreno[temp_complex.a, temp_complex.b]
 			if temp_terreno.edificio_bool{
 				var temp_edificio = temp_terreno.edificio
 				if control.edificio_flujo[temp_edificio.index]{
@@ -240,7 +243,7 @@ function add_edificio(index, dir, a, b){
 				}
 			}
 		}
+		ds_list_destroy(temp_list_4)
 	}
-	ds_list_destroy(temp_list)
 	return new_edificio
 }
