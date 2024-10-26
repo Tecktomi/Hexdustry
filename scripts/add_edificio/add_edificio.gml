@@ -23,10 +23,16 @@ function add_edificio(index, dir, a, b){
 		red : control.red_null,
 		energy_output : 0,
 		energy_storage : 0,
-		energy_link : ds_list_create()
+		energy_link : ds_list_create(),
+		flujo : ds_list_create(),
+		flujo_link : ds_list_create()
 	}
 	ds_list_add(new_edificio.energy_link, control.null_edificio)
 	ds_list_clear(new_edificio.energy_link)
+	ds_list_add(new_edificio.flujo, control.flujo_null)
+	ds_list_clear(new_edificio.flujo)
+	ds_list_add(new_edificio.flujo_link, control.null_edificio)
+	ds_list_clear(new_edificio.flujo_link)
 	var temp_terreno, temp_complex, temp_list
 	//Carga máxima y output general
 	for(var c = 0; c < control.rss_max; c++){
@@ -167,7 +173,7 @@ function add_edificio(index, dir, a, b){
 			new_edificio.energy_output = -control.edificio_elec_consumo[index]
 		temp_complex = abtoxy(a, b)
 		//Detectar otras redes cerca
-		temp_list = get_size(a, b, dir, 5)
+		temp_list = get_size(a, b, dir, 7)
 		var temp_list_redes = ds_list_create()
 		for(var c = 0; c < ds_list_size(temp_list); c++){
 			temp_complex = ds_list_find_value(temp_list, c)
@@ -221,6 +227,19 @@ function add_edificio(index, dir, a, b){
 			temp_red.bateria_max += 1000
 		new_edificio.red = temp_red
 		ds_list_add(temp_red.edificios, new_edificio)
+	}
+	//Redes de cañerias
+	if control.edificio_flujo[index]{
+		temp_list = get_arround(a, b, dir, control.edificio_size[index])
+		for(var c = 0; c < ds_list_size(temp_list); c++){
+			temp_terreno = ds_list_find_value(temp_list, c)
+			if temp_terreno.edificio_bool{
+				var temp_edificio = temp_terreno.edificio
+				if control.edificio_flujo[temp_edificio.index]{
+					
+				}
+			}
+		}
 	}
 	ds_list_destroy(temp_list)
 	return new_edificio

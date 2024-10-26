@@ -30,6 +30,7 @@ function delete_edificio(aa, bb){
 		if temp_edificio.output_index >= ds_list_size(temp_edificio.outputs)
 			temp_edificio.output_index = 0
 	}
+	ds_list_destroy(edificio.inputs)
 	//Cancelar red
 	if control.edificio_electricidad[edificio.index]{
 		var temp_red = edificio.red
@@ -107,6 +108,21 @@ function delete_edificio(aa, bb){
 			delete(temp_red)
 		}
 	}
-	ds_list_destroy(edificio.inputs)
+	//Flujos de cañerias
+	for(var a = 0; a < ds_list_size(edificio.flujo); a++){
+		var temp_flujo = ds_list_find_value(edificio.flujo, a)
+		ds_list_remove(temp_flujo.edificios, edificio)
+		if ds_list_empty(temp_flujo.edificios){
+			ds_list_remove(control.flujos, temp_flujo)
+			ds_list_destroy(temp_flujo.edificios)
+			delete(temp_flujo)
+		}
+	}
+	ds_list_destroy(edificio.flujo)
+	for(var a = 0; a < ds_list_size(edificio.flujo_link); a++){
+		var temp_edificio = ds_list_find_value(edificio.flujo_link, a)
+		ds_list_remove(temp_edificio.flujo_link, edificio)
+	}
+	ds_list_destroy(edificio.flujo_link)
 	delete(edificio)
 }

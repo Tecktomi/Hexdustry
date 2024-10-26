@@ -40,9 +40,16 @@ for(var a = 0; a < xsize; a++)
 				//Dibujo de bateria
 				else if in(edificio_nombre[temp_edificio.index], "Bateria")
 					draw_sprite_ext(edificio_sprite[temp_edificio.index], floor(10 * temp_edificio.red.bateria / temp_edificio.red.bateria_max), temp_complex.a, temp_complex.b, 1, 1, temp_edificio.dir * 60, c_white, 1)
-				//Dibujo genérico
+				//Dibujo bomba
+				else if in(edificio_nombre[temp_edificio.index], "Bomba hidraulica"){
+					draw_sprite_ext(edificio_sprite[temp_edificio.index], 0, temp_complex.a, temp_complex.b, power(-1, temp_edificio.dir), 1, 0, c_white, 1)
+					draw_sprite_ext(spr_bomba_rotor, 1, temp_complex.a + power(-1, temp_edificio.dir) * 8, temp_complex.b + 14, 1, 1, image_index, c_white, 1)
+					draw_sprite_ext(spr_bomba_cupula, 1, temp_complex.a + power(-1, temp_edificio.dir) * 8, temp_complex.b + 14, 1, 1, 0, c_white, 1)
+				}
+				//Dibujo 2x2
 				else if edificio_size[temp_edificio.index] mod 2 = 0
 					draw_sprite_ext(edificio_sprite[temp_edificio.index], image_index / 4, temp_complex.a, temp_complex.b, power(-1, temp_edificio.dir), 1, 0, c_white, 1)
+				//Dibujo predeterminado
 				else
 					draw_sprite_ext(edificio_sprite[temp_edificio.index], image_index / 4, temp_complex.a, temp_complex.b, 1, 1, temp_edificio.dir * 60, c_white, 1)
 			}
@@ -325,11 +332,12 @@ if build_index > 0{
 	last_mx = mx
 	last_my = my
 	var comprable = true
-	for(var a = 0; a < array_length(edificio_precio_index[build_index]); a++)
-		if nucleo.carga[edificio_precio_index[build_index, a]] < edificio_precio_num[build_index, a]{
-			comprable = false
-			break
-		}
+	if not cheat
+		for(var a = 0; a < array_length(edificio_precio_index[build_index]); a++)
+			if nucleo.carga[edificio_precio_index[build_index, a]] < edificio_precio_num[build_index, a]{
+				comprable = false
+				break
+			}
 	if temp_hexagono != noone{
 		var temp_array, temp_array_2, temp_text = ""
 		if not comprable{
@@ -383,11 +391,12 @@ if build_index > 0{
 				flag = false
 				for(var a = 0; a < ds_list_size(pre_build_list); a++){
 					comprable = true
-					for(var b = 0; b < array_length(edificio_precio_index[build_index]); b++)
-						if nucleo.carga[edificio_precio_index[build_index, b]] < edificio_precio_num[build_index, b]{
-							comprable = false
-							break
-						}
+					if not cheat
+						for(var b = 0; b < array_length(edificio_precio_index[build_index]); b++)
+							if nucleo.carga[edificio_precio_index[build_index, b]] < edificio_precio_num[build_index, b]{
+								comprable = false
+								break
+							}
 					if comprable{
 						var temp_complex_2 = ds_list_find_value(pre_build_list, a)
 						f1(build_index, build_dir, temp_complex_2.a, temp_complex_2.b)
@@ -471,7 +480,7 @@ if build_index > 0{
 			}
 			//Vista previa Cables
 			if in(edificio_nombre[build_index], "Cable")
-				draw_circle(temp_complex_2.a, temp_complex_2.b, 70, true)
+				draw_circle(temp_complex_2.a, temp_complex_2.b, 90, true)
 			draw_text(mouse_x + 20, mouse_y, temp_text)
 		}
 		//Construir
@@ -612,7 +621,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 			}
 		}
 		//Acción generador
-		if edificio_nombre[temp_edificio.index] = "Generador"{
+		if in(edificio_nombre[temp_edificio.index], "Generador"){
 			if temp_edificio.fuel > 0
 				temp_edificio.fuel--
 			if temp_edificio.fuel = 0{
@@ -627,6 +636,15 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 					mover(temp_edificio.a, temp_edificio.b)
 				}
 			}
+		}
+		//Acción de la bomba hidraulica
+		if in(edificio_nombre[temp_edificio.index], "Bomba hidraulica"){
+			temp_edificio.flujo.generacion -= temp_edificio.proceso
+			if temp_edificio.red.generacion < temp_edificio.red.consumo and temp_edificio.red.bateria = 0
+				temp_edificio.proceso = temp_edificio.red.generacion / temp_edificio.red.consumo
+			else
+				temp_edificio.proceso = 1
+			temp_edificio.flujo.generacion += temp_edificio.proceso
 		}
 	}
 }
@@ -660,4 +678,39 @@ if keyboard_check(ord("L")){
 	}
 	draw_set_color(c_white)
 	draw_text(0, 20, temp_text)
+}
+if keyboard_check(ord("O")){
+	var temp_text = ""
+	for(var a = 0; a < ds_list_size(flujos); a++){
+		draw_set_color(make_color_hsv(a * 40, 255, 255))
+		var temp_flujo = ds_list_find_value(flujos, a)
+		temp_text += "Tuberia " + string(a) + ": "
+		if temp_flujo.liquido = -1
+			temp_text += "Sin liquidos\n"
+		else
+			temp_text += liquido_nombre[temp_flujo.liquido] + "\n"
+		temp_text += "  Generacion: " + string(temp_flujo.generacion) + "\n"
+		temp_text += "  Consumo: " + string(temp_flujo.consumo) + "\n"
+		temp_text += "  Almacenado: " + string(floor(temp_flujo.cantidad)) + "/" + string(temp_flujo.cantidad_max) + "\n"
+		temp_text += "  Edificios:\n"
+		/*
+		UWU
+		*/
+		for(var b = 0; b < ds_list_size(temp_red.edificios); b++){
+			temp_edificio = ds_list_find_value(temp_red.edificios, b)
+			temp_text += "    " + string(edificio_nombre[temp_edificio.index]) + "\n"
+			var temp_complex = abtoxy(temp_edificio.a, temp_edificio.b)
+			for(var c = 0; c < ds_list_size(temp_edificio.energy_link); c++){
+				var temp_edificio_2 = ds_list_find_value(temp_edificio.energy_link, c)
+				var temp_complex_2 = abtoxy(temp_edificio_2.a, temp_edificio_2.b)
+				draw_line(temp_complex.a, temp_complex.b, temp_complex_2.a, temp_complex_2.b)
+			}
+		}
+	}
+	draw_set_color(c_white)
+	draw_text(0, 20, temp_text)
+}
+if string_ends_with(keyboard_string, "cheat"){
+	keyboard_string = ""
+	cheat = not cheat
 }
