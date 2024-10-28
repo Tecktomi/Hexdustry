@@ -54,7 +54,7 @@ for(var a = 0; a < xsize; a++)
 		var temp_hexagono = instance_create_layer(temp_complex.a, temp_complex.b, "instances", obj_hexagono)
 		terreno[a, b] = {
 			hexagono : temp_hexagono,
-			terreno : 0,
+			terreno : 1,
 			ore : -1,
 			ore_amount : 0,
 			ore_random : irandom(1),
@@ -84,32 +84,32 @@ rss_max = array_length(rss_name)
 //Liquidos
 liquido_nombre =	["Agua"]
 //EDIFICIOS
-edificio_sprite =			[spr_base,	spr_taladro,	spr_camino,				spr_enrutador,	spr_selector,		spr_overflow,	spr_tunel,	spr_horno,				spr_generador,				spr_cable,	spr_bateria,	spr_taladro_electrico,	spr_panel_solar,	spr_bomba,			spr_tuberia,	spr_triturador]//Sprite
-edificio_sprite_2 =			[spr_base,	spr_taladro,	spr_camino,				spr_enrutador,	spr_selector_color,	spr_overflow,	spr_tunel,	spr_horno_encendido,	spr_generador_encendido,	spr_cable,	spr_bateria,	spr_taladro_electrico,	spr_panel_solar,	spr_bomba_rotor,	spr_tuberia,	spr_triturador]//Sprite 2
-edificio_nombre =			["Nucleo",	"Taladro",		"Cinta transportadora",	"Enrutador",	"Selector",			"Overflow",		"Tunel",	"Horno",				"Generador",				"Cable",	"Bateria",		"Taladro electrico",	"Panel solar",		"Bomba hidraulica",	"Tuberia",		"Triturador"]//Nombre
-edificio_size =				[3,			2,				1,						1,				1,					1,				1,			2,						1,							1,			1,				3,						2,					2,					1,				2]//Size
-edificio_receptor =			[true,		false,			true,					true,			true,				true,			true,		true,					true,						false,		false,			false,					false,				false,				false,			true]//Receptor
-edificio_emisor =			[false,		true,			true,					true,			true,				true,			true,		true,					false,						false,		false,			true,					false,				false,				false,			true]//Emisor
-edificio_carga_max =		[0,			10,				1,						1,				1,					1,				1,			10,						10,							0,			0,				20,						0,					0,					0,				10]//Carga max
-edificio_input_all =		[true,		true,			true,					true,			true,				true,			true,		false,					false,						false,		false,			false,					false,				false,				false,			false]//Input: all
-edificio_input_index =		[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[0, 1, 3, 5],			[1],						[0],		[0],			[0],					[0],				[0],				[0],			[6]]//Input: index
-edificio_input_num =		[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[2, 2, 2, 2],			[10],						[0],		[0],			[0],					[0],				[0],				[0],			[5]]//Input: num
-edificio_output_all =		[true,		false,			true,					true,			true,				true,			true,		false,					false,						false,		false,			true,					false,				false,				false,			false]//Output: all
-edificio_output_index =		[[0],		[0, 1, 3],		[0],					[0],			[0],				[0],			[0],		[2, 4, 7],				[0],						[0],		[0],			[0, 1, 3, 5, 6],		[0],				[0],				[0],			[5]]//Output: index
-edificio_rotable =			[false,		true,			true,					true,			true,				true,			true,		true,					false,						false,		false,			false,					true,				true,				false,			true]//Rotable
-edificio_proceso =			[0,			100,			20,						20,				20,					20,				20,			150,					0,							0,			0,				40,						0,					1,					1,				40]//Steps proceso
-edificio_combutable =		[false,		false,			false,					false,			false,				false,			false,		true,					true,						false,		false,			false,					false,				false,				false,			false]//Combustable
-edificio_camino =			[false,		false,			true,					true,			true,				true,			false,		false,					false,						false,		false,			false,					false,				false,				false,			false]//Es camino?
-edificio_electricidad =		[false,		false,			false,					false,			false,				false,			false,		false,					true,						true,		true,			true,					true,				true,				false,			true]//Se conecta a la red electrica?
-edificio_elec_consumo =		[0,			0,				0,						0,				0,					0,				0,			0,						-20,						1,			0,				75,						-5,					25,					0,				30]//Consumo electrico (negativos para generadores)
-edificio_precio_index =		[[0],		[0],			[0],					[0],			[0],				[0],			[0, 3],		[0, 3],					[0, 3],						[0, 3],		[0, 2],			[0, 2, 4],				[0, 2, 4],			[0, 4, 7],			[4],			[0, 4]]//Edificio_precio: index
-edificio_precio_num =		[[0],		[15],			[1],					[2],			[2],				[2],			[4, 4],		[20, 15],				[20, 5],					[5, 1],		[20, 5],		[20, 10, 25],			[40, 10, 10],		[10, 20, 10],		[3],			[10, 25]]//Edificio_precio: num
-edificio_key =				[0,			ord("Q"),		ord(1),					ord(2),			ord(3),				ord(4),			ord(5),		ord("W"),				ord("A"),					ord("S"),	ord("D"),		ord("E"),				ord("F"),			ord("Z"),			ord("X"),		ord("R")]//Acceso directo
-edificio_flujo =			[false,		false,			false,					false,			false,				false,			false,		false,					false,						false,		false,			false,					false,				true,				true,			false]//Se conecta a cañerias?
-edificio_flujo_input_id =	[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[0],					[0],						[0],		[0],			[0],					[0],				[0],				[0],			[0]]//flujo_input_id
-edificio_flujo_input_num =	[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[0],					[0],						[0],		[0],			[0],					[0],				[0],				[0],			[0]]//flujo_input_num
-edificio_flujo_output_id =	[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[0],					[0],						[0],		[0],			[0],					[0],				[0],				[0],			[0]]//flujo_output_num
-edificio_flujo_output_num =	[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[0],					[0],						[0],		[0],			[0],					[0],				[0],				[20],			[0]]//flujo_output_num
+edificio_sprite =			[spr_base,	spr_taladro,	spr_camino,				spr_enrutador,	spr_selector,		spr_overflow,	spr_tunel,	spr_horno,				spr_generador,				spr_cable,	spr_bateria,	spr_taladro_electrico,	spr_panel_solar,	spr_bomba,			spr_tuberia,	spr_triturador,	spr_tunel_salida]//Sprite
+edificio_sprite_2 =			[spr_base,	spr_taladro,	spr_camino,				spr_enrutador,	spr_selector_color,	spr_overflow,	spr_tunel,	spr_horno_encendido,	spr_generador_encendido,	spr_cable,	spr_bateria,	spr_taladro_electrico,	spr_panel_solar,	spr_bomba_rotor,	spr_tuberia,	spr_triturador,	spr_tunel_salida]//Sprite 2
+edificio_nombre =			["Nucleo",	"Taladro",		"Cinta transportadora",	"Enrutador",	"Selector",			"Overflow",		"Tunel",	"Horno",				"Generador",				"Cable",	"Bateria",		"Taladro electrico",	"Panel solar",		"Bomba hidraulica",	"Tuberia",		"Triturador",	"Tunel"]//Nombre
+edificio_size =				[3,			2,				1,						1,				1,					1,				1,			2,						1,							1,			1,				3,						2,					2,					1,				2,				1]//Size
+edificio_receptor =			[true,		false,			true,					true,			true,				true,			true,		true,					true,						false,		false,			false,					false,				false,				false,			true,			false]//Receptor
+edificio_emisor =			[false,		true,			true,					true,			true,				true,			false,		true,					false,						false,		false,			true,					false,				false,				false,			true,			true]//Emisor
+edificio_carga_max =		[0,			10,				1,						1,				1,					1,				1,			10,						10,							0,			0,				20,						0,					0,					0,				10,				1]//Carga max
+edificio_input_all =		[true,		true,			true,					true,			true,				true,			true,		false,					false,						false,		false,			false,					false,				false,				false,			false,			true]//Input: all
+edificio_input_index =		[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[0, 1, 3, 5],			[1],						[0],		[0],			[0],					[0],				[0],				[0],			[6],			[0]]//Input: index
+edificio_input_num =		[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[2, 2, 2, 2],			[10],						[0],		[0],			[0],					[0],				[0],				[0],			[5] ,			[0]]//Input: num
+edificio_output_all =		[true,		false,			true,					true,			true,				true,			true,		false,					false,						false,		false,			true,					false,				false,				false,			false,			true]//Output: all
+edificio_output_index =		[[0],		[0, 1, 3],		[0],					[0],			[0],				[0],			[0],		[2, 4, 7],				[0],						[0],		[0],			[0, 1, 3, 5, 6],		[0],				[0],				[0],			[5],			[0]]//Output: index
+edificio_rotable =			[false,		true,			true,					true,			true,				true,			true,		true,					false,						false,		false,			false,					true,				true,				false,			true,			true]//Rotable
+edificio_proceso =			[0,			100,			20,						20,				20,					20,				20,			150,					0,							0,			0,				40,						0,					1,					1,				40,				20]//Steps proceso
+edificio_combutable =		[false,		false,			false,					false,			false,				false,			false,		true,					true,						false,		false,			false,					false,				false,				false,			false,			false]//Combustable
+edificio_camino =			[false,		false,			true,					true,			true,				true,			false,		false,					false,						false,		false,			false,					false,				false,				false,			false,			false]//Es camino?
+edificio_electricidad =		[false,		false,			false,					false,			false,				false,			false,		false,					true,						true,		true,			true,					true,				true,				false,			true,			false]//Se conecta a la red electrica?
+edificio_elec_consumo =		[0,			0,				0,						0,				0,					0,				0,			0,						-20,						1,			0,				75,						-5,					25,					0,				30,				0]//Consumo electrico (negativos para generadores)
+edificio_precio_index =		[[0],		[0],			[0],					[0],			[0],				[0],			[0, 3],		[0, 3],					[0, 3],						[0, 3],		[0, 2],			[0, 2, 4],				[0, 2, 4],			[0, 4, 7],			[4],			[0, 4],			[0, 3]]//Edificio_precio: index
+edificio_precio_num =		[[0],		[15],			[1],					[2],			[2],				[2],			[4, 4],		[20, 15],				[20, 5],					[5, 1],		[20, 5],		[20, 10, 25],			[40, 10, 10],		[10, 20, 10],		[3],			[10, 25],		[4, 4]]//Edificio_precio: num
+edificio_key =				[0,			ord("Q"),		ord(1),					ord(2),			ord(3),				ord(4),			ord(5),		ord("W"),				ord("A"),					ord("S"),	ord("D"),		ord("E"),				ord("F"),			ord("Z"),			ord("X"),		ord("R"),		0]//Acceso directo
+edificio_flujo =			[false,		false,			false,					false,			false,				false,			false,		false,					false,						false,		false,			false,					false,				true,				true,			false,			false]//Se conecta a cañerias?
+edificio_flujo_input_id =	[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[0],					[0],						[0],		[0],			[0],					[0],				[0],				[0],			[0],			[0]]//flujo_input_id
+edificio_flujo_input_num =	[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[0],					[0],						[0],		[0],			[0],					[0],				[0],				[0],			[0],			[0]]//flujo_input_num
+edificio_flujo_output_id =	[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[0],					[0],						[0],		[0],			[0],					[0],				[0],				[0],			[0],			[0]]//flujo_output_num
+edificio_flujo_output_num =	[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[0],					[0],						[0],		[0],			[0],					[0],				[0],				[20],			[0],			[0]]//flujo_output_num
 edificio_max = array_length(edificio_nombre)
 size_size = [1, 3, 7, 12, 19, 27]
 size_borde = [6, 9, 12, 15, 18, 21]
@@ -154,16 +154,20 @@ last_my = -1
 build_list = get_size(0, 0, 0, 0)
 build_menu = 0
 cheat = false
+info = false
+zoom = 1
+camx = 0
+camy = 0
 //Terreno
-var e = 1
+var e = 0
 repeat(4){
 	var a = irandom(xsize - 1)
 	var b = irandom(ysize - 1)
 	var c = 0
-	if e <= 2
-		c = e++
+	if e <= 1
+		c = 2 * e++
 	else
-		c = irandom_range(1, 2)
+		c = choose(0, 2)
 	repeat(20){
 		if terreno[a, b].terreno != 2
 			terreno[a, b].terreno = c
@@ -181,6 +185,16 @@ repeat(4){
 			b = min(max(0, temp_complex.b), ysize - 1)
 		}
 	}
+}
+//Crear nucelo
+nucleo = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
+nucleo.carga[0] = 50
+nucleo.carga_total = 50
+for(var a = 0; a < ds_list_size(nucleo.coordenadas); a++){
+	var temp_complex = ds_list_find_value(nucleo.coordenadas, a)
+	var aa = temp_complex.a, bb = temp_complex.b
+	terreno[aa, bb].terreno = 1
+	terreno[aa, bb].ore = -1
 }
 //Añadir arena / agua profunda
 for(var a = 0; a < xsize; a++)
@@ -253,13 +267,4 @@ repeat(6){
 		a = min(max(0, temp_complex.a), xsize - 1)
 		b = min(max(0, temp_complex.b), ysize - 1)
 	}
-}
-nucleo = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
-nucleo.carga[0] = 50
-nucleo.carga_total = 50
-for(var a = 0; a < ds_list_size(nucleo.coordenadas); a++){
-	var temp_complex = ds_list_find_value(nucleo.coordenadas, a)
-	var aa = temp_complex.a, bb = temp_complex.b
-	terreno[aa, bb].terreno = 0
-	terreno[aa, bb].ore = -1
 }

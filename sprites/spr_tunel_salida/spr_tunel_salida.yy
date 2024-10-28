@@ -19,6 +19,7 @@
   "height":28,
   "HTile":false,
   "layers":[
+    {"$GMImageLayer":"","%Name":"487b628b-e94f-4ce4-9dff-c3b4d869308b","blendMode":0,"displayName":"Layer 1","isLocked":false,"name":"487b628b-e94f-4ce4-9dff-c3b4d869308b","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
     {"$GMImageLayer":"","%Name":"fb8a6ce0-2178-4313-8feb-0ab4eb1ee164","blendMode":0,"displayName":"default","isLocked":false,"name":"fb8a6ce0-2178-4313-8feb-0ab4eb1ee164","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"spr_tunel_salida",

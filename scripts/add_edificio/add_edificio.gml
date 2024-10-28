@@ -109,11 +109,14 @@ function add_edificio(index, dir, a, b){
 						complex_equal(temp_complex, next_to(a, b, dir)) or
 						complex_equal(temp_complex, next_to(a, b, (dir + 1) mod 6)))
 						flag = false
-					if flag and in(control.edificio_nombre[temp_edificio.index], "Enrutador", "Selector", "Overflow", "Tunel") and(
-						complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 5) mod 6), {a : a, b : b}) or
-						complex_equal(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), {a : a, b : b}) or
-						complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 1) mod 6), {a : a, b : b}))
-						flag = false
+					if flag and in(control.edificio_nombre[temp_edificio.index], "Enrutador", "Selector", "Overflow", "Tunel")
+						for(var d = 0; d < ds_list_size(new_edificio.coordenadas); d++)
+							if	complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 5) mod 6), ds_list_find_value(new_edificio.coordenadas, d)) or
+								complex_equal(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), ds_list_find_value(new_edificio.coordenadas, d)) or
+								complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 1) mod 6), ds_list_find_value(new_edificio.coordenadas, d)){
+								flag = false
+								break
+							}
 					if flag and in(control.edificio_nombre[index], "Tunel") and(
 						complex_equal(temp_complex, next_to(a, b, (dir + 5) mod 6)) or
 						complex_equal(temp_complex, next_to(a, b, dir)) or
@@ -147,11 +150,16 @@ function add_edificio(index, dir, a, b){
 						complex_equal(temp_complex, next_to(a, b, dir)) or
 						complex_equal(temp_complex, next_to(a, b, (dir + 1) mod 6)))
 						flag = false
-					if flag and in(control.edificio_nombre[temp_edificio.index], "Enrutador", "Selector", "Overflow") and not(
-						complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 5) mod 6), {a : a, b : b}) or
-						complex_equal(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), {a : a, b : b}) or
-						complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 1) mod 6), {a : a, b : b}))
+					if flag and in(control.edificio_nombre[temp_edificio.index], "Enrutador", "Selector", "Overflow"){
 						flag = false
+						for(var d = 0; d < ds_list_size(new_edificio.coordenadas); d++)
+							if (complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 5) mod 6), ds_list_find_value(new_edificio.coordenadas, d)) or
+								complex_equal(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), ds_list_find_value(new_edificio.coordenadas, d)) or
+								complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 1) mod 6), ds_list_find_value(new_edificio.coordenadas, d))){
+								flag = true
+								break
+							}
+					}
 					if flag and in(control.edificio_nombre[temp_edificio.index], "Tunel") and(
 						complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 5) mod 6), {a : a, b : b}) or
 						complex_equal(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), {a : a, b : b}) or

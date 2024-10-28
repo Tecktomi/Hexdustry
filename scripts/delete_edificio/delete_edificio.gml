@@ -124,5 +124,11 @@ function delete_edificio(aa, bb){
 		ds_list_remove(temp_edificio.flujo_link, edificio)
 	}
 	ds_list_destroy(edificio.flujo_link)
+	//Retorno de recursos
+	if not cheat
+		for(var a = 0; a < array_length(edificio_precio_index[edificio.index]); a++){
+			control.nucleo.carga[control.edificio_precio_index[edificio.index, a]] += floor(control.edificio_precio_num[edificio.index, a] / 2)
+			control.nucleo.carga_total += floor(control.edificio_precio_num[edificio.index, a] / 2)
+		}
 	delete(edificio)
 }

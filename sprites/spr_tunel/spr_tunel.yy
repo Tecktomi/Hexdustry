@@ -19,6 +19,7 @@
   "height":28,
   "HTile":false,
   "layers":[
+    {"$GMImageLayer":"","%Name":"1b02af8d-b242-4c98-9e3b-09bcf241023e","blendMode":0,"displayName":"Layer 1","isLocked":false,"name":"1b02af8d-b242-4c98-9e3b-09bcf241023e","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
     {"$GMImageLayer":"","%Name":"fb8a6ce0-2178-4313-8feb-0ab4eb1ee164","blendMode":0,"displayName":"default","isLocked":false,"name":"fb8a6ce0-2178-4313-8feb-0ab4eb1ee164","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"spr_tunel",

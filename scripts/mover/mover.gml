@@ -16,7 +16,7 @@ function mover(aa, bb){
 					var temp_terreno = control.terreno[temp_complex.a, temp_complex.b]
 					if temp_terreno.edificio_bool{
 						temp_edificio = temp_terreno.edificio
-						if (temp_edificio.carga_total < control.edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
+						if ds_list_in(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < control.edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
 							flag = true
 							break
 						}
@@ -32,7 +32,7 @@ function mover(aa, bb){
 					var temp_terreno = control.terreno[temp_complex.a, temp_complex.b]
 					if temp_terreno.edificio_bool{
 						temp_edificio = temp_terreno.edificio
-						if (temp_edificio.carga_total < control.edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
+						if ds_list_in(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < control.edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
 							flag = true
 							edificio.output_index = 1 - b
 							break
@@ -48,7 +48,7 @@ function mover(aa, bb){
 					var temp_terreno = control.terreno[temp_complex.a, temp_complex.b]
 					if temp_terreno.edificio_bool{
 						temp_edificio = temp_terreno.edificio
-						if (temp_edificio.carga_total < control.edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
+						if ds_list_in(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < control.edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
 							flag = true
 							break
 						}
@@ -64,7 +64,7 @@ function mover(aa, bb){
 					var temp_terreno = control.terreno[temp_complex.a, temp_complex.b]
 					if temp_terreno.edificio_bool{
 						temp_edificio = temp_terreno.edificio
-						if (temp_edificio.carga_total < control.edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
+						if ds_list_in(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < control.edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
 							flag = true
 							edificio.output_index = 1 - b
 							break
@@ -72,12 +72,12 @@ function mover(aa, bb){
 					}
 				}
 				//Output frontal
-				if edificio.mode{
+				if edificio.mode and not flag{
 					var temp_complex = next_to(edificio.a, edificio.b, edificio.dir)
 					var temp_terreno = control.terreno[temp_complex.a, temp_complex.b]
 					if temp_terreno.edificio_bool{
 						temp_edificio = temp_terreno.edificio
-						if (temp_edificio.carga_total < control.edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
+						if ds_list_in(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < control.edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
 							flag = true
 							break
 						}
@@ -108,7 +108,7 @@ function mover(aa, bb){
 		if control.edificio_receptor[edificio.index]
 			for(var a = 0; a < ds_list_size(edificio.inputs); a++){
 				temp_edificio = ds_list_find_value(edificio.inputs, a)
-				if temp_edificio.waiting and mover(temp_edificio.a, temp_edificio.b) and temp_edificio.carga = 0
+				if temp_edificio.waiting and mover(temp_edificio.a, temp_edificio.b) and temp_edificio.carga_total = 0
 					temp_edificio.waiting = false
 			}
 	}
