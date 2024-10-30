@@ -105,7 +105,7 @@ function mover(aa, bb){
 		temp_edificio.carga_id = out
 		if edificio.carga_total = 0
 			edificio.waiting = false
-		if control.edificio_receptor[edificio.index]
+		if control.edificio_receptor[edificio.index] or in(control.edificio_nombre[edificio.index], "Tunel")
 			for(var a = 0; a < ds_list_size(edificio.inputs); a++){
 				temp_edificio = ds_list_find_value(edificio.inputs, a)
 				if temp_edificio.waiting and mover(temp_edificio.a, temp_edificio.b) and temp_edificio.carga_total = 0
