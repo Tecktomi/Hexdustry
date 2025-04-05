@@ -105,6 +105,7 @@ edificio_elec_consumo =		[0,			0,				0,						0,				0,					0,				0,			0,						-20
 edificio_precio_index =		[[0],		[0],			[0],					[0],			[0],				[0],			[0, 3],		[0, 3],					[0, 3],						[0, 3],		[0, 2],			[0, 2, 4],				[0, 2, 4],			[0, 4, 7],			[4],			[0, 4],			[0, 3],				[0]]//Edificio_precio: index
 edificio_precio_num =		[[0],		[15],			[1],					[2],			[2],				[2],			[4, 4],		[20, 15],				[20, 5],					[5, 1],		[20, 5],		[20, 10, 25],			[40, 10, 10],		[10, 20, 10],		[3],			[10, 25],		[4, 4],				[0]]//Edificio_precio: num
 edificio_key =				[0,			ord("Q"),		ord(1),					ord(2),			ord(3),				ord(4),			ord(5),		ord("W"),				ord("A"),					ord("S"),	ord("D"),		ord("E"),				ord("F"),			ord("Z"),			ord("X"),		ord("R"),		0,					ord("M")]//Acceso directo
+edificio_vida =				[1000,		100,			15,						15,				15,					15,				25,			120,					30,							10,			30,				180,					60,					60,					10,				80,				30,					25]//Resistencia
 edificio_flujo =			[false,		false,			false,					false,			false,				false,			false,		false,					false,						false,		false,			false,					false,				true,				true,			false,			false,				false]//Se conecta a cañerias?
 edificio_flujo_input_id =	[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[0],					[0],						[0],		[0],			[0],					[0],				[0],				[0],			[0],			[0],				[0]]//flujo_input_id
 edificio_flujo_input_num =	[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[0],					[0],						[0],		[0],			[0],					[0],				[0],				[0],			[0],			[0],				[0]]//flujo_input_num
@@ -173,16 +174,16 @@ repeat(4){
 			terreno[a, b].terreno = c
 		for(var d = 0; d < 6; d++){
 			var temp_complex = next_to(a, b, d)
-			var aa = min(max(0, temp_complex.a), xsize - 1)
-			var bb = min(max(0, temp_complex.b), ysize - 1)
+			var aa = clamp(temp_complex.a, 0, xsize - 1)
+			var bb = clamp(temp_complex.b, 0, ysize - 1)
 			if terreno[aa, bb].terreno != 2
 				terreno[aa, bb].terreno = c
 		}
 		repeat(2){
 			var d = irandom(5)
 			var temp_complex = next_to(a, b, d)
-			a = min(max(0, temp_complex.a), xsize - 1)
-			b = min(max(0, temp_complex.b), ysize - 1)
+			a = clamp(temp_complex.a, 0, xsize - 1)
+			b = clamp(temp_complex.b, 0, ysize - 1)
 		}
 	}
 }
@@ -264,7 +265,7 @@ repeat(6){
 		}
 		var d = irandom(5)
 		var temp_complex = next_to(a, b, d)
-		a = min(max(0, temp_complex.a), xsize - 1)
-		b = min(max(0, temp_complex.b), ysize - 1)
+		a = clamp(temp_complex.a, 0, xsize - 1)
+		b = clamp(temp_complex.b, 0, ysize - 1)
 	}
 }

@@ -563,8 +563,8 @@ if build_index > 0{
 						}
 					}
 					for(var a = 0; a < ds_list_size(build_list); a++){
-						var temp_complex_2 = ds_list_find_value(build_list, a)
-						if in(terreno_name[terreno[temp_complex_2.a, temp_complex_2.b].terreno], "Agua", "Agua profunda"){
+						temp_complex_2 = ds_list_find_value(build_list, a)
+						if temp_complex_2.a < xsize and temp_complex_2.b < ysize and in(terreno_name[terreno[temp_complex_2.a, temp_complex_2.b].terreno], "Agua", "Agua profunda"){
 							flag_2 = false
 							break
 						}
@@ -818,7 +818,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 //Ciclo de redes
 for(var a = 0; a < ds_list_size(redes); a++){
 	var temp_red = ds_list_find_value(redes, a)
-	temp_red.bateria = min(max(temp_red.bateria + (temp_red.generacion - temp_red.consumo) / 30, 0), temp_red.bateria_max)
+	temp_red.bateria = clamp(temp_red.bateria + (temp_red.generacion - temp_red.consumo) / 30, 0, temp_red.bateria_max)
 }
 if keyboard_check_pressed(ord("P"))
 	game_restart()
