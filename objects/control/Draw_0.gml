@@ -97,7 +97,7 @@ for(var a = 0; a < xsize; a++)
 			else if edificio_electricidad[temp_edificio.index]{
 				draw_set_color(c_yellow)
 				for(var c = 0; c < ds_list_size(temp_edificio.energy_link); c++){
-					var temp_edificio_2 = ds_list_find_value(temp_edificio.energy_link, c)
+					var temp_edificio_2 = temp_edificio.energy_link[|c]
 					var temp_complex_2 = abtoxy(temp_edificio.a, temp_edificio.b)
 					var temp_complex_3 = abtoxy(temp_edificio_2.a, temp_edificio_2.b)
 					draw_line_off(temp_complex_2.a , temp_complex_2.b , temp_complex_3.a , temp_complex_3.b)
@@ -190,7 +190,7 @@ if temp_hexagono != noone and flag{
 			draw_set_color(c_blue)
 			var temp_complex = abtoxy(temp_edificio.a, temp_edificio.b)
 			for(var a = 0; a < ds_list_size(temp_edificio.inputs); a++){
-				var temp_edificio_2 = ds_list_find_value(temp_edificio.inputs, a)
+				var temp_edificio_2 = temp_edificio.inputs[|a]
 				var temp_complex_2 = abtoxy(temp_edificio_2.a, temp_edificio_2.b)
 				draw_arrow_off(temp_complex_2.a, temp_complex_2.b, temp_complex.a, temp_complex.b, 12)
 			}
@@ -198,7 +198,7 @@ if temp_hexagono != noone and flag{
 			draw_set_color(c_red)
 			temp_complex = abtoxy(temp_edificio.a, temp_edificio.b)
 			for(var a = 0; a < ds_list_size(temp_edificio.outputs); a++){
-				var temp_edificio_2 = ds_list_find_value(temp_edificio.outputs, a)
+				var temp_edificio_2 = temp_edificio.outputs[|a]
 				var temp_complex_2 = abtoxy(temp_edificio_2.a, temp_edificio_2.b)
 				draw_arrow_off(temp_complex.a, temp_complex.b, temp_complex_2.a, temp_complex_2.b, 12)
 			}
@@ -219,7 +219,7 @@ if temp_hexagono != noone and flag{
 				for(var a = 0; a < rss_max; a++)
 					temp_array[a] = 0
 				for(var a = 0; a < ds_list_size(temp_edificio.coordenadas); a++){
-					var temp_complex = ds_list_find_value(temp_edificio.coordenadas, a)
+					var temp_complex = temp_edificio.coordenadas[|a]
 					var temp_terreno_2 = terreno[temp_complex.a, temp_complex.b]
 					if temp_terreno_2.ore >= 0
 						temp_array[ore_recurso[temp_terreno_2.ore]] += temp_terreno_2.ore_amount
@@ -275,11 +275,11 @@ if temp_hexagono != noone and flag{
 			temp_text += "  Edificios:\n"
 			if info
 				for(var a = 0; a < ds_list_size(temp_red.edificios); a++){
-					var temp_edificio_2 = ds_list_find_value(temp_red.edificios, a)
+					var temp_edificio_2 = temp_red.edificios[|a]
 					temp_text += "    " + string(edificio_nombre[temp_edificio_2.index]) + "\n"
 				}
 			for(var a = 0; a < ds_list_size(temp_edificio.energy_link); a++){
-				var temp_edificio_2 = ds_list_find_value(temp_edificio.energy_link, a)
+				var temp_edificio_2 = temp_edificio.energy_link[|a]
 				draw_set_color(c_red)
 				var temp_complex_2 = abtoxy(temp_edificio.a, temp_edificio.b)
 				var temp_complex_3 = abtoxy(temp_edificio_2.a, temp_edificio_2.b)
@@ -388,7 +388,7 @@ if build_index > 0{
 				if nucleo.carga[edificio_precio_index[build_index, a]] < edificio_precio_num[build_index, a]
 					temp_text += "  " + rss_name[edificio_precio_index[build_index, a]] + " " + string(nucleo.carga[edificio_precio_index[build_index, a]]) + "/" + string(edificio_precio_num[build_index, a]) + "\n"
 			for(var a = 0; a < ds_list_size(build_list); a++){
-				var temp_complex_2 = ds_list_find_value(build_list, a)
+				var temp_complex_2 = build_list[|a]
 				var temp_complex_3 = abtoxy(temp_complex_2.a, temp_complex_2.b)
 				draw_sprite_off(spr_rojo, 0, temp_complex_3.a, temp_complex_3.b, , , , , 0.5)
 			}
@@ -474,7 +474,7 @@ if build_index > 0{
 								break
 							}
 					if comprable{
-						var temp_complex_2 = ds_list_find_value(pre_build_list, a)
+						var temp_complex_2 = pre_build_list[|a]
 						f1(build_index, build_dir, temp_complex_2.a, temp_complex_2.b)
 					}
 				}
@@ -535,7 +535,7 @@ if build_index > 0{
 					}
 					var b = 0
 					for(var a = 0; a < ds_list_size(build_list); a++){
-						var temp_complex_3 = ds_list_find_value(build_list, a)
+						var temp_complex_3 = build_list[|a]
 						var aa = temp_complex_3.a, bb = temp_complex_3.b
 						if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
 							var temp_terreno_2 = terreno[aa, bb]
@@ -563,7 +563,7 @@ if build_index > 0{
 						}
 					}
 					for(var a = 0; a < ds_list_size(build_list); a++){
-						temp_complex_2 = ds_list_find_value(build_list, a)
+						temp_complex_2 = build_list[|a]
 						if temp_complex_2.a < xsize and temp_complex_2.b < ysize and in(terreno_name[terreno[temp_complex_2.a, temp_complex_2.b].terreno], "Agua", "Agua profunda"){
 							flag_2 = false
 							break
@@ -575,7 +575,7 @@ if build_index > 0{
 				if in(edificio_nombre[build_index], "Bomba hidraulica"){
 					var flag_2 = true
 					for(var a = 0; a < ds_list_size(build_list); a++){
-						var temp_complex_3 = ds_list_find_value(build_list, a)
+						var temp_complex_3 = build_list[|a]
 						var aa = temp_complex_3.a, bb = temp_complex_3.b
 						if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
 							var temp_terreno_2 = terreno[aa, bb]
@@ -603,7 +603,7 @@ if build_index > 0{
 		function f1(build_index, build_dir, mx, my){
 			var flag = true, flag_2 = false, build_list = get_size(mx, my, build_dir, edificio_size[build_index]), temp_edificio
 			for(var a = 0; a < ds_list_size(build_list); a++){
-				var temp_complex_2 = ds_list_find_value(build_list, a)
+				var temp_complex_2 = build_list[|a]
 				var aa = temp_complex_2.a
 				var bb = temp_complex_2.b
 				var temp_terreno = terreno[aa, bb]
@@ -669,7 +669,7 @@ else if ((mouse_check_button(mb_right) and prev_change) or mouse_check_button_pr
 	delete_edificio(mx, my)
 //Ciclo edificios
 for(var a = 0; a < ds_list_size(edificios); a++){
-	temp_edificio = ds_list_find_value(edificios, a)
+	temp_edificio = edificios[|a]
 	if not temp_edificio.idle{
 		//Accion taladro
 		if in(edificio_nombre[temp_edificio.index], "Taladro", "Taladro electrico") and temp_edificio.carga_total < edificio_carga_max[temp_edificio.index]{
@@ -690,7 +690,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 				ds_list_copy(temp_list, temp_edificio.coordenadas)
 				ds_list_shuffle(temp_list)
 				while not ds_list_empty(temp_list){
-					temp_complex_2 = ds_list_find_value(temp_list, 0)
+					temp_complex_2 = temp_list[|0]
 					temp_terreno = terreno[temp_complex_2.a, temp_complex_2.b]
 					ds_list_delete(temp_list, 0)
 					if temp_terreno.ore >= 0{
@@ -784,7 +784,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 		//Acción de la bomba hidraulica
 		if in(edificio_nombre[temp_edificio.index], "Bomba hidraulica"){
 			for(var b = 0; b < ds_list_size(temp_edificio.flujo); b++){
-				var temp_flujo = ds_list_find_value(temp_edificio.flujo, b)
+				var temp_flujo = temp_edificio.flujo[|b]
 				temp_flujo.generacion -= temp_edificio.proceso
 				if temp_edificio.red.generacion < temp_edificio.red.consumo and temp_edificio.red.bateria = 0
 					temp_edificio.proceso = temp_edificio.red.generacion / temp_edificio.red.consumo
@@ -817,7 +817,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 }
 //Ciclo de redes
 for(var a = 0; a < ds_list_size(redes); a++){
-	var temp_red = ds_list_find_value(redes, a)
+	var temp_red = redes[|a]
 	temp_red.bateria = clamp(temp_red.bateria + (temp_red.generacion - temp_red.consumo) / 30, 0, temp_red.bateria_max)
 }
 if keyboard_check_pressed(ord("P"))
@@ -829,18 +829,18 @@ if keyboard_check(ord("L")){
 	var temp_text = ""
 	for(var a = 0; a < ds_list_size(redes); a++){
 		draw_set_color(make_color_hsv(a * 40, 255, 255))
-		var temp_red = ds_list_find_value(redes, a)
+		var temp_red = redes[|a]
 		temp_text += "Red " + string(a) + ":\n"
 		temp_text += "  Consumo: " + string(temp_red.consumo) + "\n"
 		temp_text += "  Generacion: " + string(temp_red.generacion) + "\n"
 		temp_text += "  Bateria: " + string(floor(temp_red.bateria)) + "/" + string(temp_red.bateria_max) + "\n"
 		temp_text += "  Edificios:\n"
 		for(var b = 0; b < ds_list_size(temp_red.edificios); b++){
-			temp_edificio = ds_list_find_value(temp_red.edificios, b)
+			temp_edificio = temp_red.edificios[|b]
 			temp_text += "    " + string(edificio_nombre[temp_edificio.index]) + "\n"
 			var temp_complex = abtoxy(temp_edificio.a, temp_edificio.b)
 			for(var c = 0; c < ds_list_size(temp_edificio.energy_link); c++){
-				var temp_edificio_2 = ds_list_find_value(temp_edificio.energy_link, c)
+				var temp_edificio_2 = temp_edificio.energy_link[|c]
 				var temp_complex_2 = abtoxy(temp_edificio_2.a, temp_edificio_2.b)
 				draw_line_off(temp_complex.a, temp_complex.b, temp_complex_2.a, temp_complex_2.b)
 			}
@@ -854,7 +854,7 @@ if keyboard_check(ord("O")){
 	var temp_text = ""
 	for(var a = 0; a < ds_list_size(flujos); a++){
 		draw_set_color(make_color_hsv(a * 40, 255, 255))
-		var temp_flujo = ds_list_find_value(flujos, a)
+		var temp_flujo = flujos[|a]
 		temp_text += "Tuberia " + string(a) + ": "
 		if temp_flujo.liquido = -1
 			temp_text += "Sin liquidos\n"
@@ -865,11 +865,11 @@ if keyboard_check(ord("O")){
 		temp_text += "  Almacenado: " + string(floor(temp_flujo.cantidad)) + "/" + string(temp_flujo.cantidad_max) + "\n"
 		temp_text += "  Edificios:\n"
 		for(var b = 0; b < ds_list_size(temp_flujo.edificios); b++){
-			temp_edificio = ds_list_find_value(temp_flujo.edificios, b)
+			temp_edificio = temp_flujo.edificios[|b]
 			temp_text += "    " + string(edificio_nombre[temp_edificio.index]) + "\n"
 			var temp_complex = abtoxy(temp_edificio.a, temp_edificio.b)
 			for(var c = 0; c < ds_list_size(temp_edificio.energy_link); c++){
-				var temp_edificio_2 = ds_list_find_value(temp_edificio.energy_link, c)
+				var temp_edificio_2 = temp_edificio.energy_link[|c]
 				var temp_complex_2 = abtoxy(temp_edificio_2.a, temp_edificio_2.b)
 				draw_line_off(temp_complex.a, temp_complex.b, temp_complex_2.a, temp_complex_2.b)
 			}

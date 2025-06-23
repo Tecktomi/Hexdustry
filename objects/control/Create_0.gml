@@ -192,7 +192,7 @@ nucleo = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
 nucleo.carga[0] = 50
 nucleo.carga_total = 50
 for(var a = 0; a < ds_list_size(nucleo.coordenadas); a++){
-	var temp_complex = ds_list_find_value(nucleo.coordenadas, a)
+	var temp_complex = nucleo.coordenadas[|a]
 	var aa = temp_complex.a, bb = temp_complex.b
 	terreno[aa, bb].terreno = 1
 	terreno[aa, bb].ore = -1
