@@ -66,51 +66,150 @@ for(var a = 0; a < xsize; a++)
 		temp_hexagono.b = b
 	}
 //Terrenos
-terreno_sprite =	[spr_piedra,	spr_pasto,	spr_agua,	spr_arena,	spr_agua_profunda]
-terreno_name =		["Piedra",		"Pasto",	"Agua",		"Arena",	"Agua profunda"]
-terreno_rss =		[true,			false,		false,		true,		false]
-terreno_rss_id =	[6,				0,			0,			5,			0]
+#region Arreglos
+	terreno_name = []
+	terreno_sprite = []
+	terreno_rss = []
+	terreno_rss_id = []
+#endregion
+function def_terreno(nombre, sprite = spr_piedra, recurso = 0){
+	array_push(terreno_name, string(nombre))
+	array_push(terreno_sprite, sprite)
+	array_push(terreno_rss_id, recurso)
+	array_push(terreno_rss, (recurso > 0))
+}
+def_terreno("Piedra", spr_piedra, 6)
+def_terreno("Pasto", spr_pasto)
+def_terreno("Agua", spr_agua)
+def_terreno("Arena", spr_arena, 5)
+def_terreno("Agua profunda", spr_agua_profunda)
 //Ores
-ore_sprite =	[spr_cobre,		spr_carbon,		spr_hierro]
-ore_recurso =	[0,				1,				3]
-ore_amount =	[80,			60,				50]
-//RSS
-rss_item_sprite =	[spr_item_cobre,	spr_item_carbon,	spr_item_bronce,	spr_item_hierro,	spr_item_acero,	spr_item_arena,	spr_item_piedra,	spr_vidrio]
-rss_name =			["Cobre",			"Carbon",			"Bronce",			"Hierro",			"Acero",		"Arena",		"Piedra",			"Vidrio"]
-rss_item_color =	[c_orange,			c_black,			c_red,				c_gray,				c_ltgray,		c_yellow,		c_gray,				c_aqua]
-rss_combustion =	[false,				true,				false,				false,				false,			false,			false,				false]
-rss_comb_time =		[0,					150,				0,					0,					0,				0,				0,					0]
+#region Arreglos
+	ore_sprite = []
+	ore_recurso = []
+	ore_amount = []
+#endregion
+function def_ore(recurso, sprite = spr_cobre, cantidad = 50){
+	array_push(ore_recurso, real(recurso))
+	array_push(ore_sprite, sprite)
+	array_push(ore_amount, cantidad)
+}
+def_ore(0, spr_cobre, 80)
+def_ore(1, spr_carbon, 60)
+def_ore(3, spr_hierro, 50)
+//Recursos
+#region Arreglos
+	rss_item_sprite = []
+	rss_name = []
+	rss_item_color = []
+	rss_combustion = []
+	rss_comb_time = []
+#endregion
+function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion = 0){
+	array_push(rss_name, string(name))
+	array_push(rss_item_sprite, sprite)
+	array_push(rss_item_color, color)
+	array_push(rss_comb_time, combustion)
+	array_push(rss_combustion, (combustion > 0))
+}
+def_recurso("Cobre", spr_item_cobre, c_orange)
+def_recurso("Carbón", spr_item_carbon, c_black, 150)
+def_recurso("Bronce", spr_item_bronce, c_red)
+def_recurso("Hierro", spr_item_hierro, c_gray)
+def_recurso("Acero", spr_item_acero, c_ltgray)
+def_recurso("Arena", spr_item_arena, c_yellow)
+def_recurso("Piedra", spr_item_piedra, c_gray)
+def_recurso("Vidrio", spr_vidrio, c_aqua)
 rss_max = array_length(rss_name)
 //Liquidos
 liquido_nombre =	["Agua"]
-//EDIFICIOS
-edificio_sprite =			[spr_base,	spr_taladro,	spr_camino,				spr_enrutador,	spr_selector,		spr_overflow,	spr_tunel,	spr_horno,				spr_generador,				spr_cable,	spr_bateria,	spr_taladro_electrico,	spr_panel_solar,	spr_bomba,			spr_tuberia,	spr_triturador,	spr_tunel_salida,	spr_energia_infinita]//Sprite
-edificio_sprite_2 =			[spr_base,	spr_taladro,	spr_camino_diagonal,	spr_enrutador_2,spr_selector_color,	spr_overflow,	spr_tunel,	spr_horno_encendido,	spr_generador_encendido,	spr_cable,	spr_bateria,	spr_taladro_electrico,	spr_panel_solar,	spr_bomba_rotor,	spr_tuberia,	spr_triturador,	spr_tunel_salida,	spr_energia_infinita]//Sprite 2
-edificio_nombre =			["Nucleo",	"Taladro",		"Cinta transportadora",	"Enrutador",	"Selector",			"Overflow",		"Tunel",	"Horno",				"Generador",				"Cable",	"Bateria",		"Taladro electrico",	"Panel solar",		"Bomba hidraulica",	"Tuberia",		"Triturador",	"Tunel",			"Energia infinita"]//Nombre
-edificio_size =				[3,			2,				1,						1,				1,					1,				1,			2,						1,							1,			1,				3,						2,					2,					1,				2,				1,					1]//Size
-edificio_receptor =			[true,		false,			true,					true,			true,				true,			true,		true,					true,						false,		false,			false,					false,				false,				false,			true,			false,				false]//Receptor
-edificio_emisor =			[false,		true,			true,					true,			true,				true,			false,		true,					false,						false,		false,			true,					false,				false,				false,			true,			true,				false]//Emisor
-edificio_carga_max =		[0,			10,				1,						1,				1,					1,				1,			30,						10,							0,			0,				20,						0,					0,					0,				10,				1,					0]//Carga max
-edificio_input_all =		[true,		true,			true,					true,			true,				true,			true,		false,					false,						false,		false,			false,					false,				false,				false,			false,			true,				false]//Input: all
-edificio_input_index =		[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[0, 1, 3, 5],			[1],						[0],		[0],			[0],					[0],				[0],				[0],			[6],			[0],				[0]]//Input: index
-edificio_input_num =		[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[4, 2, 8, 16],			[10],						[0],		[0],			[0],					[0],				[0],				[0],			[5] ,			[0],				[0]]//Input: num
-edificio_output_all =		[true,		false,			true,					true,			true,				true,			true,		false,					false,						false,		false,			true,					false,				false,				false,			false,			true,				false]//Output: all
-edificio_output_index =		[[0],		[0, 1, 3],		[0],					[0],			[0],				[0],			[0],		[2, 4, 7],				[0],						[0],		[0],			[0, 1, 3, 5, 6],		[0],				[0],				[0],			[5],			[0],				[0]]//Output: index
-edificio_rotable =			[false,		true,			true,					true,			true,				true,			true,		true,					false,						false,		false,			false,					true,				true,				false,			true,			true,				false]//Rotable
-edificio_proceso =			[0,			100,			20,						20,				20,					20,				20,			150,					0,							0,			0,				40,						0,					1,					1,				40,				20,					0]//Steps proceso
-edificio_combutable =		[false,		false,			false,					false,			false,				false,			false,		true,					true,						false,		false,			false,					false,				false,				false,			false,			false,				false]//Combustable
-edificio_camino =			[false,		false,			true,					true,			true,				true,			false,		false,					false,						false,		false,			false,					false,				false,				false,			false,			false,				false]//Es camino?
-edificio_electricidad =		[false,		false,			false,					false,			false,				false,			false,		false,					true,						true,		true,			true,					true,				true,				false,			true,			false,				true]//Se conecta a la red electrica?
-edificio_elec_consumo =		[0,			0,				0,						0,				0,					0,				0,			0,						-20,						1,			0,				75,						-5,					25,					0,				30,				0,					-999999]//Consumo electrico (negativos para generadores)
-edificio_precio_index =		[[0],		[0],			[0],					[0],			[0],				[0],			[0, 3],		[0, 3],					[0, 3],						[0, 3],		[0, 2],			[0, 2, 4],				[0, 2, 4],			[0, 4, 7],			[4],			[0, 4],			[0, 3],				[0]]//Edificio_precio: index
-edificio_precio_num =		[[0],		[15],			[1],					[2],			[2],				[2],			[4, 4],		[20, 15],				[20, 5],					[5, 1],		[20, 5],		[20, 10, 25],			[40, 10, 10],		[10, 20, 10],		[3],			[10, 25],		[4, 4],				[0]]//Edificio_precio: num
-edificio_key =				[0,			ord("Q"),		ord(1),					ord(2),			ord(3),				ord(4),			ord(5),		ord("W"),				ord("A"),					ord("S"),	ord("D"),		ord("E"),				ord("F"),			ord("Z"),			ord("X"),		ord("R"),		0,					ord("M")]//Acceso directo
-edificio_vida =				[1000,		100,			15,						15,				15,					15,				25,			120,					30,							10,			30,				180,					60,					60,					10,				80,				30,					25]//Resistencia
-edificio_flujo =			[false,		false,			false,					false,			false,				false,			false,		false,					false,						false,		false,			false,					false,				true,				true,			false,			false,				false]//Se conecta a cañerias?
-edificio_flujo_input_id =	[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[0],					[0],						[0],		[0],			[0],					[0],				[0],				[0],			[0],			[0],				[0]]//flujo_input_id
-edificio_flujo_input_num =	[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[0],					[0],						[0],		[0],			[0],					[0],				[0],				[0],			[0],			[0],				[0]]//flujo_input_num
-edificio_flujo_output_id =	[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[0],					[0],						[0],		[0],			[0],					[0],				[0],				[0],			[0],			[0],				[0]]//flujo_output_num
-edificio_flujo_output_num =	[[0],		[0],			[0],					[0],			[0],				[0],			[0],		[0],					[0],						[0],		[0],			[0],					[0],				[0],				[20],			[0],			[0],				[0]]//flujo_output_num
+//Edificios
+#region Arreglos
+	edificio_sprite = []
+	edificio_sprite_2 = []
+	edificio_nombre = []
+	edificio_size = []
+	edificio_receptor = []
+	edificio_emisor = []
+	edificio_carga_max = []
+	edificio_input_all = []
+	edificio_input_index = []
+	edificio_input_num = []
+	edificio_output_all = []
+	edificio_output_index = []
+	edificio_rotable = []
+	edificio_proceso = []
+	edificio_combutable = []
+	edificio_camino = []
+	edificio_electricidad =	[]
+	edificio_elec_consumo = []
+	edificio_precio_index = []
+	edificio_precio_num = []
+	edificio_key = []
+	edificio_vida =	[]
+	edificio_flujo = []
+	edificio_flujo_input_id = []
+	edificio_flujo_input_num = []
+	edificio_flujo_output_id = []
+	edificio_flujo_output_num = []
+#endregion
+function def_edificio(nombre, size, sprite = spr_base, sprite_2 = spr_base, key = vk_nokey, vida = 100, proceso = 0, camino = false, combustible = false, precio_id = [0], precio_num = [0], carga = 0, receptor = false, in_all = true, in_id = [0], in_num = [0], emisor = false, out_all = true, out_id = [0], electricidad = 0, agua = 0){
+	array_push(edificio_nombre, string(nombre))
+	array_push(edificio_size, real(size))
+	array_push(edificio_sprite, sprite)
+	array_push(edificio_sprite_2, (sprite_2 = spr_base) ? sprite : sprite_2)
+	array_push(edificio_key, key)
+	array_push(edificio_rotable, ((size mod 2) = 0 or camino))
+	array_push(edificio_vida, vida)
+	array_push(edificio_proceso, proceso)
+	array_push(edificio_camino, camino)
+	array_push(edificio_combutable, combustible)
+	array_push(edificio_precio_index, precio_id)
+	array_push(edificio_precio_num, precio_num)
+	array_push(edificio_carga_max, carga)
+	array_push(edificio_receptor, receptor)
+	array_push(edificio_input_all, receptor ? in_all : false)
+	if receptor and not in_all{
+		array_push(edificio_input_index, in_id)
+		array_push(edificio_input_num, in_num)
+	}
+	else{
+		array_push(edificio_input_index, [0])
+		array_push(edificio_input_num, [0])
+	}
+	array_push(edificio_emisor, emisor)
+	array_push(edificio_output_all, emisor ? out_all : false)
+	if emisor and not out_all
+		array_push(edificio_output_index, out_id)
+	else
+		array_push(edificio_output_index, [0])
+	array_push(edificio_electricidad, (electricidad != 0))
+	array_push(edificio_elec_consumo, electricidad)
+	array_push(edificio_flujo, (agua != 0))
+	array_push(edificio_flujo_input_id, [0])
+	array_push(edificio_flujo_input_num, [max(0, -agua)])
+	array_push(edificio_flujo_output_id, [0])
+	array_push(edificio_flujo_output_num, [max(0, agua)])
+}
+def_edificio("Nucleo", 3, spr_base,,, 1000,,,,,,, true)
+def_edificio("Cinta transportadora", 1, spr_camino, spr_camino_diagonal, ord(1), 15, 20, true,, [0], [1], 1, true,,,, true)
+def_edificio("Enrutador", 1, spr_enrutador, spr_enrutador_2, ord(2), 15, 20, true,, [0], [2], 1, true,,,, true)
+def_edificio("Selector", 1, spr_selector, spr_selector_color, ord(3), 15, 20, true,, [0], [2], 1, true,,,, true)
+def_edificio("Overflow", 1, spr_overflow,, ord(4), 15, 20, true,, [0], [2], 1, true,,,, true)
+def_edificio("Tunel", 1, spr_tunel,, ord(5), 25, 20, true,, [0, 3], [4, 4], 1, true)
+def_edificio("Tunel", 1, spr_tunel_salida,,, 25, 20, true,, [0, 3], [4, 4], 1, true)
+def_edificio("Taladro", 2, spr_taladro,, ord("Q"), 100, 100,,, [0], [15], 10,,,,, true, false, [0, 1, 3])
+def_edificio("Horno", 2, spr_horno, spr_horno_encendido, ord("W"), 120, 150, false, true, [0, 3], [20, 15], 30, true, false, [0, 1, 3, 5], [4, 2, 8, 16], true, false, [2, 4, 7])
+def_edificio("Taladro electrico", 3, spr_taladro_electrico,, ord("E"), 180, 40,,, [0, 2, 4], [20, 10, 25], 20,,,,, true, false, [0, 1, 3, 5, 6], 75)
+def_edificio("Triturador", 2, spr_triturador,, ord("R"), 80, 40,,, [0, 4], [10, 25], 10, true, false, [6], [5], true, false, [5], 30)
+//10
+def_edificio("Generador", 1, spr_generador, spr_generador_encendido, ord("A"), 30,,, true, [0, 3], [20, 5], 10, true, false, [1], [10], false,,, -20)
+def_edificio("Cable", 1, spr_cable,, ord("S"), 10,,,, [0, 3], [5, 1],,,,,,,,, 1)
+def_edificio("Bateria", 1, spr_bateria,, ord("D"), 30,,,, [0, 2], [20, 5],,,,,,,,, 1)
+def_edificio("Panel solar", 2, spr_panel_solar,, ord("F"), 60,,,, [0, 2, 4], [40, 10, 10],,,,,,,,, -5)
+def_edificio("Bomba hidraulica", 2, spr_bomba, spr_bomba_rotor, ord("Z"), 60, 1,,, [0, 4, 7], [10, 20, 10],,,,,,,,, 25, 10)
+def_edificio("Tuberia", 1, spr_tuberia,, ord("X"), 10, 1,,, [4, 7], [1, 1],,,,,,,,,, 1)
+def_edificio("Energia infinita", 1, spr_energia_infinita,, ord("M"), 25,,,,,,,,,,,,,, -infinity)
 edificio_max = array_length(edificio_nombre)
 size_size = [1, 3, 7, 12, 19, 27]
 size_borde = [6, 9, 12, 15, 18, 21]
@@ -162,9 +261,7 @@ camy = 0
 //Terreno
 var e = 0
 repeat(4){
-	var a = irandom(xsize - 1)
-	var b = irandom(ysize - 1)
-	var c = 0
+	var a = irandom(xsize - 1), b = irandom(ysize - 1), c = 0
 	if e <= 1
 		c = 2 * e++
 	else
@@ -173,15 +270,12 @@ repeat(4){
 		if terreno[a, b].terreno != 2
 			terreno[a, b].terreno = c
 		for(var d = 0; d < 6; d++){
-			var temp_complex = next_to(a, b, d)
-			var aa = clamp(temp_complex.a, 0, xsize - 1)
-			var bb = clamp(temp_complex.b, 0, ysize - 1)
+			var temp_complex = next_to(a, b, d), aa = clamp(temp_complex.a, 0, xsize - 1), bb = clamp(temp_complex.b, 0, ysize - 1)
 			if terreno[aa, bb].terreno != 2
 				terreno[aa, bb].terreno = c
 		}
 		repeat(2){
-			var d = irandom(5)
-			var temp_complex = next_to(a, b, d)
+			var d = irandom(5), temp_complex = next_to(a, b, d)
 			a = clamp(temp_complex.a, 0, xsize - 1)
 			b = clamp(temp_complex.b, 0, ysize - 1)
 		}
@@ -192,8 +286,7 @@ nucleo = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
 nucleo.carga[0] = 50
 nucleo.carga_total = 50
 for(var a = 0; a < ds_list_size(nucleo.coordenadas); a++){
-	var temp_complex = nucleo.coordenadas[|a]
-	var aa = temp_complex.a, bb = temp_complex.b
+	var temp_complex = nucleo.coordenadas[|a], aa = temp_complex.a, bb = temp_complex.b
 	terreno[aa, bb].terreno = 1
 	terreno[aa, bb].ore = -1
 }
@@ -203,9 +296,7 @@ for(var a = 0; a < xsize; a++)
 		//Añadir arena
 		if terreno[a, b].terreno = 2 or (terreno[a, b].terreno = 3 and random(1) < 0.2)
 			for(var c = 0; c < 6; c++){
-				var temp_complex = next_to(a, b, c)
-				var aa = temp_complex.a
-				var bb = temp_complex.b
+				var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
 				if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
 					var temp_terreno = terreno[aa, bb]
 					if not in(temp_terreno.terreno, 2, 4)
@@ -216,9 +307,7 @@ for(var a = 0; a < xsize; a++)
 		if terreno[a, b].terreno = 2{
 			var flag = true
 			for(var c = 0; c < 6; c++){
-				var temp_complex = next_to(a, b, c)
-				var aa = temp_complex.a
-				var bb = temp_complex.b
+				var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
 				if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
 					var temp_terreno = terreno[aa, bb]
 					if not in(temp_terreno.terreno, 2, 4){
@@ -234,9 +323,7 @@ for(var a = 0; a < xsize; a++)
 //Natural Ores
 e = 0
 repeat(6){
-	var a = irandom(xsize - 1)
-	var b = irandom(ysize - 1)
-	var c = 0
+	var a = irandom(xsize - 1), b = irandom(ysize - 1), c = 0
 	if e < array_length(ore_recurso)
 		c = e++
 	else
@@ -250,9 +337,7 @@ repeat(6){
 			temp_terreno.ore_amount += floor(random_range(0.3, 1) * ore_amount[c])
 		}
 		for(var d = 0; d < 6; d++){
-			var temp_complex = next_to(a, b, d)
-			var aa = temp_complex.a
-			var bb = temp_complex.b
+			var temp_complex = next_to(a, b, d), aa = temp_complex.a, bb = temp_complex.b
 			if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
 				temp_terreno = terreno[aa, bb]
 				if not in(temp_terreno.terreno, 2, 4){
@@ -263,8 +348,7 @@ repeat(6){
 				}
 			}
 		}
-		var d = irandom(5)
-		var temp_complex = next_to(a, b, d)
+		var d = irandom(5), temp_complex = next_to(a, b, d)
 		a = clamp(temp_complex.a, 0, xsize - 1)
 		b = clamp(temp_complex.b, 0, ysize - 1)
 	}
