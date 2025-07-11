@@ -16,7 +16,7 @@ function delete_edificio(aa, bb){
 		}
 		ds_list_destroy(edificio.coordenadas)
 		//Eliminar tuneles
-		if edificio_nombre[edificio.index] = "Tunel" and not edificio.idle
+		if edificio_nombre[edificio.index] = "Túnel" and not edificio.idle
 			edificio.link.idle = true
 		//Cancelar outputs
 		for(var a = 0; a < ds_list_size(edificio.outputs); a++){
@@ -53,7 +53,7 @@ function delete_edificio(aa, bb){
 				var red_bateria = 0
 				for(var a = 0; a < ds_list_size(temp_red.edificios); a++){
 					var temp_edificio = temp_red.edificios[|a]
-					if in(edificio_nombre[temp_edificio.index], "Bateria")
+					if in(edificio_nombre[temp_edificio.index], "Batería")
 						red_bateria++}
 				var visitado = ds_list_create(), agregado = ds_list_create()
 				while not ds_list_empty(temp_red.edificios){
@@ -65,7 +65,7 @@ function delete_edificio(aa, bb){
 						ds_list_add(agregado, nodo)
 						while not ds_stack_empty(pila){
 							nodo = ds_stack_pop(pila)
-							if in(edificio_nombre[nodo.index], "Bateria")
+							if in(edificio_nombre[nodo.index], "Batería")
 								isla_bateria ++
 							ds_list_add(isla, nodo)
 							ds_list_remove(temp_red.edificios, nodo)
@@ -97,7 +97,7 @@ function delete_edificio(aa, bb){
 								temp_red_2.consumo += edificio_elec_consumo[temp_edificio.index]
 							else
 								temp_red_2.generacion += temp_edificio.energy_output
-							if in(edificio_nombre[temp_edificio.index], "Bateria")
+							if in(edificio_nombre[temp_edificio.index], "Batería")
 								temp_red_2.bateria_max += 1000
 						}
 						ds_list_add(redes, temp_red_2)

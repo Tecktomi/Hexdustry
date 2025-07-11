@@ -86,6 +86,8 @@ function mover(aa, bb){
 			}
 			//Output general
 			else for(var a = 0; a < ds_list_size(edificio.outputs); a++){
+				if edificio_nombre[edificio.index] = "Túnel"
+					show_debug_message(0)
 				temp_edificio = edificio.outputs[|(edificio.output_index + a) mod ds_list_size(edificio.outputs)]
 				if (temp_edificio.carga_total < control.edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
 					flag = true
@@ -98,6 +100,8 @@ function mover(aa, bb){
 		}
 	//Movimiento de recursos
 	if flag{
+		if edificio_nombre[edificio.index] = "Túnel"
+			show_debug_message(1)
 		edificio.carga[out]--
 		edificio.carga_total--
 		temp_edificio.carga[out]++
@@ -105,7 +109,7 @@ function mover(aa, bb){
 		temp_edificio.carga_id = out
 		if edificio.carga_total = 0
 			edificio.waiting = false
-		if control.edificio_receptor[edificio.index] or in(control.edificio_nombre[edificio.index], "Tunel")
+		if control.edificio_receptor[edificio.index] or in(control.edificio_nombre[edificio.index], "Túnel")
 			for(var a = 0; a < ds_list_size(edificio.inputs); a++){
 				temp_edificio = edificio.inputs[|a]
 				if temp_edificio.waiting and mover(temp_edificio.a, temp_edificio.b) and temp_edificio.carga_total = 0

@@ -98,10 +98,10 @@ function add_edificio(index, dir, a, b){
 							}
 					if edificio_receptor[temp_edificio.index] and edificio_emisor[index] and (ds_list_find_index(new_edificio.outputs, temp_edificio) = -1) and flag{
 						flag = true
-						if in(edificio_nombre[index], "Cinta transportadora") and not
+						if in(edificio_nombre[index], "Cinta Transportadora") and not
 							complex_equal(temp_complex, next_to(a, b, dir))
 							flag = false
-						if flag and in(edificio_nombre[temp_edificio.index], "Cinta transportadora") and
+						if flag and in(edificio_nombre[temp_edificio.index], "Cinta Transportadora") and
 							next_to_build(next_to(xx, yy, temp_dir), new_edificio)
 							flag = false
 						if flag and in(edificio_nombre[index], "Enrutador", "Selector", "Overflow") and not(
@@ -109,7 +109,7 @@ function add_edificio(index, dir, a, b){
 							complex_equal(temp_complex, next_to(a, b, dir)) or
 							complex_equal(temp_complex, next_to(a, b, (dir + 1) mod 6)))
 							flag = false
-						if flag and in(edificio_nombre[temp_edificio.index], "Enrutador", "Selector", "Overflow", "Tunel")
+						if flag and in(edificio_nombre[temp_edificio.index], "Enrutador", "Selector", "Overflow", "Túnel")
 							for(var d = 0; d < ds_list_size(new_edificio.coordenadas); d++)
 								if complex_equal(next_to(xx, yy, (temp_dir + 5) mod 6), new_edificio.coordenadas[|d]) or
 								complex_equal(next_to(xx, yy, temp_dir), new_edificio.coordenadas[|d]) or
@@ -117,7 +117,7 @@ function add_edificio(index, dir, a, b){
 									flag = false
 									break
 								}
-						if flag and in(edificio_nombre[index], "Tunel") and(
+						if flag and in(edificio_nombre[index], "Túnel") and(
 							complex_equal(temp_complex, next_to(a, b, (dir + 5) mod 6)) or
 							complex_equal(temp_complex, next_to(a, b, dir)) or
 							complex_equal(temp_complex, next_to(a, b, (dir + 1) mod 6)))
@@ -139,13 +139,13 @@ function add_edificio(index, dir, a, b){
 							}
 					if edificio_emisor[temp_edificio.index] and edificio_receptor[index] and (ds_list_find_index(new_edificio.inputs, temp_edificio) = -1) and flag{
 						flag = true
-						if in(edificio_nombre[index], "Cinta transportadora") and
+						if in(edificio_nombre[index], "Cinta Transportadora") and
 							complex_equal(temp_complex, next_to(a, b, dir))
 							flag = false
-						if flag and in(edificio_nombre[temp_edificio.index], "Cinta transportadora") and not
+						if flag and in(edificio_nombre[temp_edificio.index], "Cinta Transportadora") and not
 							next_to_build(next_to(xx, yy, temp_dir), new_edificio)
 							flag = false
-						if flag and in(edificio_nombre[index], "Enrutador", "Selector", "Overflow", "Tunel") and(
+						if flag and in(edificio_nombre[index], "Enrutador", "Selector", "Overflow", "Túnel") and(
 							complex_equal(temp_complex, next_to(a, b, (dir + 5) mod 6)) or
 							complex_equal(temp_complex, next_to(a, b, dir)) or
 							complex_equal(temp_complex, next_to(a, b, (dir + 1) mod 6)))
@@ -160,7 +160,7 @@ function add_edificio(index, dir, a, b){
 									break
 								}
 						}
-						if flag and in(edificio_nombre[temp_edificio.index], "Tunel")
+						if flag and in(edificio_nombre[temp_edificio.index], "Túnel")
 							for(var d = 0; d < ds_list_size(new_edificio.coordenadas); d++)
 								if complex_equal(next_to(xx, yy, (temp_dir + 5) mod 6), new_edificio.coordenadas[|d]) or
 								complex_equal(next_to(xx, yy, temp_dir), new_edificio.coordenadas[|d]) or
@@ -181,7 +181,7 @@ function add_edificio(index, dir, a, b){
 		ds_list_destroy(temp_list_2)
 		//Añadir a la red electrica
 		if edificio_electricidad[index]{
-			if in(edificio_nombre[index], "Panel solar", "Energia infinita")
+			if in(edificio_nombre[index], "Panel Solar", "Energía Infinita")
 				new_edificio.energy_output = -edificio_elec_consumo[index]
 			var temp_complex = abtoxy(a, b)
 			//Detectar otras redes cerca
@@ -236,7 +236,7 @@ function add_edificio(index, dir, a, b){
 				temp_red.consumo += edificio_elec_consumo[index]
 			else
 				temp_red.generacion += new_edificio.energy_output
-			if in(edificio_nombre[index], "Bateria")
+			if in(edificio_nombre[index], "Batería")
 				temp_red.bateria_max += 1000
 			new_edificio.red = temp_red
 			ds_list_add(temp_red.edificios, new_edificio)
