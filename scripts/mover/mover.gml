@@ -85,12 +85,14 @@ function mover(aa, bb){
 				}
 			}
 			//Output general
-			else for(var a = 0; a < ds_list_size(edificio.outputs); a++){
-				temp_edificio = ds_list_find_value(edificio.outputs, (edificio.output_index + a) mod ds_list_size(edificio.outputs))
-				if (temp_edificio.carga_total < control.edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
-					flag = true
-					edificio.output_index = (edificio.output_index + a + 1) mod ds_list_size(edificio.outputs)
-					break
+			else{
+				for(var a = 0; a < ds_list_size(edificio.outputs); a++){
+					temp_edificio = ds_list_find_value(edificio.outputs, (edificio.output_index + a) mod ds_list_size(edificio.outputs))
+					if (temp_edificio.carga_total < control.edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
+						flag = true
+						edificio.output_index = (edificio.output_index + a + 1) mod ds_list_size(edificio.outputs)
+						break
+					}
 				}
 			}
 			if flag

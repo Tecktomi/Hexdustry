@@ -34,16 +34,13 @@ function add_edificio(index, dir, a, b){
 	ds_list_add(new_edificio.flujo_link, control.null_edificio)
 	ds_list_clear(new_edificio.flujo_link)
 	var temp_terreno, temp_complex
-	//Carga máxima y output general
-	for(var c = 0; c < control.rss_max; c++){
+	for(var c = 0; c < control.rss_max; c++)
 		new_edificio.carga[c] = 0
-		if control.edificio_input_all[index]
+	if control.edificio_input_all[index]{
+		for(var c = 0; c < control.rss_max; c++)
 			new_edificio.carga_max[c] = control.edificio_carga_max[index]
-		if control.edificio_output_all[index]
-			new_edificio.carga_output[c] = true
 	}
-	//Inputs y carga máxima particular
-	if not control.edificio_input_all[index]{
+	else{
 		var d = 0
 		for(var c = 0; c < control.rss_max; c++)
 			if d < array_length(control.edificio_input_index[index]) and c = control.edificio_input_index[index, d]{
@@ -53,8 +50,11 @@ function add_edificio(index, dir, a, b){
 			else
 				new_edificio.carga_max[c] = 0
 	}
-	//output particular
-	if not control.edificio_output_all[index]{
+	if control.edificio_output_all[index]{
+		for(var c = 0; c < control.rss_max; c++)
+			new_edificio.carga_output[c] = true
+	}
+	else{
 		var d = 0
 		for(var c = 0; c < control.rss_max; c++){
 			if d < array_length(control.edificio_output_index[index]) and control.edificio_output_index[index, d] = c{
