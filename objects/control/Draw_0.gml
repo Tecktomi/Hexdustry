@@ -297,45 +297,78 @@ if temp_hexagono != noone and flag{
 	draw_text(0, 0, temp_text)
 }
 flag = false
-//Menu de edificios cerrado
-if build_menu = 0{
-	draw_set_color(c_ltgray)
-	draw_rectangle(room_width/2 - 100, room_height - 20, room_width/2 + 100, room_height, false)
-	draw_set_color(c_black)
-	draw_rectangle(room_width/2 - 100, room_height - 20, room_width/2 + 100, room_height, true)
-	if mouse_x > room_width/2 - 100 and mouse_y > room_height - 20 and mouse_x < room_width/2 + 100 and mouse_y < room_height
-		build_menu = 100
+//Menú de edificios
+var just_pressed = false
+if mouse_check_button_pressed(mb_right) and build_index = 0 and not temp_terreno.edificio_bool{
+	mouse_clear(mb_right)
+	if build_menu = 0{
+		build_menu = 1
+		menu_x = mouse_x
+		menu_y = mouse_y
+	}
+	else if build_menu = 1
+		build_menu = 0
+	else
+		build_menu = 1
 }
-//Menu de edificios abierto
-else{
-	build_menu--
-	draw_set_color(c_ltgray)
-	draw_rectangle(0, room_height - 40, room_width, room_height, false)
-	draw_set_color(c_black)
-	draw_rectangle(0, room_height - 40, room_width, room_height, true)
-	if mouse_x > 0 and mouse_y > room_height - 40 and mouse_x < room_width and mouse_y < room_height
-		build_menu = 100
-	for(var a = 1; a < edificio_max; a++)
-		if not in(a, 16, 17){
-			draw_sprite_stretched(edificio_sprite[a], 0, a * 40 + 5, room_height - 35, 30, 30)
-			draw_rectangle(a * 40 + 5, room_height - 35, a * 40 + 35, room_height - 5, true)
-			if mouse_x > a * 40 + 5 and mouse_y > room_height - 35 and mouse_x < a * 40 + 35 and mouse_y < room_height - 5{
-				draw_set_color(c_ltgray)
-				var temp_text = $"{edificio_nombre[a]} ({chr(edificio_key[a])})\n"
-				for(var b = 0; b < array_length(edificio_precio_index[a]); b++)
-					if edificio_precio_num[a, b] > 0
-						temp_text += $"{rss_name[edificio_precio_index[a, b]]}: {edificio_precio_num[a, b]}\n"
-				draw_rectangle(mouse_x, room_height - 40 - string_height(temp_text), mouse_x + string_width(temp_text), room_height - 40, false)
-				draw_set_color(c_black)
-				draw_text(mouse_x, room_height - 40 - string_height(temp_text), temp_text)
-				if mouse_check_button_pressed(mb_left){
-					mouse_clear(mb_left)
-					build_index = a
-					build_menu = 0
-					flag = true
-				}
+if build_menu = 1{
+	menu_array = [2, 1, 12, 14]
+	var b = 2 * pi / array_length(menu_array)
+	draw_set_color(c_white)
+	draw_circle(menu_x, menu_y, 100, true)
+	draw_circle(menu_x, menu_y, 10, false)
+	for(var a = 0; a < array_length(menu_array); a++){
+		var angle = a * b
+		draw_sprite_stretched(edificio_sprite[menu_array[a]], 0, menu_x - 15 + 100 * cos(angle + b / 2), menu_y - 15 - 100 * sin(angle + b / 2), 30, 30)
+		draw_line(menu_x, menu_y, menu_x + 100 * cos(angle), menu_y - 100 * sin(angle))
+	}
+	if mouse_check_button_pressed(mb_left){
+		mouse_clear(mb_left)
+		if sqrt(sqr(mouse_x - menu_x) + sqr(mouse_y - menu_y)) < 100{
+			build_menu = 2
+			if mouse_x > menu_x{
+				if mouse_y > menu_y
+					menu_array = [14, 15]
+				else
+					menu_array = [2, 3, 4, 5, 6, 18]
+			}
+			else{
+				if mouse_y > menu_y
+					menu_array = [10, 11, 12, 13]
+				else
+					menu_array = [1, 7, 8, 9]
 			}
 		}
+		else
+			build_menu = 0
+	}
+}
+else if build_menu = 2{
+	var b = 2 * pi / array_length(menu_array)
+	draw_set_color(c_white)
+	draw_circle(menu_x, menu_y, 100, true)
+	draw_circle(menu_x, menu_y, 10, false)
+	for(var a = 0; a < array_length(menu_array); a++){
+		var angle = a * b
+		draw_sprite_stretched(edificio_sprite[menu_array[a]], 0, menu_x - 15 + 100 * cos(angle + b / 2), menu_y - 15 - 100 * sin(angle + b / 2), 30, 30)
+		draw_line(menu_x, menu_y, menu_x + 100 * cos(angle), menu_y - 100 * sin(angle))
+	}
+	if sqrt(sqr(mouse_x - menu_x) + sqr(mouse_y - menu_y)) < 100{
+		b = menu_array[floor((array_length(menu_array) - arctan2(mouse_y - menu_y, mouse_x - menu_x) / b) mod array_length(menu_array))]
+		draw_text(mouse_x, mouse_y + 20, edificio_nombre[b])
+		if mouse_check_button_pressed(mb_left){
+			mouse_clear(mb_left)
+			build_index = b
+			build_menu = 0
+			flag = true
+			just_pressed = true
+			show_debug_message(image_index)
+		}
+	}
+	else if mouse_check_button_pressed(mb_left){
+		mouse_clear(mb_left)
+		build_menu = 1
+	}
 }
 //Acceso directo
 if keyboard_check_pressed(vk_anykey) and (not keyboard_check_pressed(ord("M")) or cheat)
@@ -345,7 +378,7 @@ if keyboard_check_pressed(vk_anykey) and (not keyboard_check_pressed(ord("M")) o
 			build_index = a
 			flag = true
 		}
-//Cacelar construccion o cerrar menu
+//Cancelar construcción o cerrar menú del selector
 if (mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape)) and (build_index > 0 or show_menu){
 	mouse_clear(mb_right)
 	build_index = 0
@@ -358,19 +391,21 @@ if build_index > 0{
 	if flag and edificio_size[build_index] mod 2 = 0
 		build_dir = 5 * (build_dir mod 2)
 	//Rotar
-	if mouse_wheel_up() and edificio_rotable[build_index] and not keyboard_check(vk_lcontrol){
-		if edificio_size[build_index] mod 2 = 0
-			build_dir = 5 - build_dir
-		else
-			build_dir = (build_dir + 1) mod 6
-		flag = true
-	}
-	if mouse_wheel_down() and edificio_rotable[build_index] and not keyboard_check(vk_lcontrol){
-		if edificio_size[build_index] mod 2 = 0
-			build_dir = 5 - build_dir
-		else
-			build_dir = build_dir - 1 + 6 * (build_dir = 0)
-		flag = true
+	if edificio_rotable[build_index] and not keyboard_check(vk_lcontrol){
+		if mouse_wheel_up(){
+			if edificio_size[build_index] mod 2 = 0
+				build_dir = 5 - build_dir
+			else
+				build_dir = (build_dir + 1) mod 6
+			flag = true
+		}
+		if mouse_wheel_down(){
+			if edificio_size[build_index] mod 2 = 0
+				build_dir = 5 - build_dir
+			else
+				build_dir = build_dir - 1 + 6 * (build_dir = 0)
+			flag = true
+		}
 	}
 	if last_mx != mx or last_my != my or flag{
 		build_list = get_size(mx, my, build_dir, edificio_size[build_index])
@@ -395,7 +430,7 @@ if build_index > 0{
 			for(var a = 0; a < ds_list_size(build_list); a++){
 				var temp_complex_2 = ds_list_find_value(build_list, a)
 				var temp_complex_3 = abtoxy(temp_complex_2.a, temp_complex_2.b)
-				draw_sprite_off(spr_rojo, 0, temp_complex_3.a, temp_complex_3.b, , , , , 0.5)
+				draw_sprite_off(spr_rojo, 0, temp_complex_3.a, temp_complex_3.b,,,,, 0.5)
 			}
 		}
 		flag = true
@@ -905,7 +940,7 @@ if keyboard_check(vk_lcontrol) and mouse_wheel_down() and zoom > 1{
 }
 if mouse_x > room_width - 40
 	camx = min(camx + 4 + 12 * keyboard_check(vk_lshift), room_width * (zoom - 1))
-if mouse_y > room_height - 40 and build_menu = 0
+if mouse_y > room_height - 40
 	camy = min(camy + 4 + 12 * keyboard_check(vk_lshift), room_height * (zoom - 1))
 if mouse_x < 40 and camx > 0
 	camx = max(camx - 4 - 12 * keyboard_check(vk_lshift), 0)
