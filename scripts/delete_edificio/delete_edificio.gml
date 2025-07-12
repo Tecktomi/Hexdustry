@@ -1,8 +1,8 @@
 function delete_edificio(aa, bb){
 	with control{
-		var temp_terreno = terreno[aa, bb]
-		if temp_terreno.edificio_bool
-			var edificio = temp_terreno.edificio
+		var terreno = terreno[aa, bb]
+		if terreno.edificio_bool
+			var edificio = terreno.edificio
 		else
 			exit
 		ds_list_remove(edificios, edificio)

@@ -288,10 +288,6 @@ if temp_hexagono != noone and flag{
 		}
 		temp_text += "___________________\n"
 	}
-	draw_set_alpha(0.5)
-	draw_set_color(c_black)
-	draw_rectangle(0, 0, string_width(temp_text), string_height(temp_text), false)
-	draw_set_alpha(1)
 	draw_set_color(c_white)
 	draw_text(0, 0, temp_text)
 }
