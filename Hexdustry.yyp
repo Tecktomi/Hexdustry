@@ -25,6 +25,7 @@
   },
   "name":"Hexdustry",
   "resources":[
+    {"id":{"name":"tf_letra","path":"fonts/tf_letra/tf_letra.yy",},},
     {"id":{"name":"control","path":"objects/control/control.yy",},},
     {"id":{"name":"obj_hexagono","path":"objects/obj_hexagono/obj_hexagono.yy",},},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
@@ -56,6 +57,8 @@
     {"id":{"name":"spr_camino_diagonal","path":"sprites/spr_camino_diagonal/spr_camino_diagonal.yy",},},
     {"id":{"name":"spr_camino","path":"sprites/spr_camino/spr_camino.yy",},},
     {"id":{"name":"spr_carbon","path":"sprites/spr_carbon/spr_carbon.yy",},},
+    {"id":{"name":"spr_cinta_magnetica_diagonal","path":"sprites/spr_cinta_magnetica_diagonal/spr_cinta_magnetica_diagonal.yy",},},
+    {"id":{"name":"spr_cinta_magnetica","path":"sprites/spr_cinta_magnetica/spr_cinta_magnetica.yy",},},
     {"id":{"name":"spr_cobre","path":"sprites/spr_cobre/spr_cobre.yy",},},
     {"id":{"name":"spr_enemigo","path":"sprites/spr_enemigo/spr_enemigo.yy",},},
     {"id":{"name":"spr_energia_infinita","path":"sprites/spr_energia_infinita/spr_energia_infinita.yy",},},
