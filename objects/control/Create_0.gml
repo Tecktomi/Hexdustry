@@ -10,7 +10,6 @@ show_menu = false
 show_menu_build = undefined
 show_menu_x = 0
 show_menu_y = 0
-draw_set_font(ft_text)
 pre_build_list = ds_list_create()
 ds_list_add(pre_build_list, {a : 0, b : 0})
 ds_list_clear(pre_build_list)
@@ -83,7 +82,7 @@ def_terreno("Piedra", spr_piedra, 6)
 def_terreno("Pasto", spr_pasto)
 def_terreno("Agua", spr_agua)
 def_terreno("Arena", spr_arena, 5)
-def_terreno("Agua Profunda", spr_agua_profunda)
+def_terreno("Agua profunda", spr_agua_profunda)
 //Ores
 #region Arreglos
 	ore_sprite = []
@@ -192,27 +191,25 @@ function def_edificio(nombre, size, sprite = spr_base, sprite_2 = spr_base, key 
 	array_push(edificio_flujo_output_id, [0])
 	array_push(edificio_flujo_output_num, [max(0, agua)])
 }
-def_edificio("Núcleo", 3, spr_base,,, 1000,,,,,,, true)
+def_edificio("Nucleo", 3, spr_base,,, 1000,,,,,,, true)
+def_edificio("Cinta transportadora", 1, spr_camino, spr_camino_diagonal, ord(1), 15, 20, true,, [0], [1], 1, true,,,, true)
+def_edificio("Enrutador", 1, spr_enrutador, spr_enrutador_2, ord(2), 15, 20, true,, [0], [2], 1, true,,,, true)
+def_edificio("Selector", 1, spr_selector, spr_selector_color, ord(3), 15, 20, true,, [0], [2], 1, true,,,, true)
+def_edificio("Overflow", 1, spr_overflow,, ord(4), 15, 20, true,, [0], [2], 1, true,,,, true)
+def_edificio("Tunel", 1, spr_tunel,, ord(5), 25, 20, true,, [0, 3], [4, 4], 1, true)
+def_edificio("Tunel", 1, spr_tunel_salida,,, 25, 20, true,, [0, 3], [4, 4], 1, true)
 def_edificio("Taladro", 2, spr_taladro,, ord("Q"), 100, 100,,, [0], [15], 10,,,,, true, false, [0, 1, 3])
-def_edificio("Cinta Transportadora", 1, spr_camino, spr_camino_diagonal, ord(1), 15, 20, true,, [0], [1], 1, true,,,, true)
-def_edificio("Enrutador", 1, spr_enrutador, spr_enrutador_2, ord(2), 15, 20, true,, [0], [4], 1, true,,,, true)
-def_edificio("Selector", 1, spr_selector, spr_selector_color, ord(3), 15, 20, true,, [0], [4], 1, true,,,, true)
-def_edificio("Overflow", 1, spr_overflow,, ord(4), 15, 20, true,, [0], [4], 1, true,,,, true)
-def_edificio("Túnel", 1, spr_tunel,, ord(5), 25, 20,,, [0, 3], [4, 4], 1, true)
 def_edificio("Horno", 2, spr_horno, spr_horno_encendido, ord("W"), 120, 150, false, true, [0, 3], [20, 15], 30, true, false, [0, 1, 3, 5], [4, 2, 8, 16], true, false, [2, 4, 7])
-def_edificio("Taladro Eléctrico", 3, spr_taladro_electrico,, ord("E"), 180, 40,,, [0, 2, 4], [20, 10, 25], 20,,,,, true, false, [0, 1, 3, 5, 6], 75)
-//10
+def_edificio("Taladro electrico", 3, spr_taladro_electrico,, ord("E"), 180, 40,,, [0, 2, 4], [20, 10, 25], 20,,,,, true, false, [0, 1, 3, 5, 6], 75)
 def_edificio("Triturador", 2, spr_triturador,, ord("R"), 80, 40,,, [0, 4], [10, 25], 10, true, false, [6], [5], true, false, [5], 30)
+//10
 def_edificio("Generador", 1, spr_generador, spr_generador_encendido, ord("A"), 30,,, true, [0, 3], [20, 5], 10, true, false, [1], [10], false,,, -20)
 def_edificio("Cable", 1, spr_cable,, ord("S"), 10,,,, [0, 3], [5, 1],,,,,,,,, 1)
-def_edificio("Batería", 1, spr_bateria,, ord("D"), 30,,,, [0, 2], [20, 5],,,,,,,,, 1)
-def_edificio("Panel Solar", 2, spr_panel_solar,, ord("F"), 60,,,, [0, 2, 4], [40, 10, 10],,,,,,,,, -5)
-def_edificio("Bomba Hidráulica", 2, spr_bomba, spr_bomba_rotor, ord("Z"), 60, 1,,, [0, 4, 7], [10, 20, 10],,,,,,,,, 25, 10)
-def_edificio("Tubería", 1, spr_tuberia,, ord("X"), 10, 1,,, [4, 7], [1, 1],,,,,,,,,, 1)
-def_edificio("Túnel", 1, spr_tunel_salida,,, 25, 20,,, [0, 3], [4, 4], 1,,,,, true)
-def_edificio("Energía Infinita", 1, spr_energia_infinita,, ord("M"), 25,,,,,,,,,,,,,, -infinity)
-edificio_rotable[6] = true
-edificio_rotable[16] = true
+def_edificio("Bateria", 1, spr_bateria,, ord("D"), 30,,,, [0, 2], [20, 5],,,,,,,,, 1)
+def_edificio("Panel solar", 2, spr_panel_solar,, ord("F"), 60,,,, [0, 2, 4], [40, 10, 10],,,,,,,,, -5)
+def_edificio("Bomba hidraulica", 2, spr_bomba, spr_bomba_rotor, ord("Z"), 60, 1,,, [0, 4, 7], [10, 20, 10],,,,,,,,, 25, 10)
+def_edificio("Tuberia", 1, spr_tuberia,, ord("X"), 10, 1,,, [4, 7], [1, 1],,,,,,,,,, 1)
+def_edificio("Energia infinita", 1, spr_energia_infinita,, ord("M"), 25,,,,,,,,,,,,,, -infinity)
 edificio_max = array_length(edificio_nombre)
 size_size = [1, 3, 7, 12, 19, 27]
 size_borde = [6, 9, 12, 15, 18, 21]

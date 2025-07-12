@@ -25,7 +25,6 @@
   },
   "name":"Hexdustry",
   "resources":[
-    {"id":{"name":"ft_text","path":"fonts/ft_text/ft_text.yy",},},
     {"id":{"name":"control","path":"objects/control/control.yy",},},
     {"id":{"name":"obj_hexagono","path":"objects/obj_hexagono/obj_hexagono.yy",},},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
