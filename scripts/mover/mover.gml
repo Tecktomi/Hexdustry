@@ -5,7 +5,7 @@ function mover(aa, bb){
 			var edificio = temp_terreno.edificio
 		else
 			exit
-		var flag = false, out = 0, temp_edificio, b
+		var flag = false, out = 0, temp_edificio = null_edificio, b = 0
 		//Selección de recursos
 		for(out = 0; out < rss_max; out++)
 			if edificio.carga[out] > 0 and edificio.carga_output[out]{

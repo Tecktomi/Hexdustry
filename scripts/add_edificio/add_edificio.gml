@@ -26,7 +26,9 @@ function add_edificio(index, dir, a, b){
 			energy_storage : 0,
 			energy_link : ds_list_create(),
 			flujo : ds_list_create(),
-			flujo_link : ds_list_create()
+			flujo_link : ds_list_create(),
+			vida : edificio_vida[index],
+			target : null_enemigo
 		}
 		ds_list_add(new_edificio.energy_link, null_edificio)
 		ds_list_clear(new_edificio.energy_link)
@@ -34,7 +36,7 @@ function add_edificio(index, dir, a, b){
 		ds_list_clear(new_edificio.flujo)
 		ds_list_add(new_edificio.flujo_link, null_edificio)
 		ds_list_clear(new_edificio.flujo_link)
-		var temp_terreno, temp_complex
+		var temp_terreno = null_terreno, temp_complex = {a : 0, b : 0}
 		for(var c = 0; c < rss_max; c++)
 			new_edificio.carga[c] = 0
 		if edificio_input_all[index]{

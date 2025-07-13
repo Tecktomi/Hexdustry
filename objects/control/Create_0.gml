@@ -41,13 +41,25 @@ null_edificio = {
 	energy_storage : 0,
 	energy_link : ds_list_create(),
 	flujo : ds_list_create(),
-	flujo_link: ds_list_create()
+	flujo_link: ds_list_create(),
+	vida : 0,
+	target : undefined
 }
 null_edificio.link = null_edificio
 ds_list_add(null_edificio.energy_link, null_edificio)
 ds_list_clear(null_edificio.energy_link)
 ds_list_add(null_edificio.flujo_link, null_edificio)
 ds_list_clear(null_edificio.flujo_link)
+null_terreno = {
+	hexagono : obj_hexagono,
+	terreno : 0,
+	ore : -1,
+	ore_amount : 0,
+	ore_random : 0,
+	edificio_bool : false,
+	edificio_draw : false,
+	edificio : null_edificio
+}
 //Crear plantilla de fondo
 for(var a = 0; a < xsize; a++)
 	for(var b = 0; b < ysize; b++){
@@ -66,6 +78,16 @@ for(var a = 0; a < xsize; a++)
 		temp_hexagono.a = a
 		temp_hexagono.b = b
 	}
+//Enemigos
+null_enemigo = {
+	a : 0,
+	b : 0,
+	vida : 5,
+	target : null_edificio
+}
+enemigos = [null_edificio]
+array_pop(enemigos)
+null_edificio.target = null_enemigo
 //Terrenos
 #region Arreglos
 	terreno_name = []
@@ -120,7 +142,7 @@ def_recurso("Hierro", spr_item_hierro, c_gray)
 def_recurso("Acero", spr_item_acero, c_ltgray)
 def_recurso("Arena", spr_item_arena, c_yellow)
 def_recurso("Piedra", spr_item_piedra, c_gray)
-def_recurso("Vidrio", spr_vidrio, c_aqua)
+def_recurso("Vidrio", spr_item_vidrio, c_aqua)
 rss_max = array_length(rss_name)
 //Liquidos
 liquido_nombre =	["Agua"]
@@ -199,7 +221,7 @@ def_edificio("Enrutador", 1, spr_enrutador, spr_enrutador_2, ord(2), 15, 10, tru
 def_edificio("Selector", 1, spr_selector, spr_selector_color, ord(3), 15, 10, true,, [0], [4], 1, true,,,, true)
 def_edificio("Overflow", 1, spr_overflow,, ord(4), 15, 10, true,, [0], [4], 1, true,,,, true)
 def_edificio("Túnel", 1, spr_tunel,, ord(5), 25, 10,,, [0, 3], [4, 4], 1, true, true)
-def_edificio("Horno", 2, spr_horno, spr_horno_encendido, ord("W"), 120, 150, false, true, [0, 3], [20, 15], 30, true, false, [0, 1, 3, 5], [4, 2, 8, 16], true, false, [2, 4, 7])
+def_edificio("Horno", 2, spr_horno, spr_horno_encendido, ord("W"), 120, 150,, true, [0, 3], [20, 15], 30, true, false, [0, 1, 3, 5], [4, 2, 8, 16], true, false, [2, 4, 7])
 def_edificio("Taladro Eléctrico", 3, spr_taladro_electrico,, ord("E"), 180, 40,,, [0, 2, 4], [20, 10, 25], 20,,,,, true, false, [0, 1, 3, 5, 6], 75)
 def_edificio("Triturador", 2, spr_triturador,, ord("R"), 80, 40,,, [0, 4], [10, 25], 10, true, false, [6], [5], true, false, [5], 30)
 //10
@@ -212,6 +234,8 @@ def_edificio("Tubería", 1, spr_tuberia,, ord("X"), 10, 1,,, [4, 7], [1, 1],,,,,
 def_edificio("Túnel", 1, spr_tunel_salida,,, 25, 10,,, [0, 3], [4, 4], 1,,,,, true, true)
 def_edificio("Energía Infinita", 1, spr_energia_infinita,, ord("M"), 25,,,,,,,,,,,,,, -infinity)
 def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, ord(6), 30, 10, true,, [2, 4], [1, 1], 1, true,,,, true)
+def_edificio("Torre", 1, spr_torre,, ord("C"), 250, 60,,, [0, 3], [20, 15], 10, true, false, [2], [10])
+//20
 edificio_rotable[6] = true
 edificio_input_all[16] = true
 edificio_max = array_length(edificio_nombre)
@@ -259,12 +283,22 @@ build_list = get_size(0, 0, 0, 0)
 build_menu = 0
 menu_x = 0
 menu_y = 0
+clicked = false
 menu_array = []
 cheat = false
 info = false
 zoom = 1
 camx = 0
 camy = 0
+borde_mapa = []
+for(var a = 0; a < xsize; a++){
+	array_push(borde_mapa, [a, 0])
+	array_push(borde_mapa, [a, ysize - 1])
+}
+for(var a = 0; a < ysize; a++){
+	array_push(borde_mapa, [0, a])
+	array_push(borde_mapa, [xsize - 1, a])
+}
 //Terreno
 var e = 0
 repeat(4){
