@@ -241,7 +241,7 @@ function def_edificio(nombre, size, sprite = spr_base, sprite_2 = spr_base, key 
 	def_edificio("Túnel", 1, spr_tunel_salida,,, 60, 10,,, [0, 3], [4, 4], 1,,,,, true, true)
 	def_edificio("Energía Infinita", 1, spr_energia_infinita,, ord("M"), 100,,,,,,,,,,,,,, -infinity)
 	def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, ord(6), 60, 10, true,, [2, 3], [1, 1], 1, true,,,, true)
-	def_edificio("Torre", 1, spr_torre,, ord("C"), 600, 60,,, [0, 3], [20, 25], 20, true, false, [2, 5], [10, 10])
+	def_edificio("Torre", 1, spr_torre,, ord("C"), 600, 60,,, [0, 3], [20, 25], 20, true, false, [2, 4], [10, 10])
 #endregion
 edificio_rotable[6] = true
 edificio_input_all[16] = true
@@ -306,7 +306,7 @@ for(var a = 0; a < ysize; a++){
 	array_push(borde_mapa, [0, a])
 	array_push(borde_mapa, [xsize - 1, a])
 }
-//Terreno
+//Agua y piedra
 var e = 0
 repeat(4){
 	var a = irandom(xsize - 1)
@@ -336,8 +336,8 @@ repeat(4){
 }
 //Crear nucelo
 nucleo = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
-nucleo.carga[0] = 50
-nucleo.carga_total = 50
+nucleo.carga[0] = 75
+nucleo.carga_total = 75
 for(var a = 0; a < ds_list_size(nucleo.coordenadas); a++){
 	var temp_complex = ds_list_find_value(nucleo.coordenadas, a)
 	var aa = temp_complex.a, bb = temp_complex.b

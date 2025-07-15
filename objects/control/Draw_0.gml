@@ -216,6 +216,8 @@ if temp_hexagono != noone and flag{
 			for(var a = 0; a < rss_max; a++)
 				if temp_edificio.carga[a] > 0
 					temp_text += $"  {recurso_nombre[a]}: {temp_edificio.carga[a]}\n"
+			if info and temp_edificio.carga_total > 0
+				temp_text += $"    Total: {temp_edificio.carga_total}\n"
 		}
 		//Mostrar recursos subterraneos
 		if in(var_edificio_nombre, "Taladro", "Taladro Eléctrico")
@@ -901,27 +903,27 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 			if temp_edificio.proceso >= edificio_proceso[index]{
 				temp_edificio.proceso -= edificio_proceso[index] + 1
 				if array_length(enemigos) > 0 and temp_edificio.target = null_enemigo{
-					var closer = null_enemigo, dis = infinity
+					var dis = infinity
 					for(var b = 0; b < array_length(enemigos); b++){
 						var enemigo = enemigos[b]
 						var c = sqrt(sqr(temp_complex.a - enemigo.a) + sqr(temp_complex.b - enemigo.b))
 						if c < dis{
 							dis = c
 							if c < 150
-								closer = enemigo
+								temp_edificio.target = enemigo
 						}
 					}
-					temp_edificio.target = closer
 				}
-				if temp_edificio.target != null_enemigo and (temp_edificio.carga[2] > 0 or temp_edificio.carga[5] > 0){
-					if temp_edificio.carga[5] > 0{
-						temp_edificio.carga[5]--
+				if temp_edificio.target != null_enemigo and (temp_edificio.carga[2] > 0 or temp_edificio.carga[4] > 0){
+					if temp_edificio.carga[4] > 0{
+						temp_edificio.carga[4]--
 						temp_edificio.target.vida -= 3
 					}
 					else{
 						temp_edificio.carga[2]--
 						temp_edificio.target.vida -= 2
 					}
+					temp_edificio.carga_total--
 					if temp_edificio.target.vida <= 0{
 						array_delete(enemigos, array_get_index(enemigos, temp_edificio.target), 1)
 						temp_edificio.target = null_enemigo
