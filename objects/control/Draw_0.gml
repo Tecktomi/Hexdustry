@@ -251,8 +251,11 @@ if temp_hexagono != noone and flag{
 			var temp_complex_2 = abtoxy(temp_edificio.a, temp_edificio.b)
 			draw_set_color(c_white)
 			draw_circle_off(temp_complex_2.a, temp_complex_2.b, (var_edificio_nombre = "Torre") ? 150 : 100, true)
-			if array_length(enemigos) > 0 and temp_edificio.target != null_enemigo{
-				draw_set_color(c_white)
+			if not ds_list_empty(enemigos) and temp_edificio.target != null_enemigo{
+				if sqrt(sqr(temp_complex_2.a - temp_edificio.target.a) + sqr(temp_complex_2.b - temp_edificio.target.b)) > (var_edificio_nombre = "Torre" ? 150 : 100)
+					draw_set_color(c_red)
+				else
+					draw_set_color(c_white)
 				draw_arrow_off(temp_complex_2.a, temp_complex_2.b, temp_edificio.target.a, temp_edificio.target.b, 8)
 			}
 		}
@@ -903,7 +906,8 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 			temp_edificio.proceso++
 			if temp_edificio.proceso >= edificio_proceso[index]{
 				temp_edificio.proceso -= edificio_proceso[index] + 1
-				if array_length(enemigos) > 0 and temp_edificio.target = null_enemigo
+				temp_edificio.target = null_enemigo
+				if not ds_list_empty(enemigos)
 					turret_target(temp_edificio)
 				if temp_edificio.target != null_enemigo and (temp_edificio.carga[2] > 0 or temp_edificio.carga[4] > 0) and sqrt(sqr(temp_complex.a - temp_edificio.target.a) + sqr(temp_complex.b - temp_edificio.target.b)) < 150{
 					if temp_edificio.carga[4] > 0{
@@ -917,7 +921,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 					temp_edificio.carga_total--
 					temp_edificio.waiting = not mover(temp_edificio.a, temp_edificio.b)
 					if temp_edificio.target.vida <= 0{
-						array_delete(enemigos, array_get_index(enemigos, temp_edificio.target), 1)
+						ds_list_remove(enemigos, temp_edificio.target)
 						temp_edificio.target = null_enemigo
 						turret_target(temp_edificio)
 					}
@@ -925,7 +929,8 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 			}
 		}
 		if in(var_edificio_nombre, "Láser"){
-			if array_length(enemigos) > 0 and temp_edificio.target = null_enemigo
+			temp_edificio.target = null_enemigo
+			if not ds_list_empty(enemigos)
 				turret_target(temp_edificio)
 			if temp_edificio.target != null_enemigo and sqrt(sqr(temp_complex.a - temp_edificio.target.a) + sqr(temp_complex.b - temp_edificio.target.b)) < 100{
 				if not temp_edificio.mode
@@ -936,7 +941,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 				else
 					temp_edificio.target.vida -= 0.03
 				if temp_edificio.target.vida <= 0{
-					array_delete(enemigos, array_get_index(enemigos, temp_edificio.target), 1)
+					ds_list_remove(enemigos, temp_edificio.target)
 					temp_edificio.target = null_enemigo
 					turret_target(temp_edificio)
 				}
@@ -950,8 +955,8 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 	}
 }
 //Ciclo de los enemigos
-for(var a = 0; a < array_length(enemigos); a++){
-	var enemigo = enemigos[a], aa = enemigo.a, bb = enemigo.b
+for(var a = 0; a < ds_list_size(enemigos); a++){
+	var enemigo = enemigos[|a], aa = enemigo.a, bb = enemigo.b
 	draw_sprite_off(spr_enemigo, 0, aa, bb)
 	if enemigo.vida < 5{
 		draw_set_color(make_color_hsv(24 * enemigo.vida, 255, 255))
@@ -984,8 +989,21 @@ if image_index > 9000 or keyboard_check_pressed(vk_space){
 			target : null_edificio
 		}
 		path_find(enemigo)
-		array_push(enemigos, enemigo)
+		ds_list_add(enemigos, enemigo)
 	}
+}
+var temp_text_right = ""
+if image_index < 9000
+	temp_text_right += $"{floor((9000 - image_index) / 60)} segundos para los enemigos"
+if temp_text_right != ""{
+	draw_set_halign(fa_right)
+	draw_set_color(c_black)
+	draw_set_alpha(0.5)
+	draw_rectangle(room_width, 0, room_width - string_width(temp_text_right) - 10, string_height(temp_text_right) + 10, false)
+	draw_set_color(c_white)
+	draw_set_alpha(1)
+	draw_text(room_width, 0, temp_text_right)
+	draw_set_halign(fa_left)
 }
 //Ciclo de redes
 for(var a = 0; a < ds_list_size(redes); a++){

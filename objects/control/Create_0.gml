@@ -85,8 +85,9 @@ null_enemigo = {
 	vida : 5,
 	target : null_edificio
 }
-enemigos = [null_edificio]
-array_pop(enemigos)
+enemigos = ds_list_create()
+ds_list_add(enemigos, null_enemigo)
+ds_list_clear(enemigos)
 null_edificio.target = null_enemigo
 //Terrenos
 #region Arreglos
