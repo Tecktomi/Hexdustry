@@ -247,16 +247,17 @@ if temp_hexagono != noone and flag{
 		if in(var_edificio_nombre, "Horno", "Generador")
 			temp_text += $"Combustion: {floor(temp_edificio.fuel / 30)} s\n"
 		//Mostrar rango de torres
-		if in(var_edificio_nombre, "Torre"){
+		if in(var_edificio_nombre, "Torre", "Láser"){
 			var temp_complex_2 = abtoxy(temp_edificio.a, temp_edificio.b)
-			draw_circle_off(temp_complex_2.a, temp_complex_2.b, 150, true)
+			draw_set_color(c_white)
+			draw_circle_off(temp_complex_2.a, temp_complex_2.b, (var_edificio_nombre = "Torre") ? 150 : 100, true)
 			if array_length(enemigos) > 0 and temp_edificio.target != null_enemigo{
 				draw_set_color(c_white)
 				draw_arrow_off(temp_complex_2.a, temp_complex_2.b, temp_edificio.target.a, temp_edificio.target.b, 8)
 			}
 		}
 		//Mostrar inputs
-		if edificio_receptor[temp_edificio.index]{
+		if info and edificio_receptor[temp_edificio.index]{
 			if edificio_input_all[temp_edificio.index]
 				temp_text += "Acepta todo\n"
 			else{
@@ -269,7 +270,7 @@ if temp_hexagono != noone and flag{
 			}
 		}
 		//Mostrar outputs
-		if edificio_emisor[temp_edificio.index]{
+		if info and edificio_emisor[temp_edificio.index]{
 			if edificio_output_all[temp_edificio.index]
 				temp_text += "Entrega todo\n"
 			else{
@@ -359,7 +360,7 @@ flag = false
 				build_menu = 2
 				if mouse_x > menu_x{
 					if mouse_y > menu_y
-						menu_array = [14, 15, 19]
+						menu_array = [14, 15, 19, 20]
 					else
 						menu_array = [2, 3, 4, 5, 6, 18]
 				}
@@ -902,19 +903,9 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 			temp_edificio.proceso++
 			if temp_edificio.proceso >= edificio_proceso[index]{
 				temp_edificio.proceso -= edificio_proceso[index] + 1
-				if array_length(enemigos) > 0 and temp_edificio.target = null_enemigo{
-					var dis = infinity
-					for(var b = 0; b < array_length(enemigos); b++){
-						var enemigo = enemigos[b]
-						var c = sqrt(sqr(temp_complex.a - enemigo.a) + sqr(temp_complex.b - enemigo.b))
-						if c < dis{
-							dis = c
-							if c < 150
-								temp_edificio.target = enemigo
-						}
-					}
-				}
-				if temp_edificio.target != null_enemigo and (temp_edificio.carga[2] > 0 or temp_edificio.carga[4] > 0){
+				if array_length(enemigos) > 0 and temp_edificio.target = null_enemigo
+					turret_target(temp_edificio)
+				if temp_edificio.target != null_enemigo and (temp_edificio.carga[2] > 0 or temp_edificio.carga[4] > 0) and sqrt(sqr(temp_complex.a - temp_edificio.target.a) + sqr(temp_complex.b - temp_edificio.target.b)) < 150{
 					if temp_edificio.carga[4] > 0{
 						temp_edificio.carga[4]--
 						temp_edificio.target.vida -= 3
@@ -924,11 +915,36 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 						temp_edificio.target.vida -= 2
 					}
 					temp_edificio.carga_total--
+					temp_edificio.waiting = not mover(temp_edificio.a, temp_edificio.b)
 					if temp_edificio.target.vida <= 0{
 						array_delete(enemigos, array_get_index(enemigos, temp_edificio.target), 1)
 						temp_edificio.target = null_enemigo
+						turret_target(temp_edificio)
 					}
 				}
+			}
+		}
+		if in(var_edificio_nombre, "Láser"){
+			if array_length(enemigos) > 0 and temp_edificio.target = null_enemigo
+				turret_target(temp_edificio)
+			if temp_edificio.target != null_enemigo and sqrt(sqr(temp_complex.a - temp_edificio.target.a) + sqr(temp_complex.b - temp_edificio.target.b)) < 100{
+				if not temp_edificio.mode
+					temp_edificio.red.consumo += abs(edificio_elec_consumo[index])
+				temp_edificio.mode = true
+				if temp_edificio.red.generacion < temp_edificio.red.consumo and temp_edificio.red.bateria = 0
+					temp_edificio.target.vida -= 0.03 * temp_edificio.red.generacion / temp_edificio.red.consumo
+				else
+					temp_edificio.target.vida -= 0.03
+				if temp_edificio.target.vida <= 0{
+					array_delete(enemigos, array_get_index(enemigos, temp_edificio.target), 1)
+					temp_edificio.target = null_enemigo
+					turret_target(temp_edificio)
+				}
+			}
+			else{
+				if temp_edificio.mode
+					temp_edificio.red.consumo -= abs(edificio_elec_consumo[index])
+				temp_edificio.mode = false
 			}
 		}
 	}
@@ -942,20 +958,8 @@ for(var a = 0; a < array_length(enemigos); a++){
 		draw_circle_off(aa, bb - 20, 5, false)
 		draw_set_color(c_white)
 	}
-	if enemigo.target = null_edificio and ds_list_size(edificios) > 0{
-		var dis = infinity
-		for(a = 0; a < ds_list_size(edificios); a++){
-			var edificio = edificios[|a]
-			if not edificio_camino[edificio.index]{
-				var temp_complex = abtoxy(edificio.a, edificio.b)
-				var b = sqrt(sqr(enemigo.a - temp_complex.a) + sqr(enemigo.b - temp_complex.b))
-				if b < dis{
-					dis = b
-					enemigo.target = edificio
-				}
-			}
-		}
-	}
+	if enemigo.target = null_edificio and ds_list_size(edificios) > 0
+		path_find(enemigo)
 	var edificio = enemigo.target, temp_complex = abtoxy(edificio.a, edificio.b), dis = sqrt(sqr(aa - temp_complex.a) + sqr(bb - temp_complex.b))
 	if dis > 50{
 		enemigo.a += (temp_complex.a - aa) / dis
@@ -966,29 +970,20 @@ for(var a = 0; a < array_length(enemigos); a++){
 		if edificio.vida <= 0{
 			delete_edificio(edificio.a, edificio.b, true)
 			enemigo.target = null_edificio
+			path_find(enemigo)
 		}
 	}
 }
 if image_index > 9000 or keyboard_check_pressed(vk_space){
 	if image_index mod 900 = 0 or keyboard_check_pressed(vk_space){
-		var a = irandom(array_length(borde_mapa) - 1), temp_complex = abtoxy(borde_mapa[a, 0], borde_mapa[a, 1]), closer = null_edificio, dis = infinity
-		for(a = 0; a < ds_list_size(edificios); a++){
-			var edificio = edificios[|a]
-			if not edificio_camino[edificio.index]{
-				var temp_complex_2 = abtoxy(edificio.a, edificio.b)
-				var b = sqrt(sqr(temp_complex.a - temp_complex_2.a) + sqr(temp_complex.b - temp_complex_2.b))
-				if b < dis{
-					dis = b
-					closer = edificio
-				}
-			}
-		}
+		var a = irandom(array_length(borde_mapa) - 1), temp_complex = abtoxy(borde_mapa[a, 0], borde_mapa[a, 1])
 		var enemigo = {
 			a : temp_complex.a,
 			b : temp_complex.b,
 			vida : 5,
-			target : closer
+			target : null_edificio
 		}
+		path_find(enemigo)
 		array_push(enemigos, enemigo)
 	}
 }

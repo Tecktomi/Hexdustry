@@ -242,6 +242,8 @@ function def_edificio(nombre, size, sprite = spr_base, sprite_2 = spr_base, key 
 	def_edificio("Energía Infinita", 1, spr_energia_infinita,, ord("M"), 100,,,,,,,,,,,,,, -infinity)
 	def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, ord(6), 60, 10, true,, [2, 3], [1, 1], 1, true,,,, true)
 	def_edificio("Torre", 1, spr_torre,, ord("C"), 600, 60,,, [0, 3], [20, 25], 20, true, false, [2, 4], [10, 10])
+	//20
+	def_edificio("Láser", 2, spr_laser,, ord("V"), 500, 1,,, [0, 2, 4], [10, 20, 30],,,,,,,,, 100)
 #endregion
 edificio_rotable[6] = true
 edificio_input_all[16] = true

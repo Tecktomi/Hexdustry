@@ -259,6 +259,8 @@ function add_edificio(index, dir, a, b){
 			}
 			ds_list_destroy(temp_list_4)
 		}
+		if edificio_nombre[index] = "Láser"
+			new_edificio.mode = true
 		return new_edificio
 	}
 }
