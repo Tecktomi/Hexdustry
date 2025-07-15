@@ -46,7 +46,7 @@ function add_edificio(index, dir, a, b){
 		else{
 			var d = 0
 			for(var c = 0; c < rss_max; c++)
-				if d < array_length(edificio_input_index[index]) and c = edificio_input_index[index, d]{
+				if d < array_length(edificio_input_id[index]) and c = edificio_input_id[index, d]{
 					new_edificio.carga_max[c] = edificio_input_num[index, d]
 					d++
 				}
@@ -60,7 +60,7 @@ function add_edificio(index, dir, a, b){
 		else{
 			var d = 0
 			for(var c = 0; c < rss_max; c++){
-				if d < array_length(edificio_output_index[index]) and edificio_output_index[index, d] = c{
+				if d < array_length(edificio_output_id[index]) and edificio_output_id[index, d] = c{
 					new_edificio.carga_output[c] = true
 					d++
 				}
@@ -93,9 +93,9 @@ function add_edificio(index, dir, a, b){
 					var flag = false
 					if edificio_input_all[temp_edificio.index] or edificio_output_all[index]
 						flag = true
-					else for(var d = 0; d < array_length(edificio_input_index[temp_edificio.index]); d++)
-						for(var e = 0; e < array_length(edificio_output_index[index]); e++)
-							if edificio_input_index[temp_edificio.index, d] = edificio_output_index[index, e]{
+					else for(var d = 0; d < array_length(edificio_input_id[temp_edificio.index]); d++)
+						for(var e = 0; e < array_length(edificio_output_id[index]); e++)
+							if edificio_input_id[temp_edificio.index, d] = edificio_output_id[index, e]{
 								flag = true
 								break
 							}
@@ -134,9 +134,9 @@ function add_edificio(index, dir, a, b){
 					flag = false
 					if edificio_output_all[temp_edificio.index] or edificio_input_all[index]
 						flag = true
-					else for(var d = 0; d < array_length(edificio_output_index[temp_edificio.index]); d++)
-						for(var e = 0; e < array_length(edificio_input_index[index]); e++)
-							if edificio_output_index[temp_edificio.index, d] = edificio_input_index[index, e]{
+					else for(var d = 0; d < array_length(edificio_output_id[temp_edificio.index]); d++)
+						for(var e = 0; e < array_length(edificio_input_id[index]); e++)
+							if edificio_output_id[temp_edificio.index, d] = edificio_input_id[index, e]{
 								flag = true
 								break
 							}

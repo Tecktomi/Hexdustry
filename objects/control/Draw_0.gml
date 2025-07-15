@@ -6,10 +6,10 @@
 		for(var a = 0; a < xsize; a++)
 			for(var b = 0; b < ysize; b++){
 				var temp_terreno = terreno[a, b]
-				var temp_complex = abtoxy(a, b)
-				draw_sprite(terreno_sprite[temp_terreno.terreno], 0, temp_complex.a, temp_complex.b)
-				if temp_terreno.ore >= 0
-					draw_sprite(ore_sprite[temp_terreno.ore], temp_terreno.ore_random + 2 * (temp_terreno.ore_amount < 50), temp_complex.a, temp_complex.b)
+				var temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b, c = temp_terreno.ore
+				draw_sprite(terreno_sprite[temp_terreno.terreno], 0, aa, bb)
+				if c >= 0
+					draw_sprite(ore_sprite[c], temp_terreno.ore_random + 2 * (temp_terreno.ore_amount < 50), aa, bb)
 			}
 		background = sprite_create_from_surface(temp_surf, 0, 0, room_width, room_height, false, false, 0, 0)
 		surface_reset_target()
@@ -39,7 +39,7 @@
 					else
 						draw_sprite_off(edificio_sprite[index], image_index / 4, aa, bb, , , (dir - 1) * 60)
 					if var_edificio_nombre = "Selector" and temp_edificio.select >= 0
-						draw_sprite_off(edificio_sprite_2[index], image_index / 4, aa, bb, , , (dir - 1) * 60, rss_item_color[temp_edificio.select])
+						draw_sprite_off(edificio_sprite_2[index], image_index / 4, aa, bb, , , (dir - 1) * 60, recurso_color[temp_edificio.select])
 				}
 				else{
 					//Dibujo edificios con horno
@@ -72,31 +72,34 @@
 						draw_circle_off(aa , bb + 8 , 4, false)
 					}
 				}
+				if temp_edificio.vida < edificio_vida[index]{
+					draw_set_color(make_color_hsv(120 * temp_edificio.vida / edificio_vida[index], 255, 255))
+					draw_circle_off(aa, bb, 5, false)
+					draw_set_color(c_white)
+				}
 			}
 		}
 	//Dibujo items y links electricos
 	for(var a = 0; a < xsize; a++)
 		for(var b = 0; b < ysize; b++){
 			var temp_terreno = terreno[a, b]
-			var temp_edificio = temp_terreno.edificio
-			var temp_complex = abtoxy(a, b)
-			var aa = temp_complex.a
-			var bb = temp_complex.b
+			var temp_edificio = temp_terreno.edificio, index = temp_edificio.index
+			var temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b
 			if temp_terreno.edificio_draw{
 				//Dibujo de items en los caminos
-				if (edificio_camino[temp_edificio.index] or temp_edificio.index = 6) and temp_edificio.carga_total > 0{
-					var c = 1.2 * (max(temp_edificio.proceso, temp_edificio.waiting * edificio_proceso[temp_edificio.index]) - 10) * 20 / edificio_proceso[temp_edificio.index]
+				if (edificio_camino[index] or index = 6) and temp_edificio.carga_total > 0{
+					var c = 1.2 * (max(temp_edificio.proceso, temp_edificio.waiting * edificio_proceso[index]) - 10) * 20 / edificio_proceso[index]
 					var d = temp_edificio.dir * pi / 3 + pi / 6
-					draw_sprite_off(rss_item_sprite[temp_edificio.carga_id], 0, aa + c * cos(d) , bb - c * sin(d))
+					draw_sprite_off(recurso_sprite[temp_edificio.carga_id], 0, aa + c * cos(d) , bb - c * sin(d))
 				}
 				//Dibujo de items saliendo del tunel
-				if temp_edificio.index = 16 and temp_edificio.carga_total > 0{
-					var c = 1.2 * (max(temp_edificio.proceso, temp_edificio.waiting * edificio_proceso[temp_edificio.index]) - 10) * 20 / edificio_proceso[temp_edificio.index]
+				if index = 16 and temp_edificio.carga_total > 0{
+					var c = 1.2 * (max(temp_edificio.proceso, temp_edificio.waiting * edificio_proceso[index]) - 10) * 20 / edificio_proceso[index]
 					var d = temp_edificio.dir * pi / 3 + pi / 6
-					draw_sprite_off(rss_item_sprite[temp_edificio.carga_id], 0, aa - c * cos(d) , bb + c * sin(d))
+					draw_sprite_off(recurso_sprite[temp_edificio.carga_id], 0, aa - c * cos(d) , bb + c * sin(d))
 				}
 				//Dibujo de los links eléctricos
-				else if edificio_electricidad[temp_edificio.index]{
+				else if edificio_electricidad[index]{
 					draw_set_color(c_yellow)
 					for(var c = 0; c < ds_list_size(temp_edificio.energy_link); c++){
 						var temp_edificio_2 = ds_list_find_value(temp_edificio.energy_link, c)
@@ -126,7 +129,7 @@ if show_menu{
 	draw_text(aa - 80 * zoom, bb + 20 * zoom, "INVERTIR")
 	if in(edificio_nombre[show_menu_build.index], "Selector")
 		for(var a = 0; a < rss_max; a++)
-			draw_sprite_stretched(rss_item_sprite[a], 0, aa + (-80 + 32 * (a mod 5)) * zoom, bb + (40 + 28 * floor(a / 5)) * zoom, 32 * zoom, 28 * zoom)
+			draw_sprite_stretched(recurso_sprite[a], 0, aa + (-80 + 32 * (a mod 5)) * zoom, bb + (40 + 28 * floor(a / 5)) * zoom, 32 * zoom, 28 * zoom)
 	if mouse_x > aa - 80 * zoom and mouse_y > bb + 20 * zoom and mouse_x < aa + 80 * zoom{
 		if mouse_y < bb + 40 * zoom{
 			flag = false
@@ -141,9 +144,9 @@ if show_menu{
 			var a = floor((mouse_x - (aa - 80 * zoom)) / (32 * zoom)) + 5 * floor((mouse_y - (bb + 40 * zoom)) / (28 * zoom))
 			if a >= 0 and a < rss_max{
 				draw_set_color(c_gray)
-				draw_rectangle(mouse_x, mouse_y, mouse_x + string_width(rss_name[a]), mouse_y + string_height(rss_name[a]), false)
+				draw_rectangle(mouse_x, mouse_y, mouse_x + string_width(recurso_nombre[a]), mouse_y + string_height(recurso_nombre[a]), false)
 				draw_set_color(c_white)
-				draw_text(mouse_x, mouse_y, rss_name[a])
+				draw_text(mouse_x, mouse_y, recurso_nombre[a])
 				if mouse_check_button_pressed(mb_left){
 					mouse_clear(mb_left)
 					show_menu = false
@@ -172,9 +175,9 @@ var temp_coordenada = temp_edificio.coordenadas
 if temp_hexagono != noone and flag{
 	//Mostrar terreno
 	var temp_text = $"{mx}, {my}\n"
-	temp_text += $"{terreno_name[temp_terreno.terreno]}\n"
+	temp_text += $"{terreno_nombre[temp_terreno.terreno]}\n"
 	if temp_terreno.ore >= 0
-		temp_text += $"{rss_name[ore_recurso[temp_terreno.ore]]}: {temp_terreno.ore_amount}\n"
+		temp_text += $"{recurso_nombre[ore_recurso[temp_terreno.ore]]}: {temp_terreno.ore_amount}\n"
 	temp_text += "___________________\n"
 	if temp_terreno.edificio_bool{
 		var var_edificio_nombre = edificio_nombre[temp_edificio.index]
@@ -212,7 +215,7 @@ if temp_hexagono != noone and flag{
 			temp_text += "Almacen:\n"
 			for(var a = 0; a < rss_max; a++)
 				if temp_edificio.carga[a] > 0
-					temp_text += $"  {rss_name[a]}: {temp_edificio.carga[a]}\n"
+					temp_text += $"  {recurso_nombre[a]}: {temp_edificio.carga[a]}\n"
 		}
 		//Mostrar recursos subterraneos
 		if in(var_edificio_nombre, "Taladro", "Taladro Eléctrico")
@@ -227,14 +230,14 @@ if temp_hexagono != noone and flag{
 					var temp_terreno_2 = terreno[temp_complex.a, temp_complex.b]
 					if temp_terreno_2.ore >= 0
 						temp_array[ore_recurso[temp_terreno_2.ore]] += temp_terreno_2.ore_amount
-					else if terreno_rss[temp_terreno_2.terreno] and in(var_edificio_nombre, "Taladro Eléctrico")
-						temp_array[terreno_rss_id[temp_terreno_2.terreno]] = -1
+					else if terreno_recurso_bool[temp_terreno_2.terreno] and in(var_edificio_nombre, "Taladro Eléctrico")
+						temp_array[terreno_recurso_id[temp_terreno_2.terreno]] = -1
 				}
 				for(var a = 0; a < rss_max; a++)
 					if temp_array[a] > 0
-						temp_text_2 += $"  {rss_name[a]}: {temp_array[a]}\n"
+						temp_text_2 += $"  {recurso_nombre[a]}: {temp_array[a]}\n"
 					else if temp_array[a] = -1
-						temp_text_2 += $"  {rss_name[a]}\n"
+						temp_text_2 += $"  {recurso_nombre[a]}\n"
 				if temp_text_2 != ""
 					temp_text += $"Recursos disponibles:\n{temp_text_2}"
 			}
@@ -258,7 +261,7 @@ if temp_hexagono != noone and flag{
 				var temp_text_2 = ""
 				for(var a = 0; a < rss_max; a++)
 					if temp_edificio.carga_max[a] > 0
-						temp_text_2 += $"  {rss_name[a]}: {temp_edificio.carga_max[a]}\n"
+						temp_text_2 += $"  {recurso_nombre[a]}: {temp_edificio.carga_max[a]}\n"
 				if temp_text_2 != ""
 					temp_text += "Acepta:\n" + temp_text_2
 			}
@@ -271,7 +274,7 @@ if temp_hexagono != noone and flag{
 				var temp_text_2 = ""
 				for(var a = 0; a < rss_max; a++)
 					if temp_edificio.carga_output[a]
-						temp_text_2 += $"  {rss_name[a]}\n"
+						temp_text_2 += $"  {recurso_nombre[a]}\n"
 				if temp_text_2 != ""
 					temp_text += $"Entrega:\n{temp_text_2}"
 			}
@@ -383,7 +386,10 @@ flag = false
 		}
 		if sqrt(sqr(mouse_x - menu_x) + sqr(mouse_y - menu_y)) < 100{
 			b = menu_array[floor((array_length(menu_array) - arctan2(mouse_y - menu_y, mouse_x - menu_x) / b) mod array_length(menu_array))]
-			draw_text(mouse_x, mouse_y + 20, edificio_nombre[b])
+			var temp_text = $"{edificio_nombre[b]}\n"
+			for(var c = 0; c < array_length(edificio_precio_id[b]); c++)
+				temp_text += $"  {recurso_nombre[edificio_precio_id[b, c]]}: {edificio_precio_num[b, c]}\n"
+			draw_text(mouse_x, mouse_y + 20, temp_text)
 			if mouse_check_button_pressed(mb_left){
 				mouse_clear(mb_left)
 				build_index = b
@@ -444,8 +450,8 @@ if build_index > 0{
 	last_my = my
 	var comprable = true
 	if not cheat
-		for(var a = 0; a < array_length(edificio_precio_index[build_index]); a++)
-			if nucleo.carga[edificio_precio_index[build_index, a]] < edificio_precio_num[build_index, a]{
+		for(var a = 0; a < array_length(edificio_precio_id[build_index]); a++)
+			if nucleo.carga[edificio_precio_id[build_index, a]] < edificio_precio_num[build_index, a]{
 				comprable = false
 				break
 			}
@@ -453,9 +459,9 @@ if build_index > 0{
 		var temp_array, temp_array_2, temp_text = ""
 		if not comprable{
 			temp_text += "Recursos insuficientes\n"
-			for(var a = 0; a < array_length(edificio_precio_index[build_index]); a++)
-				if nucleo.carga[edificio_precio_index[build_index, a]] < edificio_precio_num[build_index, a]
-					temp_text += $"  {rss_name[edificio_precio_index[build_index, a]]} {nucleo.carga[edificio_precio_index[build_index, a]]}/{edificio_precio_num[build_index, a]}\n"
+			for(var a = 0; a < array_length(edificio_precio_id[build_index]); a++)
+				if nucleo.carga[edificio_precio_id[build_index, a]] < edificio_precio_num[build_index, a]
+					temp_text += $"  {recurso_nombre[edificio_precio_id[build_index, a]]} {nucleo.carga[edificio_precio_id[build_index, a]]}/{edificio_precio_num[build_index, a]}\n"
 			for(var a = 0; a < ds_list_size(build_list); a++){
 				var temp_complex_2 = ds_list_find_value(build_list, a)
 				var temp_complex_3 = abtoxy(temp_complex_2.a, temp_complex_2.b)
@@ -474,18 +480,18 @@ if build_index > 0{
 			//Arrastre
 			if mouse_check_button(mb_left){
 				ds_list_clear(pre_build_list)
-				var temp_complex_2 = abtoxy(mx_clic, my_clic)
+				var temp_complex_2 = abtoxy(mx_clic, my_clic), aa = temp_complex_2.a, bb = temp_complex_2.b
 				if not in(var_edificio_nombre, "Cinta Transportadora", "Enrutador", "Cinta Magnética")
-					draw_sprite_off(edificio_sprite[build_index], 0, temp_complex_2.a, temp_complex_2.b, , , (build_dir - 1) * 60, , 0.5)
+					draw_sprite_off(edificio_sprite[build_index], 0, aa, bb, , , (build_dir - 1) * 60, , 0.5)
 				else{
 					if (build_dir mod 3) = 1
-						draw_sprite_off(edificio_sprite[build_index], image_index / 4, temp_complex_2.a, temp_complex_2.b, , power(-1, build_dir > 1), , , 0.5)
+						draw_sprite_off(edificio_sprite[build_index], image_index / 4, aa, bb, , power(-1, build_dir > 1), , , 0.5)
 					else
-						draw_sprite_off(edificio_sprite_2[build_index], image_index / 4, temp_complex_2.a, temp_complex_2.b, power(-1, ((build_dir + 1) mod 6) > 1), power(-1, build_dir > 2), , , 0.5)
+						draw_sprite_off(edificio_sprite_2[build_index], image_index / 4, aa, bb, power(-1, ((build_dir + 1) mod 6) > 1), power(-1, build_dir > 2), , , 0.5)
 				}
 				ds_list_add(pre_build_list, {a : mx_clic, b : my_clic})
 				if mx_clic != mx or my_clic != my{
-					var angle = radtodeg((arctan2(temp_complex_2.b * zoom - camy - mouse_y, mouse_x - temp_complex_2.a * zoom + camx) + 2 * pi) mod (2 * pi))
+					var angle = radtodeg((arctan2(bb * zoom - camy - mouse_y, mouse_x - aa * zoom + camx) + 2 * pi) mod (2 * pi))
 					build_dir = floor(angle / 60)
 					var a = mx_clic, b = my_clic, temp_complex_3
 					do{
@@ -493,43 +499,44 @@ if build_index > 0{
 						ds_list_add(pre_build_list, temp_complex_3)
 						a = temp_complex_3.a
 						b = temp_complex_3.b
-						temp_complex_3 = abtoxy(temp_complex_3.a, temp_complex_3.b)
+						temp_complex_3 = abtoxy(a, b)
+						var aaa = temp_complex_3.a, bbb = temp_complex_3.b
 						if not in(var_edificio_nombre, "Cinta Transportadora", "Enrutador")
-							draw_sprite_off(edificio_sprite[build_index], 0, temp_complex_3.a, temp_complex_3.b, , , (build_dir - 1) * 60, , 0.5)
+							draw_sprite_off(edificio_sprite[build_index], 0, aaa, bbb, , , (build_dir - 1) * 60, , 0.5)
 						else{
 							if (build_dir mod 3) = 1
-								draw_sprite_off(edificio_sprite[build_index], image_index / 4, temp_complex_3.a, temp_complex_3.b, , power(-1, build_dir > 1), , , 0.5)
+								draw_sprite_off(edificio_sprite[build_index], image_index / 4, aaa, bbb, , power(-1, build_dir > 1), , , 0.5)
 							else
-								draw_sprite_off(edificio_sprite_2[build_index], image_index / 4, temp_complex_3.a, temp_complex_3.b, power(-1, ((build_dir + 1) mod 6) > 1), power(-1, build_dir > 2), , , 0.5)
+								draw_sprite_off(edificio_sprite_2[build_index], image_index / 4, aaa, bbb, power(-1, ((build_dir + 1) mod 6) > 1), power(-1, build_dir > 2), , , 0.5)
 						}
 					}
-					until(temp_complex_3.a < min(xmouse, temp_complex_2.a) or
-						temp_complex_3.a > max(xmouse, temp_complex_2.a) or
-						temp_complex_3.b < min(ymouse, temp_complex_2.b) or
-						temp_complex_3.b > max(ymouse, temp_complex_2.b))
+					until(temp_complex_3.a < min(xmouse, aa) or
+						temp_complex_3.a > max(xmouse, aa) or
+						temp_complex_3.b < min(ymouse, bb) or
+						temp_complex_3.b > max(ymouse, bb))
 				}
 			}
 			//Mostrar caminos solos
 			else{
 				var temp_complex = next_to(mx, my, build_dir)
-				var temp_complex_2 = abtoxy(mx, my)
+				var temp_complex_2 = abtoxy(mx, my), aa = temp_complex_2.a, bb = temp_complex_2.b
 				var temp_complex_3 = abtoxy(temp_complex.a, temp_complex.b)
 				draw_set_color(c_black)
-				draw_arrow_off(temp_complex_2.a, temp_complex_2.b, temp_complex_3.a, temp_complex_3.b, 8)
+				draw_arrow_off(aa, bb, temp_complex_3.a, temp_complex_3.b, 8)
 				if not in(var_edificio_nombre, "Cinta Transportadora", "Cinta Magnética"){
-					draw_sprite_off(edificio_sprite[build_index], 0, temp_complex_2.a, temp_complex_2.b, , , (build_dir - 1) * 60, , 0.5)
+					draw_sprite_off(edificio_sprite[build_index], 0, aa, bb, , , (build_dir - 1) * 60, , 0.5)
 					temp_complex = next_to(mx, my, (build_dir + 1) mod 6)
 					temp_complex_3 = abtoxy(temp_complex.a, temp_complex.b)
-					draw_arrow_off(temp_complex_2.a, temp_complex_2.b, temp_complex_3.a, temp_complex_3.b, 8)
+					draw_arrow_off(aa, bb, temp_complex_3.a, temp_complex_3.b, 8)
 					temp_complex = next_to(mx, my, (build_dir + 5) mod 6)
 					temp_complex_3 = abtoxy(temp_complex.a, temp_complex.b)
-					draw_arrow_off(temp_complex_2.a, temp_complex_2.b, temp_complex_3.a, temp_complex_3.b, 8)
+					draw_arrow_off(aa, bb, temp_complex_3.a, temp_complex_3.b, 8)
 				}
 				else{
 					if (build_dir mod 3) = 1
-						draw_sprite_off(edificio_sprite[build_index], image_index / 4, temp_complex_2.a, temp_complex_2.b, , power(-1, build_dir > 1), , , 0.5)
+						draw_sprite_off(edificio_sprite[build_index], image_index / 4, aa, bb, , power(-1, build_dir > 1), , , 0.5)
 					else
-						draw_sprite_off(edificio_sprite_2[build_index], image_index / 4, temp_complex_2.a, temp_complex_2.b, power(-1, ((build_dir + 1) mod 6) > 1), power(-1, build_dir > 2), , , 0.5)
+						draw_sprite_off(edificio_sprite_2[build_index], image_index / 4, aa, bb, power(-1, ((build_dir + 1) mod 6) > 1), power(-1, build_dir > 2), , , 0.5)
 				}
 			}
 			//Construir en cadena
@@ -538,8 +545,8 @@ if build_index > 0{
 				for(var a = 0; a < ds_list_size(pre_build_list); a++){
 					comprable = true
 					if not cheat
-						for(var b = 0; b < array_length(edificio_precio_index[build_index]); b++)
-							if nucleo.carga[edificio_precio_index[build_index, b]] < edificio_precio_num[build_index, b]{
+						for(var b = 0; b < array_length(edificio_precio_id[build_index]); b++)
+							if nucleo.carga[edificio_precio_id[build_index, b]] < edificio_precio_num[build_index, b]{
 								comprable = false
 								break
 							}
@@ -615,9 +622,9 @@ if build_index > 0{
 								temp_array_2[ore_recurso[temp_terreno_2.ore]] += temp_terreno_2.ore_amount
 								b++
 							}
-							else if terreno_rss[temp_terreno_2.terreno] and in(var_edificio_nombre, "Taladro Eléctrico"){
-								temp_array[terreno_rss_id[temp_terreno_2.terreno]]++
-								temp_array_2[terreno_rss_id[temp_terreno_2.terreno]] = -1
+							else if terreno_recurso_bool[temp_terreno_2.terreno] and in(var_edificio_nombre, "Taladro Eléctrico"){
+								temp_array[terreno_recurso_id[temp_terreno_2.terreno]]++
+								temp_array_2[terreno_recurso_id[temp_terreno_2.terreno]] = -1
 								b++
 							}
 						}
@@ -626,17 +633,17 @@ if build_index > 0{
 					for(var a = 0; a < rss_max; a++){
 						if temp_array_2[a] > 0{
 							flag_2 = true
-							temp_text += $"{rss_name[a]}: {temp_array_2[a]}({temp_array[a] * 100 / b}%)\n"
+							temp_text += $"{recurso_nombre[a]}: {temp_array_2[a]}({temp_array[a] * 100 / b}%)\n"
 						}
 						else if temp_array_2[a] = -1{
 							flag_2 = true
-							temp_text += $"{rss_name[a]}({temp_array[a] * 100 / b}%)\n"
+							temp_text += $"{recurso_nombre[a]}({temp_array[a] * 100 / b}%)\n"
 						}
 					}
 					for(var a = 0; a < ds_list_size(build_list); a++){
 						temp_complex_2 = ds_list_find_value(build_list, a)
 						var aa = temp_complex_2.a, bb = temp_complex_2.b
-						if aa >= 0 and aa < xsize and bb >= 0 and bb < ysize and in(terreno_name[terreno[aa, bb].terreno], "Agua", "Agua Profunda"){
+						if aa >= 0 and aa < xsize and bb >= 0 and bb < ysize and in(terreno_nombre[terreno[aa, bb].terreno], "Agua", "Agua Profunda"){
 							flag_2 = false
 							break
 						}
@@ -651,7 +658,7 @@ if build_index > 0{
 						var aa = temp_complex_3.a, bb = temp_complex_3.b
 						if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
 							var temp_terreno_2 = terreno[aa, bb]
-							if not in(terreno_name[temp_terreno_2.terreno], "Agua", "Agua Profunda"){
+							if not in(terreno_nombre[temp_terreno_2.terreno], "Agua", "Agua Profunda"){
 								flag_2 = false
 								break
 							}
@@ -679,7 +686,7 @@ if build_index > 0{
 			for(var a = 0; a < ds_list_size(build_list); a++){
 				var temp_complex_2 = ds_list_find_value(build_list, a), aa = temp_complex_2.a, bb = temp_complex_2.b, temp_terreno = terreno[aa, bb]
 				//Checkear coliciones
-				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or (temp_terreno.edificio_bool and not (edificio_camino[build_index] and edificio_camino[temp_terreno.edificio.index])) or (not in(var_edificio_nombre, "Bomba Hidráulica") and in(terreno_name[temp_terreno.terreno], "Agua", "Agua Profunda")){
+				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or (temp_terreno.edificio_bool and not (edificio_camino[build_index] and edificio_camino[temp_terreno.edificio.index])) or (not in(var_edificio_nombre, "Bomba Hidráulica") and in(terreno_nombre[temp_terreno.terreno], "Agua", "Agua Profunda")){
 					flag = false
 					break
 				}
@@ -690,10 +697,10 @@ if build_index > 0{
 				if in(var_edificio_nombre, "Taladro", "Taladro Eléctrico") and temp_terreno.ore >= 0
 					flag_2 = true
 				//Checkear minerales
-				if in(var_edificio_nombre, "Taladro Eléctrico") and terreno_rss[temp_terreno.terreno]
+				if in(var_edificio_nombre, "Taladro Eléctrico") and terreno_recurso_bool[temp_terreno.terreno]
 					flag_2 = true
 				//Checkear agua
-				if in(var_edificio_nombre, "Bomba Hidráulica") and not in(terreno_name[temp_terreno.terreno], "Agua", "Agua Profunda")
+				if in(var_edificio_nombre, "Bomba Hidráulica") and not in(terreno_nombre[temp_terreno.terreno], "Agua", "Agua Profunda")
 					flag = false
 			}
 			if in(var_edificio_nombre, "Taladro", "Taladro Eléctrico") and not flag_2
@@ -728,16 +735,19 @@ if build_index > 0{
 			}
 			//Actualizar recursos
 			if not cheat
-				for(var a = 0; a < array_length(edificio_precio_index[build_index]); a++){
-					nucleo.carga[edificio_precio_index[build_index, a]] -= edificio_precio_num[build_index, a]
+				for(var a = 0; a < array_length(edificio_precio_id[build_index]); a++){
+					nucleo.carga[edificio_precio_id[build_index, a]] -= edificio_precio_num[build_index, a]
 					nucleo.carga_total -= edificio_precio_num[build_index, a]
 				}
 		}
 	}
 }
-//Romper
-else if ((mouse_check_button(mb_right) and prev_change) or mouse_check_button_pressed(mb_right)) and temp_hexagono != noone and temp_terreno.edificio_bool and temp_edificio.index != 0
+else
+//Destruir edificio
+if ((mouse_check_button(mb_right) and prev_change) or mouse_check_button_pressed(mb_right)) and temp_hexagono != noone and temp_terreno.edificio_bool and temp_edificio.index != 0{
+	mouse_clear(mb_right)
 	delete_edificio(mx, my)
+}
 //Ciclo edificios
 for(var a = 0; a < ds_list_size(edificios); a++){
 	temp_edificio = ds_list_find_value(edificios, a)
@@ -778,8 +788,8 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 						flag = true
 						break
 					}
-					else if terreno_rss[temp_terreno.terreno] and in(var_edificio_nombre, "Taladro Eléctrico"){
-						temp_edificio.carga[terreno_rss_id[temp_terreno.terreno]]++
+					else if terreno_recurso_bool[temp_terreno.terreno] and in(var_edificio_nombre, "Taladro Eléctrico"){
+						temp_edificio.carga[terreno_recurso_id[temp_terreno.terreno]]++
 						temp_edificio.carga_total++
 						flag = true
 						break
@@ -808,7 +818,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 				temp_edificio.fuel--
 			if temp_edificio.carga[2] < 2 and temp_edificio.carga[4] < 2 and temp_edificio.carga[7] < 2{
 				if temp_edificio.fuel = 0 and temp_edificio.carga[1] > 0{
-					temp_edificio.fuel = rss_comb_time[1]
+					temp_edificio.fuel = recurso_combustion_time[1]
 					temp_edificio.carga[1]--
 					temp_edificio.carga_total--
 				}
@@ -846,7 +856,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 				if temp_edificio.carga[1] > 0{
 					temp_edificio.energy_output = abs(edificio_elec_consumo[index])
 					temp_edificio.red.generacion += temp_edificio.energy_output
-					temp_edificio.fuel = rss_comb_time[1]
+					temp_edificio.fuel = recurso_combustion_time[1]
 					temp_edificio.carga[1]--
 					temp_edificio.carga_total--
 					mover(temp_edificio.a, temp_edificio.b)
@@ -903,9 +913,15 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 					}
 					temp_edificio.target = closer
 				}
-				if temp_edificio.target != null_enemigo and temp_edificio.carga[2] > 0{
-					temp_edificio.carga[2]--
-					temp_edificio.target.vida--
+				if temp_edificio.target != null_enemigo and (temp_edificio.carga[2] > 0 or temp_edificio.carga[5] > 0){
+					if temp_edificio.carga[5] > 0{
+						temp_edificio.carga[5]--
+						temp_edificio.target.vida -= 3
+					}
+					else{
+						temp_edificio.carga[2]--
+						temp_edificio.target.vida -= 2
+					}
 					if temp_edificio.target.vida <= 0{
 						array_delete(enemigos, array_get_index(enemigos, temp_edificio.target), 1)
 						temp_edificio.target = null_enemigo
@@ -913,7 +929,6 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 				}
 			}
 		}
-		
 	}
 }
 //Ciclo de los enemigos
@@ -928,11 +943,14 @@ for(var a = 0; a < array_length(enemigos); a++){
 	if enemigo.target = null_edificio and ds_list_size(edificios) > 0{
 		var dis = infinity
 		for(a = 0; a < ds_list_size(edificios); a++){
-			var edificio = edificios[|a], temp_complex = abtoxy(edificio.a, edificio.b)
-			var b = sqrt(sqr(enemigo.a - temp_complex.a) + sqr(enemigo.b - temp_complex.b))
-			if b < dis{
-				dis = b
-				enemigo.target = edificio
+			var edificio = edificios[|a]
+			if not edificio_camino[edificio.index]{
+				var temp_complex = abtoxy(edificio.a, edificio.b)
+				var b = sqrt(sqr(enemigo.a - temp_complex.a) + sqr(enemigo.b - temp_complex.b))
+				if b < dis{
+					dis = b
+					enemigo.target = edificio
+				}
 			}
 		}
 	}
@@ -944,20 +962,23 @@ for(var a = 0; a < array_length(enemigos); a++){
 	else{
 		edificio.vida--
 		if edificio.vida <= 0{
-			delete_edificio(edificio.a, edificio.b)
+			delete_edificio(edificio.a, edificio.b, true)
 			enemigo.target = null_edificio
 		}
 	}
 }
-if image_index > 3600 or keyboard_check_pressed(vk_space){
-	if image_index mod 600 = 0 or keyboard_check_pressed(vk_space){
+if image_index > 9000 or keyboard_check_pressed(vk_space){
+	if image_index mod 900 = 0 or keyboard_check_pressed(vk_space){
 		var a = irandom(array_length(borde_mapa) - 1), temp_complex = abtoxy(borde_mapa[a, 0], borde_mapa[a, 1]), closer = null_edificio, dis = infinity
 		for(a = 0; a < ds_list_size(edificios); a++){
-			var edificio = edificios[|a], temp_complex_2 = abtoxy(edificio.a, edificio.b)
-			var b = sqrt(sqr(temp_complex.a - temp_complex_2.a) + sqr(temp_complex.b - temp_complex_2.b))
-			if b < dis{
-				dis = b
-				closer = edificio
+			var edificio = edificios[|a]
+			if not edificio_camino[edificio.index]{
+				var temp_complex_2 = abtoxy(edificio.a, edificio.b)
+				var b = sqrt(sqr(temp_complex.a - temp_complex_2.a) + sqr(temp_complex.b - temp_complex_2.b))
+				if b < dis{
+					dis = b
+					closer = edificio
+				}
 			}
 		}
 		var enemigo = {
@@ -966,7 +987,6 @@ if image_index > 3600 or keyboard_check_pressed(vk_space){
 			vida : 5,
 			target : closer
 		}
-		
 		array_push(enemigos, enemigo)
 	}
 }

@@ -1,10 +1,16 @@
-function delete_edificio(aa, bb){
+function delete_edificio(aa, bb, enemigo = false){
 	with control{
 		var temp_terreno = terreno[aa, bb]
 		if temp_terreno.edificio_bool
 			var edificio = temp_terreno.edificio
 		else
 			exit
+		if edificio.index = 0{
+			if show_question("Has perdido, jugar de nuevo?")
+				game_restart()
+			else
+				game_end()
+		}
 		ds_list_remove(edificios, edificio)
 		//Cancelar coordenadas
 		for(var a = 0; a < ds_list_size(edificio.coordenadas); a++){
@@ -126,9 +132,9 @@ function delete_edificio(aa, bb){
 		}
 		ds_list_destroy(edificio.flujo_link)
 		//Retorno de recursos
-		if not cheat
-			for(var a = 0; a < array_length(edificio_precio_index[edificio.index]); a++){
-				nucleo.carga[edificio_precio_index[edificio.index, a]] += floor(edificio_precio_num[edificio.index, a] / 2)
+		if not cheat and not enemigo
+			for(var a = 0; a < array_length(edificio_precio_id[edificio.index]); a++){
+				nucleo.carga[edificio_precio_id[edificio.index, a]] += floor(edificio_precio_num[edificio.index, a] / 2)
 				nucleo.carga_total += floor(edificio_precio_num[edificio.index, a] / 2)
 			}
 		delete(edificio)
