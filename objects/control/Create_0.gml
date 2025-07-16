@@ -145,14 +145,15 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 	def_recurso("Carbón", spr_item_carbon, c_black, 150)
 	def_recurso("Bronce", spr_item_bronce, c_red)
 	def_recurso("Hierro", spr_item_hierro, c_gray)
-	def_recurso("Acero", spr_item_acero, c_ltgray)
+	def_recurso("Acero", spr_item_acero, c_dkgray)
 	def_recurso("Arena", spr_item_arena, c_yellow)
-	def_recurso("Piedra", spr_item_piedra, c_gray)
+	def_recurso("Piedra", spr_item_piedra, c_dkgray)
 	def_recurso("Vidrio", spr_item_vidrio, c_aqua)
+	def_recurso("Concreto", spr_item_concreto, c_ltgray)
 #endregion
 rss_max = array_length(recurso_nombre)
 //Liquidos
-liquido_nombre =	["Agua"]
+liquido_nombre = ["Agua"]
 //Edificios
 #region Arreglos
 	edificio_sprite = []
@@ -230,7 +231,7 @@ function def_edificio(nombre, size, sprite = spr_base, sprite_2 = spr_base, key 
 	def_edificio("Overflow", 1, spr_overflow,, ord(4), 60, 10, true,, [0], [4], 1, true,,,, true)
 	def_edificio("Túnel", 1, spr_tunel,, ord(5), 60, 10,,, [0, 3], [4, 4], 1, true, true,,, true, true)
 	def_edificio("Horno", 2, spr_horno, spr_horno_encendido, ord("W"), 250, 150,, true, [0, 3], [20, 15], 30, true, false, [0, 1, 3, 5], [4, 2, 8, 16], true, false, [2, 4, 7])
-	def_edificio("Taladro Eléctrico", 3, spr_taladro_electrico,, ord("E"), 400, 40,,, [0, 2, 4], [20, 10, 25], 20,,,,, true, false, [0, 1, 3, 5, 6], 75)
+	def_edificio("Taladro Eléctrico", 3, spr_taladro_electrico,, ord("E"), 400, 50,,, [0, 2, 4], [20, 10, 25], 20,,,,, true, false, [0, 1, 3, 5, 6], 50)
 	def_edificio("Triturador", 2, spr_triturador,, ord("R"), 250, 40,,, [0, 4], [10, 25], 10, true, false, [6], [5], true, false, [5], 30)
 	//10
 	def_edificio("Generador", 1, spr_generador, spr_generador_encendido, ord("A"), 100,,, true, [0, 3], [20, 5], 10, true, false, [1], [10], false,,, -20)
@@ -244,8 +245,9 @@ function def_edificio(nombre, size, sprite = spr_base, sprite_2 = spr_base, key 
 	def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, ord(6), 60, 10, true,, [2, 3], [1, 1], 1, true,,,, true)
 	def_edificio("Torre", 1, spr_torre,, ord("C"), 600, 60,,, [0, 3], [20, 25], 20, true, false, [2, 4], [10, 10])
 	//20
-	def_edificio("Láser", 2, spr_laser,, ord("V"), 500, 1,,, [0, 2, 4], [10, 20, 30],,,,,,,,, 100)
-	def_edificio("Muro", 1, spr_hexagono,, ord("B"), 300,,,, [3], [10])
+	def_edificio("Láser", 2, spr_laser,, ord("V"), 500, 1,,, [0, 2, 4], [10, 10, 20],,,,,,,,, 100)
+	def_edificio("Muro", 1, spr_hexagono,, ord("B"), 200,,,, [8], [4])
+	def_edificio("Fábrica de Concreto", 3, spr_fabrica_de_concreto,, ord("T"), 300, 120,,, [0, 2, 4], [10, 20, 25], 10, true, false, [3, 5, 6], [1, 3, 2], true, false, [8], 50)
 #endregion
 edificio_rotable[6] = true
 edificio_input_all[16] = true
@@ -385,13 +387,9 @@ for(var a = 0; a < xsize; a++)
 //Natural Ores
 e = 0
 repeat(6){
-	var a = irandom(xsize - 1)
+	var a = min(xsize - 1, irandom_range((e mod 3) * xsize / 3, ((e mod 3) + 1) * xsize / 3))
 	var b = irandom(ysize - 1)
-	var c = 0
-	if e < array_length(ore_recurso)
-		c = e++
-	else
-		c = irandom(array_length(ore_recurso) - 1)
+	var c = floor(e++ / 2)
 	repeat(15){
 		var temp_terreno = terreno[a, b]
 		if not in(temp_terreno.terreno, 2, 4){

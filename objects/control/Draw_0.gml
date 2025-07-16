@@ -369,7 +369,7 @@ flag = false
 				if b = 0
 					menu_array = [2, 3, 4, 5, 6, 18]
 				else if b = 1
-					menu_array = [1, 7, 8, 9]
+					menu_array = [1, 7, 8, 9, 22]
 				else if b = 2
 					menu_array = [10, 11, 12, 13]
 				else if b = 3
@@ -906,6 +906,35 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 				temp_edificio.red.consumo -= abs(edificio_elec_consumo[index])
 			}
 		}
+		//Fábrica de concreto
+		if in(var_edificio_nombre, "Fábrica de Concreto"){
+			flag = true
+			for(var b = 0; b < array_length(edificio_input_id[index]); b++)
+				if temp_edificio.carga[edificio_input_id[index, b]] < edificio_input_num[index, b]{
+					flag = false
+					break
+				}
+			if flag{
+				if temp_edificio.proceso < 0{
+					temp_edificio.red.consumo += abs(edificio_elec_consumo[index])
+					temp_edificio.proceso++
+				}
+				temp_edificio.proceso += min(temp_edificio.red.generacion / temp_edificio.red.consumo, 1)
+				if temp_edificio.proceso >= edificio_proceso[index]{
+					temp_edificio.proceso -= edificio_proceso[index] + 1
+					for(var b = 0; b < array_length(edificio_input_id[index]); b++){
+						temp_edificio.carga[edificio_input_id[index, b]] -= edificio_input_num[index, b]
+						temp_edificio.carga_total -= edificio_input_num[index, b]
+					}
+					for(var b = 0; b < array_length(edificio_output_id[index]); b++){
+						temp_edificio.carga[edificio_output_id[index, b]]++
+						temp_edificio.carga_total++
+					}
+					temp_edificio.waiting = not mover(temp_edificio.a, temp_edificio.b)
+					temp_edificio.red.consumo -= abs(edificio_elec_consumo[index])
+				}
+			}
+		}
 		//Acción de torres
 		if in(var_edificio_nombre, "Torre"){
 			temp_edificio.proceso++
@@ -992,7 +1021,7 @@ if image_index > 9000 or keyboard_check_pressed(vk_space){
 		var enemigo = {
 			a : temp_complex.a,
 			b : temp_complex.b,
-			vida : 5,
+			vida : 5 + floor(sqr((image_index - 9000) / 4500)),
 			target : null_edificio
 		}
 		path_find(enemigo)
@@ -1078,9 +1107,11 @@ for(var a = 0; a < ds_list_size(redes); a++){
 	}
 	//Comandos
 	if string_ends_with(keyboard_string, "cheat"){
-	keyboard_string = ""
-	cheat = not cheat
-}
+		keyboard_string = ""
+		cheat = not cheat
+	}
+	if keyboard_check_pressed(vk_space)
+		game_end()
 #endregion
 #region Control de camara
 	if keyboard_check_pressed(vk_f4)
