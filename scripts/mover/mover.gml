@@ -6,11 +6,12 @@ function mover(aa, bb){
 		else
 			exit
 		var flag = false, out = 0, temp_edificio = null_edificio, b = 0
+		var var_edificio_nombre = edificio_nombre[edificio.index]
 		//Selección de recursos
 		for(out = 0; out < rss_max; out++)
 			if edificio.carga[out] > 0 and edificio.carga_output[out]{
 				//Output selector
-				if in(edificio_nombre[edificio.index], "Selector"){
+				if in(var_edificio_nombre, "Selector"){
 					//Output selector frontal
 					if (edificio.carga_id = edificio.select xor not edificio.mode){
 						var temp_complex = next_to(edificio.a, edificio.b, edificio.dir)
@@ -42,7 +43,7 @@ function mover(aa, bb){
 					}
 				}
 				//Output overflow
-				else if in(edificio_nombre[edificio.index], "Overflow"){
+				else if in(var_edificio_nombre, "Overflow"){
 					//Output frontal
 					if not edificio.mode{
 						var temp_complex = next_to(edificio.a, edificio.b, edificio.dir)
@@ -108,7 +109,7 @@ function mover(aa, bb){
 			temp_edificio.carga_id = out
 			if edificio.carga_total = 0
 				edificio.waiting = false
-			if edificio_receptor[edificio.index] or in(edificio_nombre[edificio.index], "Túnel")
+			if edificio_receptor[edificio.index] or in(var_edificio_nombre, "Túnel")
 				for(var a = 0; a < ds_list_size(edificio.inputs); a++){
 					temp_edificio = ds_list_find_value(edificio.inputs, a)
 					if temp_edificio.waiting and mover(temp_edificio.a, temp_edificio.b) and temp_edificio.carga_total = 0

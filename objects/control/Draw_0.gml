@@ -87,7 +87,7 @@
 			var temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b
 			if temp_terreno.edificio_draw{
 				//Dibujo de items en los caminos
-				if (edificio_camino[index] or index = 6) and temp_edificio.carga_total > 0{
+				if (edificio_camino[index] or (index = 6)) and temp_edificio.carga_total > 0{
 					var c = 1.2 * (max(temp_edificio.proceso, temp_edificio.waiting * edificio_proceso[index]) - 10) * 20 / edificio_proceso[index]
 					var d = temp_edificio.dir * pi / 3 + pi / 6
 					draw_sprite_off(recurso_sprite[temp_edificio.carga_id], 0, aa + c * cos(d) , bb - c * sin(d))
@@ -246,13 +246,19 @@ if temp_hexagono != noone and flag{
 		//Mostrar combustión
 		if in(var_edificio_nombre, "Horno", "Generador")
 			temp_text += $"Combustion: {floor(temp_edificio.fuel / 30)} s\n"
+		//Mostrar rango de cables
+		if in(var_edificio_nombre, "Cable"){
+			var temp_complex_2 = abtoxy(temp_edificio.a, temp_edificio.b)
+			draw_set_color(c_white)
+			draw_circle_off(temp_complex_2.a, temp_complex_2.b, 90, true)
+		}
 		//Mostrar rango de torres
 		if in(var_edificio_nombre, "Torre", "Láser"){
 			var temp_complex_2 = abtoxy(temp_edificio.a, temp_edificio.b)
 			draw_set_color(c_white)
-			draw_circle_off(temp_complex_2.a, temp_complex_2.b, (var_edificio_nombre = "Torre") ? 150 : 100, true)
+			draw_circle_off(temp_complex_2.a, temp_complex_2.b, (var_edificio_nombre = "Torre") ? 200 : 120, true)
 			if not ds_list_empty(enemigos) and temp_edificio.target != null_enemigo{
-				if sqrt(sqr(temp_complex_2.a - temp_edificio.target.a) + sqr(temp_complex_2.b - temp_edificio.target.b)) > (var_edificio_nombre = "Torre" ? 150 : 100)
+				if sqrt(sqr(temp_complex_2.a - temp_edificio.target.a) + sqr(temp_complex_2.b - temp_edificio.target.b)) > (var_edificio_nombre = "Torre" ? 200 : 120)
 					draw_set_color(c_red)
 				else
 					draw_set_color(c_white)
@@ -333,7 +339,7 @@ flag = false
 			build_menu = 1
 	}
 	if build_menu = 1{
-		menu_array = [2, 1, 12, 14]
+		menu_array = [2, 1, 12, 14, 19]
 		var b = 2 * pi / array_length(menu_array)
 		draw_set_color(c_white)
 		draw_circle(menu_x, menu_y, 100, true)
@@ -345,34 +351,31 @@ flag = false
 		}
 		if sqrt(sqr(mouse_x - menu_x) + sqr(mouse_y - menu_y)) < 100{
 			var temp_text = ""
-			if mouse_x > menu_x{
-				if mouse_y > menu_y
-					temp_text = "Fluidos"
-				else
-					temp_text = "Caminos"
-			}
-			else{
-				if mouse_y > menu_y
-					temp_text = "Electricidad"
-				else
-					temp_text = "Maquinaría"
-			}
+			b = floor((array_length(menu_array) - arctan2(mouse_y - menu_y, mouse_x - menu_x) / b) mod array_length(menu_array))
+			if b = 0
+				temp_text = "Caminos"
+			else if b = 1
+				temp_text = "Fábricas"
+			else if b = 2
+				temp_text = "Electricidad"
+			else if b = 3
+				temp_text = "Fluidos"
+			else if b = 4
+				temp_text = "Defensa"
 			draw_text(mouse_x, mouse_y + 20, temp_text)
 			if mouse_check_button_pressed(mb_left){
 				mouse_clear(mb_left)
 				build_menu = 2
-				if mouse_x > menu_x{
-					if mouse_y > menu_y
-						menu_array = [14, 15, 19, 20]
-					else
-						menu_array = [2, 3, 4, 5, 6, 18]
-				}
-				else{
-					if mouse_y > menu_y
-						menu_array = [10, 11, 12, 13]
-					else
-						menu_array = [1, 7, 8, 9]
-				}
+				if b = 0
+					menu_array = [2, 3, 4, 5, 6, 18]
+				else if b = 1
+					menu_array = [1, 7, 8, 9]
+				else if b = 2
+					menu_array = [10, 11, 12, 13]
+				else if b = 3
+					menu_array = [14, 15]
+				else if b = 4
+					menu_array = [19, 20, 21]
 			}
 		}
 		else if mouse_check_button_pressed(mb_left){
@@ -677,7 +680,9 @@ if build_index > 0{
 				if in(var_edificio_nombre, "Cable")
 					draw_circle_off(temp_complex_2.a, temp_complex_2.b, 90, true)
 				if in(var_edificio_nombre, "Torre")
-					draw_circle_off(temp_complex_2.a, temp_complex_2.b, 150, true)
+					draw_circle_off(temp_complex_2.a, temp_complex_2.b, 200, true)
+				if in(var_edificio_nombre, "Láser")
+					draw_circle_off(temp_complex_2.a, temp_complex_2.b, 120, true)
 			}
 			draw_text(mouse_x + 20, mouse_y, temp_text)
 			if mouse_check_button_pressed(mb_left) and not temp_terreno.edificio_bool and flag and comprable{
@@ -757,8 +762,8 @@ if ((mouse_check_button(mb_right) and prev_change) or mouse_check_button_pressed
 //Ciclo edificios
 for(var a = 0; a < ds_list_size(edificios); a++){
 	temp_edificio = ds_list_find_value(edificios, a)
-	var index = temp_edificio.index, var_edificio_nombre = edificio_nombre[index], temp_complex = abtoxy(temp_edificio.a, temp_edificio.b)
 	if not temp_edificio.idle{
+		var index = temp_edificio.index, var_edificio_nombre = edificio_nombre[index], temp_complex = abtoxy(temp_edificio.a, temp_edificio.b)
 		//Accion taladro
 		if in(var_edificio_nombre, "Taladro", "Taladro Eléctrico") and temp_edificio.carga_total < edificio_carga_max[index]{
 			if edificio_electricidad[index]{
@@ -909,7 +914,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 				temp_edificio.target = null_enemigo
 				if not ds_list_empty(enemigos)
 					turret_target(temp_edificio)
-				if temp_edificio.target != null_enemigo and (temp_edificio.carga[2] > 0 or temp_edificio.carga[4] > 0) and sqrt(sqr(temp_complex.a - temp_edificio.target.a) + sqr(temp_complex.b - temp_edificio.target.b)) < 150{
+				if temp_edificio.target != null_enemigo and (temp_edificio.carga[2] > 0 or temp_edificio.carga[4] > 0) and sqrt(sqr(temp_complex.a - temp_edificio.target.a) + sqr(temp_complex.b - temp_edificio.target.b)) < 200{
 					if temp_edificio.carga[4] > 0{
 						temp_edificio.carga[4]--
 						temp_edificio.target.vida -= 3
@@ -932,7 +937,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 			temp_edificio.target = null_enemigo
 			if not ds_list_empty(enemigos)
 				turret_target(temp_edificio)
-			if temp_edificio.target != null_enemigo and sqrt(sqr(temp_complex.a - temp_edificio.target.a) + sqr(temp_complex.b - temp_edificio.target.b)) < 100{
+			if temp_edificio.target != null_enemigo and sqrt(sqr(temp_complex.a - temp_edificio.target.a) + sqr(temp_complex.b - temp_edificio.target.b)) < 120{
 				if not temp_edificio.mode
 					temp_edificio.red.consumo += abs(edificio_elec_consumo[index])
 				temp_edificio.mode = true
@@ -963,7 +968,9 @@ for(var a = 0; a < ds_list_size(enemigos); a++){
 		draw_circle_off(aa, bb - 20, 5, false)
 		draw_set_color(c_white)
 	}
-	if enemigo.target = null_edificio and ds_list_size(edificios) > 0
+	if enemigo.target.vida <= 0
+		enemigo.target = null_edificio
+	if not ds_list_empty(edificios) and enemigo.target = null_edificio
 		path_find(enemigo)
 	var edificio = enemigo.target, temp_complex = abtoxy(edificio.a, edificio.b), dis = sqrt(sqr(aa - temp_complex.a) + sqr(bb - temp_complex.b))
 	if dis > 50{
