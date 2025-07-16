@@ -89,7 +89,7 @@ function mover(aa, bb){
 				//Output general
 				else{
 					for(var a = 0; a < ds_list_size(edificio.outputs); a++){
-						temp_edificio = ds_list_find_value(edificio.outputs, (edificio.output_index + a) mod ds_list_size(edificio.outputs))
+						temp_edificio = edificio.outputs[|(edificio.output_index + a) mod ds_list_size(edificio.outputs)]
 						if (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
 							flag = true
 							edificio.output_index = (edificio.output_index + a + 1) mod ds_list_size(edificio.outputs)
@@ -111,7 +111,7 @@ function mover(aa, bb){
 				edificio.waiting = false
 			if edificio_receptor[edificio.index] or in(var_edificio_nombre, "Túnel")
 				for(var a = 0; a < ds_list_size(edificio.inputs); a++){
-					temp_edificio = ds_list_find_value(edificio.inputs, a)
+					temp_edificio = edificio.inputs[|a]
 					if temp_edificio.waiting and mover(temp_edificio.a, temp_edificio.b) and temp_edificio.carga_total = 0
 						temp_edificio.waiting = false
 				}

@@ -5,7 +5,8 @@ function delete_edificio(aa, bb, enemigo = false){
 			var edificio = temp_terreno.edificio
 		else
 			exit
-		if edificio.index = 0{
+		var index = edificio.index
+		if index = 0{
 			if show_question("Has perdido, jugar de nuevo?")
 				game_restart()
 			else
@@ -14,7 +15,7 @@ function delete_edificio(aa, bb, enemigo = false){
 		ds_list_remove(edificios, edificio)
 		//Cancelar coordenadas
 		for(var a = 0; a < ds_list_size(edificio.coordenadas); a++){
-			var temp_coordenada_2 = ds_list_find_value(edificio.coordenadas, a)
+			var temp_coordenada_2 = edificio.coordenadas[|a]
 			var temp_terreno_2 = terreno[temp_coordenada_2.a, temp_coordenada_2.b]
 			temp_terreno_2.edificio = null_edificio
 			temp_terreno_2.edificio_bool = false
@@ -22,29 +23,29 @@ function delete_edificio(aa, bb, enemigo = false){
 		}
 		ds_list_destroy(edificio.coordenadas)
 		//Eliminar tuneles
-		if edificio_nombre[edificio.index] = "Túnel" and not edificio.idle
+		if edificio_nombre[index] = "Túnel" and not edificio.idle
 			edificio.link.idle = true
 		//Cancelar outputs
 		for(var a = 0; a < ds_list_size(edificio.outputs); a++){
-			var temp_edificio = ds_list_find_value(edificio.outputs, a)
+			var temp_edificio = edificio.outputs[|a]
 			ds_list_remove(temp_edificio.inputs, edificio)
 		}
 		ds_list_destroy(edificio.outputs)
 		//Cancelar inputs
 		for(var a = 0; a < ds_list_size(edificio.inputs); a++){
-			var temp_edificio = ds_list_find_value(edificio.inputs, a)
+			var temp_edificio = edificio.inputs[|a]
 			ds_list_remove(temp_edificio.outputs, edificio)
 			if temp_edificio.output_index >= ds_list_size(temp_edificio.outputs)
 				temp_edificio.output_index = 0
 		}
 		ds_list_destroy(edificio.inputs)
 		//Cancelar red
-		if edificio_electricidad[edificio.index]{
+		if edificio_electricidad[index]{
 			var temp_red = edificio.red
 			ds_list_remove(temp_red.edificios, edificio)
 			//Eliminar conecciones directas
 			for(var a = 0; a < ds_list_size(edificio.energy_link); a++){
-				var temp_edificio = ds_list_find_value(edificio.energy_link, a)
+				var temp_edificio = edificio.energy_link[|a]
 				ds_list_remove(temp_edificio.energy_link, edificio)
 			}
 			ds_list_destroy(edificio.energy_link)
@@ -58,12 +59,13 @@ function delete_edificio(aa, bb, enemigo = false){
 			else{
 				var red_bateria = 0
 				for(var a = 0; a < ds_list_size(temp_red.edificios); a++){
-					var temp_edificio = ds_list_find_value(temp_red.edificios, a)
+					var temp_edificio = temp_red.edificios[|a]
 					if in(edificio_nombre[temp_edificio.index], "Batería")
-						red_bateria++}
+						red_bateria++
+					}
 				var visitado = ds_list_create(), agregado = ds_list_create()
 				while not ds_list_empty(temp_red.edificios){
-					var nodo = ds_list_find_value(temp_red.edificios, 0)
+					var nodo = temp_red.edificios[|0]
 					if not ds_list_in(visitado, nodo){
 						var isla = ds_list_create(), isla_bateria = 0
 						var pila = ds_stack_create()
@@ -78,7 +80,7 @@ function delete_edificio(aa, bb, enemigo = false){
 							if not ds_list_in(visitado, nodo){
 								ds_list_add(visitado, nodo)
 								for(var a = 0; a < ds_list_size(nodo.energy_link); a++){
-									var temp_edificio = ds_list_find_value(nodo.energy_link, a)
+									var temp_edificio = nodo.energy_link[|a]
 									if not ds_list_in(visitado, temp_edificio) and not ds_list_in(agregado, temp_edificio){
 										ds_stack_push(pila, temp_edificio)
 										ds_list_add(agregado, temp_edificio)
@@ -97,7 +99,7 @@ function delete_edificio(aa, bb, enemigo = false){
 						if red_bateria > 0
 							temp_red_2.bateria = floor(temp_red.bateria * isla_bateria / red_bateria)
 						for(var a = 0; a < ds_list_size(isla); a++){
-							var temp_edificio = ds_list_find_value(isla, a)
+							var temp_edificio = isla[|a]
 							temp_edificio.red = temp_red_2
 							if edificio_elec_consumo[temp_edificio.index] > 0
 								temp_red_2.consumo += edificio_elec_consumo[temp_edificio.index]
@@ -116,26 +118,30 @@ function delete_edificio(aa, bb, enemigo = false){
 			}
 		}
 		//Flujos de cañerias
-		for(var a = 0; a < ds_list_size(edificio.flujo); a++){
-			var temp_flujo = ds_list_find_value(edificio.flujo, a)
+		if edificio_flujo[index]{
+			var temp_flujo = edificio.flujo
 			ds_list_remove(temp_flujo.edificios, edificio)
 			if ds_list_empty(temp_flujo.edificios){
 				ds_list_remove(flujos, temp_flujo)
 				ds_list_destroy(temp_flujo.edificios)
-				delete(temp_flujo)
 			}
+			else{
+				temp_flujo.cantidad_max -= edificio_flujo_almacen[index]
+				temp_flujo.cantidad = min(temp_flujo.cantidad, temp_flujo.cantidad_max)
+				if edificio_nombre[index] = "Bomba Hidráulica"
+					temp_flujo.generacion -= edificio.proceso
+			}
+			for(var a = 0; a < ds_list_size(edificio.flujo_link); a++){
+				var temp_edificio = edificio.flujo_link[|a]
+				ds_list_remove(temp_edificio.flujo_link, edificio)
+			}
+			ds_list_destroy(edificio.flujo_link)
 		}
-		ds_list_destroy(edificio.flujo)
-		for(var a = 0; a < ds_list_size(edificio.flujo_link); a++){
-			var temp_edificio = ds_list_find_value(edificio.flujo_link, a)
-			ds_list_remove(temp_edificio.flujo_link, edificio)
-		}
-		ds_list_destroy(edificio.flujo_link)
 		//Retorno de recursos
 		if not cheat and not enemigo
-			for(var a = 0; a < array_length(edificio_precio_id[edificio.index]); a++){
-				nucleo.carga[edificio_precio_id[edificio.index, a]] += floor(edificio_precio_num[edificio.index, a] / 2)
-				nucleo.carga_total += floor(edificio_precio_num[edificio.index, a] / 2)
+			for(var a = 0; a < array_length(edificio_precio_id[index]); a++){
+				nucleo.carga[edificio_precio_id[index, a]] += floor(edificio_precio_num[index, a] / 2)
+				nucleo.carga_total += floor(edificio_precio_num[index, a] / 2)
 			}
 		delete(edificio)
 	}
