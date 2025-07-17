@@ -50,6 +50,7 @@ ds_list_add(null_edificio.energy_link, null_edificio)
 ds_list_clear(null_edificio.energy_link)
 ds_list_add(null_edificio.flujo_link, null_edificio)
 ds_list_clear(null_edificio.flujo_link)
+edificios_targeteables = ds_list_create()
 null_terreno = {
 	hexagono : obj_hexagono,
 	terreno : 0,
@@ -241,8 +242,8 @@ function def_edificio(nombre, size, sprite = spr_base, sprite_2 = spr_base, key 
 	def_edificio("Torre", 1, spr_torre,, ord("C"), 600, 60,,, [0, 3], [20, 25], 20, true, false, [2, 4], [10, 10])
 	//20
 	def_edificio("Láser", 2, spr_laser,, ord("V"), 500, 1,,, [0, 2, 4], [10, 10, 20],,,,,,,,, 100)
-	def_edificio("Muro", 1, spr_hexagono,, ord("B"), 200,,,, [8], [4])
-	def_edificio("Fábrica de Concreto", 3, spr_fabrica_de_concreto,, ord("T"), 300, 120,,, [0, 2, 4], [10, 20, 25], 10, true, false, [3, 5, 6], [1, 3, 2], true, false, [8], 50, 30)
+	def_edificio("Muro", 1, spr_hexagono,, ord("B"), 200,,,, [8], [2])
+	def_edificio("Fábrica de Concreto", 3, spr_fabrica_de_concreto,, ord("T"), 300, 120,,, [0, 2, 4], [10, 20, 25], 10, true, false, [3, 5, 6], [1, 3, 2], true, false, [8], 10, 30)
 #endregion
 edificio_rotable[6] = true
 edificio_input_all[16] = true
@@ -251,21 +252,21 @@ size_size = [1, 3, 7, 12, 19, 27]
 size_borde = [6, 9, 12, 15, 18, 21]
 edificios = ds_list_create()
 //Redes electricas
-red_null = {
+null_red = {
 	edificios : ds_list_create(),
 	generacion: 0,
 	consumo : 0,
 	bateria : 0,
 	bateria_max : 0
 }
-null_edificio.red = red_null
-ds_list_add(red_null.edificios, null_edificio)
-ds_list_clear(red_null.edificios)
+null_edificio.red = null_red
+ds_list_add(null_red.edificios, null_edificio)
+ds_list_clear(null_red.edificios)
 redes = ds_list_create()
-ds_list_add(redes, red_null)
+ds_list_add(redes, null_red)
 ds_list_clear(redes)
 //Flujos de líquidos
-flujo_null ={
+null_flujo ={
 	edificios : ds_list_create(),
 	liquido : 0,
 	cantidad : 0,
@@ -273,11 +274,11 @@ flujo_null ={
 	consumo: 0,
 	cantidad_max : 0
 }
-null_edificio.flujo = flujo_null
-ds_list_add(flujo_null.edificios, null_edificio)
-ds_list_clear(flujo_null.edificios)
+null_edificio.flujo = null_flujo
+ds_list_add(null_flujo.edificios, null_edificio)
+ds_list_clear(null_flujo.edificios)
 flujos = ds_list_create()
-ds_list_add(flujos, flujo_null)
+ds_list_add(flujos, null_flujo)
 ds_list_clear(flujos)
 //Metadatos
 build_index = 0

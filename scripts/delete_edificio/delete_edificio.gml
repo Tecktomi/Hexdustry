@@ -13,6 +13,8 @@ function delete_edificio(aa, bb, enemigo = false){
 				game_end()
 		}
 		ds_list_remove(edificios, edificio)
+		if not edificio_camino[index]
+			ds_list_remove(edificios_targeteables, edificio)
 		//Cancelar coordenadas
 		for(var a = 0; a < ds_list_size(edificio.coordenadas); a++){
 			var temp_coordenada_2 = edificio.coordenadas[|a]

@@ -501,7 +501,7 @@ if build_index > 0{
 		}
 		flag = true
 		//Vista previa caminos
-		if edificio_camino[build_index]{
+		if edificio_camino[build_index] or var_edificio_nombre = "Tubería"{
 			//Iniciar arrastre
 			if mouse_check_button_pressed(mb_left){
 				mx_clic = mx
@@ -512,7 +512,9 @@ if build_index > 0{
 			if mouse_check_button(mb_left){
 				ds_list_clear(pre_build_list)
 				var temp_complex_2 = abtoxy(mx_clic, my_clic), aa = temp_complex_2.a, bb = temp_complex_2.b
-				if not in(var_edificio_nombre, "Cinta Transportadora", "Enrutador", "Cinta Magnética")
+				if in(var_edificio_nombre, "Tubería")
+					draw_sprite_off(edificio_sprite[build_index], 0, aa, bb,,,,, 0.5)
+				else if not in(var_edificio_nombre, "Cinta Transportadora", "Enrutador", "Cinta Magnética")
 					draw_sprite_off(edificio_sprite[build_index], 0, aa, bb, , , (build_dir - 1) * 60, , 0.5)
 				else{
 					if (build_dir mod 3) = 1
@@ -532,7 +534,9 @@ if build_index > 0{
 						b = temp_complex_3.b
 						temp_complex_3 = abtoxy(a, b)
 						var aaa = temp_complex_3.a, bbb = temp_complex_3.b
-						if not in(var_edificio_nombre, "Cinta Transportadora", "Enrutador")
+						if in(var_edificio_nombre, "Tubería")
+							draw_sprite_off(edificio_sprite[build_index], 0, aaa, bbb,,,,, 0.5)
+						else if not in(var_edificio_nombre, "Cinta Transportadora", "Enrutador")
 							draw_sprite_off(edificio_sprite[build_index], 0, aaa, bbb, , , (build_dir - 1) * 60, , 0.5)
 						else{
 							if (build_dir mod 3) = 1
@@ -552,9 +556,11 @@ if build_index > 0{
 				var temp_complex = next_to(mx, my, build_dir)
 				var temp_complex_2 = abtoxy(mx, my), aa = temp_complex_2.a, bb = temp_complex_2.b
 				var temp_complex_3 = abtoxy(temp_complex.a, temp_complex.b)
-				draw_set_color(c_black)
-				draw_arrow_off(aa, bb, temp_complex_3.a, temp_complex_3.b, 8)
-				if not in(var_edificio_nombre, "Cinta Transportadora", "Cinta Magnética"){
+				if not in(var_edificio_nombre, "Tubería"){
+					draw_set_color(c_black)
+					draw_arrow_off(aa, bb, temp_complex_3.a, temp_complex_3.b, 8)
+				}
+				if not in(var_edificio_nombre, "Cinta Transportadora", "Cinta Magnética", "Tubería"){
 					draw_sprite_off(edificio_sprite[build_index], 0, aa, bb, , , (build_dir - 1) * 60, , 0.5)
 					temp_complex = next_to(mx, my, (build_dir + 1) mod 6)
 					temp_complex_3 = abtoxy(temp_complex.a, temp_complex.b)
@@ -564,7 +570,9 @@ if build_index > 0{
 					draw_arrow_off(aa, bb, temp_complex_3.a, temp_complex_3.b, 8)
 				}
 				else{
-					if (build_dir mod 3) = 1
+					if in(var_edificio_nombre, "Tubería")
+						draw_sprite_off(edificio_sprite[build_index], 0, aa, bb,,,,, 0.5)
+					else if (build_dir mod 3) = 1
 						draw_sprite_off(edificio_sprite[build_index], image_index / 4, aa, bb, , power(-1, build_dir > 1), , , 0.5)
 					else
 						draw_sprite_off(edificio_sprite_2[build_index], image_index / 4, aa, bb, power(-1, ((build_dir + 1) mod 6) > 1), power(-1, build_dir > 2), , , 0.5)
@@ -581,6 +589,8 @@ if build_index > 0{
 								comprable = false
 								break
 							}
+					if in(var_edificio_nombre, "Tubería")
+						build_dir = 0
 					if comprable{
 						var temp_complex_2 = pre_build_list[|a]
 						f1(build_index, build_dir, temp_complex_2.a, temp_complex_2.b)
@@ -942,6 +952,8 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 					flag = false
 					break
 				}
+			if flag and not (temp_edificio.flujo.liquido = 0 and temp_edificio.flujo.cantidad >= 30)
+				flag = false
 			if flag{
 				if temp_edificio.proceso < 0{
 					temp_edificio.red.consumo += abs(edificio_elec_consumo[index])
@@ -953,6 +965,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 					temp_edificio.proceso++
 				if temp_edificio.proceso >= edificio_proceso[index]{
 					temp_edificio.proceso -= edificio_proceso[index] + 1
+					temp_edificio.flujo.cantidad -= 30
 					for(var b = 0; b < array_length(edificio_input_id[index]); b++){
 						temp_edificio.carga[edificio_input_id[index, b]] -= edificio_input_num[index, b]
 						temp_edificio.carga_total -= edificio_input_num[index, b]
@@ -1146,7 +1159,7 @@ for(var a = 0; a < ds_list_size(flujos); a++){
 		keyboard_string = ""
 		cheat = not cheat
 	}
-	if keyboard_check_pressed(vk_space)
+	if keyboard_check_pressed(vk_escape)
 		game_end()
 #endregion
 #region Control de camara
