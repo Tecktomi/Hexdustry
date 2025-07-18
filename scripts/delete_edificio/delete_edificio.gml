@@ -132,6 +132,8 @@ function delete_edificio(aa, bb, enemigo = false){
 				temp_flujo.cantidad = min(temp_flujo.cantidad, temp_flujo.cantidad_max)
 				if edificio_nombre[index] = "Bomba Hidráulica"
 					temp_flujo.generacion -= edificio.proceso
+				else if edificio_nombre[index] = "Planta Química" and edificio.select > 0
+					temp_flujo.generacion -= 30
 			}
 			for(var a = 0; a < ds_list_size(edificio.flujo_link); a++){
 				var temp_edificio = edificio.flujo_link[|a]
