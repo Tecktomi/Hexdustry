@@ -110,11 +110,7 @@ function mover(aa, bb){
 			if edificio.carga_total = 0
 				edificio.waiting = false
 			if edificio_receptor[edificio.index] or in(var_edificio_nombre, "Túnel")
-				for(var a = 0; a < ds_list_size(edificio.inputs); a++){
-					temp_edificio = edificio.inputs[|a]
-					if temp_edificio.waiting and mover(temp_edificio.a, temp_edificio.b) and temp_edificio.carga_total = 0
-						temp_edificio.waiting = false
-				}
+				mover_in(edificio)
 		}
 		return flag
 	}

@@ -251,14 +251,16 @@ function add_edificio(index, dir, a, b){
 			var temp_list_flujos = ds_list_create()
 			for(var c = 0; c < ds_list_size(temp_list_4); c++){
 				temp_complex = temp_list_4[|c]
-				temp_terreno = terreno[temp_complex.a, temp_complex.b]
-				if temp_terreno.edificio_bool{
-					var temp_edificio = temp_terreno.edificio
-					if edificio_flujo[temp_edificio.index] and var_edificio_nombre = "Tubería" or edificio_nombre[temp_edificio.index] = "Tubería"{
-						ds_list_add(edificio.flujo_link, temp_edificio)
-						ds_list_add(temp_edificio.flujo_link, edificio)
-						if not ds_list_in(temp_list_flujos, temp_edificio.flujo)
-							ds_list_add(temp_list_flujos, temp_edificio.flujo)
+				if temp_complex.a >= 0 and temp_complex.b >= 0 and temp_complex.a < xsize and temp_complex.b < ysize{
+					temp_terreno = terreno[temp_complex.a, temp_complex.b]
+					if temp_terreno.edificio_bool{
+						var temp_edificio = temp_terreno.edificio
+						if edificio_flujo[temp_edificio.index] and var_edificio_nombre = "Tubería" or edificio_nombre[temp_edificio.index] = "Tubería"{
+							ds_list_add(edificio.flujo_link, temp_edificio)
+							ds_list_add(temp_edificio.flujo_link, edificio)
+							if not ds_list_in(temp_list_flujos, temp_edificio.flujo)
+								ds_list_add(temp_list_flujos, temp_edificio.flujo)
+						}
 					}
 				}
 			}
@@ -317,6 +319,8 @@ function add_edificio(index, dir, a, b){
 		}
 		if var_edificio_nombre = "Láser"
 			edificio.mode = true
+		else if var_edificio_nombre = "Rifle"
+			edificio.select = 0
 		if not edificio_camino[index]{
 			temp_complex = abtoxy(a, b)
 			for(var c = 0; c < ds_list_size(enemigos); c++){
