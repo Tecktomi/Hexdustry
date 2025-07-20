@@ -20,6 +20,8 @@ null_edificio = {
 	dir : 0,
 	a : 0,
 	b : 0,
+	x : 0,
+	y : 0,
 	coordenadas : ds_list_create(),
 	inputs : ds_list_create(),
 	outputs : ds_list_create(),
@@ -236,12 +238,12 @@ function def_edificio(nombre, size, sprite = spr_base, sprite_2 = spr_base, key 
 	def_edificio("Generador", 1, spr_generador, spr_generador_encendido, ord("A"), 100,,, true, [0, 3], [20, 5], 10, true, false, [1], [10], false,,, -20)
 	def_edificio("Cable", 1, spr_cable,, ord("S"), 30,,,, [0, 3], [5, 1],,,,,,,,, 1)
 	def_edificio("Batería", 1, spr_bateria,, ord("D"), 60,,,, [0, 2], [20, 5],,,,,,,,, 1)
-	def_edificio("Panel Solar", 2, spr_panel_solar,, ord("F"), 150,,,, [0, 2, 4], [40, 10, 10],,,,,,,,, -5)
-	def_edificio("Bomba Hidráulica", 2, spr_bomba, spr_bomba_rotor, ord("Z"), 200, 1,,, [0, 4, 7], [10, 20, 10],,,,,,,,, 25, 30)
+	def_edificio("Panel Solar", 2, spr_panel_solar,, ord("F"), 150,,,, [0, 4, 7], [10, 10, 5],,,,,,,,, -5)
+	def_edificio("Bomba Hidráulica", 2, spr_bomba, spr_bomba_rotor, ord("Z"), 200, 1,,, [0, 4, 7], [10, 15, 10],,,,,,,,, 25, 30)
 	def_edificio("Tubería", 1, spr_tuberia, spr_tuberia_color, ord("X"), 30, 1,,, [4, 7], [1, 1],,,,,,,,,, 10)
 	def_edificio("Túnel", 1, spr_tunel_salida,,, 60, 10,,, [0, 3], [4, 4], 1,,,,, true, true)
 	def_edificio("Energía Infinita", 1, spr_energia_infinita,, ord("M"), 100,,,,,,,,,,,,,, -infinity)
-	def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, ord(6), 60, 10, true,, [2, 3], [1, 1], 1, true,,,, true)
+	def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, ord(6), 60, 10, true,, [2, 4], [1, 1], 1, true,,,, true)
 	def_edificio("Torre", 1, spr_torre, spr_torre_2, ord("L"), 600, 60,,, [2, 3], [10, 25], 30, true, false, [0, 3, 6], [10, 10, 10],,,,, 10)
 	//20
 	def_edificio("Láser", 2, spr_laser,, ord("K"), 500, 1,,, [0, 2, 4], [10, 10, 20],,,,,,,,, 100)
@@ -249,7 +251,7 @@ function def_edificio(nombre, size, sprite = spr_base, sprite_2 = spr_base, key 
 	def_edificio("Fábrica de Concreto", 3, spr_fabrica_de_concreto,, ord("T"), 300, 120,,, [0, 2, 4], [10, 20, 25], 12, true, false, [3, 5, 6], [2, 6, 4], true, false, [8], 10, 30)
 	def_edificio("Planta Química", 3, spr_planta_quimica,, ord("C"), 150, 30,, true, [0, 4, 7], [20, 40, 20], 12, true, false, [1, 5, 7], [4, 4, 4],,,,, 60)
 	def_edificio("Fábrica de Explosivos", 3, spr_fabrica_explosivos,, ord("Y"), 100, 80,,, [0, 4, 8], [10, 40, 10], 10, true, false, [1, 6], [2, 2], true, false, [9], 20, 30)
-	def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, ord("H"), 600, 100,,, [2, 4], [15, 10], 20, true, false, [2, 4], [10, 10],,,,, 10)
+	def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, ord("H"), 600, 100,,, [2, 4, 9], [10, 10, 5], 20, true, false, [2, 4], [10, 10],,,,, 10)
 #endregion
 edificio_rotable[6] = true
 edificio_input_all[16] = true

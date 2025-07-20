@@ -1,10 +1,15 @@
 function add_edificio(index, dir, a, b){
 	with control{
+		var temp_complex = abtoxy(a, b)
+		x = temp_complex.a
+		y = temp_complex.b
 		var edificio = {
 			index : floor(index),
 			dir : floor(dir),
 			a : floor(a),
 			b : floor(b),
+			x : x,
+			y : y,
 			coordenadas : ds_list_create(),
 			inputs : ds_list_create(),
 			outputs : ds_list_create(),
@@ -35,7 +40,8 @@ function add_edificio(index, dir, a, b){
 		ds_list_add(edificio.flujo_link, null_edificio)
 		ds_list_clear(edificio.flujo_link)
 		var var_edificio_nombre = edificio_nombre[index]
-		var temp_terreno = null_terreno, temp_complex = {a : 0, b : 0}
+		var temp_terreno = null_terreno
+		temp_complex = {a : 0, b : 0}
 		for(var c = 0; c < rss_max; c++)
 			edificio.carga[c] = 0
 		if edificio_input_all[index]{
@@ -187,7 +193,6 @@ function add_edificio(index, dir, a, b){
 		if edificio_electricidad[index]{
 			if in(var_edificio_nombre, "Panel Solar", "Energía Infinita")
 				edificio.energy_output = -edificio_elec_consumo[index]
-			temp_complex = abtoxy(a, b)
 			//Detectar otras redes cerca
 			var temp_list_3 = get_size(a, b, dir, 7)
 			var temp_list_redes = ds_list_create()
@@ -322,10 +327,9 @@ function add_edificio(index, dir, a, b){
 		else if var_edificio_nombre = "Rifle"
 			edificio.select = 0
 		if not edificio_camino[index]{
-			temp_complex = abtoxy(a, b)
 			for(var c = 0; c < ds_list_size(enemigos); c++){
 				var enemigo = enemigos[|c], temp_complex_2 = abtoxy(enemigo.target.a, enemigo.target.b)
-				if sqr(enemigo.a - temp_complex.a) + sqr(enemigo.b - temp_complex.b) < sqr(enemigo.a - temp_complex_2.a) + sqr(enemigo.b - temp_complex_2.b)
+				if sqr(enemigo.a - x) + sqr(enemigo.b - y) < sqr(enemigo.a - temp_complex_2.a) + sqr(enemigo.b - temp_complex_2.b)
 					enemigo.target = edificio
 			}
 		}
