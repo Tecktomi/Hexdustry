@@ -260,7 +260,7 @@ function add_edificio(index, dir, a, b){
 					temp_terreno = terreno[temp_complex.a, temp_complex.b]
 					if temp_terreno.edificio_bool{
 						var temp_edificio = temp_terreno.edificio
-						if edificio_flujo[temp_edificio.index] and var_edificio_nombre = "Tubería" or edificio_nombre[temp_edificio.index] = "Tubería"{
+						if edificio_flujo[temp_edificio.index] and in(var_edificio_nombre, "Tubería", "Depósito", "Líquido Infinito") or in(edificio_nombre[temp_edificio.index], "Tubería", "Depósito", "Líquido Infinito"){
 							ds_list_add(edificio.flujo_link, temp_edificio)
 							ds_list_add(temp_edificio.flujo_link, edificio)
 							if not ds_list_in(temp_list_flujos, temp_edificio.flujo)
@@ -283,7 +283,7 @@ function add_edificio(index, dir, a, b){
 				edificio.flujo = new_flujo
 				ds_list_add(new_flujo.edificios, edificio)
 			}
-			else if var_edificio_nombre = "Tubería"{
+			else if in(var_edificio_nombre, "Tubería", "Depósito", "Líquido Infinito"){
 				var new_flujo ={
 					edificios : ds_list_create(),
 					liquido : -1,
@@ -328,8 +328,8 @@ function add_edificio(index, dir, a, b){
 			edificio.select = 0
 		if not edificio_camino[index]{
 			for(var c = 0; c < ds_list_size(enemigos); c++){
-				var enemigo = enemigos[|c], temp_complex_2 = abtoxy(enemigo.target.a, enemigo.target.b)
-				if sqr(enemigo.a - x) + sqr(enemigo.b - y) < sqr(enemigo.a - temp_complex_2.a) + sqr(enemigo.b - temp_complex_2.b)
+				var enemigo = enemigos[|c], temp_complex_2 = abtoxy(enemigo.target.a, enemigo.target.b), aa = enemigo.a, bb = enemigo.b
+				if sqr(aa - x) + sqr(bb - y) < sqr(aa - temp_complex_2.a) + sqr(bb - temp_complex_2.b)
 					enemigo.target = edificio
 			}
 		}

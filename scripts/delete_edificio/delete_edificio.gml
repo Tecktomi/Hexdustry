@@ -134,6 +134,8 @@ function delete_edificio(aa, bb, enemigo = false){
 					temp_flujo.generacion -= edificio.proceso
 				else if edificio_nombre[index] = "Planta Química" and edificio.select > 0
 					temp_flujo.generacion -= 30
+				else if edificio_nombre[index] = "Líquido Infinito" and edificio.select >= 0
+					edificio.flujo.generacion -= 999999
 			}
 			for(var a = 0; a < ds_list_size(edificio.flujo_link); a++){
 				var temp_edificio = edificio.flujo_link[|a]
@@ -147,6 +149,12 @@ function delete_edificio(aa, bb, enemigo = false){
 				nucleo.carga[edificio_precio_id[index, a]] += floor(edificio_precio_num[index, a] / 2)
 				nucleo.carga_total += floor(edificio_precio_num[index, a] / 2)
 			}
+		//Camiar target de enemigos
+		for(var a = 0; a < ds_list_size(enemigos); a++){
+			var temp_enemigo = enemigos[|a]
+			if temp_enemigo.target = edificio
+				path_find(temp_enemigo)
+		}
 		delete(edificio)
 	}
 }

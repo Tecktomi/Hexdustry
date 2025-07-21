@@ -66,8 +66,7 @@ null_terreno = {
 //Crear plantilla de fondo
 for(var a = 0; a < xsize; a++)
 	for(var b = 0; b < ysize; b++){
-		var temp_complex = abtoxy(a, b)
-		var temp_hexagono = instance_create_layer(temp_complex.a, temp_complex.b, "instances", obj_hexagono)
+		var temp_complex = abtoxy(a, b), temp_hexagono = instance_create_layer(temp_complex.a, temp_complex.b, "instances", obj_hexagono)
 		terreno[a, b] = {
 			hexagono : temp_hexagono,
 			terreno : 1,
@@ -159,8 +158,9 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 #endregion
 rss_max = array_length(recurso_nombre)
 //Liquidos
-liquido_nombre = ["Agua", "Ácido"]
-liquido_color = [c_aqua, c_green]
+liquido_nombre = ["Agua", "Ácido", "Petróleo"]
+liquido_color = [c_aqua, c_green, c_black]
+lq_max = array_length(liquido_nombre)
 //Edificios
 #region Arreglos
 	edificio_sprite = []
@@ -188,7 +188,7 @@ liquido_color = [c_aqua, c_green]
 	edificio_flujo = []
 	edificio_flujo_almacen = []
 #endregion
-function def_edificio(nombre, size, sprite = spr_base, sprite_2 = spr_base, key = vk_nokey, vida = 100, proceso = 0, camino = false, combustible = false, precio_id = [0], precio_num = [0], carga = 0, receptor = false, in_all = true, in_id = [0], in_num = [0], emisor = false, out_all = true, out_id = [0], electricidad = 0, agua = 0){
+function def_edificio(nombre, size, sprite = spr_base, sprite_2 = spr_base, key = vk_nokey, vida = 100, proceso = 0, camino = false, comb = false, precio_id = [0], precio_num = [0], carga = 0, receptor = false, in_all = true, in_id = [0], in_num = [0], emisor = false, out_all = true, out_id = [0], electricidad = 0, agua = 0){
 	array_push(edificio_nombre, string(nombre))
 	array_push(edificio_size, real(size))
 	array_push(edificio_sprite, sprite)
@@ -198,7 +198,7 @@ function def_edificio(nombre, size, sprite = spr_base, sprite_2 = spr_base, key 
 	array_push(edificio_vida, vida)
 	array_push(edificio_proceso, proceso)
 	array_push(edificio_camino, camino)
-	array_push(edificio_combutable, combustible)
+	array_push(edificio_combutable, comb)
 	array_push(edificio_precio_id, precio_id)
 	array_push(edificio_precio_num, precio_num)
 	array_push(edificio_carga_max, carga)
@@ -252,6 +252,8 @@ function def_edificio(nombre, size, sprite = spr_base, sprite_2 = spr_base, key 
 	def_edificio("Planta Química", 3, spr_planta_quimica,, ord("C"), 150, 30,, true, [0, 4, 7], [20, 40, 20], 12, true, false, [1, 5, 7], [4, 4, 4],,,,, 60)
 	def_edificio("Fábrica de Explosivos", 3, spr_fabrica_explosivos,, ord("Y"), 100, 80,,, [0, 4, 8], [10, 40, 10], 10, true, false, [1, 6], [2, 2], true, false, [9], 20, 30)
 	def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, ord("H"), 600, 100,,, [2, 4, 9], [10, 10, 5], 20, true, false, [2, 4], [10, 10],,,,, 10)
+	def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, ord("V"), 200, 1,,, [4, 7], [20, 30],,,,,,,,,, 300)
+	def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, ord("N"), 30, 1,,,,,,,,,,,,,, 10)
 #endregion
 edificio_rotable[6] = true
 edificio_input_all[16] = true
