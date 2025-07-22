@@ -105,7 +105,7 @@ function delete_edificio(aa, bb, enemigo = false){
 							var temp_edificio = isla[|a]
 							temp_edificio.red = temp_red_2
 							if edificio_energia_consumo[temp_edificio.index] > 0
-								temp_red_2.consumo += edificio_energia_consumo[temp_edificio.index]
+								temp_red_2.consumo += temp_edificio.energia_consumo
 							else
 								temp_red_2.generacion += temp_edificio.energy_output
 							if in(edificio_nombre[temp_edificio.index], "Batería")
