@@ -45,7 +45,9 @@ null_edificio = {
 	flujo : undefined,
 	flujo_link: ds_list_create(),
 	vida : 0,
-	target : undefined
+	target : undefined,
+	flujo_consumo : 0,
+	energia_consumo : 0
 }
 null_edificio.link = null_edificio
 ds_list_add(null_edificio.energy_link, null_edificio)
@@ -179,16 +181,17 @@ lq_max = array_length(liquido_nombre)
 	edificio_proceso = []
 	edificio_combutable = []
 	edificio_camino = []
-	edificio_electricidad =	[]
-	edificio_elec_consumo = []
+	edificio_energia =	[]
+	edificio_energia_consumo = []
 	edificio_precio_id = []
 	edificio_precio_num = []
 	edificio_key = []
 	edificio_vida =	[]
 	edificio_flujo = []
 	edificio_flujo_almacen = []
+	edificio_flujo_consumo = []
 #endregion
-function def_edificio(nombre, size, sprite = spr_base, sprite_2 = spr_base, key = vk_nokey, vida = 100, proceso = 0, camino = false, comb = false, precio_id = [0], precio_num = [0], carga = 0, receptor = false, in_all = true, in_id = [0], in_num = [0], emisor = false, out_all = true, out_id = [0], electricidad = 0, agua = 0){
+function def_edificio(nombre, size, sprite = spr_base, sprite_2 = spr_base, key = vk_nokey, vida = 100, proceso = 0, camino = false, comb = false, precio_id = [0], precio_num = [0], carga = 0, receptor = false, in_all = true, in_id = [0], in_num = [0], emisor = false, out_all = true, out_id = [0], energia = 0, agua = 0, agua_consumo = 0){
 	array_push(edificio_nombre, string(nombre))
 	array_push(edificio_size, real(size))
 	array_push(edificio_sprite, sprite)
@@ -218,10 +221,11 @@ function def_edificio(nombre, size, sprite = spr_base, sprite_2 = spr_base, key 
 		array_push(edificio_output_id, out_id)
 	else
 		array_push(edificio_output_id, [0])
-	array_push(edificio_electricidad, (electricidad != 0))
-	array_push(edificio_elec_consumo, electricidad)
+	array_push(edificio_energia, (energia != 0))
+	array_push(edificio_energia_consumo, energia)
 	array_push(edificio_flujo, (agua > 0))
 	array_push(edificio_flujo_almacen, agua)
+	array_push(edificio_flujo_consumo, agua_consumo)
 }
 #region Definición
 	def_edificio("Núcleo", 3, spr_base,,, 1200,,,,,,, true)
@@ -232,28 +236,28 @@ function def_edificio(nombre, size, sprite = spr_base, sprite_2 = spr_base, key 
 	def_edificio("Overflow", 1, spr_overflow,, ord(4), 60, 10, true,, [0], [4], 1, true,,,, true)
 	def_edificio("Túnel", 1, spr_tunel,, ord(5), 60, 10,,, [0, 3], [4, 4], 1, true, true,,, true, true)
 	def_edificio("Horno", 2, spr_horno, spr_horno_encendido, ord("W"), 250, 150,, true, [0, 3], [20, 15], 19, true, false, [0, 1, 3, 5], [4, 4, 4, 4], true, false, [2, 4, 7])
-	def_edificio("Taladro Eléctrico", 3, spr_taladro_electrico,, ord("E"), 400, 50,,, [0, 2, 4], [20, 10, 10], 20,,,,, true, false, [0, 1, 3, 5, 6], 50, 10)
-	def_edificio("Triturador", 2, spr_triturador,, ord("R"), 250, 40,,, [0, 4], [10, 25], 10, true, false, [6], [5], true, false, [5, 9], 30)
+	def_edificio("Taladro Eléctrico", 3, spr_taladro_electrico,, ord("E"), 400, 50,,, [0, 2, 4], [20, 10, 10], 20,,,,, true, false, [0, 1, 3, 5, 6], 50, 10, 20)
+	def_edificio("Triturador", 2, spr_triturador,, ord("R"), 250, 20,,, [0, 4], [10, 25], 10, true, false, [6], [5], true, false, [5, 9], 30)
 	//10
 	def_edificio("Generador", 1, spr_generador, spr_generador_encendido, ord("A"), 100,,, true, [0, 3], [20, 5], 10, true, false, [1], [10], false,,, -20)
 	def_edificio("Cable", 1, spr_cable,, ord("S"), 30,,,, [0, 3], [5, 1],,,,,,,,, 1)
 	def_edificio("Batería", 1, spr_bateria,, ord("D"), 60,,,, [0, 2], [20, 5],,,,,,,,, 1)
 	def_edificio("Panel Solar", 2, spr_panel_solar,, ord("F"), 150,,,, [0, 4, 7], [10, 10, 5],,,,,,,,, -5)
-	def_edificio("Bomba Hidráulica", 2, spr_bomba, spr_bomba_rotor, ord("Z"), 200, 1,,, [0, 4, 7], [10, 15, 10],,,,,,,,, 25, 30)
+	def_edificio("Bomba Hidráulica", 2, spr_bomba, spr_bomba_rotor, ord("Z"), 200, 1,,, [0, 4, 7], [10, 15, 10],,,,,,,,, 25, 30, -30)
 	def_edificio("Tubería", 1, spr_tuberia, spr_tuberia_color, ord("X"), 30, 1,,, [4, 7], [1, 1],,,,,,,,,, 10)
 	def_edificio("Túnel", 1, spr_tunel_salida,,, 60, 10,,, [0, 3], [4, 4], 1,,,,, true, true)
-	def_edificio("Energía Infinita", 1, spr_energia_infinita,, ord("M"), 100,,,,,,,,,,,,,, -infinity)
+	def_edificio("Energía Infinita", 1, spr_energia_infinita,, ord("M"), 100,,,,,,,,,,,,,, -999999)
 	def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, ord(6), 60, 10, true,, [2, 4], [1, 1], 1, true,,,, true)
-	def_edificio("Torre", 1, spr_torre, spr_torre_2, ord("L"), 600, 60,,, [2, 3], [10, 25], 30, true, false, [0, 3, 6], [10, 10, 10],,,,, 10)
+	def_edificio("Torre", 1, spr_torre, spr_torre_2, ord("L"), 600, 60,,, [2, 3], [10, 25], 30, true, false, [0, 3, 6], [10, 10, 10],,,,, 10, 60)
 	//20
 	def_edificio("Láser", 2, spr_laser,, ord("K"), 500, 1,,, [0, 2, 4], [10, 10, 20],,,,,,,,, 100)
 	def_edificio("Muro", 1, spr_hexagono,, ord("J"), 200,,,, [8], [2])
-	def_edificio("Fábrica de Concreto", 3, spr_fabrica_de_concreto,, ord("T"), 300, 120,,, [0, 2, 4], [10, 20, 25], 12, true, false, [3, 5, 6], [2, 6, 4], true, false, [8], 10, 30)
-	def_edificio("Planta Química", 3, spr_planta_quimica,, ord("C"), 150, 30,, true, [0, 4, 7], [20, 40, 20], 12, true, false, [1, 5, 7], [4, 4, 4],,,,, 60)
+	def_edificio("Fábrica de Concreto", 3, spr_fabrica_de_concreto,, ord("T"), 300, 120,,, [0, 2, 4], [10, 20, 25], 12, true, false, [3, 5, 6], [2, 6, 4], true, false, [8], 10, 30, 60)
+	def_edificio("Planta Química", 3, spr_planta_quimica,, ord("C"), 150, 30,, true, [0, 4, 7], [20, 40, 20], 12, true, false, [1, 5, 7], [4, 4, 4],,,,, 60, -20)
 	def_edificio("Fábrica de Explosivos", 3, spr_fabrica_explosivos,, ord("Y"), 100, 80,,, [0, 4, 8], [10, 40, 10], 10, true, false, [1, 6], [2, 2], true, false, [9], 20, 30)
-	def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, ord("H"), 600, 100,,, [2, 4, 9], [10, 10, 5], 20, true, false, [2, 4], [10, 10],,,,, 10)
+	def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, ord("H"), 600, 100,,, [2, 4, 9], [10, 10, 5], 20, true, false, [2, 4], [10, 10],,,,, 10, 60)
 	def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, ord("V"), 200, 1,,, [4, 7], [20, 30],,,,,,,,,, 300)
-	def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, ord("N"), 30, 1,,,,,,,,,,,,,, 10)
+	def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, ord("N"), 30, 1,,,,,,,,,,,,,, 10, -999999)
 #endregion
 edificio_rotable[6] = true
 edificio_input_all[16] = true
@@ -267,7 +271,8 @@ null_red = {
 	generacion: 0,
 	consumo : 0,
 	bateria : 0,
-	bateria_max : 0
+	bateria_max : 0,
+	eficiencia : 0
 }
 null_edificio.red = null_red
 ds_list_add(null_red.edificios, null_edificio)
@@ -279,10 +284,10 @@ ds_list_clear(redes)
 null_flujo ={
 	edificios : ds_list_create(),
 	liquido : 0,
-	cantidad : 0,
 	generacion: 0,
 	consumo: 0,
-	cantidad_max : 0
+	almacen : 0,
+	almacen_max : 0
 }
 null_edificio.flujo = null_flujo
 ds_list_add(null_flujo.edificios, null_edificio)

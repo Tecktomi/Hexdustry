@@ -42,23 +42,24 @@ function delete_edificio(aa, bb, enemigo = false){
 		}
 		ds_list_destroy(edificio.inputs)
 		//Cancelar red
-		if edificio_electricidad[index]{
-			var temp_red = edificio.red
+		if edificio_energia[index]{
+			var temp_red = edificio.red, flag = true
 			ds_list_remove(temp_red.edificios, edificio)
-			//Eliminar conecciones directas
-			for(var a = 0; a < ds_list_size(edificio.energy_link); a++){
-				var temp_edificio = edificio.energy_link[|a]
-				ds_list_remove(temp_edificio.energy_link, edificio)
-			}
-			ds_list_destroy(edificio.energy_link)
 			//Eliminar la red si no hay más edificios
 			if ds_list_empty(temp_red.edificios){
 				ds_list_destroy(temp_red.edificios)
 				ds_list_remove(redes, temp_red)
 				delete(temp_red)
+				flag = false
 			}
-			//Revisar nuevo estado de red
-			else{
+			if flag{
+				change_energia(0, edificio)
+				//Eliminar conecciones directas
+				for(var a = 0; a < ds_list_size(edificio.energy_link); a++){
+					var temp_edificio = edificio.energy_link[|a]
+					ds_list_remove(temp_edificio.energy_link, edificio)
+				}
+				//Revisar nuevo estado de red
 				var red_bateria = 0
 				for(var a = 0; a < ds_list_size(temp_red.edificios); a++){
 					var temp_edificio = temp_red.edificios[|a]
@@ -103,8 +104,8 @@ function delete_edificio(aa, bb, enemigo = false){
 						for(var a = 0; a < ds_list_size(isla); a++){
 							var temp_edificio = isla[|a]
 							temp_edificio.red = temp_red_2
-							if edificio_elec_consumo[temp_edificio.index] > 0
-								temp_red_2.consumo += edificio_elec_consumo[temp_edificio.index]
+							if edificio_energia_consumo[temp_edificio.index] > 0
+								temp_red_2.consumo += edificio_energia_consumo[temp_edificio.index]
 							else
 								temp_red_2.generacion += temp_edificio.energy_output
 							if in(edificio_nombre[temp_edificio.index], "Batería")
@@ -118,6 +119,7 @@ function delete_edificio(aa, bb, enemigo = false){
 				ds_list_remove(redes, temp_red)
 				delete(temp_red)
 			}
+			ds_list_destroy(edificio.energy_link)
 		}
 		//Flujos de cañerias
 		if edificio_flujo[index]{
@@ -128,12 +130,14 @@ function delete_edificio(aa, bb, enemigo = false){
 				ds_list_destroy(temp_flujo.edificios)
 			}
 			else{
-				temp_flujo.cantidad_max -= edificio_flujo_almacen[index]
-				temp_flujo.cantidad = min(temp_flujo.cantidad, temp_flujo.cantidad_max)
+				temp_flujo.almacen_max -= edificio_flujo_almacen[index]
+				temp_flujo.almacen = min(temp_flujo.almacen, temp_flujo.almacen_max)
+				if edificio.flujo_consumo > 0
+					temp_flujo.consumo -= edificio.flujo_consumo
+				else
+					temp_flujo.generacion += edificio.flujo_consumo
 				if edificio_nombre[index] = "Bomba Hidráulica"
 					temp_flujo.generacion -= edificio.proceso
-				else if edificio_nombre[index] = "Planta Química" and edificio.select > 0
-					temp_flujo.generacion -= 30
 				else if edificio_nombre[index] = "Líquido Infinito" and edificio.select >= 0
 					edificio.flujo.generacion -= 999999
 			}
