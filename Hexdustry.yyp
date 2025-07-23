@@ -32,6 +32,7 @@
     {"id":{"name":"abtoxy","path":"scripts/abtoxy/abtoxy.yy",},},
     {"id":{"name":"add_edificio","path":"scripts/add_edificio/add_edificio.yy",},},
     {"id":{"name":"change_energia","path":"scripts/change_energia/change_energia.yy",},},
+    {"id":{"name":"change_flujo","path":"scripts/change_flujo/change_flujo.yy",},},
     {"id":{"name":"complex_equal","path":"scripts/complex_equal/complex_equal.yy",},},
     {"id":{"name":"delete_edificio","path":"scripts/delete_edificio/delete_edificio.yy",},},
     {"id":{"name":"distance","path":"scripts/distance/distance.yy",},},

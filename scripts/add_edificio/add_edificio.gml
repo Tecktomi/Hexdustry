@@ -79,7 +79,7 @@ function add_edificio(index, dir, a, b){
 		temp_terreno = terreno[a, b]
 		temp_terreno.edificio_draw = true
 		ds_list_add(edificios, edificio)
-		if not edificio_camino[index]
+		if not edificio_camino[index] and not in(var_edificio_nombre, "Tubería")
 			ds_list_add(edificios_targeteables, edificio)
 		var temp_list = get_size(a, b, dir, edificio_size[index])
 		for(var c = 0; c < ds_list_size(temp_list); c++){
@@ -244,15 +244,15 @@ function add_edificio(index, dir, a, b){
 			}
 			ds_list_destroy(temp_list_redes)
 			//Modificar valores de la red resultante
+			edificio.red = temp_red
 			if edificio_energia_consumo[index] > 0{
-				edificio.energia_consumo = abs(edificio_energia_consumo[index])
-				temp_red.consumo += edificio.energia_consumo
+				if in(var_edificio_nombre, "Cable", "Batería", "Taladro Eléctrico")
+					change_energia(abs(edificio_energia_consumo[index]), edificio)
 			}
 			else
 				temp_red.generacion += edificio.energy_output
 			if in(var_edificio_nombre, "Batería")
 				temp_red.bateria_max += 2500
-			edificio.red = temp_red
 			ds_list_add(temp_red.edificios, edificio)
 		}
 		//Detectar cañerías cercanas
