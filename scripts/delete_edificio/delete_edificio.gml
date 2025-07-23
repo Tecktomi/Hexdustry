@@ -5,7 +5,7 @@ function delete_edificio(aa, bb, enemigo = false){
 			var edificio = temp_terreno.edificio
 		else
 			exit
-		var index = edificio.index
+		var index = edificio.index, var_edificio_nombre = edificio_nombre[index]
 		if index = 0{
 			if show_question("Has perdido, jugar de nuevo?")
 				game_restart()
@@ -13,7 +13,7 @@ function delete_edificio(aa, bb, enemigo = false){
 				game_end()
 		}
 		ds_list_remove(edificios, edificio)
-		if not edificio_camino[index]
+		if not edificio_camino[index] and not in(var_edificio_nombre, "Tubería")
 			ds_list_remove(edificios_targeteables, edificio)
 		//Cancelar coordenadas
 		for(var a = 0; a < ds_list_size(edificio.coordenadas); a++){
@@ -25,7 +25,7 @@ function delete_edificio(aa, bb, enemigo = false){
 		}
 		ds_list_destroy(edificio.coordenadas)
 		//Eliminar tuneles
-		if edificio_nombre[index] = "Túnel" and not edificio.idle
+		if var_edificio_nombre = "Túnel" and not edificio.idle
 			edificio.link.idle = true
 		//Cancelar outputs
 		for(var a = 0; a < ds_list_size(edificio.outputs); a++){
@@ -65,7 +65,7 @@ function delete_edificio(aa, bb, enemigo = false){
 					var temp_edificio = temp_red.edificios[|a]
 					if in(edificio_nombre[temp_edificio.index], "Batería")
 						red_bateria++
-					}
+				}
 				var visitado = ds_list_create(), agregado = ds_list_create()
 				while not ds_list_empty(temp_red.edificios){
 					var nodo = temp_red.edificios[|0]
@@ -124,6 +124,7 @@ function delete_edificio(aa, bb, enemigo = false){
 		//Flujos de cañerias
 		if edificio_flujo[index]{
 			var temp_flujo = edificio.flujo
+			change_flujo(0, edificio)
 			ds_list_remove(temp_flujo.edificios, edificio)
 			if ds_list_empty(temp_flujo.edificios){
 				ds_list_remove(flujos, temp_flujo)
@@ -132,14 +133,6 @@ function delete_edificio(aa, bb, enemigo = false){
 			else{
 				temp_flujo.almacen_max -= edificio_flujo_almacen[index]
 				temp_flujo.almacen = min(temp_flujo.almacen, temp_flujo.almacen_max)
-				if edificio.flujo_consumo > 0
-					temp_flujo.consumo -= edificio.flujo_consumo
-				else
-					temp_flujo.generacion += edificio.flujo_consumo
-				if edificio_nombre[index] = "Bomba Hidráulica"
-					temp_flujo.generacion -= edificio.proceso
-				else if edificio_nombre[index] = "Líquido Infinito" and edificio.select >= 0
-					edificio.flujo.generacion -= 999999
 			}
 			for(var a = 0; a < ds_list_size(edificio.flujo_link); a++){
 				var temp_edificio = edificio.flujo_link[|a]

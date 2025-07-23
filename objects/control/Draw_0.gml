@@ -130,7 +130,7 @@ var flag = true, xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / z
 if show_menu{
 	var aa = abtoxy(show_menu_build.a, show_menu_build.b).a * zoom - camx
 	var bb = abtoxy(show_menu_build.a, show_menu_build.b).b * zoom - camy
-	var var_edificio_nombre = edificio_nombre[show_menu_build.index]
+	var index = show_menu_build.index, var_edificio_nombre = edificio_nombre[index]
 	draw_set_color(c_gray)
 	draw_triangle(aa - 10 * zoom, bb + 20 * zoom, aa + 10 * zoom, bb + 20 * zoom, aa, bb + 10 * zoom, false)
 	draw_rectangle(aa - 80 * zoom, bb + 20 * zoom, aa + 80 * zoom, bb + 40 * zoom, false)
@@ -185,13 +185,13 @@ if show_menu{
 				show_menu = false
 				var a = floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))
 				if show_menu_build.select >= 0 and a = -1{
-					show_menu_build.flujo.generacion -= 999999
+					change_flujo(0, show_menu_build)
 					show_menu_build.flujo.almacen = 0
 				}
 				show_menu_build.select = a
 				if show_menu_build.select >= 0 and show_menu_build.flujo.liquido = -1
-					show_menu_build.flujo.generacion += 999999
-				show_menu_build.flujo.liquido = show_menu_build.select
+					change_flujo(edificio_flujo_consumo[index], show_menu_build)
+				show_menu_build.flujo.liquido = a
 			}
 		}
 	}
@@ -290,7 +290,7 @@ if temp_hexagono != noone and flag{
 			if var_edificio_nombre = "Torre"
 				var alc = 180
 			else if var_edificio_nombre = "Láser"
-				alc = 120
+				alc = 220
 			else if var_edificio_nombre = "Rifle"
 				alc = 300
 			draw_set_color(c_white)
@@ -334,7 +334,10 @@ if temp_hexagono != noone and flag{
 			var red = edificio.red
 			if edificio_energia_consumo[index] > 0{
 				temp_text += $"Consumiendo {edificio.energia_consumo} energía\n"
-				temp_text += $"Funcionando al {floor(100 * min((red.generacion + red.bateria) / red.consumo, 1))}% de su capacidad\n"
+				if var_edificio_nombre = "Fábrica de Concreto"
+					temp_text += $"Funcionando al {floor(100 * clamp((red.generacion + red.bateria) / min(red.consumo, 1), 0, 1) * clamp((edificio.flujo.generacion + edificio.flujo.almacen) / min(edificio.flujo.consumo, 1), 0, 1))}% de su capacidad\n"
+				else
+					temp_text += $"Funcionando al {floor(100 * clamp((red.generacion + red.bateria) / min(red.consumo, 1), 0, 1))}% de su capacidad\n"
 			}
 			temp_text += $"Red {ds_list_find_index(redes, red)}\n"
 			temp_text += $"  Consumo: {red.consumo}\n"
@@ -367,6 +370,8 @@ if temp_hexagono != noone and flag{
 				temp_text += "  Sin liquidos\n"
 			else
 				temp_text += $"  {liquido_nombre[flujo.liquido]}\n"
+			if edificio_flujo_consumo[index] > 0
+				temp_text += $"Consumiendo {edificio.flujo_consumo} líquido\n"
 			temp_text += $"  Generacion: {flujo.generacion}\n"
 			temp_text += $"  Consumo: {flujo.consumo}\n"
 			temp_text += $"  Almacenado: {floor(flujo.almacen)}/{flujo.almacen_max}\n"
@@ -529,11 +534,12 @@ if build_index > 0{
 				comprable = false
 				break
 			}
+		draw_set_color(c_red)
 		for(var a = 0; a < ds_list_size(enemigos); a++){
 			var enemigo = enemigos[|a]
-			draw_set_color(c_red)
 			draw_circle(enemigo.a, enemigo.b, 100, true)
 		}
+		draw_set_color(c_white)
 	}
 	if temp_hexagono != noone{
 		var temp_array, temp_array_2, temp_text = ""
@@ -765,7 +771,7 @@ if build_index > 0{
 					if var_edificio_nombre = "Torre"
 						var alc = 180
 					else if var_edificio_nombre = "Láser"
-						alc = 120
+						alc = 220
 					else if var_edificio_nombre = "Rifle"
 						alc = 300
 					draw_circle_off(temp_complex_2.a, temp_complex_2.b, alc, true)
@@ -813,7 +819,7 @@ if build_index > 0{
 					flag = false
 			}
 			//Detectar enemigos cerca
-			if flag
+			if flag and not cheat
 				for(var a = 0; a < ds_list_size(enemigos); a++){
 					var enemigo = enemigos[|a]
 					if sqrt(sqr(enemigo.a - temp_complex.a) + sqr(enemigo.b - temp_complex.b)) < 100{
@@ -879,10 +885,8 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 		if in(var_edificio_nombre, "Taladro", "Taladro Eléctrico") and edificio.carga_total < edificio_carga_max[index]{
 			if edificio_energia[index]{
 				change_energia(edificio_energia_consumo[index], edificio)
-				if red_power > 0 and edificio.flujo_consumo = 0 and flujo.liquido = 0{
-					edificio.flujo_consumo = 20
-					flujo.consumo += edificio.flujo_consumo
-				}
+				if red_power > 0 and edificio.flujo_consumo = 0 and flujo.liquido = 0
+					change_flujo(edificio_flujo_consumo[index], edificio)
 				var b = 1 + 0.6 * (flujo.liquido = 0 ? flujo_power : 0)
 				edificio.proceso += b * red_power
 			}
@@ -929,12 +933,8 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 					edificio.idle = true
 					change_energia(0, edificio)
 				}
-				if edificio_energia[index]{
-					if flujo.liquido = 0{
-						flujo.consumo -= edificio.flujo_consumo
-						edificio.flujo_consumo = 0
-					}
-				}
+				if edificio_energia[index] and flujo.liquido = 0
+					change_flujo(0, edificio)
 			}
 		}
 		//Accion caminos
@@ -999,17 +999,18 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 		else if in(var_edificio_nombre, "Bomba Hidráulica"){
 			if in(flujo.liquido, -1, 0){
 				change_energia(edificio_energia_consumo[index], edificio)
+				change_flujo(red_power * edificio_flujo_consumo[index], edificio)
 				flujo.generacion -= edificio.proceso
-				if flujo.almacen = flujo.almacen_max and flujo.generacion >= flujo.consumo
+				if flujo.almacen = flujo.almacen_max and flujo.generacion >= flujo.consumo{
 					change_energia(0, edificio)
-				else{
-					edificio.proceso = 50 * red_power
-					flujo.generacion += edificio.proceso
+					change_flujo(0, edificio)
 				}
 				flujo.liquido = 0
 			}
-			else
+			else{
 				change_energia(0, edificio)
+				change_flujo(0, edificio)
+			}
 		}
 		//Acción de triturador
 		else if in(var_edificio_nombre, "Triturador") and edificio.carga[6] > 0{
@@ -1031,25 +1032,23 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 			flag = (flujo.liquido = 0)
 			if flag
 				for(var b = 0; b < array_length(edificio_input_id[index]); b++)
-					if edificio.carga[edificio_input_id[index, b]] < edificio_input_num[index, b]{
+					if edificio.carga[edificio_input_id[index, b]] = 0{
 						flag = false
 						break
 					}
 			if flag{
 				if edificio.proceso < 0{
 					change_energia(edificio_energia_consumo[index], edificio)
-					if edificio.flujo_consumo = 0{
-						edificio.flujo_consumo = 30
-						flujo.consumo += edificio.flujo_consumo
-					}
+					if edificio.flujo_consumo = 0
+						change_flujo(edificio_flujo_consumo[index], edificio)
 					edificio.proceso++
 				}
 				edificio.proceso += red_power * flujo_power
 				if edificio.proceso >= edificio_proceso[index]{
 					edificio.proceso -= edificio_proceso[index] + 1
 					for(var b = 0; b < array_length(edificio_input_id[index]); b++){
-						edificio.carga[edificio_input_id[index, b]] -= edificio_input_num[index, b]
-						edificio.carga_total -= edificio_input_num[index, b]
+						edificio.carga[edificio_input_id[index, b]]--
+						edificio.carga_total--
 					}
 					for(var b = 0; b < array_length(edificio_output_id[index]); b++){
 						edificio.carga[edificio_output_id[index, b]]++
@@ -1057,8 +1056,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 					}
 					edificio.waiting = not mover(edificio.a, edificio.b)
 					change_energia(0, edificio)
-					flujo.consumo -= edificio.flujo_consumo
-					edificio.flujo_consumo = 0
+					change_flujo(0, edificio)
 				}
 			}
 		}
@@ -1072,14 +1070,12 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 			if edificio.target != null_enemigo
 				edificio.select = radtodeg(-arctan2(edificio.x - edificio.target.a, edificio.target.b - edificio.y)) - 90
 			if edificio.flujo_consumo = 0 and flujo.liquido = 0 and edificio.target = null_enemigo and distance(edificio.x, edificio.y, edificio.target.a, edificio.target.b) < alc{
-				edificio.flujo_consumo = 30
-				flujo.consumo += 30
+				change_flujo(edificio_flujo_consumo[index], edificio)
 				edificio.proceso += 0.5
 			}
 			if edificio.proceso >= edificio_proceso[index]{
 				edificio.proceso -= edificio_proceso[index]
-				flujo.consumo -= edificio.flujo_consumo
-				edificio.flujo_consumo = 0
+				change_flujo(0, edificio)
 				edificio.target = null_enemigo
 				if not ds_list_empty(enemigos)
 					turret_target(edificio)
@@ -1118,7 +1114,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 			edificio.target = null_enemigo
 			if not ds_list_empty(enemigos)
 				turret_target(edificio)
-			if edificio.target != null_enemigo and distance(edificio.x, edificio.y, edificio.target.a, edificio.target.b) < 120{
+			if edificio.target != null_enemigo and distance(edificio.x, edificio.y, edificio.target.a, edificio.target.b) < 220{
 				change_energia(edificio_energia_consumo[index], edificio)
 				edificio.mode = true
 				edificio.target.vida -= 0.03 * red_power
@@ -1141,7 +1137,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 			if edificio.select > 0{
 				edificio.select--
 				if edificio.select = 0
-					flujo.generacion -= 30
+					change_flujo(0, edificio)
 			}
 			if edificio.carga[5] > 1 and edificio.carga[7] > 1 and (edificio.carga[1] > 0 or edificio.fuel > 0){
 				if edificio.fuel > 0
@@ -1160,15 +1156,14 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 						edificio.proceso -= edificio_proceso[index]
 						flujo.liquido = 1
 						edificio.select = 30
-						flujo.generacion += 30
-						flujo.almacen = min(flujo.almacen + 30, flujo.almacen_max)
+						change_flujo(edificio_flujo_consumo[index], edificio)
 						edificio.waiting = not mover(edificio.a, edificio.b)
 					}
 				}
 			}
 		}
 		//Fábrica de explosivos
-		else if var_edificio_nombre = "Fábrica de Explosivos" and edificio.carga[1] > 0 and edificio.carga[6] > 0 and flujo.liquido = 1 and flujo.almacen >= 30{
+		else if var_edificio_nombre = "Fábrica de Explosivos" and edificio.carga[1] > 0 and edificio.carga[6] > 0{
 			if edificio.proceso < 0{
 				change_energia(edificio_energia_consumo[index], edificio)
 				edificio.proceso++
@@ -1180,7 +1175,6 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 				edificio.carga[6]--
 				edificio.carga[9]++
 				edificio.carga_total--
-				flujo.almacen -= 30
 				edificio.waiting = not mover(edificio.a, edificio.b)
 				change_energia(0, edificio)
 			}
@@ -1252,7 +1246,7 @@ for(var a = 0; a < ds_list_size(redes); a++){
 for(var a = 0; a < ds_list_size(flujos); a++){
 	var flujo = flujos[|a]
 	flujo.almacen = clamp(flujo.almacen + (flujo.generacion - flujo.consumo) / 30, 0, flujo.almacen_max)
-	if flujo.almacen = 0
+	if flujo.almacen = 0 and flujo.generacion = 0
 		flujo.liquido = -1
 }
 #region INPUT
