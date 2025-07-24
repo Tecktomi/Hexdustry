@@ -29,7 +29,7 @@ function add_edificio(index, dir, a, b){
 			red : null_red,
 			energy_output : 0,
 			energy_storage : 0,
-			energy_link : ds_list_create(),
+			energia_link : ds_list_create(),
 			flujo : null_flujo,
 			flujo_link : ds_list_create(),
 			vida : edificio_vida[index],
@@ -37,8 +37,8 @@ function add_edificio(index, dir, a, b){
 			flujo_consumo : 0,
 			energia_consumo : 0
 		}
-		ds_list_add(edificio.energy_link, null_edificio)
-		ds_list_clear(edificio.energy_link)
+		ds_list_add(edificio.energia_link, null_edificio)
+		ds_list_clear(edificio.energia_link)
 		ds_list_add(edificio.flujo_link, null_edificio)
 		ds_list_clear(edificio.flujo_link)
 		var var_edificio_nombre = edificio_nombre[index]
@@ -205,8 +205,8 @@ function add_edificio(index, dir, a, b){
 					if temp_terreno.edificio_bool{
 						var temp_edificio = temp_terreno.edificio
 						if (var_edificio_nombre = "Cable" and edificio_energia[temp_edificio.index]) or (edificio_nombre[temp_edificio.index] = "Cable" and edificio_energia[index]){
-							ds_list_add(edificio.energy_link, temp_edificio)
-							ds_list_add(temp_edificio.energy_link, edificio)
+							ds_list_add(edificio.energia_link, temp_edificio)
+							ds_list_add(temp_edificio.energia_link, edificio)
 							if not ds_list_in(temp_list_redes, temp_edificio.red)
 								ds_list_add(temp_list_redes, temp_edificio.red)
 						}
@@ -265,7 +265,7 @@ function add_edificio(index, dir, a, b){
 					temp_terreno = terreno[temp_complex.a, temp_complex.b]
 					if temp_terreno.edificio_bool{
 						var temp_edificio = temp_terreno.edificio
-						if edificio_flujo[temp_edificio.index] and in(var_edificio_nombre, "Tubería", "Depósito", "Líquido Infinito") or in(edificio_nombre[temp_edificio.index], "Tubería", "Depósito", "Líquido Infinito"){
+						if edificio_flujo[temp_edificio.index] and (in(var_edificio_nombre, "Tubería", "Depósito", "Líquido Infinito") or in(edificio_nombre[temp_edificio.index], "Tubería", "Depósito", "Líquido Infinito")){
 							ds_list_add(edificio.flujo_link, temp_edificio)
 							ds_list_add(temp_edificio.flujo_link, edificio)
 							if not ds_list_in(temp_list_flujos, temp_edificio.flujo)
