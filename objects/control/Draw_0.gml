@@ -50,6 +50,10 @@
 					//Dibujo bomba
 					else if in(var_edificio_nombre, "Bomba Hidráulica", "Turbina"){
 						draw_sprite_off(edificio_sprite[index], 0, aa, bb, power(-1, dir))
+						if edificio.flujo.liquido = -1
+							draw_sprite_off(spr_bomba_color, 0, aa + power(-1, dir) * 8, bb + 14)
+						else
+							draw_sprite_off(spr_bomba_color, 0, aa + power(-1, dir) * 8, bb + 14,,,, liquido_color[edificio.flujo.liquido], edificio.flujo.almacen / edificio.flujo.almacen_max)
 						draw_sprite_off(spr_bomba_rotor, 1, aa + power(-1, dir) * 8, bb + 14,,, image_index)
 						draw_sprite_off(spr_bomba_cupula, 1, aa + power(-1, dir) * 8, bb + 14)
 					}
@@ -467,7 +471,7 @@ flag = false
 #endregion
 //Acceso directo
 if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastkey, ord("M"), ord("N")) or cheat)
-	for(var a = 1; a < edificio_max; a++)
+	for(var a = 1; a < array_length(edificio_nombre); a++)
 		if real(keyboard_lastkey) = edificio_key[a]{
 			keyboard_clear(keyboard_lastkey)
 			build_index = a
@@ -746,8 +750,21 @@ if build_index > 0{
 						temp_text += "Debe ser construido sobre agua"
 				}
 				//Vista previa Cables
-				if in(var_edificio_nombre, "Cable")
+				if in(var_edificio_nombre, "Cable"){
 					draw_circle_off(temp_complex_2.a, temp_complex_2.b, 90, true)
+					var temp_list_complex = get_size(mx, my, build_dir, 7)
+					for(var a = 0; a < ds_list_size(temp_list_complex); a++){
+						var temp_complex_3= temp_list_complex[|a], aa = temp_complex_3.a, bb = temp_complex_3.b
+						if (aa != mx or bb != my) and aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
+							var temp_terreno_2 = terreno[aa, bb]
+							if temp_terreno_2.edificio_draw{
+								var temp_edificio = temp_terreno_2.edificio
+								if edificio_energia[temp_edificio.index]
+									draw_line(temp_complex_2.a, temp_complex_2.b, temp_edificio.x, temp_edificio.y)
+							}
+						}
+					}
+				}
 				//Vista previa Alcance de torres
 				if in(var_edificio_nombre, "Torre", "Láser", "Rifle"){
 					if var_edificio_nombre = "Torre"
@@ -763,6 +780,20 @@ if build_index > 0{
 				f1(build_index, build_dir, mx, my)
 				if not keyboard_check(vk_lshift)
 					build_index = 0
+			}
+		}
+		if edificio_energia[build_index] and var_edificio_nombre != "Cable"{
+			var temp_complex_2 = abtoxy(mx, my), temp_list_complex = get_size(mx, my, build_dir, 7)
+			for(var a = 0; a < ds_list_size(temp_list_complex); a++){
+				var temp_complex_3= temp_list_complex[|a], aa = temp_complex_3.a, bb = temp_complex_3.b
+				if (aa != mx or bb != my) and aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
+					var temp_terreno_2 = terreno[aa, bb]
+					if temp_terreno_2.edificio_draw{
+						var temp_edificio = temp_terreno_2.edificio
+						if edificio_nombre[temp_edificio.index] = "Cable"
+							draw_line(temp_complex_2.a, temp_complex_2.b, temp_edificio.x, temp_edificio.y)
+					}
+				}
 			}
 		}
 		draw_text_background(mouse_x + 20, mouse_y, temp_text)

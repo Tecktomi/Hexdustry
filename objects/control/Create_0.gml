@@ -11,6 +11,7 @@ show_menu = false
 show_menu_build = undefined
 show_menu_x = 0
 show_menu_y = 0
+edificio_max = 0
 pre_build_list = ds_list_create()
 ds_list_add(pre_build_list, {a : 0, b : 0})
 ds_list_clear(pre_build_list)
@@ -47,7 +48,8 @@ null_edificio = {
 	vida : 0,
 	target : undefined,
 	flujo_consumo : 0,
-	energia_consumo : 0
+	energia_consumo : 0,
+	edificio_index : 0
 }
 null_edificio.link = null_edificio
 ds_list_add(null_edificio.energia_link, null_edificio)
@@ -264,7 +266,6 @@ edificio_rotable[6] = true
 edificio_input_all[16] = true
 edificio_energia[11] = true
 edificio_energia[12] = true
-edificio_max = array_length(edificio_nombre)
 size_size = [1, 3, 7, 12, 19, 27]
 size_borde = [6, 9, 12, 15, 18, 21]
 edificios = ds_list_create()
