@@ -64,10 +64,10 @@ function delete_edificio(aa, bb, enemigo = false){
 					if in(edificio_nombre[temp_edificio.index], "Batería")
 						red_bateria++
 				}
-				var visitado = ds_list_create(), agregado = ds_list_create()
+				var agregado = ds_list_create(), visited = array_create(edificio_max, false)
 				while not ds_list_empty(temp_red.edificios){
 					var nodo = temp_red.edificios[|0]
-					if not ds_list_in(visitado, nodo){
+					if not visited[nodo.edificio_index]{
 						var isla = ds_list_create(), isla_bateria = 0
 						var pila = ds_stack_create()
 						ds_stack_push(pila, nodo)
@@ -78,11 +78,11 @@ function delete_edificio(aa, bb, enemigo = false){
 								isla_bateria++
 							ds_list_add(isla, nodo)
 							ds_list_remove(temp_red.edificios, nodo)
-							if not ds_list_in(visitado, nodo){
-								ds_list_add(visitado, nodo)
+							if not visited[nodo.edificio_index]{
+								visited[nodo.edificio_index] = true
 								for(var a = 0; a < ds_list_size(nodo.energia_link); a++){
 									var temp_edificio = nodo.energia_link[|a]
-									if not ds_list_in(visitado, temp_edificio) and not ds_list_in(agregado, temp_edificio){
+									if not visited[temp_edificio.edificio_index] and not ds_list_in(agregado, temp_edificio){
 										ds_stack_push(pila, temp_edificio)
 										ds_list_add(agregado, temp_edificio)
 									}
@@ -112,7 +112,6 @@ function delete_edificio(aa, bb, enemigo = false){
 						ds_list_add(redes, temp_red_2)
 					}
 				}
-				ds_list_destroy(visitado)
 				ds_list_destroy(temp_red.edificios)
 				ds_list_remove(redes, temp_red)
 			}
@@ -142,12 +141,11 @@ function delete_edificio(aa, bb, enemigo = false){
 					var flujo_almacen = 0
 					for(var a = 0; a < ds_list_size(temp_flujo.edificios); a++)
 						flujo_almacen += edificio_flujo_almacen[temp_flujo.edificios[|a].index]
-					var visitado = ds_list_create(), agregado = ds_list_create()
+					var agregado = ds_list_create(), visited = array_create(edificio_max, false)
 					while not ds_list_empty(temp_flujo.edificios){
 						var nodo = temp_flujo.edificios[|0]
-						if not ds_list_in(visitado, nodo){
-							var isla = ds_list_create(), isla_almacen = 0
-							var pila = ds_stack_create()
+						if not visited[nodo.edificio_index]{
+							var isla = ds_list_create(), isla_almacen = 0, pila = ds_stack_create()
 							ds_stack_push(pila, nodo)
 							ds_list_add(agregado, nodo)
 							while not ds_stack_empty(pila){
@@ -155,11 +153,11 @@ function delete_edificio(aa, bb, enemigo = false){
 								isla_almacen += edificio_flujo_almacen[nodo.index]
 								ds_list_add(isla, nodo)
 								ds_list_remove(temp_flujo.edificios, nodo)
-								if not ds_list_in(visitado, nodo){
-									ds_list_add(visitado, nodo)
+								if not visited[nodo.edificio_index]{
+									visited[nodo.edificio_index] = true
 									for(var a = 0; a < ds_list_size(nodo.flujo_link); a++){
 										var temp_edificio = nodo.flujo_link[|a]
-										if not ds_list_in(visitado, temp_edificio) and not ds_list_in(agregado, temp_edificio){
+										if not visited[temp_edificio.edificio_index] and not ds_list_in(agregado, temp_edificio){
 											ds_stack_push(pila, temp_edificio)
 											ds_list_add(agregado, temp_edificio)
 										}
@@ -169,7 +167,7 @@ function delete_edificio(aa, bb, enemigo = false){
 							ds_stack_destroy(pila)
 							var temp_flujo_2 = {
 								edificios : isla,
-								liquido : -1,
+								liquido : temp_flujo.liquido,
 								generacion: 0,
 								consumo: 0,
 								almacen: 0,
@@ -180,13 +178,15 @@ function delete_edificio(aa, bb, enemigo = false){
 							for(var a = 0; a < ds_list_size(isla); a++){
 								var temp_edificio = isla[|a]
 								temp_edificio.flujo = temp_flujo_2
-								change_flujo(temp_edificio.flujo_consumo, temp_edificio)
 								temp_flujo_2.almacen_max += edificio_flujo_almacen[temp_edificio.index]
+								if edificio_flujo_consumo[temp_edificio.index] > 0
+									temp_flujo_2.consumo += temp_edificio.flujo_consumo
+								else
+									temp_flujo_2.generacion -= temp_edificio.flujo_consumo
 							}
 							ds_list_add(flujos, temp_flujo_2)
 						}
 					}
-				ds_list_destroy(visitado)
 				ds_list_destroy(temp_flujo.edificios)
 				ds_list_remove(flujos, temp_flujo)
 				}

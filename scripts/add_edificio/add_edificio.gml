@@ -35,7 +35,8 @@ function add_edificio(index, dir, a, b){
 			vida : edificio_vida[index],
 			target : null_enemigo,
 			flujo_consumo : 0,
-			energia_consumo : 0
+			energia_consumo : 0,
+			edificio_index : edificio_max++
 		}
 		ds_list_add(edificio.energia_link, null_edificio)
 		ds_list_clear(edificio.energia_link)
@@ -202,9 +203,9 @@ function add_edificio(index, dir, a, b){
 				temp_complex = temp_list_3[|c]
 				if (temp_complex.a != a or temp_complex.b != b) and temp_complex.a >= 0 and temp_complex.b >= 0 and temp_complex.a < xsize and temp_complex.b < ysize{
 					temp_terreno = terreno[temp_complex.a, temp_complex.b]
-					if temp_terreno.edificio_bool{
+					if temp_terreno.edificio_draw{
 						var temp_edificio = temp_terreno.edificio
-						if (var_edificio_nombre = "Cable" and edificio_energia[temp_edificio.index]) or (edificio_nombre[temp_edificio.index] = "Cable" and edificio_energia[index]){
+						if (var_edificio_nombre = "Cable" and edificio_energia[temp_edificio.index]) or edificio_nombre[temp_edificio.index] = "Cable"{
 							ds_list_add(edificio.energia_link, temp_edificio)
 							ds_list_add(temp_edificio.energia_link, edificio)
 							if not ds_list_in(temp_list_redes, temp_edificio.red)
