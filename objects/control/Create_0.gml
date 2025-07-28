@@ -115,6 +115,7 @@ function def_terreno(nombre, sprite = spr_piedra, recurso = 0){
 	def_terreno("Agua", spr_agua)
 	def_terreno("Arena", spr_arena, 5)
 	def_terreno("Agua Profunda", spr_agua_profunda)
+	def_terreno("Petróleo", spr_petroleo)
 #endregion
 //Ores
 #region Arreglos
@@ -163,7 +164,7 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 rss_max = array_length(recurso_nombre)
 //Liquidos
 liquido_nombre = ["Agua", "Ácido", "Petróleo"]
-liquido_color = [c_aqua, c_green, c_black]
+liquido_color = [c_blue, c_green, c_black]
 lq_max = array_length(liquido_nombre)
 //Edificios
 #region Arreglos
@@ -327,15 +328,14 @@ for(var a = 0; a < ysize; a++){
 	array_push(borde_mapa, [xsize - 1, a])
 }
 //Agua y piedra
-var e = 0
-repeat(4){
-	var a = irandom(xsize - 1)
-	var b = irandom(ysize - 1)
-	var c = 0
+for(var e = 0; e < 5; e++){
+	var a = irandom(xsize - 1), b = irandom(ysize - 1)
 	if e <= 1
-		c = 2 * e++
+		var c = 0
+	else if e <= 3
+		c = 2
 	else
-		c = choose(0, 2)
+		c = 5
 	repeat(20){
 		if terreno[a, b].terreno != 2
 			terreno[a, b].terreno = c
@@ -379,6 +379,18 @@ for(var a = 0; a < xsize; a++)
 						temp_terreno.terreno = 3
 				}
 			}
+		//Añadir piedra
+		if terreno[a, b].terreno = 5
+			for(var c = 0; c < 6; c++){
+				var temp_complex = next_to(a, b, c)
+				var aa = temp_complex.a
+				var bb = temp_complex.b
+				if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
+					var temp_terreno = terreno[aa, bb]
+					if not in(temp_terreno.terreno, 5)
+						temp_terreno.terreno = 0
+				}
+			}
 		//Añadir agua profunda
 		if terreno[a, b].terreno = 2{
 			var flag = true
@@ -399,14 +411,13 @@ for(var a = 0; a < xsize; a++)
 		}
 	}
 //Natural Ores
-e = 0
-repeat(6){
+for(var e = 0; e < 6; e++){
 	var a = min(xsize - 1, irandom_range((e mod 3) * xsize / 3, ((e mod 3) + 1) * xsize / 3))
 	var b = irandom(ysize - 1)
-	var c = floor(e++ / 2)
+	var c = floor(e / 2)
 	repeat(15){
 		var temp_terreno = terreno[a, b]
-		if not in(temp_terreno.terreno, 2, 4){
+		if not in(terreno_nombre[temp_terreno.terreno], "Agua", "Agua Profunda", "Petróleo"){
 			if temp_terreno.ore != c
 				temp_terreno.ore_amount = 0
 			temp_terreno.ore = c
@@ -418,7 +429,7 @@ repeat(6){
 			var bb = temp_complex.b
 			if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
 				temp_terreno = terreno[aa, bb]
-				if not in(temp_terreno.terreno, 2, 4){
+				if not in(terreno_nombre[temp_terreno.terreno], "Agua", "Agua Profunda", "Petróleo"){
 					if temp_terreno.ore != c
 						temp_terreno.ore_amount = 0
 					temp_terreno.ore = c

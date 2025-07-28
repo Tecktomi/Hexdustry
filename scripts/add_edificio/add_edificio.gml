@@ -90,7 +90,6 @@ function add_edificio(index, dir, a, b){
 			temp_terreno.edificio = edificio
 			ds_list_add(edificio.coordenadas, temp_complex)
 		}
-		ds_list_destroy(temp_list)
 		//Añadir inputs y outputs
 		var temp_list_2 = get_arround(a, b, dir, edificio_size[index])
 		for(var c = 0; c < ds_list_size(temp_list_2); c++){
@@ -197,8 +196,25 @@ function add_edificio(index, dir, a, b){
 			if in(var_edificio_nombre, "Panel Solar", "Energía Infinita")
 				edificio.energy_output = -edificio_energia_consumo[index]
 			//Detectar otras redes cerca
-			var temp_list_3 = get_size(a, b, dir, 7)
 			var temp_list_redes = ds_list_create()
+			temp_list_2 = get_arround(a, b, dir, edificio_size[index])
+			for(var c = 0; c < ds_list_size(temp_list_2); c++){
+				temp_complex = temp_list_2[|c]
+				var aa = temp_complex.a, bb = temp_complex.b
+				if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
+					temp_terreno = terreno[aa, bb]
+					if temp_terreno.edificio_bool{
+						var temp_edificio = temp_terreno.edificio
+						if (edificio_energia[temp_edificio.index] and in(var_edificio_nombre, "Generador", "Batería", "Panel Solar", "Energía Infinita", "Turbina")) or (edificio_energia[index] and in(edificio_nombre[temp_edificio.index], "Generador", "Batería", "Panel Solar", "Energía Infinita", "Turbina")){
+							ds_list_add(edificio.energia_link, temp_edificio)
+							ds_list_add(temp_edificio.energia_link, edificio)
+							if not ds_list_in(temp_list_redes, temp_edificio.red)
+								ds_list_add(temp_list_redes, temp_edificio.red)
+						}
+					}
+				}
+			}
+			var temp_list_3 = get_size(a, b, dir, 7)
 			for(var c = 0; c < ds_list_size(temp_list_3); c++){
 				temp_complex = temp_list_3[|c]
 				if (temp_complex.a != a or temp_complex.b != b) and temp_complex.a >= 0 and temp_complex.b >= 0 and temp_complex.a < xsize and temp_complex.b < ysize{
@@ -258,6 +274,16 @@ function add_edificio(index, dir, a, b){
 		}
 		//Detectar cañerías cercanas
 		if edificio_flujo[index]{
+			if var_edificio_nombre = "Bomba Hidráulica"
+				for(var c = 0; c < ds_list_size(temp_list); c++){
+					temp_complex = temp_list[|c]
+					temp_terreno = terreno[temp_complex.a, temp_complex.b]
+					if in(terreno_nombre[temp_terreno.terreno], "Agua", "Agua Profunda")
+						edificio.select = 0
+					else if in(terreno_nombre[temp_terreno.terreno], "Petróleo")
+						edificio.select = 2
+					ds_list_add(edificio.coordenadas, temp_complex)
+				}
 			var temp_list_4 = get_arround(a, b, dir, edificio_size[index])
 			var temp_list_flujos = ds_list_create()
 			for(var c = 0; c < ds_list_size(temp_list_4); c++){
@@ -339,6 +365,7 @@ function add_edificio(index, dir, a, b){
 					enemigo.target = edificio
 			}
 		}
+		ds_list_destroy(temp_list)
 		return edificio
 	}
 }

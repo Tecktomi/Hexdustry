@@ -105,6 +105,7 @@
     {"id":{"name":"spr_overflow","path":"sprites/spr_overflow/spr_overflow.yy",},},
     {"id":{"name":"spr_panel_solar","path":"sprites/spr_panel_solar/spr_panel_solar.yy",},},
     {"id":{"name":"spr_pasto","path":"sprites/spr_pasto/spr_pasto.yy",},},
+    {"id":{"name":"spr_petroleo","path":"sprites/spr_petroleo/spr_petroleo.yy",},},
     {"id":{"name":"spr_piedra","path":"sprites/spr_piedra/spr_piedra.yy",},},
     {"id":{"name":"spr_planta_quimica","path":"sprites/spr_planta_quimica/spr_planta_quimica.yy",},},
     {"id":{"name":"spr_rifle_2","path":"sprites/spr_rifle_2/spr_rifle_2.yy",},},
