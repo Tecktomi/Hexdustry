@@ -199,6 +199,10 @@ if show_menu{
 			}
 		}
 	}
+	if mouse_check_button_pressed(mb_right){
+		mouse_clear(mb_right)
+		show_menu = false
+	}
 }
 //Terreno bajo el mouse
 var temp_hexagono = instance_position(xmouse, ymouse, obj_hexagono), mx = 0, my = 0
@@ -224,14 +228,12 @@ if temp_hexagono != noone and flag{
 	if temp_terreno.edificio_bool{
 		var index = edificio.index, var_edificio_nombre = edificio_nombre[index]
 		//Seleccionar edificios
-		if mouse_check_button_pressed(mb_left) and build_index = 0{
+		if mouse_check_button_pressed(mb_left) and build_index = 0 and build_menu = 0 and in(var_edificio_nombre, "Selector", "Overflow", "Líquido Infinito"){
 			mouse_clear(mb_left)
-			if in(var_edificio_nombre, "Selector", "Overflow", "Líquido Infinito"){
-				show_menu = true
-				show_menu_build = edificio
-				show_menu_x = edificio.x * zoom
-				show_menu_y = edificio.y * zoom
-			}
+			show_menu = true
+			show_menu_build = edificio
+			show_menu_x = edificio.x * zoom
+			show_menu_y = edificio.y * zoom
 		}
 		temp_text += $"{var_edificio_nombre}\n"
 		if info{
@@ -443,17 +445,33 @@ flag = false
 		var b = 2 * pi / array_length(menu_array)
 		draw_set_color(c_white)
 		draw_circle(menu_x, menu_y, 100, true)
-		draw_circle(menu_x, menu_y, 10, false)
 		for(var a = 0; a < array_length(menu_array); a++){
-			var angle = a * b
-			draw_sprite_stretched(edificio_sprite[menu_array[a]], 0, menu_x - 15 + 100 * cos(angle + b / 2), menu_y - 15 - 100 * sin(angle + b / 2), 30, 30)
+			var angle = a * b, comprable = true, index = menu_array[a]
+			draw_sprite_stretched(edificio_sprite[index], 0, menu_x - 15 + 100 * cos(angle + b / 2), menu_y - 15 - 100 * sin(angle + b / 2), 30, 30)
 			draw_line(menu_x, menu_y, menu_x + 100 * cos(angle), menu_y - 100 * sin(angle))
+			if not cheat{
+				for(var c = 0; c < array_length(edificio_precio_id[index]); c++)
+					if nucleo.carga[edificio_precio_id[index, c]] < edificio_precio_num[index, c]{
+						comprable = false
+						break
+					}
+				if not comprable{
+					draw_set_alpha(0.5)
+					draw_set_color(c_red)
+					draw_triangle(menu_x, menu_y, menu_x + 100 * cos(angle), menu_y - 100 * sin(angle), menu_x + 100 * cos(angle + b), menu_y - 100 * sin(angle + b), false)
+					draw_set_alpha(1)
+					draw_set_color(c_white)
+				}
+			}
 		}
+		draw_circle(menu_x, menu_y, 10, false)
 		if distance(mouse_x, mouse_y, menu_x, menu_y) < 100{
 			b = menu_array[floor((array_length(menu_array) - arctan2(mouse_y - menu_y, mouse_x - menu_x) / b) mod array_length(menu_array))]
 			var temp_text = $"{edificio_nombre[b]}\n"
-			for(var c = 0; c < array_length(edificio_precio_id[b]); c++)
-				temp_text += $"  {recurso_nombre[edificio_precio_id[b, c]]}: {edificio_precio_num[b, c]}\n"
+			if not cheat
+				for(var c = 0; c < array_length(edificio_precio_id[b]); c++)
+					temp_text += $"  {recurso_nombre[edificio_precio_id[b, c]]}: {edificio_precio_num[b, c]}\n"
+			temp_text += $"{edificio_descripcion[b]}\n"
 			draw_text_background(mouse_x, mouse_y + 20, temp_text)
 			if mouse_check_button_pressed(mb_left){
 				mouse_clear(mb_left)
@@ -475,6 +493,7 @@ if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastkey, ord("M"), ord
 		if real(keyboard_lastkey) = edificio_key[a]{
 			keyboard_clear(keyboard_lastkey)
 			build_index = a
+			build_menu = 0
 			flag = true
 		}
 //Cancelar construcción o cerrar menú del selector
@@ -1157,7 +1176,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 			}
 		}
 		//Refinería de Minerales
-		else if in(var_edificio_nombre, "Refinería de Minerales"){
+		else if in(var_edificio_nombre, "Refinería de Metales"){
 			if flujo.liquido = 1 and (edificio.carga[9] > 2 or edificio.carga[10] > 2){
 				if edificio.proceso < 0{
 					change_energia(edificio_energia_consumo[index], edificio)
@@ -1242,7 +1261,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 				edificio.target.vida -= 0.03 * red_power
 				draw_set_alpha(red_power)
 				draw_set_color(c_red)
-				draw_arrow_off(edificio.x, edificio.y, edificio.target.a, edificio.target.b, 2)
+				draw_line(edificio.x + 12, edificio.y + 14, edificio.target.a, edificio.target.b)
 				draw_set_alpha(1)
 				if edificio.target.vida <= 0{
 					change_energia(0, edificio)
@@ -1315,7 +1334,7 @@ for(var a = 0; a < ds_list_size(enemigos); a++){
 	}
 }
 #region Generación de enemigos
-	if image_index > 9000 or keyboard_check_pressed(vk_space){
+	if image_index > 10800 or keyboard_check_pressed(vk_space){
 		if image_index mod 900 = 0 or keyboard_check_pressed(vk_space){
 			var a = irandom(array_length(borde_mapa) - 1), temp_complex = abtoxy(borde_mapa[a, 0], borde_mapa[a, 1]), b = 5 + floor(sqr((image_index - 9000) / 4500))
 			var enemigo = {
@@ -1330,8 +1349,10 @@ for(var a = 0; a < ds_list_size(enemigos); a++){
 		}
 	}
 	var temp_text_right = ""
-	if image_index < 9000
-		temp_text_right += $"{floor((9000 - image_index) / 60)} segundos para los enemigos\n"
+	if image_index < 10800{
+		var seg =floor((10800 - image_index) / 60)
+		temp_text_right += $"{seg > 60 ? string(floor(seg / 60)) + " m " : ""}{seg mod 60} s para los enemigos\n"
+	}
 	if build_index > 0
 		temp_text_right += $"{edificio_nombre[build_index]}\n"
 	if temp_text_right != ""{
