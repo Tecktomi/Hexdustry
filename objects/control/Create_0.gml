@@ -167,6 +167,7 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 	//10
 	def_recurso("Piedra Férrica", spr_item_piedra_hierro, make_color_hsv(0, 100, 127))
 	def_recurso("Piedra Sulfatada", spr_item_piedra_azufre, make_color_hsv(42, 100, 127))
+	def_recurso("Compuesto Incendiario", spr_item_incendiario, make_color_rgb(191, 127, 0), 400)
 #endregion
 rss_max = array_length(recurso_nombre)
 //Liquidos
@@ -176,36 +177,36 @@ lq_max = array_length(liquido_nombre)
 //Edificios
 #region Descripciones
 	edificio_descripcion = [
-	"Es el centro de mando, aquí se almacenan todos los recursos y debes protegerlo a toda costa",
-	"Permite minar cobre, hierro y carbón sin coste alguno",
+	"Es el centro de mando, aquí se almacenan todos\nlos recursos y debes protegerlo a toda costa",
+	"Permite minar cobre, hierro y carbón sin coste\nalguno",
 	"Mueve recursos de un lugar a otro",
 	"Distribuye recursos en una dirección",
-	"Permite el paso de un recurso específico mientras desvía al resto",
-	"Desvía los recursos una vez que la línea esté saturada",
-	"Pasa recursos bajo tierra permitiendo construir encima",
-	"Utiliza combustible para fundir Bronce, Acero y Silicio",
-	"Taladro mejorado que también extrae piedra y arena del suelo pero consume energía",
+	"Permite el paso de un recurso específico mientras\ndesvía al resto",
+	"Desvía los recursos una vez que la línea esté\nsaturada",
+	"Pasa recursos bajo tierra permitiendo construir\nencima",
+	"Utiliza combustible para fundir Bronce, Acero y\nSilicio",
+	"Taladro mejorado que también extrae piedra y arena\ndel suelo pero consume energía",
 	"Tritura la piedra para hacerla arena",
 	"Genera energía utlizando conbustible",
 	"Conecta edificios cercanos a la red de energía",
-	"Almacena el excedente de energía para usarlo más tarde",
+	"Almacena el excedente de energía para usarlo más\ntarde",
 	"Genera energía limpia del sol",
 	"Extrae líquidos del terreno usando energía",
 	"Conecta estructuras para llevar líquidos",
-	"Pasa recursos bajo tierra permitiendo construir encima",
+	"Pasa recursos bajo tierra permitiendo construir\nencima",
 	"Genera energía a partir de magia",
-	"Versión mejorada de la Cinta Transportadora que permite transportar más cosas",
+	"Versión mejorada de la Cinta Transportadora que\npermite transportar más cosas",
 	"Defensa simple, puede disparar Piedra, Cobre o Hierro",
-	"Dispara un láser cuyo daño depende de la cantidad de energía disponible",
-	"Distrae a los enemigos mientras tus defensas se encargan de ellos",
+	"Dispara un láser cuyo daño depende de la cantidad\nde energía disponible",
+	"Distrae a los enemigos mientras tus defensas se\nencargan de ellos",
 	"Utiliza Arena, Piedra y Agua para producir Concreto",
-	"Consume Arena y Piedra Sulfatada para producir Ácido",
+	"Consume Arena y Piedra Sulfatada para producir\nÁcido",
 	"Refina el Petróleo para producir Carbón",
-	"Defensa de largo alcance que dispara Bronce o Acero",
+	"Defensa de largo alcance que dispara Bronce o\nAcero",
 	"Almacena grandes cantidades de líquidos",
 	"Genera el líquido a elección a partir de magia",
 	"Genera energía a partir de un combustible y Agua",
-	"Refina la Piedra Cúprica o Férrica en Cobre o Hierro usando Ácido"
+	"Refina la Piedra Cúprica o Férrica en Cobre o\nHierro usando Ácido"
 	]
 #endregion
 #region Arreglos
@@ -303,7 +304,7 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, ord("V"), 200, 1,,, [4, 7], [20, 30],,,,,,,,,, 300)
 	def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, ord("N"), 30, 1,,,,,,,,,,,,,, 10, -999999)
 	def_edificio("Turbina", 2, spr_turbina,, ord("G"), 160,,, true, [0, 4, 7], [20, 10, 10], 10, true, false, [1], [10], false,,, -150, 30, 40)
-	def_edificio("Refinería de Minerales", 3, spr_refineria_minerales,, ord("B"), 150, 80,,, [4, 7, 8], [20, 10, 10], 20, true, false, [9, 10], [5, 5], true, false, [0, 3], 80, 60, 60)
+	def_edificio("Refinería de Metales", 3, spr_refineria_minerales,, ord("B"), 150, 80,,, [4, 7, 8], [20, 10, 10], 20, true, false, [9, 10], [5, 5], true, false, [0, 3], 80, 60, 60)
 	//30
 #endregion
 edificio_rotable[6] = true
