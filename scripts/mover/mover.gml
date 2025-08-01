@@ -104,6 +104,8 @@ function mover(aa, bb){
 		if flag{
 			edificio.carga[out]--
 			edificio.carga_total--
+			if in(out, 9, 10, 11) and not (edificio_camino[temp_edificio.index] or in(edificio_nombre[temp_edificio.index], "Túnel", "Planta de Ácido", "Refinería de Minerales"))
+				out = 6
 			temp_edificio.carga[out]++
 			temp_edificio.carga_total++
 			temp_edificio.carga_id = out
