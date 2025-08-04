@@ -167,7 +167,7 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 	//10
 	def_recurso("Piedra Férrica", spr_item_piedra_hierro, make_color_hsv(0, 100, 127))
 	def_recurso("Piedra Sulfatada", spr_item_piedra_azufre, make_color_hsv(42, 100, 127))
-	def_recurso("Compuesto Incendiario", spr_item_incendiario, make_color_rgb(191, 127, 0), 400)
+	def_recurso("Compuesto Incendiario", spr_item_incendiario, make_color_rgb(191, 127, 0), 600)
 #endregion
 rss_max = array_length(recurso_nombre)
 //Liquidos
@@ -206,7 +206,8 @@ lq_max = array_length(liquido_nombre)
 	"Almacena grandes cantidades de líquidos",
 	"Genera el líquido a elección a partir de magia",
 	"Genera energía a partir de un combustible y Agua",
-	"Refina la Piedra Cúprica o Férrica en Cobre o\nHierro usando Ácido"
+	"Refina la Piedra Cúprica o Férrica en Cobre o\nHierro usando Ácido",
+	"Utiliza Carbón, Arena y Petróleo para producir\nun compuesto combustible de larga duración"
 	]
 #endregion
 #region Arreglos
@@ -284,7 +285,7 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	def_edificio("Taladro Eléctrico", 3, spr_taladro_electrico,, ord("E"), 400, 50,,, [0, 2, 4], [20, 10, 10], 20,,,,, true, false, [0, 1, 3, 5, 6, 9, 10, 11], 50, 10, 3)
 	def_edificio("Triturador", 2, spr_triturador,, ord("R"), 250, 20,,, [0, 4], [10, 25], 10, true, false, [6, 9, 10, 11], [5, 1, 1], true, false, [5, 9], 30)
 	//10
-	def_edificio("Generador", 1, spr_generador, spr_generador_encendido, ord("A"), 100,,, true, [0, 3], [20, 5], 10, true, false, [1], [10], false,,, -30)
+	def_edificio("Generador", 1, spr_generador, spr_generador_encendido, ord("A"), 100,,, true, [0, 3], [20, 5], 20, true, false, [1, 12], [10, 10], false,,, -30)
 	def_edificio("Cable", 1, spr_cable,, ord("S"), 30,,,, [0, 3], [5, 1])
 	def_edificio("Batería", 1, spr_bateria,, ord("D"), 60,,,, [0, 2], [20, 5])
 	def_edificio("Panel Solar", 2, spr_panel_solar,, ord("F"), 150,,,, [0, 4, 7], [10, 10, 5],,,,,,,,, -6)
@@ -298,14 +299,15 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	def_edificio("Láser", 2, spr_laser,, ord("K"), 400, 1,,, [0, 4, 7], [10, 10, 10],,,,,,,,, 100)
 	def_edificio("Muro", 1, spr_hexagono,, ord("J"), 500,,,, [8], [1])
 	def_edificio("Fábrica de Concreto", 3, spr_fabrica_de_concreto,, ord("T"), 250, 120,,, [0, 2, 4], [10, 20, 25], 20, true, false, [5, 6, 9, 10, 11], [5, 5, 1, 1], true, false, [8], 20, 30, 60)
-	def_edificio("Planta de Ácido", 3, spr_planta_quimica,, ord("C"), 200, 30,, true, [0, 4, 7], [20, 40, 20], 12, true, false, [1, 5, 11], [4, 4, 4],,,,, 60, -6)
+	def_edificio("Planta de Ácido", 3, spr_planta_acido,, ord("C"), 200, 30,, true, [0, 4, 7], [20, 40, 20], 12, true, false, [1, 5, 11], [4, 4, 4],,,,, 60, -6)
 	def_edificio("Refinería de Petróleo", 2, spr_refineria, spr_refineria_color, ord("Y"), 80, 60,,, [0, 2, 7], [10, 20, 10], 10,,,,, true, false, [1], 30, 30, 5)
 	def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, ord("H"), 400, 100,,, [2, 4, 8], [10, 10, 5], 20, true, false, [2, 4], [10, 10],,,,, 10, 60)
 	def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, ord("V"), 200, 1,,, [4, 7], [20, 30],,,,,,,,,, 300)
 	def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, ord("N"), 30, 1,,,,,,,,,,,,,, 10, -999999)
-	def_edificio("Turbina", 2, spr_turbina,, ord("G"), 160,,, true, [0, 4, 7], [20, 10, 10], 10, true, false, [1], [10], false,,, -150, 30, 40)
+	def_edificio("Turbina", 2, spr_turbina,, ord("G"), 160,,, true, [0, 4, 7], [20, 10, 10], 20, true, false, [1, 12], [10, 10], false,,, -150, 30, 40)
 	def_edificio("Refinería de Metales", 3, spr_refineria_minerales,, ord("B"), 150, 80,,, [4, 7, 8], [20, 10, 10], 20, true, false, [9, 10], [5, 5], true, false, [0, 3], 80, 60, 60)
 	//30
+	def_edificio("Fábrica de Compuestos Incendiarios", 2, spr_fabrica_compuesto_incendiario,, ord("N"), 100, 100,,, [2, 3], [5, 20], 13, true, false, [1, 5], [1, 2], true, false, [12], 30, true, 2)
 #endregion
 edificio_rotable[6] = true
 edificio_input_all[16] = true

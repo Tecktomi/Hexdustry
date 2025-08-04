@@ -427,7 +427,7 @@ flag = false
 				if b = 0 //Transporte
 					menu_array = [2, 3, 4, 5, 6, 18]
 				else if b = 1 //Producción
-					menu_array = [1, 7, 8, 9, 22, 23, 24, 29]
+					menu_array = [1, 7, 8, 9, 22, 23, 24, 29, 30]
 				else if b = 2 //Electricidad
 					menu_array = [10, 11, 12, 13, 28]
 				else if b = 3 //Fluidos
@@ -1075,10 +1075,16 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 			if edificio.fuel > 0
 				edificio.fuel--
 			if edificio.fuel = 0{
-				if edificio.carga[1] > 0{
+				if edificio.carga[12] > 0 or edificio.carga[1] > 0{
+					if edificio.carga[12] > 0{
+						edificio.fuel = recurso_combustion_time[12]
+						edificio.carga[12]--
+					}
+					if edificio.carga[1] > 0{
+						edificio.fuel = recurso_combustion_time[1]
+						edificio.carga[1]--
+					}
 					change_energia(edificio_energia_consumo[index], edificio)
-					edificio.fuel = recurso_combustion_time[1]
-					edificio.carga[1]--
 					edificio.carga_total--
 					mover_in(edificio)
 				}
@@ -1091,11 +1097,17 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 			if edificio.fuel > 0
 				edificio.fuel--
 			if edificio.fuel = 0 and flujo.liquido = 0{
-				if edificio.carga[1] > 0{
+				if edificio.carga[1] > 0 or edificio.carga[12] > 0{
+					if edificio.carga[12] > 0{
+						edificio.fuel = recurso_combustion_time[12]
+						edificio.carga[12]--
+					}
+					if edificio.carga[1] > 0{
+						edificio.fuel = recurso_combustion_time[1]
+						edificio.carga[1]--
+					}
 					change_energia(edificio_energia_consumo[index] * flujo_power, edificio)
 					change_flujo(edificio_flujo_consumo[index], edificio)
-					edificio.fuel = recurso_combustion_time[1]
-					edificio.carga[1]--
 					edificio.carga_total--
 					mover_in(edificio)
 				}
@@ -1141,10 +1153,10 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 			}
 		}
 		//Fábrica de concreto
-		else if in(var_edificio_nombre, "Fábrica de Concreto", "Refinería de Petróleo"){
+		else if in(var_edificio_nombre, "Fábrica de Concreto", "Refinería de Petróleo", "Fábrica de Compuestos Incendiarios"){
 			if in(var_edificio_nombre, "Fábrica de Concreto")
 				flag = (flujo.liquido = 0)
-			else if in(var_edificio_nombre, "Refinería de Petróleo")
+			else if in(var_edificio_nombre, "Refinería de Petróleo", "Fábrica de Compuestos Incendiarios")
 				flag = (flujo.liquido = 2)
 			if flag and edificio_receptor[index]
 				for(var b = 0; b < array_length(edificio_input_id[index]); b++)
