@@ -80,6 +80,8 @@
 					//Dibujo predeterminado
 					else
 						draw_sprite_off(edificio_sprite[index], image_index / 4, aa, bb,,, dir * 60)
+					if var_edificio_nombre = "Recurso Infinito" and edificio.select >= 0
+						draw_sprite_off(edificio_sprite_2[index], image_index / 4, aa, bb,,,, recurso_color[edificio.select])
 				}
 				//Dibujo estados
 				if info{
@@ -138,20 +140,20 @@ if show_menu{
 	draw_set_color(c_gray)
 	draw_triangle(aa - 10 * zoom, bb + 20 * zoom, aa + 10 * zoom, bb + 20 * zoom, aa, bb + 10 * zoom, false)
 	draw_rectangle(aa - 80 * zoom, bb + 20 * zoom, aa + 80 * zoom, bb + 40 * zoom, false)
-	if in(var_edificio_nombre, "Selector")
+	if in(var_edificio_nombre, "Selector", "Recurso Infinito")
 		draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 28 * ceil(rss_max / 5)) * zoom, false)
 	if in(var_edificio_nombre, "Líquido Infinito")
 		draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * lq_max) * zoom, false)
 	draw_set_color(c_dkgray)
 	draw_triangle(aa - 10 * zoom, bb + 20 * zoom, aa + 10 * zoom, bb + 20 * zoom, aa, bb + 10 * zoom, true)
 	draw_rectangle(aa - 80 * zoom, bb + 20 * zoom, aa + 80 * zoom, bb + 40 * zoom, true)
-	if in(var_edificio_nombre, "Selector")
+	if in(var_edificio_nombre, "Selector", "Recurso Infinito")
 		draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 28 * ceil(rss_max / 5)) * zoom, true)
 	if in(var_edificio_nombre, "Líquido Infinito")
 		draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * lq_max) * zoom, true)
 	if in(var_edificio_nombre, "Selector", "Overflow")
 		draw_text(aa - 80 * zoom, bb + 20 * zoom, "INVERTIR")
-	if in(var_edificio_nombre, "Selector")
+	if in(var_edificio_nombre, "Selector", "Recurso Infinito")
 		for(var a = 0; a < rss_max; a++)
 			draw_sprite_stretched(recurso_sprite[a], 0, aa + (-80 + 32 * (a mod 5)) * zoom, bb + (40 + 28 * floor(a / 5)) * zoom, 32 * zoom, 28 * zoom)
 	if in(var_edificio_nombre, "Líquido Infinito"){
@@ -168,7 +170,7 @@ if show_menu{
 				show_menu_build.mode = not show_menu_build.mode
 			}
 		}
-		else if in(var_edificio_nombre, "Selector") and mouse_y < bb + (40 + 28 * ceil(rss_max / 5)) * zoom{
+		else if in(var_edificio_nombre, "Selector", "Recurso Infinito") and mouse_y < bb + (40 + 28 * ceil(rss_max / 5)) * zoom{
 			flag = false
 			var a = floor((mouse_x - (aa - 80 * zoom)) / (32 * zoom)) + 5 * floor((mouse_y - (bb + 40 * zoom)) / (28 * zoom))
 			if a >= 0 and a < rss_max{
@@ -228,7 +230,7 @@ if temp_hexagono != noone and flag{
 	if temp_terreno.edificio_bool{
 		var index = edificio.index, var_edificio_nombre = edificio_nombre[index]
 		//Seleccionar edificios
-		if mouse_check_button_pressed(mb_left) and build_index = 0 and build_menu = 0 and in(var_edificio_nombre, "Selector", "Overflow", "Líquido Infinito"){
+		if mouse_check_button_pressed(mb_left) and build_index = 0 and build_menu = 0 and in(var_edificio_nombre, "Selector", "Overflow", "Líquido Infinito", "Recurso Infinito"){
 			mouse_clear(mb_left)
 			show_menu = true
 			show_menu_build = edificio
@@ -433,7 +435,7 @@ flag = false
 				else if b = 3 //Fluidos
 					menu_array = [14, 15, 26]
 				else if b = 4 //Defensa
-					menu_array = [19, 20, 21, 25]
+					menu_array = [19, 20, 21, 25, 31]
 			}
 		}
 		else if mouse_check_button_pressed(mb_left){
@@ -488,7 +490,7 @@ flag = false
 	}
 #endregion
 //Acceso directo
-if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastkey, ord("M"), ord("N")) or cheat)
+if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastkey, ord("M"), ord("N"), ord("B")) or cheat)
 	for(var a = 1; a < array_length(edificio_nombre); a++)
 		if real(keyboard_lastkey) = edificio_key[a]{
 			keyboard_clear(keyboard_lastkey)
@@ -1045,6 +1047,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 					edificio.fuel = recurso_combustion_time[1]
 					edificio.carga[1]--
 					edificio.carga_total--
+					mover_in(edificio)
 				}
 				edificio.proceso++
 				if edificio.proceso >= edificio_proceso[index]{
@@ -1235,23 +1238,19 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 				if edificio.target != null_enemigo and ((var_edificio_nombre = "Torre" and (edificio.carga[0] > 0 or edificio.carga[3] > 0 or edificio.carga[6] > 0)) or (var_edificio_nombre = "Rifle" and (edificio.carga[2] > 0 or edificio.carga[4] > 0))) and distance(edificio.x, edificio.y, edificio.target.a, edificio.target.b) < alc{
 					if edificio.carga[4] > 0{
 						edificio.carga[4]--
-						edificio.target.vida -= 7
+						edificio.target.vida -= 120
 					}
 					else if edificio.carga[2] > 0{
 						edificio.carga[2]--
-						edificio.target.vida -= 5
+						edificio.target.vida -= 80
 					}
 					else if edificio.carga[3] > 0{
 						edificio.carga[3]--
-						edificio.target.vida -= 3
+						edificio.target.vida -= 40
 					}
 					else if edificio.carga[0] > 0{
 						edificio.carga[0]--
-						edificio.target.vida -= 2
-					}
-					else{
-						edificio.carga[6]--
-						edificio.target.vida--
+						edificio.target.vida -= 30
 					}
 					edificio.carga_total--
 					mover_in(edificio)
@@ -1270,7 +1269,7 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 			if edificio.target != null_enemigo and distance(edificio.x, edificio.y, edificio.target.a, edificio.target.b) < 220{
 				change_energia(edificio_energia_consumo[index], edificio)
 				edificio.mode = true
-				edificio.target.vida -= 0.03 * red_power
+				edificio.target.vida -= red_power / 2
 				draw_set_alpha(red_power)
 				draw_set_color(c_red)
 				draw_line(edificio.x + 12, edificio.y + 14, edificio.target.a, edificio.target.b)
@@ -1315,48 +1314,159 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 				}
 			}
 		}
+		//Fábrica de Drones
+		else if in(var_edificio_nombre, "Fábrica de Drones"){
+			flag = true
+			var flag_2 = false, xx = edificio.a, yy = edificio.b
+			for(var b = 0; b < array_length(edificio_input_id[index]); b++)
+				if edificio.carga[edificio_input_id[index, b]] < edificio_input_num[index, b]{
+					flag = false
+					break
+				}
+			if flag for(var b = 0; b < ds_list_size(edificio.bordes); b++){
+				show_debug_message(1)
+				var temp_complex = edificio.bordes[|b], aa = temp_complex.a, bb = temp_complex.b
+				temp_terreno = terreno[aa, bb]
+				if not temp_terreno.edificio_bool and not bool_unidad[# aa, bb]{
+					flag_2 = true
+					xx = aa
+					yy = bb
+					break
+				}
+			}
+			if flag and flag_2{
+				if edificio.proceso < 0{
+					change_energia(edificio_energia_consumo[index], edificio)
+					edificio.proceso++
+				}
+				edificio.proceso += red_power
+				if edificio.proceso >= edificio_proceso[index]{
+					edificio.proceso -= edificio_proceso[index] + 1
+					for(var b = 0; b < array_length(edificio_input_id[index]); b++){
+						edificio.carga_total -= edificio.carga[edificio_input_id[index, b]]
+						edificio.carga[edificio_input_id[index, b]] = 0
+					}
+					var temp_complex = abtoxy(xx, yy)
+					var dron = {
+						a : temp_complex.a,
+						b : temp_complex.b,
+						vida_max : 100,
+						vida : 100,
+						target : null_edificio,
+						target_unit : null_enemigo
+					}
+					ds_grid_set(bool_unidad, xx, yy, true)
+					path_find(true, dron)
+					ds_list_add(drones_aliados, dron)
+					edificio.waiting = not mover(edificio.a, edificio.b)
+					change_energia(0, edificio)
+				}
+			}
+		}
+		//Recursos Infinitos
+		else if in(var_edificio_nombre, "Recurso Infinito"){
+			if edificio.select != -1{
+				edificio.carga[edificio.select] = 1
+				edificio.waiting = not mover(edificio.a, edificio.b)
+			}
+		}
 	}
 }
 //Ciclo de los enemigos
 for(var a = 0; a < ds_list_size(enemigos); a++){
 	var enemigo = enemigos[|a], aa = enemigo.a, bb = enemigo.b
-	draw_sprite_off(spr_enemigo, 0, aa, bb)
+	draw_sprite_off(spr_dron, 0, aa, bb)
+	draw_sprite_off(spr_dron_color, 0, aa, bb,,,, c_red)
 	if enemigo.vida < enemigo.vida_max{
 		draw_set_color(make_color_hsv(120 * enemigo.vida / enemigo.vida_max, 255, 255))
 		draw_circle_off(aa, bb - 20, 5, false)
 		draw_set_color(c_white)
 	}
-	if enemigo.target.vida <= 0
+	if enemigo.target != null_edificio and enemigo.target.vida <= 0
 		enemigo.target = null_edificio
-	if not ds_list_empty(edificios) and enemigo.target = null_edificio
-		path_find(enemigo)
-	edificio = enemigo.target
-	var dis = distance(aa, bb, edificio.x, edificio.y)
-	if dis > 50{
-		enemigo.a += (edificio.x - aa) / dis
-		enemigo.b += (edificio.y - bb) / dis
+	if enemigo.target_unit != null_enemigo and enemigo.target_unit.vida <= 0
+		enemigo.target_unit = null_enemigo
+	if (not ds_list_empty(edificios) and enemigo.target = null_edificio) or (not ds_list_empty(drones_aliados) and enemigo.target_unit = null_enemigo)
+		path_find(false, enemigo)
+	//Target edificios
+	if enemigo.target != null_edificio{
+		edificio = enemigo.target
+		var dis = distance(aa, bb, edificio.x, edificio.y)
+		if dis > 50{
+			enemigo.a += (edificio.x - aa) / dis
+			enemigo.b += (edificio.y - bb) / dis
+		}
+		else{
+			edificio.vida--
+			if edificio.vida <= 0{
+				delete_edificio(edificio.a, edificio.b, true)
+				enemigo.target = null_edificio
+				path_find(false, enemigo)
+			}
+		}
 	}
-	else{
-		edificio.vida--
-		if edificio.vida <= 0{
-			delete_edificio(edificio.a, edificio.b, true)
-			enemigo.target = null_edificio
-			path_find(enemigo)
+	//Target unidades
+	else if enemigo.target_unit != null_enemigo{
+		var dron = enemigo.target_unit
+		var dis = distance(aa, bb, dron.a, dron.b)
+		if dis > 50{
+			enemigo.a += (dron.a - aa) / dis
+			enemigo.b += (dron.b - bb) / dis
+		}
+		else{
+			dron.vida--
+			if dron.vida <= 0{
+				ds_list_remove(drones_aliados, dron)
+				enemigo.target_unit = null_edificio
+				path_find(false, enemigo)
+			}
+		}
+	}
+}
+//Ciclo drones aliados
+for(var a = 0; a < ds_list_size(drones_aliados); a++){
+	var dron = drones_aliados[|a], aa = dron.a, bb = dron.b
+	draw_sprite_off(spr_dron, 0, aa, bb)
+	draw_sprite_off(spr_dron_color, 0, aa, bb,,,, c_blue)
+	if dron.vida < dron.vida_max{
+		draw_set_color(make_color_hsv(120 * dron.vida / dron.vida_max, 255, 255))
+		draw_circle_off(aa, bb - 20, 5, false)
+		draw_set_color(c_white)
+	}
+	if dron.target_unit != null_enemigo and dron.target_unit.vida <= 0
+		dron.target_unit = null_enemigo
+	if not ds_list_empty(enemigos) and dron.target_unit = null_enemigo
+		path_find(true, dron)
+	if dron.target_unit != null_enemigo{
+		var enemigo = dron.target_unit
+		var dis = distance(aa, bb, enemigo.a, enemigo.b)
+		if dis > 50{
+			dron.a += (enemigo.a - aa) / dis
+			dron.b += (enemigo.b - bb) / dis
+		}
+		else{
+			enemigo.vida--
+			if enemigo.vida <= 0{
+				ds_list_remove(enemigos, enemigo)
+				dron.target_unit = null_edificio
+				path_find(true, dron)
+			}
 		}
 	}
 }
 #region Generación de enemigos
 	if image_index > 10800 or keyboard_check_pressed(vk_space){
 		if image_index mod 900 = 0 or keyboard_check_pressed(vk_space){
-			var a = irandom(array_length(borde_mapa) - 1), temp_complex = abtoxy(borde_mapa[a, 0], borde_mapa[a, 1]), b = 5 + floor(sqr((image_index - 9000) / 4500))
+			var a = irandom(array_length(borde_mapa) - 1), temp_complex = abtoxy(borde_mapa[a, 0], borde_mapa[a, 1]), b = 100 + floor(sqr((image_index - 10800) / 900))
 			var enemigo = {
 				a : temp_complex.a,
 				b : temp_complex.b,
 				vida_max : b,
 				vida : b,
-				target : null_edificio
+				target : null_edificio,
+				target_unit : null_enemigo
 			}
-			path_find(enemigo)
+			path_find(false, enemigo)
 			ds_list_add(enemigos, enemigo)
 		}
 	}
@@ -1442,6 +1552,21 @@ for(var a = 0; a < ds_list_size(flujos); a++){
 	if string_ends_with(keyboard_string, "cheat"){
 		keyboard_string = ""
 		cheat = not cheat
+		build_index = 0
+	}
+	if cheat and string_ends_with(keyboard_string, "dron"){
+		keyboard_string = ""
+		var dron = {
+			a : mouse_x + random_range(-32, 32),
+			b : mouse_y + random_range(-32, 32),
+			vida_max : 100,
+			vida : 100,
+			target : null_edificio,
+			target_unit : null_enemigo
+		}
+		path_find(true, dron)
+		ds_list_add(drones_aliados, dron)
+		build_index = 0
 	}
 	if keyboard_check_pressed(vk_escape)
 		game_end()

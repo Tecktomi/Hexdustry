@@ -24,6 +24,7 @@ null_edificio = {
 	x : 0,
 	y : 0,
 	coordenadas : ds_list_create(),
+	bordes : ds_list_create(),
 	inputs : ds_list_create(),
 	outputs : ds_list_create(),
 	output_index : 0,
@@ -67,6 +68,8 @@ null_terreno = {
 	edificio_draw : false,
 	edificio : null_edificio
 }
+bool_unidad = ds_grid_create(xsize, ysize)
+ds_grid_clear(bool_unidad, false)
 //Crear plantilla de fondo
 for(var a = 0; a < xsize; a++)
 	for(var b = 0; b < ysize; b++){
@@ -90,9 +93,12 @@ null_enemigo = {
 	b : 0,
 	vida_max : 5,
 	vida : 5,
-	target : null_edificio
+	target : null_edificio,
+	target_unit : undefined
 }
+null_enemigo.target_unit = null_enemigo
 enemigos = ds_list_create()
+drones_aliados = ds_list_create()
 ds_list_add(enemigos, null_enemigo)
 ds_list_clear(enemigos)
 null_edificio.target = null_enemigo
@@ -196,7 +202,7 @@ lq_max = array_length(liquido_nombre)
 	"Pasa recursos bajo tierra permitiendo construir\nencima",
 	"Genera energía a partir de magia",
 	"Versión mejorada de la Cinta Transportadora que\npermite transportar más cosas",
-	"Defensa simple, puede disparar Piedra, Cobre o Hierro",
+	"Defensa simple, puede disparar Cobre o Hierro",
 	"Dispara un láser cuyo daño depende de la cantidad\nde energía disponible",
 	"Distrae a los enemigos mientras tus defensas se\nencargan de ellos",
 	"Utiliza Arena, Piedra y Agua para producir Concreto",
@@ -207,7 +213,9 @@ lq_max = array_length(liquido_nombre)
 	"Genera el líquido a elección a partir de magia",
 	"Genera energía a partir de un combustible y Agua",
 	"Refina la Piedra Cúprica o Férrica en Cobre o\nHierro usando Ácido",
-	"Utiliza Carbón, Arena y Petróleo para producir\nun compuesto combustible de larga duración"
+	"Utiliza Carbón, Arena y Petróleo para producir\nun compuesto combustible de larga duración",
+	"Fabrica drones de defensa utilizando Acero, Silicio y bastante energía",
+	"Genera recursos a partir de magia"
 	]
 #endregion
 #region Arreglos
@@ -294,7 +302,7 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	def_edificio("Túnel", 1, spr_tunel_salida,,, 60, 10,,, [0, 3], [4, 4], 1,,,,, true, true)
 	def_edificio("Energía Infinita", 1, spr_energia_infinita,, ord("M"), 100,,,,,,,,,,,,,, -999999)
 	def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, ord(6), 60, 10, true,, [2, 4], [1, 1], 1, true,,,, true)
-	def_edificio("Torre", 1, spr_torre, spr_torre_2, ord("L"), 300, 60,,, [2, 3], [10, 25], 30, true, false, [0, 3, 6], [10, 10, 10],,,,, 10, 60)
+	def_edificio("Torre", 1, spr_torre, spr_torre_2, ord("L"), 300, 60,,, [2, 3], [10, 25], 20, true, false, [0, 3], [10, 10],,,,, 10, 60)
 	//20
 	def_edificio("Láser", 2, spr_laser,, ord("K"), 400, 1,,, [0, 4, 7], [10, 10, 10],,,,,,,,, 100)
 	def_edificio("Muro", 1, spr_hexagono,, ord("J"), 500,,,, [8], [1])
@@ -305,9 +313,11 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, ord("V"), 200, 1,,, [4, 7], [20, 30],,,,,,,,,, 300)
 	def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, ord("N"), 30, 1,,,,,,,,,,,,,, 10, -999999)
 	def_edificio("Turbina", 2, spr_turbina,, ord("G"), 160,,, true, [0, 4, 7], [20, 10, 10], 20, true, false, [1, 12], [10, 10], false,,, -150, 30, 40)
-	def_edificio("Refinería de Metales", 3, spr_refineria_minerales,, ord("B"), 150, 80,,, [4, 7, 8], [20, 10, 10], 20, true, false, [9, 10], [5, 5], true, false, [0, 3], 80, 60, 60)
+	def_edificio("Refinería de Metales", 3, spr_refineria_minerales,, ord(8), 150, 80,,, [4, 7, 8], [20, 10, 10], 20, true, false, [9, 10], [5, 5], true, false, [0, 3], 80, 60, 60)
 	//30
-	def_edificio("Fábrica de Compuestos Incendiarios", 2, spr_fabrica_compuesto_incendiario,, ord("N"), 100, 100,,, [2, 3], [5, 20], 13, true, false, [1, 5], [1, 2], true, false, [12], 30, true, 2)
+	def_edificio("Fábrica de Compuestos Incendiarios", 2, spr_fabrica_compuesto_incendiario,, ord(0), 100, 100,,, [2, 3], [5, 20], 13, true, false, [1, 5], [1, 2], true, false, [12], 30, true, 2)
+	def_edificio("Fábrica de Drones", 2, spr_fabrica_drones,, ord(9), 200, 900,,, [2, 4, 7], [20, 20, 15], 20, true, false, [4, 7], [10, 10], false, false,, 120)
+	def_edificio("Recurso Infinito", 1, spr_recurso_infinito, spr_selector_color, ord("B"), 30, 1,,,,,,,,,, true, true)
 #endregion
 edificio_rotable[6] = true
 edificio_input_all[16] = true

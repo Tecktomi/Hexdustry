@@ -208,7 +208,7 @@ function delete_edificio(aa, bb, enemigo = false){
 		for(var a = 0; a < ds_list_size(enemigos); a++){
 			var temp_enemigo = enemigos[|a]
 			if temp_enemigo.target = edificio
-				path_find(temp_enemigo)
+				path_find(false, temp_enemigo)
 		}
 		delete(edificio)
 	}
