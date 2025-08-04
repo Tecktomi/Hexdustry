@@ -11,6 +11,7 @@ function add_edificio(index, dir, a, b){
 			x : x,
 			y : y,
 			coordenadas : ds_list_create(),
+			bordes : ds_list_create(),
 			inputs : ds_list_create(),
 			outputs : ds_list_create(),
 			output_index : 0,
@@ -82,7 +83,10 @@ function add_edificio(index, dir, a, b){
 		ds_list_add(edificios, edificio)
 		if not edificio_camino[index] and not in(var_edificio_nombre, "Tubería")
 			ds_list_add(edificios_targeteables, edificio)
-		var temp_list = get_size(a, b, dir, edificio_size[index])
+		var temp_list = get_arround(a, b, dir, edificio_size[index])
+		for(var c = 0; c < ds_list_size(temp_list); c++)
+			ds_list_add(edificio.bordes, temp_list[|c])
+		temp_list = get_size(a, b, dir, edificio_size[index])
 		for(var c = 0; c < ds_list_size(temp_list); c++){
 			temp_complex = temp_list[|c]
 			temp_terreno = terreno[temp_complex.a, temp_complex.b]
