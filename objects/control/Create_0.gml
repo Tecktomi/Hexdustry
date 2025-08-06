@@ -1,7 +1,7 @@
 randomize()
 draw_set_font(tf_letra)
-xsize = 28
-ysize = 51
+xsize = 48
+ysize = 96
 prev_x = 0
 prev_y = 0
 prev_change = true
@@ -15,7 +15,9 @@ edificio_max = 0
 pre_build_list = ds_list_create()
 ds_list_add(pre_build_list, {a : 0, b : 0})
 ds_list_clear(pre_build_list)
-background = spr_hexagono
+for(var a = 0; a < xsize / 24; a++)
+	for(var b = 0; b < ysize / 51; b++)
+		background[a, b] = spr_hexagono
 null_edificio = {
 	index : 0,
 	dir : 0,
@@ -245,7 +247,7 @@ lq_max = array_length(liquido_nombre)
 	edificio_flujo_almacen = []
 	edificio_flujo_consumo = []
 #endregion
-function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = vk_nokey, vida = 100, proceso = 0, camino = false, comb = false, precio_id = [0], precio_num = [0], carga = 0, receptor = false, in_all = true, in_id = [0], in_num = [0], emisor = false, out_all = true, out_id = [0], energia = 0, agua = 0, agua_consumo = 0){
+function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = "", vida = 100, proceso = 0, camino = false, comb = false, precio_id = [0], precio_num = [0], carga = 0, receptor = false, in_all = true, in_id = [0], in_num = [0], emisor = false, out_all = true, out_id = [0], energia = 0, agua = 0, agua_consumo = 0){
 	array_push(edificio_nombre, string(name))
 	array_push(edificio_size, real(size))
 	array_push(edificio_sprite, sprite)
@@ -283,41 +285,41 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 }
 #region Definición
 	def_edificio("Núcleo", 3, spr_base,,, 1200,,,,,,, true)
-	def_edificio("Taladro", 2, spr_taladro,, ord("Q"), 200, 120,,, [0], [15], 10,,,,, true, false, [0, 1, 3])
-	def_edificio("Cinta Transportadora", 1, spr_camino, spr_camino_diagonal, ord(1), 30, 20, true,, [0], [1], 1, true,,,, true)
-	def_edificio("Enrutador", 1, spr_enrutador, spr_enrutador_2, ord(2), 60, 10, true,, [0], [4], 1, true,,,, true)
-	def_edificio("Selector", 1, spr_selector, spr_selector_color, ord(3), 60, 10, true,, [0], [4], 1, true,,,, true)
-	def_edificio("Overflow", 1, spr_overflow,, ord(4), 60, 10, true,, [0], [4], 1, true,,,, true)
-	def_edificio("Túnel", 1, spr_tunel,, ord(5), 60, 10,,, [0, 3], [4, 4], 1, true, true,,, true, true)
-	def_edificio("Horno", 2, spr_horno, spr_horno_encendido, ord("W"), 250, 150,, true, [0, 3], [20, 15], 19, true, false, [0, 1, 3, 5], [4, 4, 4, 4], true, false, [2, 4, 7])
-	def_edificio("Taladro Eléctrico", 3, spr_taladro_electrico,, ord("E"), 400, 50,,, [0, 2, 4], [20, 10, 10], 20,,,,, true, false, [0, 1, 3, 5, 6, 9, 10, 11], 50, 10, 3)
-	def_edificio("Triturador", 2, spr_triturador,, ord("R"), 250, 20,,, [0, 4], [10, 25], 10, true, false, [6, 9, 10, 11], [5, 1, 1], true, false, [5, 9], 30)
+	def_edificio("Taladro", 2, spr_taladro,, "21", 200, 120,,, [0], [15], 10,,,,, true, false, [0, 1, 3])
+	def_edificio("Cinta Transportadora", 1, spr_camino, spr_camino_diagonal, "11", 30, 20, true,, [0], [1], 1, true,,,, true)
+	def_edificio("Enrutador", 1, spr_enrutador, spr_enrutador_2, "12", 60, 10, true,, [0], [4], 1, true,,,, true)
+	def_edificio("Selector", 1, spr_selector, spr_selector_color, "13", 60, 10, true,, [0], [4], 1, true,,,, true)
+	def_edificio("Overflow", 1, spr_overflow,, "14", 60, 10, true,, [0], [4], 1, true,,,, true)
+	def_edificio("Túnel", 1, spr_tunel,, "15", 60, 10,,, [0, 3], [4, 4], 1, true, true,,, true, true)
+	def_edificio("Horno", 2, spr_horno, spr_horno_encendido, "22", 250, 150,, true, [0, 3], [20, 15], 19, true, false, [0, 1, 3, 5], [4, 4, 4, 4], true, false, [2, 4, 7])
+	def_edificio("Taladro Eléctrico", 3, spr_taladro_electrico,, "23", 400, 50,,, [0, 2, 4], [20, 10, 10], 20,,,,, true, false, [0, 1, 3, 5, 6, 9, 10, 11], 50, 10, 3)
+	def_edificio("Triturador", 2, spr_triturador,, "24", 250, 20,,, [0, 4], [10, 25], 10, true, false, [6, 9, 10, 11], [5, 1, 1], true, false, [5, 9], 30)
 	//10
-	def_edificio("Generador", 1, spr_generador, spr_generador_encendido, ord("A"), 100,,, true, [0, 3], [20, 5], 20, true, false, [1, 12], [10, 10], false,,, -30)
-	def_edificio("Cable", 1, spr_cable,, ord("S"), 30,,,, [0, 3], [5, 1])
-	def_edificio("Batería", 1, spr_bateria,, ord("D"), 60,,,, [0, 2], [20, 5])
-	def_edificio("Panel Solar", 2, spr_panel_solar,, ord("F"), 150,,,, [0, 4, 7], [10, 10, 5],,,,,,,,, -6)
-	def_edificio("Bomba Hidráulica", 2, spr_bomba,, ord("Z"), 200, 1,,, [0, 4, 7], [10, 15, 10],,,,,,,,, 25, 30, -30)
-	def_edificio("Tubería", 1, spr_tuberia, spr_tuberia_color, ord("X"), 30, 1,,, [4, 7], [1, 1],,,,,,,,,, 10)
-	def_edificio("Túnel", 1, spr_tunel_salida,,, 60, 10,,, [0, 3], [4, 4], 1,,,,, true, true)
-	def_edificio("Energía Infinita", 1, spr_energia_infinita,, ord("M"), 100,,,,,,,,,,,,,, -999999)
-	def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, ord(6), 60, 10, true,, [2, 4], [1, 1], 1, true,,,, true)
-	def_edificio("Torre", 1, spr_torre, spr_torre_2, ord("L"), 300, 60,,, [2, 3], [10, 25], 20, true, false, [0, 3], [10, 10],,,,, 10, 60)
+	def_edificio("Generador", 1, spr_generador, spr_generador_encendido, "31", 100,,, true, [0, 3], [20, 5], 20, true, false, [1, 12], [10, 10], false,,, -30)
+	def_edificio("Cable", 1, spr_cable,, "32", 30,,,, [0, 3], [5, 1])
+	def_edificio("Batería", 1, spr_bateria,, "33", 60,,,, [0, 2], [20, 5])
+	def_edificio("Panel Solar", 2, spr_panel_solar,, "34", 150,,,, [0, 4, 7], [10, 10, 5],,,,,,,,, -6)
+	def_edificio("Bomba Hidráulica", 2, spr_bomba,, "41", 200, 1,,, [0, 4, 7], [10, 15, 10],,,,,,,,, 25, 30, -30)
+	def_edificio("Tubería", 1, spr_tuberia, spr_tuberia_color, "42", 30, 1,,, [4, 7], [1, 1],,,,,,,,,, 10)
+	def_edificio("Túnel", 1, spr_tunel_salida,, "A", 60, 10,,, [0, 3], [4, 4], 1,,,,, true, true)
+	def_edificio("Energía Infinita", 1, spr_energia_infinita,, "3 ", 100,,,,,,,,,,,,,, -999999)
+	def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, "16", 60, 10, true,, [2, 4], [1, 1], 1, true,,,, true)
+	def_edificio("Torre", 1, spr_torre, spr_torre_2, "51", 300, 60,,, [2, 3], [10, 25], 20, true, false, [0, 3], [10, 10],,,,, 10, 60)
 	//20
-	def_edificio("Láser", 2, spr_laser,, ord("K"), 400, 1,,, [0, 4, 7], [10, 10, 10],,,,,,,,, 100)
-	def_edificio("Muro", 1, spr_hexagono,, ord("J"), 500,,,, [8], [1])
-	def_edificio("Fábrica de Concreto", 3, spr_fabrica_de_concreto,, ord("T"), 250, 120,,, [0, 2, 4], [10, 20, 25], 20, true, false, [5, 6, 9, 10, 11], [5, 5, 1, 1], true, false, [8], 20, 30, 60)
-	def_edificio("Planta de Ácido", 3, spr_planta_acido,, ord("C"), 200, 30,, true, [0, 4, 7], [20, 40, 20], 12, true, false, [1, 5, 11], [4, 4, 4],,,,, 60, -6)
-	def_edificio("Refinería de Petróleo", 2, spr_refineria, spr_refineria_color, ord("Y"), 80, 60,,, [0, 2, 7], [10, 20, 10], 10,,,,, true, false, [1], 30, 30, 5)
-	def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, ord("H"), 400, 100,,, [2, 4, 8], [10, 10, 5], 20, true, false, [2, 4], [10, 10],,,,, 10, 60)
-	def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, ord("V"), 200, 1,,, [4, 7], [20, 30],,,,,,,,,, 300)
-	def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, ord("N"), 30, 1,,,,,,,,,,,,,, 10, -999999)
-	def_edificio("Turbina", 2, spr_turbina,, ord("G"), 160,,, true, [0, 4, 7], [20, 10, 10], 20, true, false, [1, 12], [10, 10], false,,, -150, 30, 40)
-	def_edificio("Refinería de Metales", 3, spr_refineria_minerales,, ord(8), 150, 80,,, [4, 7, 8], [20, 10, 10], 20, true, false, [9, 10], [5, 5], true, false, [0, 3], 80, 60, 60)
+	def_edificio("Láser", 2, spr_laser,, "52", 400, 1,,, [0, 4, 7], [10, 10, 10],,,,,,,,, 100)
+	def_edificio("Muro", 1, spr_hexagono,, "53", 500,,,, [8], [1])
+	def_edificio("Fábrica de Concreto", 3, spr_fabrica_de_concreto,, "25", 250, 120,,, [0, 2, 4], [10, 20, 25], 20, true, false, [5, 6, 9, 10, 11], [5, 5, 1, 1], true, false, [8], 20, 30, 60)
+	def_edificio("Planta de Ácido", 3, spr_planta_acido,, "26", 200, 30,, true, [0, 4, 7], [20, 40, 20], 12, true, false, [1, 5, 11], [4, 4, 4],,,,, 60, -6)
+	def_edificio("Refinería de Petróleo", 2, spr_refineria, spr_refineria_color, "27", 80, 60,,, [0, 2, 7], [10, 20, 10], 10,,,,, true, false, [1], 30, 30, 5)
+	def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, "54", 400, 100,,, [2, 4, 8], [10, 10, 5], 20, true, false, [2, 4], [10, 10],,,,, 10, 60)
+	def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, "43", 200, 1,,, [4, 7], [20, 30],,,,,,,,,, 300)
+	def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, "4 ", 30, 1,,,,,,,,,,,,,, 10, -999999)
+	def_edificio("Turbina", 2, spr_turbina,, "35", 160,,, true, [0, 4, 7], [20, 10, 10], 20, true, false, [1, 12], [10, 10], false,,, -150, 30, 40)
+	def_edificio("Refinería de Metales", 3, spr_refineria_minerales,, "28", 150, 80,,, [4, 7, 8], [20, 10, 10], 20, true, false, [9, 10], [5, 5], true, false, [0, 3], 80, 60, 60)
 	//30
-	def_edificio("Fábrica de Compuestos Incendiarios", 2, spr_fabrica_compuesto_incendiario,, ord(0), 100, 100,,, [2, 3], [5, 20], 13, true, false, [1, 5], [1, 2], true, false, [12], 30, true, 2)
-	def_edificio("Fábrica de Drones", 2, spr_fabrica_drones,, ord(9), 200, 900,,, [2, 4, 7], [20, 20, 15], 20, true, false, [4, 7], [10, 10], false, false,, 120)
-	def_edificio("Recurso Infinito", 1, spr_recurso_infinito, spr_selector_color, ord("B"), 30, 1,,,,,,,,,, true, true)
+	def_edificio("Fábrica de Compuestos Incendiarios", 2, spr_fabrica_compuesto_incendiario,, "29", 100, 100,,, [2, 3], [5, 20], 13, true, false, [1, 5], [1, 2], true, false, [12], 30, true, 2)
+	def_edificio("Fábrica de Drones", 2, spr_fabrica_drones,, "55", 200, 900,,, [2, 4, 7], [20, 20, 15], 20, true, false, [4, 7], [10, 10], false, false,, 120)
+	def_edificio("Recurso Infinito", 1, spr_recurso_infinito, spr_selector_color, "1 ", 30, 1,,,,,,,,,, true, true)
 #endregion
 edificio_rotable[6] = true
 edificio_input_all[16] = true
@@ -372,8 +374,8 @@ menu_array = []
 cheat = false
 info = false
 zoom = 1
-camx = 0
-camy = 0
+camx = (xsize * 48 - room_width) / 2
+camy = (ysize * 14 - room_height) / 2
 borde_mapa = []
 for(var a = 0; a < xsize; a++){
 	array_push(borde_mapa, [a, 0])
@@ -383,12 +385,13 @@ for(var a = 0; a < ysize; a++){
 	array_push(borde_mapa, [0, a])
 	array_push(borde_mapa, [xsize - 1, a])
 }
+keyboard_step = 0
 //Agua, piedra y petróleo
-for(var e = 0; e < 5; e++){
+for(var e = 0; e < 7; e++){
 	var a = irandom(xsize - 1), b = irandom(ysize - 1)
-	if e <= 1
+	if e <= 4
 		var c = 0, f = 20
-	else if e <= 3{
+	else if e <= 6{
 		c = 2
 		f = 20
 	}
@@ -480,10 +483,10 @@ for(var a = 0; a < xsize; a++)
 		}
 	}
 //Natural Ores
-for(var e = 0; e < 6; e++){
+for(var e = 0; e < 9; e++){
 	var a = min(xsize - 1, irandom_range((e mod 3) * xsize / 3, ((e mod 3) + 1) * xsize / 3))
 	var b = irandom(ysize - 1)
-	var c = floor(e / 2)
+	var c = floor(e / 3)
 	repeat(15){
 		var temp_terreno = terreno[a, b]
 		if not in(terreno_nombre[temp_terreno.terreno], "Agua", "Agua Profunda", "Petróleo"){
