@@ -1,21 +1,24 @@
 #region Dibujo
 	//Dibujo de fondo
-	if background = spr_hexagono{
-		var temp_surf = surface_create(room_width, room_height)
-		surface_set_target(temp_surf)
-		for(var a = 0; a < xsize; a++)
-			for(var b = 0; b < ysize; b++){
-				var temp_terreno = terreno[a, b]
-				var temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b, c = temp_terreno.ore
-				draw_sprite(terreno_sprite[temp_terreno.terreno], 0, aa, bb)
-				if c >= 0
-					draw_sprite(ore_sprite[c], temp_terreno.ore_random + 2 * (temp_terreno.ore_amount < 50), aa, bb)
+	for(var a = 0; a < xsize / 24; a++)
+		for(var b = 0; b < ysize / 51; b++){
+			if background[a, b] = spr_hexagono{
+				var temp_surf = surface_create(room_width, room_height)
+				surface_set_target(temp_surf)
+				for(var c = a * 24; c < min((a + 1) * 24, xsize); c++)
+					for(var d = b * 51; d < min((b + 1) * 51, ysize); d++){
+						var temp_terreno = terreno[c, d]
+						var temp_complex = abtoxy(c, d), aa = temp_complex.a - a * 24 * 48, bb = temp_complex.b - b * 51 * 14, e = temp_terreno.ore
+						draw_sprite(terreno_sprite[temp_terreno.terreno], 0, aa, bb)
+						if e >= 0
+							draw_sprite(ore_sprite[e], temp_terreno.ore_random + 2 * (temp_terreno.ore_amount < 50), aa, bb)
+					}
+				array_set(background[a], b, sprite_create_from_surface(temp_surf, 0, 0, room_width, room_height, false, false, 0, 0))
+				surface_reset_target()
+				surface_free(temp_surf)
 			}
-		background = sprite_create_from_surface(temp_surf, 0, 0, room_width, room_height, false, false, 0, 0)
-		surface_reset_target()
-		surface_free(temp_surf)
-	}
-	draw_sprite_stretched(background, 0, -camx, -camy, room_width * zoom, room_height * zoom)
+			draw_sprite_stretched(background[a, b], 0, -camx + a * 24 * 48 * zoom, -camy + b * 51 * 14 * zoom, room_width * zoom, room_height * zoom)
+		}
 	//Dibujo de edificios
 	for(var a = 0; a < xsize; a++)
 		for(var b = 0; b < ysize; b++){
@@ -27,7 +30,7 @@
 					if in(var_edificio_nombre, "Selector", "Overflow")
 						draw_sprite_off(edificio_sprite[index], real(edificio.mode), aa, bb,,, (dir - 1) * 60)
 					else if in(var_edificio_nombre, "Cinta Transportadora", "Enrutador", "Cinta Magnética"){
-						var c = image_index / 4
+						var c = image_index / 2
 						if in(var_edificio_nombre, "Cinta Magnética")
 							c = image_index / 2
 						if (dir mod 3) = 1
@@ -469,7 +472,7 @@ flag = false
 		draw_circle(menu_x, menu_y, 10, false)
 		if distance(mouse_x, mouse_y, menu_x, menu_y) < 100{
 			b = menu_array[floor((array_length(menu_array) - arctan2(mouse_y - menu_y, mouse_x - menu_x) / b) mod array_length(menu_array))]
-			var temp_text = $"{edificio_nombre[b]}\n"
+			var temp_text = $"{edificio_nombre[b]} (hotkey: {edificio_key[b]})\n"
 			if not cheat
 				for(var c = 0; c < array_length(edificio_precio_id[b]); c++)
 					temp_text += $"  {recurso_nombre[edificio_precio_id[b, c]]}: {edificio_precio_num[b, c]}\n"
@@ -490,14 +493,18 @@ flag = false
 	}
 #endregion
 //Acceso directo
-if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastkey, ord("M"), ord("N"), ord("B")) or cheat)
+if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastchar, "A", "D", "W", "S", " ") or cheat){
 	for(var a = 1; a < array_length(edificio_nombre); a++)
-		if real(keyboard_lastkey) = edificio_key[a]{
-			keyboard_clear(keyboard_lastkey)
+		if string_ends_with(keyboard_string, edificio_key[a]){
+			keyboard_string = ""
 			build_index = a
 			build_menu = 0
 			flag = true
 		}
+	keyboard_step = 90
+}
+if keyboard_step > 0 and --keyboard_step= 0
+	keyboard_string = ""
 //Cancelar construcción o cerrar menú del selector
 if (mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape)) and (build_index > 0 or show_menu){
 	mouse_clear(mb_right)
@@ -1002,10 +1009,10 @@ for(var a = 0; a < ds_list_size(edificios); a++){
 							change_energia(0, edificio)
 						temp_terreno.ore_amount--
 						if temp_terreno.ore_amount = 50
-							background = spr_hexagono
+							array_set(background[floor(temp_complex_2.a / 24)], floor(temp_complex_2.b / 51), spr_hexagono)
 						else if temp_terreno.ore_amount = 0{
 							temp_terreno.ore = -1
-							background = spr_hexagono
+							array_set(background[floor(temp_complex_2.a / 24)], floor(temp_complex_2.b / 51), spr_hexagono)
 						}
 						flag = true
 						break
@@ -1455,9 +1462,9 @@ for(var a = 0; a < ds_list_size(drones_aliados); a++){
 	}
 }
 #region Generación de enemigos
-	if image_index > 10800 or keyboard_check_pressed(vk_space){
-		if image_index mod 900 = 0 or keyboard_check_pressed(vk_space){
-			var a = irandom(array_length(borde_mapa) - 1), temp_complex = abtoxy(borde_mapa[a, 0], borde_mapa[a, 1]), b = 100 + floor(sqr((image_index - 10800) / 900))
+	if image_index > 14400 or keyboard_check_pressed(vk_enter){
+		if image_index mod 900 = 0 or keyboard_check_pressed(vk_enter){
+			var a = irandom(array_length(borde_mapa) - 1), temp_complex = abtoxy(borde_mapa[a, 0], borde_mapa[a, 1]), b = 100 + floor(sqr((image_index - 14400) / 900))
 			var enemigo = {
 				a : temp_complex.a,
 				b : temp_complex.b,
@@ -1471,8 +1478,8 @@ for(var a = 0; a < ds_list_size(drones_aliados); a++){
 		}
 	}
 	var temp_text_right = ""
-	if image_index < 10800{
-		var seg =floor((10800 - image_index) / 60)
+	if image_index < 14400{
+		var seg =floor((14400 - image_index) / 60)
 		temp_text_right += $"{seg > 60 ? string(floor(seg / 60)) + " m " : ""}{seg mod 60} s para los enemigos\n"
 	}
 	if build_index > 0
@@ -1575,25 +1582,25 @@ for(var a = 0; a < ds_list_size(flujos); a++){
 	if keyboard_check_pressed(vk_f4)
 		window_set_fullscreen(not window_get_fullscreen())
 	if keyboard_check(vk_lcontrol) and mouse_wheel_up() and zoom < 4{
-		camx -= room_width * zoom / 2
-		camy -= room_height * zoom / 2
+		camx -= xsize * 48 * zoom / 2
+		camy -= ysize * 14 * zoom / 2
 		zoom *= power(2, 0.2)
-		camx += room_width * zoom / 2
-		camy += room_height * zoom / 2
+		camx += xsize * 48 * zoom / 2
+		camy += ysize * 14 * zoom / 2
 	}
 	if keyboard_check(vk_lcontrol) and mouse_wheel_down() and zoom > 1{
-		camx -= room_width * zoom / 2
-		camy -= room_height * zoom / 2
+		camx -= xsize * 48 * zoom / 2
+		camy -= ysize * 14 * zoom / 2
 		zoom /= power(2, 0.2)
-		camx = max(0, min(camx + room_width * zoom / 2, room_width * (zoom - 1)))
-		camy = max(0, min(camy + room_height * zoom/ 2, room_height * (zoom - 1)))
+		camx = clamp(camx + xsize * 48 * zoom / 2, 0, xsize * 48 * zoom - room_width)
+		camy = clamp(camy + ysize * 14 * zoom/ 2, 0, ysize * 14 * zoom - room_height)
 	}
-	if mouse_x > room_width - 40
-		camx = min(camx + 4 + 12 * keyboard_check(vk_lshift), room_width * (zoom - 1))
-	if mouse_y > room_height - 40
-		camy = min(camy + 4 + 12 * keyboard_check(vk_lshift), room_height * (zoom - 1))
-	if mouse_x < 40 and camx > 0
+	if mouse_x > room_width - 40 or keyboard_check(ord("D"))
+		camx = min(camx + 4 + 12 * keyboard_check(vk_lshift), xsize * 48 * zoom - room_width)
+	if mouse_y > room_height - 40 or keyboard_check(ord("S"))
+		camy = min(camy + 4 + 12 * keyboard_check(vk_lshift), ysize * 14 * zoom - room_height)
+	if mouse_x < 40 and camx > 0 or keyboard_check(ord("A"))
 		camx = max(camx - 4 - 12 * keyboard_check(vk_lshift), 0)
-	if mouse_y < 40 and camy > 0
+	if mouse_y < 40 and camy > 0 or keyboard_check(ord("W"))
 	camy = max(camy - 4 - 12 * keyboard_check(vk_lshift), 0)
 #endregion
