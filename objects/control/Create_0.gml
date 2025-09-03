@@ -1,5 +1,6 @@
 randomize()
-draw_set_font(tf_letra)
+window_set_fullscreen(true)
+draw_set_font(ft_letra)
 xsize = 48
 ysize = 96
 prev_x = 0
@@ -9,9 +10,11 @@ mx_clic = 0
 my_clic = 0
 show_menu = false
 show_menu_build = undefined
+pausa = false
 show_menu_x = 0
 show_menu_y = 0
 edificio_max = 0
+energia_solar = 1
 pre_build_list = ds_list_create()
 ds_list_add(pre_build_list, {a : 0, b : 0})
 ds_list_clear(pre_build_list)
@@ -180,20 +183,20 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 rss_max = array_length(recurso_nombre)
 //Liquidos
 liquido_nombre = ["Agua", "Ácido", "Petróleo"]
-liquido_color = [c_blue, c_green, c_black]
+liquido_color = [make_color_rgb(37, 109, 123), make_color_rgb(255, 245, 0), make_color_rgb(0, 10, 10)]
 lq_max = array_length(liquido_nombre)
 //Edificios
 #region Descripciones
 	edificio_descripcion = [
 	"Es el centro de mando, aquí se almacenan todos\nlos recursos y debes protegerlo a toda costa",
-	"Permite minar cobre, hierro y carbón sin coste\nalguno",
+	"Permite minar cobre, hierro y carbón sin coste\nalguno\nPuede mejorarse con Agua",
 	"Mueve recursos de un lugar a otro",
 	"Distribuye recursos en una dirección",
 	"Permite el paso de un recurso específico mientras\ndesvía al resto",
 	"Desvía los recursos una vez que la línea esté\nsaturada",
 	"Pasa recursos bajo tierra permitiendo construir\nencima",
 	"Utiliza combustible para fundir Bronce, Acero y\nSilicio",
-	"Taladro mejorado que también extrae piedra y arena\ndel suelo pero consume energía",
+	"Taladro mejorado que también extrae piedra y arena\ndel suelo pero consume energía\nPuede mejorarse con Ácido",
 	"Tritura la piedra para hacerla arena",
 	"Genera energía utlizando conbustible",
 	"Conecta edificios cercanos a la red de energía",
@@ -217,7 +220,8 @@ lq_max = array_length(liquido_nombre)
 	"Refina la Piedra Cúprica o Férrica en Cobre o\nHierro usando Ácido",
 	"Utiliza Carbón, Arena y Petróleo para producir\nun compuesto combustible de larga duración",
 	"Fabrica drones de defensa utilizando Acero, Silicio y bastante energía",
-	"Genera recursos a partir de magia"
+	"Genera recursos a partir de magia",
+	"Extrae lentamente Agua por evaporación"
 	]
 #endregion
 #region Arreglos
@@ -244,6 +248,7 @@ lq_max = array_length(liquido_nombre)
 	edificio_key = []
 	edificio_vida =	[]
 	edificio_flujo = []
+	edificio_flujo_liquidos = []
 	edificio_flujo_almacen = []
 	edificio_flujo_consumo = []
 #endregion
@@ -285,22 +290,22 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 }
 #region Definición
 	def_edificio("Núcleo", 3, spr_base,,, 1200,,,,,,, true)
-	def_edificio("Taladro", 2, spr_taladro,, "21", 200, 120,,, [0], [15], 10,,,,, true, false, [0, 1, 3])
+	def_edificio("Taladro", 2, spr_taladro,, "21", 200, 120,,, [0], [15], 10,,,,, true, false, [0, 1, 3],, 10, 3)
 	def_edificio("Cinta Transportadora", 1, spr_camino, spr_camino_diagonal, "11", 30, 20, true,, [0], [1], 1, true,,,, true)
 	def_edificio("Enrutador", 1, spr_enrutador, spr_enrutador_2, "12", 60, 10, true,, [0], [4], 1, true,,,, true)
 	def_edificio("Selector", 1, spr_selector, spr_selector_color, "13", 60, 10, true,, [0], [4], 1, true,,,, true)
 	def_edificio("Overflow", 1, spr_overflow,, "14", 60, 10, true,, [0], [4], 1, true,,,, true)
 	def_edificio("Túnel", 1, spr_tunel,, "15", 60, 10,,, [0, 3], [4, 4], 1, true, true,,, true, true)
-	def_edificio("Horno", 2, spr_horno, spr_horno_encendido, "22", 250, 150,, true, [0, 3], [20, 15], 19, true, false, [0, 1, 3, 5], [4, 4, 4, 4], true, false, [2, 4, 7])
+	def_edificio("Horno", 2, spr_horno, spr_horno_encendido, "22", 250, 150,, true, [0, 3], [10, 20], 19, true, false, [0, 1, 3, 5], [4, 4, 4, 4], true, false, [2, 4, 7])
 	def_edificio("Taladro Eléctrico", 3, spr_taladro_electrico,, "23", 400, 50,,, [0, 2, 4], [20, 10, 10], 20,,,,, true, false, [0, 1, 3, 5, 6, 9, 10, 11], 50, 10, 3)
-	def_edificio("Triturador", 2, spr_triturador,, "24", 250, 20,,, [0, 4], [10, 25], 10, true, false, [6, 9, 10, 11], [5, 1, 1], true, false, [5, 9], 30)
+	def_edificio("Triturador", 2, spr_triturador,, "24", 250, 20,,, [0, 4], [10, 25], 10, true, false, [6, 9, 10, 11], [5, 1, 1, 1], true, false, [5, 9], 30)
 	//10
 	def_edificio("Generador", 1, spr_generador, spr_generador_encendido, "31", 100,,, true, [0, 3], [20, 5], 20, true, false, [1, 12], [10, 10], false,,, -30)
 	def_edificio("Cable", 1, spr_cable,, "32", 30,,,, [0, 3], [5, 1])
 	def_edificio("Batería", 1, spr_bateria,, "33", 60,,,, [0, 2], [20, 5])
 	def_edificio("Panel Solar", 2, spr_panel_solar,, "34", 150,,,, [0, 4, 7], [10, 10, 5],,,,,,,,, -6)
-	def_edificio("Bomba Hidráulica", 2, spr_bomba,, "41", 200, 1,,, [0, 4, 7], [10, 15, 10],,,,,,,,, 25, 30, -30)
-	def_edificio("Tubería", 1, spr_tuberia, spr_tuberia_color, "42", 30, 1,,, [4, 7], [1, 1],,,,,,,,,, 10)
+	def_edificio("Bomba Hidráulica", 2, spr_bomba,, "43", 200, 1,,, [0, 4, 7], [10, 15, 10],,,,,,,,, 25, 60, -40)
+	def_edificio("Tubería", 1, spr_tuberia, spr_tuberia_color, "42", 30, 1,,, [0, 4], [1, 1],,,,,,,,,, 10)
 	def_edificio("Túnel", 1, spr_tunel_salida,, "A", 60, 10,,, [0, 3], [4, 4], 1,,,,, true, true)
 	def_edificio("Energía Infinita", 1, spr_energia_infinita,, "3 ", 100,,,,,,,,,,,,,, -999999)
 	def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, "16", 60, 10, true,, [2, 4], [1, 1], 1, true,,,, true)
@@ -308,11 +313,11 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	//20
 	def_edificio("Láser", 2, spr_laser,, "52", 400, 1,,, [0, 4, 7], [10, 10, 10],,,,,,,,, 100)
 	def_edificio("Muro", 1, spr_hexagono,, "53", 500,,,, [8], [1])
-	def_edificio("Fábrica de Concreto", 3, spr_fabrica_de_concreto,, "25", 250, 120,,, [0, 2, 4], [10, 20, 25], 20, true, false, [5, 6, 9, 10, 11], [5, 5, 1, 1], true, false, [8], 20, 30, 60)
+	def_edificio("Fábrica de Concreto", 3, spr_fabrica_de_concreto,, "25", 250, 120,,, [0, 2, 4], [10, 20, 25], 20, true, false, [5, 6, 9, 10, 11], [5, 5, 1, 1, 1], true, false, [8], 20, 30, 60)
 	def_edificio("Planta de Ácido", 3, spr_planta_acido,, "26", 200, 30,, true, [0, 4, 7], [20, 40, 20], 12, true, false, [1, 5, 11], [4, 4, 4],,,,, 60, -6)
 	def_edificio("Refinería de Petróleo", 2, spr_refineria, spr_refineria_color, "27", 80, 60,,, [0, 2, 7], [10, 20, 10], 10,,,,, true, false, [1], 30, 30, 5)
 	def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, "54", 400, 100,,, [2, 4, 8], [10, 10, 5], 20, true, false, [2, 4], [10, 10],,,,, 10, 60)
-	def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, "43", 200, 1,,, [4, 7], [20, 30],,,,,,,,,, 300)
+	def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, "44", 200, 1,,, [4, 7], [20, 30],,,,,,,,,, 300)
 	def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, "4 ", 30, 1,,,,,,,,,,,,,, 10, -999999)
 	def_edificio("Turbina", 2, spr_turbina,, "35", 160,,, true, [0, 4, 7], [20, 10, 10], 20, true, false, [1, 12], [10, 10], false,,, -150, 30, 40)
 	def_edificio("Refinería de Metales", 3, spr_refineria_minerales,, "28", 150, 80,,, [4, 7, 8], [20, 10, 10], 20, true, false, [9, 10], [5, 5], true, false, [0, 3], 80, 60, 60)
@@ -320,12 +325,13 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	def_edificio("Fábrica de Compuestos Incendiarios", 2, spr_fabrica_compuesto_incendiario,, "29", 100, 100,,, [2, 3], [5, 20], 13, true, false, [1, 5], [1, 2], true, false, [12], 30, true, 2)
 	def_edificio("Fábrica de Drones", 2, spr_fabrica_drones,, "55", 200, 900,,, [2, 4, 7], [20, 20, 15], 20, true, false, [4, 7], [10, 10], false, false,, 120)
 	def_edificio("Recurso Infinito", 1, spr_recurso_infinito, spr_selector_color, "1 ", 30, 1,,,,,,,,,, true, true)
+	def_edificio("Bomba de Evaporación", 1, spr_bomba_evaporacion, spr_tuberia_color, "41", 30, 1,,, [0, 4], [10, 10],,,,,,,,,, 20, -5)
 #endregion
 edificio_rotable[6] = true
 edificio_input_all[16] = true
 edificio_energia[11] = true
 edificio_energia[12] = true
-size_size = [1, 3, 7, 12, 19, 27]
+size_size = [1, 3, 7, 12, 19]
 size_borde = [6, 9, 12, 15, 18, 21]
 edificios = ds_list_create()
 //Redes electricas
@@ -376,18 +382,18 @@ info = false
 zoom = 1
 camx = (xsize * 48 - room_width) / 2
 camy = (ysize * 14 - room_height) / 2
-borde_mapa = []
-for(var a = 0; a < xsize; a++){
-	array_push(borde_mapa, [a, 0])
-	array_push(borde_mapa, [a, ysize - 1])
+enemigos_spawned = 3
+if irandom(1){
+	spawn_x = (xsize - 1) * irandom(1)
+	spawn_y = irandom(ysize - 1)
 }
-for(var a = 0; a < ysize; a++){
-	array_push(borde_mapa, [0, a])
-	array_push(borde_mapa, [xsize - 1, a])
+else{
+	spawn_x = irandom(xsize - 1)
+	spawn_y = (ysize - 1) * irandom(1)
 }
 keyboard_step = 0
 //Agua, piedra y petróleo
-for(var e = 0; e < 7; e++){
+for(var e = 0; e <= 7; e++){
 	var a = irandom(xsize - 1), b = irandom(ysize - 1)
 	if e <= 4
 		var c = 0, f = 20

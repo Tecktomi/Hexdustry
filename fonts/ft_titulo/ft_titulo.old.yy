@@ -1,6 +1,6 @@
 {
   "$GMFont":"",
-  "%Name":"tf_letra",
+  "%Name":"ft_titulo",
   "AntiAlias":1,
   "applyKerning":0,
   "ascender":14,
@@ -212,7 +212,7 @@
   "last":0,
   "lineHeight":20,
   "maintainGms1Font":false,
-  "name":"tf_letra",
+  "name":"ft_titulo",
   "parent":{
     "name":"Hexdustry",
     "path":"Hexdustry.yyp",
@@ -228,7 +228,10 @@
   "sdfSpread":8,
   "size":13.0,
   "styleName":"Bold",
-  "textureGroupId":null,
+  "textureGroupId":{
+    "name":"Default",
+    "path":"texturegroups/Default",
+  },
   "TTFName":"",
   "usesSDF":false,
 }
