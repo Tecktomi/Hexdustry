@@ -197,7 +197,7 @@ function add_edificio(index, dir, a, b){
 		ds_list_destroy(temp_list_2)
 		//Añadir a la red electrica
 		if edificio_energia[index]{
-			if in(var_edificio_nombre, "Panel Solar", "Energía Infinita")
+			if in(var_edificio_nombre, "Energía Infinita")
 				edificio.energy_output = -edificio_energia_consumo[index]
 			//Detectar otras redes cerca
 			var temp_list_redes = ds_list_create()
@@ -274,11 +274,14 @@ function add_edificio(index, dir, a, b){
 				temp_red.generacion += edificio.energy_output
 			if in(var_edificio_nombre, "Batería")
 				temp_red.bateria_max += 2500
+			if var_edificio_nombre = "Panel Solar"{
+				change_energia(edificio_energia_consumo[index], edificio)
+			}
 			ds_list_add(temp_red.edificios, edificio)
 		}
 		//Detectar cañerías cercanas
 		if edificio_flujo[index]{
-			if var_edificio_nombre = "Bomba Hidráulica"
+			if var_edificio_nombre = "Bomba Hidráulica"{
 				for(var c = 0; c < ds_list_size(temp_list); c++){
 					temp_complex = temp_list[|c]
 					temp_terreno = terreno[temp_complex.a, temp_complex.b]
@@ -288,6 +291,7 @@ function add_edificio(index, dir, a, b){
 						edificio.select = 2
 					ds_list_add(edificio.coordenadas, temp_complex)
 				}
+			}
 			var temp_list_4 = get_arround(a, b, dir, edificio_size[index])
 			var temp_list_flujos = ds_list_create()
 			for(var c = 0; c < ds_list_size(temp_list_4); c++){
@@ -357,6 +361,10 @@ function add_edificio(index, dir, a, b){
 			}
 			ds_list_destroy(temp_list_flujos)
 			edificio.flujo.almacen_max += edificio_flujo_almacen[index]
+			if var_edificio_nombre = "Bomba de Evaporación"{
+				edificio.flujo.liquido = 0
+				change_flujo(edificio_flujo_consumo[index], edificio)
+			}
 		}
 		if var_edificio_nombre = "Láser"
 			edificio.mode = true
