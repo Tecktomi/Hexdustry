@@ -15,6 +15,7 @@ show_menu_x = 0
 show_menu_y = 0
 edificio_max = 0
 energia_solar = 1
+flow = false
 pre_build_list = ds_list_create()
 ds_list_add(pre_build_list, {a : 0, b : 0})
 ds_list_clear(pre_build_list)
@@ -55,13 +56,18 @@ null_edificio = {
 	target : undefined,
 	flujo_consumo : 0,
 	energia_consumo : 0,
-	edificio_index : 0
+	edificio_index : 0,
+	coordenadas_dis : ds_grid_create(xsize, ysize),
+	coordenadas_close : ds_list_create()
 }
 null_edificio.link = null_edificio
 ds_list_add(null_edificio.energia_link, null_edificio)
 ds_list_clear(null_edificio.energia_link)
 ds_list_add(null_edificio.flujo_link, null_edificio)
 ds_list_clear(null_edificio.flujo_link)
+ds_grid_clear(null_edificio.coordenadas_dis, 0)
+ds_list_add(null_edificio.coordenadas_close, 0)
+ds_list_clear(null_edificio.coordenadas_close)
 edificios_targeteables = ds_list_create()
 null_terreno = {
 	hexagono : obj_hexagono,
@@ -99,7 +105,9 @@ null_enemigo = {
 	vida_max : 5,
 	vida : 5,
 	target : null_edificio,
-	target_unit : undefined
+	target_unit : undefined,
+	chunk_x : 0,
+	chunk_y : 0
 }
 null_enemigo.target_unit = null_enemigo
 enemigos = ds_list_create()
@@ -107,30 +115,58 @@ drones_aliados = ds_list_create()
 ds_list_add(enemigos, null_enemigo)
 ds_list_clear(enemigos)
 null_edificio.target = null_enemigo
+chunk_enemigos = ds_grid_create(ceil(xsize / 6), ceil(ysize / 12))
+for(var a = 0; a < xsize / 6; a++)
+	for(var b = 0; b < ysize / 12; b++){
+		var temp_list = ds_list_create()
+		ds_list_add(temp_list, null_enemigo)
+		ds_list_clear(temp_list)
+		ds_grid_set(chunk_enemigos, a, b, temp_list)
+	}
+//Disparos
+null_municion = {
+	x : 0,
+	y : 0,
+	hmove : 0,
+	vmove : 0,
+	tipo : 0,
+	dis : 0
+}
+municiones = ds_list_create()
+ds_list_add(municiones, null_municion)
+ds_list_clear(municiones)
+#region Tipos de disparos
+	armas = [
+		[{recurso : 0, cantidad : 1, dmg : 30}, {recurso : 3, cantidad : 1, dmg : 40}],
+		[{recurso : 2, cantidad : 1, dmg : 80}, {recurso : 4, cantidad : 1, dmg : 100}]]
+#endregion
 //Terrenos
 #region Arreglos
 	terreno_nombre = []
 	terreno_sprite = []
 	terreno_recurso_bool = []
 	terreno_recurso_id = []
+	terreno_caminable = []
 #endregion
-function def_terreno(nombre, sprite = spr_piedra, recurso = 0){
+function def_terreno(nombre, sprite = spr_piedra, recurso = 0, caminable = true){
 	array_push(terreno_nombre, string(nombre))
 	array_push(terreno_sprite, sprite)
 	array_push(terreno_recurso_id, recurso)
 	array_push(terreno_recurso_bool, (recurso > 0))
+	array_push(terreno_caminable, caminable)
 }
 #region Definición
 	def_terreno("Piedra", spr_piedra, 6)
 	def_terreno("Pasto", spr_pasto)
-	def_terreno("Agua", spr_agua)
+	def_terreno("Agua", spr_agua,, false)
 	def_terreno("Arena", spr_arena, 5)
-	def_terreno("Agua Profunda", spr_agua_profunda)
+	def_terreno("Agua Profunda", spr_agua_profunda,, false)
 	//5
-	def_terreno("Petróleo", spr_petroleo)
+	def_terreno("Petróleo", spr_petroleo,, false)
 	def_terreno("Piedra Cúprica", spr_piedra_cobre, 9)
 	def_terreno("Piedra Férrica", spr_piedra_hierro, 10)
 	def_terreno("Piedra Sulfatada", spr_piedra_azufre, 11)
+	def_terreno("Pared de Piedra", spr_pared_piedra,, false)
 #endregion
 //Ores
 #region Arreglos
@@ -384,16 +420,22 @@ camx = (xsize * 48 - room_width) / 2
 camy = (ysize * 14 - room_height) / 2
 enemigos_spawned = 3
 if irandom(1){
-	spawn_x = (xsize - 1) * irandom(1)
-	spawn_y = irandom(ysize - 1)
+	do{
+		spawn_x = (xsize - 1) * irandom(1)
+		spawn_y = irandom(ysize - 1)
+	}
+	until not in(terreno_nombre[terreno[spawn_x, spawn_y].terreno], "Agua", "Agua Profunda", "Petróleo")
 }
 else{
-	spawn_x = irandom(xsize - 1)
-	spawn_y = (ysize - 1) * irandom(1)
+	do{
+		spawn_x = irandom(xsize - 1)
+		spawn_y = (ysize - 1) * irandom(1)
+	}
+	until not in(terreno_nombre[terreno[spawn_x, spawn_y].terreno], "Agua", "Agua Profunda", "Petróleo")
 }
 keyboard_step = 0
 //Agua, piedra y petróleo
-for(var e = 0; e <= 7; e++){
+for(var e = 0; e < 11; e++){
 	var a = irandom(xsize - 1), b = irandom(ysize - 1)
 	if e <= 4
 		var c = 0, f = 20
@@ -401,9 +443,13 @@ for(var e = 0; e <= 7; e++){
 		c = 2
 		f = 20
 	}
-	else{
+	else if e = 7{
 		c = 5
 		f = 10
+	}
+	else if e < 11{
+		c = 9
+		f = 50
 	}
 	repeat(f){
 		if terreno[a, b].terreno != 2
@@ -433,6 +479,10 @@ for(var e = 0; e <= 7; e++){
 	}
 }
 //Crear nucelo
+edificio_cercano = ds_grid_create(xsize, ysize)
+ds_grid_clear(edificio_cercano, null_edificio)
+edificio_cercano_dis = ds_grid_create(xsize, ysize)
+ds_grid_clear(edificio_cercano_dis, infinity)
 nucleo = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
 nucleo.carga[0] = 75
 nucleo.carga_total = 75
@@ -495,7 +545,7 @@ for(var e = 0; e < 9; e++){
 	var c = floor(e / 3)
 	repeat(15){
 		var temp_terreno = terreno[a, b]
-		if not in(terreno_nombre[temp_terreno.terreno], "Agua", "Agua Profunda", "Petróleo"){
+		if not in(terreno_nombre[temp_terreno.terreno], "Agua", "Agua Profunda", "Petróleo", "Pared de Piedra"){
 			if temp_terreno.ore != c{
 				temp_terreno.ore_amount = 0
 				if in(temp_terreno.terreno, 0, 6, 7){
@@ -513,7 +563,7 @@ for(var e = 0; e < 9; e++){
 			var aa = clamp(temp_complex.a, 0, xsize - 1)
 			var bb = clamp(temp_complex.b, 0, ysize - 1)
 			temp_terreno = terreno[aa, bb]
-			if not in(terreno_nombre[temp_terreno.terreno], "Agua", "Agua Profunda", "Petróleo"){
+			if not in(terreno_nombre[temp_terreno.terreno], "Agua", "Agua Profunda", "Petróleo", "Pared de Piedra"){
 				if temp_terreno.ore != c{
 					temp_terreno.ore_amount = 0
 					if in(temp_terreno.terreno, 0, 6, 7){
