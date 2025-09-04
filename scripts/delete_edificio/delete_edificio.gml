@@ -13,6 +13,7 @@ function delete_edificio(aa, bb, enemigo = false){
 				game_end()
 		}
 		ds_list_remove(edificios, edificio)
+		ds_grid_destroy(edificio.coordenadas_dis)
 		if not edificio_camino[index] and not in(var_edificio_nombre, "Tubería")
 			ds_list_remove(edificios_targeteables, edificio)
 		//Cancelar coordenadas
@@ -24,6 +25,37 @@ function delete_edificio(aa, bb, enemigo = false){
 			temp_terreno_2.edificio_draw = false
 		}
 		ds_list_destroy(edificio.coordenadas)
+	    var temp_queue = ds_queue_create(), time = current_time
+	    for(var i = 0; i < ds_list_size(edificio.coordenadas_close); i++){
+	        var a = edificio.coordenadas_close[|i].a, b = edificio.coordenadas_close[|i].b
+	        ds_grid_set(edificio_cercano_dis, a, b, infinity)
+	        ds_grid_set(edificio_cercano, a, b, null_edificio)
+	        ds_queue_enqueue(temp_queue, { a: a, b: b })
+	    }
+	    ds_list_destroy(edificio.coordenadas_close)
+	    // 2. BFS incremental
+	    while not ds_queue_empty(temp_queue){
+	        var cell = ds_queue_dequeue(temp_queue), ca = cell.a, cb = cell.b
+	        // Revisar vecinos
+	        for(var i = 0; i < 6; i++){
+	            var n = next_to(ca, cb, i), na = n.a, nb = n.b;
+	            if (na < 0 or nb < 0 or na >= xsize or nb >= ysize)
+					continue;
+				var dist_actual = edificio_cercano_dis[# ca, cb]
+	            var vecino_dis = edificio_cercano_dis[# na, nb]
+				var vecino_obj = edificio_cercano[# na, nb]
+	            if vecino_obj != null_edificio{
+	                var nueva_dist = vecino_dis + 1
+	                if nueva_dist < edificio_cercano_dis[# ca, cb]{
+	                    ds_grid_set(edificio_cercano_dis, ca, cb, nueva_dist)
+	                    ds_grid_set(edificio_cercano, ca, cb, vecino_obj)
+	                    ds_list_add(vecino_obj.coordenadas_close, {a: ca, b: cb})
+	                    ds_queue_enqueue(temp_queue, {a: ca, b: cb})
+	                }
+	            }
+	        }
+	    }
+	    ds_queue_destroy(temp_queue)
 		//Eliminar tuneles
 		if var_edificio_nombre = "Túnel" and not edificio.idle
 			edificio.link.idle = true

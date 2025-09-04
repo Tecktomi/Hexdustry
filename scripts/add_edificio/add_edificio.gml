@@ -37,12 +37,15 @@ function add_edificio(index, dir, a, b){
 			target : null_enemigo,
 			flujo_consumo : 0,
 			energia_consumo : 0,
-			edificio_index : edificio_max++
+			edificio_index : edificio_max++,
+			coordenadas_dis : ds_grid_create(xsize, ysize),
+			coordenadas_close : ds_list_create()
 		}
 		ds_list_add(edificio.energia_link, null_edificio)
 		ds_list_clear(edificio.energia_link)
 		ds_list_add(edificio.flujo_link, null_edificio)
 		ds_list_clear(edificio.flujo_link)
+		ds_grid_clear(edificio.coordenadas_dis, 0)
 		var var_edificio_nombre = edificio_nombre[index]
 		var temp_terreno = null_terreno
 		temp_complex = {a : 0, b : 0}
@@ -55,10 +58,8 @@ function add_edificio(index, dir, a, b){
 		else{
 			var d = 0
 			for(var c = 0; c < rss_max; c++)
-				if d < array_length(edificio_input_id[index]) and c = edificio_input_id[index, d]{
-					edificio.carga_max[c] = edificio_input_num[index, d]
-					d++
-				}
+				if d < array_length(edificio_input_id[index]) and c = edificio_input_id[index, d]
+					edificio.carga_max[c] = edificio_input_num[index, d++]
 				else
 					edificio.carga_max[c] = 0
 		}
@@ -81,11 +82,53 @@ function add_edificio(index, dir, a, b){
 		temp_terreno = terreno[a, b]
 		temp_terreno.edificio_draw = true
 		ds_list_add(edificios, edificio)
-		if not edificio_camino[index] and not in(var_edificio_nombre, "Tubería")
-			ds_list_add(edificios_targeteables, edificio)
 		var temp_list = get_arround(a, b, dir, edificio_size[index])
 		for(var c = 0; c < ds_list_size(temp_list); c++)
 			ds_list_add(edificio.bordes, temp_list[|c])
+		if not edificio_camino[index] and not in(var_edificio_nombre, "Tubería"){
+			var visitado = ds_grid_create(xsize, ysize)
+			ds_grid_clear(visitado, false)
+			var temp_queue = ds_queue_create()
+			temp_list = get_size(a, b, dir, edificio_size[index])
+			for(var c = 0; c < ds_list_size(temp_list); c++){
+				temp_complex = temp_list[|c]
+				var aa = temp_complex.a, bb = temp_complex.b
+				ds_grid_set(visitado, aa, bb, true)
+				ds_queue_enqueue(temp_queue, {a : aa, b : bb, dis : 0, dir : -1})
+			}
+			while not ds_queue_empty(temp_queue){
+				var temp_trio = ds_queue_dequeue(temp_queue), dis = temp_trio.dis + 1
+				for(var i = 0; i < 6; i++){
+					if i = temp_trio.dir
+						continue
+					var temp_complex_2 = next_to(temp_trio.a, temp_trio.b, i), aa = temp_complex_2.a, bb = temp_complex_2.b
+					if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize and not visitado[# aa, bb] and dis < edificio_cercano_dis[# aa, bb] and terreno_caminable[terreno[aa, bb].terreno]{
+						ds_grid_set(visitado, aa, bb, true)
+						ds_queue_enqueue(temp_queue, {a : aa, b : bb, dis : dis, dir : (i + 3) mod 6})
+						ds_grid_set(edificio.coordenadas_dis, aa, bb, dis)
+						ds_grid_set(edificio_cercano_dis, aa, bb, dis)
+						ds_grid_set(edificio_cercano, aa, bb, edificio)
+					}
+				}
+			}
+			for(var c = 0; c < ds_list_size(edificios_targeteables); c++){
+				var temp_edificio = edificios_targeteables[|c]
+				ds_list_clear(temp_edificio.coordenadas_close)
+			}
+			for(var c = 0; c < xsize; c++)
+				for(var d = 0; d < ysize; d++){
+					var temp_edificio = edificio_cercano[# c, d]
+					ds_list_add(temp_edificio.coordenadas_close, {a : c, b : d})
+				}
+			ds_queue_destroy(temp_queue)
+			ds_grid_destroy(visitado)
+			ds_list_add(edificios_targeteables, edificio)
+			for(var c = 0; c < ds_list_size(enemigos); c++){
+				var enemigo = enemigos[|c], temp_complex_2 = abtoxy(enemigo.target.a, enemigo.target.b), aa = enemigo.a, bb = enemigo.b
+				if sqr(aa - x) + sqr(bb - y) < sqr(aa - temp_complex_2.a) + sqr(bb - temp_complex_2.b)
+					enemigo.target = edificio
+			}
+		}
 		temp_list = get_size(a, b, dir, edificio_size[index])
 		for(var c = 0; c < ds_list_size(temp_list); c++){
 			temp_complex = temp_list[|c]
@@ -370,13 +413,6 @@ function add_edificio(index, dir, a, b){
 			edificio.mode = true
 		else if var_edificio_nombre = "Rifle"
 			edificio.select = 0
-		if not edificio_camino[index]{
-			for(var c = 0; c < ds_list_size(enemigos); c++){
-				var enemigo = enemigos[|c], temp_complex_2 = abtoxy(enemigo.target.a, enemigo.target.b), aa = enemigo.a, bb = enemigo.b
-				if sqr(aa - x) + sqr(bb - y) < sqr(aa - temp_complex_2.a) + sqr(bb - temp_complex_2.b)
-					enemigo.target = edificio
-			}
-		}
 		ds_list_destroy(temp_list)
 		return edificio
 	}
