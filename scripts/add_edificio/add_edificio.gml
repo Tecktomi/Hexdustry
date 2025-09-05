@@ -37,15 +37,18 @@ function add_edificio(index, dir, a, b){
 			target : null_enemigo,
 			flujo_consumo : 0,
 			energia_consumo : 0,
-			edificio_index : edificio_max++,
+			edificio_index : real(edificio_max++),
 			coordenadas_dis : ds_grid_create(xsize, ysize),
-			coordenadas_close : ds_list_create()
+			coordenadas_close : ds_list_create(),
+			vivo : true
 		}
 		ds_list_add(edificio.energia_link, null_edificio)
 		ds_list_clear(edificio.energia_link)
 		ds_list_add(edificio.flujo_link, null_edificio)
 		ds_list_clear(edificio.flujo_link)
-		ds_grid_clear(edificio.coordenadas_dis, 0)
+		ds_grid_clear(edificio.coordenadas_dis, infinity)
+		ds_list_add(edificio.coordenadas_close, {a : 0, b : 0})
+		ds_list_clear(edificio.coordenadas_close)
 		var var_edificio_nombre = edificio_nombre[index]
 		var temp_terreno = null_terreno
 		temp_complex = {a : 0, b : 0}
@@ -95,6 +98,8 @@ function add_edificio(index, dir, a, b){
 				var aa = temp_complex.a, bb = temp_complex.b
 				ds_grid_set(visitado, aa, bb, true)
 				ds_queue_enqueue(temp_queue, {a : aa, b : bb, dis : 0, dir : -1})
+				var temp_priority = ds_grid_get(edificio_cercano_priority, aa, bb)
+				ds_priority_add(temp_priority, edificio, 0)
 			}
 			while not ds_queue_empty(temp_queue){
 				var temp_trio = ds_queue_dequeue(temp_queue), dis = temp_trio.dis + 1
@@ -102,15 +107,20 @@ function add_edificio(index, dir, a, b){
 					if i = temp_trio.dir
 						continue
 					var temp_complex_2 = next_to(temp_trio.a, temp_trio.b, i), aa = temp_complex_2.a, bb = temp_complex_2.b
-					if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize and not visitado[# aa, bb] and dis < edificio_cercano_dis[# aa, bb] and terreno_caminable[terreno[aa, bb].terreno]{
+					if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize and not visitado[# aa, bb] and dis < edificio.coordenadas_dis[# aa, bb] and terreno_caminable[terreno[aa, bb].terreno]{
 						ds_grid_set(visitado, aa, bb, true)
 						ds_queue_enqueue(temp_queue, {a : aa, b : bb, dis : dis, dir : (i + 3) mod 6})
 						ds_grid_set(edificio.coordenadas_dis, aa, bb, dis)
-						ds_grid_set(edificio_cercano_dis, aa, bb, dis)
-						ds_grid_set(edificio_cercano, aa, bb, edificio)
+						var temp_priority = ds_grid_get(edificio_cercano_priority, aa, bb)
+						ds_priority_add(temp_priority, edificio, dis)
+						if dis < edificio_cercano_dis[# aa, bb]{
+							ds_grid_set(edificio_cercano_dis, aa, bb, dis)
+							ds_grid_set(edificio_cercano, aa, bb, edificio)
+						}
 					}
 				}
 			}
+			ds_grid_clear(edificio_cercano_dir, -1)
 			for(var c = 0; c < ds_list_size(edificios_targeteables); c++){
 				var temp_edificio = edificios_targeteables[|c]
 				ds_list_clear(temp_edificio.coordenadas_close)
@@ -132,10 +142,15 @@ function add_edificio(index, dir, a, b){
 		temp_list = get_size(a, b, dir, edificio_size[index])
 		for(var c = 0; c < ds_list_size(temp_list); c++){
 			temp_complex = temp_list[|c]
-			temp_terreno = terreno[temp_complex.a, temp_complex.b]
+			var aa = temp_complex.a, bb = temp_complex.b
+			temp_terreno = terreno[aa, bb]
 			temp_terreno.edificio_bool = true
 			temp_terreno.edificio = edificio
 			ds_list_add(edificio.coordenadas, temp_complex)
+			ds_grid_set(edificio.coordenadas_dis, aa, bb, 0)
+			ds_grid_set(edificio_cercano_dis, aa, bb, 0)
+			ds_grid_set(edificio_cercano, aa, bb, edificio)
+			ds_list_add(edificio.coordenadas_close, {a : aa, b : bb})
 		}
 		//Añadir inputs y outputs
 		var temp_list_2 = get_arround(a, b, dir, edificio_size[index])

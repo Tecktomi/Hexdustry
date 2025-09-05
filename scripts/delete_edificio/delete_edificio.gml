@@ -17,45 +17,81 @@ function delete_edificio(aa, bb, enemigo = false){
 		if not edificio_camino[index] and not in(var_edificio_nombre, "Tubería")
 			ds_list_remove(edificios_targeteables, edificio)
 		//Cancelar coordenadas
-		for(var a = 0; a < ds_list_size(edificio.coordenadas); a++){
-			var temp_coordenada_2 = edificio.coordenadas[|a]
-			var temp_terreno_2 = terreno[temp_coordenada_2.a, temp_coordenada_2.b]
+		for(var i = 0; i < ds_list_size(edificio.coordenadas); i++){
+			var temp_coordenada_2 = edificio.coordenadas[|i], a = temp_coordenada_2.a, b = temp_coordenada_2.b
+			var temp_terreno_2 = terreno[a, b]
 			temp_terreno_2.edificio = null_edificio
 			temp_terreno_2.edificio_bool = false
 			temp_terreno_2.edificio_draw = false
+			ds_grid_set(edificio_cercano, a, b, null_edificio)
+			ds_grid_set(edificio_cercano_dis, a, b, infinity)
 		}
 		ds_list_destroy(edificio.coordenadas)
-	    var temp_queue = ds_queue_create(), time = current_time
+		if not ds_list_empty(edificios_targeteables)
+			for(var a = 0; a < xsize; a++)
+				for(var b = 0; b < ysize; b++)
+					if terreno_caminable[terreno[a, b].terreno]{
+						var temp_priority = ds_grid_get(edificio_cercano_priority, a, b)
+						if not ds_priority_empty(temp_priority){
+							var temp_edificio = ds_priority_find_min(temp_priority)
+							while not temp_edificio.vivo{
+								ds_priority_delete_min(temp_priority)
+								temp_edificio = ds_priority_find_min(temp_priority)
+							}
+							if temp_edificio = edificio{
+								ds_priority_delete_min(temp_priority)
+								temp_edificio = ds_priority_find_min(temp_priority)
+								while not temp_edificio.vivo{
+									ds_priority_delete_min(temp_priority)
+									temp_edificio = ds_priority_find_min(temp_priority)
+								}
+								ds_grid_set(edificio_cercano, a, b, temp_edificio)
+								ds_grid_set(edificio_cercano_dis, a, b, temp_edificio.coordenadas_dis[# a, b])
+							}
+						}
+					}
+		edificio.vivo = false
+		/*
+		var temp_priority = ds_priority_create()
 	    for(var i = 0; i < ds_list_size(edificio.coordenadas_close); i++){
 	        var a = edificio.coordenadas_close[|i].a, b = edificio.coordenadas_close[|i].b
+			ds_priority_add(temp_priority, {a : a, b : b}, edificio_cercano_dis[# a, b])
 	        ds_grid_set(edificio_cercano_dis, a, b, infinity)
 	        ds_grid_set(edificio_cercano, a, b, null_edificio)
-	        ds_queue_enqueue(temp_queue, { a: a, b: b })
+			var temp_priority_2 = ds_grid_get(edificio_cercano_priority, a, b)
+			ds_priority_delete_min(temp_priority_2)
+			var temp_edificio = ds_priority_find_min(temp_priority_2)
+			show_debug_message(edificio_nombre[temp_edificio.index])
+			ds_grid_set(edificio_cercano, a, b, temp_edificio)
+			ds_grid_set(edificio_cercano_dis, a, b, temp_edificio.coordenadas_dis[# a, b])
 	    }
 	    ds_list_destroy(edificio.coordenadas_close)
-	    // 2. BFS incremental
-	    while not ds_queue_empty(temp_queue){
-	        var cell = ds_queue_dequeue(temp_queue), ca = cell.a, cb = cell.b
-	        // Revisar vecinos
+		if false
+	    while not ds_priority_empty(temp_priority){
+	        var cell = ds_priority_delete_max(temp_priority), ca = cell.a, cb = cell.b
 	        for(var i = 0; i < 6; i++){
 	            var n = next_to(ca, cb, i), na = n.a, nb = n.b;
-	            if (na < 0 or nb < 0 or na >= xsize or nb >= ysize)
-					continue;
-				var dist_actual = edificio_cercano_dis[# ca, cb]
+	            if na < 0 or nb < 0 or na >= xsize or nb >= ysize or not terreno_caminable[terreno[na, nb].terreno]
+					continue
 	            var vecino_dis = edificio_cercano_dis[# na, nb]
-				var vecino_obj = edificio_cercano[# na, nb]
-	            if vecino_obj != null_edificio{
+				if vecino_dis = infinity
+					continue
+				var dist_actual = edificio_cercano_dis[# ca, cb]
+				var vecino_obj = ds_grid_get(edificio_cercano, na, nb)
+	            if vecino_obj != null_edificio and vecino_obj != edificio{
 	                var nueva_dist = vecino_dis + 1
 	                if nueva_dist < edificio_cercano_dis[# ca, cb]{
 	                    ds_grid_set(edificio_cercano_dis, ca, cb, nueva_dist)
 	                    ds_grid_set(edificio_cercano, ca, cb, vecino_obj)
 	                    ds_list_add(vecino_obj.coordenadas_close, {a: ca, b: cb})
-	                    ds_queue_enqueue(temp_queue, {a: ca, b: cb})
+	                    ds_priority_add(temp_priority, {a: ca, b: cb}, nueva_dist)
 	                }
 	            }
 	        }
 	    }
-	    ds_queue_destroy(temp_queue)
+	    ds_priority_destroy(temp_priority)
+		*/
+		ds_grid_clear(edificio_cercano_dir, -1)
 		//Eliminar tuneles
 		if var_edificio_nombre = "Túnel" and not edificio.idle
 			edificio.link.idle = true
