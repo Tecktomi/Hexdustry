@@ -58,15 +58,20 @@ null_edificio = {
 	energia_consumo : 0,
 	edificio_index : 0,
 	coordenadas_dis : ds_grid_create(xsize, ysize),
-	coordenadas_close : ds_list_create()
+	coordenadas_close : ds_list_create(),
+	vivo : false
 }
 null_edificio.link = null_edificio
+ds_list_add(null_edificio.coordenadas, {a : 0, b : 0})
+ds_list_clear(null_edificio.coordenadas)
+ds_list_add(null_edificio.bordes, {a : 0, b : 0})
+ds_list_clear(null_edificio.bordes)
 ds_list_add(null_edificio.energia_link, null_edificio)
 ds_list_clear(null_edificio.energia_link)
 ds_list_add(null_edificio.flujo_link, null_edificio)
 ds_list_clear(null_edificio.flujo_link)
 ds_grid_clear(null_edificio.coordenadas_dis, 0)
-ds_list_add(null_edificio.coordenadas_close, 0)
+ds_list_add(null_edificio.coordenadas_close, {a : 0, b : 0})
 ds_list_clear(null_edificio.coordenadas_close)
 edificios_targeteables = ds_list_create()
 null_terreno = {
@@ -424,14 +429,14 @@ if irandom(1){
 		spawn_x = (xsize - 1) * irandom(1)
 		spawn_y = irandom(ysize - 1)
 	}
-	until not in(terreno_nombre[terreno[spawn_x, spawn_y].terreno], "Agua", "Agua Profunda", "Petróleo")
+	until terreno_caminable[terreno[spawn_x, spawn_y].terreno]
 }
 else{
 	do{
 		spawn_x = irandom(xsize - 1)
 		spawn_y = (ysize - 1) * irandom(1)
 	}
-	until not in(terreno_nombre[terreno[spawn_x, spawn_y].terreno], "Agua", "Agua Profunda", "Petróleo")
+	until terreno_caminable[terreno[spawn_x, spawn_y].terreno]
 }
 keyboard_step = 0
 //Agua, piedra y petróleo
@@ -483,6 +488,21 @@ edificio_cercano = ds_grid_create(xsize, ysize)
 ds_grid_clear(edificio_cercano, null_edificio)
 edificio_cercano_dis = ds_grid_create(xsize, ysize)
 ds_grid_clear(edificio_cercano_dis, infinity)
+edificio_cercano_dir = ds_grid_create(xsize, ysize)
+ds_grid_clear(edificio_cercano_dir, -1)
+edificio_cercano_priority = ds_grid_create(xsize, ysize)
+for(var a = 0; a < xsize; a++)
+	for(var b = 0; b < ysize; b++){
+		var temp_priority = ds_priority_create()
+		ds_priority_add(temp_priority, null_edificio, 0)
+		ds_priority_delete_max(temp_priority)
+		ds_grid_set(edificio_cercano_priority, a, b, temp_priority)
+	}
+angle_dir = [pi / 6, pi / 2, 5 * pi / 6, 7 * pi / 6, 3 * pi / 2, 11 * pi / 6]
+for(var a = 0; a < 6; a++){
+	cos_angle_dir[a] = cos(angle_dir[a])
+	sin_angle_dir[a] = sin(angle_dir[a])
+}
 nucleo = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
 nucleo.carga[0] = 75
 nucleo.carga_total = 75

@@ -1026,7 +1026,7 @@ else{
 					var b = 1 + 0.6 * (flujo.liquido = 1 ? flujo_power : 0)
 					edificio.proceso += b * red_power
 				}
-				else in(var_edificio_nombre, "Taladro"){
+				else if in(var_edificio_nombre, "Taladro"){
 					change_flujo(edificio_flujo_consumo[index], edificio)
 					edificio.proceso += 1 + 0.6 * (flujo.liquido = 0 ? flujo_power : 0)
 				}
@@ -1463,10 +1463,29 @@ else{
 		//Target edificios
 		if enemigo.target != null_edificio{
 			edificio = enemigo.target
-			var dis = distance(aa, bb, edificio.x, edificio.y)
-			if dis > 50{
-				enemigo.a += (edificio.x - aa) / dis
-				enemigo.b += (edificio.y - bb) / dis
+			
+			var temp_complex = xytoab(aa, bb), aaa = temp_complex.a, bbb = temp_complex.b, dir = -1
+			if edificio_cercano_dis[# aaa, bbb] > 1 and distance(aa, bb, edificio.x, edificio.y) > 50{
+				if edificio_cercano_dir[# aaa, bbb] = -1{
+					var min_dis = edificio_cercano_dis[# aaa, bbb]
+					for(var i = 0; i < 6; i++){
+						temp_complex = next_to(aaa, bbb, i)
+						var dis = edificio_cercano_dis[# temp_complex.a, temp_complex.b]
+						if dis < min_dis{
+							min_dis = dis
+							dir = i
+							ds_grid_set(edificio_cercano_dir, aaa, bbb, i)
+						}
+					}
+				}
+				else
+					dir = edificio_cercano_dir[# aaa, bbb]
+				if dir = -1{
+					dir = 0
+					show_debug_message(1)
+				}
+				enemigo.a += cos_angle_dir[dir]
+				enemigo.b -= sin_angle_dir[dir]
 			}
 			else{
 				edificio.vida--
