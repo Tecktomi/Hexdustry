@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"dibujar_edificios",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"dibujar_edificios",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
