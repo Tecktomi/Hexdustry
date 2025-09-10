@@ -347,6 +347,8 @@ function add_edificio(index, dir, a, b){
 						edificio.select = 0
 					else if in(terreno_nombre[temp_terreno.terreno], "Petróleo")
 						edificio.select = 2
+					else if in(terreno_nombre[temp_terreno.terreno], "Lava")
+						edificio.select = 3
 					ds_list_add(edificio.coordenadas, temp_complex)
 				}
 			}

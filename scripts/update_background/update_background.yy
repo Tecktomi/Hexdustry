@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"update_background",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"update_background",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

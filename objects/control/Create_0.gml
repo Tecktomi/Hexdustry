@@ -1,8 +1,12 @@
 randomize()
 window_set_fullscreen(true)
 draw_set_font(ft_letra)
+menu = 0
+cursor = cr_arrow
 xsize = 48
 ysize = 96
+chunk_width = 12
+chunk_height = 24
 prev_x = 0
 prev_y = 0
 prev_change = true
@@ -19,8 +23,8 @@ flow = false
 pre_build_list = ds_list_create()
 ds_list_add(pre_build_list, {a : 0, b : 0})
 ds_list_clear(pre_build_list)
-for(var a = 0; a < xsize / 24; a++)
-	for(var b = 0; b < ysize / 51; b++)
+for(var a = 0; a < xsize / chunk_width; a++)
+	for(var b = 0; b < ysize / chunk_height; b++)
 		background[a, b] = spr_hexagono
 null_edificio = {
 	index : 0,
@@ -95,7 +99,7 @@ for(var a = 0; a < xsize; a++)
 			terreno : 1,
 			ore : -1,
 			ore_amount : 0,
-			ore_random : irandom(1),
+			ore_random : random(1),
 			edificio_bool : false,
 			edificio_draw : false,
 			edificio : null_edificio
@@ -152,26 +156,34 @@ ds_list_clear(municiones)
 	terreno_recurso_bool = []
 	terreno_recurso_id = []
 	terreno_caminable = []
+	terreno_liquido = []
 #endregion
-function def_terreno(nombre, sprite = spr_piedra, recurso = 0, caminable = true){
+function def_terreno(nombre, sprite = spr_piedra, recurso = 0, caminable = true, liquido = false){
 	array_push(terreno_nombre, string(nombre))
 	array_push(terreno_sprite, sprite)
 	array_push(terreno_recurso_id, recurso)
 	array_push(terreno_recurso_bool, (recurso > 0))
 	array_push(terreno_caminable, caminable)
+	array_push(terreno_liquido, liquido)
 }
 #region Definición
 	def_terreno("Piedra", spr_piedra, 6)
 	def_terreno("Pasto", spr_pasto)
-	def_terreno("Agua", spr_agua,, false)
+	def_terreno("Agua", spr_agua,, false, true)
 	def_terreno("Arena", spr_arena, 5)
-	def_terreno("Agua Profunda", spr_agua_profunda,, false)
+	def_terreno("Agua Profunda", spr_agua_profunda,, false, true)
 	//5
-	def_terreno("Petróleo", spr_petroleo,, false)
+	def_terreno("Petróleo", spr_petroleo,, false, true)
 	def_terreno("Piedra Cúprica", spr_piedra_cobre, 9)
 	def_terreno("Piedra Férrica", spr_piedra_hierro, 10)
 	def_terreno("Piedra Sulfatada", spr_piedra_azufre, 11)
 	def_terreno("Pared de Piedra", spr_pared_piedra,, false)
+	//10
+	def_terreno("Pared de Pasto", spr_pared_pasto,, false)
+	def_terreno("Pared de Arena", spr_pared_arena,, false)
+	def_terreno("Nieve", spr_nieve)
+	def_terreno("Pared de Nieve", spr_pared_nieve,, false)
+	def_terreno("Lava", spr_lava,, false, true)
 #endregion
 //Ores
 #region Arreglos
@@ -223,8 +235,8 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 #endregion
 rss_max = array_length(recurso_nombre)
 //Liquidos
-liquido_nombre = ["Agua", "Ácido", "Petróleo"]
-liquido_color = [make_color_rgb(37, 109, 123), make_color_rgb(255, 245, 0), make_color_rgb(0, 10, 10)]
+liquido_nombre = ["Agua", "Ácido", "Petróleo", "Lava"]
+liquido_color = [make_color_rgb(37, 109, 123), make_color_rgb(255, 245, 0), make_color_rgb(0, 10, 10), make_color_rgb(251, 175, 93)]
 lq_max = array_length(liquido_nombre)
 //Edificios
 #region Descripciones
@@ -260,9 +272,10 @@ lq_max = array_length(liquido_nombre)
 	"Genera energía a partir de un combustible y Agua",
 	"Refina la Piedra Cúprica o Férrica en Cobre o\nHierro usando Ácido",
 	"Utiliza Carbón, Arena y Petróleo para producir\nun compuesto combustible de larga duración",
-	"Fabrica drones de defensa utilizando Acero, Silicio y bastante energía",
+	"Fabrica drones de defensa utilizando Acero, Silicio\ny bastante energía",
 	"Genera recursos a partir de magia",
-	"Extrae lentamente Agua por evaporación"
+	"Extrae lentamente Agua por evaporación",
+	"Similar al horno normal, pero utiliza el calor\nde la lava para cocinar más rápido"
 	]
 #endregion
 #region Arreglos
@@ -367,6 +380,7 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	def_edificio("Fábrica de Drones", 2, spr_fabrica_drones,, "55", 200, 900,,, [2, 4, 7], [20, 20, 15], 20, true, false, [4, 7], [10, 10], false, false,, 120)
 	def_edificio("Recurso Infinito", 1, spr_recurso_infinito, spr_selector_color, "1 ", 30, 1,,,,,,,,,, true, true)
 	def_edificio("Bomba de Evaporación", 1, spr_bomba_evaporacion, spr_tuberia_color, "41", 30, 1,,, [0, 4], [10, 10],,,,,,,,,, 20, -5)
+	def_edificio("Horno de Lava", 2, spr_horno_lava, spr_horno_lava_encendido, "20", 400, 90,,, [4, 8], [10, 10], 15, true, false, [0, 3, 5], [5, 5, 5], true, false, [2, 4, 7],, 10, 0.5)
 #endregion
 edificio_rotable[6] = true
 edificio_input_all[16] = true
@@ -407,6 +421,7 @@ ds_list_add(flujos, null_flujo)
 ds_list_clear(flujos)
 //Metadatos
 build_index = 0
+build_size = 1
 build_dir = 0
 build_able = false
 build_target = null_edificio
@@ -424,23 +439,20 @@ zoom = 1
 camx = (xsize * 48 - room_width) / 2
 camy = (ysize * 14 - room_height) / 2
 enemigos_spawned = 3
-if irandom(1){
-	do{
+do{
+	if irandom(1){
 		spawn_x = (xsize - 1) * irandom(1)
 		spawn_y = irandom(ysize - 1)
 	}
-	until terreno_caminable[terreno[spawn_x, spawn_y].terreno]
-}
-else{
-	do{
+	else{
 		spawn_x = irandom(xsize - 1)
 		spawn_y = (ysize - 1) * irandom(1)
 	}
-	until terreno_caminable[terreno[spawn_x, spawn_y].terreno]
 }
+until terreno_caminable[terreno[spawn_x, spawn_y].terreno]
 keyboard_step = 0
-//Agua, piedra y petróleo
-for(var e = 0; e < 11; e++){
+//Agua, piedra, petróleo y lava
+for(var e = 0; e < 12; e++){
 	var a = irandom(xsize - 1), b = irandom(ysize - 1)
 	if e <= 4
 		var c = 0, f = 20
@@ -452,9 +464,13 @@ for(var e = 0; e < 11; e++){
 		c = 5
 		f = 10
 	}
-	else if e < 11{
+	else if e = 10{
 		c = 9
 		f = 50
+	}
+	else if e = 11{
+		c = 14
+		f = 15
 	}
 	repeat(f){
 		if terreno[a, b].terreno != 2
@@ -528,19 +544,26 @@ for(var a = 0; a < xsize; a++)
 				}
 			}
 		//Añadir piedra
-		if terreno[a, b].terreno = 5
+		else if terreno[a, b].terreno = 5
 			for(var c = 0; c < 6; c++){
-				var temp_complex = next_to(a, b, c)
-				var aa = temp_complex.a
-				var bb = temp_complex.b
-				if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
-					var temp_terreno = terreno[aa, bb]
-					if not in(temp_terreno.terreno, 5)
-						temp_terreno.terreno = 0
-				}
+				var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
+				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+					continue
+				var temp_terreno = terreno[aa, bb]
+				if not in(temp_terreno.terreno, 5)
+					temp_terreno.terreno = 0
+			}
+		else if terreno[a, b].terreno = 14
+			for(var c = 0; c < 6; c++){
+				var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
+				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+					continue
+				var temp_terreno = terreno[aa, bb]
+				if not in(temp_terreno.terreno, 14)
+					temp_terreno.terreno = 0
 			}
 		//Añadir agua profunda
-		if terreno[a, b].terreno = 2{
+		else if terreno[a, b].terreno = 2{
 			var flag = true
 			for(var c = 0; c < 6; c++){
 				var temp_complex = next_to(a, b, c)
@@ -565,7 +588,7 @@ for(var e = 0; e < 9; e++){
 	var c = floor(e / 3)
 	repeat(15){
 		var temp_terreno = terreno[a, b]
-		if not in(terreno_nombre[temp_terreno.terreno], "Agua", "Agua Profunda", "Petróleo", "Pared de Piedra"){
+		if terreno_caminable[temp_terreno.terreno]{
 			if temp_terreno.ore != c{
 				temp_terreno.ore_amount = 0
 				if in(temp_terreno.terreno, 0, 6, 7){
@@ -583,7 +606,7 @@ for(var e = 0; e < 9; e++){
 			var aa = clamp(temp_complex.a, 0, xsize - 1)
 			var bb = clamp(temp_complex.b, 0, ysize - 1)
 			temp_terreno = terreno[aa, bb]
-			if not in(terreno_nombre[temp_terreno.terreno], "Agua", "Agua Profunda", "Petróleo", "Pared de Piedra"){
+			if terreno_caminable[temp_terreno.terreno]{
 				if temp_terreno.ore != c{
 					temp_terreno.ore_amount = 0
 					if in(temp_terreno.terreno, 0, 6, 7){

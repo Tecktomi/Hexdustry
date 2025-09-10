@@ -1,12 +1,10 @@
 function delete_edificio(aa, bb, enemigo = false){
 	with control{
 		var temp_terreno = terreno[aa, bb]
-		if temp_terreno.edificio_bool
-			var edificio = temp_terreno.edificio
-		else
+		if not temp_terreno.edificio_bool
 			exit
-		var index = edificio.index, var_edificio_nombre = edificio_nombre[index]
-		if index = 0{
+		var edificio = temp_terreno.edificio, index = edificio.index, var_edificio_nombre = edificio_nombre[index]
+		if index = 0 and menu = 1{
 			if show_question("Has perdido, jugar de nuevo?")
 				game_restart()
 			else

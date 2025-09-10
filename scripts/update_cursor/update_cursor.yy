@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"update_cursor",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"update_cursor",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
