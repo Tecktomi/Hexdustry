@@ -27,7 +27,7 @@ for(var a = 0; a < xsize / chunk_width; a++)
 	for(var b = 0; b < ysize / chunk_height; b++)
 		background[a, b] = spr_hexagono
 null_edificio = {
-	index : 0,
+	index : -1,
 	dir : 0,
 	a : 0,
 	b : 0,
@@ -83,13 +83,16 @@ null_terreno = {
 	terreno : 0,
 	ore : -1,
 	ore_amount : 0,
-	ore_random : 0,
-	edificio_bool : false,
-	edificio_draw : false,
-	edificio : null_edificio
+	ore_random : 0
 }
 bool_unidad = ds_grid_create(xsize, ysize)
 ds_grid_clear(bool_unidad, false)
+edificio_bool = ds_grid_create(xsize, ysize)
+ds_grid_clear(edificio_bool, false)
+edificio_id = ds_grid_create(xsize, ysize)
+ds_grid_clear(edificio_id, null_edificio)
+edificio_draw = ds_grid_create(xsize, ysize)
+ds_grid_clear(edificio_draw, false)
 //Crear plantilla de fondo
 for(var a = 0; a < xsize; a++)
 	for(var b = 0; b < ysize; b++){
@@ -99,10 +102,7 @@ for(var a = 0; a < xsize; a++)
 			terreno : 1,
 			ore : -1,
 			ore_amount : 0,
-			ore_random : random(1),
-			edificio_bool : false,
-			edificio_draw : false,
-			edificio : null_edificio
+			ore_random : random(1)
 		}
 		temp_hexagono.a = a
 		temp_hexagono.b = b
@@ -275,7 +275,8 @@ lq_max = array_length(liquido_nombre)
 	"Fabrica drones de defensa utilizando Acero, Silicio\ny bastante energía",
 	"Genera recursos a partir de magia",
 	"Extrae lentamente Agua por evaporación",
-	"Similar al horno normal, pero utiliza el calor\nde la lava para cocinar más rápido"
+	"Similar al horno normal, pero utiliza el calor\nde la lava para cocinar más rápido",
+	"Genera energía a partir de evaporar Agua,\ndebe ser construido sobre lava"
 	]
 #endregion
 #region Arreglos
@@ -381,6 +382,7 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	def_edificio("Recurso Infinito", 1, spr_recurso_infinito, spr_selector_color, "1 ", 30, 1,,,,,,,,,, true, true)
 	def_edificio("Bomba de Evaporación", 1, spr_bomba_evaporacion, spr_tuberia_color, "41", 30, 1,,, [0, 4], [10, 10],,,,,,,,,, 20, -5)
 	def_edificio("Horno de Lava", 2, spr_horno_lava, spr_horno_lava_encendido, "20", 400, 90,,, [4, 8], [10, 10], 15, true, false, [0, 3, 5], [5, 5, 5], true, false, [2, 4, 7],, 10, 0.5)
+	def_edificio("Generador Geotérmico", 2, spr_generador_geotermico,, "36", 200, 1,,, [0, 4, 8], [10, 10, 10],,,,,,,,, -120, 30, 30)
 #endregion
 edificio_rotable[6] = true
 edificio_input_all[16] = true
@@ -464,7 +466,7 @@ for(var e = 0; e < 12; e++){
 		c = 5
 		f = 10
 	}
-	else if e = 10{
+	else if e <= 10{
 		c = 9
 		f = 50
 	}

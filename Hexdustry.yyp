@@ -96,6 +96,7 @@
     {"id":{"name":"spr_fabrica_de_concreto","path":"sprites/spr_fabrica_de_concreto/spr_fabrica_de_concreto.yy",},},
     {"id":{"name":"spr_fabrica_drones","path":"sprites/spr_fabrica_drones/spr_fabrica_drones.yy",},},
     {"id":{"name":"spr_generador_encendido","path":"sprites/spr_generador_encendido/spr_generador_encendido.yy",},},
+    {"id":{"name":"spr_generador_geotermico","path":"sprites/spr_generador_geotermico/spr_generador_geotermico.yy",},},
     {"id":{"name":"spr_generador","path":"sprites/spr_generador/spr_generador.yy",},},
     {"id":{"name":"spr_hexagono_2","path":"sprites/spr_hexagono_2/spr_hexagono_2.yy",},},
     {"id":{"name":"spr_hexagono_3","path":"sprites/spr_hexagono_3/spr_hexagono_3.yy",},},
@@ -162,6 +163,7 @@
     {"id":{"name":"spr_tunel_view","path":"sprites/spr_tunel_view/spr_tunel_view.yy",},},
     {"id":{"name":"spr_tunel","path":"sprites/spr_tunel/spr_tunel.yy",},},
     {"id":{"name":"spr_turbina","path":"sprites/spr_turbina/spr_turbina.yy",},},
+    {"id":{"name":"Sprite96","path":"sprites/Sprite96/Sprite96.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
@@ -171,5 +173,6 @@
   "templateType":"game",
   "TextureGroups":[
     {"$GMTextureGroup":"","%Name":"Default","autocrop":true,"border":2,"compressFormat":"bz2","customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"Default","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMTextureGroup":"","%Name":"texturegroup1","autocrop":true,"border":2,"compressFormat":"bz2","customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"texturegroup1","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
   ],
 }
