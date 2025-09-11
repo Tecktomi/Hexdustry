@@ -82,8 +82,7 @@ function add_edificio(index, dir, a, b){
 			}
 		}
 		//Añadir coordenadas
-		temp_terreno = terreno[a, b]
-		temp_terreno.edificio_draw = true
+		ds_grid_set(edificio_draw, a, b, true)
 		ds_list_add(edificios, edificio)
 		var temp_list = get_arround(a, b, dir, edificio_size[index])
 		for(var c = 0; c < ds_list_size(temp_list); c++)
@@ -143,9 +142,8 @@ function add_edificio(index, dir, a, b){
 		for(var c = 0; c < ds_list_size(temp_list); c++){
 			temp_complex = temp_list[|c]
 			var aa = temp_complex.a, bb = temp_complex.b
-			temp_terreno = terreno[aa, bb]
-			temp_terreno.edificio_bool = true
-			temp_terreno.edificio = edificio
+			ds_grid_set(edificio_bool, aa, bb, true)
+			ds_grid_set(edificio_id, aa, bb, edificio)
 			ds_list_add(edificio.coordenadas, temp_complex)
 			ds_grid_set(edificio.coordenadas_dis, aa, bb, 0)
 			ds_grid_set(edificio_cercano_dis, aa, bb, 0)
@@ -156,98 +154,98 @@ function add_edificio(index, dir, a, b){
 		var temp_list_2 = get_arround(a, b, dir, edificio_size[index])
 		for(var c = 0; c < ds_list_size(temp_list_2); c++){
 			temp_complex = temp_list_2[|c]
-			if temp_complex.a >= 0 and temp_complex.b >= 0 and temp_complex.a < xsize and temp_complex.b < ysize{
-				temp_terreno = terreno[temp_complex.a, temp_complex.b]
-				if temp_terreno.edificio_bool{
-					var temp_edificio = temp_terreno.edificio
-					//OUTPUTS del nuevo edificio
-					var flag = false
-					if edificio_input_all[temp_edificio.index] or edificio_output_all[index]
-						flag = true
-					else for(var d = 0; d < array_length(edificio_input_id[temp_edificio.index]); d++)
-						for(var e = 0; e < array_length(edificio_output_id[index]); e++)
-							if edificio_input_id[temp_edificio.index, d] = edificio_output_id[index, e]{
-								flag = true
+			var aa = temp_complex.a, bb = temp_complex.b
+			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+				continue
+			if edificio_bool[# aa, bb]{
+				var temp_edificio = edificio_id[# aa, bb]
+				//OUTPUTS del nuevo edificio
+				var flag = false
+				if edificio_input_all[temp_edificio.index] or edificio_output_all[index]
+					flag = true
+				else for(var d = 0; d < array_length(edificio_input_id[temp_edificio.index]); d++)
+					for(var e = 0; e < array_length(edificio_output_id[index]); e++)
+						if edificio_input_id[temp_edificio.index, d] = edificio_output_id[index, e]{
+							flag = true
+							break
+						}
+				if edificio_receptor[temp_edificio.index] and edificio_emisor[index] and (ds_list_find_index(edificio.outputs, temp_edificio) = -1) and flag{
+					flag = true
+					if in(var_edificio_nombre, "Cinta Transportadora", "Cinta Magnética") and not
+						complex_equal(temp_complex, next_to(a, b, dir))
+						flag = false
+					if flag and in(edificio_nombre[temp_edificio.index], "Cinta Transportadora", "Cinta Magnética") and
+						next_to_build(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), edificio)
+						flag = false
+					if flag and in(var_edificio_nombre, "Enrutador", "Selector", "Overflow") and not(
+						complex_equal(temp_complex, next_to(a, b, (dir + 5) mod 6)) or
+						complex_equal(temp_complex, next_to(a, b, dir)) or
+						complex_equal(temp_complex, next_to(a, b, (dir + 1) mod 6)))
+						flag = false
+					if flag and in(edificio_nombre[temp_edificio.index], "Enrutador", "Selector", "Overflow", "Túnel")
+						for(var d = 0; d < ds_list_size(edificio.coordenadas); d++)
+							if complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 5) mod 6), edificio.coordenadas[|d]) or
+							complex_equal(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), edificio.coordenadas[|d]) or
+							complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 1) mod 6), edificio.coordenadas[|d]){
+								flag = false
 								break
 							}
-					if edificio_receptor[temp_edificio.index] and edificio_emisor[index] and (ds_list_find_index(edificio.outputs, temp_edificio) = -1) and flag{
-						flag = true
-						if in(var_edificio_nombre, "Cinta Transportadora", "Cinta Magnética") and not
-							complex_equal(temp_complex, next_to(a, b, dir))
-							flag = false
-						if flag and in(edificio_nombre[temp_edificio.index], "Cinta Transportadora", "Cinta Magnética") and
-							next_to_build(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), edificio)
-							flag = false
-						if flag and in(var_edificio_nombre, "Enrutador", "Selector", "Overflow") and not(
-							complex_equal(temp_complex, next_to(a, b, (dir + 5) mod 6)) or
-							complex_equal(temp_complex, next_to(a, b, dir)) or
-							complex_equal(temp_complex, next_to(a, b, (dir + 1) mod 6)))
-							flag = false
-						if flag and in(edificio_nombre[temp_edificio.index], "Enrutador", "Selector", "Overflow", "Túnel")
-							for(var d = 0; d < ds_list_size(edificio.coordenadas); d++)
-								if complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 5) mod 6), edificio.coordenadas[|d]) or
-								complex_equal(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), edificio.coordenadas[|d]) or
-								complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 1) mod 6), edificio.coordenadas[|d]){
-									flag = false
-									break
-								}
-						if flag and in(var_edificio_nombre, "Túnel") and(
-							complex_equal(temp_complex, next_to(a, b, (dir + 5) mod 6)) or
-							complex_equal(temp_complex, next_to(a, b, dir)) or
-							complex_equal(temp_complex, next_to(a, b, (dir + 1) mod 6)))
-							flag = false
-						if flag{
-							ds_list_add(temp_edificio.inputs, edificio)
-							ds_list_add(edificio.outputs, temp_edificio)
-						}
+					if flag and in(var_edificio_nombre, "Túnel") and(
+						complex_equal(temp_complex, next_to(a, b, (dir + 5) mod 6)) or
+						complex_equal(temp_complex, next_to(a, b, dir)) or
+						complex_equal(temp_complex, next_to(a, b, (dir + 1) mod 6)))
+						flag = false
+					if flag{
+						ds_list_add(temp_edificio.inputs, edificio)
+						ds_list_add(edificio.outputs, temp_edificio)
 					}
-					//INPUTS del nuevo edificio
-					flag = false
-					if edificio_output_all[temp_edificio.index] or edificio_input_all[index]
-						flag = true
-					else for(var d = 0; d < array_length(edificio_output_id[temp_edificio.index]); d++)
-						for(var e = 0; e < array_length(edificio_input_id[index]); e++)
-							if edificio_output_id[temp_edificio.index, d] = edificio_input_id[index, e]{
+				}
+				//INPUTS del nuevo edificio
+				flag = false
+				if edificio_output_all[temp_edificio.index] or edificio_input_all[index]
+					flag = true
+				else for(var d = 0; d < array_length(edificio_output_id[temp_edificio.index]); d++)
+					for(var e = 0; e < array_length(edificio_input_id[index]); e++)
+						if edificio_output_id[temp_edificio.index, d] = edificio_input_id[index, e]{
+							flag = true
+							break
+						}
+				if edificio_emisor[temp_edificio.index] and edificio_receptor[index] and (ds_list_find_index(edificio.inputs, temp_edificio) = -1) and flag{
+					flag = true
+					if in(var_edificio_nombre, "Cinta Transportadora", "Cinta Magnética") and
+						complex_equal(temp_complex, next_to(a, b, dir))
+						flag = false
+					if flag and in(edificio_nombre[temp_edificio.index], "Cinta Transportadora", "Cinta Magnética") and not
+						next_to_build(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), edificio)
+						flag = false
+					if flag and in(var_edificio_nombre, "Enrutador", "Selector", "Overflow", "Túnel") and(
+						complex_equal(temp_complex, next_to(a, b, (dir + 5) mod 6)) or
+						complex_equal(temp_complex, next_to(a, b, dir)) or
+						complex_equal(temp_complex, next_to(a, b, (dir + 1) mod 6)))
+						flag = false
+					if flag and in(edificio_nombre[temp_edificio.index], "Enrutador", "Selector", "Overflow"){
+						flag = false
+						for(var d = 0; d < ds_list_size(edificio.coordenadas); d++)
+							if (complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 5) mod 6), edificio.coordenadas[|d]) or
+								complex_equal(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), edificio.coordenadas[|d]) or
+								complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 1) mod 6), edificio.coordenadas[|d])){
 								flag = true
 								break
 							}
-					if edificio_emisor[temp_edificio.index] and edificio_receptor[index] and (ds_list_find_index(edificio.inputs, temp_edificio) = -1) and flag{
-						flag = true
-						if in(var_edificio_nombre, "Cinta Transportadora", "Cinta Magnética") and
-							complex_equal(temp_complex, next_to(a, b, dir))
-							flag = false
-						if flag and in(edificio_nombre[temp_edificio.index], "Cinta Transportadora", "Cinta Magnética") and not
-							next_to_build(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), edificio)
-							flag = false
-						if flag and in(var_edificio_nombre, "Enrutador", "Selector", "Overflow", "Túnel") and(
-							complex_equal(temp_complex, next_to(a, b, (dir + 5) mod 6)) or
-							complex_equal(temp_complex, next_to(a, b, dir)) or
-							complex_equal(temp_complex, next_to(a, b, (dir + 1) mod 6)))
-							flag = false
-						if flag and in(edificio_nombre[temp_edificio.index], "Enrutador", "Selector", "Overflow"){
-							flag = false
-							for(var d = 0; d < ds_list_size(edificio.coordenadas); d++)
-								if (complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 5) mod 6), edificio.coordenadas[|d]) or
-									complex_equal(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), edificio.coordenadas[|d]) or
-									complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 1) mod 6), edificio.coordenadas[|d])){
-									flag = true
-									break
-								}
-						}
-						if flag and in(edificio_nombre[temp_edificio.index], "Túnel")
-							for(var d = 0; d < ds_list_size(edificio.coordenadas); d++)
-								if complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 5) mod 6), edificio.coordenadas[|d]) or
-								complex_equal(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), edificio.coordenadas[|d]) or
-								complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 1) mod 6), edificio.coordenadas[|d]){
-									flag = false
-									break
-								}
-						if flag{
-							ds_list_add(temp_edificio.outputs, edificio)
-							ds_list_add(edificio.inputs, temp_edificio)
-							if temp_edificio.waiting
-								mover(temp_edificio.a, temp_edificio.b)
-						}
+					}
+					if flag and in(edificio_nombre[temp_edificio.index], "Túnel")
+						for(var d = 0; d < ds_list_size(edificio.coordenadas); d++)
+							if complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 5) mod 6), edificio.coordenadas[|d]) or
+							complex_equal(next_to(temp_edificio.a, temp_edificio.b, temp_edificio.dir), edificio.coordenadas[|d]) or
+							complex_equal(next_to(temp_edificio.a, temp_edificio.b, (temp_edificio.dir + 1) mod 6), edificio.coordenadas[|d]){
+								flag = false
+								break
+							}
+					if flag{
+						ds_list_add(temp_edificio.outputs, edificio)
+						ds_list_add(edificio.inputs, temp_edificio)
+						if temp_edificio.waiting
+							mover(temp_edificio.a, temp_edificio.b)
 					}
 				}
 			}
@@ -263,32 +261,31 @@ function add_edificio(index, dir, a, b){
 			for(var c = 0; c < ds_list_size(temp_list_2); c++){
 				temp_complex = temp_list_2[|c]
 				var aa = temp_complex.a, bb = temp_complex.b
-				if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
-					temp_terreno = terreno[aa, bb]
-					if temp_terreno.edificio_bool{
-						var temp_edificio = temp_terreno.edificio
-						if (edificio_energia[temp_edificio.index] and in(var_edificio_nombre, "Generador", "Batería", "Panel Solar", "Energía Infinita", "Turbina")) or (edificio_energia[index] and in(edificio_nombre[temp_edificio.index], "Generador", "Batería", "Panel Solar", "Energía Infinita", "Turbina")){
-							ds_list_add(edificio.energia_link, temp_edificio)
-							ds_list_add(temp_edificio.energia_link, edificio)
-							if not ds_list_in(temp_list_redes, temp_edificio.red)
-								ds_list_add(temp_list_redes, temp_edificio.red)
-						}
+				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+					continue
+				if edificio_bool[# aa, bb]{
+					var temp_edificio = edificio_id[# aa, bb]
+					if (edificio_energia[temp_edificio.index] and in(var_edificio_nombre, "Generador", "Batería", "Panel Solar", "Energía Infinita", "Turbina")) or (edificio_energia[index] and in(edificio_nombre[temp_edificio.index], "Generador", "Batería", "Panel Solar", "Energía Infinita", "Turbina")){
+						ds_list_add(edificio.energia_link, temp_edificio)
+						ds_list_add(temp_edificio.energia_link, edificio)
+						if not ds_list_in(temp_list_redes, temp_edificio.red)
+							ds_list_add(temp_list_redes, temp_edificio.red)
 					}
 				}
 			}
 			var temp_list_3 = get_size(a, b, dir, 7)
 			for(var c = 0; c < ds_list_size(temp_list_3); c++){
 				temp_complex = temp_list_3[|c]
-				if (temp_complex.a != a or temp_complex.b != b) and temp_complex.a >= 0 and temp_complex.b >= 0 and temp_complex.a < xsize and temp_complex.b < ysize{
-					temp_terreno = terreno[temp_complex.a, temp_complex.b]
-					if temp_terreno.edificio_draw{
-						var temp_edificio = temp_terreno.edificio
-						if (var_edificio_nombre = "Cable" and edificio_energia[temp_edificio.index]) or edificio_nombre[temp_edificio.index] = "Cable"{
-							ds_list_add(edificio.energia_link, temp_edificio)
-							ds_list_add(temp_edificio.energia_link, edificio)
-							if not ds_list_in(temp_list_redes, temp_edificio.red)
-								ds_list_add(temp_list_redes, temp_edificio.red)
-						}
+				var aa = temp_complex.a, bb = temp_complex.b
+				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+					continue
+				if (aa != a or bb != b) and edificio_draw[# aa, bb]{
+					var temp_edificio = edificio_id[# aa, bb]
+					if (var_edificio_nombre = "Cable" and edificio_energia[temp_edificio.index]) or edificio_nombre[temp_edificio.index] = "Cable"{
+						ds_list_add(edificio.energia_link, temp_edificio)
+						ds_list_add(temp_edificio.energia_link, edificio)
+						if not ds_list_in(temp_list_redes, temp_edificio.red)
+							ds_list_add(temp_list_redes, temp_edificio.red)
 					}
 				}
 			}
@@ -356,16 +353,16 @@ function add_edificio(index, dir, a, b){
 			var temp_list_flujos = ds_list_create()
 			for(var c = 0; c < ds_list_size(temp_list_4); c++){
 				temp_complex = temp_list_4[|c]
-				if temp_complex.a >= 0 and temp_complex.b >= 0 and temp_complex.a < xsize and temp_complex.b < ysize{
-					temp_terreno = terreno[temp_complex.a, temp_complex.b]
-					if temp_terreno.edificio_bool{
-						var temp_edificio = temp_terreno.edificio
-						if edificio_flujo[temp_edificio.index] and (in(var_edificio_nombre, "Tubería", "Depósito", "Líquido Infinito") or in(edificio_nombre[temp_edificio.index], "Tubería", "Depósito", "Líquido Infinito")){
-							ds_list_add(edificio.flujo_link, temp_edificio)
-							ds_list_add(temp_edificio.flujo_link, edificio)
-							if not ds_list_in(temp_list_flujos, temp_edificio.flujo)
-								ds_list_add(temp_list_flujos, temp_edificio.flujo)
-						}
+				var aa = temp_complex.a, bb = temp_complex.b
+				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+					continue
+				if edificio_bool[# aa, bb]{
+					var temp_edificio = edificio_id[# aa, bb]
+					if edificio_flujo[temp_edificio.index] and (in(var_edificio_nombre, "Tubería", "Depósito", "Líquido Infinito") or in(edificio_nombre[temp_edificio.index], "Tubería", "Depósito", "Líquido Infinito")){
+						ds_list_add(edificio.flujo_link, temp_edificio)
+						ds_list_add(temp_edificio.flujo_link, edificio)
+						if not ds_list_in(temp_list_flujos, temp_edificio.flujo)
+							ds_list_add(temp_list_flujos, temp_edificio.flujo)
 					}
 				}
 			}
@@ -423,6 +420,10 @@ function add_edificio(index, dir, a, b){
 			edificio.flujo.almacen_max += edificio_flujo_almacen[index]
 			if var_edificio_nombre = "Bomba de Evaporación"{
 				edificio.flujo.liquido = 0
+				change_flujo(edificio_flujo_consumo[index], edificio)
+			}
+			else if var_edificio_nombre = "Generador Geotérmico"{
+				edificio.flujo.liquido = 3
 				change_flujo(edificio_flujo_consumo[index], edificio)
 			}
 		}

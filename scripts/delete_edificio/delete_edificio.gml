@@ -1,9 +1,9 @@
 function delete_edificio(aa, bb, enemigo = false){
 	with control{
 		var temp_terreno = terreno[aa, bb]
-		if not temp_terreno.edificio_bool
+		if not edificio_bool[# aa, bb]
 			exit
-		var edificio = temp_terreno.edificio, index = edificio.index, var_edificio_nombre = edificio_nombre[index]
+		var edificio = edificio_id[# aa, bb], index = edificio.index, var_edificio_nombre = edificio_nombre[index]
 		if index = 0 and menu = 1{
 			if show_question("Has perdido, jugar de nuevo?")
 				game_restart()
@@ -18,11 +18,11 @@ function delete_edificio(aa, bb, enemigo = false){
 		for(var i = 0; i < ds_list_size(edificio.coordenadas); i++){
 			var temp_coordenada_2 = edificio.coordenadas[|i], a = temp_coordenada_2.a, b = temp_coordenada_2.b
 			var temp_terreno_2 = terreno[a, b]
-			temp_terreno_2.edificio = null_edificio
-			temp_terreno_2.edificio_bool = false
-			temp_terreno_2.edificio_draw = false
 			ds_grid_set(edificio_cercano, a, b, null_edificio)
 			ds_grid_set(edificio_cercano_dis, a, b, infinity)
+			ds_grid_set(edificio_bool, a, b, false)
+			ds_grid_set(edificio_id, a, b, null_edificio)
+			ds_grid_set(edificio_draw, a, b, false)
 		}
 		ds_list_destroy(edificio.coordenadas)
 		if not ds_list_empty(edificios_targeteables)
@@ -39,12 +39,16 @@ function delete_edificio(aa, bb, enemigo = false){
 							if temp_edificio = edificio{
 								ds_priority_delete_min(temp_priority)
 								temp_edificio = ds_priority_find_min(temp_priority)
-								while not temp_edificio.vivo{
+								while not ds_priority_empty(temp_priority) and not temp_edificio.vivo{
 									ds_priority_delete_min(temp_priority)
 									temp_edificio = ds_priority_find_min(temp_priority)
 								}
-								ds_grid_set(edificio_cercano, a, b, temp_edificio)
-								ds_grid_set(edificio_cercano_dis, a, b, temp_edificio.coordenadas_dis[# a, b])
+								if not ds_priority_empty(temp_priority){
+									ds_grid_set(edificio_cercano, a, b, temp_edificio)
+									ds_grid_set(edificio_cercano_dis, a, b, temp_edificio.coordenadas_dis[# a, b])
+								}
+								else
+									show_debug_message("!!")
 							}
 						}
 					}

@@ -2,10 +2,9 @@ function dibujar_edificios(){
 	with control{
 		var mina = max(floor(camx / zoom / 48), 0), minb = max(floor(camy / zoom / 14), 0), maxa = ceil((camx + room_width) / zoom / 48), maxb = ceil((camy + room_height) / zoom / 14)
 		for(var a = mina; a < maxa; a++)
-			for(var b = minb; b < maxb; b++){
-				var temp_terreno = terreno[a, b]
-				if temp_terreno.edificio_draw{
-					var edificio = terreno[a, b].edificio, index = edificio.index, var_edificio_nombre = edificio_nombre[index], dir = edificio.dir, aa = edificio.x, bb = edificio.y
+			for(var b = minb; b < maxb; b++)
+				if edificio_draw[# a, b]{
+					var edificio = edificio_id[# a, b], index = edificio.index, var_edificio_nombre = edificio_nombre[index], dir = edificio.dir, aa = edificio.x, bb = edificio.y
 					//Dibujo caminos
 					if edificio_camino[index] or var_edificio_nombre = "Túnel"{
 						if in(var_edificio_nombre, "Selector", "Overflow")
@@ -34,7 +33,7 @@ function dibujar_edificios(){
 						else if in(var_edificio_nombre, "Batería")
 							draw_sprite_off(edificio_sprite[index], floor(10 * edificio.red.bateria / edificio.red.bateria_max), aa, bb,,, dir * 60)
 						//Dibujo bomba
-						else if in(var_edificio_nombre, "Bomba Hidráulica", "Turbina", "Refinería de Petróleo"){
+						else if in(var_edificio_nombre, "Bomba Hidráulica", "Turbina", "Refinería de Petróleo", "Generador Geotérmico"){
 							draw_sprite_off(edificio_sprite[index], 0, aa, bb, power(-1, dir))
 							if edificio.flujo.liquido = -1
 								draw_sprite_off(spr_bomba_color, 0, aa + power(-1, dir) * 8, bb + 14)
@@ -84,6 +83,5 @@ function dibujar_edificios(){
 						draw_set_color(c_white)
 					}
 				}
-			}
 	}
 }

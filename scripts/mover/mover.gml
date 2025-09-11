@@ -1,10 +1,9 @@
 function mover(aa, bb){
 	with control{
 		var temp_terreno = terreno[aa, bb]
-		if temp_terreno.edificio_bool
-			var edificio = temp_terreno.edificio
-		else
+		if not edificio_bool[# aa, bb]
 			exit
+		var edificio = edificio_id[# aa, bb]
 		var flag = false, out = 0, temp_edificio = null_edificio, b = 0
 		var var_edificio_nombre = edificio_nombre[edificio.index]
 		//Selección de recursos
@@ -14,10 +13,9 @@ function mover(aa, bb){
 				if in(var_edificio_nombre, "Selector"){
 					//Output selector frontal
 					if (edificio.carga_id = edificio.select xor not edificio.mode){
-						var temp_complex = next_to(edificio.a, edificio.b, edificio.dir)
-						temp_terreno = terreno[temp_complex.a, temp_complex.b]
-						if temp_terreno.edificio_bool{
-							temp_edificio = temp_terreno.edificio
+						var temp_complex = next_to(edificio.a, edificio.b, edificio.dir), aaa = temp_complex.a, bbb = temp_complex.b
+						if edificio_bool[# aaa, bbb]{
+							temp_edificio = edificio_id[# aaa, bbb]
 							if ds_list_in(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
 								flag = true
 								break
@@ -30,10 +28,9 @@ function mover(aa, bb){
 							b = a
 						else
 							b = 1 - a
-						var temp_complex = next_to(edificio.a, edificio.b, (edificio.dir + 1 + b * 4) mod 6)
-						temp_terreno = terreno[temp_complex.a, temp_complex.b]
-						if temp_terreno.edificio_bool{
-							temp_edificio = temp_terreno.edificio
+						var temp_complex = next_to(edificio.a, edificio.b, (edificio.dir + 1 + b * 4) mod 6), aaa = temp_complex.a, bbb = temp_complex.b
+						if edificio_bool[# aaa, bbb]{
+							temp_edificio = edificio_id[# aaa, bbb]
 							if ds_list_in(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
 								flag = true
 								edificio.output_index = 1 - b
@@ -46,10 +43,9 @@ function mover(aa, bb){
 				else if in(var_edificio_nombre, "Overflow"){
 					//Output frontal
 					if not edificio.mode{
-						var temp_complex = next_to(edificio.a, edificio.b, edificio.dir)
-						temp_terreno = terreno[temp_complex.a, temp_complex.b]
-						if temp_terreno.edificio_bool{
-							temp_edificio = temp_terreno.edificio
+						var temp_complex = next_to(edificio.a, edificio.b, edificio.dir), aaa = temp_complex.a, bbb = temp_complex.b
+						if edificio_bool[# aaa, bbb]{
+							temp_edificio = edificio_id[# aaa, bbb]
 							if ds_list_in(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
 								flag = true
 								break
@@ -62,10 +58,9 @@ function mover(aa, bb){
 							b = a
 						else
 							b = 1 - a
-						var temp_complex = next_to(edificio.a, edificio.b, (edificio.dir + 1 + b * 4) mod 6)
-						temp_terreno = terreno[temp_complex.a, temp_complex.b]
-						if temp_terreno.edificio_bool{
-							temp_edificio = temp_terreno.edificio
+						var temp_complex = next_to(edificio.a, edificio.b, (edificio.dir + 1 + b * 4) mod 6), aaa = temp_complex.a, bbb = temp_complex.b
+						if edificio_bool[# aaa, bbb]{
+							temp_edificio = edificio_id[# aaa, bbb]
 							if ds_list_in(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
 								flag = true
 								edificio.output_index = 1 - b
@@ -75,10 +70,9 @@ function mover(aa, bb){
 					}
 					//Output frontal
 					if edificio.mode and not flag{
-						var temp_complex = next_to(edificio.a, edificio.b, edificio.dir)
-						temp_terreno = terreno[temp_complex.a, temp_complex.b]
-						if temp_terreno.edificio_bool{
-							temp_edificio = temp_terreno.edificio
+						var temp_complex = next_to(edificio.a, edificio.b, edificio.dir), aaa = temp_complex.a, bbb = temp_complex.b
+						if edificio_bool[# aaa, bbb]{
+							temp_edificio = edificio_id[# aaa, bbb]
 							if ds_list_in(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
 								flag = true
 								break

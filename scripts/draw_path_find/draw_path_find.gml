@@ -3,11 +3,11 @@ function draw_path_find(){
 		var h = draw_get_halign(), v = draw_get_valign()
 		draw_set_halign(fa_center)
 		draw_set_valign(fa_middle)
-		var mina = floor(camx / zoom / 48), minb = floor(camy / zoom / 14), maxa = ceil((camx + room_width) / zoom / 48), maxb = ceil((camy + room_height) / zoom / 14)
+		var mina = max(floor(camx / zoom / 48), 0), minb = max(floor(camy / zoom / 14), 0), maxa = ceil((camx + room_width) / zoom / 48), maxb = ceil((camy + room_height) / zoom / 14)
 		for(var a = mina; a < maxa; a++)
 			for(var b = minb; b < maxb; b++)
 				if terreno_caminable[terreno[a, b].terreno]{
-					if false{
+					if true{
 						if false{
 							var temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b
 							draw_text_off(aa, bb, edificio_cercano_dis[# a, b])
