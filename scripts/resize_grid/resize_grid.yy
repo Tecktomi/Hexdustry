@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"resize_grid",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"resize_grid",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
