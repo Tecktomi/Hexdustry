@@ -50,7 +50,6 @@ function add_edificio(index, dir, a, b){
 		ds_list_add(edificio.coordenadas_close, {a : 0, b : 0})
 		ds_list_clear(edificio.coordenadas_close)
 		var var_edificio_nombre = edificio_nombre[index]
-		var temp_terreno = null_terreno
 		temp_complex = {a : 0, b : 0}
 		for(var c = 0; c < rss_max; c++)
 			edificio.carga[c] = 0
@@ -102,11 +101,15 @@ function add_edificio(index, dir, a, b){
 			}
 			while not ds_queue_empty(temp_queue){
 				var temp_trio = ds_queue_dequeue(temp_queue), dis = temp_trio.dis + 1
+				var count = 0
 				for(var i = 0; i < 6; i++){
 					if i = temp_trio.dir
 						continue
 					var temp_complex_2 = next_to(temp_trio.a, temp_trio.b, i), aa = temp_complex_2.a, bb = temp_complex_2.b
-					if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize and not visitado[# aa, bb] and dis < edificio.coordenadas_dis[# aa, bb] and terreno_caminable[terreno[aa, bb].terreno]{
+					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+						continue
+					if not visitado[# aa, bb] and terreno_caminable[terreno[# aa, bb]]{
+						count++
 						ds_grid_set(visitado, aa, bb, true)
 						ds_queue_enqueue(temp_queue, {a : aa, b : bb, dis : dis, dir : (i + 3) mod 6})
 						ds_grid_set(edificio.coordenadas_dis, aa, bb, dis)
@@ -339,12 +342,12 @@ function add_edificio(index, dir, a, b){
 			if var_edificio_nombre = "Bomba Hidráulica"{
 				for(var c = 0; c < ds_list_size(temp_list); c++){
 					temp_complex = temp_list[|c]
-					temp_terreno = terreno[temp_complex.a, temp_complex.b]
-					if in(terreno_nombre[temp_terreno.terreno], "Agua", "Agua Profunda")
+					var aa = temp_complex.a, bb = temp_complex.b
+					if in(terreno_nombre[terreno[# aa, bb]], "Agua", "Agua Profunda")
 						edificio.select = 0
-					else if in(terreno_nombre[temp_terreno.terreno], "Petróleo")
+					else if in(terreno_nombre[terreno[# aa, bb]], "Petróleo")
 						edificio.select = 2
-					else if in(terreno_nombre[temp_terreno.terreno], "Lava")
+					else if in(terreno_nombre[terreno[# aa, bb]], "Lava")
 						edificio.select = 3
 					ds_list_add(edificio.coordenadas, temp_complex)
 				}

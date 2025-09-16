@@ -1,5 +1,6 @@
 function next_to(a, b, dir){
 	var aa, bb;
+	dir = dir mod 6
 	if (b mod 2) = 1{
 		if dir = 0{
 			aa = a + 1

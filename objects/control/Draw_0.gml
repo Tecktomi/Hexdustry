@@ -24,20 +24,25 @@ if menu = 2{
 	control_camara(-200)
 	var xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / zoom
 	var temp_hexagono = instance_position(xmouse, ymouse, obj_hexagono), mx = 0, my = 0
+	//click en mapa
 	if mouse_x > 200 and temp_hexagono != noone{
 		mx = temp_hexagono.a
 		my = temp_hexagono.b
 		//Barril de Pintura
-		if keyboard_check(vk_lcontrol){
+		if keyboard_check(vk_lcontrol) and not build_able{
 			if mouse_check_button_pressed(mb_left)
+				//Aplicar cambio
 				if mx = last_mx and my = last_my{
 					last_mx = -1
 					last_my = -1
 					for(var i = 0; i < ds_list_size(build_list); i++){
-						var temp_complex = build_list[|i]
-						terreno[temp_complex.a, temp_complex.b].terreno = build_index
+						var temp_complex = build_list[|i], aa = temp_complex.a, bb = temp_complex.b
+						ds_grid_set(terreno, aa, bb, build_index)
+						if not terreno_caminable[build_index]
+							ds_grid_set(ore, aa, bb, -1)
 					}
 				}
+				//Calcular tarro de pintura
 				else{
 					ds_list_clear(build_list)
 					last_mx = mx
@@ -46,19 +51,21 @@ if menu = 2{
 					var temp_queue = ds_queue_create(), visitado = ds_grid_create(xsize, ysize)
 					ds_grid_clear(visitado, false)
 					ds_grid_set(visitado, mx, my, true)
-					ds_queue_enqueue(temp_queue, {a : mx, b : my})
-					var target_id = terreno[mx, my].terreno
+					ds_queue_enqueue(temp_queue, {a : mx, b : my, dir : -1})
+					var target_id = terreno[# mx, my]
 					while not ds_queue_empty(temp_queue){
-						var temp_complex = ds_queue_dequeue(temp_queue), a = temp_complex.a, b = temp_complex.b
-						ds_list_add(build_list, temp_complex)
+						var temp_trio = ds_queue_dequeue(temp_queue), a = temp_trio.a, b = temp_trio.b, dir = temp_trio.dir
+						ds_list_add(build_list, {a : a, b : b})
 						for(var i = 0; i < 6; i++){
+							if i= temp_trio.dir
+								continue
 							var temp_complex_2 = next_to(a, b, i), aa = temp_complex_2.a, bb = temp_complex_2.b
 							if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 								continue
 							if not visitado[# aa, bb]{
 								ds_grid_set(visitado, aa, bb, true)
-								if terreno[aa, bb].terreno = target_id
-									ds_queue_enqueue(temp_queue, {a : aa, b : bb})
+								if terreno[# aa, bb] = target_id
+									ds_queue_enqueue(temp_queue, {a : aa, b : bb, dir : (i + 3) mod 6})
 							}
 						}
 					}
@@ -73,64 +80,150 @@ if menu = 2{
 				draw_text_background(mouse_x, mouse_y + 20, "Clic para aplicar")
 			}
 		}
-		else{
-			var temp_list = get_size(mx, my, 0, build_size)
-			for(var i = 0; i < ds_list_size(temp_list); i++){
-				var temp_complex = temp_list[|i], a = temp_complex.a, b = temp_complex.b
-				if a < 0 or b < 0 or a >= xsize or b >= ysize
-					continue
-				temp_complex = abtoxy(a, b)
-				var temp_terreno = terreno[a, b], aa = temp_complex.a, bb = temp_complex.b
-				if build_index >= 0{
-					var offset = 0
-					if build_index <= array_length(terreno_nombre){
-						draw_sprite_off(terreno_sprite[build_index], 0, aa, bb,,,,, 0.5)
-						if mouse_check_button(mb_left){
-							temp_terreno.terreno = build_index
-							if not terreno_caminable[build_index]
-								temp_terreno.ore = -1
-							update_background(a, b)
-						}
-					}
-					else{
-						offset += array_length(terreno_nombre)
-						if build_index - offset <= array_length(ore_recurso){
-							draw_sprite_off(ore_sprite[build_index - offset], 0, aa, bb,,,,, 0.5)
+		//Lapiz
+		else if build_index >= 0{
+			//Spawn point
+			if build_able{
+				draw_set_color(c_red)
+				var temp_complex = abtoxy(mx, my)
+				draw_circle_off(temp_complex.a, temp_complex.b, 200, true)
+				if mouse_check_button_pressed(mb_left){
+					mouse_clear(mb_left)
+					spawn_x = mx
+					spawn_y = my
+					build_able = false
+				}
+			}
+			//Terreno
+			else{
+				var temp_list = get_size(mx, my, 0, build_size)
+				for(var i = 0; i < ds_list_size(temp_list); i++){
+					var temp_complex = temp_list[|i], a = temp_complex.a, b = temp_complex.b
+					if a < 0 or b < 0 or a >= xsize or b >= ysize
+						continue
+					temp_complex = abtoxy(a, b)
+					var aa = temp_complex.a, bb = temp_complex.b
+					if build_index >= 0{
+						var offset = 0
+						//Terrenos
+						if build_index <= array_length(terreno_nombre){
+							draw_sprite_off(terreno_sprite[build_index], 0, aa, bb,,,,, 0.5)
 							if mouse_check_button(mb_left){
-								temp_terreno.ore = build_index - offset
-								temp_terreno.ore_amount = floor(random_range(0.3, 1) * ore_amount[build_index - offset])
+								ds_grid_set(terreno, a, b, build_index)
+								if not terreno_caminable[build_index]
+									ds_grid_set(ore, a, b, -1)
 								update_background(a, b)
+							}
+						}
+						//Minerales
+						else{
+							offset += array_length(terreno_nombre)
+							if build_index - offset < array_length(ore_recurso){
+								draw_sprite_off(ore_sprite[build_index - offset], 0, aa, bb,,,,, 0.5)
+								if mouse_check_button(mb_left){
+									ds_grid_set(ore, a, b, build_index - offset)
+									ds_grid_set(ore_amount, a, b, floor(random_range(0.3, 1) * ore_size[build_index - offset]))
+									update_background(a, b)
+								}
+							}
+							else{
+								draw_sprite_off(spr_rojo, 0, aa, bb,,,,, 0.5)
+								if mouse_check_button(mb_left){
+									ds_grid_set(ore, a, b, -1)
+									ds_grid_set(ore_amount, a, b, 0)
+									update_background(a, b)
+								}
 							}
 						}
 					}
 				}
 			}
 		}
-		if mouse_check_button_pressed(mb_right){
-			var temp_terreno = terreno[mx, my]
-			if edificio_bool[# mx, my]{
-				mouse_clear(mb_right)
-				delete_edificio(mx, my)
-			}
+		//Borrar edificio
+		if mouse_check_button_pressed(mb_right) and edificio_bool[# mx, my]{
+			mouse_clear(mb_right)
+			delete_edificio(mx, my)
 		}
 	}
 	if mouse_check_button_pressed(mb_right) and build_index >= 0
 		build_index = -1
+	draw_set_color(c_red)
+	var temp_complex = abtoxy(spawn_x, spawn_y)
+	draw_circle_off(temp_complex.a, temp_complex.b, 200, true)
 	draw_set_color(c_ltgray)
 	draw_rectangle(0, 0, 200, room_height, false)
 	draw_set_color(c_black)
 	var b = 0
 	for(var a = 0; a < array_length(terreno_nombre); a++)
-		if draw_sprite_boton(terreno_sprite[a], 10 + (a mod 5) * 36, 10 + floor(a / 5) * 36)
+		if draw_sprite_boton(terreno_sprite[a], 10 + (a mod 5) * 36, 10 + floor(a / 5) * 36){
 			build_index = a
+			build_able = false
+		}
 	b += array_length(terreno_nombre)
 	for(var a = 0; a < array_length(ore_sprite); a++)
-		if draw_sprite_boton(ore_sprite[a], 10 + ((a + b) mod 5) * 36, 10 + floor((a + b) / 5) * 36)
+		if draw_sprite_boton(ore_sprite[a], 10 + ((a + b) mod 5) * 36, 10 + floor((a + b) / 5) * 36){
 			build_index = a + b
+			build_able = false
+		}
 	b += array_length(ore_sprite)
-	build_size = round(deslizante(50, 150, room_height - 100, build_size, 1, 5))
-	if draw_boton(100, room_height - 50, "Volver") or keyboard_check_pressed(vk_escape)
+	if draw_sprite_boton(spr_equis, 10 + (b mod 5) * 36, 10 + floor(b / 5) * 36){
+		build_index = b
+		build_able = false
+	}
+	if draw_boton(10, room_height - 250, "Spawn point")
+		build_able = true
+	var prev_xsize = xsize
+	xsize = round(deslizante(50, 150, room_height - 200, xsize, 28, 96, 0))
+	draw_text(150, room_height - 200, $"{xsize}")
+	if xsize > prev_xsize
+		resize_grid(prev_xsize, 0)
+	var prev_ysize = ysize
+	ysize = round(deslizante(50, 150, room_height - 180, ysize, 60, 192, 1))
+	draw_text(150, room_height - 180, $"{ysize}")
+	if ysize > prev_ysize
+		resize_grid(0, prev_ysize)
+	build_size = round(deslizante(50, 150, room_height - 150, build_size, 1, 5, 2))
+	if draw_boton(10, room_height - 100, "Volver") or keyboard_check_pressed(vk_escape)
 		menu = 0
+	if draw_boton(10, room_height - 60, "Guardar") or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("S"))){
+		var file = get_save_filename("*.txt", game_save_id + "save.txt")
+		if file != ""{
+			ini_open(file + ".txt")
+			ini_write_real("Global", "xsize", xsize)
+			ini_write_real("Global", "ysize", ysize)
+			for(var a = 0; a < xsize; a++)
+				for(b = 0; b < ysize; b++){
+					ini_write_real("Terreno", $"{a},{b}", floor(terreno[# a, b]))
+					ini_write_real("Ore", $"{a},{b}", floor(ore[# a, b]))
+					ini_write_real("Ore amount", $"{a},{b}", floor(ore_amount[# a, b]))
+				}
+			ini_close()
+			ini_open(game_save_id + "settings.ini")
+			ini_write_real("Saves", file, current_day)
+			ini_close()
+		}
+	}
+	if draw_boton(10, room_height - 30, "Cargar") or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("L"))){
+		var file = get_open_filename("*.txt", game_save_id + "save.txt")
+		if file != ""{
+			ini_open(file)
+			prev_xsize = xsize
+			xsize = ini_read_real("Global", "xsize", xsize)
+			if xsize > prev_xsize
+				resize_grid(prev_xsize, 0)
+			prev_ysize = ysize
+			ysize = ini_read_real("Global", "ysize", ysize)
+			if ysize > prev_ysize
+				resize_grid(0, prev_ysize)
+			for(var a = 0; a < xsize; a++)
+				for(b = 0; b < ysize; b++){
+					ds_grid_set(terreno, a, b, ini_read_real("Terreno", $"{a},{b}", terreno[# a, b]))
+					ds_grid_set(ore, a, b, ini_read_real("Ore", $"{a},{b}", ore[# a, b]))
+					ds_grid_set(ore_amount, a, b, ini_read_real("Ore amount", $"{a},{b}", ore_amount[# a, b]))
+				}
+			ini_close()
+		}
+	}
 	update_cursor()
 	exit
 }
@@ -256,14 +349,14 @@ if temp_hexagono != noone{
 		prev_change = true
 	}
 }
-var temp_terreno = terreno[mx, my], edificio = edificio_id[# mx, my], temp_coordenada = edificio.coordenadas
+var edificio = edificio_id[# mx, my], temp_coordenada = edificio.coordenadas
 //Mostrar detalles de edificios al pasar el mouse_por encima
 if temp_hexagono != noone and flag{
 	//Mostrar terreno
 	var temp_text = $"{mx}, {my}\n"
-	temp_text += $"{terreno_nombre[temp_terreno.terreno]}\n"
-	if temp_terreno.ore >= 0
-		temp_text += $"{recurso_nombre[ore_recurso[temp_terreno.ore]]}: {temp_terreno.ore_amount}\n"
+	temp_text += $"{terreno_nombre[terreno[# mx, my]]}\n"
+	if ore[# mx, my] >= 0
+		temp_text += $"{recurso_nombre[ore_recurso[ore[# mx, my]]]}: {ore_amount[# mx, my]}\n"
 	temp_text += "___________________\n"
 	if edificio_bool[# mx, my]{
 		var index = edificio.index, var_edificio_nombre = edificio_nombre[index]
@@ -308,12 +401,11 @@ if temp_hexagono != noone and flag{
 				for(var a = 0; a < rss_max; a++)
 					temp_array[a] = 0
 				for(var a = 0; a < ds_list_size(edificio.coordenadas); a++){
-					var temp_complex = edificio.coordenadas[|a]
-					var temp_terreno_2 = terreno[temp_complex.a, temp_complex.b]
-					if temp_terreno_2.ore >= 0
-						temp_array[ore_recurso[temp_terreno_2.ore]] += temp_terreno_2.ore_amount
-					else if terreno_recurso_bool[temp_terreno_2.terreno] and in(var_edificio_nombre, "Taladro Eléctrico")
-						temp_array[terreno_recurso_id[temp_terreno_2.terreno]] = -1
+					var temp_complex = edificio.coordenadas[|a], aa = temp_complex.a, bb = temp_complex.b
+					if ore[# aa, bb] >= 0
+						temp_array[ore_recurso[ore[# aa, bb]]] += ore_amount[# aa, bb]
+					else if terreno_recurso_bool[terreno[# aa, bb]] and in(var_edificio_nombre, "Taladro Eléctrico")
+						temp_array[terreno_recurso_id[terreno[# aa, bb]]] = -1
 				}
 				for(var a = 0; a < rss_max; a++)
 					if temp_array[a] > 0
@@ -437,43 +529,24 @@ flag = false
 			build_menu = 1
 	}
 	if build_menu = 1{
-		menu_array = [2, 1, 12, 14, 19]
-		var b = 2 * pi / array_length(menu_array)
+		var b = 2 * pi / array_length(categoria_nombre)
 		draw_set_color(c_white)
 		draw_circle(menu_x, menu_y, 100, true)
 		draw_circle(menu_x, menu_y, 10, false)
-		for(var a = 0; a < array_length(menu_array); a++){
+		for(var a = 0; a < array_length(categoria_nombre); a++){
 			var angle = a * b
-			draw_sprite_stretched(edificio_sprite[menu_array[a]], 0, menu_x - 15 + 100 * cos(angle + b / 2), menu_y - 15 - 100 * sin(angle + b / 2), 30, 30)
+			draw_sprite_stretched(categoria_sprite[a], 0, menu_x - 15 + 100 * cos(angle + b / 2), menu_y - 15 - 100 * sin(angle + b / 2), 30, 30)
 			draw_line(menu_x, menu_y, menu_x + 100 * cos(angle), menu_y - 100 * sin(angle))
 		}
 		if distance(mouse_x, mouse_y, menu_x, menu_y) < 100{
 			var temp_text = ""
-			b = floor((array_length(menu_array) - arctan2(mouse_y - menu_y, mouse_x - menu_x) / b) mod array_length(menu_array))
-			if b = 0
-				temp_text = "Transporte"
-			else if b = 1
-				temp_text = "Producción"
-			else if b = 2
-				temp_text = "Electricidad"
-			else if b = 3
-				temp_text = "Fluidos"
-			else if b = 4
-				temp_text = "Defensa"
+			b = floor((array_length(categoria_nombre) - arctan2(mouse_y - menu_y, mouse_x - menu_x) / b) mod array_length(categoria_nombre))
+			temp_text = categoria_nombre[b]
 			draw_text_background(mouse_x + 20, mouse_y, temp_text)
 			if mouse_check_button_pressed(mb_left){
 				mouse_clear(mb_left)
 				build_menu = 2
-				if b = 0 //Transporte
-					menu_array = [2, 3, 4, 5, 6, 18]
-				else if b = 1 //Producción
-					menu_array = [1, 7, 8, 9, 22, 23, 24, 29, 30, 34]
-				else if b = 2 //Electricidad
-					menu_array = [10, 11, 12, 13, 28, 35]
-				else if b = 3 //Fluidos
-					menu_array = [33, 15, 14, 26]
-				else if b = 4 //Defensa
-					menu_array = [19, 20, 21, 25, 31]
+				menu_array = categoria_edificios[b]
 			}
 		}
 		else if mouse_check_button_pressed(mb_left){
@@ -610,16 +683,15 @@ if build_index > 0{
 			draw_set_color(c_white)
 		}
 		draw_set_color(c_red)
-		var temp_complex = abtoxy(spawn_x, spawn_y)
-		draw_circle_off(temp_complex.a, temp_complex.b, 250, true)
-		if sqrt(sqr(mouse_x - temp_complex.a + camx) + sqr(mouse_y - temp_complex.b + camy)) < 250{
+		var temp_complex = abtoxy(spawn_x, spawn_y), aaa = temp_complex.a, bbb = temp_complex.b
+		draw_circle_off(aaa, bbb, 250, true)
+		if sqrt(sqr(mouse_x - aaa + camx) + sqr(mouse_y - bbb + camy)) < 250{
 			temp_text += "Zona de generación de enemigos\n"
 			comprable = false
 		}
 		for(var a = 0; a < ds_list_size(build_list); a++){
-			var temp_complex_2 = build_list[|a]
-			temp_terreno = terreno[temp_complex_2.a, temp_complex_2.b]
-			if in(terreno_nombre[temp_terreno.terreno], "Pared de Piedra"){
+			var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb =  temp_complex_2.b
+			if in(terreno_nombre[terreno[# aa, bb]], "Pared de Piedra"){
 				temp_text += "Terreno inválido\n"
 				comprable = false
 				break
@@ -628,9 +700,8 @@ if build_index > 0{
 		//Detectar que no esté en terreno prohíbido
 		if not in(var_edificio_nombre, "Tubería", "Bomba de Evaporación", "Bomba Hidráulica", "Generador Geotérmico")
 			for(var a = 0; a < ds_list_size(build_list); a++){
-				var temp_complex_2 = build_list[|a]
-				temp_terreno = terreno[temp_complex_2.a, temp_complex_2.b]
-				if terreno_liquido[temp_terreno.terreno]{
+				var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
+				if terreno_liquido[terreno[# aa, bb]]{
 					temp_text += "Terreno inválido\n"
 					comprable = false
 					break
@@ -641,11 +712,10 @@ if build_index > 0{
 			flag = false
 			var liquido = -1
 			for(var a = 0; a < ds_list_size(build_list); a++){
-				var temp_complex_2 = build_list[|a]
-				temp_terreno = terreno[temp_complex_2.a, temp_complex_2.b]
-				if terreno_liquido[temp_terreno.terreno]{
+				var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
+				if terreno_liquido[terreno[# aa, bb]]{
 					flag = true
-					if in(terreno_nombre[temp_terreno.terreno], "Agua", "Agua Profunda"){
+					if in(terreno_nombre[terreno[# aa, bb]], "Agua", "Agua Profunda"){
 						if not in(liquido, -1, 0){
 							flag = false
 							temp_text += "No se puede combinar líquidos\n"
@@ -671,9 +741,8 @@ if build_index > 0{
 		else if in(var_edificio_nombre, "Generador Geotérmico"){
 			flag  = false
 			for(var a = 0; a < ds_list_size(build_list); a++){
-				var temp_complex_2 = build_list[|a]
-				temp_terreno = terreno[temp_complex_2.a, temp_complex_2.b]
-				if terreno_nombre[temp_terreno.terreno] = "Lava"
+				var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
+				if terreno_nombre[terreno[# aa, bb]] = "Lava"
 					flag = true
 			}
 			if not flag{
@@ -684,9 +753,8 @@ if build_index > 0{
 		else if in(var_edificio_nombre, "Bomba de Evaporación"){
 			flag = false
 			for(var a = 0; a < ds_list_size(build_list); a++){
-				var temp_complex_2 = build_list[|a]
-				temp_terreno = terreno[temp_complex_2.a, temp_complex_2.b]
-				if in(terreno_nombre[temp_terreno.terreno], "Agua", "Agua Profunda"){
+				var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
+				if in(terreno_nombre[terreno[# aa, bb]], "Agua", "Agua Profunda"){
 					flag = true
 					break
 				}
@@ -706,11 +774,10 @@ if build_index > 0{
 			}
 			//Buscar minerales superficiales
 			for(var a = 0; a < ds_list_size(build_list); a++){
-				var temp_complex_2 = build_list[|a]
-				temp_terreno = terreno[temp_complex_2.a, temp_complex_2.b]
-				if temp_terreno.ore >= 0{
-					temp_array[ore_recurso[temp_terreno.ore]]++
-					temp_array_2[ore_recurso[temp_terreno.ore]] += temp_terreno.ore_amount
+				var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
+				if ore[# aa, bb] >= 0{
+					temp_array[ore_recurso[ore[# aa, bb]]]++
+					temp_array_2[ore_recurso[ore[# aa, bb]]] += ore_amount[# aa, bb]
 					b++
 					flag = true
 				}
@@ -718,11 +785,10 @@ if build_index > 0{
 			//Buscar piedra o arena
 			if in(var_edificio_nombre, "Taladro Eléctrico"){
 				for(var a = 0; a < ds_list_size(build_list); a++){
-					var temp_complex_2 = build_list[|a]
-					temp_terreno = terreno[temp_complex_2.a, temp_complex_2.b]
-					if temp_terreno.ore = -1 and in(terreno_nombre[temp_terreno.terreno], "Piedra", "Arena", "Piedra con Cobre", "Piedra con Hierro", "Piedra con Azufre"){
-						temp_array[terreno_recurso_id[temp_terreno.terreno]]++
-						temp_array_2[terreno_recurso_id[temp_terreno.terreno]] = -1
+					var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
+					if ore[# aa, bb] = -1 and in(terreno_nombre[terreno[# aa, bb]], "Piedra", "Arena", "Piedra con Cobre", "Piedra con Hierro", "Piedra con Azufre"){
+						temp_array[terreno_recurso_id[terreno[# aa, bb]]]++
+						temp_array_2[terreno_recurso_id[terreno[# aa, bb]]] = -1
 						b++
 						flag = true
 					}
@@ -760,9 +826,8 @@ if build_index > 0{
 			}
 		}
 		else for(var a = 0; a < ds_list_size(build_list); a++){
-			var temp_complex_2 = build_list[|a]
-			temp_terreno = terreno[temp_complex_2.a, temp_complex_2.b]
-			if edificio_bool[# temp_complex_2.a, temp_complex_2.b]{
+			var temp_complex_2 = build_list[|a], aa  = temp_complex_2.a, bb = temp_complex_2.b
+			if edificio_bool[# aa, bb]{
 				temp_text += "Terreno ocupado\n"
 				comprable = false
 				break
@@ -779,7 +844,7 @@ if build_index > 0{
 			}
 			draw_text_background(mouse_x + 20, mouse_y, temp_text)
 		}
-		//Si se puede construir
+		//Sí se puede construir
 		else{
 			temp_complex = abtoxy(mx, my)
 			if not (mouse_check_button(mb_left) and (edificio_camino[build_index] or var_edificio_nombre = "Tubería"))
@@ -810,13 +875,11 @@ if build_index > 0{
 							a = temp_complex_3.a
 							b = temp_complex_3.b
 							temp_complex_3 = abtoxy(a, b)
-							var aaa = temp_complex_3.a, bbb = temp_complex_3.b
+							aaa = temp_complex_3.a
+							bbb = temp_complex_3.b
 							draw_edificio(aaa, bbb, build_index, build_dir, 0.5)
 						}
-						until(temp_complex_3.a < min(xmouse, aa) or
-							temp_complex_3.a > max(xmouse, aa) or
-							temp_complex_3.b < min(ymouse, bb) or
-							temp_complex_3.b > max(ymouse, bb))
+						until(temp_complex_3.a < min(xmouse, aa) or temp_complex_3.a > max(xmouse, aa) or temp_complex_3.b < min(ymouse, bb) or temp_complex_3.b > max(ymouse, bb))
 					}
 				}
 				//Mostrar caminos solos
@@ -871,7 +934,6 @@ if build_index > 0{
 						b = temp_complex_2.b
 						if a < 0 or b < 0 or a >= xsize or b >= ysize
 							break
-						var temp_terreno_2 = terreno[a, b]
 						if edificio_bool[# a, b]{
 							var edificio_2 = edificio_id[# a, b]
 							if edificio_nombre[edificio_2.index] = "Túnel" and edificio_2.dir = (build_dir + 3) mod 6{
@@ -953,7 +1015,7 @@ if build_index > 0{
 						flag = false
 						break
 					}
-					var temp_terreno = terreno[aa, bb], temp_terreno_terreno = temp_terreno.terreno
+					var temp_terreno_terreno = terreno[# aa, bb]
 					if in(terreno_nombre[temp_terreno_terreno], "Pared de Piedra", "Pared de Arena", "Pared de Nieve", "Pared de Pasto"){
 						flag = false
 						break
@@ -972,7 +1034,7 @@ if build_index > 0{
 					if edificio_bool[# aa, bb] and (edificio_camino[build_index] or (var_edificio_nombre = "Túnel")) and edificio_camino[build_index]
 						delete_edificio(aa, bb)
 					//Checkear minerales
-					if in(var_edificio_nombre, "Taladro", "Taladro Eléctrico") and temp_terreno.ore >= 0
+					if in(var_edificio_nombre, "Taladro", "Taladro Eléctrico") and ore[# aa, bb] >= 0
 						flag_2 = true
 					//Checkear minerales
 					if in(var_edificio_nombre, "Taladro Eléctrico") and terreno_recurso_bool[temp_terreno_terreno]
@@ -1024,10 +1086,10 @@ if build_index > 0{
 				}
 				//Actualizar recursos
 				if not cheat
-				for(var a = 0; a < array_length(edificio_precio_id[build_index]); a++){
-					nucleo.carga[edificio_precio_id[build_index, a]] -= edificio_precio_num[build_index, a]
-					nucleo.carga_total -= edificio_precio_num[build_index, a]
-				}
+					for(var a = 0; a < array_length(edificio_precio_id[build_index]); a++){
+						nucleo.carga[edificio_precio_id[build_index, a]] -= edificio_precio_num[build_index, a]
+						nucleo.carga_total -= edificio_precio_num[build_index, a]
+					}
 			}
 		}
 	}
@@ -1086,24 +1148,23 @@ else{
 				while not ds_list_empty(temp_list){
 					temp_complex_2 = temp_list[|0]
 					var aa = temp_complex_2.a, bb = temp_complex_2.b
-					temp_terreno = terreno[aa, bb]
 					ds_list_delete(temp_list, 0)
-					if temp_terreno.ore >= 0{
-						edificio.carga[ore_recurso[temp_terreno.ore]]++
+					if ore[# aa, bb] >= 0{
+						edificio.carga[ore_recurso[ore[# aa, bb]]]++
 						edificio.carga_total++
 						if edificio.carga_total = edificio_carga_max[index]
 							change_energia(0, edificio)
-						temp_terreno.ore_amount--
-						if temp_terreno.ore_amount = 50
+						ds_grid_add(ore_amount, aa, bb, -1)
+						if ore_amount[# aa, bb] = 50
 							update_background(aa, bb)
-						else if temp_terreno.ore_amount = 0
-							temp_terreno.ore = -1
+						else if ore_amount[# aa, bb] = 0
+							ds_grid_set(ore, aa, bb, -1)
 							update_background(aa, bb)
 						flag = true
 						break
 					}
-					else if terreno_recurso_bool[temp_terreno.terreno] and in(var_edificio_nombre, "Taladro Eléctrico"){
-						edificio.carga[terreno_recurso_id[temp_terreno.terreno]]++
+					else if terreno_recurso_bool[terreno[# aa, bb]] and in(var_edificio_nombre, "Taladro Eléctrico"){
+						edificio.carga[terreno_recurso_id[terreno[# aa, bb]]]++
 						edificio.carga_total++
 						if edificio.carga_total = edificio_carga_max[index]
 							change_energia(0, edificio)
@@ -1436,7 +1497,6 @@ else{
 			if flag for(var b = 0; b < ds_list_size(edificio.bordes); b++){
 				show_debug_message(1)
 				var temp_complex = edificio.bordes[|b], aa = temp_complex.a, bb = temp_complex.b
-				temp_terreno = terreno[aa, bb]
 				if not edificio_bool[# aa, bb] and not bool_unidad[# aa, bb]{
 					flag_2 = true
 					xx = aa
@@ -1550,7 +1610,7 @@ else{
 					var min_dis = edificio_cercano_dis[# aaa, bbb]
 					for(var i = 0; i < 6; i++){
 						temp_complex = next_to(aaa, bbb, i)
-						var disi = edificio_cercano_dis[# temp_complex.a, temp_complex.b]
+						var disi = edificio_cercano_dis[# aa, bb]
 						if disi < min_dis{
 							min_dis = disi
 							disi = i

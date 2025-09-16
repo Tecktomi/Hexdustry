@@ -1,7 +1,8 @@
 function update_background(a, b){
 	with control{
-		if background[floor(a / chunk_width), floor(b / chunk_height)] != spr_hexagono
-			sprite_delete(background[floor(a / chunk_width), floor(b / chunk_height)])
-		array_set(background[floor(a / chunk_width)], floor(b / chunk_height), spr_hexagono)
+		var aa = floor(a / chunk_width), bb = floor(b / chunk_height)
+		if background[aa, bb] != spr_hexagono
+			sprite_delete(background[aa, bb])
+		array_set(background[aa], bb, spr_hexagono)
 	}
 }

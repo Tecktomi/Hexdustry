@@ -1,6 +1,5 @@
 function mover(aa, bb){
 	with control{
-		var temp_terreno = terreno[aa, bb]
 		if not edificio_bool[# aa, bb]
 			exit
 		var edificio = edificio_id[# aa, bb]

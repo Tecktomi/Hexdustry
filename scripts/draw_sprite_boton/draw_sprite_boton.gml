@@ -1,6 +1,6 @@
 function draw_sprite_boton(sprite, x, y){
-	var width = sprite_get_width(sprite), height = sprite_get_height(sprite)
-	draw_sprite(sprite, 0, x + width / 2, y + height / 2)
+	var width = 32, height = 28
+	draw_sprite_stretched(sprite, 0, x, y, 32, 28)
 	if mouse_x > x and mouse_y > y and mouse_x < x + width and mouse_y < y + height{
 		control.cursor = cr_handpoint
 		if mouse_check_button_pressed(mb_left){

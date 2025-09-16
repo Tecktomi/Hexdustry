@@ -1,8 +1,13 @@
 randomize()
-window_set_fullscreen(true)
 draw_set_font(ft_letra)
+directorio = game_save_id
+ini_open(game_save_id + "settings.ini")
+ini_write_string("Global", "version", "16_09_2025")
+ini_close()
+show_debug_message(game_save_id)
 menu = 0
 cursor = cr_arrow
+deslizante_id = -1
 xsize = 48
 ysize = 96
 chunk_width = 12
@@ -20,6 +25,7 @@ show_menu_y = 0
 edificio_max = 0
 energia_solar = 1
 flow = false
+flow_type = 0
 pre_build_list = ds_list_create()
 ds_list_add(pre_build_list, {a : 0, b : 0})
 ds_list_clear(pre_build_list)
@@ -78,13 +84,6 @@ ds_grid_clear(null_edificio.coordenadas_dis, 0)
 ds_list_add(null_edificio.coordenadas_close, {a : 0, b : 0})
 ds_list_clear(null_edificio.coordenadas_close)
 edificios_targeteables = ds_list_create()
-null_terreno = {
-	hexagono : obj_hexagono,
-	terreno : 0,
-	ore : -1,
-	ore_amount : 0,
-	ore_random : 0
-}
 bool_unidad = ds_grid_create(xsize, ysize)
 ds_grid_clear(bool_unidad, false)
 edificio_bool = ds_grid_create(xsize, ysize)
@@ -93,17 +92,19 @@ edificio_id = ds_grid_create(xsize, ysize)
 ds_grid_clear(edificio_id, null_edificio)
 edificio_draw = ds_grid_create(xsize, ysize)
 ds_grid_clear(edificio_draw, false)
+ore = ds_grid_create(xsize, ysize)
+ds_grid_clear(ore, -1)
+ore_amount = ds_grid_create(xsize, ysize)
+ds_grid_clear(ore_amount, 0)
+ore_random = ds_grid_create(xsize, ysize)
+ds_grid_clear(ore_random, 0)
+terreno = ds_grid_create(xsize, ysize)
+ds_grid_clear(terreno, 1)
 //Crear plantilla de fondo
 for(var a = 0; a < xsize; a++)
 	for(var b = 0; b < ysize; b++){
 		var temp_complex = abtoxy(a, b), temp_hexagono = instance_create_layer(temp_complex.a, temp_complex.b, "instances", obj_hexagono)
-		terreno[a, b] = {
-			hexagono : temp_hexagono,
-			terreno : 1,
-			ore : -1,
-			ore_amount : 0,
-			ore_random : random(1)
-		}
+		ds_grid_set(ore_random, a, b, random(1))
 		temp_hexagono.a = a
 		temp_hexagono.b = b
 	}
@@ -189,12 +190,12 @@ function def_terreno(nombre, sprite = spr_piedra, recurso = 0, caminable = true,
 #region Arreglos
 	ore_sprite = []
 	ore_recurso = []
-	ore_amount = []
+	ore_size = []
 #endregion
 function def_ore(recurso, sprite = spr_cobre, cantidad = 50){
 	array_push(ore_recurso, real(recurso))
 	array_push(ore_sprite, sprite)
-	array_push(ore_amount, cantidad)
+	array_push(ore_size, cantidad)
 }
 #region Definición
 	def_ore(0, spr_cobre, 80)
@@ -384,6 +385,9 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	def_edificio("Horno de Lava", 2, spr_horno_lava, spr_horno_lava_encendido, "20", 400, 90,,, [4, 8], [10, 10], 15, true, false, [0, 3, 5], [5, 5, 5], true, false, [2, 4, 7],, 10, 0.5)
 	def_edificio("Generador Geotérmico", 2, spr_generador_geotermico,, "36", 200, 1,,, [0, 4, 8], [10, 10, 10],,,,,,,,, -120, 30, 30)
 #endregion
+categoria_edificios = [[2, 3, 4, 5, 6, 18], [1, 7, 8, 9, 22, 23, 24, 29, 30, 34], [10, 11, 12, 13, 28, 35], [33, 15, 14, 26], [19, 20, 21, 25, 31]]
+categoria_nombre = ["Transporte", "Producción", "Electricidad", "Líquidos", "Defensa"]
+categoria_sprite = [spr_camino, spr_taladro, spr_bateria, spr_bomba, spr_torre]
 edificio_rotable[6] = true
 edificio_input_all[16] = true
 edificio_energia[11] = true
@@ -451,45 +455,31 @@ do{
 		spawn_y = (ysize - 1) * irandom(1)
 	}
 }
-until terreno_caminable[terreno[spawn_x, spawn_y].terreno]
+until terreno_caminable[terreno[# spawn_x, spawn_y]]
 keyboard_step = 0
 //Agua, piedra, petróleo y lava
-for(var e = 0; e < 12; e++){
+var temp_peso = [0, 0, 0, 0, 0, 1, 1, 2, 3, 3, 3, 4]
+var temp_peso_data = [[0, 20], [2, 20], [5, 10], [9, 50], [14, 15]]
+for(var e = 0; e < array_length(temp_peso); e++){
 	var a = irandom(xsize - 1), b = irandom(ysize - 1)
-	if e <= 4
-		var c = 0, f = 20
-	else if e <= 6{
-		c = 2
-		f = 20
-	}
-	else if e = 7{
-		c = 5
-		f = 10
-	}
-	else if e <= 10{
-		c = 9
-		f = 50
-	}
-	else if e = 11{
-		c = 14
-		f = 15
-	}
+	var c = temp_peso_data[temp_peso[e], 0]
+	var f = temp_peso_data[temp_peso[e], 1]
 	repeat(f){
-		if terreno[a, b].terreno != 2
-			terreno[a, b].terreno = c
+		if terreno[# a, b] != 2
+			ds_grid_set(terreno, a, b, c)
 		for(var d = 0; d < 6; d++){
 			var temp_complex = next_to(a, b, d)
 			var aa = clamp(temp_complex.a, 0, xsize - 1)
 			var bb = clamp(temp_complex.b, 0, ysize - 1)
-			if terreno[aa, bb].terreno != 2{
-				terreno[aa, bb].terreno = c
+			if terreno[# aa, bb] != 2{
+					ds_grid_set(terreno, aa, bb, c)
 				if c = 0{
 					if random(1) < 0.1
-						terreno[aa, bb].terreno = 6
+						ds_grid_set(terreno, aa, bb, 6)
 					else if random(1) < 0.1
-						terreno[aa, bb].terreno = 7
+						ds_grid_set(terreno, aa, bb, 7)
 					else if random(1) < 0.1
-						terreno[aa, bb].terreno = 8
+						ds_grid_set(terreno, aa, bb, 8)
 				}
 			}
 		}
@@ -527,60 +517,44 @@ nucleo.carga_total = 75
 for(var a = 0; a < ds_list_size(nucleo.coordenadas); a++){
 	var temp_complex = nucleo.coordenadas[|a]
 	var aa = temp_complex.a, bb = temp_complex.b
-	terreno[aa, bb].terreno = 1
-	terreno[aa, bb].ore = -1
+	ds_grid_set(terreno, aa, bb, 1)
+	ds_grid_set(ore, aa, bb, -1)
 }
 //Añadir arena / agua profunda
 for(var a = 0; a < xsize; a++)
 	for(var b = 0; b < ysize; b++){
 		//Añadir arena
-		if terreno[a, b].terreno = 2 or (terreno[a, b].terreno = 3 and random(1) < 0.2)
-			for(var c = 0; c < 6; c++){
-				var temp_complex = next_to(a, b, c)
-				var aa = temp_complex.a
-				var bb = temp_complex.b
-				if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
-					var temp_terreno = terreno[aa, bb]
-					if not in(temp_terreno.terreno, 2, 4)
-						temp_terreno.terreno = 3
-				}
-			}
-		//Añadir piedra
-		else if terreno[a, b].terreno = 5
+		if terreno[# a, b] = 2 or (terreno[# a, b] = 3 and random(1) < 0.2)
 			for(var c = 0; c < 6; c++){
 				var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
-				var temp_terreno = terreno[aa, bb]
-				if not in(temp_terreno.terreno, 5)
-					temp_terreno.terreno = 0
+				if not in(terreno[# aa, bb], 2, 4)
+					ds_grid_set(terreno, aa, bb, 3)
 			}
-		else if terreno[a, b].terreno = 14
+		//Piedra al rededor de Petróleo
+		if in(terreno[# a, b], 5, 14)
 			for(var c = 0; c < 6; c++){
 				var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
-				var temp_terreno = terreno[aa, bb]
-				if not in(temp_terreno.terreno, 14)
-					temp_terreno.terreno = 0
+				if not in(terreno[# aa, bb], 5, 14)
+					terreno[# aa, bb] = 0
 			}
 		//Añadir agua profunda
-		else if terreno[a, b].terreno = 2{
+		if terreno[# a, b] = 2{
 			var flag = true
 			for(var c = 0; c < 6; c++){
-				var temp_complex = next_to(a, b, c)
-				var aa = temp_complex.a
-				var bb = temp_complex.b
-				if aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
-					var temp_terreno = terreno[aa, bb]
-					if not in(temp_terreno.terreno, 2, 4){
-						flag = false
-						break
-					}
+				var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
+				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+					continue
+				if not in(terreno[# aa, bb], 2, 4){
+					flag = false
+					break
 				}
 			}
 			if flag
-				terreno[a, b].terreno = 4
+				ds_grid_set(terreno, a, b, 4)
 		}
 	}
 //Natural Ores
@@ -589,37 +563,35 @@ for(var e = 0; e < 9; e++){
 	var b = irandom(ysize - 1)
 	var c = floor(e / 3)
 	repeat(15){
-		var temp_terreno = terreno[a, b]
-		if terreno_caminable[temp_terreno.terreno]{
-			if temp_terreno.ore != c{
-				temp_terreno.ore_amount = 0
-				if in(temp_terreno.terreno, 0, 6, 7){
+		if terreno_caminable[terreno[# a, b]]{
+			if ore[# a, b] != c{
+				ds_grid_set(ore_amount, a, b, 0)
+				if in(terreno[# a, b], 0, 6, 7){
 					if c = 0
-						temp_terreno.terreno = 6
+						ds_grid_set(terreno, a, b, 6)
 					else if c = 2
-						temp_terreno.terreno = 7
+						ds_grid_set(terreno, a, b, 7)
 				}
 			}
-			temp_terreno.ore = c
-			temp_terreno.ore_amount += floor(random_range(0.3, 1) * ore_amount[c])
+			ds_grid_set(ore, a, b, c)
+			ds_grid_add(ore_amount, a, b, floor(random_range(0.3, 1) * ore_size[c]))
 		}
 		for(var d = 0; d < 6; d++){
-			var temp_complex = next_to(a, b, d)
-			var aa = clamp(temp_complex.a, 0, xsize - 1)
-			var bb = clamp(temp_complex.b, 0, ysize - 1)
-			temp_terreno = terreno[aa, bb]
-			if terreno_caminable[temp_terreno.terreno]{
-				if temp_terreno.ore != c{
-					temp_terreno.ore_amount = 0
-					if in(temp_terreno.terreno, 0, 6, 7){
+			var temp_complex = next_to(a, b, d), aa = temp_complex.a, bb = temp_complex.b
+			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+				continue
+			if terreno_caminable[terreno[# aa, bb]]{
+				if ore[# aa, bb] != c{
+					ds_grid_set(ore_amount, aa, bb, 0)
+					if in(terreno[# aa, bb], 0, 6, 7){
 						if c = 0
-							temp_terreno.terreno = 6
+							ds_grid_set(terreno, aa, bb, 6)
 						else if c = 2
-							temp_terreno.terreno = 7
+							ds_grid_set(terreno, aa, bb, 7)
 					}
 				}
-				temp_terreno.ore = c
-				temp_terreno.ore_amount += floor(random_range(0.3, 1) * ore_amount[c])
+				ds_grid_set(ore, aa, bb, c)
+				ds_grid_add(ore_amount, aa, bb, floor(random_range(0.3, 1) * ore_size[c]))
 			}
 		}
 		var d = irandom(5)
