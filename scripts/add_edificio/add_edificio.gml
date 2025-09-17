@@ -87,53 +87,7 @@ function add_edificio(index, dir, a, b){
 		for(var c = 0; c < ds_list_size(temp_list); c++)
 			ds_list_add(edificio.bordes, temp_list[|c])
 		if not edificio_camino[index] and not in(var_edificio_nombre, "Tubería"){
-			var visitado = ds_grid_create(xsize, ysize)
-			ds_grid_clear(visitado, false)
-			var temp_queue = ds_queue_create()
-			temp_list = get_size(a, b, dir, edificio_size[index])
-			for(var c = 0; c < ds_list_size(temp_list); c++){
-				temp_complex = temp_list[|c]
-				var aa = temp_complex.a, bb = temp_complex.b
-				ds_grid_set(visitado, aa, bb, true)
-				ds_queue_enqueue(temp_queue, {a : aa, b : bb, dis : 0, dir : -1})
-				var temp_priority = ds_grid_get(edificio_cercano_priority, aa, bb)
-				ds_priority_add(temp_priority, edificio, 0)
-			}
-			while not ds_queue_empty(temp_queue){
-				var temp_trio = ds_queue_dequeue(temp_queue), dis = temp_trio.dis + 1
-				var count = 0
-				for(var i = 0; i < 6; i++){
-					if i = temp_trio.dir
-						continue
-					var temp_complex_2 = next_to(temp_trio.a, temp_trio.b, i), aa = temp_complex_2.a, bb = temp_complex_2.b
-					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
-						continue
-					if not visitado[# aa, bb] and terreno_caminable[terreno[# aa, bb]]{
-						count++
-						ds_grid_set(visitado, aa, bb, true)
-						ds_queue_enqueue(temp_queue, {a : aa, b : bb, dis : dis, dir : (i + 3) mod 6})
-						ds_grid_set(edificio.coordenadas_dis, aa, bb, dis)
-						var temp_priority = ds_grid_get(edificio_cercano_priority, aa, bb)
-						ds_priority_add(temp_priority, edificio, dis)
-						if dis < edificio_cercano_dis[# aa, bb]{
-							ds_grid_set(edificio_cercano_dis, aa, bb, dis)
-							ds_grid_set(edificio_cercano, aa, bb, edificio)
-						}
-					}
-				}
-			}
-			ds_grid_clear(edificio_cercano_dir, -1)
-			for(var c = 0; c < ds_list_size(edificios_targeteables); c++){
-				var temp_edificio = edificios_targeteables[|c]
-				ds_list_clear(temp_edificio.coordenadas_close)
-			}
-			for(var c = 0; c < xsize; c++)
-				for(var d = 0; d < ysize; d++){
-					var temp_edificio = edificio_cercano[# c, d]
-					ds_list_add(temp_edificio.coordenadas_close, {a : c, b : d})
-				}
-			ds_queue_destroy(temp_queue)
-			ds_grid_destroy(visitado)
+			edificio_pathfind(edificio)
 			ds_list_add(edificios_targeteables, edificio)
 			for(var c = 0; c < ds_list_size(enemigos); c++){
 				var enemigo = enemigos[|c], temp_complex_2 = abtoxy(enemigo.target.a, enemigo.target.b), aa = enemigo.a, bb = enemigo.b

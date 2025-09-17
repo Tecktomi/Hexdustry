@@ -3,12 +3,23 @@ if menu = 0{
 	draw_set_color(c_white)
 	draw_text(room_width / 2, 100, "HEXDUSTRY")
 	draw_set_font(ft_letra)
-	if draw_boton(room_width / 2, 200, "Jugar"){
+	if draw_boton(room_width / 2, 200, "Juego rápido"){
 		if not nucleo.vivo
 			game_restart()
 		menu = 1
 		image_index = 0
 		build_index = 0
+	}
+	if draw_boton(room_width / 2, 250, "Cargar escenario"){
+		if not nucleo.vivo
+			game_restart()
+		var file = cargar_escenario()
+		if file != ""{
+			redo_pathfind()
+			menu = 1
+			image_index = 0
+			build_index = 0
+		}
 	}
 	if draw_boton(room_width / 2, 300, "Editor")
 		menu = 2
@@ -19,7 +30,7 @@ if menu = 0{
 	exit
 }
 if menu = 2{
-	dibujar_fondo(true)
+	dibujar_fondo(1)
 	dibujar_edificios()
 	control_camara(-200)
 	var xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / zoom
@@ -106,7 +117,7 @@ if menu = 2{
 					if build_index >= 0{
 						var offset = 0
 						//Terrenos
-						if build_index <= array_length(terreno_nombre){
+						if build_index < array_length(terreno_nombre){
 							draw_sprite_off(terreno_sprite[build_index], 0, aa, bb,,,,, 0.5)
 							if mouse_check_button(mb_left){
 								ds_grid_set(terreno, a, b, build_index)
@@ -183,19 +194,25 @@ if menu = 2{
 	if ysize > prev_ysize
 		resize_grid(0, prev_ysize)
 	build_size = round(deslizante(50, 150, room_height - 150, build_size, 1, 5, 2))
-	if draw_boton(10, room_height - 100, "Volver") or keyboard_check_pressed(vk_escape)
+	if draw_boton(10, room_height - 100, "Volver") or keyboard_check_pressed(vk_escape){
 		menu = 0
+		redo_pathfind()
+	}
 	if draw_boton(10, room_height - 60, "Guardar") or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("S"))){
 		var file = get_save_filename("*.txt", game_save_id + "save.txt")
 		if file != ""{
-			ini_open(file + ".txt")
+			ini_open(file)
 			ini_write_real("Global", "xsize", xsize)
 			ini_write_real("Global", "ysize", ysize)
+			ini_write_real("Global", "spawn_x", spawn_x)
+			ini_write_real("Global", "spawn_y", spawn_y)
 			for(var a = 0; a < xsize; a++)
 				for(b = 0; b < ysize; b++){
 					ini_write_real("Terreno", $"{a},{b}", floor(terreno[# a, b]))
-					ini_write_real("Ore", $"{a},{b}", floor(ore[# a, b]))
-					ini_write_real("Ore amount", $"{a},{b}", floor(ore_amount[# a, b]))
+					if ore[# a, b]!= -1{
+						ini_write_real("Ore", $"{a},{b}", floor(ore[# a, b]))
+						ini_write_real("Ore amount", $"{a},{b}", floor(ore_amount[# a, b]))
+					}
 				}
 			ini_close()
 			ini_open(game_save_id + "settings.ini")
@@ -203,32 +220,15 @@ if menu = 2{
 			ini_close()
 		}
 	}
-	if draw_boton(10, room_height - 30, "Cargar") or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("L"))){
-		var file = get_open_filename("*.txt", game_save_id + "save.txt")
-		if file != ""{
-			ini_open(file)
-			prev_xsize = xsize
-			xsize = ini_read_real("Global", "xsize", xsize)
-			if xsize > prev_xsize
-				resize_grid(prev_xsize, 0)
-			prev_ysize = ysize
-			ysize = ini_read_real("Global", "ysize", ysize)
-			if ysize > prev_ysize
-				resize_grid(0, prev_ysize)
-			for(var a = 0; a < xsize; a++)
-				for(b = 0; b < ysize; b++){
-					ds_grid_set(terreno, a, b, ini_read_real("Terreno", $"{a},{b}", terreno[# a, b]))
-					ds_grid_set(ore, a, b, ini_read_real("Ore", $"{a},{b}", ore[# a, b]))
-					ds_grid_set(ore_amount, a, b, ini_read_real("Ore amount", $"{a},{b}", ore_amount[# a, b]))
-				}
-			ini_close()
-		}
-	}
+	if draw_boton(10, room_height - 30, "Cargar") or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("L")))
+		cargar_escenario()
 	update_cursor()
 	exit
 }
 #region Dibujo
 	dibujar_fondo()
+	if tile_animation
+		dibujar_fondo(2)
 	dibujar_edificios()
 	//Dibujo items y links electricos
 	var mina = floor(camx / zoom / 48), minb = floor(camy / zoom / 14), maxa = ceil((camx + room_width) / zoom / 48), maxb = ceil((camy + room_height) / zoom / 14)
@@ -1021,7 +1021,7 @@ if build_index > 0{
 						break
 					}
 					//Checkear coliciones
-					if edificio_bool[# aa, bb] and not ((edificio_camino[build_index] or (var_edificio_nombre = "Túnel")) and edificio_camino[build_index]){
+					if edificio_bool[# aa, bb] and not ((edificio_camino[build_index] or var_edificio_nombre = "Túnel") and edificio_camino[edificio_id[# aa, bb].index]){
 						flag = false
 						break
 					}
@@ -1398,7 +1398,6 @@ else{
 						arma = 1
 					for(var b = 0; b < array_length(armas[arma]); b++){
 						var tiro_struct = armas[arma, b]
-						show_debug_message(tiro_struct)
 						if edificio.carga[tiro_struct.recurso] >= tiro_struct.cantidad{
 							tiro = b
 							break
@@ -1495,7 +1494,6 @@ else{
 					break
 				}
 			if flag for(var b = 0; b < ds_list_size(edificio.bordes); b++){
-				show_debug_message(1)
 				var temp_complex = edificio.bordes[|b], aa = temp_complex.a, bb = temp_complex.b
 				if not edificio_bool[# aa, bb] and not bool_unidad[# aa, bb]{
 					flag_2 = true
@@ -1610,10 +1608,13 @@ else{
 					var min_dis = edificio_cercano_dis[# aaa, bbb]
 					for(var i = 0; i < 6; i++){
 						temp_complex = next_to(aaa, bbb, i)
-						var disi = edificio_cercano_dis[# aa, bb]
+						var aaaa = temp_complex.a, bbbb = temp_complex.b
+						if aaaa < 0 or bbbb < 0 or aaaa >= xsize or bbbb >= ysize
+							continue
+						var disi = edificio_cercano_dis[# aaaa, bbbb]
 						if disi < min_dis{
 							min_dis = disi
-							disi = i
+							dir = i
 							ds_grid_set(edificio_cercano_dir, aaa, bbb, i)
 						}
 					}
@@ -1793,7 +1794,7 @@ else{
 	if keyboard_check_pressed(ord("I"))
 		info = not info
 	if keyboard_check_pressed(ord("L"))
-		flow = not flow
+		flow = (flow + 1) mod 6
 	//Mostrar redes electricas
 	if keyboard_check(ord("O")){
 		var temp_text = ""
@@ -1864,8 +1865,10 @@ else{
 	}
 	if keyboard_check_pressed(vk_escape)
 		menu = 0
+	if keyboard_check_pressed(ord("G"))
+		tile_animation = not tile_animation
 #endregion
 control_camara()
-if flow
+if flow > 0
 	draw_path_find()
 update_cursor()
