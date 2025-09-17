@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"edificio_pathfind",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"edificio_pathfind",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

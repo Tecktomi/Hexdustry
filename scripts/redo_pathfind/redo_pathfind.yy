@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"redo_pathfind",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"redo_pathfind",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

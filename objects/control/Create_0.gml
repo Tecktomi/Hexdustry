@@ -2,36 +2,61 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "16_09_2025")
+ini_write_string("Global", "version", "17_09_2025")
 ini_close()
-show_debug_message(game_save_id)
-menu = 0
-cursor = cr_arrow
-deslizante_id = -1
-xsize = 48
-ysize = 96
-chunk_width = 12
-chunk_height = 24
-prev_x = 0
-prev_y = 0
-prev_change = true
-mx_clic = 0
-my_clic = 0
-show_menu = false
-show_menu_build = undefined
-pausa = false
-show_menu_x = 0
-show_menu_y = 0
-edificio_max = 0
-energia_solar = 1
-flow = false
-flow_type = 0
-pre_build_list = ds_list_create()
-ds_list_add(pre_build_list, {a : 0, b : 0})
-ds_list_clear(pre_build_list)
-for(var a = 0; a < xsize / chunk_width; a++)
-	for(var b = 0; b < ysize / chunk_height; b++)
+#region Metadatos
+	menu = 0
+	cursor = cr_arrow
+	deslizante_id = -1
+	xsize = 48
+	ysize = 96
+	chunk_width = 12
+	chunk_height = 24
+	prev_x = 0
+	prev_y = 0
+	prev_change = true
+	mx_clic = 0
+	my_clic = 0
+	show_menu = false
+	show_menu_build = undefined
+	pausa = false
+	show_menu_x = 0
+	show_menu_y = 0
+	edificio_max = 0
+	energia_solar = 1
+	flow = 0
+	build_index = 0
+	build_size = 1
+	build_dir = 0
+	build_able = false
+	last_mx = -1
+	last_my = -1
+	build_list = get_size(0, 0, 0, 0)
+	build_menu = 0
+	menu_x = 0
+	menu_y = 0
+	clicked = false
+	menu_array = []
+	cheat = false
+	info = false
+	zoom = 1
+	tile_animation = true
+	camx = (xsize * 48 - room_width) / 2
+	camy = (ysize * 14 - room_height) / 2
+	enemigos_spawned = 3
+	keyboard_step = 0
+	angle_dir = [pi / 6, pi / 2, 5 * pi / 6, 7 * pi / 6, 3 * pi / 2, 11 * pi / 6]
+	for(var a = 0; a < 6; a++){
+		cos_angle_dir[a] = cos(angle_dir[a])
+		sin_angle_dir[a] = sin(angle_dir[a])
+	}
+	pre_build_list = ds_list_create()
+	ds_list_add(pre_build_list, {a : 0, b : 0})
+	ds_list_clear(pre_build_list)
+	for(var a = 0; a < xsize / chunk_width; a++)
+		for(var b = 0; b < ysize / chunk_height; b++)
 		background[a, b] = spr_hexagono
+#endregion
 null_edificio = {
 	index : -1,
 	dir : 0,
@@ -83,7 +108,8 @@ ds_list_clear(null_edificio.flujo_link)
 ds_grid_clear(null_edificio.coordenadas_dis, 0)
 ds_list_add(null_edificio.coordenadas_close, {a : 0, b : 0})
 ds_list_clear(null_edificio.coordenadas_close)
-edificios_targeteables = ds_list_create()
+build_target = null_edificio
+//Grids
 bool_unidad = ds_grid_create(xsize, ysize)
 ds_grid_clear(bool_unidad, false)
 edificio_bool = ds_grid_create(xsize, ysize)
@@ -100,6 +126,20 @@ ore_random = ds_grid_create(xsize, ysize)
 ds_grid_clear(ore_random, 0)
 terreno = ds_grid_create(xsize, ysize)
 ds_grid_clear(terreno, 1)
+edificio_cercano = ds_grid_create(xsize, ysize)
+ds_grid_clear(edificio_cercano, null_edificio)
+edificio_cercano_dis = ds_grid_create(xsize, ysize)
+ds_grid_clear(edificio_cercano_dis, infinity)
+edificio_cercano_dir = ds_grid_create(xsize, ysize)
+ds_grid_clear(edificio_cercano_dir, -1)
+edificio_cercano_priority = ds_grid_create(xsize, ysize)
+for(var a = 0; a < xsize; a++)
+	for(var b = 0; b < ysize; b++){
+		var temp_priority = ds_priority_create()
+		ds_priority_add(temp_priority, null_edificio, 0)
+		ds_priority_delete_max(temp_priority)
+		ds_grid_set(edificio_cercano_priority, a, b, temp_priority)
+	}
 //Crear plantilla de fondo
 for(var a = 0; a < xsize; a++)
 	for(var b = 0; b < ysize; b++){
@@ -185,6 +225,9 @@ function def_terreno(nombre, sprite = spr_piedra, recurso = 0, caminable = true,
 	def_terreno("Nieve", spr_nieve)
 	def_terreno("Pared de Nieve", spr_pared_nieve,, false)
 	def_terreno("Lava", spr_lava,, false, true)
+	//15
+	def_terreno("Hielo", spr_hielo)
+	def_terreno("Basalto", spr_basalto)
 #endregion
 //Ores
 #region Arreglos
@@ -395,6 +438,7 @@ edificio_energia[12] = true
 size_size = [1, 3, 7, 12, 19]
 size_borde = [6, 9, 12, 15, 18, 21]
 edificios = ds_list_create()
+edificios_targeteables = ds_list_create()
 //Redes electricas
 null_red = {
 	edificios : ds_list_create(),
@@ -425,38 +469,6 @@ ds_list_clear(null_flujo.edificios)
 flujos = ds_list_create()
 ds_list_add(flujos, null_flujo)
 ds_list_clear(flujos)
-//Metadatos
-build_index = 0
-build_size = 1
-build_dir = 0
-build_able = false
-build_target = null_edificio
-last_mx = -1
-last_my = -1
-build_list = get_size(0, 0, 0, 0)
-build_menu = 0
-menu_x = 0
-menu_y = 0
-clicked = false
-menu_array = []
-cheat = false
-info = false
-zoom = 1
-camx = (xsize * 48 - room_width) / 2
-camy = (ysize * 14 - room_height) / 2
-enemigos_spawned = 3
-do{
-	if irandom(1){
-		spawn_x = (xsize - 1) * irandom(1)
-		spawn_y = irandom(ysize - 1)
-	}
-	else{
-		spawn_x = irandom(xsize - 1)
-		spawn_y = (ysize - 1) * irandom(1)
-	}
-}
-until terreno_caminable[terreno[# spawn_x, spawn_y]]
-keyboard_step = 0
 //Agua, piedra, petróleo y lava
 var temp_peso = [0, 0, 0, 0, 0, 1, 1, 2, 3, 3, 3, 4]
 var temp_peso_data = [[0, 20], [2, 20], [5, 10], [9, 50], [14, 15]]
@@ -472,7 +484,7 @@ for(var e = 0; e < array_length(temp_peso); e++){
 			var aa = clamp(temp_complex.a, 0, xsize - 1)
 			var bb = clamp(temp_complex.b, 0, ysize - 1)
 			if terreno[# aa, bb] != 2{
-					ds_grid_set(terreno, aa, bb, c)
+				ds_grid_set(terreno, aa, bb, c)
 				if c = 0{
 					if random(1) < 0.1
 						ds_grid_set(terreno, aa, bb, 6)
@@ -492,25 +504,6 @@ for(var e = 0; e < array_length(temp_peso); e++){
 	}
 }
 //Crear nucelo
-edificio_cercano = ds_grid_create(xsize, ysize)
-ds_grid_clear(edificio_cercano, null_edificio)
-edificio_cercano_dis = ds_grid_create(xsize, ysize)
-ds_grid_clear(edificio_cercano_dis, infinity)
-edificio_cercano_dir = ds_grid_create(xsize, ysize)
-ds_grid_clear(edificio_cercano_dir, -1)
-edificio_cercano_priority = ds_grid_create(xsize, ysize)
-for(var a = 0; a < xsize; a++)
-	for(var b = 0; b < ysize; b++){
-		var temp_priority = ds_priority_create()
-		ds_priority_add(temp_priority, null_edificio, 0)
-		ds_priority_delete_max(temp_priority)
-		ds_grid_set(edificio_cercano_priority, a, b, temp_priority)
-	}
-angle_dir = [pi / 6, pi / 2, 5 * pi / 6, 7 * pi / 6, 3 * pi / 2, 11 * pi / 6]
-for(var a = 0; a < 6; a++){
-	cos_angle_dir[a] = cos(angle_dir[a])
-	sin_angle_dir[a] = sin(angle_dir[a])
-}
 nucleo = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
 nucleo.carga[0] = 75
 nucleo.carga_total = 75
@@ -524,22 +517,49 @@ for(var a = 0; a < ds_list_size(nucleo.coordenadas); a++){
 for(var a = 0; a < xsize; a++)
 	for(var b = 0; b < ysize; b++){
 		//Añadir arena
-		if terreno[# a, b] = 2 or (terreno[# a, b] = 3 and random(1) < 0.2)
+		if terreno[# a, b] = 2
 			for(var c = 0; c < 6; c++){
 				var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if not in(terreno[# aa, bb], 2, 4)
 					ds_grid_set(terreno, aa, bb, 3)
+				if brandom(){
+					temp_complex = next_to(aa, bb, 5)
+					aa = temp_complex.a
+					bb = temp_complex.b
+					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+						continue
+					if not in(terreno[# aa, bb], 2, 4)
+						ds_grid_set(terreno, aa, bb, 3)
+				}
 			}
 		//Piedra al rededor de Petróleo
-		if in(terreno[# a, b], 5, 14)
+		else if terreno[# a, b] = 5
 			for(var c = 0; c < 6; c++){
 				var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
-				if not in(terreno[# aa, bb], 5, 14)
+				if terreno[# aa, bb] != 5
 					terreno[# aa, bb] = 0
+			}
+		//Basalto al rededor de la Lava
+		else if terreno[# a, b] = 14
+			for(var c = 0; c < 6; c++){
+				var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
+				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+					continue
+				if terreno[# aa, bb] != 14
+					terreno[# aa, bb] = 16
+				if brandom(){
+					temp_complex = next_to(aa, bb, irandom(5))
+					aa = temp_complex.a
+					bb = temp_complex.b
+					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+						continue
+					if terreno[# aa, bb] != 14
+						ds_grid_set(terreno, aa, bb, 16)
+				}
 			}
 		//Añadir agua profunda
 		if terreno[# a, b] = 2{
@@ -600,3 +620,15 @@ for(var e = 0; e < 9; e++){
 		b = clamp(temp_complex.b, 0, ysize - 1)
 	}
 }
+//Spawn point
+do{
+	if irandom(1){
+		spawn_x = (xsize - 1) * irandom(1)
+		spawn_y = irandom(ysize - 1)
+	}
+	else{
+		spawn_x = irandom(xsize - 1)
+		spawn_y = (ysize - 1) * irandom(1)
+	}
+}
+until terreno_caminable[terreno[# spawn_x, spawn_y]]

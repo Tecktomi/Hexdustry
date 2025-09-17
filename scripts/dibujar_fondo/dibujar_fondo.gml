@@ -1,6 +1,6 @@
-function dibujar_fondo(editor = false){
+function dibujar_fondo(editor = 0){
 	with control{
-		if editor{
+		if editor = 1{
 			var step = image_index / 10
 			var mina = max(floor(camx / zoom / 48), 0), minb = max(floor(camy / zoom / 14) - 1, 0), maxa = ceil((camx + room_width) / zoom / 48), maxb = ceil((camy + room_height) / zoom / 14)
 			for(var a = mina; a < maxa; a++)
@@ -12,6 +12,17 @@ function dibujar_fondo(editor = false){
 					if terreno[# a, b] = 14
 						draw_sprite_off(spr_lava_animacion, step + 16 * ore_random[# a, b], aa, bb)
 				}
+			break
+		}
+		if editor = 2{
+			var step = image_index / 10
+			var mina = max(floor(camx / zoom / 48), 0), minb = max(floor(camy / zoom / 14) - 1, 0), maxa = ceil((camx + room_width) / zoom / 48), maxb = ceil((camy + room_height) / zoom / 14)
+			for(var a = mina; a < maxa; a++)
+				for(var b = minb; b < maxb; b++)
+					if terreno[# a, b] = 14{
+						var temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b
+						draw_sprite_off(spr_lava_animacion, step + 16 * ore_random[# a, b], aa, bb)
+					}
 			break
 		}
 		for(var a = 0; a < xsize / chunk_width; a++)
