@@ -92,7 +92,7 @@ function delete_edificio(aa, bb, enemigo = false){
 					if in(edificio_nombre[temp_edificio.index], "Batería")
 						red_bateria++
 				}
-				var agregado = ds_list_create(), visited = array_create(edificio_max, false)
+				var agregado = ds_list_create(), visited = array_create(edificio_count, false)
 				while not ds_list_empty(temp_red.edificios){
 					var nodo = temp_red.edificios[|0]
 					if not visited[nodo.edificio_index]{
@@ -169,7 +169,7 @@ function delete_edificio(aa, bb, enemigo = false){
 					var flujo_almacen = 0
 					for(var a = 0; a < ds_list_size(temp_flujo.edificios); a++)
 						flujo_almacen += edificio_flujo_almacen[temp_flujo.edificios[|a].index]
-					var agregado = ds_list_create(), visited = array_create(edificio_max, false)
+					var agregado = ds_list_create(), visited = array_create(edificio_count, false)
 					while not ds_list_empty(temp_flujo.edificios){
 						var nodo = temp_flujo.edificios[|0]
 						if not visited[nodo.edificio_index]{

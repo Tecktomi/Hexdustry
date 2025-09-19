@@ -117,7 +117,7 @@ if menu = 2{
 					if build_index >= 0{
 						var offset = 0
 						//Terrenos
-						if build_index < array_length(terreno_nombre){
+						if build_index < terreno_max{
 							draw_sprite_off(terreno_sprite[build_index], 0, aa, bb,,,,, 0.5)
 							if mouse_check_button(mb_left){
 								ds_grid_set(terreno, a, b, build_index)
@@ -128,8 +128,8 @@ if menu = 2{
 						}
 						//Minerales
 						else{
-							offset += array_length(terreno_nombre)
-							if build_index - offset < array_length(ore_recurso){
+							offset += terreno_max
+							if build_index - offset < ore_max{
 								draw_sprite_off(ore_sprite[build_index - offset], 0, aa, bb,,,,, 0.5)
 								if mouse_check_button(mb_left){
 									ds_grid_set(ore, a, b, build_index - offset)
@@ -165,18 +165,18 @@ if menu = 2{
 	draw_rectangle(0, 0, 200, room_height, false)
 	draw_set_color(c_black)
 	var b = 0
-	for(var a = 0; a < array_length(terreno_nombre); a++)
+	for(var a = 0; a < terreno_max; a++)
 		if draw_sprite_boton(terreno_sprite[a], 10 + (a mod 5) * 36, 10 + floor(a / 5) * 36){
 			build_index = a
 			build_able = false
 		}
-	b += array_length(terreno_nombre)
-	for(var a = 0; a < array_length(ore_sprite); a++)
+	b += terreno_max
+	for(var a = 0; a < ore_max; a++)
 		if draw_sprite_boton(ore_sprite[a], 10 + ((a + b) mod 5) * 36, 10 + floor((a + b) / 5) * 36){
 			build_index = a + b
 			build_able = false
 		}
-	b += array_length(ore_sprite)
+	b += ore_max
 	if draw_sprite_boton(spr_equis, 10 + (b mod 5) * 36, 10 + floor(b / 5) * 36){
 		build_index = b
 		build_able = false
@@ -603,7 +603,7 @@ flag = false
 #endregion
 //Acceso directo
 if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastchar, "A", "D", "W", "S", " ") or cheat){
-	for(var a = 1; a < array_length(edificio_nombre); a++)
+	for(var a = 1; a < edificio_max; a++)
 		if string_ends_with(keyboard_string, edificio_key[a]){
 			keyboard_string = ""
 			build_index = a
@@ -1605,17 +1605,32 @@ else{
 			var dis = distance(aa, bb, edificio.x, edificio.y)
 			if edificio_cercano_dis[# aaa, bbb] > 1 and dis > 50{
 				if edificio_cercano_dir[# aaa, bbb] = -1{
-					var min_dis = edificio_cercano_dis[# aaa, bbb]
+					var min_dis = edificio_cercano_dis[# aaa, bbb], min_dis_eu =  infinity
 					for(var i = 0; i < 6; i++){
 						temp_complex = next_to(aaa, bbb, i)
 						var aaaa = temp_complex.a, bbbb = temp_complex.b
 						if aaaa < 0 or bbbb < 0 or aaaa >= xsize or bbbb >= ysize
+							continue
+						if not terreno_caminable[terreno[# aaaa, bbbb]]
 							continue
 						var disi = edificio_cercano_dis[# aaaa, bbbb]
 						if disi < min_dis{
 							min_dis = disi
 							dir = i
 							ds_grid_set(edificio_cercano_dir, aaa, bbb, i)
+							temp_complex = abtoxy(aaaa, bbbb)
+							min_dis_eu = distance(temp_complex.a, temp_complex.b, edificio.x, edificio.y)
+							
+						}
+						else if disi = min_dis{
+							temp_complex = abtoxy(aaaa, bbbb)
+							var c = distance(temp_complex.a, temp_complex.b, edificio.x, edificio.y)
+							if c < min_dis_eu{
+								min_dis = disi
+								dir = i
+								ds_grid_set(edificio_cercano_dir, aaa, bbb, i)
+								min_dis_eu = c
+							}
 						}
 					}
 				}
@@ -1628,7 +1643,7 @@ else{
 				enemigo.a += cos_angle_dir[dir]
 				enemigo.b -= sin_angle_dir[dir]
 			}
-			if dis < 70{
+			if dis < 80{
 				edificio.vida--
 				if edificio.vida <= 0{
 					delete_edificio(edificio.a, edificio.b, true)
@@ -1674,8 +1689,11 @@ else{
 			if temp_enemigo != enemigo{
 				var dis = distance(aa, bb, temp_enemigo.a, temp_enemigo.b)
 				if dis < 20{
-					enemigo.a += (aa - temp_enemigo.a) / dis
-					enemigo.b += (bb - temp_enemigo.b) / dis
+					var aaa = (aa - temp_enemigo.a) / dis, bbb = (bb - temp_enemigo.b) / dis
+					enemigo.a += aaa
+					enemigo.b += bbb
+					temp_enemigo.a -= aaa
+					temp_enemigo.b -= bbb
 				}
 			}
 		}
@@ -1735,7 +1753,7 @@ else{
 					e = array_length(size_size)
 				var temp_complex_list = get_size(spawn_x, spawn_y, 0, e)
 				for(var i = 0; i < min(ds_list_size(temp_complex_list), d); i++){
-					var temp_complex = temp_complex_list[|i], aa = temp_complex.a, bb = temp_complex.b, temp_complex_2 = abtoxy(aa, bb)
+					var temp_complex = temp_complex_list[|i], aa = clamp(temp_complex.a, 0, xsize - 1), bb = clamp(temp_complex.b, 0, ysize - 1), temp_complex_2 = abtoxy(aa, bb)
 					var enemigo = {
 						a : temp_complex_2.a,
 						b : temp_complex_2.b,

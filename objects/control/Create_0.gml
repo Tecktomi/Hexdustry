@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "17_09_2025")
+ini_write_string("Global", "version", "19_09_2025")
 ini_close()
 #region Metadatos
 	menu = 0
@@ -22,7 +22,7 @@ ini_close()
 	pausa = false
 	show_menu_x = 0
 	show_menu_y = 0
-	edificio_max = 0
+	edificio_count = 0
 	energia_solar = 1
 	flow = 0
 	build_index = 0
@@ -229,6 +229,7 @@ function def_terreno(nombre, sprite = spr_piedra, recurso = 0, caminable = true,
 	def_terreno("Hielo", spr_hielo)
 	def_terreno("Basalto", spr_basalto)
 #endregion
+terreno_max = array_length(terreno_nombre)
 //Ores
 #region Arreglos
 	ore_sprite = []
@@ -245,6 +246,7 @@ function def_ore(recurso, sprite = spr_cobre, cantidad = 50){
 	def_ore(1, spr_carbon, 60)
 	def_ore(3, spr_hierro, 50)
 #endregion
+ore_max = array_length(ore_sprite)
 //Recursos
 #region Arreglos
 	recurso_sprite = []
@@ -262,7 +264,7 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 }
 #region Definición
 	def_recurso("Cobre", spr_item_cobre, c_orange)
-	def_recurso("Carbón", spr_item_carbon, c_black, 150)
+	def_recurso("Carbón", spr_item_carbon, c_black, 300)
 	def_recurso("Bronce", spr_item_bronce, c_red)
 	def_recurso("Hierro", spr_item_hierro, c_gray)
 	def_recurso("Acero", spr_item_acero, c_dkgray)
@@ -275,7 +277,7 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 	//10
 	def_recurso("Piedra Férrica", spr_item_piedra_hierro, make_color_hsv(0, 100, 127))
 	def_recurso("Piedra Sulfatada", spr_item_piedra_azufre, make_color_hsv(42, 100, 127))
-	def_recurso("Compuesto Incendiario", spr_item_incendiario, make_color_rgb(191, 127, 0), 600)
+	def_recurso("Compuesto Incendiario", spr_item_incendiario, make_color_rgb(191, 127, 0), 900)
 #endregion
 rss_max = array_length(recurso_nombre)
 //Liquidos
@@ -431,6 +433,7 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 categoria_edificios = [[2, 3, 4, 5, 6, 18], [1, 7, 8, 9, 22, 23, 24, 29, 30, 34], [10, 11, 12, 13, 28, 35], [33, 15, 14, 26], [19, 20, 21, 25, 31]]
 categoria_nombre = ["Transporte", "Producción", "Electricidad", "Líquidos", "Defensa"]
 categoria_sprite = [spr_camino, spr_taladro, spr_bateria, spr_bomba, spr_torre]
+edificio_max = array_length(edificio_nombre)
 edificio_rotable[6] = true
 edificio_input_all[16] = true
 edificio_energia[11] = true

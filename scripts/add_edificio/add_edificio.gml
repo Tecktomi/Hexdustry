@@ -37,7 +37,7 @@ function add_edificio(index, dir, a, b){
 			target : null_enemigo,
 			flujo_consumo : 0,
 			energia_consumo : 0,
-			edificio_index : real(edificio_max++),
+			edificio_index : real(edificio_count++),
 			coordenadas_dis : ds_grid_create(xsize, ysize),
 			coordenadas_close : ds_list_create(),
 			vivo : true
