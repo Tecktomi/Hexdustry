@@ -16,7 +16,6 @@ function edificio_pathfind(edificio = null_edificio){
 		}
 		while not ds_queue_empty(temp_queue){
 			var temp_trio = ds_queue_dequeue(temp_queue), dis = temp_trio.dis + 1
-			var count = 0
 			for(var i = 0; i < 6; i++){
 				if i = temp_trio.dir
 					continue
@@ -24,7 +23,6 @@ function edificio_pathfind(edificio = null_edificio){
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if not visitado[# aa, bb] and terreno_caminable[terreno[# aa, bb]]{
-					count++
 					ds_grid_set(visitado, aa, bb, true)
 					ds_queue_enqueue(temp_queue, {a : aa, b : bb, dis : dis, dir : (i + 3) mod 6})
 					ds_grid_set(edificio.coordenadas_dis, aa, bb, dis)

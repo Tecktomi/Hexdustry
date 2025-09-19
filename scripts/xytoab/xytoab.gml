@@ -1,5 +1,6 @@
 function xytoab(x, y) {
-    var b = floor(y / 14) - 1;
-    var a = floor((x - 16) / 48 - ((b mod 2) / 2));
-    return { a: clamp(a, 0, xsize - 1), b: clamp(b, 0, ysize - 1) };
+    var temp_hexagono = instance_position(x, y, obj_hexagono)
+	if temp_hexagono != noone
+		return {a : temp_hexagono.a, b : temp_hexagono.b}
+	return {a : 0, b : 0}
 }
