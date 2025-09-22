@@ -6,7 +6,7 @@ function dibujar_edificios(){
 				if edificio_draw[# a, b]{
 					var edificio = edificio_id[# a, b], index = edificio.index, var_edificio_nombre = edificio_nombre[index], dir = edificio.dir, aa = edificio.x, bb = edificio.y
 					//Dibujo caminos
-					if edificio_camino[index] or var_edificio_nombre = "Túnel"{
+					if edificio_camino[index] or in(var_edificio_nombre, "Túnel", "Túnel salida"){
 						if in(var_edificio_nombre, "Selector", "Overflow")
 							draw_sprite_off(edificio_sprite[index], real(edificio.mode), aa, bb,,, (dir - 1) * 60)
 						else if in(var_edificio_nombre, "Cinta Transportadora", "Enrutador", "Cinta Magnética"){

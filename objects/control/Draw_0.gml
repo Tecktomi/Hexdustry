@@ -1,3 +1,4 @@
+//Menú principal
 if menu = 0{
 	draw_set_font(ft_titulo)
 	draw_set_color(c_white)
@@ -29,6 +30,7 @@ if menu = 0{
 		game_end()
 	exit
 }
+//Editor
 if menu = 2{
 	dibujar_fondo(1)
 	dibujar_edificios()
@@ -40,7 +42,7 @@ if menu = 2{
 		mx = temp_hexagono.a
 		my = temp_hexagono.b
 		//Barril de Pintura
-		if keyboard_check(vk_lcontrol) and not build_able{
+		if keyboard_check(vk_lcontrol) and editor_herramienta = 0 and build_index < terreno_max{
 			if mouse_check_button_pressed(mb_left)
 				//Aplicar cambio
 				if mx = last_mx and my = last_my{
@@ -92,9 +94,9 @@ if menu = 2{
 			}
 		}
 		//Lapiz
-		else if build_index >= 0{
+		else{
 			//Spawn point
-			if build_able{
+			if editor_herramienta = 1{
 				draw_set_color(c_red)
 				var temp_complex = abtoxy(mx, my)
 				draw_circle_off(temp_complex.a, temp_complex.b, 200, true)
@@ -102,11 +104,27 @@ if menu = 2{
 					mouse_clear(mb_left)
 					spawn_x = mx
 					spawn_y = my
-					build_able = false
+					editor_herramienta = 0
+				}
+			}
+			//Base
+			else if editor_herramienta = 2{
+				var temp_complex = abtoxy(mx, my)
+				draw_sprite_off(spr_base, 0, temp_complex.a, temp_complex.b,,,,, 0.5)
+				if mouse_check_button_pressed(mb_left){
+					mouse_clear(mb_left)
+					var temp_nucleo = add_edificio(0, 0, mx, my)
+					delete_edificio(nucleo.a, nucleo.b, false)
+					nucleo = temp_nucleo
+					editor_herramienta = 0
 				}
 			}
 			//Terreno
-			else{
+			else if build_index >= 0 or editor_herramienta = 3{
+				if mouse_wheel_up() and build_size < 5
+					build_size++
+				if mouse_wheel_down() and build_size > 1
+					build_size--
 				var temp_list = get_size(mx, my, 0, build_size)
 				for(var i = 0; i < ds_list_size(temp_list); i++){
 					var temp_complex = temp_list[|i], a = temp_complex.a, b = temp_complex.b
@@ -114,6 +132,15 @@ if menu = 2{
 						continue
 					temp_complex = abtoxy(a, b)
 					var aa = temp_complex.a, bb = temp_complex.b
+					//Eliminar minerales
+					if editor_herramienta = 3{
+						draw_sprite_off(spr_rojo, 0, aa, bb,,,,, 0.5)
+						if mouse_check_button(mb_left){
+							ds_grid_set(ore, a, b, -1)
+							ds_grid_set(ore_amount, a, b, 0)
+							update_background(a, b)
+						}
+					}
 					if build_index >= 0{
 						var offset = 0
 						//Terrenos
@@ -129,21 +156,11 @@ if menu = 2{
 						//Minerales
 						else{
 							offset += terreno_max
-							if build_index - offset < ore_max{
-								draw_sprite_off(ore_sprite[build_index - offset], 0, aa, bb,,,,, 0.5)
-								if mouse_check_button(mb_left){
-									ds_grid_set(ore, a, b, build_index - offset)
-									ds_grid_set(ore_amount, a, b, floor(random_range(0.3, 1) * ore_size[build_index - offset]))
-									update_background(a, b)
-								}
-							}
-							else{
-								draw_sprite_off(spr_rojo, 0, aa, bb,,,,, 0.5)
-								if mouse_check_button(mb_left){
-									ds_grid_set(ore, a, b, -1)
-									ds_grid_set(ore_amount, a, b, 0)
-									update_background(a, b)
-								}
+							draw_sprite_off(ore_sprite[build_index - offset], 0, aa, bb,,,,, 0.5)
+							if mouse_check_button(mb_left){
+								ds_grid_set(ore, a, b, build_index - offset)
+								ds_grid_set(ore_amount, a, b, floor(random_range(0.3, 1) * ore_size[build_index - offset]))
+								update_background(a, b)
 							}
 						}
 					}
@@ -156,8 +173,12 @@ if menu = 2{
 			delete_edificio(mx, my)
 		}
 	}
-	if mouse_check_button_pressed(mb_right) and build_index >= 0
-		build_index = -1
+	if mouse_check_button_pressed(mb_right){
+		if build_index >= 0
+			build_index = -1
+		else if editor_herramienta > 0
+			editor_herramienta = 0
+	}
 	draw_set_color(c_red)
 	var temp_complex = abtoxy(spawn_x, spawn_y)
 	draw_circle_off(temp_complex.a, temp_complex.b, 200, true)
@@ -168,21 +189,29 @@ if menu = 2{
 	for(var a = 0; a < terreno_max; a++)
 		if draw_sprite_boton(terreno_sprite[a], 10 + (a mod 5) * 36, 10 + floor(a / 5) * 36){
 			build_index = a
-			build_able = false
+			editor_herramienta = 0
 		}
 	b += terreno_max
 	for(var a = 0; a < ore_max; a++)
 		if draw_sprite_boton(ore_sprite[a], 10 + ((a + b) mod 5) * 36, 10 + floor((a + b) / 5) * 36){
 			build_index = a + b
-			build_able = false
+			editor_herramienta = 0
 		}
 	b += ore_max
 	if draw_sprite_boton(spr_equis, 10 + (b mod 5) * 36, 10 + floor(b / 5) * 36){
-		build_index = b
-		build_able = false
+		build_index = -1
+		editor_herramienta = 3
 	}
-	if draw_boton(10, room_height - 250, "Spawn point")
-		build_able = true
+	b++
+	if draw_sprite_boton(spr_base, 10 + (b mod 5) * 36, 10 + floor(b / 5) * 36){
+		build_index = -1
+		editor_herramienta = 2
+	}
+	b++
+	if draw_boton(10, room_height - 250, "Spawn point"){
+		build_index = -1
+		editor_herramienta = 1
+	}
 	var prev_xsize = xsize
 	xsize = round(deslizante(50, 150, room_height - 200, xsize, 28, 96, 0))
 	draw_text(150, room_height - 200, $"{xsize}")
@@ -206,6 +235,8 @@ if menu = 2{
 			ini_write_real("Global", "ysize", ysize)
 			ini_write_real("Global", "spawn_x", spawn_x)
 			ini_write_real("Global", "spawn_y", spawn_y)
+			ini_write_real("Global", "nucleo_x", nucleo.a)
+			ini_write_real("Global", "nucleo_y", nucleo.b)
 			for(var a = 0; a < xsize; a++)
 				for(b = 0; b < ysize; b++){
 					ini_write_real("Terreno", $"{a},{b}", floor(terreno[# a, b]))
@@ -220,7 +251,7 @@ if menu = 2{
 			ini_close()
 		}
 	}
-	if draw_boton(10, room_height - 30, "Cargar") or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("L")))
+	if draw_boton(10, room_height - 30, "Cargar") or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("A")))
 		cargar_escenario()
 	update_cursor()
 	exit
@@ -439,6 +470,40 @@ if temp_hexagono != noone and flag{
 				else
 					color = c_red
 				draw_sprite_off(spr_target, 0, edificio.target.a, edificio.target.b,,,, color)
+			}
+		}
+		//Mostrar rutas de tuneles
+		if in(var_edificio_nombre, "Túnel", "Túnel salida"){
+			if keyboard_check_pressed(ord("R")) and edificio.link != null_edificio{
+				keyboard_clear(ord("R"))
+				if edificio.index = 16{
+					edificio.index = 6
+					edificio.link.index = 16
+					ds_list_clear(edificio.outputs)
+					ds_list_clear(edificio.inputs)
+					ds_list_clear(edificio.link.outputs)
+					ds_list_clear(edificio.link.inputs)
+					calculate_in_out(edificio)
+					calculate_in_out(edificio.link)
+					calculate_in_out_2(edificio)
+					calculate_in_out_2(edificio.link)
+					ds_list_add(edificio.outputs, edificio.link)
+					ds_list_add(edificio.link.inputs, edificio)
+				}
+				else{
+					edificio.index = 16
+					edificio.link.index = 6
+					ds_list_clear(edificio.outputs)
+					ds_list_clear(edificio.inputs)
+					ds_list_clear(edificio.link.outputs)
+					ds_list_clear(edificio.link.inputs)
+					calculate_in_out(edificio)
+					calculate_in_out(edificio.link)
+					calculate_in_out_2(edificio)
+					calculate_in_out_2(edificio.link)
+					ds_list_add(edificio.inputs, edificio.link)
+					ds_list_add(edificio.link.outputs, edificio)
+				}
 			}
 		}
 		//Mostrar inputs
@@ -810,7 +875,7 @@ if build_index > 0{
 			}
 		}
 		//Detectar que no haya otros edificios debajo
-		if edificio_camino[build_index] or in(var_edificio_nombre, "Túnel"){
+		if edificio_camino[build_index] or in(var_edificio_nombre, "Túnel", "Túnel salida"){
 			for(var a = 0; a < ds_list_size(build_list); a++){
 				var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
@@ -922,7 +987,7 @@ if build_index > 0{
 			}
 			//Vista previa no caminos
 			else{
-				if var_edificio_nombre = "Túnel"{
+				if in(var_edificio_nombre, "Túnel", "Túnel salida"){
 					var temp_complex_2 = abtoxy(mx, my), flag_2 = false
 					var a = mx, b = my, c = 0
 					//Evaluar si es construible
@@ -936,7 +1001,7 @@ if build_index > 0{
 							break
 						if edificio_bool[# a, b]{
 							var edificio_2 = edificio_id[# a, b]
-							if edificio_nombre[edificio_2.index] = "Túnel" and edificio_2.dir = (build_dir + 3) mod 6{
+							if in(edificio_nombre[edificio_2.index], "Túnel", "Túnel salida") and edificio_2.dir = (build_dir + 3) mod 6{
 								build_target = edificio_2
 								build_able = true
 								break
@@ -988,7 +1053,7 @@ if build_index > 0{
 						draw_circle_off(temp_complex_2.a, temp_complex_2.b, alc, true)
 					}
 				}
-				if mouse_check_button_pressed(mb_left) and flag and comprable and (not edificio_bool[# mx, my] or ((var_edificio_nombre = "Túnel") and edificio_camino[edificio_id[# mx, my].index]))
+				if mouse_check_button_pressed(mb_left) and flag and comprable and (not edificio_bool[# mx, my] or ((in(var_edificio_nombre, "Túnel", "Túnel salida")) and edificio_camino[edificio_id[# mx, my].index]))
 					f1(build_index, build_dir, mx, my)
 			}
 			if edificio_energia[build_index] and var_edificio_nombre != "Cable"{
@@ -1021,7 +1086,7 @@ if build_index > 0{
 						break
 					}
 					//Checkear coliciones
-					if edificio_bool[# aa, bb] and not ((edificio_camino[build_index] or var_edificio_nombre = "Túnel") and edificio_camino[edificio_id[# aa, bb].index]){
+					if edificio_bool[# aa, bb] and not ((edificio_camino[build_index] or in(var_edificio_nombre, "Túnel", "Túnel salida")) and edificio_camino[edificio_id[# aa, bb].index]){
 						flag = false
 						break
 					}
@@ -1031,7 +1096,7 @@ if build_index > 0{
 						break
 					}
 					//Reemplazar caminos
-					if edificio_bool[# aa, bb] and (edificio_camino[build_index] or (var_edificio_nombre = "Túnel")) and edificio_camino[build_index]
+					if edificio_bool[# aa, bb] and (edificio_camino[build_index] or (in(var_edificio_nombre, "Túnel", "Túnel salida"))) and edificio_camino[build_index]
 						delete_edificio(aa, bb)
 					//Checkear minerales
 					if in(var_edificio_nombre, "Taladro", "Taladro Eléctrico") and ore[# aa, bb] >= 0
@@ -1056,12 +1121,12 @@ if build_index > 0{
 					}
 				if flag and in(var_edificio_nombre, "Taladro", "Taladro Eléctrico") and not flag_2
 					flag = false
-				if flag and var_edificio_nombre = "Túnel" and build_able and build_target.index = 6
+				if flag and in(var_edificio_nombre, "Túnel", "Túnel salida") and build_able and build_target.index = 6
 					build_index = 16
 				if flag
 					edificio = add_edificio(build_index, build_dir, mx, my)
 				//Algoritmo link de tuneles
-				if var_edificio_nombre = "Túnel"{
+				if in(var_edificio_nombre, "Túnel", "Túnel salida"){
 					edificio.idle = not build_able
 					if build_able{
 						if not build_target.idle{
@@ -1186,7 +1251,7 @@ else{
 			}
 		}
 		//Accion caminos
-		else if (edificio_camino[index] or var_edificio_nombre = "Túnel") and edificio.carga_total > 0 and not edificio.waiting{
+		else if (edificio_camino[index] or in(var_edificio_nombre, "Túnel", "Túnel salida")) and edificio.carga_total > 0 and not edificio.waiting{
 			edificio.proceso++
 			if edificio.proceso = edificio_proceso[index]{
 				edificio.proceso = 0

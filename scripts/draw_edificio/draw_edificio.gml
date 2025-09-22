@@ -1,7 +1,7 @@
 function draw_edificio(a, b, index, dir, alpha = 1){
 	with control{
 		var var_edificio_nombre = edificio_nombre[index]
-		if edificio_camino[index] or in(var_edificio_nombre, "Túnel"){
+		if edificio_camino[index] or in(var_edificio_nombre, "Túnel", "Túnel salida"){
 			if in(var_edificio_nombre, "Cinta Transportadora", "Enrutador", "Cinta Magnética"){
 				var c = image_index / 2
 				if in(var_edificio_nombre, "Cinta Magnética")

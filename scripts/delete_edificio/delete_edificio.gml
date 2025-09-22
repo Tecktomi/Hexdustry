@@ -53,7 +53,7 @@ function delete_edificio(aa, bb, enemigo = false){
 		edificio.vivo = false
 		ds_grid_clear(edificio_cercano_dir, -1)
 		//Eliminar tuneles
-		if var_edificio_nombre = "Túnel" and not edificio.idle
+		if in(var_edificio_nombre = "Túnel", "Túnel salida") and not edificio.idle
 			edificio.link.idle = true
 		//Cancelar outputs
 		for(var a = 0; a < ds_list_size(edificio.outputs); a++){
