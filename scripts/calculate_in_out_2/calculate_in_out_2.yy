@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"calculate_in_out_2",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"calculate_in_out_2",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

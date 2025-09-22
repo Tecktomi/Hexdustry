@@ -33,6 +33,8 @@
     {"id":{"name":"abtoxy","path":"scripts/abtoxy/abtoxy.yy",},},
     {"id":{"name":"add_edificio","path":"scripts/add_edificio/add_edificio.yy",},},
     {"id":{"name":"brandom","path":"scripts/brandom/brandom.yy",},},
+    {"id":{"name":"calculate_in_out_2","path":"scripts/calculate_in_out_2/calculate_in_out_2.yy",},},
+    {"id":{"name":"calculate_in_out","path":"scripts/calculate_in_out/calculate_in_out.yy",},},
     {"id":{"name":"cargar_escenario","path":"scripts/cargar_escenario/cargar_escenario.yy",},},
     {"id":{"name":"change_energia","path":"scripts/change_energia/change_energia.yy",},},
     {"id":{"name":"change_flujo","path":"scripts/change_flujo/change_flujo.yy",},},

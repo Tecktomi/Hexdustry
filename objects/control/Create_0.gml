@@ -29,6 +29,7 @@ ini_close()
 	build_size = 1
 	build_dir = 0
 	build_able = false
+	editor_herramienta = 0
 	last_mx = -1
 	last_my = -1
 	build_list = get_size(0, 0, 0, 0)
@@ -407,7 +408,7 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	def_edificio("Panel Solar", 2, spr_panel_solar,, "34", 150,,,, [0, 4, 7], [10, 10, 5],,,,,,,,, -6)
 	def_edificio("Bomba Hidráulica", 2, spr_bomba,, "43", 200, 1,,, [0, 4, 7], [10, 15, 10],,,,,,,,, 25, 60, -40)
 	def_edificio("Tubería", 1, spr_tuberia, spr_tuberia_color, "42", 30, 1,,, [0, 4], [1, 1],,,,,,,,,, 10)
-	def_edificio("Túnel", 1, spr_tunel_salida,, "A", 60, 10,,, [0, 3], [4, 4], 1,,,,, true, true)
+	def_edificio("Túnel salida", 1, spr_tunel_salida,, "A", 60, 10,,, [0, 3], [4, 4], 1,,,,, true, true)
 	def_edificio("Energía Infinita", 1, spr_energia_infinita,, "3 ", 100,,,,,,,,,,,,,, -999999)
 	def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, "16", 60, 10, true,, [2, 4], [1, 1], 1, true,,,, true)
 	def_edificio("Torre", 1, spr_torre, spr_torre_2, "51", 300, 60,,, [2, 3], [10, 25], 20, true, false, [0, 3], [10, 10],,,,, 10, 60)
