@@ -40,7 +40,9 @@ function add_edificio(index, dir, a, b){
 			edificio_index : real(edificio_count++),
 			coordenadas_dis : ds_grid_create(xsize, ysize),
 			coordenadas_close : ds_list_create(),
-			vivo : true
+			vivo : true,
+			emisor : edificio_emisor[index],
+			receptor : edificio_receptor[index]
 		}
 		ds_list_add(edificio.energia_link, null_edificio)
 		ds_list_clear(edificio.energia_link)
@@ -260,6 +262,8 @@ function add_edificio(index, dir, a, b){
 			edificio.mode = true
 		else if var_edificio_nombre = "Rifle"
 			edificio.select = 0
+		else if var_edificio_nombre = "Planta Química"
+			edificio.select = -1
 		ds_list_destroy(temp_list)
 		return edificio
 	}
