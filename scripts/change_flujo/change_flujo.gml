@@ -3,13 +3,13 @@ function change_flujo(cantidad, edificio = control.null_edificio){
 	if edificio_flujo[index]{
 		var flujo = edificio.flujo
 		//Fábrica
-		if edificio_flujo_consumo[index] > 0{
+		if cantidad >= 0{
 			flujo.consumo -= edificio.flujo_consumo
 			edificio.flujo_consumo = cantidad
 			flujo.consumo += edificio.flujo_consumo
 		}
 		//Generador
-		else{
+		if cantidad <= 0{
 			flujo.generacion += edificio.flujo_consumo
 			edificio.flujo_consumo = cantidad
 			flujo.generacion -= edificio.flujo_consumo

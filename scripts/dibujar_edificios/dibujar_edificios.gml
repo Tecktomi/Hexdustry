@@ -33,7 +33,7 @@ function dibujar_edificios(){
 						else if in(var_edificio_nombre, "Batería")
 							draw_sprite_off(edificio_sprite[index], floor(10 * edificio.red.bateria / edificio.red.bateria_max), aa, bb,,, dir * 60)
 						//Dibujo bomba
-						else if in(var_edificio_nombre, "Bomba Hidráulica", "Turbina", "Refinería de Petróleo", "Generador Geotérmico"){
+						else if in(var_edificio_nombre, "Bomba Hidráulica", "Turbina", "Generador Geotérmico"){
 							draw_sprite_off(edificio_sprite[index], 0, aa, bb, power(-1, dir))
 							if edificio.flujo.liquido = -1
 								draw_sprite_off(spr_bomba_color, 0, aa + power(-1, dir) * 8, bb + 14)
@@ -42,7 +42,7 @@ function dibujar_edificios(){
 							draw_sprite_off(spr_bomba_rotor, 1, aa + power(-1, dir) * 8, bb + 14,,, image_index)
 							draw_sprite_off(spr_bomba_cupula, 1, aa + power(-1, dir) * 8, bb + 14)
 						}
-						else if in(var_edificio_nombre, "Tubería", "Depósito", "Líquido Infinito", "Refinería de Petróleo", "Bomba de Evaporación"){
+						else if in(var_edificio_nombre, "Tubería", "Depósito", "Líquido Infinito", "Bomba de Evaporación"){
 							draw_sprite_off(edificio_sprite[index], 0, aa, bb)
 							if edificio.flujo.liquido = -1
 								draw_sprite_off(edificio_sprite_2[index], 0, aa, bb)
