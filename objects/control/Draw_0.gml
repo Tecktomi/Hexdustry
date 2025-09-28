@@ -34,9 +34,151 @@ if menu = 0{
 if menu = 2{
 	dibujar_fondo(1)
 	dibujar_edificios()
-	control_camara(-200)
 	var xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / zoom
 	var temp_hexagono = instance_position(xmouse, ymouse, obj_hexagono), mx = 0, my = 0
+	//Editor de objetivos
+	if editor_menu{
+		draw_set_color(c_ltgray)
+		draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
+		draw_set_color(c_black)
+		draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
+		if draw_boton(110, 110, "Volver") or keyboard_check_pressed(vk_escape){
+			keyboard_clear(vk_escape)
+			editor_mision_edit = -1
+			get_keyboard_string = -1
+			editor_menu = false
+		}
+		var size = array_length(editor_mision_nombre)
+		for(var i = 0; i < size; i++)
+			if draw_boton(140, 150 + i * 30, editor_mision_nombre[i])
+				editor_mision_edit = i
+		if size < 16 and draw_boton(140, 150 + size * 30, "Nuevo Objetivo"){
+			array_push(editor_mision_nombre, $"objetivo {size}")
+			array_push(editor_mision_objetivo, 0)
+			array_push(editor_mision_recurso_id, 0)
+			array_push(editor_mision_recurso_num, 0)
+			editor_mision_edit = size
+		}
+		if editor_mision_edit >= 0{
+			draw_set_color(c_ltgray)
+			draw_rectangle(room_width / 2, 110, room_width - 110, room_height - 110, false)
+			draw_set_color(c_black)
+			draw_rectangle(room_width / 2, 110, room_width - 110, room_height - 110, true)
+			var i = editor_mision_edit
+			var a = room_width / 2 + 20
+			draw_text(a, 120, "Nombre objetivo: ")
+			a += string_width("Nombre objetivo: ")
+			if draw_boton(a, 120, editor_mision_nombre[i],,,, false){
+				keyboard_string = editor_mision_nombre[i]
+				get_keyboard_string = 0
+			}
+			if get_keyboard_string = 0{
+				draw_line(a, 141, a + string_width(keyboard_string), 140)
+				editor_mision_nombre[i] = keyboard_string
+				if keyboard_check_pressed(vk_enter) or mouse_check_button_pressed(mb_right){
+					mouse_clear(mb_right)
+					get_keyboard_string = -1
+				}
+			}
+			a = room_width / 2 + 40
+			draw_text(a, 150, "Objetivo: ")
+			a += string_width("Objetivo: ")
+			//Objetivo
+			if draw_boton(a, 150, $"{editor_mision_objetivos[editor_mision_objetivo[i]]} ",,,, false)
+				get_keyboard_string = 3
+			if get_keyboard_string = 3{
+				var max_width = 0
+				for(var b = 0; b < array_length(editor_mision_objetivos); b++)
+					max_width = max(max_width, string_width(editor_mision_objetivos[b]))
+				draw_set_color(c_ltgray)
+				draw_rectangle(a, 170, a + max_width, 170 + 20 * array_length(editor_mision_objetivos), false)
+				draw_set_color(c_black)
+				draw_rectangle(a, 170, a + max_width, 170 + 20 * array_length(editor_mision_objetivos), true)
+				for(var b = 0; b < array_length(editor_mision_objetivos); b++)
+					if draw_boton(a, 170 + 20 * b, editor_mision_objetivos[b],,,, false){
+						editor_mision_objetivo[i] = b
+						get_keyboard_string = -1
+					}
+				if mouse_check_button_pressed(mb_right){
+					mouse_clear(mb_right)
+					get_keyboard_string = -1
+				}
+			}
+			a += string_width($"{editor_mision_objetivos[editor_mision_objetivo[i]]} ")
+			//Cantidad
+			if draw_boton(a, 150, editor_mision_recurso_num[i],,,, false){
+				keyboard_string = editor_mision_recurso_num[i] = 0 ? "" : string(editor_mision_recurso_num[i])
+				get_keyboard_string = 1
+			}
+			if get_keyboard_string = 1{
+				draw_line(a, 170, a + string_width(editor_mision_recurso_num[i]), 170)
+				editor_mision_recurso_num[i] = keyboard_string = "" ? 0 : string_digits(keyboard_string)
+				if keyboard_check_pressed(vk_enter) or mouse_check_button_pressed(mb_right){
+					mouse_clear(mb_right)
+					get_keyboard_string = -1
+				}
+			}
+			a += string_width(editor_mision_recurso_num[i])
+			//Conseguir recurso / Tener almacenado
+			if editor_mision_objetivo[i] < 2{
+				draw_text(a, 150, " de ")
+				a += string_width(" de ")
+				//Recurso
+				if draw_boton(a, 150, recurso_nombre[editor_mision_recurso_id[i]],,,, false)
+					get_keyboard_string = 2
+				if get_keyboard_string = 2{
+					var max_width = 0
+					for(var b = 0; b < rss_max; b++)
+						max_width = max(max_width, string_width(recurso_nombre[b]))
+					draw_set_color(c_ltgray)
+					draw_rectangle(a, 170, a + max_width, 170 + 20 * rss_max, false)
+					draw_set_color(c_black)
+					draw_rectangle(a, 170, a + max_width, 170 + 20 * rss_max, true)
+					for(var b = 0; b < rss_max; b++)
+						if draw_boton(a, 170 + 20 * b, recurso_nombre[b],,,, false){
+							editor_mision_recurso_id[i] = b
+							get_keyboard_string = -1
+						}
+					if mouse_check_button_pressed(mb_right){
+						mouse_clear(mb_right)
+						get_keyboard_string = -1
+					}
+				}
+			}
+			//Construir / Tener construido
+			else if editor_mision_objetivo[i] < 4{
+				if draw_boton(a, 150, $" {edificio_nombre[editor_mision_recurso_id[i]]}",,,, false)
+					get_keyboard_string = 2
+				if get_keyboard_string = 2{
+					var max_width = 0
+					for(var b = 0; b < edificio_max; b++)
+						max_width = max(max_width, string_width(edificio_nombre[b]))
+					draw_set_color(c_ltgray)
+					draw_rectangle(a, 170, a + max_width, 170 + 20 * edificio_max, false)
+					draw_set_color(c_black)
+					draw_rectangle(a, 170, a + max_width, 170 + 20 * edificio_max, true)
+					for(var b = 0; b < edificio_max; b++)
+						if draw_boton(a, 170 + 20 * b, edificio_nombre[b],,,, false){
+							editor_mision_recurso_id[i] = b
+							get_keyboard_string = -1
+						}
+					if mouse_check_button_pressed(mb_right){
+						mouse_clear(mb_right)
+						get_keyboard_string = -1
+					}
+				}
+			}
+			if draw_boton(room_width / 2 + 10, room_height - 140, "Eliminar objetivo"){
+				array_delete(editor_mision_nombre, i, 1)
+				array_delete(editor_mision_objetivo, i, 1)
+				array_delete(editor_mision_recurso_id, i, 1)
+				array_delete(editor_mision_recurso_num, i, 1)
+				editor_mision_edit = -1
+			}
+		}
+		update_cursor()
+		exit
+	}
 	//click en mapa
 	if mouse_x > 200 and temp_hexagono != noone{
 		mx = temp_hexagono.a
@@ -186,31 +328,39 @@ if menu = 2{
 	draw_rectangle(0, 0, 200, room_height, false)
 	draw_set_color(c_black)
 	var b = 0
+	sprite_boton_text = ""
 	for(var a = 0; a < terreno_max; a++)
-		if draw_sprite_boton(terreno_sprite[a], 10 + (a mod 5) * 36, 10 + floor(a / 5) * 36){
+		if draw_sprite_boton(terreno_sprite[a], 10 + (a mod 5) * 36, 10 + floor(a / 5) * 36, terreno_nombre[a]){
 			build_index = a
 			editor_herramienta = 0
 		}
 	b += terreno_max
 	for(var a = 0; a < ore_max; a++)
-		if draw_sprite_boton(ore_sprite[a], 10 + ((a + b) mod 5) * 36, 10 + floor((a + b) / 5) * 36){
+		if draw_sprite_boton(ore_sprite[a], 10 + ((a + b) mod 5) * 36, 10 + floor((a + b) / 5) * 36, recurso_nombre[ore_recurso[a]]){
 			build_index = a + b
 			editor_herramienta = 0
 		}
 	b += ore_max
-	if draw_sprite_boton(spr_equis, 10 + (b mod 5) * 36, 10 + floor(b / 5) * 36){
+	if draw_sprite_boton(spr_equis, 10 + (b mod 5) * 36, 10 + floor(b / 5) * 36, "Eliminar depósito de Recursos"){
 		build_index = -1
 		editor_herramienta = 3
 	}
 	b++
-	if draw_sprite_boton(spr_base, 10 + (b mod 5) * 36, 10 + floor(b / 5) * 36){
+	if draw_sprite_boton(spr_base, 10 + (b mod 5) * 36, 10 + floor(b / 5) * 36, "Cambia posición de la Base"){
 		build_index = -1
 		editor_herramienta = 2
 	}
 	b++
-	if draw_boton(10, room_height - 250, "Spawn point"){
+	if draw_sprite_boton(spr_dron, 10 + (b mod 5) * 36, 10 + floor(b / 5) * 36, "Cambiar zona de enemigos"){
 		build_index = -1
 		editor_herramienta = 1
+	}
+	b++
+	if sprite_boton_text != ""
+		draw_text_background(mouse_x + 20, mouse_y, sprite_boton_text)
+	if draw_boton(10, room_height - 250, "Objetivos"){
+		editor_menu = true
+		exit
 	}
 	var prev_xsize = xsize
 	xsize = round(deslizante(50, 150, room_height - 200, xsize, 28, 96, 0))
@@ -253,6 +403,7 @@ if menu = 2{
 	}
 	if draw_boton(10, room_height - 30, "Cargar") or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("A")))
 		cargar_escenario()
+	control_camara(-200)
 	update_cursor()
 	exit
 }

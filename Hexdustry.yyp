@@ -32,6 +32,7 @@
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
     {"id":{"name":"abtoxy","path":"scripts/abtoxy/abtoxy.yy",},},
     {"id":{"name":"add_edificio","path":"scripts/add_edificio/add_edificio.yy",},},
+    {"id":{"name":"array_remove","path":"scripts/array_remove/array_remove.yy",},},
     {"id":{"name":"brandom","path":"scripts/brandom/brandom.yy",},},
     {"id":{"name":"calculate_in_out_2","path":"scripts/calculate_in_out_2/calculate_in_out_2.yy",},},
     {"id":{"name":"calculate_in_out","path":"scripts/calculate_in_out/calculate_in_out.yy",},},
