@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "24_09_2025")
+ini_write_string("Global", "version", "28_09_2025")
 ini_close()
 #region Metadatos
 	menu = 0
@@ -25,7 +25,7 @@ ini_close()
 	edificio_count = 0
 	energia_solar = 1
 	flow = 0
-	build_index = 0
+	build_index = -1
 	build_size = 1
 	build_dir = 0
 	build_able = false
@@ -56,7 +56,16 @@ ini_close()
 	ds_list_clear(pre_build_list)
 	for(var a = 0; a < xsize / chunk_width; a++)
 		for(var b = 0; b < ysize / chunk_height; b++)
-		background[a, b] = spr_hexagono
+			background[a, b] = spr_hexagono
+	sprite_boton_text = ""
+	editor_menu = false
+	editor_mision_nombre = array_create(0, "")
+	editor_mision_objetivo = array_create(0, 0)
+	editor_mision_recurso_id = array_create(0, 0)
+	editor_mision_recurso_num = array_create(0, 0)
+	editor_mision_edit = -1
+	get_keyboard_string = -1
+	editor_mision_objetivos = ["conseguir", "tener almacenado", "construir", "tener construido"]
 #endregion
 null_edificio = {
 	index : -1,

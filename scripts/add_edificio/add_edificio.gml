@@ -55,11 +55,12 @@ function add_edificio(index, dir, a, b){
 		temp_complex = {a : 0, b : 0}
 		calculate_in_out(edificio)
 		//Añadir coordenadas
+		var temp_list_size = get_size(a, b, dir, edificio_size[index])
+		var temp_list_arround = get_arround(a, b, dir, edificio_size[index])
 		ds_grid_set(edificio_draw, a, b, true)
 		ds_list_add(edificios, edificio)
-		var temp_list = get_arround(a, b, dir, edificio_size[index])
-		for(var c = 0; c < ds_list_size(temp_list); c++)
-			ds_list_add(edificio.bordes, temp_list[|c])
+		for(var c = 0; c < ds_list_size(temp_list_arround); c++)
+			ds_list_add(edificio.bordes, temp_list_arround[|c])
 		if not edificio_camino[index] and not in(var_edificio_nombre, "Tubería"){
 			edificio_pathfind(edificio)
 			ds_list_add(edificios_targeteables, edificio)
@@ -69,9 +70,8 @@ function add_edificio(index, dir, a, b){
 					enemigo.target = edificio
 			}
 		}
-		temp_list = get_size(a, b, dir, edificio_size[index])
-		for(var c = 0; c < ds_list_size(temp_list); c++){
-			temp_complex = temp_list[|c]
+		for(var c = 0; c < ds_list_size(temp_list_size); c++){
+			temp_complex = temp_list_size[|c]
 			var aa = temp_complex.a, bb = temp_complex.b
 			ds_grid_set(edificio_bool, aa, bb, true)
 			ds_grid_set(edificio_id, aa, bb, edificio)
@@ -88,9 +88,8 @@ function add_edificio(index, dir, a, b){
 				edificio.energy_output = -edificio_energia_consumo[index]
 			//Detectar otras redes cerca
 			var temp_list_redes = ds_list_create()
-			temp_list_2 = get_arround(a, b, dir, edificio_size[index])
-			for(var c = 0; c < ds_list_size(temp_list_2); c++){
-				temp_complex = temp_list_2[|c]
+			for(var c = 0; c < ds_list_size(temp_list_arround); c++){
+				temp_complex = temp_list_arround[|c]
 				var aa = temp_complex.a, bb = temp_complex.b
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
@@ -104,9 +103,9 @@ function add_edificio(index, dir, a, b){
 					}
 				}
 			}
-			var temp_list_3 = get_size(a, b, dir, 7)
-			for(var c = 0; c < ds_list_size(temp_list_3); c++){
-				temp_complex = temp_list_3[|c]
+			var temp_list = get_size(a, b, dir, 7)
+			for(var c = 0; c < ds_list_size(temp_list); c++){
+				temp_complex = temp_list[|c]
 				var aa = temp_complex.a, bb = temp_complex.b
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
@@ -120,7 +119,7 @@ function add_edificio(index, dir, a, b){
 					}
 				}
 			}
-			ds_list_destroy(temp_list_3)
+			ds_list_destroy(temp_list)
 			//Añadir red
 			var temp_red = {
 				edificios: ds_list_create(),
@@ -168,8 +167,8 @@ function add_edificio(index, dir, a, b){
 		//Detectar cañerías cercanas
 		if edificio_flujo[index]{
 			if var_edificio_nombre = "Bomba Hidráulica"{
-				for(var c = 0; c < ds_list_size(temp_list); c++){
-					temp_complex = temp_list[|c]
+				for(var c = 0; c < ds_list_size(temp_list_size); c++){
+					temp_complex = temp_list_size[|c]
 					var aa = temp_complex.a, bb = temp_complex.b
 					if in(terreno_nombre[terreno[# aa, bb]], "Agua", "Agua Profunda")
 						edificio.select = 0
@@ -180,10 +179,9 @@ function add_edificio(index, dir, a, b){
 					ds_list_add(edificio.coordenadas, temp_complex)
 				}
 			}
-			var temp_list_4 = get_arround(a, b, dir, edificio_size[index])
 			var temp_list_flujos = ds_list_create()
-			for(var c = 0; c < ds_list_size(temp_list_4); c++){
-				temp_complex = temp_list_4[|c]
+			for(var c = 0; c < ds_list_size(temp_list_arround); c++){
+				temp_complex = temp_list_arround[|c]
 				var aa = temp_complex.a, bb = temp_complex.b
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
@@ -197,7 +195,6 @@ function add_edificio(index, dir, a, b){
 					}
 				}
 			}
-			ds_list_destroy(temp_list_4)
 			if ds_list_empty(temp_list_flujos){
 				var new_flujo ={
 					edificios : ds_list_create(),
@@ -264,7 +261,8 @@ function add_edificio(index, dir, a, b){
 			edificio.select = 0
 		else if var_edificio_nombre = "Planta Química"
 			edificio.select = -1
-		ds_list_destroy(temp_list)
+		ds_list_destroy(temp_list_size)
+		ds_list_destroy(temp_list_arround)
 		return edificio
 	}
 }
