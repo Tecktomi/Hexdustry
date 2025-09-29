@@ -67,6 +67,7 @@
     {"id":{"name":"mover","path":"scripts/mover/mover.yy",},},
     {"id":{"name":"next_to_build","path":"scripts/next_to_build/next_to_build.yy",},},
     {"id":{"name":"next_to","path":"scripts/next_to/next_to.yy",},},
+    {"id":{"name":"pasar_mision","path":"scripts/pasar_mision/pasar_mision.yy",},},
     {"id":{"name":"path_find","path":"scripts/path_find/path_find.yy",},},
     {"id":{"name":"red_text","path":"scripts/red_text/red_text.yy",},},
     {"id":{"name":"redo_pathfind","path":"scripts/redo_pathfind/redo_pathfind.yy",},},

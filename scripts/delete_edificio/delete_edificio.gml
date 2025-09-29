@@ -10,6 +10,7 @@ function delete_edificio(aa, bb, enemigo = false){
 				game_end()
 		}
 		ds_list_remove(edificios, edificio)
+		edificios_counter[index]--
 		ds_grid_destroy(edificio.coordenadas_dis)
 		if not edificio_camino[index] and not in(var_edificio_nombre, "Tubería")
 			ds_list_remove(edificios_targeteables, edificio)
