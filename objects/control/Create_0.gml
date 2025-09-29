@@ -59,13 +59,17 @@ ini_close()
 			background[a, b] = spr_hexagono
 	sprite_boton_text = ""
 	editor_menu = false
-	editor_mision_nombre = array_create(0, "")
-	editor_mision_objetivo = array_create(0, 0)
-	editor_mision_recurso_id = array_create(0, 0)
-	editor_mision_recurso_num = array_create(0, 0)
-	editor_mision_edit = -1
+	mision_nombre = array_create(0, "")
+	mision_objetivo = array_create(0, 0)
+	mision_target_id = array_create(0, 0)
+	mision_target_num = array_create(0, 0)
+	mision_actual = -1
+	mision_counter = 0
 	get_keyboard_string = -1
-	editor_mision_objetivos = ["conseguir", "tener almacenado", "construir", "tener construido"]
+	objetivos_nombre = ["conseguir", "tener almacenado", "construir", "tener construido"]
+	oleadas = true
+	oleadas_tiempo_primera = 240
+	oleadas_tiempo = 30
 #endregion
 null_edificio = {
 	index : -1,
@@ -454,6 +458,7 @@ edificio_energia[12] = true
 size_size = [1, 3, 7, 12, 19]
 size_borde = [6, 9, 12, 15, 18, 21]
 edificios = ds_list_create()
+edificios_counter = array_create(edificio_max, 0)
 edificios_targeteables = ds_list_create()
 //Redes electricas
 null_red = {

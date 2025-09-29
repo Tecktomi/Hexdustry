@@ -52,6 +52,8 @@ function add_edificio(index, dir, a, b){
 		ds_list_add(edificio.coordenadas_close, {a : 0, b : 0})
 		ds_list_clear(edificio.coordenadas_close)
 		var var_edificio_nombre = edificio_nombre[index]
+		if mision_actual >= 0 and mision_objetivo[mision_actual] = 2 and mision_target_id[mision_actual] = index and ++mision_counter >= mision_target_num[mision_actual]
+			pasar_mision()
 		temp_complex = {a : 0, b : 0}
 		calculate_in_out(edificio)
 		//Añadir coordenadas
@@ -59,6 +61,7 @@ function add_edificio(index, dir, a, b){
 		var temp_list_arround = get_arround(a, b, dir, edificio_size[index])
 		ds_grid_set(edificio_draw, a, b, true)
 		ds_list_add(edificios, edificio)
+		edificios_counter[index]++
 		for(var c = 0; c < ds_list_size(temp_list_arround); c++)
 			ds_list_add(edificio.bordes, temp_list_arround[|c])
 		if not edificio_camino[index] and not in(var_edificio_nombre, "Tubería"){

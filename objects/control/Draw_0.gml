@@ -7,6 +7,8 @@ if menu = 0{
 	if draw_boton(room_width / 2, 200, "Juego rápido"){
 		if not nucleo.vivo
 			game_restart()
+		if array_length(mision_nombre) > 0
+			mision_actual = 0
 		menu = 1
 		image_index = 0
 		build_index = 0
@@ -17,6 +19,8 @@ if menu = 0{
 		var file = cargar_escenario()
 		if file != ""{
 			redo_pathfind()
+			if array_length(mision_nombre) > 0
+				mision_actual = 0
 			menu = 1
 			image_index = 0
 			build_index = 0
@@ -44,37 +48,37 @@ if menu = 2{
 		draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
 		if draw_boton(110, 110, "Volver") or keyboard_check_pressed(vk_escape){
 			keyboard_clear(vk_escape)
-			editor_mision_edit = -1
+			mision_actual = -1
 			get_keyboard_string = -1
 			editor_menu = false
 		}
-		var size = array_length(editor_mision_nombre)
+		var size = array_length(mision_nombre)
 		for(var i = 0; i < size; i++)
-			if draw_boton(140, 150 + i * 30, editor_mision_nombre[i])
-				editor_mision_edit = i
+			if draw_boton(140, 150 + i * 30, mision_nombre[i])
+				mision_actual = i
 		if size < 16 and draw_boton(140, 150 + size * 30, "Nuevo Objetivo"){
-			array_push(editor_mision_nombre, $"objetivo {size}")
-			array_push(editor_mision_objetivo, 0)
-			array_push(editor_mision_recurso_id, 0)
-			array_push(editor_mision_recurso_num, 0)
-			editor_mision_edit = size
+			array_push(mision_nombre, $"objetivo {size}")
+			array_push(mision_objetivo, 0)
+			array_push(mision_target_id, 0)
+			array_push(mision_target_num, 0)
+			mision_actual = size
 		}
-		if editor_mision_edit >= 0{
+		if mision_actual >= 0{
 			draw_set_color(c_ltgray)
 			draw_rectangle(room_width / 2, 110, room_width - 110, room_height - 110, false)
 			draw_set_color(c_black)
 			draw_rectangle(room_width / 2, 110, room_width - 110, room_height - 110, true)
-			var i = editor_mision_edit
+			var i = mision_actual
 			var a = room_width / 2 + 20
 			draw_text(a, 120, "Nombre objetivo: ")
 			a += string_width("Nombre objetivo: ")
-			if draw_boton(a, 120, editor_mision_nombre[i],,,, false){
-				keyboard_string = editor_mision_nombre[i]
+			if draw_boton(a, 120, mision_nombre[i],,,, false){
+				keyboard_string = mision_nombre[i]
 				get_keyboard_string = 0
 			}
 			if get_keyboard_string = 0{
 				draw_line(a, 141, a + string_width(keyboard_string), 140)
-				editor_mision_nombre[i] = keyboard_string
+				mision_nombre[i] = keyboard_string
 				if keyboard_check_pressed(vk_enter) or mouse_check_button_pressed(mb_right){
 					mouse_clear(mb_right)
 					get_keyboard_string = -1
@@ -84,19 +88,19 @@ if menu = 2{
 			draw_text(a, 150, "Objetivo: ")
 			a += string_width("Objetivo: ")
 			//Objetivo
-			if draw_boton(a, 150, $"{editor_mision_objetivos[editor_mision_objetivo[i]]} ",,,, false)
+			if draw_boton(a, 150, $"{objetivos_nombre[mision_objetivo[i]]} ",,,, false)
 				get_keyboard_string = 3
 			if get_keyboard_string = 3{
 				var max_width = 0
-				for(var b = 0; b < array_length(editor_mision_objetivos); b++)
-					max_width = max(max_width, string_width(editor_mision_objetivos[b]))
+				for(var b = 0; b < array_length(objetivos_nombre); b++)
+					max_width = max(max_width, string_width(objetivos_nombre[b]))
 				draw_set_color(c_ltgray)
-				draw_rectangle(a, 170, a + max_width, 170 + 20 * array_length(editor_mision_objetivos), false)
+				draw_rectangle(a, 170, a + max_width, 170 + 20 * array_length(objetivos_nombre), false)
 				draw_set_color(c_black)
-				draw_rectangle(a, 170, a + max_width, 170 + 20 * array_length(editor_mision_objetivos), true)
-				for(var b = 0; b < array_length(editor_mision_objetivos); b++)
-					if draw_boton(a, 170 + 20 * b, editor_mision_objetivos[b],,,, false){
-						editor_mision_objetivo[i] = b
+				draw_rectangle(a, 170, a + max_width, 170 + 20 * array_length(objetivos_nombre), true)
+				for(var b = 0; b < array_length(objetivos_nombre); b++)
+					if draw_boton(a, 170 + 20 * b, objetivos_nombre[b],,,, false){
+						mision_objetivo[i] = b
 						get_keyboard_string = -1
 					}
 				if mouse_check_button_pressed(mb_right){
@@ -104,27 +108,27 @@ if menu = 2{
 					get_keyboard_string = -1
 				}
 			}
-			a += string_width($"{editor_mision_objetivos[editor_mision_objetivo[i]]} ")
+			a += string_width($"{objetivos_nombre[mision_objetivo[i]]} ")
 			//Cantidad
-			if draw_boton(a, 150, editor_mision_recurso_num[i],,,, false){
-				keyboard_string = editor_mision_recurso_num[i] = 0 ? "" : string(editor_mision_recurso_num[i])
+			if draw_boton(a, 150, mision_target_num[i],,,, false){
+				keyboard_string = mision_target_num[i] = 0 ? "" : string(mision_target_num[i])
 				get_keyboard_string = 1
 			}
 			if get_keyboard_string = 1{
-				draw_line(a, 170, a + string_width(editor_mision_recurso_num[i]), 170)
-				editor_mision_recurso_num[i] = keyboard_string = "" ? 0 : string_digits(keyboard_string)
+				draw_line(a, 170, a + string_width(mision_target_num[i]), 170)
+				mision_target_num[i] = keyboard_string = "" ? 0 : real(string_digits(keyboard_string))
 				if keyboard_check_pressed(vk_enter) or mouse_check_button_pressed(mb_right){
 					mouse_clear(mb_right)
 					get_keyboard_string = -1
 				}
 			}
-			a += string_width(editor_mision_recurso_num[i])
+			a += string_width(mision_target_num[i])
 			//Conseguir recurso / Tener almacenado
-			if editor_mision_objetivo[i] < 2{
+			if mision_objetivo[i] < 2{
 				draw_text(a, 150, " de ")
 				a += string_width(" de ")
 				//Recurso
-				if draw_boton(a, 150, recurso_nombre[editor_mision_recurso_id[i]],,,, false)
+				if draw_boton(a, 150, recurso_nombre[mision_target_id[i]],,,, false)
 					get_keyboard_string = 2
 				if get_keyboard_string = 2{
 					var max_width = 0
@@ -136,7 +140,7 @@ if menu = 2{
 					draw_rectangle(a, 170, a + max_width, 170 + 20 * rss_max, true)
 					for(var b = 0; b < rss_max; b++)
 						if draw_boton(a, 170 + 20 * b, recurso_nombre[b],,,, false){
-							editor_mision_recurso_id[i] = b
+							mision_target_id[i] = b
 							get_keyboard_string = -1
 						}
 					if mouse_check_button_pressed(mb_right){
@@ -146,8 +150,8 @@ if menu = 2{
 				}
 			}
 			//Construir / Tener construido
-			else if editor_mision_objetivo[i] < 4{
-				if draw_boton(a, 150, $" {edificio_nombre[editor_mision_recurso_id[i]]}",,,, false)
+			else if mision_objetivo[i] < 4{
+				if draw_boton(a, 150, $" {edificio_nombre[mision_target_id[i]]}",,,, false)
 					get_keyboard_string = 2
 				if get_keyboard_string = 2{
 					var max_width = 0
@@ -159,7 +163,7 @@ if menu = 2{
 					draw_rectangle(a, 170, a + max_width, 170 + 20 * edificio_max, true)
 					for(var b = 0; b < edificio_max; b++)
 						if draw_boton(a, 170 + 20 * b, edificio_nombre[b],,,, false){
-							editor_mision_recurso_id[i] = b
+							mision_target_id[i] = b
 							get_keyboard_string = -1
 						}
 					if mouse_check_button_pressed(mb_right){
@@ -169,11 +173,11 @@ if menu = 2{
 				}
 			}
 			if draw_boton(room_width / 2 + 10, room_height - 140, "Eliminar objetivo"){
-				array_delete(editor_mision_nombre, i, 1)
-				array_delete(editor_mision_objetivo, i, 1)
-				array_delete(editor_mision_recurso_id, i, 1)
-				array_delete(editor_mision_recurso_num, i, 1)
-				editor_mision_edit = -1
+				array_delete(mision_nombre, i, 1)
+				array_delete(mision_objetivo, i, 1)
+				array_delete(mision_target_id, i, 1)
+				array_delete(mision_target_num, i, 1)
+				mision_actual = -1
 			}
 		}
 		update_cursor()
@@ -387,10 +391,23 @@ if menu = 2{
 			ini_write_real("Global", "spawn_y", spawn_y)
 			ini_write_real("Global", "nucleo_x", nucleo.a)
 			ini_write_real("Global", "nucleo_y", nucleo.b)
+			ini_write_real("Global", "objetivos", array_length(mision_nombre))
+			for(var a = 0; ini_section_exists($"Objetivo {a}"); a++)
+				ini_section_delete($"Objetivo {a}")
+			for(var a = 0; a < array_length(mision_nombre); a++){
+				ini_write_string($"Objetivo {a}", "nombre", mision_nombre[a])
+				ini_write_real($"Objetivo {a}", "objetivo", mision_objetivo[a])
+				ini_write_real($"Objetivo {a}", "target_id", mision_target_id[a])
+				ini_write_real($"Objetivo {a}", "target_num", mision_target_num[a])
+			}
 			for(var a = 0; a < xsize; a++)
 				for(b = 0; b < ysize; b++){
 					ini_write_real("Terreno", $"{a},{b}", floor(terreno[# a, b]))
-					if ore[# a, b]!= -1{
+					if ore[# a, b] = -1{
+						ini_key_delete("Ore", $"{a},{b}")
+						ini_key_delete("Ore amount", $"{a},{b}")
+					}
+					else{
 						ini_write_real("Ore", $"{a},{b}", floor(ore[# a, b]))
 						ini_write_real("Ore amount", $"{a},{b}", floor(ore_amount[# a, b]))
 					}
@@ -2032,10 +2049,11 @@ else{
 		if municion.dis <= 0
 			ds_list_delete(municiones, a--)
 	}
-	#region Generación de enemigos
-		if image_index > 14400 or keyboard_check_pressed(vk_enter){
-			if image_index mod 3600 = 0 or keyboard_check_pressed(vk_enter){
-				var c = 100 + floor(sqr((image_index - 14400) / 900)), d = enemigos_spawned++, e = 1, flag_2 = false
+	var temp_text_right = ""
+	if oleadas{
+		if image_index > (60 * oleadas_tiempo_primera) or keyboard_check_pressed(vk_enter){
+			if image_index mod (60 * oleadas_tiempo) = 0 or keyboard_check_pressed(vk_enter){
+				var c = 100 + floor(sqr((image_index - (60 * oleadas_tiempo_primera)) / (15 * oleadas_tiempo))), d = enemigos_spawned++, e = 1, flag_2 = false
 				for(var i = 0; i < array_length(size_size); i++)
 					if d <= size_size[i]{
 						e = i + 1
@@ -2064,20 +2082,40 @@ else{
 				}
 			}
 		}
-		var temp_text_right = ""
-		if image_index < 14400{
-			var seg =floor((14400 - image_index) / 60)
+		if image_index < (60 * oleadas_tiempo_primera){
+			var seg =floor(((60 * oleadas_tiempo_primera) - image_index) / 60)
 			temp_text_right += $"{seg > 60 ? string(floor(seg / 60)) + " m " : ""}{seg mod 60} s para los enemigos\n"
 		}
-		if build_index > 0
-			temp_text_right += $"{edificio_nombre[build_index]}\n"
-		if temp_text_right != ""{
-			temp_text_right = string_trim(temp_text_right)
-			draw_set_halign(fa_right)
-			draw_text_background(room_width, 0, temp_text_right)
-			draw_set_halign(fa_left)
+	}
+	if mision_actual >= 0{
+		var a = mision_actual
+		temp_text_right += $"\n\n{mision_nombre[a]} ({mision_actual}/{array_length(mision_nombre)})\n{objetivos_nombre[mision_objetivo[a]]} {mision_target_num[a]} "
+		if mision_objetivo[a] < 2
+			temp_text_right += recurso_nombre[mision_target_id[a]]
+		else if mision_objetivo[a] < 4
+			temp_text_right += edificio_nombre[mision_target_id[a]]
+		temp_text_right += $"\n{mision_counter} / {mision_target_num[a]}"
+		if mision_objetivo[a] = 1{
+			mision_counter = nucleo.carga[mision_target_id[a]]
+			if mision_counter >= mision_target_num[a]{
+				pasar_mision()
+				a++
+			}
 		}
-	#endregion
+		if mision_objetivo[a] = 3{
+			mision_counter = edificios_counter[mision_target_id[a]]
+			if mision_counter >= mision_target_num[a]{
+				pasar_mision()
+				a++
+			}
+		}
+	}
+	if temp_text_right != ""{
+		temp_text_right = string_trim(temp_text_right)
+		draw_set_halign(fa_right)
+		draw_text_background(room_width, 0, temp_text_right)
+		draw_set_halign(fa_left)
+	}
 	energia_solar = clamp(2 * sin((image_index + 900) / 1800), 0, 1)
 	draw_set_alpha((1 - energia_solar) / 3)
 	draw_set_color(c_black)
