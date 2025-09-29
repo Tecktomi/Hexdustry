@@ -50,7 +50,7 @@ function dibujar_edificios(){
 								draw_sprite_off(edificio_sprite_2[index], 0, aa, bb,,,, liquido_color[edificio.flujo.liquido], edificio.flujo.almacen / edificio.flujo.almacen_max)
 						}
 						//Torres 1x1
-						else if in(var_edificio_nombre, "Torre"){
+						else if in(var_edificio_nombre, "Torre", "Mortero"){
 							draw_sprite_off(edificio_sprite[index], 0, aa, bb)
 							draw_sprite_off(edificio_sprite_2[index], 0, aa, bb,,, edificio.select)
 						}
