@@ -584,6 +584,13 @@ if show_menu{
 					show_menu_build.receptor = false
 					show_menu_build.emisor = true
 				}
+				else if a = 5{
+					show_menu_build.carga_max[0] = 5
+					show_menu_build.carga_max[3] = 5
+					show_menu_build.carga_output[14] = true
+					show_menu_build.receptor = true
+					show_menu_build.emisor = true
+				}
 				calculate_in_out_2(show_menu_build)
 			}
 		}
@@ -930,6 +937,8 @@ if build_index > 0{
 	}
 	if last_mx != mx or last_my != my or flag{
 		build_list = get_size(mx, my, build_dir, edificio_size[build_index])
+		if var_edificio_nombre = "Taladro de Explosión"
+			build_list_arround = get_size(mx, my, build_dir, edificio_size[build_index] + 2)
 		show_menu = false
 	}
 	last_mx = mx
@@ -1050,12 +1059,8 @@ if build_index > 0{
 		}
 		//Detectar que los taladros tengan recursos
 		if in(var_edificio_nombre, "Taladro", "Taladro Eléctrico"){
-			var temp_array, temp_array_2, b = 0
+			var temp_array = array_create(rss_max, 0), temp_array_2 = array_create(rss_max, 0), b = 0
 			flag = false
-			for(var a = 0; a < rss_max; a++){
-				temp_array[a] = 0
-				temp_array_2[a] = 0
-			}
 			//Buscar minerales superficiales
 			for(var a = 0; a < ds_list_size(build_list); a++){
 				var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
@@ -1090,7 +1095,38 @@ if build_index > 0{
 				if temp_array_2[a] > 0
 					temp_text += $"{recurso_nombre[a]}: {temp_array_2[a]}({round(temp_array[a] * 100 / b)}%)\n"
 				else if temp_array_2[a] = -1
-						temp_text += $"{recurso_nombre[a]}({round(temp_array[a] * 100 / b)}%)\n"
+					temp_text += $"{recurso_nombre[a]}({round(temp_array[a] * 100 / b)}%)\n"
+			}
+		}
+		//Taladros de Explosión
+		if var_edificio_nombre = "Taladro de Explosión"{
+			var temp_array = array_create(rss_max, 0), temp_array_2 = array_create(rss_max, 0)
+			for(var a = 0; a < ds_list_size(build_list_arround); a++){
+				var temp_complex_2 = build_list_arround[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
+				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+					continue
+				var temp_complex_3 = abtoxy(aa, bb)
+				draw_sprite_off(spr_blanco, 0, temp_complex_3.a, temp_complex_3.b,,,,, 0.5)
+				if ore[# aa, bb] >= 0{
+					temp_array[ore_recurso[ore[# aa, bb]]]++
+					temp_array_2[ore_recurso[ore[# aa, bb]]] += ore_amount[# aa, bb]
+					flag = true
+				}
+				else if in(terreno_nombre[terreno[# aa, bb]], "Piedra", "Arena", "Piedra Cúprica", "Piedra Férrica", "Basalto Sulfatado"){
+					temp_array[terreno_recurso_id[terreno[# aa, bb]]]++
+					temp_array_2[terreno_recurso_id[terreno[# aa, bb]]] = -1
+					flag = true
+				}
+			}
+			if not flag{
+				comprable = false
+				temp_text += "Necesita ser construido sobre minerales, piedra o arena"
+			}
+			else for(var a = 0; a < rss_max; a++){
+				if temp_array_2[a] > 0
+					temp_text += $"{recurso_nombre[a]}: {temp_array_2[a]} ({temp_array[a] / 5}/s)\n"
+				else if temp_array_2[a] = -1
+					temp_text += $"{recurso_nombre[a]} ({temp_array[a] / 5}/s)\n"
 			}
 		}
 		//Detectar que no haya otros edificios debajo
@@ -1474,6 +1510,38 @@ else{
 					change_flujo(0, edificio)
 			}
 		}
+		//Taladro explosivo
+		else if var_edificio_nombre = "Taladro de Explosión"{
+			if edificio.carga[13] > 0{
+				if edificio.carga_total < edificio_carga_max[index] and ++edificio.proceso >= edificio_proceso[index]{
+					edificio.carga[13]--
+					edificio.carga_total--
+					var temp_list = get_size(edificio.a, edificio.b, edificio.dir, edificio_size[index] + 2), flag = false
+					for(var b = 0; b < ds_list_size(temp_list); b++){
+						var temp_complex = temp_list[|b], aa = temp_complex.a, bb = temp_complex.b
+						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+							continue
+						if ore[# aa, bb] >= 0{
+							edificio.carga[ore_recurso[ore[# aa, bb]]]++
+							edificio.carga_total++
+							flag = true
+						}
+						else if in(terreno_nombre[terreno[# aa, bb]], "Piedra", "Arena", "Piedra Cúprica", "Piedra Férrica", "Basalto Sulfatado"){
+							edificio.carga[terreno_recurso_id[terreno[# aa, bb]]]++
+							edificio.carga_total++
+							flag = true
+						}
+					}
+					if flag
+						edificio.waiting = not mover(edificio.a, edificio.b)
+					else
+						edificio.idle = true
+					edificio.proceso -= edificio_proceso[index]
+				}
+			}
+			if edificio.carga_total > edificio.carga[13]
+				edificio.waiting = not mover(edificio.a, edificio.b)
+		}
 		//Accion caminos
 		else if (edificio_camino[index] or in(var_edificio_nombre, "Túnel", "Túnel salida")) and edificio.carga_total > 0 and not edificio.waiting{
 			edificio.proceso++
@@ -1738,14 +1806,17 @@ else{
 					change_flujo(4, edificio)
 				else if edificio.select = 4
 					change_flujo(6, edificio)
+				else if edificio.select = 5
+					change_flujo(4, edificio)
 				edificio.proceso++
 			}
 			if (edificio.select = 0 and edificio.carga[5] > 1 and edificio.carga[11] > 0 and in(flujo.liquido, -1, 1) and flujo.almacen < flujo.almacen_max) or
 				(edificio.select = 1 and edificio.carga[5] > 0 and (edificio.carga[6] > 0 or edificio.carga[9] > 0 or edificio.carga[10] > 0 or edificio.carga[11] > 0) and flujo.liquido = 0) or
 				(edificio.select = 2 and edificio.carga[1] > 0 and edificio.carga[11] > 0) or
 				(edificio.select = 3 and flujo.liquido = 2) or
-				(edificio.select = 4 and flujo.liquido = 2){
-				if in(edificio.select, 3, 4)
+				(edificio.select = 4 and flujo.liquido = 2) or
+				(edificio.select = 5 and flujo.liquido = 1 and edificio.carga[0] > 0 and edificio.carga[3] > 0){
+				if in(edificio.select, 3, 4, 5)
 					edificio.proceso += red_power * flujo_power
 				else
 					edificio.proceso += red_power
@@ -1787,6 +1858,12 @@ else{
 						edificio.carga[11]++
 						edificio.carga_total++
 						change_flujo(0, edificio)
+					}
+					else if edificio.select = 5{
+						edificio.carga[0]--
+						edificio.carga[3]--
+						edificio.carga[14]++
+						edificio.carga_total--
 					}
 					edificio.proceso -= edificio_proceso[index] + 1
 					change_energia(0, edificio)

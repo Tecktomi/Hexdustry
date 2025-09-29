@@ -33,6 +33,7 @@ ini_close()
 	last_mx = -1
 	last_my = -1
 	build_list = get_size(0, 0, 0, 0)
+	build_list_arround = get_size(0, 0, 0, 0)
 	build_menu = 0
 	menu_x = 0
 	menu_y = 0
@@ -295,6 +296,7 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 	def_recurso("Piedra Sulfatada", spr_item_piedra_azufre, make_color_hsv(42, 100, 127))
 	def_recurso("Compuesto Incendiario", spr_item_incendiario, make_color_rgb(191, 127, 0), 900)
 	def_recurso("Explosivo", spr_item_explosivos, c_red)
+	def_recurso("Batería", spr_item_bateria, make_color_rgb(163, 98, 10))
 #endregion
 rss_max = array_length(recurso_nombre)
 //Liquidos
@@ -336,7 +338,9 @@ lq_max = array_length(liquido_nombre)
 	"Genera recursos a partir de magia",
 	"Extrae lentamente Agua por evaporación",
 	"Similar al horno normal, pero utiliza el calor\nde la lava para cocinar más rápido",
-	"Genera energía a partir de evaporar Agua,\ndebe ser construido sobre lava"
+	"Genera energía a partir de evaporar Agua,\ndebe ser construido sobre lava",
+	"Utiliza explosivos para extraer un recurso\nde cada terreno minable en su área",
+	"Dispara explosivos a largo alcance, devastando\nun área de enemigos"
 	]
 #endregion
 #region Arreglos
@@ -417,7 +421,7 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	//10
 	def_edificio("Generador", 1, spr_generador, spr_generador_encendido, "32", 100,,, true, [0, 3], [20, 5], 20, true, false, [1, 12], [10, 10], false,,, -30)
 	def_edificio("Cable", 1, spr_cable,, "31", 30,,,, [0, 3], [5, 1])
-	def_edificio("Batería", 1, spr_bateria,, "33", 60,,,, [0, 2], [20, 5])
+	def_edificio("Batería", 1, spr_bateria,, "33", 60,,,, [2, 14], [5, 3])
 	def_edificio("Panel Solar", 2, spr_panel_solar,, "34", 150,,,, [0, 4, 7], [10, 10, 5],,,,,,,,, -6)
 	def_edificio("Bomba Hidráulica", 2, spr_bomba,, "43", 200, 1,,, [0, 4, 7], [10, 15, 10],,,,,,,,, 25, 60, -40)
 	def_edificio("Tubería", 1, spr_tuberia, spr_tuberia_color, "41", 30, 1,,, [0, 4], [1, 1],,,,,,,,,, 10)
@@ -440,16 +444,19 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	def_edificio("Bomba de Evaporación", 1, spr_bomba_evaporacion, spr_tuberia_color, "42", 30, 1,,, [0, 4], [10, 10],,,,,,,,,, 20, -5)
 	def_edificio("Horno de Lava", 2, spr_horno_lava, spr_horno_lava_encendido, "27", 400, 90,,, [4, 8], [10, 10], 15, true, false, [0, 3, 5], [5, 5, 5], true, false, [2, 4, 7],, 10, 0.5)
 	def_edificio("Generador Geotérmico", 2, spr_generador_geotermico,, "36", 200, 1,,, [0, 4, 8], [10, 10, 10],,,,,,,,, -120, 30, 30)
+	def_edificio("Taladro de Explosión", 3, spr_taladro_explosivo,, "28", 300, 300,,, [2, 4, 8], [40, 40, 30], 40, true, false, [13], [10], true, false, [0, 1, 3, 5, 6, 9, 10, 11])
+	def_edificio("Mortero", 3, spr_mortero, spr_mortero_2, "55", 600, 300,,, [4, 8], [50, 30], 10, true, false, [13], [10])
 #endregion
-categoria_edificios = [[2, 3, 4, 5, 6, 18], [1, 7, 8, 9, 22, 27, 31], [11, 10, 12, 13, 26, 32], [15, 30, 14, 24], [19, 20, 21, 23, 28]]
+categoria_edificios = [[2, 3, 4, 5, 6, 18], [1, 7, 8, 9, 22, 27, 31, 33], [11, 10, 12, 13, 26, 32], [15, 30, 14, 24], [19, 20, 21, 23, 28, 34]]
 categoria_nombre = ["Transporte", "Producción", "Electricidad", "Líquidos", "Defensa"]
 categoria_sprite = [spr_camino, spr_taladro, spr_bateria, spr_bomba, spr_torre]
-planta_quimica_receta = ["Ácido", "Concreto", "Explosivos", "Combustible", "Azufre"]
+planta_quimica_receta = ["Ácido", "Concreto", "Explosivos", "Combustible", "Azufre", "Baterías"]
 planta_quimica_descripcion = [	"Consume Arena y Piedra Sulfatada para producir\nÁcido",
 								"Utiliza Arena, Piedra y Agua para producir Concreto",
 								"Utiliza Carbón y Azufre para producir Explosivos",
 								"Utiliza Petróleo para producir compuestos\ncombustibles de larga duración",
-								"Extrae el Azufre del Petróleo"]
+								"Extrae el Azufre del Petróleo",
+								"Utiliza Ácido, Cobre y Hierro para producir\nBaterías"]
 edificio_max = array_length(edificio_nombre)
 edificio_rotable[6] = true
 edificio_input_all[16] = true
