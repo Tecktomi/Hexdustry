@@ -172,6 +172,9 @@ if menu = 2{
 					}
 				}
 			}
+			//Matar enemigos
+			else if mision_objetivo[i] = 4
+				draw_text(a, 150, " enemigos")
 			if draw_boton(room_width / 2 + 10, room_height - 140, "Eliminar objetivo"){
 				array_delete(mision_nombre, i, 1)
 				array_delete(mision_objetivo, i, 1)
@@ -689,13 +692,15 @@ if temp_hexagono != noone and flag{
 			draw_circle_off(edificio.x, edificio.y, 90, true)
 		}
 		//Mostrar rango de torres
-		if in(var_edificio_nombre, "Torre", "Láser", "Rifle"){
+		if in(var_edificio_nombre, "Torre", "Láser", "Rifle", "Mortero"){
 			if var_edificio_nombre = "Torre"
 				var alc = 180
 			else if var_edificio_nombre = "Láser"
 				alc = 220
 			else if var_edificio_nombre = "Rifle"
 				alc = 300
+			else if var_edificio_nombre = "Mortero"
+				alc = 600
 			draw_set_color(c_white)
 			draw_circle_off(edificio.x, edificio.y, alc, true)
 			if not ds_list_empty(enemigos) and edificio.target != null_enemigo{
@@ -1298,13 +1303,15 @@ if build_index > 0{
 						}
 					}
 					//Vista previa Alcance de torres
-					if in(var_edificio_nombre, "Torre", "Láser", "Rifle"){
+					if in(var_edificio_nombre, "Torre", "Láser", "Rifle", "Mortero"){
 						if var_edificio_nombre = "Torre"
 							var alc = 180
 						else if var_edificio_nombre = "Láser"
 							alc = 220
 						else if var_edificio_nombre = "Rifle"
 							alc = 300
+						else if var_edificio_nombre = "Mortero"
+							alc = 600
 						draw_circle_off(temp_complex_2.a, temp_complex_2.b, alc, true)
 					}
 				}
@@ -1516,7 +1523,8 @@ else{
 				if edificio.carga_total < edificio_carga_max[index] and ++edificio.proceso >= edificio_proceso[index]{
 					edificio.carga[13]--
 					edificio.carga_total--
-					var temp_list = get_size(edificio.a, edificio.b, edificio.dir, edificio_size[index] + 2), flag = false
+					var temp_list = get_size(edificio.a, edificio.b, edificio.dir, edificio_size[index] + 2)
+					flag = false
 					for(var b = 0; b < ds_list_size(temp_list); b++){
 						var temp_complex = temp_list[|b], aa = temp_complex.a, bb = temp_complex.b
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
@@ -1711,15 +1719,17 @@ else{
 			}
 		}
 		//Acción de torres
-		else if in(var_edificio_nombre, "Torre", "Rifle"){
+		else if in(var_edificio_nombre, "Torre", "Rifle", "Mortero"){
 			edificio.proceso++
 			if var_edificio_nombre = "Torre"
 				var alc = 180
-			else var_edificio_nombre = "Rifle"
+			else if var_edificio_nombre = "Rifle"
 				alc = 300
+			else if var_edificio_nombre = "Mortero"
+				alc = 600
 			if edificio.target != null_enemigo
 				edificio.select = radtodeg(-arctan2(edificio.x - edificio.target.a, edificio.target.b - edificio.y)) - 90
-			if edificio.flujo_consumo = 0 and flujo.liquido = 0 and edificio.target = null_enemigo and distance(edificio.x, edificio.y, edificio.target.a, edificio.target.b) < alc{
+			if in(var_edificio_nombre, "Torre", "Rifle") and edificio.flujo_consumo = 0 and flujo.liquido = 0 and edificio.target = null_enemigo and distance(edificio.x, edificio.y, edificio.target.a, edificio.target.b) < alc{
 				change_flujo(edificio_flujo_consumo[index], edificio)
 				edificio.proceso += 0.5
 			}
@@ -1729,12 +1739,15 @@ else{
 				edificio.target = null_enemigo
 				if not ds_list_empty(enemigos)
 					turret_target(edificio)
-				if edificio.target != null_enemigo{
+				var enemigo = edificio.target
+				if enemigo != null_enemigo{
 					var tiro = -1
 					if var_edificio_nombre = "Torre"
 						var arma = 0
 					else if var_edificio_nombre = "Rifle"
 						arma = 1
+					else if var_edificio_nombre = "Mortero"
+						arma = 2
 					for(var b = 0; b < array_length(armas[arma]); b++){
 						var tiro_struct = armas[arma, b]
 						if edificio.carga[tiro_struct.recurso] >= tiro_struct.cantidad{
@@ -1742,29 +1755,23 @@ else{
 							break
 						}
 					}
-					var dis = distance(edificio.x, edificio.y, edificio.target.a, edificio.target.b)
+					var dis = distance(edificio.x, edificio.y, enemigo.a, enemigo.b)
 					if tiro >= 0 and dis < alc{
 						var tiro_struct = armas[arma, tiro]
 						edificio.carga[tiro_struct.recurso] -= tiro_struct.cantidad
-						edificio.target.vida -= tiro_struct.dmg
 						edificio.carga_total -= tiro_struct.cantidad
 						var municion = {
 							x : edificio.x,
 							y : edificio.y,
-							hmove : (edificio.target.a - edificio.x) / dis,
-							vmove : (edificio.target.b - edificio.y) / dis,
-							tipo : 0,
-							dis : dis
+							hmove : 25 * (enemigo.a - edificio.x) / dis,
+							vmove : 25 * (enemigo.b - edificio.y) / dis,
+							tipo : real(var_edificio_nombre = "Mortero"),
+							dis : dis / 25,
+							dmg : tiro_struct.dmg,
+							target : enemigo
 						}
-						ds_list_add(municiones, municion)
+						array_push(municiones, municion)
 						mover_in(edificio)
-						if edificio.target.vida <= 0{
-							var temp_list = ds_grid_get(chunk_enemigos, edificio.target.chunk_x, edificio.target.chunk_y)
-							ds_list_remove(temp_list, edificio.target)
-							ds_list_remove(enemigos, edificio.target)
-							edificio.target = null_enemigo
-							turret_target(edificio)
-						}
 					}
 				}
 			}
@@ -1773,19 +1780,18 @@ else{
 			edificio.target = null_enemigo
 			if not ds_list_empty(enemigos)
 				turret_target(edificio)
-			if edificio.target != null_enemigo and distance(edificio.x, edificio.y, edificio.target.a, edificio.target.b) < 220{
+			enemigo = edificio.target
+			if enemigo != null_enemigo and distance(edificio.x, edificio.y, enemigo.a, enemigo.b) < 220{
 				change_energia(edificio_energia_consumo[index], edificio)
 				edificio.mode = true
-				edificio.target.vida -= red_power / 2
+				enemigo.vida -= red_power / 2
 				draw_set_alpha(red_power)
 				draw_set_color(c_red)
-				draw_line_off(edificio.x + 12, edificio.y + 14, edificio.target.a, edificio.target.b)
+				draw_line_off(edificio.x + 12, edificio.y + 14, enemigo.a, enemigo.b)
 				draw_set_alpha(1)
-				if edificio.target.vida <= 0{
+				if enemigo.vida <= 0{
+					kill_enemigo(enemigo)
 					change_energia(0, edificio)
-					var temp_list = ds_grid_get(chunk_enemigos, edificio.target.chunk_x, edificio.target.chunk_y)
-					ds_list_remove(temp_list, edificio.target)
-					ds_list_remove(enemigos, edificio.target)
 					edificio.target = null_enemigo
 					turret_target(edificio)
 				}
@@ -2107,9 +2113,7 @@ else{
 				dron.b += (enemigo.b - bb) / dis
 			}
 			else if --enemigo.vida <= 0{
-				var temp_list = ds_grid_get(chunk_enemigos, edificio.target.chunk_x, edificio.target.chunk_y)
-				ds_list_remove(temp_list, edificio.target)
-				ds_list_remove(enemigos, enemigo)
+				kill_enemigo(enemigo)
 				dron.target_unit = null_edificio
 				path_find(true, dron)
 			}
@@ -2117,20 +2121,48 @@ else{
 	}
 	//Ciclo de disparos
 	draw_set_color(c_black)
-	for(var a = 0; a < ds_list_size(municiones); a++){
-		var municion = municiones[|a]
+	for(var a = 0; a < array_length(municiones); a++){
+		var municion = municiones[a]
 		draw_circle_off(municion.x, municion.y, 2, false)
-		municion.x += 25 * municion.hmove
-		municion.y += 25 * municion.vmove
-		municion.dis -= 25
-		if municion.dis <= 0
-			ds_list_delete(municiones, a--)
+		municion.x += municion.hmove
+		municion.y += municion.vmove
+		if --municion.dis <= 0{
+			municiones[a--] = municiones[array_length(municiones) - 1]
+			array_pop(municiones)
+			if municion.target.vida > 0{
+				municion.target.vida -= municion.dmg
+				if municion.target.vida <= 0
+					kill_enemigo(municion.target)
+			}
+			if municion.tipo = 1{
+				array_push(efectos, new_efecto(spr_explosion, 0, municion.x, municion.y, 8))
+				for(var b = 0; b < ds_list_size(enemigos); b++){
+					var enemigo = enemigos[|b], dis = distance(enemigo.a, enemigo.b, municion.x, municion.y)
+					if dis < 50{
+						enemigo.vida -= 1000 / (10 + dis)
+						if enemigo.vida <= 0{
+							kill_enemigo(enemigo)
+							b--
+						}
+					}
+				}
+			}
+		}
+	}
+	//Efectos estáticos
+	for(var a = 0; a < array_length(efectos); a++){
+		var efecto = efectos[a]
+		draw_sprite_off(efecto.sprite, efecto.subsprite++, efecto.x, efecto.y)
+		if --efecto.tiempo <= 0{
+			efectos[a--] = efectos[array_length(efectos) - 1]
+			array_pop(efectos)
+		}
 	}
 	var temp_text_right = ""
 	if oleadas{
 		if image_index > (60 * oleadas_tiempo_primera) or keyboard_check_pressed(vk_enter){
 			if image_index mod (60 * oleadas_tiempo) = 0 or keyboard_check_pressed(vk_enter){
-				var c = 100 + floor(sqr((image_index - (60 * oleadas_tiempo_primera)) / (15 * oleadas_tiempo))), d = enemigos_spawned++, e = 1, flag_2 = false
+				var c = 100 + floor(sqr(max(0, image_index - (60 * oleadas_tiempo_primera)) / (15 * oleadas_tiempo))), d = enemigos_spawned++, e = 1, flag_2 = false
 				for(var i = 0; i < array_length(size_size); i++)
 					if d <= size_size[i]{
 						e = i + 1
@@ -2171,6 +2203,8 @@ else{
 			temp_text_right += recurso_nombre[mision_target_id[a]]
 		else if mision_objetivo[a] < 4
 			temp_text_right += edificio_nombre[mision_target_id[a]]
+		else if mision_objetivo[a] = 4
+			temp_text_right += "enemigos"
 		temp_text_right += $"\n{mision_counter} / {mision_target_num[a]}"
 		if mision_objetivo[a] = 1{
 			mision_counter = nucleo.carga[mision_target_id[a]]

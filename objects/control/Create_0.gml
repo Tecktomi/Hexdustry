@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "28_09_2025")
+ini_write_string("Global", "version", "30_09_2025")
 ini_close()
 #region Metadatos
 	menu = 0
@@ -67,10 +67,12 @@ ini_close()
 	mision_actual = -1
 	mision_counter = 0
 	get_keyboard_string = -1
-	objetivos_nombre = ["conseguir", "tener almacenado", "construir", "tener construido"]
+	objetivos_nombre = ["conseguir", "tener almacenado", "construir", "tener construido", "matar"]
 	oleadas = true
 	oleadas_tiempo_primera = 240
 	oleadas_tiempo = 30
+	null_efecto = new_efecto()
+	efectos = array_create(0, null_efecto)
 #endregion
 null_edificio = {
 	index : -1,
@@ -197,15 +199,16 @@ null_municion = {
 	hmove : 0,
 	vmove : 0,
 	tipo : 0,
-	dis : 0
+	dis : 0,
+	dmg : 0,
+	target : null_enemigo
 }
-municiones = ds_list_create()
-ds_list_add(municiones, null_municion)
-ds_list_clear(municiones)
+municiones = array_create(0, null_municion)
 #region Tipos de disparos
 	armas = [
 		[{recurso : 0, cantidad : 1, dmg : 30}, {recurso : 3, cantidad : 1, dmg : 40}],
-		[{recurso : 2, cantidad : 1, dmg : 80}, {recurso : 4, cantidad : 1, dmg : 100}]]
+		[{recurso : 2, cantidad : 1, dmg : 80}, {recurso : 4, cantidad : 1, dmg : 100}],
+		[{recurso : 13, cantidad : 1, dmg : 400}]]
 #endregion
 //Terrenos
 #region Arreglos
