@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"kill_enemigo",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"kill_enemigo",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
