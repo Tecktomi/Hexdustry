@@ -36,13 +36,16 @@ function add_edificio(index, dir, a, b){
 			vida : edificio_vida[index],
 			target : null_enemigo,
 			flujo_consumo : 0,
+			flujo_consumo_max : edificio_flujo_consumo[index],
 			energia_consumo : 0,
+			energia_consumo_max : edificio_energia_consumo[index],
 			edificio_index : real(edificio_count++),
 			coordenadas_dis : ds_grid_create(xsize, ysize),
 			coordenadas_close : ds_list_create(),
 			vivo : true,
 			emisor : edificio_emisor[index],
-			receptor : edificio_receptor[index]
+			receptor : edificio_receptor[index],
+			luz : false
 		}
 		ds_list_add(edificio.energia_link, null_edificio)
 		ds_list_clear(edificio.energia_link)
@@ -79,10 +82,12 @@ function add_edificio(index, dir, a, b){
 			ds_grid_set(edificio_bool, aa, bb, true)
 			ds_grid_set(edificio_id, aa, bb, edificio)
 			ds_list_add(edificio.coordenadas, temp_complex)
-			ds_grid_set(edificio.coordenadas_dis, aa, bb, 0)
-			ds_grid_set(edificio_cercano_dis, aa, bb, 0)
-			ds_grid_set(edificio_cercano, aa, bb, edificio)
-			ds_list_add(edificio.coordenadas_close, {a : aa, b : bb})
+			if not edificio_camino[index] and not in(var_edificio_nombre, "Tubería"){
+				ds_grid_set(edificio.coordenadas_dis, aa, bb, 0)
+				ds_grid_set(edificio_cercano_dis, aa, bb, 0)
+				ds_grid_set(edificio_cercano, aa, bb, edificio)
+				ds_list_add(edificio.coordenadas_close, {a : aa, b : bb})
+			}
 		}
 		calculate_in_out_2(edificio)
 		//Añadir a la red electrica
@@ -256,6 +261,10 @@ function add_edificio(index, dir, a, b){
 			else if var_edificio_nombre = "Generador Geotérmico"{
 				edificio.flujo.liquido = 3
 				change_flujo(edificio_flujo_consumo[index], edificio)
+			}
+			if ver_luz and edificio.flujo.liquido = 3{
+				edificio.luz = true
+				add_luz(a, b, 1)
 			}
 		}
 		if var_edificio_nombre = "Láser"

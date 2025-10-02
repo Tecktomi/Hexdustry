@@ -23,6 +23,13 @@ function delete_edificio(aa, bb, enemigo = false){
 			ds_grid_set(edificio_id, a, b, null_edificio)
 			ds_grid_set(edificio_draw, a, b, false)
 		}
+		if ver_luz and edificio.luz{
+			var temp_list = edificio.coordenadas, size = ds_list_size(temp_list)
+			for(var b = 0; b < size; b++){
+				var temp_complex = temp_list[|b]
+				add_luz(temp_complex.a, temp_complex.b, -1)
+			}
+		}
 		ds_list_destroy(edificio.coordenadas)
 		if not ds_list_empty(edificios_targeteables)
 			for(var a = 0; a < xsize; a++)

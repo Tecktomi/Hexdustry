@@ -3,7 +3,7 @@ function change_energia(energia, edificio = control.null_edificio){
 	if edificio_energia[index]{
 		var red = edificio.red
 		//Fábrica
-		if edificio_energia_consumo[index] > 0{
+		if edificio.energia_consumo_max >= 0{
 			red.consumo -= edificio.energia_consumo
 			edificio.energia_consumo = energia
 			red.consumo += edificio.energia_consumo
