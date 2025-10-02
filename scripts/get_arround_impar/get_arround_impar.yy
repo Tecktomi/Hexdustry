@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"get_arround_impar",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"get_arround_impar",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

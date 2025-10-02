@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "30_09_2025")
+ini_write_string("Global", "version", "01_10_2025")
 ini_close()
 #region Metadatos
 	menu = 0
@@ -73,6 +73,7 @@ ini_close()
 	oleadas_tiempo = 30
 	null_efecto = new_efecto()
 	efectos = array_create(0, null_efecto)
+	ver_luz = true
 #endregion
 null_edificio = {
 	index : -1,
@@ -107,13 +108,16 @@ null_edificio = {
 	vida : 0,
 	target : undefined,
 	flujo_consumo : 0,
+	flujo_consumo_max : 0,
 	energia_consumo : 0,
+	energia_consumo_max : 0,
 	edificio_index : 0,
 	coordenadas_dis : ds_grid_create(xsize, ysize),
 	coordenadas_close : ds_list_create(),
 	vivo : false,
 	emisor : false,
-	receptor : false
+	receptor : false,
+	luz : false
 }
 null_edificio.link = null_edificio
 ds_list_add(null_edificio.coordenadas, {a : 0, b : 0})
@@ -159,6 +163,8 @@ for(var a = 0; a < xsize; a++)
 		ds_priority_delete_max(temp_priority)
 		ds_grid_set(edificio_cercano_priority, a, b, temp_priority)
 	}
+luz = ds_grid_create(xsize, ysize)
+ds_grid_clear(luz, 0)
 //Crear plantilla de fondo
 for(var a = 0; a < xsize; a++)
 	for(var b = 0; b < ysize; b++){
@@ -448,7 +454,7 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	def_edificio("Horno de Lava", 2, spr_horno_lava, spr_horno_lava_encendido, "27", 400, 90,,, [4, 8], [10, 10], 15, true, false, [0, 3, 5], [5, 5, 5], true, false, [2, 4, 7],, 10, 0.5)
 	def_edificio("Generador Geotérmico", 2, spr_generador_geotermico,, "36", 200, 1,,, [0, 4, 8], [10, 10, 10],,,,,,,,, -120, 30, 30)
 	def_edificio("Taladro de Explosión", 3, spr_taladro_explosivo,, "28", 300, 300,,, [2, 4, 8], [40, 40, 30], 40, true, false, [13], [10], true, false, [0, 1, 3, 5, 6, 9, 10, 11])
-	def_edificio("Mortero", 3, spr_mortero, spr_mortero_2, "55", 600, 300,,, [4, 8], [50, 30], 10, true, false, [13], [10])
+	def_edificio("Mortero", 3, spr_mortero, spr_mortero_2, "56", 600, 300,,, [4, 8], [50, 30], 10, true, false, [13], [10])
 #endregion
 categoria_edificios = [[2, 3, 4, 5, 6, 18], [1, 7, 8, 9, 22, 27, 31, 33], [11, 10, 12, 13, 26, 32], [15, 30, 14, 24], [19, 20, 21, 23, 28, 34]]
 categoria_nombre = ["Transporte", "Producción", "Electricidad", "Líquidos", "Defensa"]
@@ -467,6 +473,9 @@ edificio_energia[11] = true
 edificio_energia[12] = true
 size_size = [1, 3, 7, 12, 19]
 size_borde = [6, 9, 12, 15, 18, 21]
+edificios_construibles = []
+for(var a = 0; a < array_length(categoria_nombre); a++)
+	edificios_construibles = array_concat(edificios_construibles, categoria_edificios[a])
 edificios = ds_list_create()
 edificios_counter = array_create(edificio_max, 0)
 edificios_targeteables = ds_list_create()
@@ -510,10 +519,13 @@ for(var e = 0; e < array_length(temp_peso); e++){
 	repeat(f){
 		if terreno[# a, b] != 2
 			ds_grid_set(terreno, a, b, c)
-		for(var d = 0; d < 6; d++){
-			var temp_complex = next_to(a, b, d)
-			var aa = clamp(temp_complex.a, 0, xsize - 1)
-			var bb = clamp(temp_complex.b, 0, ysize - 1)
+		var temp_list = get_arround(a, b, 0, 1)
+		for(var d = 0; d < ds_list_size(temp_list); d++){
+			var temp_complex = temp_list[|d], aa = temp_complex.a, bb = temp_complex.b
+			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+				continue
+			if c = 14
+				add_luz(aa, bb, 1)
 			if terreno[# aa, bb] != 2{
 				ds_grid_set(terreno, aa, bb, c)
 				if c = 0{
