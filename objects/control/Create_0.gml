@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "01_10_2025")
+ini_write_string("Global", "version", "03_10_2025")
 ini_close()
 #region Metadatos
 	menu = 0
@@ -132,6 +132,11 @@ ds_grid_clear(null_edificio.coordenadas_dis, 0)
 ds_list_add(null_edificio.coordenadas_close, {a : 0, b : 0})
 ds_list_clear(null_edificio.coordenadas_close)
 build_target = null_edificio
+//Puertos de Carga
+puerto_carga_bool = false
+puerto_carga_link = null_edificio
+puerto_carga_array = array_create(0, null_edificio)
+puerto_carga_atended = 0
 //Grids
 bool_unidad = ds_grid_create(xsize, ysize)
 ds_grid_clear(bool_unidad, false)
@@ -177,14 +182,15 @@ for(var a = 0; a < xsize; a++)
 null_enemigo = {
 	a : 0,
 	b : 0,
-	vida_max : 5,
+	index : 0,
 	vida : 5,
 	target : null_edificio,
-	target_unit : undefined,
 	chunk_x : 0,
-	chunk_y : 0
+	chunk_y : 0,
+	carga : [0],
+	carga_total : 0,
+	modo : 0
 }
-null_enemigo.target_unit = null_enemigo
 enemigos = ds_list_create()
 drones_aliados = ds_list_create()
 ds_list_add(enemigos, null_enemigo)
@@ -216,6 +222,10 @@ municiones = array_create(0, null_municion)
 		[{recurso : 2, cantidad : 1, dmg : 80}, {recurso : 4, cantidad : 1, dmg : 100}],
 		[{recurso : 13, cantidad : 1, dmg : 400}]]
 #endregion
+dron_nombre = ["Araña", "Dron"]
+dron_sprite = [spr_arana, spr_dron]
+dron_sprite_color = [spr_arana_color, spr_arana_color]
+dron_vida_max = [100, 40]
 //Terrenos
 #region Arreglos
 	terreno_nombre = []
@@ -343,13 +353,14 @@ lq_max = array_length(liquido_nombre)
 	"Genera el líquido a elección a partir de magia",
 	"Genera energía a partir de un combustible y Agua",
 	"Refina la Piedra Cúprica o Férrica en Cobre o\nHierro usando Ácido",
-	"Fabrica drones de defensa utilizando Acero, Silicio\ny bastante energía",
+	"Fabrica drones de transporte utilizando Silicio, Baterías\ny bastante energía",
 	"Genera recursos a partir de magia",
 	"Extrae lentamente Agua por evaporación",
 	"Similar al horno normal, pero utiliza el calor\nde la lava para cocinar más rápido",
 	"Genera energía a partir de evaporar Agua,\ndebe ser construido sobre lava",
 	"Utiliza explosivos para extraer un recurso\nde cada terreno minable en su área",
-	"Dispara explosivos a largo alcance, devastando\nun área de enemigos"
+	"Dispara explosivos a largo alcance, devastando\nun área de enemigos",
+	"Conceta Puertos de Carga para que tus drones\nmuevan recursos entre ellos"
 	]
 #endregion
 #region Arreglos
@@ -447,16 +458,17 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, "4 ", 30, 1,,,,,,,,,,,,,, 10, -999999)
 	def_edificio("Turbina", 2, spr_turbina,, "35", 160,,, true, [0, 4, 7], [20, 10, 10], 20, true, false, [1, 12], [10, 10], false,,, -150, 30, 40)
 	def_edificio("Refinería de Metales", 3, spr_refineria_minerales,, "26", 150, 80,,, [4, 7, 8], [20, 10, 10], 20, true, false, [9, 10], [5, 5], true, false, [0, 3], 80, 60, 60)
-	def_edificio("Fábrica de Drones", 2, spr_fabrica_drones,, "55", 200, 900,,, [2, 4, 7], [20, 20, 15], 20, true, false, [4, 7], [10, 10], false, false,, 120)
+	def_edificio("Fábrica de Drones", 2, spr_fabrica_drones,, "17", 200, 900,,, [2, 4, 7], [20, 20, 15], 20, true, false, [7, 14], [10, 3], false, false,, 120)
 	def_edificio("Recurso Infinito", 1, spr_recurso_infinito, spr_selector_color, "1 ", 30, 1,,,,,,,,,, true, true)
 	//30
 	def_edificio("Bomba de Evaporación", 1, spr_bomba_evaporacion, spr_tuberia_color, "42", 30, 1,,, [0, 4], [10, 10],,,,,,,,,, 20, -5)
 	def_edificio("Horno de Lava", 2, spr_horno_lava, spr_horno_lava_encendido, "27", 400, 90,,, [4, 8], [10, 10], 15, true, false, [0, 3, 5], [5, 5, 5], true, false, [2, 4, 7],, 10, 0.5)
 	def_edificio("Generador Geotérmico", 2, spr_generador_geotermico,, "36", 200, 1,,, [0, 4, 8], [10, 10, 10],,,,,,,,, -120, 30, 30)
 	def_edificio("Taladro de Explosión", 3, spr_taladro_explosivo,, "28", 300, 300,,, [2, 4, 8], [40, 40, 30], 40, true, false, [13], [10], true, false, [0, 1, 3, 5, 6, 9, 10, 11])
-	def_edificio("Mortero", 3, spr_mortero, spr_mortero_2, "56", 600, 300,,, [4, 8], [50, 30], 10, true, false, [13], [10])
+	def_edificio("Mortero", 3, spr_mortero, spr_mortero_2, "55", 600, 300,,, [4, 8], [50, 30], 10, true, false, [13], [10])
+	def_edificio("Puerto de Carga", 2, spr_punto_carga,, "18", 150,,,, [2, 4, 7], [10, 5, 5], 25,, true,,,, true)
 #endregion
-categoria_edificios = [[2, 3, 4, 5, 6, 18], [1, 7, 8, 9, 22, 27, 31, 33], [11, 10, 12, 13, 26, 32], [15, 30, 14, 24], [19, 20, 21, 23, 28, 34]]
+categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 7, 8, 9, 22, 27, 31, 33], [11, 10, 12, 13, 26, 32], [15, 30, 14, 24], [19, 20, 21, 23, 34]]
 categoria_nombre = ["Transporte", "Producción", "Electricidad", "Líquidos", "Defensa"]
 categoria_sprite = [spr_camino, spr_taladro, spr_bateria, spr_bomba, spr_torre]
 planta_quimica_receta = ["Ácido", "Concreto", "Explosivos", "Combustible", "Azufre", "Baterías"]
@@ -471,6 +483,8 @@ edificio_rotable[6] = true
 edificio_input_all[16] = true
 edificio_energia[11] = true
 edificio_energia[12] = true
+edificio_input_all[35] = true
+edificio_output_all[35] = true
 size_size = [1, 3, 7, 12, 19]
 size_borde = [6, 9, 12, 15, 18, 21]
 edificios_construibles = []
