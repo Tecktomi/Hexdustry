@@ -73,7 +73,9 @@ ini_close()
 	oleadas_tiempo = 30
 	null_efecto = new_efecto()
 	efectos = array_create(0, null_efecto)
-	ver_luz = true
+	ver_luz = false
+	text_x = 0
+	text_y = 0
 #endregion
 null_edificio = {
 	index : -1,
@@ -316,6 +318,8 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 	def_recurso("Compuesto Incendiario", spr_item_incendiario, make_color_rgb(191, 127, 0), 900)
 	def_recurso("Explosivo", spr_item_explosivos, c_red)
 	def_recurso("Batería", spr_item_bateria, make_color_rgb(163, 98, 10))
+	//15
+	def_recurso("Plástico", spr_item_plastico, c_blue)
 #endregion
 rss_max = array_length(recurso_nombre)
 //Liquidos
@@ -471,13 +475,14 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 7, 8, 9, 22, 27, 31, 33], [11, 10, 12, 13, 26, 32], [15, 30, 14, 24], [19, 20, 21, 23, 34]]
 categoria_nombre = ["Transporte", "Producción", "Electricidad", "Líquidos", "Defensa"]
 categoria_sprite = [spr_camino, spr_taladro, spr_bateria, spr_bomba, spr_torre]
-planta_quimica_receta = ["Ácido", "Concreto", "Explosivos", "Combustible", "Azufre", "Baterías"]
+planta_quimica_receta = ["Ácido", "Concreto", "Explosivos", "Combustible", "Azufre", "Baterías", "Plástico"]
 planta_quimica_descripcion = [	"Consume Arena y Piedra Sulfatada para producir\nÁcido",
 								"Utiliza Arena, Piedra y Agua para producir Concreto",
 								"Utiliza Carbón y Azufre para producir Explosivos",
 								"Utiliza Petróleo para producir compuestos\ncombustibles de larga duración",
 								"Extrae el Azufre del Petróleo",
-								"Utiliza Ácido, Cobre y Hierro para producir\nBaterías"]
+								"Utiliza Ácido, Cobre y Hierro para producir\nBaterías",
+								"Utiliza Petróleo para producir Plástico"]
 edificio_max = array_length(edificio_nombre)
 edificio_rotable[6] = true
 edificio_input_all[16] = true
@@ -538,8 +543,6 @@ for(var e = 0; e < array_length(temp_peso); e++){
 			var temp_complex = temp_list[|d], aa = temp_complex.a, bb = temp_complex.b
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 				continue
-			if c = 14
-				add_luz(aa, bb, 1)
 			if terreno[# aa, bb] != 2{
 				ds_grid_set(terreno, aa, bb, c)
 				if c = 0{
@@ -562,6 +565,8 @@ for(var e = 0; e < array_length(temp_peso); e++){
 nucleo = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
 nucleo.carga[0] = 75
 nucleo.carga_total = 75
+carga_inicial = array_create(rss_max, 0)
+array_copy(carga_inicial, 0, nucleo.carga, 0, rss_max)
 for(var a = 0; a < ds_list_size(nucleo.coordenadas); a++){
 	var temp_complex = nucleo.coordenadas[|a]
 	var aa = temp_complex.a, bb = temp_complex.b
@@ -695,3 +700,7 @@ do{
 	}
 }
 until terreno_caminable[terreno[# spawn_x, spawn_y]]
+for(var a = 0; a < xsize; a++)
+	for(var b = 0; b < ysize; b++)
+		if terreno[# a, b] = 14
+			add_luz(a, b, 1)

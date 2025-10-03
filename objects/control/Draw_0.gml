@@ -52,6 +52,10 @@ if menu = 2{
 			get_keyboard_string = -1
 			editor_menu = false
 		}
+		if draw_boton(250, 110, "Configuración"){
+			mision_actual = -1
+			get_keyboard_string = -1
+		}
 		var size = array_length(mision_nombre)
 		for(var i = 0; i < size; i++)
 			if draw_boton(140, 150 + i * 30, mision_nombre[i])
@@ -63,11 +67,11 @@ if menu = 2{
 			array_push(mision_target_num, 0)
 			mision_actual = size
 		}
+		draw_set_color(c_ltgray)
+		draw_rectangle(room_width / 2, 110, room_width - 110, room_height - 110, false)
+		draw_set_color(c_black)
+		draw_rectangle(room_width / 2, 110, room_width - 110, room_height - 110, true)
 		if mision_actual >= 0{
-			draw_set_color(c_ltgray)
-			draw_rectangle(room_width / 2, 110, room_width - 110, room_height - 110, false)
-			draw_set_color(c_black)
-			draw_rectangle(room_width / 2, 110, room_width - 110, room_height - 110, true)
 			var i = mision_actual
 			var a = room_width / 2 + 20
 			draw_text(a, 120, "Nombre objetivo: ")
@@ -102,11 +106,10 @@ if menu = 2{
 					if draw_boton(a, 170 + 20 * b, objetivos_nombre[b],,,, false){
 						mision_objetivo[i] = b
 						get_keyboard_string = -1
+						if in(b, 2, 3)
+							mision_target_id[i] = edificios_construibles[0]
 					}
-				if mouse_check_button_pressed(mb_right){
-					mouse_clear(mb_right)
-					get_keyboard_string = -1
-				}
+				exit_keyboard_input()
 			}
 			a += string_width($"{objetivos_nombre[mision_objetivo[i]]} ")
 			//Cantidad
@@ -117,10 +120,7 @@ if menu = 2{
 			if get_keyboard_string = 1{
 				draw_line(a, 170, a + string_width(mision_target_num[i]), 170)
 				mision_target_num[i] = keyboard_string = "" ? 0 : real(string_digits(keyboard_string))
-				if keyboard_check_pressed(vk_enter) or mouse_check_button_pressed(mb_right){
-					mouse_clear(mb_right)
-					get_keyboard_string = -1
-				}
+				exit_keyboard_input()
 			}
 			a += string_width(mision_target_num[i])
 			//Conseguir recurso / Tener almacenado
@@ -143,10 +143,7 @@ if menu = 2{
 							mision_target_id[i] = b
 							get_keyboard_string = -1
 						}
-					if mouse_check_button_pressed(mb_right){
-						mouse_clear(mb_right)
-						get_keyboard_string = -1
-					}
+					exit_keyboard_input()
 				}
 			}
 			//Construir / Tener construido
@@ -169,10 +166,7 @@ if menu = 2{
 							get_keyboard_string = -1
 						}
 					}
-					if mouse_check_button_pressed(mb_right){
-						mouse_clear(mb_right)
-						get_keyboard_string = -1
-					}
+					exit_keyboard_input()
 				}
 			}
 			//Matar enemigos
@@ -184,6 +178,64 @@ if menu = 2{
 				array_delete(mision_target_id, i, 1)
 				array_delete(mision_target_num, i, 1)
 				mision_actual = -1
+			}
+		}
+		//Opciones generales
+		else{
+			var ypos = 120
+			if draw_boton(room_width / 2 + 20, 120, (oleadas ? "Des" : "A") + "ctivar oleadas")
+				oleadas = not oleadas
+			ypos += 40
+			if oleadas{
+				var a = room_width / 2 + 40
+				draw_text(a, ypos, "Tiempo primera ronda: ")
+				a += string_width("Tiempo primera ronda: ")
+				if draw_boton(a, ypos, $"{oleadas_tiempo_primera} s",,,, false){
+					keyboard_string = string(oleadas_tiempo_primera)
+					get_keyboard_string = 0
+				}
+				ypos += 20
+				if get_keyboard_string = 0{
+					draw_line(a, ypos, a + string_width(oleadas_tiempo_primera), ypos)
+					oleadas_tiempo_primera = keyboard_string = "" ? 0 :  real(string_digits(keyboard_string))
+					exit_keyboard_input()
+				}
+				ypos += 10
+				a = room_width / 2 + 40
+				draw_text(a, ypos, "Tiempo entre rondas: ")
+				a += string_width("Tiempo entre rondas: ")
+				if draw_boton(a, ypos, $"{oleadas_tiempo} s",,,, false){
+					keyboard_string = string(oleadas_tiempo)
+					get_keyboard_string = 1
+				}
+				ypos += 20
+				if get_keyboard_string = 1{
+					draw_line(a, ypos, a + string_width(oleadas_tiempo), ypos)
+					oleadas_tiempo = keyboard_string = "" ? 0 : real(string_digits(keyboard_string))
+					exit_keyboard_input()
+				}
+			}
+			ypos += 20
+			ypos = draw_text_pos(room_width / 2 + 20, ypos, "Carga inicial")
+			var xpos = room_width / 2 + 40, width = 0, ypos_2 = ypos
+			for(var a = 0; a < rss_max; a++){
+				ypos_2 = draw_text_pos(xpos, ypos_2, recurso_nombre[a])
+				width = max(width, string_width(recurso_nombre[a]))
+			}
+			xpos = room_width / 2 + 60 + width
+			ypos_2 = ypos
+			for(var a = 0; a < rss_max; a++){
+				if draw_boton(xpos, ypos_2, carga_inicial[a],,,, false){
+					keyboard_string = string(carga_inicial[a])
+					get_keyboard_string = 10 + a
+				}
+				ypos_2 += string_height(carga_inicial[a])
+				if get_keyboard_string = 10 + a{
+					draw_line(xpos, ypos_2 - 4, xpos + string_width(carga_inicial[a]), ypos_2 - 4)
+					carga_inicial[a] = keyboard_string = "" ? 0 : real(string_digits(keyboard_string))
+					nucleo.carga[a] = carga_inicial[a]
+					exit_keyboard_input()
+				}
 			}
 		}
 		update_cursor()
@@ -397,6 +449,11 @@ if menu = 2{
 			ini_write_real("Global", "spawn_y", spawn_y)
 			ini_write_real("Global", "nucleo_x", nucleo.a)
 			ini_write_real("Global", "nucleo_y", nucleo.b)
+			for(var a = 0; a < rss_max; a++)
+				ini_write_real("Carga inicial", a, carga_inicial[a])
+			ini_write_real("Global", "oleadas", oleadas)
+			ini_write_real("Global", "tiempo primera oleada", oleadas_tiempo_primera)
+			ini_write_real("Global", "tiempo entre oleadas", oleadas_tiempo)
 			ini_write_real("Global", "objetivos", array_length(mision_nombre))
 			for(var a = 0; ini_section_exists($"Objetivo {a}"); a++)
 				ini_section_delete($"Objetivo {a}")
@@ -627,6 +684,12 @@ if show_menu{
 					edificio.emisor = true
 					edificio.flujo_consumo_max = 4
 				}
+				else if a = 6{
+					edificio.carga_output[15] = true
+					edificio.receptor = false
+					edificio.emisor = true
+					edificio.flujo_consumo_max = 8
+				}
 				calculate_in_out_2(edificio)
 			}
 		}
@@ -826,8 +889,12 @@ if temp_hexagono != noone and flag{
 				}
 			}
 		}
-		if var_edificio_nombre = "Fábrica de Drones" and edificio.proceso > 0
-			temp_text += $"Creando Dron ({ds_list_size(drones_aliados)}/8)"
+		if var_edificio_nombre = "Fábrica de Drones"{
+			if edificio.proceso > 0
+				temp_text += $"Creando Dron ({ds_list_size(drones_aliados)}/8)\n"
+			else if ds_list_size(drones_aliados) = 8
+				temp_text += "Límite de Drones alcanzado (8/8)\n"
+		}
 		//Mostrar inputs
 		if info and edificio.receptor{
 			if edificio_input_all[index]
@@ -1970,12 +2037,8 @@ else{
 			}
 			if edificio.proceso < 0{
 				change_energia(edificio_energia_consumo[index], edificio)
-				if edificio.select = 3
-					change_flujo(4, edificio)
-				else if edificio.select = 4
-					change_flujo(6, edificio)
-				else if edificio.select = 5
-					change_flujo(4, edificio)
+				if in(edificio.select, 3, 4, 5, 6)
+					change_flujo(edificio.flujo_consumo_max, edificio)
 				edificio.proceso++
 			}
 			if (edificio.select = 0 and edificio.carga[5] > 1 and edificio.carga[11] > 0 and in(flujo.liquido, -1, 1) and flujo.almacen < flujo.almacen_max) or
@@ -1983,8 +2046,9 @@ else{
 				(edificio.select = 2 and edificio.carga[1] > 0 and edificio.carga[11] > 0) or
 				(edificio.select = 3 and flujo.liquido = 2) or
 				(edificio.select = 4 and flujo.liquido = 2) or
-				(edificio.select = 5 and flujo.liquido = 1 and edificio.carga[0] > 0 and edificio.carga[3] > 0){
-				if in(edificio.select, 3, 4, 5)
+				(edificio.select = 5 and flujo.liquido = 1 and edificio.carga[0] > 0 and edificio.carga[3] > 0) or
+				(edificio.select = 6 and flujo.liquido = 2){
+				if in(edificio.select, 3, 4, 5, 6)
 					edificio.proceso += red_power * flujo_power
 				else
 					edificio.proceso += red_power
@@ -2032,6 +2096,11 @@ else{
 						edificio.carga[3]--
 						edificio.carga[14]++
 						edificio.carga_total--
+					}
+					else if edificio.select = 6{
+						edificio.carga[15]++
+						edificio.carga_total++
+						change_flujo(0, edificio)
 					}
 					edificio.proceso -= edificio_proceso[index] + 1
 					change_energia(0, edificio)
@@ -2125,10 +2194,10 @@ else{
 		}
 		if enemigo.target != null_edificio and enemigo.target.vida <= 0
 			enemigo.target = null_edificio
-		if enemigo.target_unit != null_enemigo and enemigo.target_unit.vida <= 0
-			enemigo.target_unit = null_enemigo
-		if not ds_list_empty(edificios) and enemigo.target = null_edificio
-			path_find(false, enemigo)
+		if not ds_list_empty(edificios) and enemigo.target = null_edificio{
+			var temp_complex = xytoab(aa, bb)
+			enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
+		}
 		//Target edificios
 		if enemigo.target != null_edificio{
 			edificio = enemigo.target
@@ -2178,9 +2247,21 @@ else{
 				edificio.vida--
 				if edificio.vida <= 0{
 					delete_edificio(edificio.a, edificio.b, true)
-					enemigo.target = null_edificio
-					path_find(false, enemigo)
+					temp_complex = xytoab(aa, bb)
+					enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
 				}
+			}
+			else if not ds_list_empty(drones_aliados){
+				var closest_dron = null_enemigo, size = ds_list_size(drones_aliados), closest_dis = infinity
+				for(var b = 0; b < size; b++){
+					var temp_dron = drones_aliados[|b], temp_dis = distance(aa, bb, temp_dron.a, temp_dron.b)
+					if temp_dis < 50 and temp_dis < closest_dis{
+						closest_dis = temp_dis
+						closest_dron = temp_dron
+					}
+				}
+				if closest_dron != null_enemigo and --closest_dron.vida <= 0
+					ds_list_remove(drones_aliados, closest_dron)
 			}
 		}
 		//Cambiar de chunk
@@ -2221,6 +2302,11 @@ else{
 			draw_set_color(make_color_hsv(120 * dron.vida / dron_vida_max[index], 255, 255))
 			draw_circle_off(aa, bb - 20, 5, false)
 			draw_set_color(c_white)
+			if dron.vida <= 0{
+				ds_list_remove(drones_aliados, dron)
+				a--
+				continue
+			}
 		}
 		if array_length(puerto_carga_array) > 0{
 			if dron.modo = 0{
@@ -2229,7 +2315,8 @@ else{
 				dron.modo = 1
 			}
 			else{
-				var edificio = dron.target, dis = distance(aa, bb, edificio.x, edificio.y)
+				edificio = dron.target
+				var dis = distance(aa, bb, edificio.x, edificio.y)
 				if dis > 10{
 					dron.a += (edificio.x - dron.a) / dis
 					dron.b += (edificio.y - dron.b) / dis
@@ -2339,7 +2426,7 @@ else{
 					var enemigo = add_dron(aa, bb, 0)
 					var temp_list = ds_grid_get(chunk_enemigos, enemigo.chunk_x, enemigo.chunk_y)
 					ds_list_add(temp_list, enemigo)
-					path_find(false, enemigo)
+					enemigo.target = edificio_cercano[# aa, bb]
 					ds_list_add(enemigos, enemigo)
 				}
 			}
@@ -2408,6 +2495,14 @@ else{
 		}
 	}
 }
+draw_set_halign(fa_center)
+var temp_text = ""
+for(var a = 0; a < rss_max; a++)
+	if nucleo.carga[a] > 0
+		temp_text += $"{recurso_nombre[a]} {nucleo.carga[a]}\n"
+if temp_text != ""
+	draw_text_background(room_width / 2, 0, temp_text)
+draw_set_halign(fa_left)
 #region INPUT
 	if keyboard_check_pressed(ord("P"))
 		pausa = not pausa
@@ -2421,7 +2516,7 @@ else{
 		image_index += 20
 	//Mostrar redes electricas
 	if keyboard_check(ord("O")){
-		var temp_text = ""
+		temp_text = ""
 		for(var a = 0; a < ds_list_size(redes); a++){
 			var red = redes[|a]
 			temp_text += $"Red {a}:\n"
@@ -2442,7 +2537,7 @@ else{
 	}
 	//Mostrar redes hidraulicas
 	if keyboard_check(ord("U")){
-		var temp_text = ""
+		temp_text = ""
 		for(var a = 0; a < ds_list_size(flujos); a++){
 			var flujo = flujos[|a]
 			temp_text += $"Tubería {a}:\n"
@@ -2473,10 +2568,10 @@ else{
 	}
 	if keyboard_check_pressed(vk_escape)
 		menu = 0
-	if keyboard_check_pressed(ord("G")){
+	if keyboard_check_pressed(ord("G"))
 		tile_animation = not tile_animation
+	if keyboard_check_pressed(ord("H"))
 		ver_luz = not ver_luz
-	}
 #endregion
 control_camara()
 if flow > 0
