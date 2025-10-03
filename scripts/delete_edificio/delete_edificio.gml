@@ -255,8 +255,10 @@ function delete_edificio(aa, bb, enemigo = false){
 		//Camiar target de enemigos
 		for(var a = 0; a < ds_list_size(enemigos); a++){
 			var temp_enemigo = enemigos[|a]
-			if temp_enemigo.target = edificio
-				path_find(false, temp_enemigo)
+			if temp_enemigo.target = edificio{
+				var temp_complex = xytoab(temp_enemigo.a, temp_enemigo.b)
+				enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
+			}
 		}
 		delete(edificio)
 	}

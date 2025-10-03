@@ -70,6 +70,11 @@ function add_edificio(index, dir, a, b){
 		if not edificio_camino[index] and not in(var_edificio_nombre, "Tubería"){
 			edificio_pathfind(edificio)
 			ds_list_add(edificios_targeteables, edificio)
+			for(var c = 0; c < ds_list_size(enemigos); c++){
+				var enemigo = enemigos[|c]
+				temp_complex = xytoab(enemigo.a, enemigo.b)
+				enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
+			}
 		}
 		for(var c = 0; c < ds_list_size(temp_list_size); c++){
 			temp_complex = temp_list_size[|c]
