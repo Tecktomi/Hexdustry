@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"exit_keyboard_input",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"exit_keyboard_input",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

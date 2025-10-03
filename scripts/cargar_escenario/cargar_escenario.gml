@@ -13,11 +13,15 @@ function cargar_escenario(){
 				resize_grid(0, prev_ysize)
 			spawn_x = ini_read_real("Global", "spawn_x", 0)
 			spawn_y = ini_read_real("Global", "spawn_y", 0)
-			var temp_carga = nucleo.carga
+			for(var a = 0; a < rss_max; a++)
+				carga_inicial[a] = ini_read_real("Carga inicial", a, 0)
 			delete_edificio(nucleo.a, nucleo.b, false)
 			var temp_nucleo = add_edificio(0, 0, ini_read_real("Global", "nucleo_x", floor(xsize / 2)), ini_read_real("Global", "nucleo_y", floor(ysize / 2)))
 			nucleo = temp_nucleo
-			nucleo.carga = temp_carga
+			array_copy(nucleo.carga, 0, carga_inicial, 0, rss_max)
+			oleadas = bool(ini_read_real("Global", "oleadas", real(oleadas)))
+			oleadas_tiempo_primera = ini_read_real("Global", "tiempo primera oleada", oleadas_tiempo_primera)
+			oleadas_tiempo = ini_read_real("Global", "tiempo entre oleadas", oleadas_tiempo)
 			var objetivos_max = ini_read_real("Global", "objetivos", 0)
 			array_resize(mision_nombre, objetivos_max)
 			array_resize(mision_objetivo, objetivos_max)
