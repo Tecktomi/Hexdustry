@@ -361,7 +361,7 @@ if menu = 2{
 		editor_herramienta = 2
 	}
 	b++
-	if draw_sprite_boton(spr_dron, 10 + (b mod 5) * 36, 10 + floor(b / 5) * 36, "Cambiar zona de enemigos"){
+	if draw_sprite_boton(spr_arana, 10 + (b mod 5) * 36, 10 + floor(b / 5) * 36, "Cambiar zona de enemigos"){
 		build_index = -1
 		editor_herramienta = 1
 	}
@@ -669,6 +669,62 @@ if temp_hexagono != noone and flag{
 			show_menu_x = edificio.x * zoom
 			show_menu_y = edificio.y * zoom
 		}
+		//Modificar puertos de carga
+		if var_edificio_nombre = "Puerto de Carga"{
+			if edificio.link != null_edificio{
+				draw_set_color(c_green)
+				if edificio.receptor
+					draw_arrow_off(edificio.x, edificio.y, edificio.link.x, edificio.link.y, 8)
+				else
+					draw_arrow_off(edificio.link.x, edificio.link.y, edificio.x, edificio.y, 8)
+			}
+			if mouse_check_button_pressed(mb_left){
+				mouse_clear(mb_left)
+				if puerto_carga_bool and edificio != puerto_carga_link{
+					if puerto_carga_link.link != null_edificio{
+						if puerto_carga_link.receptor
+							array_remove(puerto_carga_array, puerto_carga_link)
+						else
+							array_remove(puerto_carga_array, puerto_carga_link.link)
+						if puerto_carga_atended >= array_length(puerto_carga_array)
+							puerto_carga_atended = 0
+						puerto_carga_link.link.receptor = false
+						puerto_carga_link.link.emisor = false
+						calculate_in_out_2(puerto_carga_link.link)
+						puerto_carga_link.link.link = null_edificio
+					}
+					puerto_carga_link.receptor = true
+					puerto_carga_link.emisor = false
+					puerto_carga_link.link = edificio
+					calculate_in_out(puerto_carga_link)
+					calculate_in_out_2(puerto_carga_link)
+					if edificio.link != null_edificio{
+						if edificio.receptor
+							array_remove(puerto_carga_array, edificio)
+						else
+							array_remove(puerto_carga_array, edificio.link)
+						if puerto_carga_atended >= array_length(puerto_carga_array)
+							puerto_carga_atended = 0
+						edificio.link.receptor = false
+						edificio.link.emisor = false
+						calculate_in_out_2(edificio.link)
+						edificio.link.link = null_edificio
+					}
+					edificio.receptor = false
+					edificio.emisor = true
+					edificio.link = puerto_carga_link
+					calculate_in_out(edificio)
+					calculate_in_out_2(edificio)
+					array_push(puerto_carga_array, puerto_carga_link)
+					puerto_carga_link = null_edificio
+					puerto_carga_bool = false
+				}
+				else{
+					puerto_carga_link = edificio
+					puerto_carga_bool = true
+				}
+			}
+		}
 		temp_text += $"{var_edificio_nombre}\n"
 		if info{
 			//Mostrar inputs
@@ -770,6 +826,8 @@ if temp_hexagono != noone and flag{
 				}
 			}
 		}
+		if var_edificio_nombre = "Fábrica de Drones" and edificio.proceso > 0
+			temp_text += $"Creando Dron ({ds_list_size(drones_aliados)}/8)"
 		//Mostrar inputs
 		if info and edificio.receptor{
 			if edificio_input_all[index]
@@ -841,6 +899,15 @@ if temp_hexagono != noone and flag{
 		temp_text += "___________________\n"
 	}
 	draw_text_background(0, 0, temp_text)
+}
+if puerto_carga_bool{
+	draw_set_halign(fa_center)
+	draw_text_background(room_width / 2, 100, "Conecta con otro Puerto de Carga")
+	draw_set_halign(fa_left)
+	if mouse_check_button_pressed(mb_any){
+		mouse_clear(mouse_lastbutton)
+		puerto_carga_bool = false
+	}
 }
 flag = false
 #region Menú de edificios
@@ -1466,6 +1533,16 @@ else if ((mouse_check_button(mb_right) and prev_change) or mouse_check_button_pr
 	delete_edificio(mx, my)
 }
 if pausa{
+	for(var a = 0; a < ds_list_size(enemigos); a++){
+		var enemigo = enemigos[|a], aa = enemigo.a, bb = enemigo.b, index = enemigo.index
+		draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb)
+		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,,, c_red)
+	}
+	for(var a = 0; a < ds_list_size(drones_aliados); a++){
+		var dron = drones_aliados[|a], aa = dron.a, bb = dron.b, index = dron.index
+		draw_sprite_off(dron_sprite[index], 0, aa, bb)
+		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,,, c_blue)
+	}
 	image_index--
 	var color = draw_get_color()
 	draw_set_color(c_white)
@@ -1964,23 +2041,7 @@ else{
 		}
 		//Fábrica de Drones
 		else if in(var_edificio_nombre, "Fábrica de Drones"){
-			flag = true
-			var flag_2 = false, xx = edificio.a, yy = edificio.b
-			for(var b = 0; b < array_length(edificio_input_id[index]); b++)
-				if edificio.carga[edificio_input_id[index, b]] < edificio_input_num[index, b]{
-					flag = false
-					break
-				}
-			if flag for(var b = 0; b < ds_list_size(edificio.bordes); b++){
-				var temp_complex = edificio.bordes[|b], aa = temp_complex.a, bb = temp_complex.b
-				if not edificio_bool[# aa, bb] and not bool_unidad[# aa, bb]{
-					flag_2 = true
-					xx = aa
-					yy = bb
-					break
-				}
-			}
-			if flag and flag_2{
+			if ds_list_size(drones_aliados) < 8{
 				if edificio.proceso < 0{
 					change_energia(edificio_energia_consumo[index], edificio)
 					edificio.proceso++
@@ -1992,24 +2053,16 @@ else{
 						edificio.carga_total -= edificio.carga[edificio_input_id[index, b]]
 						edificio.carga[edificio_input_id[index, b]] = 0
 					}
-					var temp_complex = abtoxy(xx, yy)
-					var dron = {
-						a : temp_complex.a,
-						b : temp_complex.b,
-						vida_max : 100,
-						vida : 100,
-						target : null_edificio,
-						target_unit : null_enemigo,
-						chunk_x : 0,
-						chunk_y : 0
-					}
-					ds_grid_set(bool_unidad, xx, yy, true)
-					path_find(true, dron)
+					var dron = add_dron(edificio.a, edificio.b, 1)
 					ds_list_add(drones_aliados, dron)
-					edificio.waiting = not mover(edificio.a, edificio.b)
+					edificio.waiting = not mover_in(edificio)
 					change_energia(0, edificio)
 				}
 			}
+		}
+		else if in(var_edificio_nombre, "Puerto de Carga"){
+			if edificio.link != null_edificio and edificio.emisor
+				edificio.waiting = mover(edificio.a, edificio.b)
 		}
 		//Recursos Infinitos
 		else if in(var_edificio_nombre, "Recurso Infinito"){
@@ -2062,11 +2115,11 @@ else{
 	}
 	//Ciclo de los enemigos
 	for(var a = 0; a < ds_list_size(enemigos); a++){
-		var enemigo = enemigos[|a], aa = enemigo.a, bb = enemigo.b
-		draw_sprite_off(spr_dron, 0, aa, bb)
-		draw_sprite_off(spr_dron_color, 0, aa, bb,,,, c_red)
-		if enemigo.vida < enemigo.vida_max{
-			draw_set_color(make_color_hsv(120 * enemigo.vida / enemigo.vida_max, 255, 255))
+		var enemigo = enemigos[|a], aa = enemigo.a, bb = enemigo.b, index = enemigo.index
+		draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb)
+		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,,, c_red)
+		if enemigo.vida < dron_vida_max[index]{
+			draw_set_color(make_color_hsv(120 * enemigo.vida / dron_vida_max[index], 255, 255))
 			draw_circle_off(aa, bb - 20, 5, false)
 			draw_set_color(c_white)
 		}
@@ -2074,7 +2127,7 @@ else{
 			enemigo.target = null_edificio
 		if enemigo.target_unit != null_enemigo and enemigo.target_unit.vida <= 0
 			enemigo.target_unit = null_enemigo
-		if (not ds_list_empty(edificios) and enemigo.target = null_edificio) or (not ds_list_empty(drones_aliados) and enemigo.target_unit = null_enemigo)
+		if not ds_list_empty(edificios) and enemigo.target = null_edificio
 			path_find(false, enemigo)
 		//Target edificios
 		if enemigo.target != null_edificio{
@@ -2130,23 +2183,6 @@ else{
 				}
 			}
 		}
-		//Target unidades
-		else if enemigo.target_unit != null_enemigo{
-			var dron = enemigo.target_unit
-			var dis = distance(aa, bb, dron.a, dron.b)
-			if dis > 50{
-				enemigo.a += (dron.a - aa) / dis
-				enemigo.b += (dron.b - bb) / dis
-			}
-			else{
-				dron.vida--
-				if dron.vida <= 0{
-					ds_list_remove(drones_aliados, dron)
-					enemigo.target_unit = null_edificio
-					path_find(false, enemigo)
-				}
-			}
-		}
 		//Cambiar de chunk
 		var temp_list = ds_grid_get(chunk_enemigos, enemigo.chunk_x, enemigo.chunk_y)
 		var temp_complex = xytoab(aa, bb)
@@ -2178,30 +2214,70 @@ else{
 	}
 	//Ciclo drones aliados
 	for(var a = 0; a < ds_list_size(drones_aliados); a++){
-		var dron = drones_aliados[|a], aa = dron.a, bb = dron.b
-		draw_sprite_off(spr_dron, 0, aa, bb)
-		draw_sprite_off(spr_dron_color, 0, aa, bb,,,, c_blue)
-		if dron.vida < dron.vida_max{
-			draw_set_color(make_color_hsv(120 * dron.vida / dron.vida_max, 255, 255))
+		var dron = drones_aliados[|a], aa = dron.a, bb = dron.b, index = dron.index
+		draw_sprite_off(dron_sprite[index], 0, aa, bb)
+		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,,, c_blue)
+		if dron.vida < dron_vida_max[index]{
+			draw_set_color(make_color_hsv(120 * dron.vida / dron_vida_max[index], 255, 255))
 			draw_circle_off(aa, bb - 20, 5, false)
 			draw_set_color(c_white)
 		}
-		if dron.target_unit != null_enemigo and dron.target_unit.vida <= 0
-			dron.target_unit = null_enemigo
-		if not ds_list_empty(enemigos) and dron.target_unit = null_enemigo
-			path_find(true, dron)
-		if dron.target_unit != null_enemigo{
-			var enemigo = dron.target_unit
-			var dis = distance(aa, bb, enemigo.a, enemigo.b)
-			if dis > 50{
-				dron.a += (enemigo.a - aa) / dis
-				dron.b += (enemigo.b - bb) / dis
+		if array_length(puerto_carga_array) > 0{
+			if dron.modo = 0{
+				puerto_carga_atended = (++puerto_carga_atended) mod array_length(puerto_carga_array)
+				dron.target = puerto_carga_array[puerto_carga_atended]
+				dron.modo = 1
 			}
-			else if --enemigo.vida <= 0{
-				kill_enemigo(enemigo)
-				dron.target_unit = null_edificio
-				path_find(true, dron)
+			else{
+				var edificio = dron.target, dis = distance(aa, bb, edificio.x, edificio.y)
+				if dis > 10{
+					dron.a += (edificio.x - dron.a) / dis
+					dron.b += (edificio.y - dron.b) / dis
+				}
+				else{
+					if dron.modo = 1{
+						for(var b = 0; b < rss_max; b++){
+							dron.carga[b] += edificio.carga[b]
+							edificio.carga[b] = 0
+						}
+						edificio.carga_total = 0
+						mover_in(edificio)
+						dron.target = edificio.link
+						dron.modo = 2
+					}
+					else if dron.modo = 2{
+						for(var b = 0; b < rss_max; b++){
+							var c = dron.carga[b], d = edificio_carga_max[edificio.index] - edificio.carga_total
+							if d > c{
+								edificio.carga[b] += c
+								edificio.carga_total += c
+								dron.carga[b] = 0
+							}
+							else{
+								edificio.carga[b] += d
+								edificio.carga_total += d
+								dron.carga[b] -= d
+								break
+							}
+						}
+						mover(edificio.a, edificio.b)
+						puerto_carga_atended = (++puerto_carga_atended) mod array_length(puerto_carga_array)
+						dron.target = puerto_carga_array[puerto_carga_atended]
+						dron.modo = 1
+					}
+				}
 			}
+		}
+		for(var b = a + 1; b < ds_list_size(drones_aliados); b++){
+			var temp_dron = drones_aliados[|b], dis = distance(aa, bb, temp_dron.a, temp_dron.b)
+			if dis < 20{
+				var aaa = (aa - temp_dron.a) / dis, bbb = (bb - temp_dron.b) / dis
+				dron.a += aaa
+				dron.b += bbb
+				temp_dron.a -= aaa
+				temp_dron.b -= bbb
+			}
+			
 		}
 	}
 	//Ciclo de disparos
@@ -2248,7 +2324,7 @@ else{
 	if oleadas{
 		if image_index > (60 * oleadas_tiempo_primera) or keyboard_check_pressed(vk_enter){
 			if image_index mod (60 * oleadas_tiempo) = 0 or keyboard_check_pressed(vk_enter){
-				var c = 100 + floor(sqr(max(0, image_index - (60 * oleadas_tiempo_primera)) / (15 * oleadas_tiempo))), d = enemigos_spawned++, e = 1, flag_2 = false
+				var d = enemigos_spawned++, e = 1, flag_2 = false
 				for(var i = 0; i < array_length(size_size); i++)
 					if d <= size_size[i]{
 						e = i + 1
@@ -2259,17 +2335,8 @@ else{
 					e = array_length(size_size)
 				var temp_complex_list = get_size(spawn_x, spawn_y, 0, e)
 				for(var i = 0; i < min(ds_list_size(temp_complex_list), d); i++){
-					var temp_complex = temp_complex_list[|i], aa = clamp(temp_complex.a, 0, xsize - 1), bb = clamp(temp_complex.b, 0, ysize - 1), temp_complex_2 = abtoxy(aa, bb)
-					var enemigo = {
-						a : temp_complex_2.a,
-						b : temp_complex_2.b,
-						vida_max : c,
-						vida : c,
-						target : null_edificio,
-						target_unit : null_enemigo,
-						chunk_x : clamp(round(aa / 6), 0, ds_grid_width(chunk_enemigos) - 1),
-						chunk_y : clamp(round(bb / 12), 0, ds_grid_height(chunk_enemigos) - 1)
-					}
+					var temp_complex = temp_complex_list[|i], aa = clamp(temp_complex.a, 0, xsize - 1), bb = clamp(temp_complex.b, 0, ysize - 1)
+					var enemigo = add_dron(aa, bb, 0)
 					var temp_list = ds_grid_get(chunk_enemigos, enemigo.chunk_x, enemigo.chunk_y)
 					ds_list_add(temp_list, enemigo)
 					path_find(false, enemigo)
@@ -2402,22 +2469,6 @@ else{
 	if string_ends_with(keyboard_string, "cheat"){
 		keyboard_string = ""
 		cheat = not cheat
-		build_index = 0
-	}
-	if cheat and string_ends_with(keyboard_string, "dron"){
-		keyboard_string = ""
-		var dron = {
-			a : mouse_x + random_range(-32, 32),
-			b : mouse_y + random_range(-32, 32),
-			vida_max : 100,
-			vida : 100,
-			target : null_edificio,
-			target_unit : null_enemigo,
-			chunk_x : 0,
-			chunk_y : 0
-		}
-		path_find(true, dron)
-		ds_list_add(drones_aliados, dron)
 		build_index = 0
 	}
 	if keyboard_check_pressed(vk_escape)

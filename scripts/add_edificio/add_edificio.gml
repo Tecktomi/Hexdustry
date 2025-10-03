@@ -70,11 +70,6 @@ function add_edificio(index, dir, a, b){
 		if not edificio_camino[index] and not in(var_edificio_nombre, "Tubería"){
 			edificio_pathfind(edificio)
 			ds_list_add(edificios_targeteables, edificio)
-			for(var c = 0; c < ds_list_size(enemigos); c++){
-				var enemigo = enemigos[|c], temp_complex_2 = abtoxy(enemigo.target.a, enemigo.target.b), aa = enemigo.a, bb = enemigo.b
-				if sqr(aa - x) + sqr(bb - y) < sqr(aa - temp_complex_2.a) + sqr(bb - temp_complex_2.b)
-					enemigo.target = edificio
-			}
 		}
 		for(var c = 0; c < ds_list_size(temp_list_size); c++){
 			temp_complex = temp_list_size[|c]
