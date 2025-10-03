@@ -14,6 +14,18 @@ function delete_edificio(aa, bb, enemigo = false){
 		ds_grid_destroy(edificio.coordenadas_dis)
 		if not edificio_camino[index] and not in(var_edificio_nombre, "Tubería")
 			ds_list_remove(edificios_targeteables, edificio)
+		if var_edificio_nombre = "Puerto de Carga" and edificio.link != null_edificio{
+			if edificio.receptor
+				array_remove(puerto_carga_array, edificio)
+			else
+				array_remove(puerto_carga_array, edificio.link)
+			if puerto_carga_atended >= array_length(puerto_carga_array)
+				puerto_carga_atended = 0
+			edificio.link.receptor = false
+			edificio.link.emisor = false
+			calculate_in_out_2(edificio.link)
+			edificio.link.link = null_edificio
+		}
 		//Cancelar coordenadas
 		for(var i = 0; i < ds_list_size(edificio.coordenadas); i++){
 			var temp_coordenada_2 = edificio.coordenadas[|i], a = temp_coordenada_2.a, b = temp_coordenada_2.b
