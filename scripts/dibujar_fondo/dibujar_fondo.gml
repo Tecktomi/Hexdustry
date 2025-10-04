@@ -30,8 +30,9 @@ function dibujar_fondo(editor = 0){
 				if background[a, b] = spr_hexagono{
 					var temp_surf = surface_create(room_width, room_height)
 					surface_set_target(temp_surf)
-					for(var c = a * chunk_width; c < min((a + 1) * chunk_width, xsize); c++)
-						for(var d = b * chunk_height; d < min((b + 1) * chunk_height, ysize); d++){
+					var minc = a * chunk_width, mind = b * chunk_height, maxc = min((a + 1) * chunk_width, xsize), maxd = min((b + 1) * chunk_height, ysize)
+					for(var c = minc; c < maxc; c++)
+						for(var d = mind; d < maxd; d++){
 							var temp_complex = abtoxy(c, d), aa = temp_complex.a - a * chunk_width * 48, bb = temp_complex.b - b * chunk_height * 14, e = ore[# c, d]
 							draw_sprite(terreno_sprite[terreno[# c, d]], 0, aa, bb)
 							if e >= 0

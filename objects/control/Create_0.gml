@@ -320,6 +320,7 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 	def_recurso("Batería", spr_item_bateria, make_color_rgb(163, 98, 10))
 	//15
 	def_recurso("Plástico", spr_item_plastico, c_blue)
+	def_recurso("Componente", spr_item_chip, make_color_rgb(33, 94, 35))
 #endregion
 rss_max = array_length(recurso_nombre)
 //Liquidos
@@ -364,7 +365,8 @@ lq_max = array_length(liquido_nombre)
 	"Genera energía a partir de evaporar Agua,\ndebe ser construido sobre lava",
 	"Utiliza explosivos para extraer un recurso\nde cada terreno minable en su área",
 	"Dispara explosivos a largo alcance, devastando\nun área de enemigos",
-	"Conceta Puertos de Carga para que tus drones\nmuevan recursos entre ellos"
+	"Conceta Puertos de Carga para que tus drones\nmuevan recursos entre ellos",
+	"Utiliza Cobre y Silicio para producir componentes"
 	]
 #endregion
 #region Arreglos
@@ -454,15 +456,15 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, "16", 60, 10, true,, [2, 3], [1, 1], 1, true,,,, true)
 	def_edificio("Torre", 1, spr_torre, spr_torre_2, "51", 300, 60,,, [2, 3], [10, 25], 20, true, false, [0, 3], [10, 10],,,,, 10, 60)
 	//20
-	def_edificio("Láser", 2, spr_laser,, "52", 400, 1,,, [0, 4, 7], [10, 10, 10],,,,,,,,, 100)
+	def_edificio("Láser", 2, spr_laser,, "52", 400, 1,,, [0, 4, 7], [10, 10, 5],,,,,,,,, 100)
 	def_edificio("Muro", 1, spr_hexagono,, "53", 500,,,, [8], [1])
 	def_edificio("Planta Química", 3, spr_planta_quimica,, "25", 200, 30,, true, [0, 4, 7], [20, 40, 20], 30,,,,,,,, 50, 20)
-	def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, "54", 400, 100,,, [2, 4, 8], [10, 10, 5], 20, true, false, [2, 4], [10, 10],,,,, 10, 60)
+	def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, "54", 400, 100,,, [2, 3, 4], [10, 10, 10], 20, true, false, [2, 4], [10, 10],,,,, 10, 60)
 	def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, "44", 200, 1,,, [4, 7], [20, 30],,,,,,,,,, 300)
 	def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, "4 ", 30, 1,,,,,,,,,,,,,, 10, -999999)
 	def_edificio("Turbina", 2, spr_turbina,, "35", 160,,, true, [0, 4, 7], [20, 10, 10], 20, true, false, [1, 12], [10, 10], false,,, -150, 30, 40)
 	def_edificio("Refinería de Metales", 3, spr_refineria_minerales,, "26", 150, 80,,, [4, 7, 8], [20, 10, 10], 20, true, false, [9, 10], [5, 5], true, false, [0, 3], 80, 60, 60)
-	def_edificio("Fábrica de Drones", 2, spr_fabrica_drones,, "17", 200, 900,,, [2, 4, 7], [20, 20, 15], 20, true, false, [7, 14], [10, 3], false, false,, 120)
+	def_edificio("Fábrica de Drones", 2, spr_fabrica_drones,, "17", 200, 900,,, [2, 4, 7], [20, 20, 15], 20, true, false, [14, 15, 16], [1, 3, 1], false, false,, 120)
 	def_edificio("Recurso Infinito", 1, spr_recurso_infinito, spr_selector_color, "1 ", 30, 1,,,,,,,,,, true, true)
 	//30
 	def_edificio("Bomba de Evaporación", 1, spr_bomba_evaporacion, spr_tuberia_color, "42", 30, 1,,, [0, 4], [10, 10],,,,,,,,,, 20, -5)
@@ -471,8 +473,9 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	def_edificio("Taladro de Explosión", 3, spr_taladro_explosivo,, "28", 300, 300,,, [2, 4, 8], [40, 40, 30], 40, true, false, [13], [10], true, false, [0, 1, 3, 5, 6, 9, 10, 11])
 	def_edificio("Mortero", 3, spr_mortero, spr_mortero_2, "55", 600, 300,,, [4, 8], [50, 30], 10, true, false, [13], [10])
 	def_edificio("Puerto de Carga", 2, spr_punto_carga,, "18", 150,,,, [2, 4, 7], [10, 5, 5], 25,, true,,,, true)
+	def_edificio("Ensambladora", 3, spr_refineria_minerales,, "29", 400, 150,,, [0, 2, 4, 7], [20, 10, 30, 10], 20, true, false, [0, 7], [5, 5], true, false, [16], 100)
 #endregion
-categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 7, 8, 9, 22, 27, 31, 33], [11, 10, 12, 13, 26, 32], [15, 30, 14, 24], [19, 20, 21, 23, 34]]
+categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 7, 8, 9, 22, 27, 31, 33, 36], [11, 10, 12, 13, 26, 32], [15, 30, 14, 24], [19, 20, 21, 23, 34]]
 categoria_nombre = ["Transporte", "Producción", "Electricidad", "Líquidos", "Defensa"]
 categoria_sprite = [spr_camino, spr_taladro, spr_bateria, spr_bomba, spr_torre]
 planta_quimica_receta = ["Ácido", "Concreto", "Explosivos", "Combustible", "Azufre", "Baterías", "Plástico"]
@@ -530,16 +533,16 @@ ds_list_add(flujos, null_flujo)
 ds_list_clear(flujos)
 //Agua, piedra, petróleo y lava
 var temp_peso = [0, 0, 0, 0, 0, 1, 1, 2, 3, 3, 3, 4]
-var temp_peso_data = [[0, 20], [2, 20], [5, 10], [9, 50], [14, 15]]
-for(var e = 0; e < array_length(temp_peso); e++){
+var temp_peso_data = [[0, 20], [2, 20], [5, 10], [9, 50], [14, 15]], size = array_length(temp_peso)
+for(var e = 0; e < size; e++){
 	var a = irandom(xsize - 1), b = irandom(ysize - 1)
 	var c = temp_peso_data[temp_peso[e], 0]
 	var f = temp_peso_data[temp_peso[e], 1]
 	repeat(f){
 		if terreno[# a, b] != 2
 			ds_grid_set(terreno, a, b, c)
-		var temp_list = get_arround(a, b, 0, 1)
-		for(var d = 0; d < ds_list_size(temp_list); d++){
+		var temp_list = get_arround(a, b, 0, 1), size_2 = ds_list_size(temp_list)
+		for(var d = 0; d < size_2; d++){
 			var temp_complex = temp_list[|d], aa = temp_complex.a, bb = temp_complex.b
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 				continue
@@ -560,18 +563,6 @@ for(var e = 0; e < array_length(temp_peso); e++){
 			b = clamp(temp_complex.b, 0, ysize - 1)
 		}
 	}
-}
-//Crear nucelo
-nucleo = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
-nucleo.carga[0] = 75
-nucleo.carga_total = 75
-carga_inicial = array_create(rss_max, 0)
-array_copy(carga_inicial, 0, nucleo.carga, 0, rss_max)
-for(var a = 0; a < ds_list_size(nucleo.coordenadas); a++){
-	var temp_complex = nucleo.coordenadas[|a]
-	var aa = temp_complex.a, bb = temp_complex.b
-	ds_grid_set(terreno, aa, bb, 1)
-	ds_grid_set(ore, aa, bb, -1)
 }
 //Añadir arena / agua profunda
 for(var a = 0; a < xsize; a++)
@@ -645,6 +636,21 @@ for(var a = 0; a < xsize; a++)
 				ds_grid_set(terreno, a, b, 4)
 		}
 	}
+//Crear nucelo
+nucleo = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
+nucleo.carga[0] = 75
+nucleo.carga_total = 75
+carga_inicial = array_create(rss_max, 0)
+array_copy(carga_inicial, 0, nucleo.carga, 0, rss_max)
+var temp_list = get_size(nucleo.a, nucleo.b, 0, 7)
+size = ds_list_size(temp_list)
+for(var a = 0; a < size; a++){
+	var temp_complex = temp_list[|a], aa = temp_complex.a, bb = temp_complex.b
+	if not terreno_caminable[terreno[# aa, bb]]
+		ds_grid_set(terreno, aa, bb, 1)
+	ds_grid_set(ore, aa, bb, -1)
+	ds_grid_set(ore_amount, aa, bb, 0)
+}
 //Natural Ores
 for(var e = 0; e < 9; e++){
 	var a = min(xsize - 1, irandom_range((e mod 3) * xsize / 3, ((e mod 3) + 1) * xsize / 3))
@@ -700,7 +706,3 @@ do{
 	}
 }
 until terreno_caminable[terreno[# spawn_x, spawn_y]]
-for(var a = 0; a < xsize; a++)
-	for(var b = 0; b < ysize; b++)
-		if terreno[# a, b] = 14
-			add_luz(a, b, 1)

@@ -65,18 +65,21 @@ function add_edificio(index, dir, a, b){
 		ds_grid_set(edificio_draw, a, b, true)
 		ds_list_add(edificios, edificio)
 		edificios_counter[index]++
-		for(var c = 0; c < ds_list_size(temp_list_arround); c++)
+		var size = ds_list_size(temp_list_arround)
+		for(var c = 0; c < size; c++)
 			ds_list_add(edificio.bordes, temp_list_arround[|c])
 		if not edificio_camino[index] and not in(var_edificio_nombre, "Tubería"){
 			edificio_pathfind(edificio)
 			ds_list_add(edificios_targeteables, edificio)
-			for(var c = 0; c < ds_list_size(enemigos); c++){
+			size = ds_list_size(enemigos)
+			for(var c = 0; c < size; c++){
 				var enemigo = enemigos[|c]
 				temp_complex = xytoab(enemigo.a, enemigo.b)
 				enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
 			}
 		}
-		for(var c = 0; c < ds_list_size(temp_list_size); c++){
+		size = ds_list_size(temp_list_size)
+		for(var c = 0; c < size; c++){
 			temp_complex = temp_list_size[|c]
 			var aa = temp_complex.a, bb = temp_complex.b
 			ds_grid_set(edificio_bool, aa, bb, true)
@@ -96,7 +99,8 @@ function add_edificio(index, dir, a, b){
 				edificio.energy_output = -edificio_energia_consumo[index]
 			//Detectar otras redes cerca
 			var temp_list_redes = ds_list_create()
-			for(var c = 0; c < ds_list_size(temp_list_arround); c++){
+			size = ds_list_size(temp_list_arround)
+			for(var c = 0; c < size; c++){
 				temp_complex = temp_list_arround[|c]
 				var aa = temp_complex.a, bb = temp_complex.b
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
@@ -112,7 +116,8 @@ function add_edificio(index, dir, a, b){
 				}
 			}
 			var temp_list = get_size(a, b, dir, 7)
-			for(var c = 0; c < ds_list_size(temp_list); c++){
+			size = ds_list_size(temp_list)
+			for(var c = 0; c < size; c++){
 				temp_complex = temp_list[|c]
 				var aa = temp_complex.a, bb = temp_complex.b
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
@@ -140,9 +145,10 @@ function add_edificio(index, dir, a, b){
 			ds_list_add(redes, temp_red)
 			//Combinar otras redes si las hay cerca
 			if not ds_list_empty(temp_list_redes){
-				for(var c = 0; c < ds_list_size(temp_list_redes); c++){
-					var temp_red_2 = temp_list_redes[|c]
-					for(var d = 0; d < ds_list_size(temp_red_2.edificios); d++){
+				size = ds_list_size(temp_list_redes)
+				for(var c = 0; c < size; c++){
+					var temp_red_2 = temp_list_redes[|c], size_2 = ds_list_size(temp_red_2.edificios)
+					for(var d = 0; d < size_2; d++){
 						var temp_edificio = temp_red_2.edificios[|d]
 						temp_edificio.red = temp_red
 						ds_list_add(temp_red.edificios, temp_edificio)
@@ -175,7 +181,8 @@ function add_edificio(index, dir, a, b){
 		//Detectar cañerías cercanas
 		if edificio_flujo[index]{
 			if var_edificio_nombre = "Bomba Hidráulica"{
-				for(var c = 0; c < ds_list_size(temp_list_size); c++){
+				size = ds_list_size(temp_list_size)
+				for(var c = 0; c < size; c++){
 					temp_complex = temp_list_size[|c]
 					var aa = temp_complex.a, bb = temp_complex.b
 					if in(terreno_nombre[terreno[# aa, bb]], "Agua", "Agua Profunda")
@@ -188,7 +195,8 @@ function add_edificio(index, dir, a, b){
 				}
 			}
 			var temp_list_flujos = ds_list_create()
-			for(var c = 0; c < ds_list_size(temp_list_arround); c++){
+			size = ds_list_size(temp_list_arround)
+			for(var c = 0; c < size; c++){
 				temp_complex = temp_list_arround[|c]
 				var aa = temp_complex.a, bb = temp_complex.b
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
@@ -225,10 +233,12 @@ function add_edificio(index, dir, a, b){
 					almacen : 0,
 					almacen_max : 0
 				}
-				for(var c = 0; c < ds_list_size(temp_list_flujos); c++){
+				size = ds_list_size(temp_list_flujos)
+				for(var c = 0; c < size; c++){
 					var temp_flujo = temp_list_flujos[|c]
 					if new_flujo.liquido = -1 or temp_flujo.liquido = -1 or new_flujo.liquido = temp_flujo.liquido{
-						for(var d = 0; d < ds_list_size(temp_flujo.edificios); d++){
+						var size_2 = ds_list_size(temp_flujo.edificios)
+						for(var d = 0; d < size_2; d++){
 							var temp_edificio = temp_flujo.edificios[|d]
 							temp_edificio.flujo = new_flujo
 							ds_list_add(new_flujo.edificios, temp_edificio)
