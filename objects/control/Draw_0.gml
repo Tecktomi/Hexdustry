@@ -1,5 +1,6 @@
 //Menú principal
 if menu = 0{
+	draw_set_halign(fa_center)
 	draw_set_font(ft_titulo)
 	draw_set_color(c_white)
 	draw_text(room_width / 2, 100, "HEXDUSTRY")
@@ -12,6 +13,11 @@ if menu = 0{
 		menu = 1
 		image_index = 0
 		build_index = 0
+		ds_grid_clear(luz, 0)
+		for(var a = 0; a < xsize; a++)
+			for(var b = 0; b < ysize; b++)
+				if terreno[# a, b] = 14
+					add_luz(a, b, 1)
 	}
 	if draw_boton(room_width / 2, 250, "Cargar escenario"){
 		if not nucleo.vivo
@@ -24,10 +30,16 @@ if menu = 0{
 			menu = 1
 			image_index = 0
 			build_index = 0
+			ds_grid_clear(luz, 0)
+			for(var a = 0; a < xsize; a++)
+				for(var b = 0; b < ysize; b++)
+					if terreno[# a, b] = 14
+						add_luz(a, b, 1)
 		}
 	}
 	if draw_boton(room_width / 2, 300, "Editor")
 		menu = 2
+	draw_set_halign(fa_left)
 	draw_text(0, room_height - 20, "Tomás Ramdohr")
 	update_cursor()
 	if keyboard_check_pressed(vk_escape)
@@ -300,7 +312,7 @@ if menu = 2{
 		//Lapiz
 		else{
 			//Spawn point
-			if editor_herramienta = 1{
+			if editor_herramienta = 1 and terreno_caminable[terreno[# mx, my]]{
 				draw_set_color(c_red)
 				var temp_complex = abtoxy(mx, my)
 				draw_circle_off(temp_complex.a, temp_complex.b, 200, true)
@@ -493,7 +505,7 @@ if menu = 2{
 		dibujar_fondo(2)
 	dibujar_edificios()
 	//Dibujo items y links electricos
-	var mina = floor(camx / zoom / 48), minb = floor(camy / zoom / 14), maxa = ceil((camx + room_width) / zoom / 48), maxb = ceil((camy + room_height) / zoom / 14)
+	var mina = floor(camx / zoom / 48), minb = max(0, floor(camy / zoom / 14) - 1), maxa = ceil((camx + room_width) / zoom / 48), maxb = ceil((camy + room_height) / zoom / 14)
 	for(var a = mina; a < maxa; a++)
 		for(var b = minb; b < maxb; b++)
 			if edificio_draw[# a, b]{
@@ -530,7 +542,7 @@ if menu = 2{
 			for(var a = mina; a < maxa; a++)
 				for(var b = minb; b < maxb; b++){
 					var temp_complex = abtoxy(a, b)
-					draw_sprite_off(spr_negro, 0, temp_complex.a, temp_complex.b,,,,, max(0, luz_alpha - luz[# a, b] / 90))
+					draw_sprite_off(spr_negro, 0, temp_complex.a, temp_complex.b,,,,, max(0, luz_alpha - luz[# a, b] / 18))
 				}
 		}
 		else{
@@ -2108,6 +2120,24 @@ else{
 				}
 			}
 		}
+		else if in(var_edificio_nombre, "Ensambladora"){
+			if edificio.proceso < 0{
+				change_energia(edificio_energia_consumo[index], edificio)
+				edificio.proceso++
+			}
+			if edificio.carga[0] > 0 and edificio.carga[7] > 0{
+				edificio.proceso += red_power
+				if edificio.proceso >= edificio_proceso[index]{
+					edificio.carga[0]--
+					edificio.carga[7]--
+					edificio.carga[16]++
+					edificio.carga_total--
+					edificio.proceso -= edificio_proceso[index] + 1
+					change_energia(0, edificio)
+					edificio.waiting = not mover(edificio.a, edificio.b)
+				}
+			}
+		}
 		//Fábrica de Drones
 		else if in(var_edificio_nombre, "Fábrica de Drones"){
 			if ds_list_size(drones_aliados) < 8{
@@ -2115,10 +2145,19 @@ else{
 					change_energia(edificio_energia_consumo[index], edificio)
 					edificio.proceso++
 				}
+				flag = false
+				var size = edificio_input_id[index]
+				for(var b = 0; b < size; b++)
+					if edificio.carga[edificio_input_id[index, b]] < edificio_input_num[index, b]{
+						flag = true
+						break
+					}
+				if flag
+					continue
 				edificio.proceso += red_power
 				if edificio.proceso >= edificio_proceso[index]{
 					edificio.proceso -= edificio_proceso[index] + 1
-					for(var b = 0; b < array_length(edificio_input_id[index]); b++){
+					for(var b = 0; b < size; b++){
 						edificio.carga_total -= edificio.carga[edificio_input_id[index, b]]
 						edificio.carga[edificio_input_id[index, b]] = 0
 					}

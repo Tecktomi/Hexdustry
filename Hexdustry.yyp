@@ -136,6 +136,7 @@
     {"id":{"name":"spr_item_bateria","path":"sprites/spr_item_bateria/spr_item_bateria.yy",},},
     {"id":{"name":"spr_item_bronce","path":"sprites/spr_item_bronce/spr_item_bronce.yy",},},
     {"id":{"name":"spr_item_carbon","path":"sprites/spr_item_carbon/spr_item_carbon.yy",},},
+    {"id":{"name":"spr_item_chip","path":"sprites/spr_item_chip/spr_item_chip.yy",},},
     {"id":{"name":"spr_item_cobre","path":"sprites/spr_item_cobre/spr_item_cobre.yy",},},
     {"id":{"name":"spr_item_concreto","path":"sprites/spr_item_concreto/spr_item_concreto.yy",},},
     {"id":{"name":"spr_item_explosivos","path":"sprites/spr_item_explosivos/spr_item_explosivos.yy",},},

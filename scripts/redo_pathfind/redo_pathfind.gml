@@ -8,7 +8,8 @@ function redo_pathfind(){
 				ds_grid_clear(edificio_cercano_dis, infinity)
 				ds_grid_clear(edificio_cercano_dir, -1)
 			}
-		for(var a = 0; a < ds_list_size(edificios_targeteables); a++){
+		var size = ds_list_size(edificios_targeteables)
+		for(var a = 0; a < size; a++){
 			var edificio = edificios_targeteables[|a]
 			ds_grid_clear(edificio.coordenadas_dis, infinity)
 			ds_list_clear(edificio.coordenadas_close)
