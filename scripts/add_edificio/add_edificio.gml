@@ -58,6 +58,10 @@ function add_edificio(index, dir, a, b){
 		if mision_actual >= 0 and mision_objetivo[mision_actual] = 2 and mision_target_id[mision_actual] = index and ++mision_counter >= mision_target_num[mision_actual]
 			pasar_mision()
 		temp_complex = {a : 0, b : 0}
+		if var_edificio_nombre = "Planta Química"{
+			edificio.carga_max = array_create(rss_max, 0)
+			edificio.carga_output = array_create(rss_max, 0)
+		}
 		calculate_in_out(edificio)
 		//Añadir coordenadas
 		var temp_list_size = get_size(a, b, dir, edificio_size[index])
