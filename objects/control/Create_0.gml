@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "03_10_2025")
+ini_write_string("Global", "version", "06_10_2025")
 ini_close()
 #region Metadatos
 	menu = 0
@@ -76,6 +76,12 @@ ini_close()
 	ver_luz = false
 	text_x = 0
 	text_y = 0
+	enciclopedia = 0
+	enciclopedia_item = 0
+	enciclopedia_deslizante = 0
+	null_humo = new_humo(0, 0, 0, 0, 0, 0, 0)
+	humos = array_create(0, null_humo)
+	direccion_viento = random(2 * pi)
 #endregion
 null_edificio = {
 	index : -1,
@@ -139,39 +145,38 @@ puerto_carga_bool = false
 puerto_carga_link = null_edificio
 puerto_carga_array = array_create(0, null_edificio)
 puerto_carga_atended = 0
-//Grids
-bool_unidad = ds_grid_create(xsize, ysize)
-ds_grid_clear(bool_unidad, false)
-edificio_bool = ds_grid_create(xsize, ysize)
-ds_grid_clear(edificio_bool, false)
-edificio_id = ds_grid_create(xsize, ysize)
-ds_grid_clear(edificio_id, null_edificio)
-edificio_draw = ds_grid_create(xsize, ysize)
-ds_grid_clear(edificio_draw, false)
-ore = ds_grid_create(xsize, ysize)
-ds_grid_clear(ore, -1)
-ore_amount = ds_grid_create(xsize, ysize)
-ds_grid_clear(ore_amount, 0)
-ore_random = ds_grid_create(xsize, ysize)
-ds_grid_clear(ore_random, 0)
-terreno = ds_grid_create(xsize, ysize)
-ds_grid_clear(terreno, 1)
-edificio_cercano = ds_grid_create(xsize, ysize)
-ds_grid_clear(edificio_cercano, null_edificio)
-edificio_cercano_dis = ds_grid_create(xsize, ysize)
-ds_grid_clear(edificio_cercano_dis, infinity)
-edificio_cercano_dir = ds_grid_create(xsize, ysize)
-ds_grid_clear(edificio_cercano_dir, -1)
-edificio_cercano_priority = ds_grid_create(xsize, ysize)
-for(var a = 0; a < xsize; a++)
-	for(var b = 0; b < ysize; b++){
-		var temp_priority = ds_priority_create()
-		ds_priority_add(temp_priority, null_edificio, 0)
-		ds_priority_delete_max(temp_priority)
-		ds_grid_set(edificio_cercano_priority, a, b, temp_priority)
-	}
-luz = ds_grid_create(xsize, ysize)
-ds_grid_clear(luz, 0)
+#region GRIDS
+	edificio_bool = ds_grid_create(xsize, ysize)
+	ds_grid_clear(edificio_bool, false)
+	edificio_id = ds_grid_create(xsize, ysize)
+	ds_grid_clear(edificio_id, null_edificio)
+	edificio_draw = ds_grid_create(xsize, ysize)
+	ds_grid_clear(edificio_draw, false)
+	ore = ds_grid_create(xsize, ysize)
+	ds_grid_clear(ore, -1)
+	ore_amount = ds_grid_create(xsize, ysize)
+	ds_grid_clear(ore_amount, 0)
+	ore_random = ds_grid_create(xsize, ysize)
+	ds_grid_clear(ore_random, 0)
+	terreno = ds_grid_create(xsize, ysize)
+	ds_grid_clear(terreno, 1)
+	edificio_cercano = ds_grid_create(xsize, ysize)
+	ds_grid_clear(edificio_cercano, null_edificio)
+	edificio_cercano_dis = ds_grid_create(xsize, ysize)
+	ds_grid_clear(edificio_cercano_dis, infinity)
+	edificio_cercano_dir = ds_grid_create(xsize, ysize)
+	ds_grid_clear(edificio_cercano_dir, -1)
+	edificio_cercano_priority = ds_grid_create(xsize, ysize)
+	for(var a = 0; a < xsize; a++)
+		for(var b = 0; b < ysize; b++){
+			var temp_priority = ds_priority_create()
+			ds_priority_add(temp_priority, null_edificio, 0)
+			ds_priority_delete_max(temp_priority)
+			ds_grid_set(edificio_cercano_priority, a, b, temp_priority)
+		}
+	luz = ds_grid_create(xsize, ysize)
+	ds_grid_clear(luz, 0)
+#endregion
 //Crear plantilla de fondo
 for(var a = 0; a < xsize; a++)
 	for(var b = 0; b < ysize; b++){
@@ -220,14 +225,19 @@ null_municion = {
 municiones = array_create(0, null_municion)
 #region Tipos de disparos
 	armas = [
-		[{recurso : 0, cantidad : 1, dmg : 30}, {recurso : 3, cantidad : 1, dmg : 40}],
-		[{recurso : 2, cantidad : 1, dmg : 80}, {recurso : 4, cantidad : 1, dmg : 100}],
+		[{recurso : 0, cantidad : 0.3, dmg : 30}, {recurso : 3, cantidad : 0.3, dmg : 40}],
+		[{recurso : 2, cantidad : 0.5, dmg : 80}, {recurso : 4, cantidad : 0.5, dmg : 100}, {recurso: 17, cantidad : 1, dmg : 180}, {recurso: 19, cantidad : 1, dmg : 180}],
 		[{recurso : 13, cantidad : 1, dmg : 400}]]
 #endregion
+dron_descripcion = ["Dispara a los enemigos cercanos",
+					"Transporta recursos entre Puertos de Carga"]
 dron_nombre = ["Araña", "Dron"]
 dron_sprite = [spr_arana, spr_dron]
 dron_sprite_color = [spr_arana_color, spr_arana_color]
 dron_vida_max = [100, 40]
+dron_precio_id = [[4, 14, 16], [14, 15, 16]]
+dron_precio_num = [[5, 1, 1], [1, 3, 1]]
+dron_max = array_length(dron_nombre)
 //Terrenos
 #region Arreglos
 	terreno_nombre = []
@@ -283,6 +293,7 @@ function def_ore(recurso, sprite = spr_cobre, cantidad = 50){
 	def_ore(0, spr_cobre, 80)
 	def_ore(1, spr_carbon, 60)
 	def_ore(3, spr_hierro, 50)
+	def_ore(17, spr_uranio, 20)
 #endregion
 ore_max = array_length(ore_sprite)
 //Recursos
@@ -321,6 +332,9 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 	//15
 	def_recurso("Plástico", spr_item_plastico, c_blue)
 	def_recurso("Componente", spr_item_chip, make_color_rgb(33, 94, 35))
+	def_recurso("Uranio Bruto", spr_item_uranio, make_color_rgb(153, 178, 88))
+	def_recurso("Uranio Enriquecido", spr_item_uranio_235, c_green)
+	def_recurso("Uranio Empobrecido", spr_item_uranio_238, make_color_rgb(0, 127, 0))
 #endregion
 rss_max = array_length(recurso_nombre)
 //Liquidos
@@ -331,14 +345,14 @@ lq_max = array_length(liquido_nombre)
 #region Descripciones
 	edificio_descripcion = [
 	"Es el centro de mando, aquí se almacenan todos\nlos recursos y debes protegerlo a toda costa",
-	"Permite minar cobre, hierro y carbón sin coste\nalguno\nPuede mejorarse con Agua",
+	"Permite minar cobre, hierro y carbón sin coste\nalguno.    Puede potenciarse con Agua",
 	"Mueve recursos de un lugar a otro",
 	"Distribuye recursos en una dirección",
 	"Permite el paso de un recurso específico mientras\ndesvía al resto",
 	"Desvía los recursos una vez que la línea esté\nsaturada",
 	"Pasa recursos bajo tierra permitiendo construir\nencima",
 	"Utiliza combustible para fundir Bronce, Acero y\nSilicio",
-	"Taladro mejorado que también extrae piedra y arena\ndel suelo pero consume energía\nPuede mejorarse con Ácido",
+	"Taladro mejorado que también extrae piedra y arena\ndel suelo pero consume energía.\nPuede potenciarse con Ácido",
 	"Tritura la piedra para hacerla arena",
 	"Genera energía utlizando conbustible",
 	"Conecta edificios cercanos a la red de energía",
@@ -353,7 +367,7 @@ lq_max = array_length(liquido_nombre)
 	"Dispara un láser cuyo daño depende de la cantidad\nde energía disponible",
 	"Distrae a los enemigos mientras tus defensas se\nencargan de ellos",
 	"Escoge una receta para producir compuestos\nquímicos",
-	"Defensa de largo alcance que dispara Bronce o\nAcero",
+	"Defensa de largo alcance que dispara Bronce,\nAcero o Uranio",
 	"Almacena grandes cantidades de líquidos",
 	"Genera el líquido a elección a partir de magia",
 	"Genera energía a partir de un combustible y Agua",
@@ -366,8 +380,8 @@ lq_max = array_length(liquido_nombre)
 	"Utiliza explosivos para extraer un recurso\nde cada terreno minable en su área",
 	"Dispara explosivos a largo alcance, devastando\nun área de enemigos",
 	"Conceta Puertos de Carga para que tus drones\nmuevan recursos entre ellos",
-	"Utiliza Cobre y Silicio para producir componentes"
-	]
+	"Utiliza Cobre y Silicio para producir componentes",
+	"Consume 1 parte de Uranio Enriquecido por\n20 partes de Uranio Empobrecido y mucha Agua."]
 #endregion
 #region Arreglos
 	edificio_sprite = []
@@ -397,7 +411,7 @@ lq_max = array_length(liquido_nombre)
 	edificio_flujo_almacen = []
 	edificio_flujo_consumo = []
 #endregion
-function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = "", vida = 100, proceso = 0, camino = false, comb = false, precio_id = [0], precio_num = [0], carga = 0, receptor = false, in_all = true, in_id = [0], in_num = [0], emisor = false, out_all = true, out_id = [0], energia = 0, agua = 0, agua_consumo = 0){
+function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = "", vida = 100, proceso = 0, camino = false, comb = false, precio_id = array_create(0, 0), precio_num = array_create(0, 0), carga = 0, receptor = false, in_all = true, in_id = array_create(0, 0), in_num = array_create(0, 0), emisor = false, out_all = true, out_id = array_create(0, 0), energia = 0, agua = 0, agua_consumo = 0){
 	array_push(edificio_nombre, string(name))
 	array_push(edificio_size, real(size))
 	array_push(edificio_sprite, sprite)
@@ -418,15 +432,15 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 		array_push(edificio_input_num, in_num)
 	}
 	else{
-		array_push(edificio_input_id, [0])
-		array_push(edificio_input_num, [0])
+		array_push(edificio_input_id, array_create(0, 0))
+		array_push(edificio_input_num, array_create(0, 0))
 	}
 	array_push(edificio_emisor, emisor)
 	array_push(edificio_output_all, emisor ? out_all : false)
 	if emisor and not out_all
 		array_push(edificio_output_id, out_id)
 	else
-		array_push(edificio_output_id, [0])
+		array_push(edificio_output_id, array_create(0, 0))
 	array_push(edificio_energia, (energia != 0))
 	array_push(edificio_energia_consumo, energia)
 	array_push(edificio_flujo, (agua > 0))
@@ -454,28 +468,29 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	def_edificio("Túnel salida", 1, spr_tunel_salida,, "A", 60, 10,,, [0, 3], [4, 4], 1,,,,, true, true)
 	def_edificio("Energía Infinita", 1, spr_energia_infinita,, "3 ", 100,,,,,,,,,,,,,, -999999)
 	def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, "16", 60, 10, true,, [2, 3], [1, 1], 1, true,,,, true)
-	def_edificio("Torre", 1, spr_torre, spr_torre_2, "51", 300, 60,,, [2, 3], [10, 25], 20, true, false, [0, 3], [10, 10],,,,, 10, 60)
+	def_edificio("Torre", 1, spr_torre, spr_torre_2, "51", 300, 30,,, [2, 3], [10, 25], 20, true, false, [0, 3], [10, 10],,,,, 10, 60)
 	//20
 	def_edificio("Láser", 2, spr_laser,, "52", 400, 1,,, [0, 4, 7], [10, 10, 5],,,,,,,,, 100)
 	def_edificio("Muro", 1, spr_hexagono,, "53", 500,,,, [8], [1])
-	def_edificio("Planta Química", 3, spr_planta_quimica,, "25", 200, 30,, true, [0, 4, 7], [20, 40, 20], 30,,,,,,,, 50, 20)
-	def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, "54", 400, 100,,, [2, 3, 4], [10, 10, 10], 20, true, false, [2, 4], [10, 10],,,,, 10, 60)
+	def_edificio("Planta Química", 3, spr_planta_quimica,, "25", 200, 30,, true, [0, 4, 7], [20, 40, 20], 30, true, false, [0, 1, 3, 5, 6, 9, 10, 11], [0, 0, 0, 0, 0, 0, 0, 0], true, false, [8, 11, 12, 13, 14, 15], 50, 20)
+	def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, "54", 400, 60,,, [2, 3, 4], [10, 10, 10], 20, true, false, [2, 4, 17, 19], [10, 10, 10, 10],,,,, 10, 60)
 	def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, "44", 200, 1,,, [4, 7], [20, 30],,,,,,,,,, 300)
 	def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, "4 ", 30, 1,,,,,,,,,,,,,, 10, -999999)
-	def_edificio("Turbina", 2, spr_turbina,, "35", 160,,, true, [0, 4, 7], [20, 10, 10], 20, true, false, [1, 12], [10, 10], false,,, -150, 30, 40)
-	def_edificio("Refinería de Metales", 3, spr_refineria_minerales,, "26", 150, 80,,, [4, 7, 8], [20, 10, 10], 20, true, false, [9, 10], [5, 5], true, false, [0, 3], 80, 60, 60)
+	def_edificio("Turbina", 2, spr_turbina,, "35", 160,,, true, [0, 4, 7], [20, 10, 10], 20, true, false, [1, 12], [10, 10],,,, -150, 30, 40)
+	def_edificio("Refinería de Metales", 3, spr_refineria_minerales,, "26", 150, 80,,, [4, 7, 8], [20, 10, 10], 30, true, false, [9, 10, 17], [5, 5, 10], true, false, [0, 3, 18, 19], 80, 60, 60)
 	def_edificio("Fábrica de Drones", 2, spr_fabrica_drones,, "17", 200, 900,,, [2, 4, 7], [20, 20, 15], 20, true, false, [14, 15, 16], [1, 3, 1], false, false,, 120)
 	def_edificio("Recurso Infinito", 1, spr_recurso_infinito, spr_selector_color, "1 ", 30, 1,,,,,,,,,, true, true)
 	//30
 	def_edificio("Bomba de Evaporación", 1, spr_bomba_evaporacion, spr_tuberia_color, "42", 30, 1,,, [0, 4], [10, 10],,,,,,,,,, 20, -5)
 	def_edificio("Horno de Lava", 2, spr_horno_lava, spr_horno_lava_encendido, "27", 400, 90,,, [4, 8], [10, 10], 15, true, false, [0, 3, 5], [5, 5, 5], true, false, [2, 4, 7],, 10, 0.5)
 	def_edificio("Generador Geotérmico", 2, spr_generador_geotermico,, "36", 200, 1,,, [0, 4, 8], [10, 10, 10],,,,,,,,, -120, 30, 30)
-	def_edificio("Taladro de Explosión", 3, spr_taladro_explosivo,, "28", 300, 300,,, [2, 4, 8], [40, 40, 30], 40, true, false, [13], [10], true, false, [0, 1, 3, 5, 6, 9, 10, 11])
-	def_edificio("Mortero", 3, spr_mortero, spr_mortero_2, "55", 600, 300,,, [4, 8], [50, 30], 10, true, false, [13], [10])
+	def_edificio("Taladro de Explosión", 3, spr_taladro_explosivo,, "28", 300, 300,,, [2, 4, 8], [40, 40, 30], 40, true, false, [13], [10], true, false, [0, 1, 3, 5, 6, 9, 10, 11, 17])
+	def_edificio("Mortero", 3, spr_mortero, spr_mortero_2, "55", 600, 180,,, [4, 8], [50, 30], 10, true, false, [13], [10])
 	def_edificio("Puerto de Carga", 2, spr_punto_carga,, "18", 150,,,, [2, 4, 7], [10, 5, 5], 25,, true,,,, true)
-	def_edificio("Ensambladora", 3, spr_refineria_minerales,, "29", 400, 150,,, [0, 2, 4, 7], [20, 10, 30, 10], 20, true, false, [0, 7], [5, 5], true, false, [16], 100)
+	def_edificio("Ensambladora", 3, spr_ensambladora,, "29", 400, 150,,, [0, 2, 4, 7], [20, 10, 30, 10], 20, true, false, [0, 7], [5, 5], true, false, [16], 100)
+	def_edificio("Planta Nuclear", 4, spr_planta_nuclear,, "37", 500,,, true, [0, 4, 8, 16], [100, 80, 50, 20], 21, true, false, [18, 19], [1, 20],,,, -900, 150, 300)
 #endregion
-categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 7, 8, 9, 22, 27, 31, 33, 36], [11, 10, 12, 13, 26, 32], [15, 30, 14, 24], [19, 20, 21, 23, 34]]
+categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 7, 8, 9, 22, 27, 31, 33, 36], [11, 10, 12, 13, 26, 32, 37], [15, 30, 14, 24], [19, 20, 21, 23, 34]]
 categoria_nombre = ["Transporte", "Producción", "Electricidad", "Líquidos", "Defensa"]
 categoria_sprite = [spr_camino, spr_taladro, spr_bateria, spr_bomba, spr_torre]
 planta_quimica_receta = ["Ácido", "Concreto", "Explosivos", "Combustible", "Azufre", "Baterías", "Plástico"]
@@ -652,7 +667,7 @@ for(var a = 0; a < size; a++){
 	ds_grid_set(ore_amount, aa, bb, 0)
 }
 //Natural Ores
-for(var e = 0; e < 9; e++){
+for(var e = 0; e < 10; e++){
 	var a = min(xsize - 1, irandom_range((e mod 3) * xsize / 3, ((e mod 3) + 1) * xsize / 3))
 	var b = irandom(ysize - 1)
 	var c = floor(e / 3)

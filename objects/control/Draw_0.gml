@@ -404,28 +404,28 @@ if menu = 2{
 	var b = 0
 	sprite_boton_text = ""
 	for(var a = 0; a < terreno_max; a++)
-		if draw_sprite_boton(terreno_sprite[a], 10 + (a mod 5) * 36, 10 + floor(a / 5) * 36, terreno_nombre[a]){
+		if draw_sprite_boton(terreno_sprite[a], 10 + (a mod 5) * 36, 10 + floor(a / 5) * 36,,, terreno_nombre[a]){
 			build_index = a
 			editor_herramienta = 0
 		}
 	b += terreno_max
 	for(var a = 0; a < ore_max; a++)
-		if draw_sprite_boton(ore_sprite[a], 10 + ((a + b) mod 5) * 36, 10 + floor((a + b) / 5) * 36, recurso_nombre[ore_recurso[a]]){
+		if draw_sprite_boton(ore_sprite[a], 10 + ((a + b) mod 5) * 36, 10 + floor((a + b) / 5) * 36,,, recurso_nombre[ore_recurso[a]]){
 			build_index = a + b
 			editor_herramienta = 0
 		}
 	b += ore_max
-	if draw_sprite_boton(spr_equis, 10 + (b mod 5) * 36, 10 + floor(b / 5) * 36, "Eliminar depósito de Recursos"){
+	if draw_sprite_boton(spr_equis, 10 + (b mod 5) * 36, 10 + floor(b / 5) * 36,,, "Eliminar depósito de Recursos"){
 		build_index = -1
 		editor_herramienta = 3
 	}
 	b++
-	if draw_sprite_boton(spr_base, 10 + (b mod 5) * 36, 10 + floor(b / 5) * 36, "Cambia posición de la Base"){
+	if draw_sprite_boton(spr_base, 10 + (b mod 5) * 36, 10 + floor(b / 5) * 36,,, "Cambia posición de la Base"){
 		build_index = -1
 		editor_herramienta = 2
 	}
 	b++
-	if draw_sprite_boton(spr_arana, 10 + (b mod 5) * 36, 10 + floor(b / 5) * 36, "Cambiar zona de enemigos"){
+	if draw_sprite_boton(spr_arana, 10 + (b mod 5) * 36, 10 + floor(b / 5) * 36,,, "Cambiar zona de enemigos"){
 		build_index = -1
 		editor_herramienta = 1
 	}
@@ -509,7 +509,7 @@ if menu = 2{
 	for(var a = mina; a < maxa; a++)
 		for(var b = minb; b < maxb; b++)
 			if edificio_draw[# a, b]{
-				var edificio = edificio_id[# a, b], index = edificio.index, temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b
+				var edificio = edificio_id[# a, b], index = edificio.index, temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b, var_edificio_nombre = edificio_nombre[index]
 				if edificio.carga_total > 0{
 					//Dibujo de items en los caminos
 					if (edificio_camino[index] or index = 6){
@@ -534,6 +534,10 @@ if menu = 2{
 						draw_line_off(edificio.x, edificio.y, edificio_2.x, edificio_2.y)
 					}
 				}
+				if (image_index mod 5) = 0 and ((in(var_edificio_nombre, "Generador", "Turbina", "Planta Nuclear") and edificio.fuel > 0) or (var_edificio_nombre = "Generador Geotérmico" and edificio.flujo.liquido = 0)){
+					var dir = direccion_viento + random_range(-pi / 4, pi / 4)
+					array_push(humos, new_humo(edificio.x, edificio.y, cos(dir), sin(dir), irandom_range(70, 100), 191, 0.3))
+				}
 			}
 	//Luz
 	if energia_solar < 1{
@@ -550,6 +554,211 @@ if menu = 2{
 			draw_rectangle(0, 0, room_width, room_height, false)
 			draw_set_alpha(1)
 		}
+	}
+	if enciclopedia > 0{
+		image_index--
+		draw_set_color(c_gray)
+		draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
+		draw_set_color(c_black)
+		draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
+		var width = 100
+		if draw_boton(width, 100, "Recursos"){
+			enciclopedia_deslizante = 0
+			enciclopedia = 1
+		}
+		width += string_width("Recursos") + 20
+		if draw_boton(width, 100, "Edificios"){
+			enciclopedia_deslizante = 0
+			enciclopedia = 2
+		}
+		width += string_width("Edificios") + 20
+		if draw_boton(width, 100, "Unidades"){
+			enciclopedia_deslizante = 0
+			enciclopedia = 5
+		}
+		width += string_width("Unidades") + 20
+		//Menú Recursos
+		if enciclopedia = 1{
+			var pos = 140
+			if rss_max > 25{
+				draw_line(110, pos, 110, pos + 25 * 20)
+				draw_circle(110, pos + (25 * 20) * (enciclopedia_deslizante / (rss_max - 25)), 5, false)
+			}
+			for(var a = enciclopedia_deslizante; a < min(enciclopedia_deslizante + 25, rss_max); a++){
+				if draw_boton(120, pos, recurso_nombre[a],,,, false){
+					enciclopedia_item = a
+					enciclopedia = 3
+				}
+				pos += 20
+			}
+			if enciclopedia_deslizante + 25 < rss_max and mouse_wheel_down()
+				enciclopedia_deslizante++
+			if enciclopedia_deslizante > 0 and mouse_wheel_up()
+				enciclopedia_deslizante--
+		}
+		//Menú Edificios
+		else if enciclopedia = 2{
+			var pos = 140
+			if edificio_max > 25{
+				draw_line(110, pos, 110, pos + 25 * 20)
+				draw_circle(110, pos + (25 * 20) * (enciclopedia_deslizante / (edificio_max - 25)), 5, false)
+			}
+			for(var a = enciclopedia_deslizante; a < min(enciclopedia_deslizante + 25, edificio_max); a++){
+				if draw_boton(120, pos, edificio_nombre[a],,,, false){
+					enciclopedia_item = a
+					enciclopedia = 4
+				}
+				pos += 20
+			}
+			if enciclopedia_deslizante + 25 < edificio_max and mouse_wheel_down()
+				enciclopedia_deslizante++
+			if enciclopedia_deslizante > 0 and mouse_wheel_up()
+				enciclopedia_deslizante--
+		}
+		//Detalles Recurso
+		else if enciclopedia = 3{
+			var pos = 140
+			draw_set_font(ft_titulo)
+			pos = draw_text_pos(120, pos, recurso_nombre[enciclopedia_item])
+			draw_set_font(ft_letra)
+			if recurso_combustion[enciclopedia_item]{
+				pos = draw_text_pos(120, pos, $"Combustible por {recurso_combustion_time[enciclopedia_item] / 60}[s]")
+			}
+			pos = draw_text_pos(120, pos, "Usado en:")
+			for(var a = 0; a < edificio_max; a++)
+				for(var b = 0; b < array_length(edificio_input_id[a]); b++)
+					if edificio_input_id[a, b] = enciclopedia_item{
+						if draw_boton(140, pos, edificio_nombre[a],,,, false){
+							enciclopedia_item = a
+							enciclopedia = 4
+							exit
+						}
+						pos += 20
+						break
+					}
+			pos = draw_text_pos(120, pos, "Producido en:")
+			for(var a = 0; a < edificio_max; a++)
+				for(var b = 0; b < array_length(edificio_output_id[a]); b++)
+					if edificio_output_id[a, b] = enciclopedia_item{
+						if draw_boton(140, pos, edificio_nombre[a],,,, false){
+							enciclopedia_item = a
+							enciclopedia = 4
+							exit
+						}
+						pos += 20
+						break
+					}
+			draw_sprite_ext(recurso_sprite[enciclopedia_item], 0, room_width - 200, 200, 4, 4, 0, c_white, 1)
+		}
+		//Detalles Edificio
+		else if enciclopedia = 4{
+			var pos = 140
+			draw_set_font(ft_titulo)
+			pos = draw_text_pos(120, pos, edificio_nombre[enciclopedia_item])
+			draw_set_font(ft_letra)
+			pos = draw_text_pos(120, pos, edificio_descripcion[enciclopedia_item])
+			pos = draw_text_pos(120, pos, $"Vida máxima: {edificio_vida[enciclopedia_item]}")
+			if array_length(edificio_precio_id[enciclopedia_item]) > 0{
+				pos += 10
+				pos = draw_text_pos(120, pos, "Coste de construcción:")
+				for(var a = 0; a < array_length(edificio_precio_id[enciclopedia_item]); a++){
+					if draw_boton(140, pos, $"{edificio_precio_num[enciclopedia_item, a]} {recurso_nombre[edificio_precio_id[enciclopedia_item, a]]}",,,, false){
+						enciclopedia_item = edificio_precio_id[enciclopedia_item, a]
+						enciclopedia = 3
+						exit
+					}
+					pos += 20
+				}
+			}
+			if array_length(edificio_input_id[enciclopedia_item]) > 0{
+				pos += 10
+				pos = draw_text_pos(120, pos, "Consume:")
+				for(var a = 0; a < array_length(edificio_input_id[enciclopedia_item]); a++){
+					if draw_boton(140, pos, recurso_nombre[edificio_input_id[enciclopedia_item, a]],,,, false){
+						enciclopedia_item = edificio_input_id[enciclopedia_item, a]
+						enciclopedia = 3
+						exit
+					}
+					pos += 20
+				}
+			}
+			if array_length(edificio_output_id[enciclopedia_item]) > 0{
+				pos += 10
+				pos = draw_text_pos(120, pos, "Produce:")
+				for(var a = 0; a < array_length(edificio_output_id[enciclopedia_item]); a++){
+					if draw_boton(140, pos, recurso_nombre[edificio_output_id[enciclopedia_item, a]],,,, false){
+						enciclopedia_item = edificio_output_id[enciclopedia_item, a]
+						enciclopedia = 3
+						exit
+					}
+					pos += 20
+				}
+			}
+			if edificio_energia[enciclopedia_item]{
+				pos += 10
+				if edificio_energia_consumo[enciclopedia_item] > 0
+					pos = draw_text_pos(120, pos, $"Consume {edificio_energia_consumo[enciclopedia_item]} energía/s")
+				else if edificio_energia_consumo[enciclopedia_item] < 0
+					pos = draw_text_pos(120, pos, $"Produce {abs(edificio_energia_consumo[enciclopedia_item])} energía/s")
+			}
+			if edificio_flujo[enciclopedia_item]{
+				pos += 10
+				if edificio_flujo_consumo[enciclopedia_item] > 0
+					pos = draw_text_pos(120, pos, $"Consume {edificio_flujo_consumo[enciclopedia_item]} líquido/s")
+				else if edificio_flujo_consumo[enciclopedia_item] < 0
+					pos = draw_text_pos(120, pos, $"Produce {abs(edificio_flujo_consumo[enciclopedia_item])} líquido/s")
+			}
+			draw_sprite_ext(edificio_sprite[enciclopedia_item], 0, room_width - 200, 200, 2, 2, 0, c_white, 1)
+		}
+		//Menú Unidades
+		else if enciclopedia = 5{
+			var pos = 140
+			if dron_max > 25{
+				draw_line(110, pos, 110, pos + 25 * 20)
+				draw_circle(110, pos + (25 * 20) * (enciclopedia_deslizante / (dron_max - 25)), 5, false)
+			}
+			for(var a = enciclopedia_deslizante; a < min(enciclopedia_deslizante + 25, dron_max); a++){
+				if draw_boton(120, pos, dron_nombre[a],,,, false){
+					enciclopedia_item = a
+					enciclopedia = 6
+				}
+				pos += 20
+			}
+			if enciclopedia_deslizante + 25 < dron_max and mouse_wheel_down()
+				enciclopedia_deslizante++
+			if enciclopedia_deslizante > 0 and mouse_wheel_up()
+				enciclopedia_deslizante--
+		}
+		//Detalles Dron
+		else if enciclopedia = 6{
+			var pos = 140
+			draw_set_font(ft_titulo)
+			pos = draw_text_pos(120, pos, dron_nombre[enciclopedia_item])
+			draw_set_font(ft_letra)
+			pos = draw_text_pos(120, pos, dron_descripcion[enciclopedia_item])
+			pos = draw_text_pos(120, pos, $"Vida máxima: {dron_vida_max[enciclopedia_item]}")
+			if array_length(dron_precio_id[enciclopedia_item]) > 0{
+				pos += 10
+				pos = draw_text_pos(120, pos, "Coste de construcción:")
+				for(var a = 0; a < array_length(dron_precio_id[enciclopedia_item]); a++){
+					if draw_boton(140, pos, $"{dron_precio_num[enciclopedia_item, a]} {recurso_nombre[dron_precio_id[enciclopedia_item, a]]}",,,, false){
+						enciclopedia_item = dron_precio_id[enciclopedia_item, a]
+						enciclopedia = 3
+						exit
+					}
+					pos += 20
+				}
+			}
+			draw_sprite_ext(dron_sprite[enciclopedia_item], image_index / 2, room_width - 200, 200, 2, 2, 0, c_white, 1)
+		}
+		if keyboard_check_pressed(vk_escape) or keyboard_check_pressed(ord("K")) or (mouse_check_button_pressed(mb_any) and (mouse_x < 100 or mouse_y < 100 or mouse_x > room_width - 100 or mouse_y > room_height - 100)){
+			mouse_clear(mouse_lastbutton)
+			keyboard_clear(vk_escape)
+			keyboard_clear(ord("K"))
+			enciclopedia = false
+		}
+		update_cursor()
+		exit
 	}
 #endregion
 var flag = true, xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / zoom
@@ -820,9 +1029,9 @@ if temp_hexagono != noone and flag{
 			temp_text += "Almacen:\n"
 			for(var a = 0; a < rss_max; a++)
 				if edificio.carga[a] > 0
-					temp_text += $"  {recurso_nombre[a]}: {edificio.carga[a]}\n"
+					temp_text += $"  {recurso_nombre[a]}: {floor(edificio.carga[a])}\n"
 			if info and edificio.carga_total > 0
-				temp_text += $"    Total: {edificio.carga_total}\n"
+				temp_text += $"    Total: {floor(edificio.carga_total)}\n"
 		}
 		//Mostrar recursos subterraneos
 		if in(var_edificio_nombre, "Taladro", "Taladro Eléctrico")
@@ -834,7 +1043,7 @@ if temp_hexagono != noone and flag{
 					temp_array[a] = 0
 				for(var a = 0; a < ds_list_size(edificio.coordenadas); a++){
 					var temp_complex = edificio.coordenadas[|a], aa = temp_complex.a, bb = temp_complex.b
-					if ore[# aa, bb] >= 0
+					if in(ore[# aa, bb], 0, 1, 2)
 						temp_array[ore_recurso[ore[# aa, bb]]] += ore_amount[# aa, bb]
 					else if terreno_recurso_bool[terreno[# aa, bb]] and in(var_edificio_nombre, "Taladro Eléctrico")
 						temp_array[terreno_recurso_id[terreno[# aa, bb]]] = -1
@@ -848,7 +1057,7 @@ if temp_hexagono != noone and flag{
 					temp_text += $"Recursos disponibles:\n{temp_text_2}"
 			}
 		//Mostrar combustión
-		if in(var_edificio_nombre, "Horno", "Generador")
+		if in(var_edificio_nombre, "Horno", "Generador", "Turbina", "Planta Nuclear")
 			temp_text += $"Combustion: {floor(edificio.fuel / 30)} s\n"
 		//Mostrar rango de cables
 		if in(var_edificio_nombre, "Cable"){
@@ -1248,7 +1457,7 @@ if build_index > 0{
 			//Buscar minerales superficiales
 			for(var a = 0; a < ds_list_size(build_list); a++){
 				var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
-				if ore[# aa, bb] >= 0{
+				if in(ore[# aa, bb], 0, 1, 2){
 					temp_array[ore_recurso[ore[# aa, bb]]]++
 					temp_array_2[ore_recurso[ore[# aa, bb]]] += ore_amount[# aa, bb]
 					b++
@@ -1259,7 +1468,7 @@ if build_index > 0{
 			if in(var_edificio_nombre, "Taladro Eléctrico"){
 				for(var a = 0; a < ds_list_size(build_list); a++){
 					var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
-					if ore[# aa, bb] = -1 and in(terreno_nombre[terreno[# aa, bb]], "Piedra", "Arena", "Piedra Cúprica", "Piedra Férrica", "Basalto Sulfatado"){
+					if not in(ore[# aa, bb], 0, 1, 2) and in(terreno_nombre[terreno[# aa, bb]], "Piedra", "Arena", "Piedra Cúprica", "Piedra Férrica", "Basalto Sulfatado"){
 						temp_array[terreno_recurso_id[terreno[# aa, bb]]]++
 						temp_array_2[terreno_recurso_id[terreno[# aa, bb]]] = -1
 						b++
@@ -1513,8 +1722,8 @@ if build_index > 0{
 			}
 			draw_text_background(mouse_x + 20, mouse_y, temp_text)
 			//Construir
-			function f1(index, build_dir, mx, my){
-				var flag = true, flag_2 = false, build_list = get_size(mx, my, build_dir, edificio_size[index]), edificio, var_edificio_nombre = edificio_nombre[index], temp_complex = abtoxy(mx, my)
+			function f1(index, dir, mx, my){
+				var flag = true, flag_2 = false, build_list = get_size(mx, my, dir, edificio_size[index]), edificio, var_edificio_nombre = edificio_nombre[index], temp_complex = abtoxy(mx, my)
 				for(var a = 0; a < ds_list_size(build_list); a++){
 					var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
 					//Asegurarse de que esté dentro del mundo
@@ -1565,8 +1774,11 @@ if build_index > 0{
 					flag = false
 				if flag and in(var_edificio_nombre, "Túnel", "Túnel salida") and build_able and build_target.index = 6
 					index = 16
-				if flag
-					edificio = add_edificio(index, build_dir, mx, my)
+				if flag{
+					edificio = add_edificio(index, dir, mx, my)
+					if in(edificio_nombre[index], "Túnel", "Túnel salida")
+						build_dir = (dir + 3) mod 6
+				}
 				//Algoritmo link de tuneles
 				if in(var_edificio_nombre, "Túnel", "Túnel salida"){
 					edificio.idle = not build_able
@@ -1629,7 +1841,12 @@ if pausa{
 	draw_set_font(ft_titulo)
 	draw_text(room_width / 2, 100, "P A U S A")
 	draw_set_font(ft_letra)
-	draw_text(room_width / 2, 150, "Presiona P para continuar")
+	draw_text(room_width / 2, 150,	"Presiona P para continuar"
+									+ "\n\"O\" para ver las redes eléctricas"
+									+ "\n\"U\" para ver las redes de líquidos"
+									+ "\n\"G\" para activar animaciones del terreno"
+									+ "\n\"H\" para activar la iluminación"
+									+ "\n\"K\" para abrir la enciclopedia")
 	draw_set_halign(fa_left)
 	draw_set_alpha(0.2)
 	draw_rectangle(0, 0, room_width, room_height, false)
@@ -1671,7 +1888,7 @@ else{
 					temp_complex_2 = temp_list[|0]
 					var aa = temp_complex_2.a, bb = temp_complex_2.b
 					ds_list_delete(temp_list, 0)
-					if ore[# aa, bb] >= 0{
+					if in(ore[# aa, bb], 0, 1, 2){
 						edificio.carga[ore_recurso[ore[# aa, bb]]]++
 						edificio.carga_total++
 						if edificio.carga_total = edificio_carga_max[index]
@@ -1880,6 +2097,47 @@ else{
 				}
 			}
 		}
+		//Planta Nuclear
+		else if in(var_edificio_nombre, "Planta Nuclear"){
+			if edificio.fuel > 0{
+				edificio.fuel--
+				if flujo.liquido != 0
+					edificio.vida--
+				else if flujo_power < 1
+					edificio.vida -= (1 - flujo_power)
+			}
+			if edificio.fuel = 0 and flujo.liquido = 0{
+				if edificio.carga[18] > 0 and edificio.carga[19] > 0 and flujo_power > 0{
+					edificio.fuel = 900
+					edificio.carga[18] -= 0.05
+					edificio.carga[19]--
+					if ver_luz and not edificio.luz{
+						edificio.luz = true
+						var temp_list = edificio.coordenadas, size = ds_list_size(temp_list)
+						for(var b = 0; b < size; b++){
+							var temp_complex = temp_list[|b]
+							add_luz(temp_complex.a, temp_complex.b, 1)
+						}
+					}
+					change_energia(edificio_energia_consumo[index] * flujo_power, edificio)
+					change_flujo(edificio_flujo_consumo[index], edificio)
+					edificio.carga_total -= 1.05
+					mover_in(edificio)
+				}
+				else{
+					if ver_luz and edificio.luz{
+						edificio.luz = false
+						var temp_list = edificio.coordenadas, size = ds_list_size(temp_list)
+						for(var b = 0; b < size; b++){
+							var temp_complex = temp_list[|b]
+							add_luz(temp_complex.a, temp_complex.b, -1)
+						}
+					}
+					change_energia(0, edificio)
+					change_flujo(0, edificio)
+				}
+			}
+		}
 		//Acción de la bomba hidraulica
 		else if in(var_edificio_nombre, "Bomba Hidráulica"){
 			if in(flujo.liquido, -1, edificio.select) and red_power > 0{
@@ -1935,7 +2193,7 @@ else{
 		}
 		//Refinería de Minerales
 		else if in(var_edificio_nombre, "Refinería de Metales"){
-			if flujo.liquido = 1 and (edificio.carga[9] > 2 or edificio.carga[10] > 2){
+			if flujo.liquido = 1 and (edificio.carga[9] > 2 or edificio.carga[10] > 2 or edificio.carga[17] > 0){
 				if edificio.proceso < 0{
 					change_energia(edificio_energia_consumo[index], edificio)
 					change_flujo(edificio_flujo_consumo[index], edificio)
@@ -1944,11 +2202,20 @@ else{
 				edificio.proceso += red_power * flujo_power
 				if edificio.proceso >= edificio_proceso[index]{
 					edificio.proceso -= edificio_proceso[index] + 1
-					if edificio.carga[10] > 2{
+					if edificio.carga[17] > 0{
+						repeat(edificio.carga[17]){
+							if random(1) < 0.993
+								edificio.carga[19]++
+							else
+								edificio.carga[18]++
+						}
+						edificio.carga[17] = 0
+					}
+					else if edificio.carga[10] > 2{
 						edificio.carga[10] -= 3
 						edificio.carga[3]++
 					}
-					else{
+					else if edificio.carga[9] > 2{
 						edificio.carga[9] -= 3
 						edificio.carga[0]++
 					}
@@ -1958,6 +2225,8 @@ else{
 					change_flujo(0, edificio)
 				}
 			}
+			if edificio.waiting and edificio.carga[18] > 0 or edificio.carga[19] > 0
+				edificio.waiting = not mover(edificio.a, edificio.b)
 		}
 		//Acción de torres
 		else if in(var_edificio_nombre, "Torre", "Rifle", "Mortero"){
@@ -2025,7 +2294,7 @@ else{
 			if enemigo != null_enemigo and distance(edificio.x, edificio.y, enemigo.a, enemigo.b) < 220{
 				change_energia(edificio_energia_consumo[index], edificio)
 				edificio.mode = true
-				enemigo.vida -= red_power / 2
+				enemigo.vida -= red_power
 				draw_set_alpha(red_power)
 				draw_set_color(c_red)
 				draw_line_off(edificio.x + 12, edificio.y + 14, enemigo.a, enemigo.b)
@@ -2446,6 +2715,19 @@ else{
 			array_pop(efectos)
 		}
 	}
+	//Humo
+	for(var a = 0; a < array_length(humos); a++){
+		var humo = humos[a]
+		draw_set_alpha(humo.alpha)
+		draw_set_color(make_color_hsv(0, 0, humo.value))
+		draw_circle_off(humo.x, humo.y, 10, false)
+		humo.x += humo.hmove
+		humo.y += humo.vmove
+		if --humo.time <= 0{
+			humos[a--] = humos[array_length(humos) - 1]
+			array_pop(humos)
+		}
+	}
 	var temp_text_right = ""
 	if oleadas{
 		if image_index > (60 * oleadas_tiempo_primera) or keyboard_check_pressed(vk_enter){
@@ -2506,6 +2788,8 @@ else{
 		draw_text_background(room_width, 0, temp_text_right)
 		draw_set_halign(fa_left)
 	}
+	if draw_sprite_boton(spr_manual, room_width - 64, string_height(temp_text_right), 64, 64, "Abrir Enciclopedia")
+		enciclopedia = true
 	energia_solar = clamp(2 * sin((image_index + 900) / 1800), 0, 1)
 	draw_set_alpha((1 - energia_solar) / 3)
 	draw_set_color(c_black)
@@ -2611,6 +2895,11 @@ draw_set_halign(fa_left)
 		tile_animation = not tile_animation
 	if keyboard_check_pressed(ord("H"))
 		ver_luz = not ver_luz
+	if keyboard_check_pressed(ord("K"))
+		if enciclopedia = 0
+			enciclopedia = 1
+		else
+			enciclopedia = 0
 #endregion
 control_camara()
 if flow > 0

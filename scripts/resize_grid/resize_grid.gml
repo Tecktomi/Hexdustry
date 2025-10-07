@@ -5,7 +5,6 @@ function resize_grid(minx = 0, miny = 0){
 				background[a, b] = spr_hexagono
 				update_background(a * chunk_width, b * chunk_height)
 			}
-		ds_grid_resize(bool_unidad, xsize, ysize)
 		ds_grid_resize(edificio_bool, xsize, ysize)
 		ds_grid_resize(edificio_id, xsize, ysize)
 		ds_grid_resize(edificio_draw, xsize, ysize)
