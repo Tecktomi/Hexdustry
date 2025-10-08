@@ -64,10 +64,15 @@ ini_close()
 	mision_objetivo = array_create(0, 0)
 	mision_target_id = array_create(0, 0)
 	mision_target_num = array_create(0, 0)
+	mision_recompensa = array_create(0, false)
+	mision_recompensa_tipo = array_create(0, 0)
+	mision_recompensa_id = array_create(0, 0)
+	mision_recompensa_num = array_create(0, 0)
 	mision_actual = -1
 	mision_counter = 0
 	get_keyboard_string = -1
 	objetivos_nombre = ["conseguir", "tener almacenado", "construir", "tener construido", "matar"]
+	recompensas_nombre = ["Ganar la partida", "Conseguir "]
 	oleadas = true
 	oleadas_tiempo_primera = 240
 	oleadas_tiempo = 30
@@ -78,7 +83,7 @@ ini_close()
 	text_y = 0
 	enciclopedia = 0
 	enciclopedia_item = 0
-	enciclopedia_deslizante = 0
+	deslizante = 0
 	null_humo = new_humo(0, 0, 0, 0, 0, 0, 0)
 	humos = array_create(0, null_humo)
 	direccion_viento = random(2 * pi)
