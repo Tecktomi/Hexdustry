@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"deslizante",
+  "%Name":"draw_deslizante_vertical",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"deslizante",
+  "name":"draw_deslizante_vertical",
   "parent":{
     "name":"SCRIPTS",
     "path":"folders/SCRIPTS.yy",

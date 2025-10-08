@@ -68,15 +68,27 @@ if menu = 2{
 			mision_actual = -1
 			get_keyboard_string = -1
 		}
-		var size = array_length(mision_nombre)
-		for(var i = 0; i < size; i++)
-			if draw_boton(140, 150 + i * 30, mision_nombre[i])
+		var size = array_length(mision_nombre), pos = 150
+		if size > 15
+			deslizante = floor(draw_deslizante_vertical(120, pos, pos + 15 * 30, deslizante, 0, size - 15, 0))
+		for(var i = deslizante; i < min(deslizante + 15, size); i++){
+			if draw_boton(140, pos, mision_nombre[i])
 				mision_actual = i
-		if size < 16 and draw_boton(140, 150 + size * 30, "Nuevo Objetivo"){
+			pos += 30
+		}
+		if deslizante + 15 < size and mouse_wheel_down()
+			deslizante++
+		if deslizante > 0 and mouse_wheel_up()
+			deslizante--
+		if draw_boton(140, 600, "Nuevo Objetivo"){
 			array_push(mision_nombre, $"objetivo {size}")
 			array_push(mision_objetivo, 0)
 			array_push(mision_target_id, 0)
 			array_push(mision_target_num, 0)
+			array_push(mision_recompensa, false)
+			array_push(mision_recompensa_tipo, 0)
+			array_push(mision_recompensa_id, 0)
+			array_push(mision_recompensa_num, 0)
 			mision_actual = size
 		}
 		draw_set_color(c_ltgray)
@@ -184,12 +196,39 @@ if menu = 2{
 			//Matar enemigos
 			else if mision_objetivo[i] = 4
 				draw_text(a, 150, " enemigos")
+			if draw_boton(room_width / 2 + 40, 180, $"Recompensa: {mision_recompensa[i] ? "A" : "Desa"}ctivado")
+				mision_recompensa[i] = not mision_recompensa[i]
+			if mision_recompensa[i]{
+				a = room_width / 2 + 60
+				if draw_boton(a, 210, recompensas_nombre[mision_recompensa_tipo[i]],,,, false)
+					get_keyboard_string = 4
+				if get_keyboard_string = 4{
+					var max_width = 0, max_height = 20 * array_length(recompensas_nombre)
+					for(var b = 0; b < array_length(recompensas_nombre); b++)
+						max_width = max(max_width, string_width(recompensas_nombre[b]))
+					draw_set_color(c_ltgray)
+					draw_rectangle(a, 230, a + max_width, 230 + max_height, false)
+					draw_set_color(c_black)
+					draw_rectangle(a, 230, a + max_width, 230 + max_height, true)
+					for(var b = 0; b < array_length(recompensas_nombre); b++)
+						if draw_boton(a, 230 + 20 * b, recompensas_nombre[b],,,, false){
+							mision_recompensa_tipo[i] = b
+							get_keyboard_string = -1
+						}
+					exit_keyboard_input()
+				}
+			}
 			if draw_boton(room_width / 2 + 10, room_height - 140, "Eliminar objetivo"){
 				array_delete(mision_nombre, i, 1)
 				array_delete(mision_objetivo, i, 1)
 				array_delete(mision_target_id, i, 1)
 				array_delete(mision_target_num, i, 1)
+				array_delete(mision_recompensa, i, 1)
+				array_delete(mision_recompensa_tipo, i, 1)
+				array_delete(mision_recompensa_id, i, 1)
+				array_delete(mision_recompensa_num, i, 1)
 				mision_actual = -1
+				deslizante = 0
 			}
 		}
 		//Opciones generales
@@ -437,16 +476,16 @@ if menu = 2{
 		exit
 	}
 	var prev_xsize = xsize
-	xsize = round(deslizante(50, 150, room_height - 200, xsize, 28, 96, 0))
+	xsize = round(draw_deslizante(50, 150, room_height - 200, xsize, 28, 96, 0))
 	draw_text(150, room_height - 200, $"{xsize}")
 	if xsize > prev_xsize
 		resize_grid(prev_xsize, 0)
 	var prev_ysize = ysize
-	ysize = round(deslizante(50, 150, room_height - 180, ysize, 60, 192, 1))
+	ysize = round(draw_deslizante(50, 150, room_height - 180, ysize, 60, 192, 1))
 	draw_text(150, room_height - 180, $"{ysize}")
 	if ysize > prev_ysize
 		resize_grid(0, prev_ysize)
-	build_size = round(deslizante(50, 150, room_height - 150, build_size, 1, 5, 2))
+	build_size = round(draw_deslizante(50, 150, room_height - 150, build_size, 1, 5, 2))
 	if draw_boton(10, room_height - 100, "Volver") or keyboard_check_pressed(vk_escape){
 		menu = 0
 		redo_pathfind()
@@ -563,57 +602,53 @@ if menu = 2{
 		draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
 		var width = 100
 		if draw_boton(width, 100, "Recursos"){
-			enciclopedia_deslizante = 0
+			deslizante = 0
 			enciclopedia = 1
 		}
 		width += string_width("Recursos") + 20
 		if draw_boton(width, 100, "Edificios"){
-			enciclopedia_deslizante = 0
+			deslizante = 0
 			enciclopedia = 2
 		}
 		width += string_width("Edificios") + 20
 		if draw_boton(width, 100, "Unidades"){
-			enciclopedia_deslizante = 0
+			deslizante = 0
 			enciclopedia = 5
 		}
 		width += string_width("Unidades") + 20
 		//Menú Recursos
 		if enciclopedia = 1{
 			var pos = 140
-			if rss_max > 25{
-				draw_line(110, pos, 110, pos + 25 * 20)
-				draw_circle(110, pos + (25 * 20) * (enciclopedia_deslizante / (rss_max - 25)), 5, false)
-			}
-			for(var a = enciclopedia_deslizante; a < min(enciclopedia_deslizante + 25, rss_max); a++){
+			if rss_max > 25
+				deslizante = floor(draw_deslizante_vertical(110, pos, pos + 25 * 20, deslizante, 0, rss_max - 25, 0))
+			for(var a = deslizante; a < min(deslizante + 25, rss_max); a++){
 				if draw_boton(120, pos, recurso_nombre[a],,,, false){
 					enciclopedia_item = a
 					enciclopedia = 3
 				}
 				pos += 20
 			}
-			if enciclopedia_deslizante + 25 < rss_max and mouse_wheel_down()
-				enciclopedia_deslizante++
-			if enciclopedia_deslizante > 0 and mouse_wheel_up()
-				enciclopedia_deslizante--
+			if deslizante + 25 < rss_max and mouse_wheel_down()
+				deslizante++
+			if deslizante > 0 and mouse_wheel_up()
+				deslizante--
 		}
 		//Menú Edificios
 		else if enciclopedia = 2{
 			var pos = 140
-			if edificio_max > 25{
-				draw_line(110, pos, 110, pos + 25 * 20)
-				draw_circle(110, pos + (25 * 20) * (enciclopedia_deslizante / (edificio_max - 25)), 5, false)
-			}
-			for(var a = enciclopedia_deslizante; a < min(enciclopedia_deslizante + 25, edificio_max); a++){
+			if edificio_max > 25
+				deslizante = floor(draw_deslizante_vertical(110, pos, pos + 25 * 20, deslizante, 0, edificio_max - 25, 0))
+			for(var a = deslizante; a < min(deslizante + 25, edificio_max); a++){
 				if draw_boton(120, pos, edificio_nombre[a],,,, false){
 					enciclopedia_item = a
 					enciclopedia = 4
 				}
 				pos += 20
 			}
-			if enciclopedia_deslizante + 25 < edificio_max and mouse_wheel_down()
-				enciclopedia_deslizante++
-			if enciclopedia_deslizante > 0 and mouse_wheel_up()
-				enciclopedia_deslizante--
+			if deslizante + 25 < edificio_max and mouse_wheel_down()
+				deslizante++
+			if deslizante > 0 and mouse_wheel_up()
+				deslizante--
 		}
 		//Detalles Recurso
 		else if enciclopedia = 3{
@@ -713,21 +748,19 @@ if menu = 2{
 		//Menú Unidades
 		else if enciclopedia = 5{
 			var pos = 140
-			if dron_max > 25{
-				draw_line(110, pos, 110, pos + 25 * 20)
-				draw_circle(110, pos + (25 * 20) * (enciclopedia_deslizante / (dron_max - 25)), 5, false)
-			}
-			for(var a = enciclopedia_deslizante; a < min(enciclopedia_deslizante + 25, dron_max); a++){
+			if dron_max > 25
+				deslizante = floor(draw_deslizante_vertical(110, pos, pos + 25 * 20, deslizante, 0, dron_max - 25, 0))
+			for(var a = deslizante; a < min(deslizante + 25, dron_max); a++){
 				if draw_boton(120, pos, dron_nombre[a],,,, false){
 					enciclopedia_item = a
 					enciclopedia = 6
 				}
 				pos += 20
 			}
-			if enciclopedia_deslizante + 25 < dron_max and mouse_wheel_down()
-				enciclopedia_deslizante++
-			if enciclopedia_deslizante > 0 and mouse_wheel_up()
-				enciclopedia_deslizante--
+			if deslizante + 25 < dron_max and mouse_wheel_down()
+				deslizante++
+			if deslizante > 0 and mouse_wheel_up()
+				deslizante--
 		}
 		//Detalles Dron
 		else if enciclopedia = 6{
