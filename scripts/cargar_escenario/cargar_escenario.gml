@@ -23,6 +23,8 @@ function cargar_escenario(){
 			oleadas_tiempo_primera = ini_read_real("Global", "tiempo primera oleada", oleadas_tiempo_primera)
 			oleadas_tiempo = ini_read_real("Global", "tiempo entre oleadas", oleadas_tiempo)
 			var objetivos_max = ini_read_real("Global", "objetivos", 0)
+			if objetivos_max > 0
+				mision_texto_victoria = ini_read_string("Global", "texto victoria", mision_texto_victoria)
 			array_resize(mision_nombre, objetivos_max)
 			array_resize(mision_objetivo, objetivos_max)
 			array_resize(mision_target_id, objetivos_max)
@@ -39,6 +41,8 @@ function cargar_escenario(){
 			for(var a = 0; a < xsize; a++)
 				for(var b = 0; b < ysize; b++){
 					ds_grid_set(terreno, a, b, ini_read_real("Terreno", $"{a},{b}", 1))
+					if terreno_pared[terreno[# a, b]]
+						ds_grid_set(terreno_pared_index, a, b, ini_read_real("Terreno pared index", $"{a},{b}", 0))
 					ds_grid_set(ore, a, b, ini_read_real("Ore", $"{a},{b}", -1))
 					ds_grid_set(ore_amount, a, b, ini_read_real("Ore amount", $"{a},{b}", 0))
 				}

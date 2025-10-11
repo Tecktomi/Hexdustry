@@ -97,6 +97,11 @@ function delete_edificio(aa, bb, enemigo = false){
 		if edificio_energia[index]{
 			var temp_red = edificio.red
 			ds_list_remove(temp_red.edificios, edificio)
+			if var_edificio_nombre = "Torre de Alta Tensión"{
+				var a = array_get_index(torres_de_tension, edificio)
+				torres_de_tension[a] = torres_de_tension[array_length(torres_de_tension) - 1]
+				array_pop(torres_de_tension)
+			}
 			//Eliminar la red si no hay más edificios
 			if ds_list_empty(temp_red.edificios){
 				ds_list_destroy(temp_red.edificios)

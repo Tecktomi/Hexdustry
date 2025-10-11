@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "06_10_2025")
+ini_write_string("Global", "version", "10_10_2025")
 ini_close()
 #region Metadatos
 	menu = 0
@@ -64,18 +64,14 @@ ini_close()
 	mision_objetivo = array_create(0, 0)
 	mision_target_id = array_create(0, 0)
 	mision_target_num = array_create(0, 0)
-	mision_recompensa = array_create(0, false)
-	mision_recompensa_tipo = array_create(0, 0)
-	mision_recompensa_id = array_create(0, 0)
-	mision_recompensa_num = array_create(0, 0)
+	mision_texto_victoria = "Todos los objetivos cumplidos"
 	mision_actual = -1
 	mision_counter = 0
 	get_keyboard_string = -1
 	objetivos_nombre = ["conseguir", "tener almacenado", "construir", "tener construido", "matar"]
-	recompensas_nombre = ["Ganar la partida", "Conseguir "]
 	oleadas = true
 	oleadas_tiempo_primera = 240
-	oleadas_tiempo = 30
+	oleadas_tiempo = 45
 	null_efecto = new_efecto()
 	efectos = array_create(0, null_efecto)
 	ver_luz = false
@@ -87,6 +83,7 @@ ini_close()
 	null_humo = new_humo(0, 0, 0, 0, 0, 0, 0)
 	humos = array_create(0, null_humo)
 	direccion_viento = random(2 * pi)
+	better_walls = true
 #endregion
 null_edificio = {
 	index : -1,
@@ -181,6 +178,8 @@ puerto_carga_atended = 0
 		}
 	luz = ds_grid_create(xsize, ysize)
 	ds_grid_clear(luz, 0)
+	terreno_pared_index = ds_grid_create(xsize, ysize)
+	ds_grid_clear(terreno_pared_index, 0)
 #endregion
 //Crear plantilla de fondo
 for(var a = 0; a < xsize; a++)
@@ -235,13 +234,14 @@ municiones = array_create(0, null_municion)
 		[{recurso : 13, cantidad : 1, dmg : 400}]]
 #endregion
 dron_descripcion = ["Dispara a los enemigos cercanos",
-					"Transporta recursos entre Puertos de Carga"]
-dron_nombre = ["Araña", "Dron"]
-dron_sprite = [spr_arana, spr_dron]
-dron_sprite_color = [spr_arana_color, spr_arana_color]
-dron_vida_max = [100, 40]
-dron_precio_id = [[4, 14, 16], [14, 15, 16]]
-dron_precio_num = [[5, 1, 1], [1, 3, 1]]
+					"Transporta recursos entre Puertos de Carga",
+					"Repara los edificios dañados"]
+dron_nombre = ["Araña", "Dron", "Reparador"]
+dron_sprite = [spr_arana, spr_dron, spr_reparador]
+dron_sprite_color = [spr_arana_color, spr_arana_color, spr_arana_color]
+dron_vida_max = [100, 40, 60]
+dron_precio_id = [[2, 14, 16], [14, 15, 16], [7, 14, 15, 16]]
+dron_precio_num = [[3, 1, 1], [1, 3, 1], [10, 1, 3, 1]]
 dron_max = array_length(dron_nombre)
 //Terrenos
 #region Arreglos
@@ -251,14 +251,16 @@ dron_max = array_length(dron_nombre)
 	terreno_recurso_id = []
 	terreno_caminable = []
 	terreno_liquido = []
+	terreno_pared = []
 #endregion
-function def_terreno(nombre, sprite = spr_piedra, recurso = 0, caminable = true, liquido = false){
+function def_terreno(nombre, sprite = spr_piedra, recurso = 0, caminable = true, liquido = false, pared = false){
 	array_push(terreno_nombre, string(nombre))
 	array_push(terreno_sprite, sprite)
 	array_push(terreno_recurso_id, recurso)
 	array_push(terreno_recurso_bool, (recurso > 0))
 	array_push(terreno_caminable, caminable)
 	array_push(terreno_liquido, liquido)
+	array_push(terreno_pared, pared)
 }
 #region Definición
 	def_terreno("Piedra", spr_piedra, 6)
@@ -271,12 +273,12 @@ function def_terreno(nombre, sprite = spr_piedra, recurso = 0, caminable = true,
 	def_terreno("Piedra Cúprica", spr_piedra_cobre, 9)
 	def_terreno("Piedra Férrica", spr_piedra_hierro, 10)
 	def_terreno("Basalto Sulfatado", spr_basalto_azufre, 11)
-	def_terreno("Pared de Piedra", spr_pared_piedra,, false)
+	def_terreno("Pared de Piedra", spr_pared_piedra,, false,, true)
 	//10
-	def_terreno("Pared de Pasto", spr_pared_pasto,, false)
-	def_terreno("Pared de Arena", spr_pared_arena,, false)
+	def_terreno("Pared de Pasto", spr_pared_pasto,, false,, true)
+	def_terreno("Pared de Arena", spr_pared_arena,, false,, true)
 	def_terreno("Nieve", spr_nieve)
-	def_terreno("Pared de Nieve", spr_pared_nieve,, false)
+	def_terreno("Pared de Nieve", spr_pared_nieve,, false,, true)
 	def_terreno("Lava", spr_lava,, false, true)
 	//15
 	def_terreno("Hielo", spr_hielo)
@@ -386,7 +388,8 @@ lq_max = array_length(liquido_nombre)
 	"Dispara explosivos a largo alcance, devastando\nun área de enemigos",
 	"Conceta Puertos de Carga para que tus drones\nmuevan recursos entre ellos",
 	"Utiliza Cobre y Silicio para producir componentes",
-	"Consume 1 parte de Uranio Enriquecido por\n20 partes de Uranio Empobrecido y mucha Agua."]
+	"Consume 1 parte de Uranio Enriquecido por\n20 partes de Uranio Empobrecido y mucha Agua\npara generar mucha energía",
+	"Conecta redes eléctricas a través de largas\ndistancias."]
 #endregion
 #region Arreglos
 	edificio_sprite = []
@@ -494,8 +497,9 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	def_edificio("Puerto de Carga", 2, spr_punto_carga,, "18", 150,,,, [2, 4, 7], [10, 5, 5], 25,, true,,,, true)
 	def_edificio("Ensambladora", 3, spr_ensambladora,, "29", 400, 150,,, [0, 2, 4, 7], [20, 10, 30, 10], 20, true, false, [0, 7], [5, 5], true, false, [16], 100)
 	def_edificio("Planta Nuclear", 4, spr_planta_nuclear,, "37", 500,,, true, [0, 4, 8, 16], [100, 80, 50, 20], 21, true, false, [18, 19], [1, 20],,,, -900, 150, 300)
+	def_edificio("Torre de Alta Tensión", 2, spr_cable_tension,, "38", 100,,,, [0, 4, 16], [30, 10, 2],,,,,,,,, 5)
 #endregion
-categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 7, 8, 9, 22, 27, 31, 33, 36], [11, 10, 12, 13, 26, 32, 37], [15, 30, 14, 24], [19, 20, 21, 23, 34]]
+categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 7, 8, 9, 22, 27, 31, 33, 36], [11, 10, 12, 13, 26, 32, 37, 38], [15, 30, 14, 24], [19, 20, 21, 23, 34]]
 categoria_nombre = ["Transporte", "Producción", "Electricidad", "Líquidos", "Defensa"]
 categoria_sprite = [spr_camino, spr_taladro, spr_bateria, spr_bomba, spr_torre]
 planta_quimica_receta = ["Ácido", "Concreto", "Explosivos", "Combustible", "Azufre", "Baterías", "Plástico"]
@@ -513,6 +517,7 @@ edificio_energia[11] = true
 edificio_energia[12] = true
 edificio_input_all[35] = true
 edificio_output_all[35] = true
+edificio_energia[38] = true
 size_size = [1, 3, 7, 12, 19]
 size_borde = [6, 9, 12, 15, 18, 21]
 edificios_construibles = []
@@ -521,6 +526,7 @@ for(var a = 0; a < array_length(categoria_nombre); a++)
 edificios = ds_list_create()
 edificios_counter = array_create(edificio_max, 0)
 edificios_targeteables = ds_list_create()
+torres_de_tension = array_create(0, null_edificio)
 //Redes electricas
 null_red = {
 	edificios : ds_list_create(),
@@ -560,14 +566,14 @@ for(var e = 0; e < size; e++){
 	var f = temp_peso_data[temp_peso[e], 1]
 	repeat(f){
 		if terreno[# a, b] != 2
-			ds_grid_set(terreno, a, b, c)
+			set_terreno(a, b, c)
 		var temp_list = get_arround(a, b, 0, 1), size_2 = ds_list_size(temp_list)
 		for(var d = 0; d < size_2; d++){
 			var temp_complex = temp_list[|d], aa = temp_complex.a, bb = temp_complex.b
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 				continue
 			if terreno[# aa, bb] != 2{
-				ds_grid_set(terreno, aa, bb, c)
+				set_terreno(aa, bb, c)
 				if c = 0{
 					if random(1) < 0.1
 						ds_grid_set(terreno, aa, bb, 6)

@@ -17,8 +17,8 @@ function add_edificio(index, dir, a, b){
 			output_index : 0,
 			proceso : 0,
 			carga : array_create(rss_max, 0),
-			carga_max : [0],
-			carga_output : [true],
+			carga_max : array_create(rss_max, 0),
+			carga_output : array_create(rss_max, true),
 			carga_id : 0,
 			carga_total : 0,
 			fuel : 0,
@@ -58,7 +58,7 @@ function add_edificio(index, dir, a, b){
 		if mision_actual >= 0 and mision_objetivo[mision_actual] = 2 and mision_target_id[mision_actual] = index and ++mision_counter >= mision_target_num[mision_actual]
 			pasar_mision()
 		temp_complex = {a : 0, b : 0}
-		if var_edificio_nombre = "Planta Química"{
+		if in(var_edificio_nombre, "Planta Química", "Fábrica de Drones"){
 			edificio.carga_max = array_create(rss_max, 0)
 			edificio.carga_output = array_create(rss_max, 0)
 		}
@@ -99,9 +99,9 @@ function add_edificio(index, dir, a, b){
 		calculate_in_out_2(edificio)
 		//Añadir a la red electrica
 		if edificio_energia[index]{
-			if in(var_edificio_nombre, "Energía Infinita")
+			if var_edificio_nombre = "Energía Infinita"
 				edificio.energy_output = -edificio_energia_consumo[index]
-			//Detectar otras redes cerca
+			//Buscar edificios electricos colindantes
 			var temp_list_redes = ds_list_create()
 			size = ds_list_size(temp_list_arround)
 			for(var c = 0; c < size; c++){
@@ -111,7 +111,7 @@ function add_edificio(index, dir, a, b){
 					continue
 				if edificio_bool[# aa, bb]{
 					var temp_edificio = edificio_id[# aa, bb]
-					if (edificio_energia[temp_edificio.index] and in(var_edificio_nombre, "Generador", "Batería", "Panel Solar", "Energía Infinita", "Turbina")) or (edificio_energia[index] and in(edificio_nombre[temp_edificio.index], "Generador", "Batería", "Panel Solar", "Energía Infinita", "Turbina")){
+					if (edificio_energia[temp_edificio.index] and in(var_edificio_nombre, "Generador", "Batería", "Panel Solar", "Energía Infinita", "Turbina", "Generador Geotérmico", "Planta Nuclear", "Torre de Alta Tensión")) or (edificio_energia[index] and in(edificio_nombre[temp_edificio.index], "Generador", "Batería", "Panel Solar", "Energía Infinita", "Turbina", "Generador Geotérmico", "Planta Nuclear", "Torre de Alta Tensión")){
 						ds_list_add(edificio.energia_link, temp_edificio)
 						ds_list_add(temp_edificio.energia_link, edificio)
 						if not ds_list_in(temp_list_redes, temp_edificio.red)
@@ -119,6 +119,7 @@ function add_edificio(index, dir, a, b){
 					}
 				}
 			}
+			//Buscar cables cerca
 			var temp_list = get_size(a, b, dir, 7)
 			size = ds_list_size(temp_list)
 			for(var c = 0; c < size; c++){
@@ -137,6 +138,20 @@ function add_edificio(index, dir, a, b){
 				}
 			}
 			ds_list_destroy(temp_list)
+			//Buscar otras torres de alta tensión
+			if var_edificio_nombre = "Torre de Alta Tensión"{
+				size = array_length(torres_de_tension)
+				for(var c = 0; c < size; c++){
+					var temp_edificio = torres_de_tension[c]
+					if sqr(temp_edificio.x - edificio.x) + sqr(temp_edificio.y - edificio.y) < 1000000{//1000^2
+						ds_list_add(edificio.energia_link, temp_edificio)
+						ds_list_add(temp_edificio.energia_link, edificio)
+						if not ds_list_in(temp_list_redes, temp_edificio.red)
+							ds_list_add(temp_list_redes, temp_edificio.red)
+					}
+				}
+				array_push(torres_de_tension, edificio)
+			}
 			//Añadir red
 			var temp_red = {
 				edificios: ds_list_create(),
@@ -285,7 +300,7 @@ function add_edificio(index, dir, a, b){
 			edificio.mode = true
 		else if in(var_edificio_nombre = "Rifle", "Mortero")
 			edificio.select = 0
-		else if var_edificio_nombre = "Planta Química"
+		else if in(var_edificio_nombre, "Planta Química", "Fábrica de Drones")
 			edificio.select = -1
 		ds_list_destroy(temp_list_size)
 		ds_list_destroy(temp_list_arround)
