@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"set_terreno",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"set_terreno",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
