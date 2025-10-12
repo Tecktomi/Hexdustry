@@ -32,7 +32,7 @@ function dibujar_edificios(){
 						//Dibujo de bateria
 						else if in(var_edificio_nombre, "Batería")
 							draw_sprite_off(edificio_sprite[index], floor(10 * edificio.red.bateria / edificio.red.bateria_max), aa, bb,,, dir * 60)
-						//Dibujo bomba
+						//Dibujo bomba tamaño par
 						else if in(var_edificio_nombre, "Bomba Hidráulica", "Turbina", "Generador Geotérmico"){
 							draw_sprite_off(edificio_sprite[index], 0, aa, bb, power(-1, dir))
 							if edificio.flujo.liquido = -1
@@ -42,6 +42,17 @@ function dibujar_edificios(){
 							draw_sprite_off(spr_bomba_rotor, 1, aa + power(-1, dir) * 8, bb + 14,,, image_index)
 							draw_sprite_off(spr_bomba_cupula, 1, aa + power(-1, dir) * 8, bb + 14)
 						}
+						//Dibujo bomba tamaño impar
+						else if in(var_edificio_nombre, "Perforadora de Petróleo"){
+							draw_sprite_off(edificio_sprite[index], 0, aa, bb)
+							if edificio.flujo.liquido = -1
+								draw_sprite_off(spr_bomba_color, 0, aa, bb)
+							else
+								draw_sprite_off(spr_bomba_color, 0, aa, bb,,,, liquido_color[edificio.flujo.liquido], edificio.flujo.almacen / edificio.flujo.almacen_max)
+							draw_sprite_off(spr_bomba_rotor, 1, aa, bb,,, image_index)
+							draw_sprite_off(spr_bomba_cupula, 1, aa, bb)
+						}
+						//Dibujo líquido sin bomba
 						else if in(var_edificio_nombre, "Tubería", "Depósito", "Líquido Infinito", "Bomba de Evaporación"){
 							draw_sprite_off(edificio_sprite[index], 0, aa, bb)
 							if edificio.flujo.liquido = -1
@@ -49,20 +60,20 @@ function dibujar_edificios(){
 							else
 								draw_sprite_off(edificio_sprite_2[index], 0, aa, bb,,,, liquido_color[edificio.flujo.liquido], edificio.flujo.almacen / edificio.flujo.almacen_max)
 						}
-						//Torres 1x1
+						//Torres tamaño impar
 						else if in(var_edificio_nombre, "Torre", "Mortero"){
 							draw_sprite_off(edificio_sprite[index], 0, aa, bb)
 							draw_sprite_off(edificio_sprite_2[index], 0, aa, bb,,, edificio.select)
 						}
-						//Torres 2x2
-						else if in(var_edificio_nombre, "Rifle"){
+						//Torres tamaño par
+						else if in(var_edificio_nombre, "Rifle", "Lanzallamas"){
 							draw_sprite_off(edificio_sprite[index], 0, aa, bb, power(-1, dir))
 							draw_sprite_off(edificio_sprite_2[index], 0, aa + 9 * power(-1, dir), bb + 14,,, edificio.select)
 						}
-						//Dibujo 2x2
+						//Dibujo predeterminado tamaño par
 						else if edificio_size[index] mod 2 = 0
 							draw_sprite_off(edificio_sprite[index], image_index / 4, aa, bb, power(-1, dir))
-						//Dibujo predeterminado
+						//Dibujo predeterminado tamaño impar
 						else
 							draw_sprite_off(edificio_sprite[index], image_index / 4, aa, bb,,, dir * 60)
 						if var_edificio_nombre = "Recurso Infinito" and edificio.select >= 0

@@ -163,7 +163,7 @@ if menu = 2{
 				if get_keyboard_string = 2{
 					var max_width = 0
 					for(var b = 0; b < rss_max; b++)
-						max_width = max(max_width, string_width(recurso_nombre[b]))
+						max_width = max(max_width, string_width(recurso_nombre[rss_sort[b]]))
 					draw_set_color(c_ltgray)
 					draw_rectangle(a, 170, a + max_width, 170 + 20 * rss_max, false)
 					draw_set_color(c_black)
@@ -176,8 +176,8 @@ if menu = 2{
 						deslizante--
 					pos = 170
 					for(var b = deslizante; b < min(deslizante + 25, rss_max); b++){
-						if draw_boton(a, pos, recurso_nombre[b],,,, false){
-							mision_target_id[i] = b
+						if draw_boton(a, pos, recurso_nombre[rss_sort[b]],,,, false){
+							mision_target_id[i] = rss_sort[b]
 							get_keyboard_string = -1
 						}
 						pos += 20
@@ -283,21 +283,21 @@ if menu = 2{
 			ypos = draw_text_pos(room_width / 2 + 20, ypos, "Carga inicial")
 			var xpos = room_width / 2 + 40, width = 0, ypos_2 = ypos
 			for(var a = 0; a < rss_max; a++){
-				ypos_2 = draw_text_pos(xpos, ypos_2, recurso_nombre[a])
-				width = max(width, string_width(recurso_nombre[a]))
+				ypos_2 = draw_text_pos(xpos, ypos_2, recurso_nombre[rss_sort[a]])
+				width = max(width, string_width(recurso_nombre[rss_sort[a]]))
 			}
 			xpos = room_width / 2 + 60 + width
 			ypos_2 = ypos
 			for(var a = 0; a < rss_max; a++){
-				if draw_boton(xpos, ypos_2, carga_inicial[a],,,, false){
-					keyboard_string = string(carga_inicial[a])
+				if draw_boton(xpos, ypos_2, carga_inicial[rss_sort[a]],,,, false){
+					keyboard_string = string(carga_inicial[rss_sort[a]])
 					get_keyboard_string = 10 + a
 				}
-				ypos_2 += string_height(carga_inicial[a])
+				ypos_2 += string_height(carga_inicial[rss_sort[a]])
 				if get_keyboard_string = 10 + a{
-					draw_line(xpos, ypos_2 - 4, xpos + string_width(carga_inicial[a]), ypos_2 - 4)
-					carga_inicial[a] = keyboard_string = "" ? 0 : real(string_digits(keyboard_string))
-					nucleo.carga[a] = carga_inicial[a]
+					draw_line(xpos, ypos_2 - 4, xpos + string_width(carga_inicial[rss_sort[a]]), ypos_2 - 4)
+					carga_inicial[rss_sort[a]] = keyboard_string = "" ? 0 : real(string_digits(keyboard_string))
+					nucleo.carga[rss_sort[a]] = carga_inicial[rss_sort[a]]
 					exit_keyboard_input()
 				}
 			}
@@ -586,6 +586,7 @@ if menu = 2{
 						draw_line_off(edificio.x, edificio.y, edificio_2.x, edificio_2.y)
 					}
 				}
+				//Humo
 				if (image_index mod 5) = 0 and ((in(var_edificio_nombre, "Generador", "Turbina", "Planta Nuclear") and edificio.fuel > 0) or (var_edificio_nombre = "Generador Geotérmico" and edificio.flujo.liquido = 0)){
 					var dir = direccion_viento + random_range(-pi / 4, pi / 4)
 					array_push(humos, new_humo(edificio.x, edificio.y, cos(dir), sin(dir), irandom_range(70, 100), 191, 0.3))
@@ -635,8 +636,8 @@ if menu = 2{
 			if rss_max > 25
 				deslizante = floor(draw_deslizante_vertical(110, pos, pos + 25 * 20, deslizante, 0, rss_max - 25, 0))
 			for(var a = deslizante; a < min(deslizante + 25, rss_max); a++){
-				if draw_boton(120, pos, recurso_nombre[a],,,, false){
-					enciclopedia_item = a
+				if draw_boton(120, pos, recurso_nombre[rss_sort[a]],,,, false){
+					enciclopedia_item = rss_sort[a]
 					enciclopedia = 3
 				}
 				pos += 20
@@ -652,8 +653,8 @@ if menu = 2{
 			if edificio_max > 25
 				deslizante = floor(draw_deslizante_vertical(110, pos, pos + 25 * 20, deslizante, 0, edificio_max - 25, 0))
 			for(var a = deslizante; a < min(deslizante + 25, edificio_max); a++){
-				if draw_boton(120, pos, edificio_nombre[a],,,, false){
-					enciclopedia_item = a
+				if draw_boton(120, pos, edificio_nombre[edi_sort[a]],,,, false){
+					enciclopedia_item = edi_sort[a]
 					enciclopedia = 4
 				}
 				pos += 20
@@ -669,33 +670,65 @@ if menu = 2{
 			draw_set_font(ft_titulo)
 			pos = draw_text_pos(120, pos, recurso_nombre[enciclopedia_item])
 			draw_set_font(ft_letra)
-			if recurso_combustion[enciclopedia_item]{
+			pos = draw_text_pos(120, pos, recurso_descripcion[enciclopedia_item])
+			if recurso_combustion[enciclopedia_item]
 				pos = draw_text_pos(120, pos, $"Combustible por {recurso_combustion_time[enciclopedia_item] / 60}[s]")
-			}
 			pos = draw_text_pos(120, pos, "Usado en:")
-			for(var a = 0; a < edificio_max; a++)
-				for(var b = 0; b < array_length(edificio_input_id[a]); b++)
-					if edificio_input_id[a, b] = enciclopedia_item{
-						if draw_boton(140, pos, edificio_nombre[a],,,, false){
-							enciclopedia_item = a
+			for(var a = 0; a < edificio_max; a++){
+				var aa = edi_sort[a]
+				for(var b = 0; b < array_length(edificio_input_id[aa]); b++)
+					if edificio_input_id[aa, b] = enciclopedia_item{
+						if draw_boton(140, pos, edificio_nombre[aa],,,, false){
+							enciclopedia_item = aa
 							enciclopedia = 4
 							exit
 						}
 						pos += 20
 						break
 					}
+			}
 			pos = draw_text_pos(120, pos, "Producido en:")
-			for(var a = 0; a < edificio_max; a++)
-				for(var b = 0; b < array_length(edificio_output_id[a]); b++)
-					if edificio_output_id[a, b] = enciclopedia_item{
-						if draw_boton(140, pos, edificio_nombre[a],,,, false){
-							enciclopedia_item = a
+			for(var a = 0; a < edificio_max; a++){
+				var aa = edi_sort[a]
+				for(var b = 0; b < array_length(edificio_output_id[aa]); b++)
+					if edificio_output_id[aa, b] = enciclopedia_item{
+						if draw_boton(140, pos, edificio_nombre[aa],,,, false){
+							enciclopedia_item = aa
 							enciclopedia = 4
 							exit
 						}
 						pos += 20
 						break
 					}
+			}
+			var flag = false
+			for(var a = 0; a < edificio_max; a++){
+				for(var b = 0; b < array_length(edificio_precio_id[a]); b++)
+					if edificio_precio_id[a, b] = enciclopedia_item{
+						flag = true
+						break
+					}
+				if flag
+					break
+			}
+			if flag{
+				pos = draw_text_pos(120, pos, "Necesario para construir:")
+				for(var a = 0; a < edificio_max; a++){
+					var aa = edi_sort[a]
+					for(var b = 0; b < array_length(edificio_precio_id[aa]); b++)
+						if edificio_precio_id[aa, b] = enciclopedia_item{
+							if draw_boton(140, pos, edificio_nombre[aa],,,, false){
+								enciclopedia_item = aa
+								enciclopedia = 4
+								exit
+							}
+							pos += 20
+							break
+						}
+				}
+			}
+			else
+				draw_text_pos(120, pos, "No es útil en el núcleo")
 			draw_sprite_ext(recurso_sprite[enciclopedia_item], 0, room_width - 200, 200, 4, 4, 0, c_white, 1)
 		}
 		//Detalles Edificio
@@ -757,6 +790,11 @@ if menu = 2{
 					pos = draw_text_pos(120, pos, $"Produce {abs(edificio_flujo_consumo[enciclopedia_item])} líquido/s")
 			}
 			draw_sprite_ext(edificio_sprite[enciclopedia_item], 0, room_width - 200, 200, 2, 2, 0, c_white, 1)
+			if edificio_armas[enciclopedia_item] and edificio_nombre[enciclopedia_item] != "Láser"
+				if edificio_size[enciclopedia_item] mod 2 = 0
+					draw_sprite_ext(edificio_sprite_2[enciclopedia_item], 0, room_width - 184, 224, 2, 2, 0, c_white, 1)
+				else
+					draw_sprite_ext(edificio_sprite_2[enciclopedia_item], 0, room_width - 200, 200, 2, 2, 0, c_white, 1)
 		}
 		//Menú Unidades
 		else if enciclopedia = 5{
@@ -1136,20 +1174,14 @@ if temp_hexagono != noone and flag{
 			draw_circle_off(edificio.x, edificio.y, 90, true)
 		}
 		//Mostrar rango de torres
-		if in(var_edificio_nombre, "Torre", "Láser", "Rifle", "Mortero"){
-			if var_edificio_nombre = "Torre"
-				var alc = 180
-			else if var_edificio_nombre = "Láser"
-				alc = 220
-			else if var_edificio_nombre = "Rifle"
-				alc = 300
-			else if var_edificio_nombre = "Mortero"
-				alc = 600
+		if edificio_armas[index]{
+			var alc = edificio_alcance[index]
 			draw_set_color(c_white)
 			draw_circle_off(edificio.x, edificio.y, alc, true)
 			if not ds_list_empty(enemigos) and edificio.target != null_enemigo{
+				var color
 				if distance(edificio.x, edificio.y, edificio.target.a, edificio.target.b) > alc
-					var color = c_white
+					color = c_white
 				else
 					color = c_red
 				draw_sprite_off(spr_target, 0, edificio.target.a, edificio.target.b,,,, color)
@@ -1772,17 +1804,8 @@ if build_index > 0{
 						}
 					}
 					//Vista previa Alcance de torres
-					if in(var_edificio_nombre, "Torre", "Láser", "Rifle", "Mortero"){
-						if var_edificio_nombre = "Torre"
-							var alc = 180
-						else if var_edificio_nombre = "Láser"
-							alc = 220
-						else if var_edificio_nombre = "Rifle"
-							alc = 300
-						else if var_edificio_nombre = "Mortero"
-							alc = 600
-						draw_circle_off(temp_complex_2.a, temp_complex_2.b, alc, true)
-					}
+					if edificio_armas[build_index]
+						draw_circle_off(temp_complex_2.a, temp_complex_2.b, edificio_alcance[build_index], true)
 				}
 				if mouse_check_button_pressed(mb_left) and flag and comprable and (not edificio_bool[# mx, my] or ((in(var_edificio_nombre, "Túnel", "Túnel salida")) and edificio_camino[edificio_id[# mx, my].index]))
 					f1(build_index, build_dir, mx, my)
@@ -2247,6 +2270,23 @@ else{
 				change_flujo(0, edificio)
 			}
 		}
+		//Acción de la perforadora de petróleo
+		else if in(var_edificio_nombre, "Perforadora de Petróleo"){
+			if in(flujo.liquido, -1, 2) and red_power > 0{
+				change_energia(edificio_energia_consumo[index], edificio)
+				change_flujo(red_power * edificio_flujo_consumo[index], edificio)
+				flujo.generacion -= edificio.proceso
+				if flujo.almacen = flujo.almacen_max and flujo.generacion >= flujo.consumo{
+					change_energia(0, edificio)
+					change_flujo(0, edificio)
+				}
+				flujo.liquido = 2
+			}
+			else{
+				change_energia(0, edificio)
+				change_flujo(0, edificio)
+			}
+		}
 		//Acción de triturador
 		else if in(var_edificio_nombre, "Triturador"){
 			if edificio.carga[6] > 0 or edificio.carga[9] > 0 or edificio.carga[10] > 0 or edificio.carga[11] > 0{
@@ -2309,35 +2349,31 @@ else{
 				edificio.waiting = not mover(edificio.a, edificio.b)
 		}
 		//Acción de torres
-		else if in(var_edificio_nombre, "Torre", "Rifle", "Mortero"){
-			edificio.proceso++
-			if var_edificio_nombre = "Torre"
-				var alc = 180
-			else if var_edificio_nombre = "Rifle"
-				alc = 300
-			else if var_edificio_nombre = "Mortero"
-				alc = 600
-			if edificio.target != null_enemigo
-				edificio.select = radtodeg(-arctan2(edificio.x - edificio.target.a, edificio.target.b - edificio.y)) - 90
-			if in(var_edificio_nombre, "Torre", "Rifle") and edificio.flujo_consumo = 0 and flujo.liquido = 0 and edificio.target = null_enemigo and distance(edificio.x, edificio.y, edificio.target.a, edificio.target.b) < alc{
-				change_flujo(edificio_flujo_consumo[index], edificio)
-				edificio.proceso += 0.5
-			}
-			if edificio.proceso >= edificio_proceso[index]{
-				edificio.proceso -= edificio_proceso[index]
+		else if in(var_edificio_nombre, "Torre", "Rifle", "Mortero", "Lanzallamas"){
+			var dmg_factor = 1, alc = edificio_alcance[index]
+			if edificio.proceso < 0{
+				edificio.proceso++
 				change_flujo(0, edificio)
+			}
+			if edificio.target != null_enemigo{
+				edificio.select = radtodeg(-arctan2(edificio.x - edificio.target.a, edificio.target.b - edificio.y)) - 90
+				if ((in(var_edificio_nombre, "Torre", "Rifle") and flujo.liquido = 0) or (var_edificio_nombre = "Lanzallamas" and flujo.liquido = 2)) and distance(edificio.x, edificio.y, edificio.target.a, edificio.target.b) < alc{
+					change_flujo(edificio_flujo_consumo[index], edificio)
+					if in(var_edificio_nombre, "Torre", "Rifle")
+						edificio.proceso += 0.5
+					else
+						dmg_factor = 1.4
+				}
+			}
+			//Disparo
+			if ++edificio.proceso >= edificio_proceso[index]{
+				edificio.proceso = -1
 				edificio.target = null_enemigo
 				if not ds_list_empty(enemigos)
 					turret_target(edificio)
 				var enemigo = edificio.target
 				if enemigo != null_enemigo{
-					var tiro = -1
-					if var_edificio_nombre = "Torre"
-						var arma = 0
-					else if var_edificio_nombre = "Rifle"
-						arma = 1
-					else if var_edificio_nombre = "Mortero"
-						arma = 2
+					var tiro = -1, arma = edificio_arma[index]
 					for(var b = 0; b < array_length(armas[arma]); b++){
 						var tiro_struct = armas[arma, b]
 						if edificio.carga[tiro_struct.recurso] >= tiro_struct.cantidad{
@@ -2347,20 +2383,29 @@ else{
 					}
 					var dis = distance(edificio.x, edificio.y, enemigo.a, enemigo.b)
 					if tiro >= 0 and dis < alc{
-						var tiro_struct = armas[arma, tiro]
+						var tiro_struct = armas[arma, tiro], aa = edificio.x, bb = edificio.y
 						edificio.carga[tiro_struct.recurso] -= tiro_struct.cantidad
 						edificio.carga_total -= tiro_struct.cantidad
+						if edificio_size[index] mod 2 = 0{
+							bb = edificio.y + 14
+							aa = edificio.x + power(-1, edificio.dir) * 8
+						}
 						var municion = {
-							x : edificio.x,
-							y : edificio.y,
-							hmove : 25 * (enemigo.a - edificio.x) / dis,
-							vmove : 25 * (enemigo.b - edificio.y) / dis,
-							tipo : real(var_edificio_nombre = "Mortero"),
+							x : aa,
+							y : bb,
+							hmove : 25 * (enemigo.a - aa) / dis,
+							vmove : 25 * (enemigo.b - bb) / dis,
+							tipo : var_edificio_nombre = "Mortero" ? 1 : (var_edificio_nombre = "Lanzallamas" ? 2 : 0),
 							dis : dis / 25,
-							dmg : tiro_struct.dmg,
+							dmg : tiro_struct.dmg * dmg_factor,
 							target : enemigo
 						}
 						array_push(municiones, municion)
+						if var_edificio_nombre = "Lanzallamas"{
+							var angle = arctan2(bb - enemigo.b, aa - enemigo.a)
+							var b = angle + random_range(-pi / 16, pi / 16)
+							array_push(fuegos, add_fuego(aa - 20 * cos(angle), bb - 20 * sin(angle), 12 * -cos(b), 12 * -sin(b), 40))
+						}
 						mover_in(edificio)
 					}
 				}
@@ -2800,7 +2845,8 @@ else{
 	draw_set_color(c_black)
 	for(var a = 0; a < array_length(municiones); a++){
 		var municion = municiones[a]
-		draw_circle_off(municion.x, municion.y, 2, false)
+		if municion.tipo != 2
+			draw_circle_off(municion.x, municion.y, 2, false)
 		municion.x += municion.hmove
 		municion.y += municion.vmove
 		if --municion.dis <= 0{
@@ -2849,6 +2895,24 @@ else{
 			array_pop(humos)
 		}
 	}
+	//Fuego
+	for(var a = 0; a < array_length(fuegos); a++){
+		var fuego = fuegos[a]
+		draw_set_alpha(0.4)
+		draw_set_color(make_color_hsv(fuego.intensidad, 127, 255))
+		draw_circle_off(fuego.x, fuego.y, 10, false)
+		fuego.x += fuego.hmove
+		fuego.y += fuego.vmove
+		fuego.hmove *= 0.9
+		fuego.vmove *= 0.9
+		if random(1) < 0.05
+			array_push(humos, new_humo(fuego.x, fuego.y, random_range(-1, 1), random_range(-1, 1), 15, random(255), 0.3))
+		if --fuego.intensidad <= 0{
+			fuegos[a--] = fuegos[array_length(fuegos) - 1]
+			array_pop(fuegos)
+			array_push(humos, new_humo(fuego.x, fuego.y, random_range(-1, 1), random_range(-1, 1), 15, random(255), 0.3))
+		}
+	}
 	var temp_text_right = ""
 	if oleadas{
 		if image_index >= (60 * oleadas_tiempo_primera) or keyboard_check_pressed(vk_enter){
@@ -2865,6 +2929,8 @@ else{
 				var temp_complex_list = get_size(spawn_x, spawn_y, 0, e)
 				for(var i = 0; i < min(ds_list_size(temp_complex_list), d); i++){
 					var temp_complex = temp_complex_list[|i], aa = clamp(temp_complex.a, 0, xsize - 1), bb = clamp(temp_complex.b, 0, ysize - 1)
+					if not terreno_caminable[terreno[# aa, bb]]
+						continue
 					var enemigo = add_dron(aa, bb, 0)
 					enemigo.vida += 5 * d
 					var temp_list = ds_grid_get(chunk_enemigos, enemigo.chunk_x, enemigo.chunk_y)
@@ -2947,8 +3013,8 @@ else{
 draw_set_halign(fa_center)
 var temp_text = ""
 for(var a = 0; a < rss_max; a++)
-	if nucleo.carga[a] > 0
-		temp_text += $"{recurso_nombre[a]} {nucleo.carga[a]}\n"
+	if nucleo.carga[rss_sort[a]] > 0
+		temp_text += $"{recurso_nombre[rss_sort[a]]} {nucleo.carga[rss_sort[a]]}\n"
 if temp_text != ""
 	draw_text_background(room_width / 2, 0, temp_text)
 draw_set_halign(fa_left)
