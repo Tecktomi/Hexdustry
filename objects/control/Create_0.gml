@@ -91,6 +91,14 @@ ini_close()
 	minb = 0
 	maxa = 0
 	maxb = 0
+	sonidos = [snd_motor, snd_maquina, snd_horno]
+	sonidos_max = array_length(sonidos)
+	volumen = array_create(sonidos_max, 0)
+	sonido_id = array_create(sonidos_max)
+	for(var a = 0; a < sonidos_max; a++){
+		sonido_id[a] = audio_play_sound(sonidos[a], 1, true)
+		audio_pause_sound(sonido_id[a])
+	}
 #endregion
 null_edificio = {
 	index : -1,
