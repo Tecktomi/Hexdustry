@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "12_10_2025")
+ini_write_string("Global", "version", "13_10_2025")
 ini_close()
 #region Metadatos
 	menu = 0
@@ -42,7 +42,6 @@ ini_close()
 	cheat = false
 	info = false
 	zoom = 1
-	tile_animation = true
 	camx = (xsize * 48 - room_width) / 2
 	camy = (ysize * 14 - room_height) / 2
 	enemigos_spawned = 3
@@ -72,20 +71,26 @@ ini_close()
 	oleadas = true
 	oleadas_tiempo_primera = 240
 	oleadas_tiempo = 45
-	null_efecto = new_efecto()
+	null_efecto = add_efecto()
 	efectos = array_create(0, null_efecto)
-	ver_luz = false
+	grafic_tile_animation = true
+	grafic_luz = false
+	grafic_pared = true
+	grafic_humo = true
 	text_x = 0
 	text_y = 0
 	enciclopedia = 0
 	enciclopedia_item = 0
 	deslizante = 0
-	null_humo = new_humo(0, 0, 0, 0, 0, 0, 0)
+	null_humo = add_humo(0, 0, 0, 0, 0, 0, 0, 0, 0)
 	humos = array_create(0, null_humo)
 	direccion_viento = random(2 * pi)
-	better_walls = true
-	null_fuego = add_fuego(0, 0, 0, 0, 0)
+	null_fuego = add_fuego(0, 0, 0, 0, 0, 0, 0)
 	fuegos = array_create(0, null_fuego)
+	mina = 0
+	minb = 0
+	maxa = 0
+	maxb = 0
 #endregion
 null_edificio = {
 	index : -1,
@@ -463,6 +468,7 @@ lq_max = array_length(liquido_nombre)
 	edificio_flujo_consumo = []
 	edificio_arma = []
 	edificio_alcance = []
+	edificio_alcance_sqr = []
 	edificio_armas = []
 #endregion
 function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = "", vida = 100, proceso = 0, camino = false, comb = false, precio_id = array_create(0, 0), precio_num = array_create(0, 0), carga = 0, receptor = false, in_all = true, in_id = array_create(0, 0), in_num = array_create(0, 0), emisor = false, out_all = true, out_id = array_create(0, 0), energia = 0, agua = 0, agua_consumo = 0, arma = -1, alcance = 0){
@@ -502,6 +508,7 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	array_push(edificio_flujo_consumo, agua_consumo)
 	array_push(edificio_arma, arma)
 	array_push(edificio_alcance, alcance)
+	array_push(edificio_alcance_sqr, sqr(alcance))
 	array_push(edificio_armas, bool(alcance > 0))
 }
 #region Definición
@@ -513,7 +520,7 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	def_edificio("Overflow", 1, spr_overflow,, "14", 60, 10, true,, [0], [4], 1, true,,,, true)
 	def_edificio("Túnel", 1, spr_tunel,, "15", 60, 10,,, [0, 3], [4, 4], 1, true, true,,, true, true)
 	def_edificio("Horno", 2, spr_horno, spr_horno_encendido, "22", 250, 150,, true, [0, 3], [10, 20], 20, true, false, [0, 1, 3, 5, 12], [4, 4, 4, 4, 4], true, false, [2, 4, 7])
-	def_edificio("Taladro Eléctrico", 3, spr_taladro_electrico,, "23", 400, 50,,, [2, 4], [20, 10], 20,,,,, true, false, [0, 1, 3, 5, 6, 9, 10, 11], 50, 10, 3)
+	def_edificio("Taladro Eléctrico", 3, spr_taladro_electrico,, "23", 400, 45,,, [2, 4], [20, 10], 20,,,,, true, false, [0, 1, 3, 5, 6, 9, 10, 11], 50, 10, 3)
 	def_edificio("Triturador", 2, spr_triturador,, "24", 250, 20,,, [2, 4], [10, 25], 25, true, false, [6, 9, 10, 11], [5, 5, 5, 5], true, false, [5], 30)
 	//10
 	def_edificio("Generador", 1, spr_generador, spr_generador_encendido, "32", 100,,, true, [0, 3], [20, 5], 20, true, false, [1, 12], [10, 10], false,,, -30)
@@ -522,14 +529,14 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	def_edificio("Panel Solar", 2, spr_panel_solar,, "34", 150,,,, [0, 2, 7], [10, 10, 5],,,,,,,,, -6)
 	def_edificio("Bomba Hidráulica", 2, spr_bomba,, "43", 200, 1,,, [0, 2, 3], [10, 25, 10],,,,,,,,, 25, 60, -40)
 	def_edificio("Tubería", 1, spr_tuberia, spr_tuberia_color, "41", 30, 1,,, [2], [1],,,,,,,,,, 10)
-	def_edificio("Túnel salida", 1, spr_tunel_salida,, "A", 60, 10,,, [0, 3], [4, 4], 1,,,,, true, true)
+	def_edificio("Túnel salida", 1, spr_tunel_salida,, "", 60, 10,,, [0, 3], [4, 4], 1,,,,, true, true)
 	def_edificio("Energía Infinita", 1, spr_energia_infinita,, "3 ", 100,,,,,,,,,,,,,, -999999)
 	def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, "16", 60, 10, true,, [2, 3], [1, 1], 1, true,,,, true)
 	def_edificio("Torre", 1, spr_torre, spr_torre_2, "51", 300, 30,,, [2, 3], [10, 25], 20, true, false, [0, 3], [10, 10],,,,, 10, 60, 0, 180)
 	//20
 	def_edificio("Láser", 2, spr_laser,, "52", 400, 1,,, [0, 7, 16], [10, 10, 2],,,,,,,,, 100,,,, 220)
 	def_edificio("Muro", 1, spr_hexagono,, "53", 500,,,, [8], [1])
-	def_edificio("Planta Química", 3, spr_planta_quimica,, "25", 200, 30,, true, [0, 2, 3], [20, 20, 20], 30, true, false, [0, 1, 3, 5, 6, 9, 10, 11], [0, 0, 0, 0, 0, 0, 0, 0], true, false, [8, 11, 12, 13, 14, 15], 50, 20)
+	def_edificio("Planta Química", 3, spr_planta_quimica,, "25", 200, 60,, true, [0, 2, 3], [20, 20, 20], 30, true, false, [0, 1, 3, 5, 6, 9, 10, 11], [0, 0, 0, 0, 0, 0, 0, 0], true, false, [8, 11, 12, 13, 14, 15], 50, 20)
 	def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, "54", 400, 45,,, [2, 3, 4], [10, 10, 10], 20, true, false, [2, 4, 17, 19], [10, 10, 10, 10],,,,, 10, 60, 1, 300)
 	def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, "44", 200, 1,,, [2, 4], [20, 10],,,,,,,,,, 300)
 	def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, "4 ", 30, 1,,,,,,,,,,,,,, 10, -999999)

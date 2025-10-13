@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"add_humo",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"add_humo",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

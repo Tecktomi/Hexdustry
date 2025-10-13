@@ -1,9 +1,18 @@
-function turret_target(edificio = control.null_edificio){
+function turret_target(edificio = control.null_edificio, alc_min = 0){
 	with control{
-		var dis = infinity, size = ds_list_size(enemigos)
-		for(var c = 0; c < size; c++){
-			var enemigo = enemigos[|c], d = sqr(edificio.x - enemigo.a) + sqr(edificio.y - enemigo.b)
-			if d < dis{
+		var dis = edificio_alcance_sqr[edificio.index], size = ds_list_size(enemigos)
+		if alc_min = 0{
+			for(var c = 0; c < size; c++){
+				var enemigo = enemigos[|c], d = distance_sqr(edificio.x, edificio.y, enemigo.a, enemigo.b)
+				if d < dis{
+					dis = d
+					edificio.target = enemigo
+				}
+			}
+		}
+		else for(var c = 0; c < size; c++){
+			var enemigo = enemigos[|c], d = distance_sqr(edificio.x, edificio.y, enemigo.a, enemigo.b)
+			if d < dis and d > alc_min{
 				dis = d
 				edificio.target = enemigo
 			}

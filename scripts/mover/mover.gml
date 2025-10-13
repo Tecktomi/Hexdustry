@@ -11,7 +11,7 @@ function mover(aa, bb){
 				//Output selector
 				if in(var_edificio_nombre, "Selector"){
 					//Output selector frontal
-					if (edificio.carga_id = edificio.select xor not edificio.mode){
+					if (edificio.carga_id = edificio.select xor edificio.mode){
 						var temp_complex = next_to(edificio.a, edificio.b, edificio.dir), aaa = temp_complex.a, bbb = temp_complex.b
 						if edificio_bool[# aaa, bbb]{
 							temp_edificio = edificio_id[# aaa, bbb]

@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"new_efecto",
+  "%Name":"add_efecto",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"new_efecto",
+  "name":"add_efecto",
   "parent":{
     "name":"SCRIPTS",
     "path":"folders/SCRIPTS.yy",

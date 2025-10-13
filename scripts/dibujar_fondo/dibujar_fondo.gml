@@ -34,7 +34,7 @@ function dibujar_fondo(editor = 0){
 					var temp_surf = surface_create(room_width, room_height)
 					surface_set_target(temp_surf)
 					var minc = a * chunk_width, mind = b * chunk_height, maxc = min((a + 1) * chunk_width, xsize), maxd = min((b + 1) * chunk_height, ysize)
-					if better_walls{
+					if grafic_pared{
 						for(var c = minc; c < maxc; c++)
 							for(var d = mind; d < maxd; d++){
 								var temp_complex = abtoxy(c, d), aa = temp_complex.a - a * chunk_width * 48, bb = temp_complex.b - b * chunk_height * 14, f = terreno[# c, d], e = ore[# c, d]
