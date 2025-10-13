@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"new_humo",
+  "%Name":"distance_sqr",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"new_humo",
+  "name":"distance_sqr",
   "parent":{
     "name":"SCRIPTS",
     "path":"folders/SCRIPTS.yy",

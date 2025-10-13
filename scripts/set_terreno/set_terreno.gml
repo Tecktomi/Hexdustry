@@ -1,7 +1,7 @@
 function set_terreno(a, b, index){
 	if terreno[# a, b] != index{
 		ds_grid_set(terreno, a, b, real(index))
-		if better_walls and terreno_pared[index]{
+		if grafic_pared and terreno_pared[index]{
 			for(var i = 0; i < 3; i++){
 				var temp_complex = next_to(a, b, i), aa = temp_complex.a, bb = temp_complex.b
 				if aa < 0 or bb < 0 or aa >= xsize

@@ -1,4 +1,4 @@
-function new_efecto(sprite = spr_hexagono, subsprite = 0, x = 0, y = 0, tiempo = 0, frame_speed = 1){
+function add_efecto(sprite = spr_hexagono, subsprite = 0, x = 0, y = 0, tiempo = 0, frame_speed = 1){
 	var efecto = {
 		sprite : sprite,
 		subsprite : subsprite,

@@ -3,6 +3,7 @@ function delete_edificio(aa, bb, enemigo = false){
 		if not edificio_bool[# aa, bb]
 			exit
 		var edificio = edificio_id[# aa, bb], index = edificio.index, var_edificio_nombre = edificio_nombre[index]
+		edificio.vida = 0
 		if index = 0 and menu = 1{
 			if show_question("Has perdido, jugar de nuevo?")
 				game_restart()
@@ -36,7 +37,7 @@ function delete_edificio(aa, bb, enemigo = false){
 			ds_grid_set(edificio_id, a, b, null_edificio)
 			ds_grid_set(edificio_draw, a, b, false)
 		}
-		if ver_luz and edificio.luz{
+		if grafic_luz and edificio.luz{
 			var temp_list = edificio.coordenadas
 			size = ds_list_size(temp_list)
 			for(var b = 0; b < size; b++){

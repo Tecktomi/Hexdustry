@@ -291,7 +291,7 @@ function add_edificio(index, dir, a, b){
 				edificio.flujo.liquido = 3
 				change_flujo(edificio_flujo_consumo[index], edificio)
 			}
-			if ver_luz and edificio.flujo.liquido = 3{
+			if grafic_luz and edificio.flujo.liquido = 3{
 				edificio.luz = true
 				add_luz(a, b, 1)
 			}
