@@ -557,10 +557,10 @@ if menu = 2{
 		dibujar_fondo(2)
 	dibujar_edificios()
 	//Dibujo items y links electricos
-	mina = floor(camx / zoom / 48)
+	mina = max(0, floor(camx / zoom / 48))
 	minb = max(0, floor(camy / zoom / 14) - 1)
-	maxa = ceil((camx + room_width) / zoom / 48)
-	maxb = ceil((camy + room_height) / zoom / 14)
+	maxa = min(xsize - 1, ceil((camx + room_width) / zoom / 48))
+	maxb = min(ysize - 1, ceil((camy + room_height) / zoom / 14))
 	for(var a = mina; a < maxa; a++)
 		for(var b = minb; b < maxb; b++)
 			if edificio_draw[# a, b]{
@@ -847,6 +847,13 @@ if menu = 2{
 		}
 		update_cursor()
 		exit
+	}
+	if random(1) < 0.1{
+		var a = irandom_range(mina, maxa), b = irandom_range(minb, maxb)
+		if terreno_nombre[terreno[# a, b]] = "Lava"{
+			var temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b
+			sound_play(snd_lava, aa, bb, 0.5)
+		}
 	}
 #endregion
 var flag = true, xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / zoom
@@ -1305,6 +1312,8 @@ if puerto_carga_bool{
 	}
 }
 flag = false
+for(var a = 0; a < sonidos_max; a++)
+	volumen[a] = 0
 #region Menú de edificios
 	var just_pressed = false
 	if mouse_check_button_pressed(mb_right) and build_index = 0 and not edificio_bool[# mx, my]{
@@ -1998,6 +2007,9 @@ else{
 					change_flujo(edificio_flujo_consumo[index], edificio)
 					edificio.proceso += 1 + 0.6 * (flujo.liquido = 0 ? flujo_power : 0)
 				}
+				var dis = distance_sqr(edificio.x * zoom - camx, edificio.y * zoom - camy, room_width / 2, room_height / 2)
+				if dis < 490_000//700^2
+					volumen[0] = max(volumen[0], clamp(zoom * 100 / (100 + sqrt(dis)), 0, 1))
 				if edificio.proceso >= edificio_proceso[index]{
 					edificio.proceso = 0
 					var temp_list = ds_list_create(), temp_complex_2 = {a : 0, b : 0}
@@ -2049,6 +2061,7 @@ else{
 		else if var_edificio_nombre = "Taladro de Explosión"{
 			if edificio.carga[13] > 0{
 				if edificio.carga_total < edificio_carga_max[index] and ++edificio.proceso >= edificio_proceso[index]{
+					sound_play(snd_explosion, edificio.x, edificio.y)
 					edificio.carga[13]--
 					edificio.carga_total--
 					var temp_list = get_size(edificio.a, edificio.b, edificio.dir, edificio_size[index] + 2)
@@ -2081,8 +2094,12 @@ else{
 		//Acción horno
 		else if var_edificio_nombre = "Horno"{
 			if (edificio.carga[0] > 1 or edificio.carga[3] > 1 or edificio.carga[5] > 1) and (edificio.carga[1] > 0 or edificio.carga[12] > 0 or edificio.fuel > 0){
-				if edificio.fuel > 0
+				if edificio.fuel > 0{
 					edificio.fuel--
+					var dis = distance_sqr(edificio.x * zoom - camx, edificio.y * zoom - camy, room_width / 2, room_height / 2)
+					if dis < 490_000//700^2
+						volumen[2] = max(volumen[2], clamp(zoom * 100 / (100 + sqrt(dis)), 0, 1))
+				}
 				if edificio.carga[2] < 2 and edificio.carga[4] < 2 and edificio.carga[7] < 2{
 					if edificio.fuel = 0
 						if (edificio.carga[1] > 0 or edificio.carga[12] > 0){
@@ -2140,8 +2157,12 @@ else{
 		}
 		//Acción generador
 		else if in(var_edificio_nombre, "Generador"){
-			if edificio.fuel > 0
+			if edificio.fuel > 0{
 				edificio.fuel--
+				var dis = distance_sqr(edificio.x * zoom - camx, edificio.y * zoom - camy, room_width / 2, room_height / 2)
+				if dis < 490_000//700^2
+					volumen[2] = max(volumen[2], clamp(zoom * 100 / (100 + sqrt(dis)), 0, 1))
+			}
 			if edificio.fuel <= 0{
 				//Encender
 				if edificio.carga[1] > 0 or edificio.carga[12] > 0{
@@ -2178,6 +2199,9 @@ else{
 				edificio.fuel--
 				if flujo.liquido = 0
 					change_energia(edificio_energia_consumo[index] * flujo_power, edificio)
+				var dis = distance_sqr(edificio.x * zoom - camx, edificio.y * zoom - camy, room_width / 2, room_height / 2)
+				if dis < 490_000//700^2
+					volumen[2] = max(volumen[2], clamp(zoom * 100 / (100 + sqrt(dis)), 0, 1))
 			}
 			if edificio.fuel = 0 and flujo.liquido = 0{
 				//Encender
@@ -2322,6 +2346,9 @@ else{
 					edificio.proceso++
 				}
 				edificio.proceso += red_power
+				var dis = distance_sqr(edificio.x * zoom - camx, edificio.y * zoom - camy, room_width / 2, room_height / 2)
+				if dis < 490_000//700^2
+					volumen[1] = max(volumen[1], clamp(zoom * 100 / (100 + sqrt(dis)), 0, 1))
 				//Producir / apagar
 				if edificio.proceso >= edificio_proceso[index]{
 					edificio.proceso = -1
@@ -2404,6 +2431,7 @@ else{
 				}
 				//Disparo
 				if ++edificio.proceso >= edificio_proceso[index]{
+					sound_play(snd_disparo, edificio.x, edificio.y)
 					edificio.proceso = 0
 					var tiro = -1, arma = edificio_arma[index]
 					for(var b = 0; b < array_length(armas[arma]); b++){
@@ -2903,6 +2931,7 @@ else{
 					kill_enemigo(municion.target)
 			}
 			if municion.tipo = 1{
+				sound_play(snd_explosion, municion.x, municion.y)
 				array_push(efectos, add_efecto(spr_explosion, 0, municion.x, municion.y, 24, 1 / 3))
 				for(var b = 0; b < ds_list_size(enemigos); b++){
 					var enemigo = enemigos[|b], dis = distance_sqr(enemigo.a, enemigo.b, municion.x, municion.y)
@@ -3149,3 +3178,10 @@ control_camara()
 if flow > 0
 	draw_path_find()
 update_cursor()
+for(var a = 0; a < sonidos_max; a++){
+	if not audio_is_paused(sonido_id[a]) and volumen[a] = 0
+		audio_pause_sound(sonido_id[a])
+	if audio_is_paused(sonido_id[a]) and volumen[a] > 0
+		audio_resume_sound(sonido_id[a])
+	audio_sound_gain(sonido_id[a], volumen[a], 0)
+}
