@@ -77,6 +77,7 @@ ini_close()
 	grafic_luz = false
 	grafic_pared = true
 	grafic_humo = true
+	grafic_hideui = false
 	text_x = 0
 	text_y = 0
 	enciclopedia = 0
@@ -91,6 +92,7 @@ ini_close()
 	minb = 0
 	maxa = 0
 	maxb = 0
+	sonido = true
 	sonidos = [snd_motor, snd_maquina, snd_horno]
 	sonidos_max = array_length(sonidos)
 	volumen = array_create(sonidos_max, 0)
