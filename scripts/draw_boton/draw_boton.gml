@@ -13,13 +13,16 @@ function draw_boton(x, y, texto, back_color = c_white, text_color = c_black, bot
 		draw_rectangle(x - xx, y - yy, x + width + 8 - xx, y + height + 8 - yy, true)
 		draw_text(x + 4, y + 4, texto)
 	}
-	else
+	else{
 		draw_text(x, y, texto)
+		control.text_x = string_width(texto)
+		control.text_y = string_height(texto)
+	}
 	draw_set_color(color)
 	if mouse_x > x - xx and mouse_y > y - yy and ((box and mouse_x < x + width + 8 - xx and mouse_y < y + height + 8 - yy) or (not box and mouse_x < x + width - xx and mouse_y < y + height - yy)){
 		control.cursor = cr_handpoint
 		if mouse_check_button_pressed(boton){
-			mouse_clear(mb_left)
+			mouse_clear(boton)
 			return true
 		}
 	}
