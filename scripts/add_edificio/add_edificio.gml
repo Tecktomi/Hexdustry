@@ -45,7 +45,9 @@ function add_edificio(index, dir, a, b){
 			vivo : true,
 			emisor : edificio_emisor[index],
 			receptor : edificio_receptor[index],
-			luz : false
+			luz : false,
+			instruccion : array_create(0, array_create(1, 0)),
+			variables : array_create(16, 0)
 		}
 		ds_list_add(edificio.energia_link, null_edificio)
 		ds_list_clear(edificio.energia_link)
@@ -72,6 +74,7 @@ function add_edificio(index, dir, a, b){
 		var size = ds_list_size(temp_list_arround)
 		for(var c = 0; c < size; c++)
 			ds_list_add(edificio.bordes, temp_list_arround[|c])
+		//Edificios targeteables
 		if not edificio_camino[index] and not in(var_edificio_nombre, "Tubería"){
 			edificio_pathfind(edificio)
 			ds_list_add(edificios_targeteables, edificio)

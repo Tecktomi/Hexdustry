@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"draw_text_pos",
+  "%Name":"draw_text_xpos",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"draw_text_pos",
+  "name":"draw_text_xpos",
   "parent":{
     "name":"SCRIPTS",
     "path":"folders/SCRIPTS.yy",

@@ -1,7 +1,6 @@
 function draw_text_background(x, y, text){
-	if grafic_hideui or text = ""{
-		return undefined
-	}
+	if grafic_hideui or text = ""
+		return
 	var color = draw_get_color(), width = string_width(text), height = string_height(text)
 	var xx = draw_get_halign() = fa_left ? 0 : (draw_get_halign() = fa_center ? width / 2 : width)
 	var yy = draw_get_valign() = fa_top ? 0 : (draw_get_valign() = fa_middle ? height / 2 : height)
