@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"desactivar_edificio",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"desactivar_edificio",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

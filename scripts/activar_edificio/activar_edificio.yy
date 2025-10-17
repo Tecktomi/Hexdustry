@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"activar_edificio",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"activar_edificio",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
