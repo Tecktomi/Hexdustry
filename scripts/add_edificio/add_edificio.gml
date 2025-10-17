@@ -13,6 +13,7 @@ function add_edificio(index, dir, a, b){
 			coordenadas : ds_list_create(),
 			bordes : ds_list_create(),
 			inputs : ds_list_create(),
+			input_index : 0,
 			outputs : ds_list_create(),
 			output_index : 0,
 			proceso : 0,
@@ -47,7 +48,9 @@ function add_edificio(index, dir, a, b){
 			receptor : edificio_receptor[index],
 			luz : false,
 			instruccion : array_create(0, array_create(1, 0)),
-			variables : array_create(16, 0)
+			variables : array_create(16, 0),
+			pointer : -1,
+			procesador_link : array_create(0, null_edificio)
 		}
 		ds_list_add(edificio.energia_link, null_edificio)
 		ds_list_clear(edificio.energia_link)
@@ -65,6 +68,9 @@ function add_edificio(index, dir, a, b){
 			edificio.carga_output = array_create(rss_max, 0)
 		}
 		calculate_in_out(edificio)
+		activar_edificio(edificio)
+		if var_edificio_nombre = "Procesador"
+			array_push(edificio.procesador_link, edificio)
 		//Añadir coordenadas
 		var temp_list_size = get_size(a, b, dir, edificio_size[index])
 		var temp_list_arround = get_arround(a, b, dir, edificio_size[index])

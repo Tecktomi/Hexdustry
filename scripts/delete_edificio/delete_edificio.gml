@@ -27,6 +27,9 @@ function delete_edificio(aa, bb, enemigo = false){
 			calculate_in_out_2(edificio.link)
 			edificio.link.link = null_edificio
 		}
+		desactivar_edificio(edificio)
+		for(var i = real(var_edificio_nombre = "Procesador"); i < array_length(edificio.procesador_link); i++)
+			array_remove(edificio.procesador_link[i].procesador_link, edificio)
 		//Cancelar coordenadas
 		var size = ds_list_size(edificio.coordenadas)
 		for(var i = 0; i < size; i++){
