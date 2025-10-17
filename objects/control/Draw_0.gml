@@ -1069,7 +1069,6 @@ if show_menu{
 					pc[1] = clamp(floor(get_input("", pc[1])), 0, 15)
 			}
 			else if pc[0] = 7{
-				//Set VAR_{A} to [carga][VAR_{B}] from LINK_{VAR_{C}}
 				var signs = ["carga"]
 				xpos = draw_text_xpos(xpos, ypos, "Set ")
 				if draw_boton(xpos, ypos, $"VAR_{pc[1]}",,,, false)
@@ -2961,7 +2960,7 @@ if not pausa{
 				//Randomize {A}
 				else if pc[0] = 6
 					edificio.variables[pc[1]] = random(1)
-				//Set VAR_{A} to [carga]{int} from LINK_{VAR_{B}}
+				//Set VAR_{A} to [carga][VAR_{B}] from LINK_{VAR_{C}}
 				else if pc[0] = 7{
 					var b = array_length(edificio.procesador_link)
 					if b = 0
