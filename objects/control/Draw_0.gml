@@ -918,80 +918,48 @@ if pausa{
 var flag = true, xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / zoom
 //Seleccionar recurso
 if show_menu{
-	var edificio = show_menu_build
-	var aa = abtoxy(edificio.a, edificio.b).a * zoom - camx
-	var bb = abtoxy(edificio.a, edificio.b).b * zoom - camy
-	var index = edificio.index, var_edificio_nombre = edificio_nombre[index]
-	draw_set_color(c_gray)
-	draw_triangle(aa - 10 * zoom, bb + 20 * zoom, aa + 10 * zoom, bb + 20 * zoom, aa, bb + 10 * zoom, false)
+	var edificio = show_menu_build, index = edificio.index, var_edificio_nombre = edificio_nombre[index]
 	if var_edificio_nombre = "Procesador"{
-		draw_rectangle(aa - 200 * zoom, bb + 20 * zoom, aa + 200 * zoom, bb + 40 * zoom, false)
-		draw_rectangle(aa - 200 * zoom, bb + 40 * zoom, aa + 200 * zoom, bb + (60 + 20 * array_length(edificio.instruccion)) * zoom, false)
-	}
-	else if in(var_edificio_nombre, "Selector", "Recurso Infinito")
-		draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 28 * ceil(rss_max / 5)) * zoom, false)
-	else if in(var_edificio_nombre, "Líquido Infinito")
-		draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * lq_max) * zoom, false)
-	else if var_edificio_nombre = "Planta Química"
-		draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, false)
-	else if var_edificio_nombre = "Fábrica de Drones"
-		draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * dron_max) * zoom, false)
-	draw_set_color(c_dkgray)
-	draw_triangle(aa - 10 * zoom, bb + 20 * zoom, aa + 10 * zoom, bb + 20 * zoom, aa, bb + 10 * zoom, true)
-	if var_edificio_nombre = "Procesador"
-		draw_rectangle(aa - 200 * zoom, bb + 20 * zoom, aa + 200 * zoom, bb + 40 * zoom, true)
-	else
-		draw_rectangle(aa - 80 * zoom, bb + 20 * zoom, aa + 80 * zoom, bb + 40 * zoom, true)
-	if in(var_edificio_nombre, "Selector", "Overflow")
-		draw_text(aa - 80 * zoom, bb + 20 * zoom, "INVERTIR")
-	if in(var_edificio_nombre, "Selector", "Recurso Infinito"){
-		draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 28 * ceil(rss_max / 5)) * zoom, true)
-		for(var a = 0; a < rss_max; a++)
-			draw_sprite_stretched(recurso_sprite[a], 0, aa + (-80 + 32 * (a mod 5)) * zoom, bb + (40 + 28 * floor(a / 5)) * zoom, 32 * zoom, 28 * zoom)
-	}
-	if in(var_edificio_nombre, "Líquido Infinito"){
-		draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * lq_max) * zoom, true)
-		draw_text(aa - 80 * zoom, bb + 20 * zoom, "Ningún líquido")
-		for(var a = 0; a < lq_max; a++)
-			draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, liquido_nombre[a])
-	}
-	if var_edificio_nombre = "Planta Química"{
-		draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, true)
-		draw_text(aa - 80 * zoom, bb + 20 * zoom, "Receta")
-		for(var a = 0; a < array_length(planta_quimica_receta); a++)
-			draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, planta_quimica_receta[a])
-	}
-	if var_edificio_nombre = "Fábrica de Drones"{
-		draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * dron_max) * zoom, true)
-		draw_text(aa - 80 * zoom, bb + 20 * zoom, "Unidad")
-		for(var a = 0; a < dron_max; a++)
-			draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, dron_nombre[a])
-	}
-	else if var_edificio_nombre = "Procesador"{
+		draw_set_color(c_gray)
+		draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
+		draw_set_color(c_white)
+		draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
 		var b = 0
-		draw_rectangle(aa - 200 * zoom, bb + 40 * zoom, aa + 200 * zoom, bb + (60 + 20 * array_length(edificio.instruccion)) * zoom, true)
-		if draw_boton(aa - 200 * zoom, bb + 20 * zoom, "Vincular",,,, false){
+		draw_set_halign(fa_center)
+		if draw_boton(room_width / 2, 110, "Vincular",,,, false){
 			procesador_select = edificio
 			show_menu = false
 		}
-		for(var a = 0; a < array_length(edificio.instruccion); a++){
-			var pc = edificio.instruccion[a], xpos = aa - 200 * zoom, ypos = bb + (40 + 20 * a) * zoom
-			if draw_boton(xpos, ypos, ">",,, mb_any, false){
-				if mouse_lastbutton = mb_left{
-					pc[0] = ++pc[0] mod array_length(procesador_instrucciones_length)
-					array_resize(edificio.instruccion[a], procesador_instrucciones_length[pc[0]])
-				}
-				else
-					array_delete(edificio.instruccion, a, 1)
+		draw_set_halign(fa_left)
+		var xpos, ypos = 150
+		var size = array_length(edificio.instruccion)
+		if size > 25
+			deslizante = floor(draw_deslizante_vertical(110, ypos, ypos + 25 * 20, deslizante, 0, size - 25, 0))
+		for(var a = deslizante; a < min(deslizante + 25, size); a++){
+			var pc = edificio.instruccion[a]
+			xpos = 150
+			draw_set_halign(fa_right)
+			draw_text_xpos(xpos, ypos, $"{a}|")
+			draw_set_halign(fa_left)
+			if draw_sprite_boton(spr_siguiente, xpos, ypos, 20, 20, "Cambiar"){
+				pc[0] = ++pc[0] mod array_length(procesador_instrucciones_length)
+				array_resize(edificio.instruccion[a], procesador_instrucciones_length[pc[0]])
 			}
-			xpos += text_x
-			if a > 0 and draw_sprite_boton(spr_flecha, xpos, ypos, 16, 16){
+			xpos += 20
+			if draw_sprite_boton(spr_basura, xpos, ypos, 20, 20, "Borrar"){
+				array_delete(edificio.instruccion, a, 1)
+				size--
+			}
+			xpos += 20
+			if a > 0 and draw_sprite_boton(spr_flecha, xpos, ypos, 20, 20, "Subir"){
 				edificio.instruccion[a] = edificio.instruccion[a - 1]
 				edificio.instruccion[a - 1] = pc
 			}
 			xpos += 20
+			//Continue
 			if pc[0] = 0
 				draw_text(xpos, ypos, "Continue")
+			//Set {A} to {int}
 			else if pc[0] = 1{
 				xpos = draw_text_xpos(xpos, ypos, "Set ")
 				if draw_boton(xpos, ypos, $"VAR_{pc[1]}",,,, false)
@@ -1001,6 +969,7 @@ if show_menu{
 				if draw_boton(xpos, ypos, pc[2],,,, false)
 					pc[2] = get_input("", pc[2])
 			}
+			//Set {A} to {B} [+, -, *, /, div, mod, or, and, xor, <<, >>] {C}
 			else if pc[0] = 2{
 				var signs = ["+", "-", "*", "/", "div", "mod", "or", "and", "xor", "<<", ">>"]
 				xpos = draw_text_xpos(xpos, ypos, "Set ")
@@ -1017,6 +986,7 @@ if show_menu{
 				if draw_boton(xpos, ypos, $"VAR_{pc[4]}",,,, false)
 					pc[4] = clamp(floor(get_input("", pc[4])), 0, 15)
 			}
+			//If {A} [yes, no][<, >, =] {B}, jump to {int}
 			else if pc[0] = 3{
 				var signs = ["<", ">", "="]
 				xpos = draw_text_xpos(xpos, ypos, "If ")
@@ -1037,18 +1007,20 @@ if show_menu{
 					pc[5] = clamp(floor(get_input("", pc[5])), 0, array_length(edificio.instruccion) - 1)
 				xpos += text_x
 				if a != pc[5]{
-					draw_set_color(c_red)
-					draw_rectangle(xpos, ypos + 10, xpos + 6 * ++b + 1, ypos + 11, false)
-					draw_rectangle(xpos + 6 * b, ypos + 10, xpos + 6 * b, bb + (40 + 20 * pc[5]) * zoom + 11, false)
-					draw_arrow(xpos + 6 * b, bb + (40 + 20 * pc[5]) * zoom + 10, xpos, bb + (40 + 20 * pc[5]) * zoom + 10, 8)
-					draw_set_color(c_dkgray)
+					draw_set_color(make_color_hsv((49 * b) mod 255, 127, 127))
+					draw_rectangle(xpos, ypos + 8, xpos + 10 + 10 * ++b, ypos + 12, false)
+					draw_rectangle(xpos + 8 + 10 * b, ypos + 12, xpos + 10 + 10 * b, 150 + pc[5] * 20, false)
+					draw_rectangle(xpos, 148 + pc[5] * 20, xpos + 10 + 10 * b, 152 + pc[5] * 20, false)
+					draw_set_color(c_white)
 				}
 			}
+			//Print {A}
 			else if pc[0] = 4{
 				xpos = draw_text_xpos(xpos, ypos, "Print ")
 				if draw_boton(xpos, ypos, $"VAR_{pc[1]}",,,, false)
 					pc[1] = clamp(floor(get_input("", pc[1])), 0, 15)
 			}
+			//Control LINK_{VAR_{A}} to set [Eneable] to {B}
 			else if pc[0] = 5{
 				var signs = ["Eneabled"]
 				xpos = draw_text_xpos(xpos, ypos, "Control ")
@@ -1063,11 +1035,13 @@ if show_menu{
 				if draw_boton(xpos, ypos, $"VAR_{pc[3]}",,,, false)
 					pc[3] = clamp(floor(get_input("", pc[3])), 0, 15)
 			}
+			//Randomize {A}
 			else if pc[0] = 6{
 				xpos = draw_text_xpos(xpos, ypos, "Randomize ")
 				if draw_boton(xpos, ypos, $"VAR_{pc[1]}",,,, false)
 					pc[1] = clamp(floor(get_input("", pc[1])), 0, 15)
 			}
+			//Set VAR_{A} to [carga][VAR_{B}] from LINK_{VAR_{C}}
 			else if pc[0] = 7{
 				var signs = ["carga"]
 				xpos = draw_text_xpos(xpos, ypos, "Set ")
@@ -1086,149 +1060,201 @@ if show_menu{
 				if draw_boton(xpos, ypos, $"LINK_[VAR_{pc[4]}]",,,, false)
 					pc[4] = clamp(floor(get_input("", pc[4])), 0, 15)
 			}
+			ypos += 20
 		}
-		if draw_boton(aa - 200 * zoom, bb + (40 + 20 * array_length(edificio.instruccion)) * zoom, "Añadir",,,, false)
+		if deslizante + 25 < size and mouse_wheel_down()
+			deslizante++
+		if deslizante > 0 and mouse_wheel_up()
+			deslizante--
+		xpos = 150
+		if draw_boton(xpos, ypos, "Añadir",,,, false)
 			array_push(edificio.instruccion, array_create(1, 0))
 	}
-	if mouse_x > aa - 80 * zoom and mouse_y > bb + 20 * zoom and mouse_x < aa + 80 * zoom{
-		if in(var_edificio_nombre, "Selector", "Overflow") and mouse_y < bb + 40 * zoom{
-			if mouse_check_button_pressed(mb_left){
-				mouse_clear(mb_left)
-				show_menu = false
-				edificio.mode = not edificio.mode
-				mover(edificio.a, edificio.b)
-			}
+	else{
+		var aa = abtoxy(edificio.a, edificio.b).a * zoom - camx
+		var bb = abtoxy(edificio.a, edificio.b).b * zoom - camy
+		draw_set_color(c_gray)
+		draw_triangle(aa - 10 * zoom, bb + 20 * zoom, aa + 10 * zoom, bb + 20 * zoom, aa, bb + 10 * zoom, false)
+		if var_edificio_nombre = "Procesador"{
+			draw_rectangle(aa - 200 * zoom, bb + 20 * zoom, aa + 200 * zoom, bb + 40 * zoom, false)
+			draw_rectangle(aa - 200 * zoom, bb + 40 * zoom, aa + 200 * zoom, bb + (60 + 20 * array_length(edificio.instruccion)) * zoom, false)
 		}
-		else if in(var_edificio_nombre, "Selector", "Recurso Infinito") and mouse_y < bb + (40 + 28 * ceil(rss_max / 5)) * zoom{
-			var a = floor((mouse_x - (aa - 80 * zoom)) / (32 * zoom)) + 5 * floor((mouse_y - (bb + 40 * zoom)) / (28 * zoom))
-			if a >= 0 and a < rss_max{
-				draw_text_background(mouse_x + 20, mouse_y, recurso_nombre[a])
-				cursor = cr_handpoint
+		else if in(var_edificio_nombre, "Selector", "Recurso Infinito")
+			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 28 * ceil(rss_max / 5)) * zoom, false)
+		else if in(var_edificio_nombre, "Líquido Infinito")
+			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * lq_max) * zoom, false)
+		else if var_edificio_nombre = "Planta Química"
+			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, false)
+		else if var_edificio_nombre = "Fábrica de Drones"
+			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * dron_max) * zoom, false)
+		draw_set_color(c_dkgray)
+		draw_triangle(aa - 10 * zoom, bb + 20 * zoom, aa + 10 * zoom, bb + 20 * zoom, aa, bb + 10 * zoom, true)
+		draw_rectangle(aa - 80 * zoom, bb + 20 * zoom, aa + 80 * zoom, bb + 40 * zoom, true)
+		if in(var_edificio_nombre, "Selector", "Overflow")
+			draw_text(aa - 80 * zoom, bb + 20 * zoom, "INVERTIR")
+		if in(var_edificio_nombre, "Selector", "Recurso Infinito"){
+			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 28 * ceil(rss_max / 5)) * zoom, true)
+			for(var a = 0; a < rss_max; a++)
+				draw_sprite_stretched(recurso_sprite[a], 0, aa + (-80 + 32 * (a mod 5)) * zoom, bb + (40 + 28 * floor(a / 5)) * zoom, 32 * zoom, 28 * zoom)
+		}
+		if in(var_edificio_nombre, "Líquido Infinito"){
+			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * lq_max) * zoom, true)
+			draw_text(aa - 80 * zoom, bb + 20 * zoom, "Ningún líquido")
+			for(var a = 0; a < lq_max; a++)
+				draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, liquido_nombre[a])
+		}
+		if var_edificio_nombre = "Planta Química"{
+			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, true)
+			draw_text(aa - 80 * zoom, bb + 20 * zoom, "Receta")
+			for(var a = 0; a < array_length(planta_quimica_receta); a++)
+				draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, planta_quimica_receta[a])
+		}
+		if var_edificio_nombre = "Fábrica de Drones"{
+			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * dron_max) * zoom, true)
+			draw_text(aa - 80 * zoom, bb + 20 * zoom, "Unidad")
+			for(var a = 0; a < dron_max; a++)
+				draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, dron_nombre[a])
+		}
+		if mouse_x > aa - 80 * zoom and mouse_y > bb + 20 * zoom and mouse_x < aa + 80 * zoom{
+			if in(var_edificio_nombre, "Selector", "Overflow") and mouse_y < bb + 40 * zoom{
 				if mouse_check_button_pressed(mb_left){
 					mouse_clear(mb_left)
 					show_menu = false
-					edificio.select = a
+					edificio.mode = not edificio.mode
 					mover(edificio.a, edificio.b)
 				}
 			}
-		}
-		else if in(var_edificio_nombre, "Líquido Infinito") and mouse_y < bb + (40 + 20 * lq_max) * zoom{
-			if mouse_check_button_pressed(mb_left){
-				mouse_clear(mb_left)
-				show_menu = false
-				var a = floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))
-				if edificio.select >= 0 and a = -1{
-					change_flujo(0, edificio)
-					edificio.flujo.almacen = 0
+			else if in(var_edificio_nombre, "Selector", "Recurso Infinito") and mouse_y < bb + (40 + 28 * ceil(rss_max / 5)) * zoom{
+				var a = floor((mouse_x - (aa - 80 * zoom)) / (32 * zoom)) + 5 * floor((mouse_y - (bb + 40 * zoom)) / (28 * zoom))
+				if a >= 0 and a < rss_max{
+					draw_text_background(mouse_x + 20, mouse_y, recurso_nombre[a])
+					cursor = cr_handpoint
+					if mouse_check_button_pressed(mb_left){
+						mouse_clear(mb_left)
+						show_menu = false
+						edificio.select = a
+						mover(edificio.a, edificio.b)
+					}
 				}
-				edificio.select = a
-				if edificio.select >= 0 and edificio.flujo.liquido = -1
-					change_flujo(edificio_flujo_consumo[index], edificio)
-				edificio.flujo.liquido = a
-				if grafic_luz and a = 3 and not edificio.luz{
-					for(var b = 0; b < ds_list_size(edificio.flujo.edificios); b++){
-						var temp_edificio = edificio.flujo.edificios[|b]
-						if not temp_edificio.luz{
-							temp_edificio.luz = true
-							add_luz(temp_edificio.a, temp_edificio.b, 1)
+			}
+			else if in(var_edificio_nombre, "Líquido Infinito") and mouse_y < bb + (40 + 20 * lq_max) * zoom{
+				if mouse_check_button_pressed(mb_left){
+					mouse_clear(mb_left)
+					show_menu = false
+					var a = floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))
+					if edificio.select >= 0 and a = -1{
+						change_flujo(0, edificio)
+						edificio.flujo.almacen = 0
+					}
+					edificio.select = a
+					if edificio.select >= 0 and edificio.flujo.liquido = -1
+						change_flujo(edificio_flujo_consumo[index], edificio)
+					edificio.flujo.liquido = a
+					if grafic_luz and a = 3 and not edificio.luz{
+						for(var b = 0; b < ds_list_size(edificio.flujo.edificios); b++){
+							var temp_edificio = edificio.flujo.edificios[|b]
+							if not temp_edificio.luz{
+								temp_edificio.luz = true
+								add_luz(temp_edificio.a, temp_edificio.b, 1)
+							}
 						}
 					}
 				}
 			}
-		}
-		else if in(var_edificio_nombre, "Planta Química") and mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom{
-			var a = floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))
-			draw_text_background(mouse_x + 20, mouse_y, planta_quimica_descripcion[a])
-			cursor = cr_handpoint
-			if mouse_check_button_pressed(mb_left){
-				mouse_clear(mb_left)
-				show_menu = false
-				change_flujo(0, edificio)
-				if edificio.flujo.almacen = 0 and edificio.flujo.generacion = 0
-					edificio.flujo.liquido = -1
-				for(var i = 0; i < rss_max; i++){
-					edificio.carga[i] = 0
-					edificio.carga_max[i] = 0
-					edificio.carga_output[i] = false
+			else if in(var_edificio_nombre, "Planta Química") and mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom{
+				var a = floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))
+				draw_text_background(mouse_x + 20, mouse_y, planta_quimica_descripcion[a])
+				cursor = cr_handpoint
+				if mouse_check_button_pressed(mb_left){
+					mouse_clear(mb_left)
+					show_menu = false
+					change_flujo(0, edificio)
+					if edificio.flujo.almacen = 0 and edificio.flujo.generacion = 0
+						edificio.flujo.liquido = -1
+					for(var i = 0; i < rss_max; i++){
+						edificio.carga[i] = 0
+						edificio.carga_max[i] = 0
+						edificio.carga_output[i] = false
+					}
+					edificio.carga_total = 0
+					edificio.select = a
+					edificio.fuel = 0
+					if a = 0{
+						edificio.carga_max[5] = 5
+						edificio.carga_max[11] = 5
+						edificio.receptor = true
+						edificio.emisor = false
+						edificio.flujo_consumo_max = -2
+					}
+					else if a = 1{
+						edificio.carga_max[5] = 5
+						edificio.carga_max[6] = 5
+						edificio.carga_max[9] = 5
+						edificio.carga_max[10] = 5
+						edificio.carga_max[11] = 5
+						edificio.carga_output[8] = true
+						edificio.receptor = true
+						edificio.emisor = true
+					}
+					else if a = 2{
+						edificio.carga_max[1] = 5
+						edificio.carga_max[11] = 5
+						edificio.carga_output[13] = true
+						edificio.receptor = true
+						edificio.emisor = true
+					}
+					else if a = 3{
+						edificio.carga_output[12] = true
+						edificio.receptor = false
+						edificio.emisor = true
+						edificio.flujo_consumo_max = 4
+					}
+					else if a = 4{
+						edificio.carga_output[11] = true
+						edificio.receptor = false
+						edificio.emisor = true
+						edificio.flujo_consumo_max = 6
+					}
+					else if a = 5{
+						edificio.carga_max[0] = 5
+						edificio.carga_max[3] = 5
+						edificio.carga_output[14] = true
+						edificio.receptor = true
+						edificio.emisor = true
+						edificio.flujo_consumo_max = 4
+					}
+					else if a = 6{
+						edificio.carga_output[15] = true
+						edificio.receptor = false
+						edificio.emisor = true
+						edificio.flujo_consumo_max = 8
+					}
+					calculate_in_out_2(edificio)
+					mover_in(edificio)
 				}
-				edificio.carga_total = 0
-				edificio.select = a
-				edificio.fuel = 0
-				if a = 0{
-					edificio.carga_max[5] = 5
-					edificio.carga_max[11] = 5
-					edificio.receptor = true
-					edificio.emisor = false
-					edificio.flujo_consumo_max = -2
+			}
+			else if in(var_edificio_nombre, "Fábrica de Drones") and mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * dron_max) * zoom{
+				var a = floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))
+				draw_text_background(mouse_x + 20, mouse_y, dron_descripcion[a] + (a = 0 ? "\nNo disponible de momento" : ""))
+				cursor = cr_handpoint
+				if mouse_check_button_pressed(mb_left) and a > 0{
+					mouse_clear(mb_left)
+					show_menu = false
+					edificio.carga = array_create(rss_max, 0)
+					edificio.carga_max = array_create(rss_max, 0)
+					edificio.carga_total = 0
+					edificio.select = a
+					edificio.fuel = 0
+					for(var b = 0; b < array_length(dron_precio_id[a]); b++)
+						edificio.carga_max[dron_precio_id[a, b]] = 2 * dron_precio_num[a, b]
+					calculate_in_out_2(edificio)
+					mover_in(edificio)
 				}
-				else if a = 1{
-					edificio.carga_max[5] = 5
-					edificio.carga_max[6] = 5
-					edificio.carga_max[9] = 5
-					edificio.carga_max[10] = 5
-					edificio.carga_max[11] = 5
-					edificio.carga_output[8] = true
-					edificio.receptor = true
-					edificio.emisor = true
-				}
-				else if a = 2{
-					edificio.carga_max[1] = 5
-					edificio.carga_max[11] = 5
-					edificio.carga_output[13] = true
-					edificio.receptor = true
-					edificio.emisor = true
-				}
-				else if a = 3{
-					edificio.carga_output[12] = true
-					edificio.receptor = false
-					edificio.emisor = true
-					edificio.flujo_consumo_max = 4
-				}
-				else if a = 4{
-					edificio.carga_output[11] = true
-					edificio.receptor = false
-					edificio.emisor = true
-					edificio.flujo_consumo_max = 6
-				}
-				else if a = 5{
-					edificio.carga_max[0] = 5
-					edificio.carga_max[3] = 5
-					edificio.carga_output[14] = true
-					edificio.receptor = true
-					edificio.emisor = true
-					edificio.flujo_consumo_max = 4
-				}
-				else if a = 6{
-					edificio.carga_output[15] = true
-					edificio.receptor = false
-					edificio.emisor = true
-					edificio.flujo_consumo_max = 8
-				}
-				calculate_in_out_2(edificio)
-				mover_in(edificio)
 			}
 		}
-		else if in(var_edificio_nombre, "Fábrica de Drones") and mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * dron_max) * zoom{
-			var a = floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))
-			draw_text_background(mouse_x + 20, mouse_y, dron_descripcion[a] + (a = 0 ? "\nNo disponible de momento" : ""))
-			cursor = cr_handpoint
-			if mouse_check_button_pressed(mb_left) and a > 0{
-				mouse_clear(mb_left)
-				show_menu = false
-				edificio.carga = array_create(rss_max, 0)
-				edificio.carga_max = array_create(rss_max, 0)
-				edificio.carga_total = 0
-				edificio.select = a
-				edificio.fuel = 0
-				for(var b = 0; b < array_length(dron_precio_id[a]); b++)
-					edificio.carga_max[dron_precio_id[a, b]] = 2 * dron_precio_num[a, b]
-				calculate_in_out_2(edificio)
-				mover_in(edificio)
-			}
-		}
+		else if mouse_check_button_pressed(mb_left)
+			show_menu = false
 	}
-	else if mouse_check_button_pressed(mb_left)
-		show_menu = false
 	if mouse_check_button_pressed(mb_right){
 		mouse_clear(mb_right)
 		show_menu = false
@@ -1248,7 +1274,7 @@ if temp_hexagono != noone{
 }
 var edificio = edificio_id[# mx, my], temp_coordenada = edificio.coordenadas
 //Mostrar detalles de edificios al pasar el mouse_por encima
-if not pausa and temp_hexagono != noone and flag{
+if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio_nombre[show_menu_build.index] = "Procesador"){
 	//Mostrar terreno
 	temp_text = $"{mx}, {my}\n"
 	temp_text += $"{terreno_nombre[terreno[# mx, my]]}\n"
