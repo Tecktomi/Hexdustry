@@ -48,9 +48,10 @@ function add_edificio(index, dir, a, b){
 			receptor : edificio_receptor[index],
 			luz : false,
 			instruccion : array_create(0, array_create(1, 0)),
-			variables : array_create(16, 0),
+			variables : [],
 			pointer : -1,
-			procesador_link : array_create(0, null_edificio)
+			procesador_link : array_create(0, null_edificio),
+			procesador_string : ""
 		}
 		ds_list_add(edificio.energia_link, null_edificio)
 		ds_list_clear(edificio.energia_link)
@@ -69,8 +70,12 @@ function add_edificio(index, dir, a, b){
 		}
 		calculate_in_out(edificio)
 		activar_edificio(edificio)
-		if var_edificio_nombre = "Procesador"
+		if var_edificio_nombre = "Procesador"{
 			array_push(edificio.procesador_link, edificio)
+			edificio.variables = array_create(16)
+		}
+		else if var_edificio_nombre = "Memoria"
+			edificio.variables = array_create(128)
 		//Añadir coordenadas
 		var temp_list_size = get_size(a, b, dir, edificio_size[index])
 		var temp_list_arround = get_arround(a, b, dir, edificio_size[index])
@@ -201,9 +206,8 @@ function add_edificio(index, dir, a, b){
 				temp_red.generacion += edificio.energy_output
 			if in(var_edificio_nombre, "Batería")
 				temp_red.bateria_max += 2500
-			if var_edificio_nombre = "Panel Solar"{
+			else if in(var_edificio_nombre, "Panel Solar", "Procesador")
 				change_energia(edificio_energia_consumo[index], edificio)
-			}
 			ds_list_add(temp_red.edificios, edificio)
 		}
 		//Detectar cañerías cercanas

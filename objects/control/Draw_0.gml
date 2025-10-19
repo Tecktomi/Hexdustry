@@ -920,13 +920,13 @@ var flag = true, xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / z
 if show_menu{
 	var edificio = show_menu_build, index = edificio.index, var_edificio_nombre = edificio_nombre[index]
 	if var_edificio_nombre = "Procesador"{
-		draw_set_color(c_gray)
+		draw_set_color(make_color_rgb(189, 140, 191))
 		draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
 		draw_set_color(c_white)
 		draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
 		var b = 0
 		draw_set_halign(fa_center)
-		if draw_boton(room_width / 2, 110, "Vincular",,,, false){
+		if draw_boton(room_width / 2, 110, "Vincular edificios",,,, false){
 			procesador_select = edificio
 			show_menu = false
 		}
@@ -936,16 +936,11 @@ if show_menu{
 		if size > 25
 			deslizante = floor(draw_deslizante_vertical(110, ypos, ypos + 25 * 20, deslizante, 0, size - 25, 0))
 		for(var a = deslizante; a < min(deslizante + 25, size); a++){
-			var pc = edificio.instruccion[a]
+			var pc = edificio.instruccion[a], pc0 = pc[0]
 			xpos = 150
 			draw_set_halign(fa_right)
-			draw_text_xpos(xpos, ypos, $"{a}|")
+			draw_text_xpos(xpos, ypos, (edificio.select = a ? ">" : "") + $"{a}|")
 			draw_set_halign(fa_left)
-			if draw_sprite_boton(spr_siguiente, xpos, ypos, 20, 20, "Cambiar"){
-				pc[0] = ++pc[0] mod array_length(procesador_instrucciones_length)
-				array_resize(edificio.instruccion[a], procesador_instrucciones_length[pc[0]])
-			}
-			xpos += 20
 			if draw_sprite_boton(spr_basura, xpos, ypos, 20, 20, "Borrar"){
 				array_delete(edificio.instruccion, a, 1)
 				size--
@@ -957,20 +952,31 @@ if show_menu{
 			}
 			xpos += 20
 			//Continue
-			if pc[0] = 0
+			if pc0 = 0
 				draw_text(xpos, ypos, "Continue")
 			//Set {A} to {int}
-			else if pc[0] = 1{
+			else if pc0 = 1{
 				xpos = draw_text_xpos(xpos, ypos, "Set ")
 				if draw_boton(xpos, ypos, $"VAR_{pc[1]}",,,, false)
 					pc[1] = clamp(floor(get_input("", pc[1])), 0, 15)
 				xpos += text_x
 				xpos = draw_text_xpos(xpos, ypos, " to ")
-				if draw_boton(xpos, ypos, pc[2],,,, false)
-					pc[2] = get_input("", pc[2])
+				if draw_boton(xpos, ypos, pc[2],,,, false){
+					var c = get_string("", string(pc[2]))
+					if string_digits(c) = c
+						pc[2] = real(c)
+					else
+						pc[2] = string(c)
+				}
+			}
+			//Randomize {A}
+			else if pc0 = 2{
+				xpos = draw_text_xpos(xpos, ypos, "Randomize ")
+				if draw_boton(xpos, ypos, $"VAR_{pc[1]}",,,, false)
+					pc[1] = clamp(floor(get_input("", pc[1])), 0, 15)
 			}
 			//Set {A} to {B} [+, -, *, /, div, mod, or, and, xor, <<, >>] {C}
-			else if pc[0] = 2{
+			else if pc0 = 3{
 				var signs = ["+", "-", "*", "/", "div", "mod", "or", "and", "xor", "<<", ">>"]
 				xpos = draw_text_xpos(xpos, ypos, "Set ")
 				if draw_boton(xpos, ypos, $"VAR_{pc[1]}",,,, false)
@@ -981,23 +987,23 @@ if show_menu{
 					pc[2] = clamp(floor(get_input("", pc[2])), 0, 15)
 				xpos += text_x
 				if draw_boton(xpos, ypos, $" {signs[pc[3]]} ",,,, false)
-					pc[3] = clamp(floor(get_input(string(signs), pc[3])), 0, array_length(signs) - 1)
+					pc[3] = (pc[3] + 1) mod array_length(signs)
 				xpos += text_x
 				if draw_boton(xpos, ypos, $"VAR_{pc[4]}",,,, false)
 					pc[4] = clamp(floor(get_input("", pc[4])), 0, 15)
 			}
 			//If {A} [yes, no][<, >, =] {B}, jump to {int}
-			else if pc[0] = 3{
+			else if pc0 = 4{
 				var signs = ["<", ">", "="]
 				xpos = draw_text_xpos(xpos, ypos, "If ")
 				if draw_boton(xpos, ypos, $"VAR_{pc[1]}",,,, false)
 					pc[1] = clamp(floor(get_input("", pc[1])), 0, 15)
 				xpos += text_x
 				if draw_boton(xpos, ypos, pc[2] ? " is" : " is not",,,, false)
-					pc[2] = real(show_question("is / is not"))
+					pc[2] = 1 - pc[2]
 				xpos += text_x
 				if draw_boton(xpos, ypos, $" {signs[pc[3]]} ",,,, false)
-					pc[3] = clamp(floor(get_input(string(signs), pc[3])), 0, 2)
+					pc[3] = (pc[3] + 1) mod 3
 				xpos += text_x
 				if draw_boton(xpos, ypos, $"VAR_{pc[4]}",,,, false)
 					pc[4] = clamp(floor(get_input("", pc[4])), 0, 15)
@@ -1014,14 +1020,8 @@ if show_menu{
 					draw_set_color(c_white)
 				}
 			}
-			//Print {A}
-			else if pc[0] = 4{
-				xpos = draw_text_xpos(xpos, ypos, "Print ")
-				if draw_boton(xpos, ypos, $"VAR_{pc[1]}",,,, false)
-					pc[1] = clamp(floor(get_input("", pc[1])), 0, 15)
-			}
 			//Control LINK_{VAR_{A}} to set [Eneable] to {B}
-			else if pc[0] = 5{
+			else if pc0 = 5{
 				var signs = ["Eneabled"]
 				xpos = draw_text_xpos(xpos, ypos, "Control ")
 				if draw_boton(xpos, ypos, $"LINK_[VAR_{pc[1]}]",,,, false)
@@ -1029,36 +1029,72 @@ if show_menu{
 				xpos += text_x
 				xpos = draw_text_xpos(xpos, ypos, " to set ")
 				if draw_boton(xpos, ypos, signs[pc[2]],,,, false)
-					pc[2] = clamp(floor(get_input(string(signs), pc[2])), 0, array_length(signs) - 1)
+					pc[2] = (pc[2] + 1) mod array_length(signs)
 				xpos += text_x
 				xpos = draw_text_xpos(xpos, ypos, " to ")
 				if draw_boton(xpos, ypos, $"VAR_{pc[3]}",,,, false)
 					pc[3] = clamp(floor(get_input("", pc[3])), 0, 15)
 			}
-			//Randomize {A}
-			else if pc[0] = 6{
-				xpos = draw_text_xpos(xpos, ypos, "Randomize ")
-				if draw_boton(xpos, ypos, $"VAR_{pc[1]}",,,, false)
-					pc[1] = clamp(floor(get_input("", pc[1])), 0, 15)
-			}
-			//Set VAR_{A} to [carga][VAR_{B}] from LINK_{VAR_{C}}
-			else if pc[0] = 7{
-				var signs = ["carga"]
+			//Set VAR_{A} to [eneabled, carga][VAR_{B}] from LINK_{VAR_{C}}
+			else if pc0 = 6{
+				var signs = ["eneabled", "carga", "líquido tipo", "líquido almacen", "líquido capacidad", "líquido produccion", "líquido consumo", "energía almacenada", "energía capacidad", "energía producida", "energía consumida"]
+				var signs_subindex = [false, true, false, false, false, false, false, false, false, false, false]
 				xpos = draw_text_xpos(xpos, ypos, "Set ")
 				if draw_boton(xpos, ypos, $"VAR_{pc[1]}",,,, false)
 					pc[1] = clamp(floor(get_input("", pc[1])), 0, 15)
 				xpos += text_x
 				xpos = draw_text_xpos(xpos, ypos, " to ")
 				if draw_boton(xpos, ypos, signs[pc[2]],,,, false)
-					pc[2] = clamp(floor(get_input(string(signs), pc[2])), 0, array_length(signs) - 1)
+					pc[2] = (pc[2] + 1) mod array_length(signs)
 				xpos += text_x
-				xpos = draw_text_xpos(xpos, ypos, "[")
-				if draw_boton(xpos, ypos, $"VAR_{pc[3]}",,,, false)
-					pc[3] = clamp(floor(get_input("", pc[3])), 0, 15)
-				xpos += text_x
-				xpos = draw_text_xpos(xpos, ypos, "] from ")
+				if signs_subindex[pc[2]]{
+					xpos = draw_text_xpos(xpos, ypos, "[")
+					if draw_boton(xpos, ypos, $"VAR_{pc[3]}",,,, false)
+						pc[3] = clamp(floor(get_input("", pc[3])), 0, 15)
+					xpos += text_x
+					xpos = draw_text_xpos(xpos, ypos, "]")
+				}
+				xpos = draw_text_xpos(xpos, ypos, " from ")
 				if draw_boton(xpos, ypos, $"LINK_[VAR_{pc[4]}]",,,, false)
 					pc[4] = clamp(floor(get_input("", pc[4])), 0, 15)
+			}
+			//Write VAR_{A} to LINK_{VAR_{B]]
+			else if pc0 = 7{
+				xpos = draw_text_xpos(xpos, ypos, "Write ")
+				if draw_boton(xpos, ypos, $"VAR_{pc[1]}",,,, false)
+					pc[1] = clamp(floor(get_input("", pc[1])), 0, 15)
+				xpos += text_x
+				xpos = draw_text_xpos(xpos, ypos, " to ")
+				if draw_boton(xpos, ypos, $"LINK_[VAR_{pc[2]}]",,,, false)
+					pc[2] = clamp(floor(get_input("", pc[2])), 0, 15)
+			}
+			//Set VAR_{A} to value of cell VAR_{B} of LINK_{VAR_{C}}
+			else if pc0 = 8{
+				xpos = draw_text_xpos(xpos, ypos, "Set ")
+				if draw_boton(xpos, ypos, $"VAR_{pc[1]}",,,, false)
+					pc[1] = clamp(floor(get_input("", pc[1])), 0, 15)
+				xpos += text_x
+				xpos = draw_text_xpos(xpos, ypos, " to value of cell ")
+				if draw_boton(xpos, ypos, $"VAR_{pc[2]}",,,, false)
+					pc[2] = clamp(floor(get_input("", pc[2])), 0, 15)
+				xpos += text_x
+				xpos = draw_text_xpos(xpos, ypos, " of ")
+				if draw_boton(xpos, ypos, $"LINK_[VAR_{pc[3]}]",,,, false)
+					pc[3] = clamp(floor(get_input("", pc[3])), 0, 15)
+			}
+			//Write VAR_{A} into value of cell VAR_{B} of LINK_{VAR_{c}}
+			else if pc0 = 9{
+				xpos = draw_text_xpos(xpos, ypos, "Write ")
+				if draw_boton(xpos, ypos, $"VAR_{pc[1]}",,,, false)
+					pc[1] = clamp(floor(get_input("", pc[1])), 0, 15)
+				xpos += text_x
+				xpos = draw_text_xpos(xpos, ypos, " into value of cell ")
+				if draw_boton(xpos, ypos, $"VAR_{pc[2]}",,,, false)
+					pc[2] = clamp(floor(get_input("", pc[2])), 0, 15)
+				xpos += text_x
+				xpos = draw_text_xpos(xpos, ypos, " of ")
+				if draw_boton(xpos, ypos, $"LINK_[VAR_{pc[3]}]",,,, false)
+					pc[3] = clamp(floor(get_input("", pc[3])), 0, 15)
 			}
 			ypos += 20
 		}
@@ -1067,8 +1103,66 @@ if show_menu{
 		if deslizante > 0 and mouse_wheel_up()
 			deslizante--
 		xpos = 150
-		if draw_boton(xpos, ypos, "Añadir",,,, false)
-			array_push(edificio.instruccion, array_create(1, 0))
+		if draw_boton(xpos, ypos, "Añadir",,,, false){
+			procesador_add = true
+			input_layer = 1
+		}
+		if procesador_add{
+			var width = 0
+			for(var a = 0; a < array_length(procesador_instrucciones_length); a++)
+				width = max(width, string_width(procesador_instrucciones_nombre[a] + $"({a})"))
+			draw_set_color(c_gray)
+			draw_rectangle((room_width - width) / 2, 200, (room_width + width) / 2, 200 + 20 * array_length(procesador_instrucciones_length), false)
+			draw_set_color(c_white)
+			draw_rectangle((room_width - width) / 2, 200, (room_width + width) / 2, 200 + 20 * array_length(procesador_instrucciones_length), true)
+			draw_set_halign(fa_center)
+			for(var a = 0; a < array_length(procesador_instrucciones_length); a++)
+				if draw_boton(room_width / 2, 200 + 20 * a, procesador_instrucciones_nombre[a] + $"({a})",,,, false, 1) or keyboard_check_pressed(ord(string(a))){
+					var new_instruccion = array_create(procesador_instrucciones_length[a], 0)
+					new_instruccion[0] = a
+					array_push(edificio.instruccion, new_instruccion)
+					procesador_add = false
+					input_layer = 0
+					break
+				}
+			draw_set_halign(fa_left)
+			if mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape){
+				keyboard_clear(vk_escape)
+				mouse_clear(mb_right)
+				procesador_add = false
+				input_layer = 0
+			}
+		}
+		draw_set_halign(fa_right)
+		for(var a = 0; a < 16; a++)
+			if draw_boton(room_width - 120, 150 + 20 * a, $"VAR_{a}: {edificio.variables[a]}",,,, false){
+				var val = get_string("", edificio.variables[a])
+				if string_digits(val) = val
+					edificio.variables[a] = real(val)
+				else
+					edificio.variables[a] = string(val)
+			}
+		if draw_boton(room_width - 120, 500, "NEXT STEP",,,, false)
+			edificio.proceso = 1
+		draw_set_halign(fa_left)
+	}
+	else if var_edificio_nombre = "Memoria"{
+		draw_set_color(make_color_rgb(189, 140, 191))
+		draw_rectangle((room_width - 840) / 2, 100, (room_width + 840) / 2, 480, false)
+		draw_set_color(c_white)
+		draw_rectangle((room_width - 840) / 2, 100, (room_width + 840) / 2, 480, true)
+		draw_text(room_width / 2, 110, "Memoria")
+		for(var a = 0; a < 128; a++){
+			var xpos = (a mod 8) * 100 + (room_width - 800) / 2, ypos = (a div 8) * 20 + 140
+			if is_real(edificio.variables[a])
+				draw_set_color(make_color_rgb(127, 127, 255))
+			else
+				draw_set_color(make_color_rgb(255, 91, 91))
+			draw_rectangle(xpos, ypos, xpos + 100, ypos + 20, false)
+			draw_set_color(c_white)
+			draw_rectangle(xpos, ypos, xpos + 100, ypos + 20, true)
+			draw_text(xpos, ypos, edificio.variables[a])
+		}
 	}
 	else{
 		var aa = abtoxy(edificio.a, edificio.b).a * zoom - camx
@@ -1255,9 +1349,11 @@ if show_menu{
 		else if mouse_check_button_pressed(mb_left)
 			show_menu = false
 	}
-	if mouse_check_button_pressed(mb_right){
+	if mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape){
+		keyboard_clear(vk_escape)
 		mouse_clear(mb_right)
 		show_menu = false
+		input_layer = 0
 	}
 }
 //Terreno bajo el mouse
@@ -1304,7 +1400,7 @@ if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio
 				}
 				procesador_select = null_edificio
 			}
-			else if in(var_edificio_nombre, "Selector", "Overflow", "Líquido Infinito", "Recurso Infinito", "Planta Química", "Fábrica de Drones", "Procesador"){
+			else if in(var_edificio_nombre, "Selector", "Overflow", "Líquido Infinito", "Recurso Infinito", "Planta Química", "Fábrica de Drones", "Procesador", "Memoria"){
 				mouse_clear(mb_left)
 				show_menu = true
 				show_menu_build = edificio
@@ -1474,6 +1570,8 @@ if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio
 			else if ds_list_size(drones_aliados) = 8
 				temp_text += "Límite de Drones alcanzado (8/8)\n"
 		}
+		if var_edificio_nombre = "Mensaje"
+			temp_text += $"{edificio.procesador_string}\n"
 		//Mostrar inputs
 		if info and edificio.receptor{
 			if edificio_input_all[index]
@@ -2919,58 +3017,62 @@ if not pausa{
 				edificio.proceso += red_power
 			if edificio.proceso >= 1{
 				edificio.proceso--
-				edificio.select = ++edificio.select mod max(1, array_length(edificio.instruccion))
-				var pc = edificio.instruccion[edificio.select]
-				//Continue
-				if pc[0] = 0
+				if array_length(edificio.instruccion) = 0
 					continue
-				//Set {A} to {int}
-				else if pc[0] = 1
+				edificio.select = ++edificio.select mod max(1, array_length(edificio.instruccion))
+				var pc = edificio.instruccion[edificio.select], pc0 = pc[0]
+				//Continue
+				if pc0 = 0
+					continue
+				//Set {A} to {val}
+				else if pc0 = 1
 					edificio.variables[pc[1]] = pc[2]
+				//Randomize {A}
+				else if pc0 = 2
+					edificio.variables[pc[1]] = random(1)
 				//Set {A} to {B} [+, -, *, /, div, mod, or, and, xor, <<, >>] {C}
-				else if pc[0] = 2{
-					if pc[3] = 0
-						edificio.variables[pc[1]] = edificio.variables[pc[2]] + edificio.variables[pc[4]]
-					else if pc[3] = 1
-						edificio.variables[pc[1]] = edificio.variables[pc[2]] - edificio.variables[pc[4]]
-					else if pc[3] = 2
-						edificio.variables[pc[1]] = edificio.variables[pc[2]] * edificio.variables[pc[4]]
-					else if pc[3] = 3
-						edificio.variables[pc[1]] = edificio.variables[pc[2]] / edificio.variables[pc[4]]
-					else if pc[3] = 4
-						edificio.variables[pc[1]] = edificio.variables[pc[2]] div edificio.variables[pc[4]]
-					else if pc[3] = 5
-						edificio.variables[pc[1]] = edificio.variables[pc[2]] % edificio.variables[pc[4]]
+				else if pc0 = 3{
+					var val = undefined, val2 = edificio.variables[pc[2]], val3 = edificio.variables[pc[4]], type2 = typeof(val2), type3 = typeof(val3)
+					if pc[3] = 0 and not(type2 = "string" and type3 != "string")
+						val = val2 + val3
+					else if pc[3] = 1 and not(type2 = "string" or type3 = "string")
+						val = val2 - val3
+					else if pc[3] = 2 and not (type2 = "string")
+						val = val2 * val3
+					else if pc[3] = 3 and not (type2 = "string" or type3 = "string")
+						val = val2 / val3
+					else if pc[3] = 4 and not (type2 = "string" or type3 = "string")
+						val = val2 div val3
+					else if pc[3] = 5 and not (type2 = "string" or type3 = "string")
+						val = val2 % val3
 					else if pc[3] = 6
-						edificio.variables[pc[1]] = edificio.variables[pc[2]] | edificio.variables[pc[4]]
+						val = val2 | val3
 					else if pc[3] = 7
-						edificio.variables[pc[1]] = edificio.variables[pc[2]] & edificio.variables[pc[4]]
+						val = val2 & val3
 					else if pc[3] = 8
-						edificio.variables[pc[1]] = edificio.variables[pc[2]] ^ edificio.variables[pc[4]]
+						val = val2 ^ val3
 					else if pc[3] = 9
-						edificio.variables[pc[1]] = edificio.variables[pc[2]] << edificio.variables[pc[4]]
+						val = val2 << val3
 					else if pc[3] = 10
-						edificio.variables[pc[1]] = edificio.variables[pc[2]] >> edificio.variables[pc[4]]
+						val = val2 >> val3
+					edificio.variables[pc[1]] = val
 				}
 				//If {A} [yes, no][<, >, =] {B}, jump to {int}
-				else if pc[0] = 3{
-					if pc[3] = 0 and (pc[2] xor edificio.variables[pc[1]] < edificio.variables[pc[4]])
-						edificio.select = pc[5]
-					if pc[3] = 1 and (pc[2] xor edificio.variables[pc[1]] > edificio.variables[pc[4]])
-						edificio.select = pc[5]
-					if pc[3] = 2 and (pc[2] xor edificio.variables[pc[1]] = edificio.variables[pc[4]])
-						edificio.select = pc[5]
+				else if pc0 = 4{
+					if pc[3] = 0 and (not pc[2] xor (edificio.variables[pc[1]] < edificio.variables[pc[4]]))
+						edificio.select = real(pc[5] - 1)
+					if pc[3] = 1 and (not pc[2] xor (edificio.variables[pc[1]] > edificio.variables[pc[4]]))
+						edificio.select = real(pc[5] - 1)
+					if pc[3] = 2 and (not pc[2] xor (edificio.variables[pc[1]] = edificio.variables[pc[4]]))
+						edificio.select = real(pc[5] - 1)
 				}
-				//Print {A}
-				else if pc[0] = 4
-					show_debug_message(edificio.variables[pc[1]])
 				//Control LINK_{VAR_{A}} to set [Eneable] to {B}
-				else if pc[0] = 5{
+				else if pc0 = 5{
 					var b = array_length(edificio.procesador_link)
 					if b = 0
 						continue
 					var temp_edificio = edificio.procesador_link[min(edificio.variables[pc[1]], b - 1)]
-					if pc[2] = 0{
+					if pc[2] = 0 and not typeof(edificio.variables[pc[3]]) = "string"{
 						if bool(edificio.variables[pc[3]]){
 							activar_edificio(temp_edificio)
 							size_edificios++
@@ -2983,17 +3085,78 @@ if not pausa{
 						}
 					}
 				}
-				//Randomize {A}
-				else if pc[0] = 6
-					edificio.variables[pc[1]] = random(1)
-				//Set VAR_{A} to [carga][VAR_{B}] from LINK_{VAR_{C}}
-				else if pc[0] = 7{
+				//Set VAR_{A} to [eneabled, carga][VAR_{B}] from LINK_{VAR_{C}}
+				else if pc0 = 6{
 					var b = array_length(edificio.procesador_link)
-					if b = 0
+					if b = 0 or not is_real(pc[4])
 						continue
-					var temp_edificio = edificio.procesador_link[min(edificio.variables[pc[4]], b - 1)]
-					if pc[2] = 0
-						edificio.variables[pc[1]] = temp_edificio.carga[clamp(edificio.variables[pc[3]], 0, rss_max)]
+					var temp_edificio = edificio.procesador_link[min(edificio.variables[pc[4]], b - 1)], val = -1
+					b = 0
+					if pc[2] = b++
+						val = real(temp_edificio.pointer >= 0)
+					else if pc[2] = b++
+						val = temp_edificio.carga[clamp(edificio.variables[pc[3]], 0, rss_max)]
+					else if pc[2] = b++{
+						if edificio_flujo[temp_edificio.index]
+							val = temp_edificio.flujo.liquido
+					}
+					else if pc[2] = b++{
+						if edificio_flujo[temp_edificio.index]
+							val = temp_edificio.flujo.almacen
+					}
+					else if pc[2] = b++{
+						if edificio_flujo[temp_edificio.index]
+							val = temp_edificio.flujo.almacen_max
+					}
+					else if pc[2] = b++{
+						if edificio_flujo[temp_edificio.index]
+							val = temp_edificio.flujo.generacion
+					}
+					else if pc[2] = b++{
+						if edificio_flujo[temp_edificio.index]
+							val = temp_edificio.flujo.consumo
+					}
+					else if pc[2] = b++{
+						if edificio_energia[temp_edificio.index]
+							val = temp_edificio.red.bateria
+					}
+					else if pc[2] = b++{
+						if edificio_energia[temp_edificio.index]
+							val = temp_edificio.red.bateria_max
+					}
+					else if pc[2] = b++{
+						if edificio_energia[temp_edificio.index]
+							val = temp_edificio.red.generacion
+					}
+					else if pc[2] = b++{
+						if edificio_energia[temp_edificio.index]
+							val = temp_edificio.red.consumo
+					}
+					edificio.variables[pc[1]] = val
+				}
+				//Write VAR_{A} to LINK_{VAR_{B}}
+				else if pc0 = 7{
+					var b = array_length(edificio.procesador_link)
+					if b = 0 or not is_real(pc[2])
+						continue
+					var temp_edificio = edificio.procesador_link[min(edificio.variables[pc[2]], b - 1)], val = -1
+					temp_edificio.procesador_string = string(pc[1])
+				}
+				//Set VAR_{A} to value of cell VAR_{B} of LINK_{VAR_{C}}
+				else if pc0 = 8{
+					var b = array_length(edificio.procesador_link)
+					if b = 0 or not is_real(pc[3]) or not is_real(pc[2])
+						continue
+					var temp_edificio = edificio.procesador_link[min(edificio.variables[pc[3]], b - 1)]
+					edificio.variables[pc[1]] = temp_edificio.variables[clamp(edificio.variables[pc[2]], 0, 127)]
+				}
+				//Write VAR_{A} into value of cell VAR_{B} of LINK_{VAR_{c}}
+				else if pc0 = 9{
+					var b = array_length(edificio.procesador_link)
+					if b = 0 or not is_real(pc[3]) or not is_real(pc[2])
+						continue
+					var temp_edificio = edificio.procesador_link[min(edificio.variables[pc[3]], b - 1)]
+					temp_edificio.variables[clamp(edificio.variables[pc[2]], 0, 127)] = edificio.variables[pc[1]]
 				}
 			}
 		}

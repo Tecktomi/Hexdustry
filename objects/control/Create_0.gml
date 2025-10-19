@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "16_10_2025")
+ini_write_string("Global", "version", "19_10_2025")
 ini_close()
 #region Metadatos
 	menu = 0
@@ -101,7 +101,20 @@ ini_close()
 		sonido_id[a] = audio_play_sound(sonidos[a], 1, true)
 		audio_pause_sound(sonido_id[a])
 	}
-	procesador_instrucciones_length = [1, 3, 5, 6, 2, 4, 2, 5]
+	procesador_instrucciones_length = [1, 3, 2, 5, 6, 4, 5, 3, 4, 4]
+	procesador_instrucciones_nombre = [
+		"Continuar",
+		"Asignar variable",
+		"Asignar variable aleatoria",
+		"Operaciones",
+		"Saltar a línea",
+		"Controlar edificio",
+		"Leer información de edificio",
+		"Escribir texto a Mensaje",
+		"Leer datos de Memoria",
+		"Escribir datos a Memoria"]
+	procesador_add = false
+	input_layer = 0
 #endregion
 null_edificio = {
 	index : -1,
@@ -148,9 +161,10 @@ null_edificio = {
 	receptor : false,
 	luz : false,
 	instruccion : array_create(0, array_create(1, 0)),
-	variables : array_create(16, 0),
+	variables : array_create(16),
 	pointer : -1,
 	procesador_link : undefined,
+	procesador_string : ""
 }
 null_edificio.link = null_edificio
 ds_list_add(null_edificio.coordenadas, {a : 0, b : 0})
@@ -457,7 +471,9 @@ lq_max = array_length(liquido_nombre)
 	"Conecta redes eléctricas a través de largas\ndistancias",
 	"Produce petróleo a alto coste en cualquier lugar",
 	"Utiliza recursos combustibles para quemar\na los enemigos.\nPuede ser potenciado con Petróleo",
-	"Procesa instrucciones lógicas"]
+	"Procesa instrucciones lógicas",
+	"Permite escribir mensajes",
+	"Permite almacenar hasta 128 datos"]
 #endregion
 #region Arreglos
 	edificio_sprite = []
@@ -579,11 +595,12 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	def_edificio("Perforadora de Petróleo", 3, spr_perforadora,, "20", 200, 1,, [2, 4, 8], [10, 15, 10]); def_edificio_2(120, 10, -2)
 	//40
 	def_edificio("Lanzallamas", 2, spr_lanzallamas, spr_lanzallamas_2, "56", 400, 1,, [2, 3, 15], [25, 15, 10], 20, true, false, [1, 12], [10, 10]); def_edificio_2(, 10, 4, 3, 130)
-	def_edificio("Procesador", 2, spr_procesador,, "39", 80, 1,, [0, 15, 16], [20, 40, 20]); def_edificio_2(40)
+	def_edificio("Procesador", 2, spr_procesador,, "61", 80, 1,, [0, 15, 16], [20, 40, 20]); def_edificio_2(5)
+	def_edificio("Mensaje", 1, spr_mensaje,, "62", 50,,, [0, 16], [10, 3]); def_edificio_2(,,,,, true)
+	def_edificio("Memoria", 1, spr_memoria,, "63", 50,,, [0, 16], [10, 3]); def_edificio_2(,,,,, true)
 #endregion
-categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 7, 8, 9, 22, 36, 27, 31, 33, 39], [11, 10, 12, 13, 26, 32, 37, 38, 41], [15, 30, 14, 24], [19, 23, 21, 20, 34, 40]]
-categoria_nombre = ["Transporte", "Producción", "Electricidad", "Líquidos", "Defensa"]
-categoria_sprite = [spr_camino, spr_taladro, spr_bateria, spr_bomba, spr_torre]
+categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 7, 8, 9, 22, 36, 27, 31, 33, 39], [11, 10, 12, 13, 26, 32, 37, 38], [15, 30, 14, 24], [19, 23, 21, 20, 34, 40], [41, 42, 43]]
+categoria_nombre = ["Transporte", "Producción", "Electricidad", "Líquidos", "Defensa", "Lógica"]
 #region planta quimica
 	planta_quimica_receta = ["Ácido", "Concreto", "Explosivos", "Combustible", "Azufre", "Baterías", "Plástico"]
 	planta_quimica_descripcion = [
