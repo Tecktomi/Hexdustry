@@ -1,4 +1,4 @@
-function draw_boton(x, y, texto, back_color = c_white, text_color = c_black, boton = mb_left, box = true){
+function draw_boton(x, y, texto, back_color = c_white, text_color = c_black, boton = mb_left, box = true, input_layer = 0){
 	if texto = ""
 		return
 	var color = draw_get_color(), width = string_width(texto), height = string_height(texto)
@@ -19,7 +19,7 @@ function draw_boton(x, y, texto, back_color = c_white, text_color = c_black, bot
 		control.text_y = string_height(texto)
 	}
 	draw_set_color(color)
-	if mouse_x > x - xx and mouse_y > y - yy and ((box and mouse_x < x + width + 8 - xx and mouse_y < y + height + 8 - yy) or (not box and mouse_x < x + width - xx and mouse_y < y + height - yy)){
+	if control.input_layer = input_layer and mouse_x > x - xx and mouse_y > y - yy and ((box and mouse_x < x + width + 8 - xx and mouse_y < y + height + 8 - yy) or (not box and mouse_x < x + width - xx and mouse_y < y + height - yy)){
 		control.cursor = cr_handpoint
 		if mouse_check_button_pressed(boton){
 			mouse_clear(boton)
