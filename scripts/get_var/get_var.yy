@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"get_var",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"get_var",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

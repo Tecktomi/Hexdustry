@@ -1,4 +1,4 @@
-function desactivar_edificio(edificio = null_edificio){
+function desactivar_edificio(edificio = control.null_edificio){
 	with control{
 		if not edificio_inerte[edificio.index] and edificio.pointer >= 0{
 			edificios_activos[edificio.pointer] = edificios_activos[array_length(edificios_activos) - 1]
