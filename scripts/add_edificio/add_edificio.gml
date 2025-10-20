@@ -29,8 +29,6 @@ function add_edificio(index, dir, a, b){
 			idle : false,
 			link : null_edificio,
 			red : null_red,
-			energy_output : 0,
-			energy_storage : 0,
 			energia_link : ds_list_create(),
 			flujo : null_flujo,
 			flujo_link : ds_list_create(),
@@ -50,8 +48,7 @@ function add_edificio(index, dir, a, b){
 			instruccion : array_create(0, array_create(1, 0)),
 			variables : [],
 			pointer : -1,
-			procesador_link : array_create(0, null_edificio),
-			procesador_string : ""
+			procesador_link : array_create(0, null_edificio)
 		}
 		ds_list_add(edificio.energia_link, null_edificio)
 		ds_list_clear(edificio.energia_link)
@@ -73,7 +70,10 @@ function add_edificio(index, dir, a, b){
 		if var_edificio_nombre = "Procesador"{
 			array_push(edificio.procesador_link, edificio)
 			edificio.variables = array_create(16)
+			edificio.variables_nombre = array_create(16, "")
 		}
+		else if var_edificio_nombre = "Mensaje"
+			edificio.variables = array_create(1, "")
 		else if var_edificio_nombre = "Memoria"
 			edificio.variables = array_create(128)
 		//Añadir coordenadas
@@ -114,7 +114,7 @@ function add_edificio(index, dir, a, b){
 		//Añadir a la red electrica
 		if edificio_energia[index]{
 			if var_edificio_nombre = "Energía Infinita"
-				edificio.energy_output = -edificio_energia_consumo[index]
+				edificio.energia_consumo = edificio_energia_consumo[index]
 			//Buscar edificios electricos colindantes
 			var temp_list_redes = ds_list_create()
 			size = ds_list_size(temp_list_arround)
@@ -203,7 +203,7 @@ function add_edificio(index, dir, a, b){
 					change_energia(abs(edificio_energia_consumo[index]), edificio)
 			}
 			else
-				temp_red.generacion += edificio.energy_output
+				temp_red.generacion += abs(edificio.energia_consumo)
 			if in(var_edificio_nombre, "Batería")
 				temp_red.bateria_max += 2500
 			else if in(var_edificio_nombre, "Panel Solar", "Procesador")

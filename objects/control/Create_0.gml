@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "19_10_2025")
+ini_write_string("Global", "version", "20_10_2025")
 ini_close()
 #region Metadatos
 	menu = 0
@@ -101,11 +101,11 @@ ini_close()
 		sonido_id[a] = audio_play_sound(sonidos[a], 1, true)
 		audio_pause_sound(sonido_id[a])
 	}
-	procesador_instrucciones_length = [1, 3, 2, 5, 6, 4, 5, 3, 4, 4]
+	procesador_instrucciones_length = [1, 4, 2, 7, 9, 6, 7, 5, 6, 7]
 	procesador_instrucciones_nombre = [
 		"Continuar",
 		"Asignar variable",
-		"Asignar variable aleatoria",
+		"Variable aleatoria",
 		"Operaciones",
 		"Saltar a línea",
 		"Controlar edificio",
@@ -142,8 +142,6 @@ null_edificio = {
 	idle : false,
 	link : undefined,
 	red : undefined,
-	energy_output : 0,
-	energy_storage : 0,
 	energia_link : ds_list_create(),
 	flujo : undefined,
 	flujo_link: ds_list_create(),
@@ -161,10 +159,9 @@ null_edificio = {
 	receptor : false,
 	luz : false,
 	instruccion : array_create(0, array_create(1, 0)),
-	variables : array_create(16),
+	variables : [],
 	pointer : -1,
-	procesador_link : undefined,
-	procesador_string : ""
+	procesador_link : undefined
 }
 null_edificio.link = null_edificio
 ds_list_add(null_edificio.coordenadas, {a : 0, b : 0})

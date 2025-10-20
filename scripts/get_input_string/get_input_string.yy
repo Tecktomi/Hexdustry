@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"get_input_string",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"get_input_string",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
