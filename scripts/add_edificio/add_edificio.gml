@@ -48,7 +48,9 @@ function add_edificio(index, dir, a, b){
 			instruccion : array_create(0, array_create(1, 0)),
 			variables : [],
 			pointer : -1,
-			procesador_link : array_create(0, null_edificio)
+			procesador_link : array_create(0, null_edificio),
+			eliminar : false,
+			agregar : false
 		}
 		ds_list_add(edificio.energia_link, null_edificio)
 		ds_list_clear(edificio.energia_link)
@@ -76,6 +78,7 @@ function add_edificio(index, dir, a, b){
 			edificio.variables = array_create(1, "")
 		else if var_edificio_nombre = "Memoria"
 			edificio.variables = array_create(128)
+		array_push(efectos, add_efecto(size_fx[edificio_size[index] - 1], 0, x, y, 3))
 		//Añadir coordenadas
 		var temp_list_size = get_size(a, b, dir, edificio_size[index])
 		var temp_list_arround = get_arround(a, b, dir, edificio_size[index])
@@ -157,7 +160,7 @@ function add_edificio(index, dir, a, b){
 				size = array_length(torres_de_tension)
 				for(var c = 0; c < size; c++){
 					var temp_edificio = torres_de_tension[c]
-					if sqr(temp_edificio.x - edificio.x) + sqr(temp_edificio.y - edificio.y) < 1000000{//1000^2
+					if sqr(temp_edificio.x - edificio.x) + sqr(temp_edificio.y - edificio.y) < 1_000_000{//1000^2
 						ds_list_add(edificio.energia_link, temp_edificio)
 						ds_list_add(temp_edificio.energia_link, edificio)
 						if not ds_list_in(temp_list_redes, temp_edificio.red)

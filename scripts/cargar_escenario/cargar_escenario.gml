@@ -29,11 +29,27 @@ function cargar_escenario(){
 			array_resize(mision_objetivo, objetivos_max)
 			array_resize(mision_target_id, objetivos_max)
 			array_resize(mision_target_num, objetivos_max)
+			array_resize(mision_tiempo, objetivos_max)
+			array_resize(mision_tiempo_victoria, objetivos_max)
+			array_resize(mision_tiempo_show, objetivos_max)
+			array_resize(mision_texto, objetivos_max)
 			for(var a = 0; a < objetivos_max; a++){
 				mision_nombre[a] = ini_read_string($"Objetivo {a}", "nombre", $"objetivo {a}")
 				mision_objetivo[a] = ini_read_real($"Objetivo {a}", "objetivo", 0)
 				mision_target_id[a] = ini_read_real($"Objetivo {a}", "target_id", 0)
 				mision_target_num[a] = ini_read_real($"Objetivo {a}", "target_num", 0)
+				mision_tiempo[a] = ini_read_real($"Objetivo {a}", "tiempo", 0)
+				mision_tiempo_victoria[a] = bool(ini_read_real($"Objetivo {a}", "tiempo victoria", 0))
+				mision_tiempo_show[a] = bool(ini_read_real($"Objetivo {a}", "tiempo show", 1))
+				var objetivo_textos = ini_read_real($"Objetivo {a}", "textos", 0)
+				array_set(mision_texto, a, [])
+				array_resize(mision_texto[a], objetivo_textos)
+				for(var b = 0; b < objetivo_textos; b++)
+					array_set(mision_texto[a], b, {
+						x : ini_read_real($"Objetivo {a}", $"x {b}", 0),
+						y : ini_read_real($"Objetivo {a}", $"y {b}", 0),
+						texto : ini_read_string($"Objetivo {a}", $"texto {b}", "")
+					})
 			}
 			ds_grid_clear(terreno, 0)
 			ds_grid_clear(ore, -1)

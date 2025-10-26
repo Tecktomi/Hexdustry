@@ -60,15 +60,17 @@ function dibujar_edificios(){
 							else
 								draw_sprite_off(edificio_sprite_2[index], 0, aa, bb,,,, liquido_color[edificio.flujo.liquido], edificio.flujo.almacen / edificio.flujo.almacen_max)
 						}
-						//Torres tamaño impar
-						else if in(var_edificio_nombre, "Torre", "Mortero"){
-							draw_sprite_off(edificio_sprite[index], 0, aa, bb)
-							draw_sprite_off(edificio_sprite_2[index], 0, aa, bb,,, edificio.select)
-						}
-						//Torres tamaño par
-						else if in(var_edificio_nombre, "Rifle", "Lanzallamas"){
-							draw_sprite_off(edificio_sprite[index], 0, aa, bb, power(-1, dir))
-							draw_sprite_off(edificio_sprite_2[index], 0, aa + 9 * power(-1, dir), bb + 14,,, edificio.select)
+						else if edificio_armas[index]{
+							//Torres tamaño impar
+							if edificio_size[index] mod 2 = 1{
+								draw_sprite_off(edificio_sprite[index], 0, aa, bb)
+								draw_sprite_off(edificio_sprite_2[index], 0, aa, bb,,, edificio.select)
+							}
+							//Torres tamaño par
+							else{
+								draw_sprite_off(edificio_sprite[index], 0, aa, bb, power(-1, dir))
+								draw_sprite_off(edificio_sprite_2[index], 0, aa + 9 * power(-1, dir), bb + 14,,, edificio.select)
+							}
 						}
 						//Dibujo predeterminado tamaño par
 						else if edificio_size[index] mod 2 = 0

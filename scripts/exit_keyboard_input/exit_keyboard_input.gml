@@ -4,5 +4,6 @@ function exit_keyboard_input(){
 		keyboard_clear(vk_enter)
 		mouse_clear(mouse_lastbutton)
 		control.get_keyboard_string = -1
+		control.input_layer = 0
 	}
 }
