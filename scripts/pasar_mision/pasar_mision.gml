@@ -7,6 +7,8 @@ function pasar_mision(){
 		}
 		else{
 			mision_counter = 0
+			if mision_tiempo[mision_actual] > 0
+				mision_current_tiempo = 60 * mision_tiempo[mision_actual]
 		}
 	}
 }

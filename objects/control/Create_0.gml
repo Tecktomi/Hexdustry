@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "20_10_2025")
+ini_write_string("Global", "version", "24_10_2025")
 ini_close()
 #region Metadatos
 	menu = 0
@@ -28,6 +28,7 @@ ini_close()
 	build_index = -1
 	build_size = 1
 	build_dir = 0
+	build_dir_camino = 0
 	build_able = false
 	editor_herramienta = 0
 	last_mx = -1
@@ -63,11 +64,18 @@ ini_close()
 	mision_objetivo = array_create(0, 0)
 	mision_target_id = array_create(0, 0)
 	mision_target_num = array_create(0, 0)
+	mision_tiempo = array_create(0, 0)
+	mision_tiempo_victoria = array_create(0, false)
+	mision_tiempo_show = array_create(0, true)
+	mision_texto = array_create(0, array_create(0, {x : 0, y : 0, texto : ""}))
 	mision_texto_victoria = "Todos los objetivos cumplidos"
 	mision_actual = -1
 	mision_counter = 0
+	mision_current_tiempo = 0
+	mision_choosing_coord = false
+	mision_choosing_coord_i = 0
 	get_keyboard_string = -1
-	objetivos_nombre = ["conseguir", "tener almacenado", "construir", "tener construido", "matar"]
+	objetivos_nombre = ["conseguir", "tener almacenado", "construir", "tener construido", "matar", "sin objetivo"]
 	oleadas = true
 	oleadas_tiempo_primera = 240
 	oleadas_tiempo = 45
@@ -115,6 +123,7 @@ ini_close()
 		"Escribir datos a Memoria"]
 	procesador_add = false
 	input_layer = 0
+	show_smoke = true
 #endregion
 null_edificio = {
 	index : -1,
@@ -161,7 +170,9 @@ null_edificio = {
 	instruccion : array_create(0, array_create(1, 0)),
 	variables : [],
 	pointer : -1,
-	procesador_link : undefined
+	procesador_link : undefined,
+	eliminar : false,
+	agregar : false
 }
 null_edificio.link = null_edificio
 ds_list_add(null_edificio.coordenadas, {a : 0, b : 0})
@@ -179,6 +190,7 @@ build_target = null_edificio
 edificios_activos = array_create(0, null_edificio)
 procesador_select = null_edificio
 null_edificio.procesador_link = array_create(0, null_edificio)
+edificios_pendientes = array_create(0, null_edificio)
 //Puertos de Carga
 puerto_carga_bool = false
 puerto_carga_link = null_edificio
@@ -427,50 +439,67 @@ lq_max = array_length(liquido_nombre)
 //Edificios
 #region Descripciones
 	edificio_descripcion = [
-	"Es el centro de mando, aquí se almacenan todos\nlos recursos y debes protegerlo a toda costa",
-	"Permite minar cobre, hierro y carbón sin coste\nalguno.    Puede potenciarse con Agua",
-	"Mueve recursos de un lugar a otro",
-	"Distribuye recursos en una dirección",
-	"Permite el paso de un recurso específico mientras\ndesvía al resto",
-	"Desvía los recursos una vez que la línea esté\nsaturada",
-	"Pasa recursos bajo tierra permitiendo construir\nencima",
-	"Utiliza combustible para fundir Bronce, Acero y\nSilicio",
-	"Taladro mejorado que también extrae piedra y arena\ndel suelo pero consume energía.\nPuede potenciarse con Ácido",
-	"Tritura la piedra para hacerla arena",
-	"Genera energía utlizando conbustible",
-	"Conecta edificios cercanos a la red de energía",
-	"Almacena el excedente de energía para usarlo más\ntarde",
-	"Genera energía limpia del sol",
-	"Extrae líquidos del terreno usando energía",
-	"Conecta estructuras para llevar líquidos",
-	"Pasa recursos bajo tierra permitiendo construir\nencima",
-	"Genera energía a partir de magia",
-	"Versión mejorada de la Cinta Transportadora que\npermite transportar más cosas",
-	"Defensa simple, puede disparar Cobre o Hierro",
-	"Dispara un láser cuyo daño depende de la cantidad\nde energía disponible",
-	"Distrae a los enemigos mientras tus defensas se\nencargan de ellos",
-	"Escoge una receta para producir compuestos\nquímicos",
-	"Defensa de largo alcance que dispara Bronce,\nAcero o Uranio",
-	"Almacena grandes cantidades de líquidos",
-	"Genera el líquido a elección a partir de magia",
-	"Genera energía a partir de un combustible y Agua",
-	"Refina la Piedra Cúprica o Férrica en Cobre o\nHierro usando Ácido",
-	"Fabrica drones de transporte utilizando Silicio, Baterías\ny bastante energía",
-	"Genera recursos a partir de magia",
-	"Extrae lentamente Agua por evaporación",
-	"Similar al horno normal, pero utiliza el calor\nde la lava para cocinar más rápido",
-	"Genera energía a partir de evaporar Agua,\ndebe ser construido sobre lava",
-	"Utiliza explosivos para extraer un recurso\nde cada terreno minable en su área",
-	"Dispara explosivos a largo alcance, devastando\nun área de enemigos",
-	"Conceta Puertos de Carga para que tus drones\nmuevan recursos entre ellos",
-	"Utiliza Cobre y Silicio para producir componentes",
-	"Consume 1 parte de Uranio Enriquecido por\n20 partes de Uranio Empobrecido y mucha Agua\npara generar mucha energía",
-	"Conecta redes eléctricas a través de largas\ndistancias",
-	"Produce petróleo a alto coste en cualquier lugar",
-	"Utiliza recursos combustibles para quemar\na los enemigos.\nPuede ser potenciado con Petróleo",
-	"Procesa instrucciones lógicas",
-	"Permite escribir mensajes",
-	"Permite almacenar hasta 128 datos"]
+		"Es el centro de mando, aquí se almacenan todos los recursos y debes protegerlo a toda costa",
+		"Permite minar cobre, hierro y carbón sin coste alguno.    Puede potenciarse con Agua",
+		"Mueve recursos de un lugar a otro",
+		"Distribuye recursos en una dirección",
+		"Permite el paso de un recurso específico mientras desvía al resto",
+		"Desvía los recursos una vez que la línea esté saturada",
+		"Pasa recursos bajo tierra permitiendo construir encima",
+		"Utiliza combustible para fundir Bronce, Acero y Silicio",
+		"Taladro mejorado que también extrae piedra y arena del suelo pero consume energía. Puede potenciarse con Ácido",
+		"Tritura la piedra para hacerla arena",
+		//10
+		"Genera energía utlizando conbustible",
+		"Conecta edificios cercanos a la red de energía",
+		"Almacena el excedente de energía para usarlo más tarde",
+		"Genera energía limpia del sol",
+		"Extrae líquidos del terreno usando energía",
+		"Conecta estructuras para llevar líquidos",
+		"Pasa recursos bajo tierra permitiendo construir encima",
+		"Genera energía a partir de magia",
+		"Versión mejorada de la Cinta Transportadora que permite transportar más cosas",
+		"Defensa simple, puede disparar Cobre o Hierro",
+		//20
+		"Defensa de largo alcance que dispara Bronce, Acero o Uranio",
+		"Utiliza recursos combustibles para quemar a los enemigos. Puede ser potenciado con Petróleo",
+		"Escoge una receta para producir compuestos químicos",
+		"Dispara un láser constante cuyo daño depende de la cantidad de energía disponible",
+		"Almacena grandes cantidades de líquidos",
+		"Genera el líquido a elección a partir de magia",
+		"Genera energía a partir de un combustible y Agua",
+		"Refina la Piedra Cúprica o Férrica en Cobre o Hierro usando Ácido",
+		"Fabrica drones de transporte utilizando Silicio, Baterías y bastante energía",
+		"Genera recursos a partir de magia",
+		//30
+		"Extrae lentamente Agua por evaporación",
+		"Similar al horno normal, pero utiliza el calor de la lava para cocinar más rápido",
+		"Genera energía a partir de evaporar Agua, debe ser construido sobre lava",
+		"Utiliza explosivos para extraer un recurso de cada terreno minable en su área",
+		"Distrae a los enemigos mientras tus defensas se encargan de ellos",
+		"Conceta Puertos de Carga para que tus drones muevan recursos entre ellos",
+		"Utiliza Cobre y Silicio para producir componentes",
+		"Consume 1 parte de Uranio Enriquecido por 20 partes de Uranio Empobrecido y mucha Agua para generar mucha energía",
+		"Conecta redes eléctricas a través de largas distancias",
+		"Produce petróleo a alto coste en cualquier lugar",
+		//40
+		"Dispara explosivos a largo alcance, devastando un área de enemigos",
+		"Procesa instrucciones lógicas",
+		"Permite escribir mensajes",
+		"Permite almacenar hasta 128 datos"
+	]
+	for(var a = array_length(edificio_descripcion) - 1; a >= 0; a--){
+		var trozos = string_split(edificio_descripcion[a], " "), temp_text = "", line_width = 0
+		for(var b = 0; b < array_length(trozos); b++){
+			if line_width > 400{
+				temp_text += "\n"
+				line_width = 0
+			}
+			temp_text += trozos[b] + " "
+			line_width += string_width(trozos[b] + " ")
+		}
+		edificio_descripcion[a] = temp_text
+	}
 #endregion
 #region Arreglos
 	edificio_sprite = []
@@ -567,12 +596,12 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	def_edificio("Túnel salida", 1, spr_tunel_salida,, "", 60, 10,, [0, 3], [4, 4], 1,,,,, true, true); def_edificio_2()
 	def_edificio("Energía Infinita", 1, spr_energia_infinita,, "3 ", 100); def_edificio_2(-999_999,,,,, true)
 	def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, "16", 60, 10, true, [2, 3], [1, 1], 1, true,,,, true); def_edificio_2()
-	def_edificio("Torre", 1, spr_torre, spr_torre_2, "51", 300, 30,, [2, 3], [10, 25], 20, true, false, [0, 3], [10, 10]); def_edificio_2(, 10, 60, 0, 180)
+	def_edificio("Torre básica", 1, spr_torre, spr_torre_2, "51", 300, 30,, [0, 3], [10, 25], 20, true, false, [0, 3], [10, 10]); def_edificio_2(, 10, 60, 0, 180)
 	//20
-	def_edificio("Láser", 2, spr_laser,, "54", 400, 1,, [0, 7, 16], [10, 10, 2]); def_edificio_2(200,,,, 220)
-	def_edificio("Muro", 1, spr_hexagono,, "53", 500,,, [8], [1]); def_edificio_2(,,,,, true)
+	def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, "52", 400, 45,, [0, 3, 4], [10, 10, 10], 20, true, false, [2, 4, 17, 19], [10, 10, 10, 10]); def_edificio_2(, 10, 60, 1, 300)
+	def_edificio("Lanzallamas", 2, spr_lanzallamas, spr_lanzallamas_2, "53", 400, 1,, [0, 2, 3], [15, 15, 10], 20, true, false, [1, 12], [10, 10]); def_edificio_2(, 10, 4, 3, 130)
 	def_edificio("Planta Química", 3, spr_planta_quimica,, "25", 200, 60,, [0, 2, 3, 7], [20, 10, 20, 10], 30, true, false, [0, 1, 3, 5, 6, 9, 10, 11], [0, 0, 0, 0, 0, 0, 0, 0], true, false, [8, 11, 12, 13, 14, 15]); def_edificio_2(50, 10)
-	def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, "52", 400, 45,, [2, 3, 4], [10, 10, 10], 20, true, false, [2, 4, 17, 19], [10, 10, 10, 10]); def_edificio_2(, 10, 60, 1, 300)
+	def_edificio("Láser", 2, spr_laser, spr_laser_2, "54", 400, 1,, [0, 4, 7], [10, 10, 5]); def_edificio_2(120,,, 0, 220)
 	def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, "44", 200, 1,, [2, 4], [20, 10]); def_edificio_2(, 300,,,, true)
 	def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, "4 ", 30, 1); def_edificio_2(, 10, -999_999,,, true)
 	def_edificio("Turbina", 2, spr_turbina,, "35", 160,,, [0, 2, 4], [10, 10, 10], 20, true, false, [1, 12], [10, 10]); def_edificio_2(-150, 10, 40)
@@ -584,19 +613,19 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	def_edificio("Horno de Lava", 2, spr_horno_lava, spr_horno_lava_encendido, "28", 400, 90,, [4, 8], [15, 10], 15, true, false, [0, 3, 5], [5, 5, 5], true, false, [2, 4, 7]); def_edificio_2(, 10, 1)
 	def_edificio("Generador Geotérmico", 2, spr_generador_geotermico,, "36", 200, 1,, [0, 4, 8], [10, 10, 10]); def_edificio_2(-120, 10, 30)
 	def_edificio("Taladro de Explosión", 3, spr_taladro_explosivo,, "29", 300, 300,, [2, 4, 8], [40, 40, 30], 40, true, false, [13], [10], true, false, [0, 1, 3, 5, 6, 9, 10, 11, 17]); def_edificio_2()
-	def_edificio("Mortero", 3, spr_mortero, spr_mortero_2, "55", 600, 180,, [4, 8], [50, 30], 10, true, false, [13], [10]); def_edificio_2(,,, 2, 600)
+	def_edificio("Muro", 1, spr_hexagono,, "56", 500,,, [8], [1]); def_edificio_2(,,,,, true)
 	def_edificio("Puerto de Carga", 2, spr_punto_carga,, "18", 150,,, [0, 3, 16], [10, 10, 1], 25,, true,,,, true); def_edificio_2()
 	def_edificio("Ensambladora", 3, spr_ensambladora,, "26", 400, 150,, [2, 3, 4, 7], [10, 20, 10, 10], 20, true, false, [0, 7], [5, 5], true, false, [16]); def_edificio_2(100)
 	def_edificio("Planta Nuclear", 4, spr_planta_nuclear,, "37", 500,,, [0, 4, 8, 16], [100, 80, 50, 20], 21, true, false, [18, 19], [1, 20]); def_edificio_2(-900, 150, 300)
 	def_edificio("Torre de Alta Tensión", 2, spr_cable_tension,, "38", 100,,, [0, 4, 16], [30, 10, 2]); def_edificio_2(5,,,,, true)
 	def_edificio("Perforadora de Petróleo", 3, spr_perforadora,, "20", 200, 1,, [2, 4, 8], [10, 15, 10]); def_edificio_2(120, 10, -2)
 	//40
-	def_edificio("Lanzallamas", 2, spr_lanzallamas, spr_lanzallamas_2, "56", 400, 1,, [2, 3, 15], [25, 15, 10], 20, true, false, [1, 12], [10, 10]); def_edificio_2(, 10, 4, 3, 130)
+	def_edificio("Mortero", 3, spr_mortero, spr_mortero_2, "55", 600, 180,, [4, 8], [50, 30], 10, true, false, [13], [10]); def_edificio_2(,,, 2, 600)
 	def_edificio("Procesador", 2, spr_procesador,, "61", 80, 1,, [0, 15, 16], [20, 40, 20]); def_edificio_2(5)
 	def_edificio("Mensaje", 1, spr_mensaje,, "62", 50,,, [0, 16], [10, 3]); def_edificio_2(,,,,, true)
 	def_edificio("Memoria", 1, spr_memoria,, "63", 50,,, [0, 16], [10, 3]); def_edificio_2(,,,,, true)
 #endregion
-categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 7, 8, 9, 22, 36, 27, 31, 33, 39], [11, 10, 12, 13, 26, 32, 37, 38], [15, 30, 14, 24], [19, 23, 21, 20, 34, 40], [41, 42, 43]]
+categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 7, 8, 9, 22, 36, 27, 31, 33, 39], [11, 10, 12, 13, 26, 32, 37, 38], [15, 30, 14, 24], [19, 20, 21, 23, 34, 40], [41, 42, 43]]
 categoria_nombre = ["Transporte", "Producción", "Electricidad", "Líquidos", "Defensa", "Lógica"]
 #region planta quimica
 	planta_quimica_receta = ["Ácido", "Concreto", "Explosivos", "Combustible", "Azufre", "Baterías", "Plástico"]
@@ -619,6 +648,7 @@ edificio_output_all[35] = true
 edificio_energia[38] = true
 size_size = [1, 3, 7, 12, 19]
 size_borde = [6, 9, 12, 15, 18, 21]
+size_fx = [fx_construir_1, fx_construir_2, fx_construir_3, fx_construir_4, spr_hexagono_5]
 edificios_construibles = array_create(0, 0)
 for(var a = 0; a < array_length(categoria_nombre); a++)
 	edificios_construibles = array_concat(edificios_construibles, categoria_edificios[a])
