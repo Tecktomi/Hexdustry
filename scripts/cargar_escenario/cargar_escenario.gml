@@ -1,6 +1,7 @@
-function cargar_escenario(){
+function cargar_escenario(file = ""){
 	with control{
-		var file = get_open_filename("*.txt", game_save_id + "save.txt")
+		if file = ""
+			file = get_open_filename("*.txt", game_save_id + "save.txt")
 		if file != ""{
 			ini_open(file)
 			var prev_xsize = xsize
@@ -33,6 +34,7 @@ function cargar_escenario(){
 			array_resize(mision_tiempo_victoria, objetivos_max)
 			array_resize(mision_tiempo_show, objetivos_max)
 			array_resize(mision_texto, objetivos_max)
+			array_resize(mision_switch_oleadas, objetivos_max)
 			for(var a = 0; a < objetivos_max; a++){
 				mision_nombre[a] = ini_read_string($"Objetivo {a}", "nombre", $"objetivo {a}")
 				mision_objetivo[a] = ini_read_real($"Objetivo {a}", "objetivo", 0)
@@ -50,7 +52,9 @@ function cargar_escenario(){
 						y : ini_read_real($"Objetivo {a}", $"y {b}", 0),
 						texto : ini_read_string($"Objetivo {a}", $"texto {b}", "")
 					})
+				mision_switch_oleadas[a] = bool(ini_read_real($"Objetivo {a}", "switch oleadas", 0))
 			}
+			multiplicador_vida_enemigos = ini_read_real("Global", "Multiplicador vida enemigos", 1)
 			ds_grid_clear(terreno, 0)
 			ds_grid_clear(ore, -1)
 			ds_grid_clear(ore_amount, 0)

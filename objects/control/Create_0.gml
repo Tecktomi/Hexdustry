@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "24_10_2025")
+ini_write_string("Global", "version", "29_10_2025")
 ini_close()
 #region Metadatos
 	menu = 0
@@ -59,7 +59,7 @@ ini_close()
 		for(var b = 0; b < ysize / chunk_height; b++)
 			background[a, b] = spr_hexagono
 	sprite_boton_text = ""
-	editor_menu = false
+	editor_menu = 0
 	mision_nombre = array_create(0, "")
 	mision_objetivo = array_create(0, 0)
 	mision_target_id = array_create(0, 0)
@@ -74,6 +74,7 @@ ini_close()
 	mision_current_tiempo = 0
 	mision_choosing_coord = false
 	mision_choosing_coord_i = 0
+	mision_switch_oleadas = array_create(0, false)
 	get_keyboard_string = -1
 	objetivos_nombre = ["conseguir", "tener almacenado", "construir", "tener construido", "matar", "sin objetivo"]
 	oleadas = true
@@ -124,6 +125,21 @@ ini_close()
 	procesador_add = false
 	input_layer = 0
 	show_smoke = true
+	oleadas_timer = 0
+	multiplicador_vida_enemigos = 1
+	save_file = ""
+	editor_seed = random_get_seed()
+	editor_fondo = 0
+	editor_terrenos = array_create(0, {target : 0, size : 0, count : 0})
+	editor_reemplazo = array_create(0, {start : 0, target : array_create(0, 0), finish : 0})
+	editor_menas = array_create(0, {target : 0, size : 0, count : 0})
+	draw_boton_text_counter = 0
+	editor_xpos = 0
+	editor_ypos = 0
+	editor_array_name = array_create(0, "")
+	editor_array = array_create(0, 0)
+	editor_max_height = 25
+	editor_list = false
 #endregion
 null_edificio = {
 	index : -1,
@@ -488,18 +504,8 @@ lq_max = array_length(liquido_nombre)
 		"Permite escribir mensajes",
 		"Permite almacenar hasta 128 datos"
 	]
-	for(var a = array_length(edificio_descripcion) - 1; a >= 0; a--){
-		var trozos = string_split(edificio_descripcion[a], " "), temp_text = "", line_width = 0
-		for(var b = 0; b < array_length(trozos); b++){
-			if line_width > 400{
-				temp_text += "\n"
-				line_width = 0
-			}
-			temp_text += trozos[b] + " "
-			line_width += string_width(trozos[b] + " ")
-		}
-		edificio_descripcion[a] = temp_text
-	}
+	for(var a = array_length(edificio_descripcion) - 1; a >= 0; a--)
+		edificio_descripcion[a] = text_wrap(edificio_descripcion[a], 400)
 #endregion
 #region Arreglos
 	edificio_sprite = []

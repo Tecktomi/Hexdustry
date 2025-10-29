@@ -24,7 +24,7 @@ function draw_boton(x, y, texto, back_color = c_white, text_color = c_black, bot
 	if control.input_layer = input_layer and mouse_x > x - xx and mouse_y > y - yy and ((box and mouse_x < x + width + 8 - xx and mouse_y < y + height + 8 - yy) or (not box and mouse_x < x + width - xx and mouse_y < y + height - yy)){
 		control.cursor = cr_handpoint
 		if not box
-			draw_line(x - xx, y + height, x - xx + width, y + height)
+			draw_line(x - xx, y + height - 4, x - xx + width, y + height - 4)
 		if mouse_check_button_pressed(boton){
 			mouse_clear(boton)
 			return true
