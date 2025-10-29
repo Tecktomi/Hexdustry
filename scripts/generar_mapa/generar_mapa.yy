@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"generar_mapa",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"generar_mapa",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

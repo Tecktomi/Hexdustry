@@ -9,6 +9,8 @@ function pasar_mision(){
 			mision_counter = 0
 			if mision_tiempo[mision_actual] > 0
 				mision_current_tiempo = 60 * mision_tiempo[mision_actual]
+			if mision_switch_oleadas[mision_actual]
+				oleadas = not oleadas
 		}
 	}
 }

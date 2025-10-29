@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"game_start",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"game_start",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
