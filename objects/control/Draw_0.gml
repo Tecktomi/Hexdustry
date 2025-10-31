@@ -43,6 +43,7 @@ if menu = 2{
 	var temp_hexagono = instance_position(xmouse, ymouse, obj_hexagono), mx = 0, my = 0
 	//Editor de objetivos
 	if editor_menu = 1 and not mision_choosing_coord{
+		draw_boton_text_counter = 0
 		draw_set_color(c_ltgray)
 		draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
 		draw_set_color(c_black)
@@ -89,121 +90,28 @@ if menu = 2{
 		if mision_actual >= 0{
 			var i = mision_actual, xpos = room_width / 2 + 20, ypos = 120, a
 			xpos = draw_text_xpos(xpos, ypos, "Nombre objetivo: ")
-			if draw_boton(xpos, ypos, $"'{mision_nombre[i]}'",,,, false){
-				keyboard_string = mision_nombre[i]
-				get_keyboard_string = 0
-			}
-			if get_keyboard_string = 0{
-				draw_line(xpos, ypos + 20, xpos + text_x, ypos + 20)
-				mision_nombre[i] = keyboard_string
-				exit_keyboard_input()
-			}
+			mision_nombre[i] = draw_boton_text(xpos, ypos, mision_nombre[i], false)
 			xpos = room_width / 2 + 40
 			ypos = 150
 			xpos = draw_text_xpos(xpos, ypos, "Objetivo: ")
 			//Objetivo
-			if draw_boton(xpos, ypos, $"{objetivos_nombre[mision_objetivo[i]]} ",,,, false)
-				get_keyboard_string = 3
-			a = text_x
-			if get_keyboard_string = 3{
-				var max_width = 0
-				for(var b = 0; b < array_length(objetivos_nombre); b++)
-					max_width = max(max_width, string_width(objetivos_nombre[b]))
-				draw_set_color(c_ltgray)
-				draw_rectangle(xpos, ypos + 20, xpos + max_width, ypos + 20 * (array_length(objetivos_nombre) + 1), false)
-				draw_set_color(c_black)
-				draw_rectangle(xpos, ypos + 20, xpos + max_width, ypos + 20 * (array_length(objetivos_nombre) + 1), true)
-				for(var b = 0; b < array_length(objetivos_nombre); b++)
-					if draw_boton(xpos, 170 + 20 * b, objetivos_nombre[b],,,, false){
-						mision_objetivo[i] = b
-						get_keyboard_string = -1
-						if in(b, 2, 3)
-							mision_target_id[i] = categoria_edificios[0, 0]
-					}
-				exit_keyboard_input()
-			}
-			xpos += a
+			mision_objetivo[i] = draw_boton_text_list(xpos, ypos, mision_objetivo[i], objetivos_nombre)
+			xpos += text_x
 			//Cantidad
 			if mision_objetivo[i] != 5{
-				if draw_boton(xpos, ypos, mision_target_num[i],,,, false){
-					keyboard_string = mision_target_num[i] = 0 ? "" : string(mision_target_num[i])
-					get_keyboard_string = 1
-				}
-				a = text_x
-				if get_keyboard_string = 1{
-					draw_line(xpos, ypos + 20, xpos + text_x, ypos + 20)
-					mision_target_num[i] = keyboard_string = "" ? 0 : real(string_digits(keyboard_string))
-					exit_keyboard_input()
-				}
-				xpos += a
+				xpos = draw_text_xpos(xpos, ypos, " ")
+				mision_target_num[i] = draw_boton_text(xpos, ypos, mision_target_num[i])
+				xpos += text_x
 			}
 			//Conseguir recurso / Tener almacenado
 			if mision_objetivo[i] < 2{
 				xpos = draw_text_xpos(xpos, ypos, " de ")
-				//Recurso
-				if draw_boton(xpos, ypos, recurso_nombre[mision_target_id[i]],,,, false){
-					get_keyboard_string = 2
-					input_layer = 1
-				}
-				if get_keyboard_string = 2{
-					var max_width = 0
-					for(var b = 0; b < rss_max; b++)
-						max_width = max(max_width, string_width(recurso_nombre[rss_sort[b]]))
-					draw_set_color(c_ltgray)
-					draw_rectangle(xpos, ypos + 20, xpos + max_width, ypos + 20 * (rss_max + 1), false)
-					draw_set_color(c_black)
-					draw_rectangle(xpos, ypos + 20, xpos + max_width, ypos + 20 * (rss_max + 1), true)
-					if rss_max > 25
-						deslizante = floor(draw_deslizante_vertical(xpos, 170, 170 + 25 * 20, deslizante, 0, rss_max - 25, 0))
-					if deslizante + 25 < rss_max and mouse_wheel_down()
-						deslizante++
-					if deslizante > 0 and mouse_wheel_up()
-						deslizante--
-					pos = 170
-					for(var b = deslizante; b < min(deslizante + 25, rss_max); b++){
-						if draw_boton(xpos, pos, recurso_nombre[rss_sort[b]],,,, false, 1){
-							mision_target_id[i] = rss_sort[b]
-							get_keyboard_string = -1
-							input_layer = 0
-						}
-						pos += 20
-					}
-					exit_keyboard_input()
-				}
+				mision_target_id[i] = draw_boton_text_list(xpos, ypos, mision_target_id[i], recurso_nombre,, 10)
 			}
 			//Construir / Tener construido
 			else if mision_objetivo[i] < 4{
-				if draw_boton(xpos, ypos, $" {edificio_nombre[mision_target_id[i]]}",,,, false){
-					get_keyboard_string = 2
-					input_layer = 1
-				}
-				if get_keyboard_string = 2{
-					var max_width = 0
-					size = array_length(edificios_construibles)
-					for(var b = 0; b < 25; b++)
-						max_width = max(max_width, string_width(edificio_nombre[deslizante + b]))
-					draw_set_color(c_ltgray)
-					draw_rectangle(xpos, ypos + 20, xpos + max_width + 20, ypos + 20 * 26, false)
-					draw_set_color(c_black)
-					draw_rectangle(xpos, ypos + 20, xpos + max_width + 20, ypos + 20 * 26, true)
-					if size > 25
-						deslizante = floor(draw_deslizante_vertical(xpos + 10, 170, 170 + 25 * 20, deslizante, 0, size - 25, 0))
-					if deslizante + 25 < size and mouse_wheel_down()
-						deslizante++
-					if deslizante > 0 and mouse_wheel_up()
-						deslizante--
-					pos = 170
-					for(var b = deslizante; b < min(deslizante + 25, size); b++){
-						var c = edificios_construibles[b]
-						if draw_boton(xpos + 20, pos, edificio_nombre[c],,,, false, 1){
-							mision_target_id[i] = c
-							get_keyboard_string = -1
-							input_layer = 0
-						}
-						pos += 20
-					}
-					exit_keyboard_input()
-				}
+				xpos = draw_text_xpos(xpos, ypos, " ")
+				mision_target_id[i] = draw_boton_text_list(xpos, ypos, mision_target_id[i], edificio_nombre,, 10)
 			}
 			//Matar enemigos
 			else if mision_objetivo[i] = 4
@@ -220,17 +128,10 @@ if menu = 2{
 				xpos = room_width / 2 + 70
 				ypos += 30
 				xpos = draw_text_xpos(xpos, ypos, "Tiempo límite: ")
-				if draw_boton(xpos, ypos, $"{mision_tiempo[i]}s",,,, false){
-					keyboard_string = mision_tiempo[i] = 0 ? "" : string(mision_tiempo[i])
-					get_keyboard_string = 4
-				}
-				a = text_x
-				if get_keyboard_string = 4{
-					draw_line(xpos, ypos + 20, xpos + text_x, ypos + 20)
-					mision_tiempo[i] = keyboard_string = "" ? 1 : max(1, real(string_digits(keyboard_string)))
-					exit_keyboard_input()
-				}
-				xpos += a + 20
+				mision_tiempo[i] = draw_boton_text(xpos, ypos, mision_tiempo[i])
+				if mision_tiempo[i] = 0
+					get_keyboard_string = -1
+				xpos += text_x + 20
 				if draw_boton(xpos, ypos, mision_tiempo_victoria[i] ? "Victoria" : "Derrota")
 					mision_tiempo_victoria[i] = not mision_tiempo_victoria[i]
 				xpos += text_x + 20
@@ -310,60 +211,24 @@ if menu = 2{
 				oleadas = not oleadas
 			ypos += 40
 			if oleadas{
-				var a = room_width / 2 + 40
-				draw_text(a, ypos, "Tiempo primera ronda: ")
-				a += string_width("Tiempo primera ronda: ")
-				if draw_boton(a, ypos, $"{oleadas_tiempo_primera} s",,,, false){
-					keyboard_string = string(oleadas_tiempo_primera)
-					get_keyboard_string = 0
-				}
-				ypos += 20
-				if get_keyboard_string = 0{
-					draw_line(a, ypos, a + string_width(oleadas_tiempo_primera), ypos)
-					oleadas_tiempo_primera = keyboard_string = "" ? 0 :  real(string_digits(keyboard_string))
-					exit_keyboard_input()
-				}
-				ypos += 10
-				a = room_width / 2 + 40
-				draw_text(a, ypos, "Tiempo entre rondas: ")
-				a += string_width("Tiempo entre rondas: ")
-				if draw_boton(a, ypos, $"{oleadas_tiempo} s",,,, false){
-					keyboard_string = string(oleadas_tiempo)
-					get_keyboard_string = 1
-				}
-				ypos += 20
-				if get_keyboard_string = 1{
-					draw_line(a, ypos, a + string_width(oleadas_tiempo), ypos)
-					oleadas_tiempo = keyboard_string = "" ? 0 : real(string_digits(keyboard_string))
-					exit_keyboard_input()
-				}
+				var xpos = room_width / 2 + 40
+				xpos = draw_text_xpos(xpos, ypos, "Tiempo primera ronda: ")
+				oleadas_tiempo_primera = draw_boton_text(xpos, ypos, oleadas_tiempo_primera)
+				xpos = room_width / 2 + 40
+				ypos += text_y
+				xpos = draw_text_xpos(xpos, ypos, "Tiempo entre rondas: ")
+				oleadas_tiempo = draw_boton_text(xpos, ypos, oleadas_tiempo)
 			}
 			if array_length(mision_nombre) > 0{
 				var xpos = room_width / 2 + 40
 				ypos += 20
 				xpos = draw_text_xpos(xpos, ypos, "Texto de victoria: ")
-				if draw_boton(xpos, ypos, $"'{mision_texto_victoria}'",,,, false){
-					keyboard_string = mision_texto_victoria
-					get_keyboard_string = 2
-				}
-				if get_keyboard_string = 2{
-					draw_line(xpos, ypos + 20, xpos + text_x, ypos + 20)
-					mision_texto_victoria = keyboard_string
-					exit_keyboard_input()
-				}
+				mision_texto_victoria = draw_boton_text(xpos, ypos, mision_texto_victoria)
 			}
 			var xpos = room_width / 2 + 40
 			ypos += 20
 			xpos = draw_text_xpos(xpos, ypos, "Multiplicador de vida de enemigos: ")
-			if draw_boton(xpos, ypos, multiplicador_vida_enemigos,,,, false){
-				keyboard_string = string(multiplicador_vida_enemigos)
-				get_keyboard_string = 3
-			}
-			if get_keyboard_string = 3{
-				draw_line(xpos, ypos + 20, xpos + text_x, ypos + 20)
-				multiplicador_vida_enemigos = keyboard_string = "" ? 1 : max(real(keyboard_string), 0.01)
-				exit_keyboard_input()
-			}
+			multiplicador_vida_enemigos = draw_boton_text(xpos, ypos, multiplicador_vida_enemigos)
 			ypos += 20
 			ypos = draw_text_ypos(room_width / 2 + 20, ypos, "Carga inicial")
 			xpos = room_width / 2 + 40
@@ -375,19 +240,11 @@ if menu = 2{
 			xpos = room_width / 2 + 60 + width
 			ypos_2 = ypos
 			for(var a = 0; a < rss_max; a++){
-				if draw_boton(xpos, ypos_2, carga_inicial[rss_sort[a]],,,, false){
-					keyboard_string = string(carga_inicial[rss_sort[a]])
-					get_keyboard_string = 10 + a
-				}
+				carga_inicial[rss_sort[a]] = draw_boton_text(xpos, ypos_2, carga_inicial[rss_sort[a]])
 				ypos_2 += text_y
-				if get_keyboard_string = 10 + a{
-					draw_line(xpos, ypos_2 - 4, xpos + text_x, ypos_2 - 4)
-					carga_inicial[rss_sort[a]] = keyboard_string = "" ? 0 : real(string_digits(keyboard_string))
-					nucleo.carga[rss_sort[a]] = carga_inicial[rss_sort[a]]
-					exit_keyboard_input()
-				}
 			}
 		}
+		draw_boton_text_list_end()
 		update_cursor()
 		exit
 	}
@@ -404,7 +261,7 @@ if menu = 2{
 			editor_menu = 0
 		}
 		if draw_boton(110, 180, "Generar Terreno")
-			generar_mapa(editor_seed, editor_fondo, editor_terrenos, editor_reemplazo, editor_menas)
+			generar_mapa(editor_seed, editor_fondo, editor_instrucciones)
 		var xpos = 120, ypos = 220
 		draw_boton_text_counter = 0
 		xpos = draw_text_xpos(xpos, ypos, "Semilla: ")
@@ -412,61 +269,84 @@ if menu = 2{
 		xpos = 120
 		ypos += text_y
 		xpos = draw_text_xpos(xpos, ypos, "Terreno Base: ")
-		editor_fondo = draw_boton_text(xpos, ypos, editor_fondo)
-		#region Bloques de Terreno
-			xpos = 120
-			ypos += text_y
-			draw_text(xpos, ypos, "Bloques de Terreno")
-			for(var a = 0; a < array_length(editor_terrenos); a++){
-				var temp_editor_terrenos = editor_terrenos[a]
-				xpos = 140
-				ypos += text_y
-				if draw_sprite_boton(spr_basura, xpos, ypos, 20, 20)
-					array_delete(editor_terrenos, a, 1)
-				xpos += 20
-				xpos = draw_text_xpos(xpos, ypos, "id: ")
-				temp_editor_terrenos.target = draw_boton_text_list(xpos, ypos, temp_editor_terrenos.target, terreno_nombre,, 10)
-				xpos += text_x
-				xpos = draw_text_xpos(xpos, ypos, ", size: ")
-				temp_editor_terrenos.size = draw_boton_text(xpos, ypos, temp_editor_terrenos.size)
-				xpos += text_x
-				xpos = draw_text_xpos(xpos, ypos, ", count: ")
-				temp_editor_terrenos.count = draw_boton_text(xpos, ypos, temp_editor_terrenos.count)
-			}
+		editor_fondo = draw_boton_text_list(xpos, ypos, editor_fondo, terreno_nombre,, 10)
+		var ore_names = []
+		for(var j = 0; j < ore_max; j++)
+			array_push(ore_names, recurso_nombre[ore_recurso[j]])
+		for(var i = 0; i < array_length(editor_instrucciones); i++){
+			var instruccion = editor_instrucciones[i], tipo = instruccion[0], dat1 = instruccion[1], dat2 = instruccion[2], dat3 = instruccion[3]
 			xpos = 140
 			ypos += text_y
-			if draw_boton(xpos, ypos, "Nuevo Bloque de Terreno")
-				array_push(editor_terrenos, {target : 0, size : 0, count : 0})
-		#endregion
+			if draw_sprite_boton(spr_basura, xpos, ypos, 20, 20){
+				array_delete(editor_instrucciones, i, 1)
+				continue
+			}
+			xpos += 20
+			if i > 0 and draw_sprite_boton(spr_flecha, xpos, ypos, 20, 20){
+				editor_instrucciones[i] = editor_instrucciones[i - 1]
+				editor_instrucciones[i - 1] = instruccion
+				continue
+			}
+			xpos += 20
+			//Bloques de Terreno
+			if tipo = 0{
+				xpos = draw_text_xpos(xpos, ypos, "Añadir ")
+				instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
+				xpos += text_x
+				xpos = draw_text_xpos(xpos, ypos, " de tamaño ")
+				instruccion[2] = draw_boton_text(xpos, ypos, dat2)
+				xpos += text_x
+				xpos = draw_text_xpos(xpos, ypos, ", ")
+				instruccion[3] = draw_boton_text(xpos, ypos, dat3)
+				xpos += text_x
+				xpos = draw_text_xpos(xpos, ypos, " veces")
+			}
+			//Bordes de Terreno
+			else if tipo = 1{
+				xpos = draw_text_xpos(xpos, ypos, "Al rededor de ")
+				instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre)
+				xpos += text_x
+				xpos = draw_text_xpos(xpos, ypos, " reemplazar ")
+				instruccion[2] = draw_boton_text_list(xpos, ypos, dat2, terreno_nombre)
+				xpos += text_x
+				xpos = draw_text_xpos(xpos, ypos, " con ")
+				instruccion[3] = draw_boton_text_list(xpos, ypos, dat3, terreno_nombre)
+			}
+			//Ruido Aleatorio
+			else if tipo = 2{
+				xpos = draw_text_xpos(xpos, ypos, "Reemplazar ")
+				instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre)
+				xpos += text_x
+				xpos = draw_text_xpos(xpos, ypos, " con ")
+				instruccion[2] = draw_boton_text_list(xpos, ypos, dat2, terreno_nombre)
+				xpos += text_x
+				xpos = draw_text_xpos(xpos, ypos, " el ")
+				instruccion[3] = draw_boton_text(xpos, ypos, dat3)
+				xpos += text_x
+				xpos = draw_text_xpos(xpos, ypos, "% del tiempo")
+			}
+			//Menas de Recursos
+			else if tipo = 3{
+				xpos = draw_text_xpos(xpos, ypos, "Añadir ")
+				instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, ore_names)
+				xpos += text_x
+				xpos = draw_text_xpos(xpos, ypos, " de tamaño ")
+				instruccion[2] = draw_boton_text(xpos, ypos, dat2)
+				xpos += text_x
+				xpos = draw_text_xpos(xpos, ypos, ", ")
+				instruccion[3] = draw_boton_text(xpos, ypos, dat3)
+				xpos += text_x
+				xpos = draw_text_xpos(xpos, ypos, " veces")
+			}
+		}
+		xpos = 120
 		ypos += text_y
-		#region Menas de Recursos
-			xpos = 120
-			ypos += text_y
-			draw_text(xpos, ypos, "Menas de Recursos")
-			for(var a = 0; a < array_length(editor_menas); a++){
-				var temp_editor_menas = editor_menas[a]
-				xpos = 140
-				ypos += text_y
-				if draw_sprite_boton(spr_basura, xpos, ypos, 20, 20)
-					array_delete(editor_menas, a, 1)
-				xpos += 20
-				xpos = draw_text_xpos(xpos, ypos, "id: ")
-				var temp_array = []
-				for(var j = 0; j < ore_max; j++)
-					array_push(temp_array, recurso_nombre[ore_recurso[j]])
-				temp_editor_menas.target = draw_boton_text_list(xpos, ypos, temp_editor_menas.target, temp_array)
-				xpos += text_x
-				xpos = draw_text_xpos(xpos, ypos, ", size: ")
-				temp_editor_menas.size = draw_boton_text(xpos, ypos, temp_editor_menas.size)
-				xpos += text_x
-				xpos = draw_text_xpos(xpos, ypos, ", count: ")
-				temp_editor_menas.count = draw_boton_text(xpos, ypos, temp_editor_menas.count)
-			}
-			xpos = 140
-			ypos += text_y
-			if draw_boton(xpos, ypos, "Nueva Mena de Recursos")
-				array_push(editor_menas, {target : 0, size : 0, count : 0})
-		#endregion
+		xpos = draw_text_xpos(xpos, ypos, "Añadir ")
+		var a = draw_boton_text_list(xpos, ypos, 0, ["...", "Bloques de Terreno", "Bordes", "Ruido", "Menas de Recursos"])
+		if a > 0{
+			array_push(editor_instrucciones, [a - 1, 0, 0, 0])
+			a = 0
+		}
 		xpos = room_width / 2 + 20
 		ypos = 120
 		draw_text(xpos, ypos, "Tamaño del mapa")
@@ -2612,8 +2492,7 @@ else if ((mouse_check_button(mb_right) and prev_change) or mouse_check_button_pr
 //Ciclos
 if not pausa{
 	//Ciclo edificios
-	var size_edificios = array_length(edificios_activos)
-	for(var a = 0; a < size_edificios; a++){
+	for(var a = 0; a < array_length(edificios_activos); a++){
 		edificio = edificios_activos[a]
 		if edificio.idle or edificio.vida <= 0
 			continue
@@ -2875,8 +2754,14 @@ if not pausa{
 			//Está encendido
 			if edificio.fuel > 0{
 				edificio.fuel--
-				if flujo.liquido != 0
-					edificio.vida--
+				if flujo.liquido != 0{
+					edificio.vida -= 4
+					if edificio.vida <= 0{
+						delete_edificio(edificio.a, edificio.b, true)
+						a--
+						continue
+					}
+				}
 				else{
 					if flujo_power < 1
 						edificio.vida -= (1 - flujo_power)
@@ -3581,7 +3466,7 @@ if not pausa{
 			}
 		}
 	}
-	size_edificios = array_length(edificios_pendientes)
+	var size_edificios = array_length(edificios_pendientes)
 	for(var a = 0; a < size_edificios; a++){
 		edificio = edificios_pendientes[a]
 		if edificio.eliminar and edificio.pointer >= 0{
@@ -4024,6 +3909,16 @@ if not pausa{
 				}
 			flujo.liquido = -1
 		}
+	}
+	if nuclear_step-- > 0{
+		if nuclear_step > 150{
+			draw_set_color(c_white)
+			draw_set_alpha((nuclear_step - 150) / 150)
+			draw_rectangle(0, 0, room_width, room_height, false)
+		}
+		draw_sprite_off(spr_blur, 0, nuclear_x, nuclear_y,,,,, nuclear_step / 300)
+		draw_set_color(c_black)
+		draw_set_alpha(1)
 	}
 }
 //Input

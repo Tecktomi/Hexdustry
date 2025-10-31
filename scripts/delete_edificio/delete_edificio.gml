@@ -285,6 +285,29 @@ function delete_edificio(aa, bb, enemigo = false){
 				enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
 			}
 		}
+		//Explosión Nuclear
+		if enemigo and var_edificio_nombre = "Planta Nuclear" and edificio.fuel > 0{
+			var xpos = edificio.x, ypos = edificio.y
+			for(var i = 0; i < ds_list_size(edificios); i++){
+				var temp_edificio = edificios[|i], dis = distance_sqr(xpos, ypos, temp_edificio.x, temp_edificio.y)
+				if dis > 160_000 //400^2
+					continue
+				temp_edificio.vida -= 9_000_000 / dis * random_range(0.7, 1.3)
+				if temp_edificio.vida > 0
+					continue
+				delete_edificio(temp_edificio.a, temp_edificio.b, true)
+				i--
+			}
+			nuclear_x = xpos
+			nuclear_y = ypos
+			nuclear_step = 300
+			var temp_complex = xytoab(xpos, ypos)
+			var temp_list = get_size(temp_complex.a, temp_complex.b, 0, 7)
+			for(var a = 0; a < ds_list_size(temp_list); a++){
+				temp_complex = temp_list[|a]
+				set_terreno(temp_complex.a, temp_complex.b, 17)
+			}
+		}
 		delete(edificio)
 	}
 }

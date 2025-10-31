@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "29_10_2025")
+ini_write_string("Global", "version", "30_10_2025")
 ini_close()
 #region Metadatos
 	menu = 0
@@ -130,9 +130,7 @@ ini_close()
 	save_file = ""
 	editor_seed = random_get_seed()
 	editor_fondo = 0
-	editor_terrenos = array_create(0, {target : 0, size : 0, count : 0})
-	editor_reemplazo = array_create(0, {start : 0, target : array_create(0, 0), finish : 0})
-	editor_menas = array_create(0, {target : 0, size : 0, count : 0})
+	editor_instrucciones = array_create(0, array_create(4, 0))
 	draw_boton_text_counter = 0
 	editor_xpos = 0
 	editor_ypos = 0
@@ -140,6 +138,9 @@ ini_close()
 	editor_array = array_create(0, 0)
 	editor_max_height = 25
 	editor_list = false
+	nuclear_x = 0
+	nuclear_y = 0
+	nuclear_step = 0
 #endregion
 null_edificio = {
 	index : -1,
@@ -353,6 +354,7 @@ function def_terreno(nombre, sprite = spr_piedra, recurso = 0, caminable = true,
 	//15
 	def_terreno("Hielo", spr_hielo)
 	def_terreno("Basalto", spr_basalto)
+	def_terreno("Ceniza", spr_ceniza)
 #endregion
 terreno_max = array_length(terreno_nombre)
 //Ores
