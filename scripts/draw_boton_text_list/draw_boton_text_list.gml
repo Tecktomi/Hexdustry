@@ -3,6 +3,7 @@ function draw_boton_text_list(xpos, ypos, variable = 0, array_name = array_creat
 		if draw_boton(xpos, ypos, array_name[variable],,,, false){
 			get_keyboard_string = draw_boton_text_counter
 			input_layer = 1
+			deslizante = 0
 		}
 		if get_keyboard_string = draw_boton_text_counter++{
 			var max_width = 0, size = array_length(array_name), a = text_x

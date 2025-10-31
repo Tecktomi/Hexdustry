@@ -6,6 +6,8 @@ function draw_boton_text(xpos, ypos, variable, es_real = true){
 			else
 				keyboard_string = string(variable)
 			get_keyboard_string = draw_boton_text_counter
+			input_layer = 0
+			editor_list = false
 		}
 		if get_keyboard_string = draw_boton_text_counter++{
 			draw_line(xpos, ypos + 16, xpos + text_x, ypos + 16)

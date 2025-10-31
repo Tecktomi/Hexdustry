@@ -22,6 +22,8 @@ function game_start(){
 						delete_edificio(a, b)
 				}
 			}
+		for(var a = 0; a < rss_max; a++)
+			nucleo.carga[a] = carga_inicial[a]
 		for(var a = 0; a < xsize / chunk_width; a++)
 			for(var b = 0; b < ysize / chunk_height; b++)
 				update_background(a * chunk_width, b * chunk_height)

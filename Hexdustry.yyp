@@ -2,7 +2,7 @@
   "$GMProject":"v1",
   "%Name":"Hexdustry",
   "AudioGroups":[
-    {"$GMAudioGroup":"","%Name":"audiogroup_default","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMAudioGroup":"v1","%Name":"audiogroup_default","exportDir":"","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
   ],
   "configs":{
     "children":[],
@@ -25,7 +25,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.13.1.193",
+    "IDEVersion":"2024.14.0.207",
   },
   "name":"Hexdustry",
   "resources":[
@@ -132,6 +132,7 @@
     {"id":{"name":"spr_basura","path":"sprites/spr_basura/spr_basura.yy",},},
     {"id":{"name":"spr_bateria","path":"sprites/spr_bateria/spr_bateria.yy",},},
     {"id":{"name":"spr_blanco","path":"sprites/spr_blanco/spr_blanco.yy",},},
+    {"id":{"name":"spr_blur","path":"sprites/spr_blur/spr_blur.yy",},},
     {"id":{"name":"spr_bomba_color","path":"sprites/spr_bomba_color/spr_bomba_color.yy",},},
     {"id":{"name":"spr_bomba_cupula","path":"sprites/spr_bomba_cupula/spr_bomba_cupula.yy",},},
     {"id":{"name":"spr_bomba_evaporacion","path":"sprites/spr_bomba_evaporacion/spr_bomba_evaporacion.yy",},},
@@ -143,6 +144,7 @@
     {"id":{"name":"spr_camino_diagonal","path":"sprites/spr_camino_diagonal/spr_camino_diagonal.yy",},},
     {"id":{"name":"spr_camino","path":"sprites/spr_camino/spr_camino.yy",},},
     {"id":{"name":"spr_carbon","path":"sprites/spr_carbon/spr_carbon.yy",},},
+    {"id":{"name":"spr_ceniza","path":"sprites/spr_ceniza/spr_ceniza.yy",},},
     {"id":{"name":"spr_cinta_magnetica_diagonal","path":"sprites/spr_cinta_magnetica_diagonal/spr_cinta_magnetica_diagonal.yy",},},
     {"id":{"name":"spr_cinta_magnetica","path":"sprites/spr_cinta_magnetica/spr_cinta_magnetica.yy",},},
     {"id":{"name":"spr_clonar","path":"sprites/spr_clonar/spr_clonar.yy",},},
