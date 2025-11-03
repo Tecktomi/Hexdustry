@@ -1,4 +1,4 @@
-function calculate_in_out_2(edificio = control.null_edificio){
+function calculate_in_out_2(edificio = control.null_edificio, set_receptor = true){
 	var index = edificio.index, a = edificio.a, b = edificio.b, dir = edificio.dir, var_edificio_nombre = edificio_nombre[index]
 	with control{
 		for(var i = 0; i < ds_list_size(edificio.inputs); i++){
@@ -6,13 +6,15 @@ function calculate_in_out_2(edificio = control.null_edificio){
 			ds_list_remove(temp_edificio.outputs, edificio)
 		}
 		ds_list_clear(edificio.inputs)
-		edificio.receptor = edificio_receptor[index]
+		if set_receptor
+			edificio.receptor = edificio_receptor[index]
 		for(var i = 0; i < ds_list_size(edificio.outputs); i++){
 			var temp_edificio = edificio.outputs[|i]
 			ds_list_remove(temp_edificio.inputs, edificio)
 		}
 		ds_list_clear(edificio.outputs)
-		edificio.emisor = edificio_emisor[index]
+		if set_receptor
+			edificio.emisor = edificio_emisor[index]
 		//Añadir inputs y outputs
 		var temp_list = get_arround(a, b, dir, edificio_size[index])
 		for(var c = 0; c < ds_list_size(temp_list); c++){

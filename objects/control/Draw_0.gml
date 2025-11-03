@@ -981,13 +981,15 @@ if menu = 2{
 	sprite_boton_text = ""
 #endregion
 if pausa{
-	for(var a = 0; a < ds_list_size(enemigos); a++){
-		var enemigo = enemigos[|a], aa = enemigo.a, bb = enemigo.b, index = enemigo.index
+	size = array_length(enemigos)
+	for(var a = 0; a < size; a++){
+		var enemigo = enemigos[a], aa = enemigo.a, bb = enemigo.b, index = enemigo.index
 		draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb)
 		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,,, c_red)
 	}
-	for(var a = 0; a < ds_list_size(drones_aliados); a++){
-		var dron = drones_aliados[|a], aa = dron.a, bb = dron.b, index = dron.index
+	size = array_length(drones_aliados)
+	for(var a = 0; a < size; a++){
+		var dron = drones_aliados[a], aa = dron.a, bb = dron.b, index = dron.index
 		draw_sprite_off(dron_sprite[index], 0, aa, bb)
 		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,,, c_blue)
 	}
@@ -1051,7 +1053,7 @@ if show_menu{
 		}
 		draw_set_halign(fa_left)
 		var xpos, ypos = 150
-		var size = array_length(edificio.instruccion)
+		size = array_length(edificio.instruccion)
 		if size > 25
 			deslizante = floor(draw_deslizante_vertical(110, ypos, ypos + 25 * 20, deslizante, 0, size - 25, 0))
 		for(var a = deslizante; a < min(deslizante + 25, size); a++){
@@ -1602,7 +1604,7 @@ if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio
 					puerto_carga_link.emisor = false
 					puerto_carga_link.link = edificio
 					calculate_in_out(puerto_carga_link)
-					calculate_in_out_2(puerto_carga_link)
+					calculate_in_out_2(puerto_carga_link, false)
 					if edificio.link != null_edificio{
 						if edificio.receptor
 							array_remove(puerto_carga_array, edificio)
@@ -1619,7 +1621,7 @@ if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio
 					edificio.emisor = true
 					edificio.link = puerto_carga_link
 					calculate_in_out(edificio)
-					calculate_in_out_2(edificio)
+					calculate_in_out_2(edificio, false)
 					array_push(puerto_carga_array, puerto_carga_link)
 					puerto_carga_link = null_edificio
 					puerto_carga_bool = false
@@ -1701,7 +1703,7 @@ if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio
 			draw_circle_off(edificio.x, edificio.y, alc, true)
 			if var_edificio_nombre = "Mortero"
 				draw_circle_off(edificio.x, edificio.y, 100, true)
-			if not ds_list_empty(enemigos) and edificio.target != null_enemigo
+			if array_length(enemigos) > 0 and edificio.target != null_enemigo
 				draw_sprite_off(spr_target, 0, edificio.target.a, edificio.target.b)
 		}
 		//Mostrar rutas de tuneles
@@ -1732,8 +1734,8 @@ if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio
 		}
 		if var_edificio_nombre = "Fábrica de Drones"{
 			if edificio.proceso > 0
-				temp_text += $"Creando Dron ({ds_list_size(drones_aliados)}/8)\n"
-			else if ds_list_size(drones_aliados) = 8
+				temp_text += $"Creando Dron ({array_length(drones_aliados)}/8)\n"
+			else if array_length(drones_aliados) = 8
 				temp_text += "Límite de Drones alcanzado (8/8)\n"
 		}
 		if var_edificio_nombre = "Mensaje"
@@ -1993,9 +1995,9 @@ if build_index > 0{
 			if not comprable
 				temp_text = "Recursos insuficientes\n" + temp_text
 			draw_set_color(c_red)
-			var flag_3 = false
-			for(var a = 0; a < ds_list_size(enemigos); a++){
-				var enemigo = enemigos[|a]
+			var flag_3 = false, size_2 = array_length(enemigos)
+			for(var a = 0; a < size_2; a++){
+				var enemigo = enemigos[a]
 				draw_circle_off(enemigo.a, enemigo.b, 100, true)
 				if not flag_3 and (sqr(mouse_x - enemigo.a + camx) + sqr(mouse_y - enemigo.b + camy)) < 10000{//100^2
 					temp_text += "¡Hay enemigos demasiado cerca!\n"
@@ -2341,7 +2343,7 @@ if build_index > 0{
 					}
 					else if var_edificio_nombre = "Torre de Alta Tensión"{
 						draw_circle_off(temp_complex_2.a, temp_complex_2.b, 1_000, true)
-						var size = array_length(torres_de_tension)
+						size = array_length(torres_de_tension)
 						for(var c = 0; c < size; c++){
 							var temp_edificio = torres_de_tension[c]
 							if sqr(temp_edificio.x - temp_complex_2.a) + sqr(temp_edificio.y - temp_complex_2.b) < 1_000_000//1000^2
@@ -2425,14 +2427,16 @@ if build_index > 0{
 						flag = false
 				}
 				//Detectar enemigos cerca
-				if flag and not cheat
-					for(var a = 0; a < ds_list_size(enemigos); a++){
-						var enemigo = enemigos[|a]
+				if flag and not cheat{
+					var size_2 = array_length(enemigos)
+					for(var a = 0; a < size_2; a++){
+						var enemigo = enemigos[a]
 						if (sqr(enemigo.a - temp_complex.a) + sqr(enemigo.b - temp_complex.b)) < 10_000{//100^2
 							flag = false
 							break
 						}
 					}
+				}
 				if flag and in(var_edificio_nombre, "Taladro", "Taladro Eléctrico") and not flag_2
 					flag = false
 				if not flag
@@ -2623,7 +2627,8 @@ if not pausa{
 							}
 							if grafic_luz and not edificio.luz{
 								edificio.luz = true
-								var temp_list = edificio.coordenadas, size = ds_list_size(temp_list)
+								var temp_list = edificio.coordenadas
+								size = ds_list_size(temp_list)
 								for(var b = 0; b < size; b++){
 									var temp_complex = temp_list[|b]
 									add_luz(temp_complex.a, temp_complex.b, 1)
@@ -2634,7 +2639,8 @@ if not pausa{
 						}
 						else if grafic_luz and edificio.luz{
 							edificio.luz = false
-							var temp_list = edificio.coordenadas, size = ds_list_size(temp_list)
+							var temp_list = edificio.coordenadas
+							size = ds_list_size(temp_list)
 							for(var b = 0; b < size; b++){
 								var temp_complex = temp_list[|b]
 								add_luz(temp_complex.a, temp_complex.b, -1)
@@ -2723,7 +2729,8 @@ if not pausa{
 					}
 					if grafic_luz and not edificio.luz{
 						edificio.luz = true
-						var temp_list = edificio.coordenadas, size = ds_list_size(temp_list)
+						var temp_list = edificio.coordenadas
+						size = ds_list_size(temp_list)
 						for(var b = 0; b < size; b++){
 							var temp_complex = temp_list[|b]
 							add_luz(temp_complex.a, temp_complex.b, 1)
@@ -2738,7 +2745,8 @@ if not pausa{
 				else{
 					if grafic_luz and edificio.luz{
 						edificio.luz = false
-						var temp_list = edificio.coordenadas, size = ds_list_size(temp_list)
+						var temp_list = edificio.coordenadas
+						size = ds_list_size(temp_list)
 						for(var b = 0; b < size; b++){
 							var temp_complex = temp_list[|b]
 							add_luz(temp_complex.a, temp_complex.b, -1)
@@ -2776,7 +2784,8 @@ if not pausa{
 					edificio.carga[19]--
 					if grafic_luz and not edificio.luz{
 						edificio.luz = true
-						var temp_list = edificio.coordenadas, size = ds_list_size(temp_list)
+						var temp_list = edificio.coordenadas
+						size = ds_list_size(temp_list)
 						for(var b = 0; b < size; b++){
 							var temp_complex = temp_list[|b]
 							add_luz(temp_complex.a, temp_complex.b, 1)
@@ -2791,7 +2800,8 @@ if not pausa{
 				else{
 					if grafic_luz and edificio.luz{
 						edificio.luz = false
-						var temp_list = edificio.coordenadas, size = ds_list_size(temp_list)
+						var temp_list = edificio.coordenadas
+						size = ds_list_size(temp_list)
 						for(var b = 0; b < size; b++){
 							var temp_complex = temp_list[|b]
 							add_luz(temp_complex.a, temp_complex.b, -1)
@@ -2924,7 +2934,7 @@ if not pausa{
 				//Buscar enemigos
 				if (image_index mod 10 = 0 or edificio.target = null_enemigo) or edificio.target.vida <= 0{
 					edificio.target = null_enemigo
-					if not ds_list_empty(enemigos){
+					if array_length(enemigos) > 0{
 						if var_edificio_nombre = "Mortero"
 							turret_target(edificio, 10000)//100^2
 						else
@@ -2992,7 +3002,7 @@ if not pausa{
 			else if in(var_edificio_nombre, "Láser"){
 				if edificio.target = null_enemigo or edificio.target.vida <= 0{
 					edificio.target = null_enemigo
-					if not ds_list_empty(enemigos)
+					if array_length(enemigos) > 0
 						turret_target(edificio)
 				}
 				var enemigo = edificio.target
@@ -3006,7 +3016,7 @@ if not pausa{
 					draw_line_off(edificio.x + 12, edificio.y + 14, enemigo.a, enemigo.b)
 					draw_set_alpha(1)
 					if enemigo.vida <= 0{
-						kill_enemigo(enemigo)
+						destroy_dron(enemigo)
 						change_energia(0, edificio)
 						edificio.target = null_enemigo
 						turret_target(edificio)
@@ -3014,6 +3024,31 @@ if not pausa{
 				}
 				else
 					change_energia(0, edificio)
+			}
+			else if var_edificio_nombre = "Torre Reparadora"{
+				if edificio.link = null_edificio{
+					edificio.link = edificios[|irandom(ds_list_size(edificios) - 1)]
+					if edificio != edificio.link and edificio.link.vida >= edificio_vida[edificio.link.index] or distance_sqr(edificio.x, edificio.y, edificio.link.x, edificio.link.y) > edificio_alcance_sqr[index]{
+						edificio.link = null_edificio
+						change_energia(0, edificio)
+					}
+				}
+				else{
+					if edificio.link.vida <= 0 or edificio.link.vida >= edificio_vida[edificio.link.index]{
+						edificio.link = null_edificio
+						change_energia(0, edificio)
+					}
+					else{
+						change_energia(edificio_energia_consumo[index], edificio)
+						draw_set_color(c_green)
+						draw_set_alpha(red_power)
+						draw_line_off(edificio.x + 12, edificio.y + 14, edificio.link.x, edificio.link.y)
+						edificio.link.vida = min(edificio.link.vida + 2 * red_power, edificio_vida[edificio.link.index])
+						edificio.select = radtodeg(-arctan2(edificio.x + 12 - edificio.link.x, edificio.link.y - edificio.y - 14)) - 90
+						draw_set_alpha(1)
+						draw_set_color(c_black)
+					}
+				}
 			}
 		}
 		//Planta química
@@ -3122,9 +3157,9 @@ if not pausa{
 		}
 		//Fábrica de Drones
 		else if in(var_edificio_nombre, "Fábrica de Drones"){
-			if edificio.select >= 0 and ds_list_size(drones_aliados) < 8{
+			if edificio.select >= 0 and array_length(drones_aliados) < 8{
 				flag = false
-				var size = array_length(dron_precio_id[edificio.select])
+				size = array_length(dron_precio_id[edificio.select])
 				for(var b = 0; b < size; b++)
 					if edificio.carga[dron_precio_id[edificio.select, b]] < dron_precio_num[edificio.select, b]{
 						flag = true
@@ -3146,7 +3181,8 @@ if not pausa{
 						edificio.carga[dron_precio_id[edificio.select, b]] -= dron_precio_num[edificio.select, b]
 					}
 					var dron = add_dron(edificio.a, edificio.b, edificio.select)
-					ds_list_add(drones_aliados, dron)
+					dron.pointer = array_length(drones_aliados)
+					array_push(drones_aliados, dron)
 					edificio.waiting = not mover_in(edificio)
 					change_energia(0, edificio)
 				}
@@ -3484,8 +3520,9 @@ if not pausa{
 	}
 	edificios_pendientes = array_create(0, null_edificio)
 	//Ciclo de los enemigos
-	for(var a = 0; a < ds_list_size(enemigos); a++){
-		var enemigo = enemigos[|a], aa = enemigo.a, bb = enemigo.b, index = enemigo.index
+	size = array_length(enemigos)
+	for(var a = 0; a < size; a++){
+		var enemigo = enemigos[a], aa = enemigo.a, bb = enemigo.b, index = enemigo.index
 		draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb)
 		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,,, c_red)
 		if enemigo.vida < dron_vida_max[index]{
@@ -3553,10 +3590,10 @@ if not pausa{
 					enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
 				}
 			}
-			else if not ds_list_empty(drones_aliados){
-				var closest_dron = null_enemigo, size = ds_list_size(drones_aliados), closest_dis = infinity
-				for(var b = 0; b < size; b++){
-					var temp_dron = drones_aliados[|b], temp_dis = distance_sqr(aa, bb, temp_dron.a, temp_dron.b)
+			else if array_length(drones_aliados) > 0{
+				var closest_dron = null_enemigo, size_2 = array_length(drones_aliados), closest_dis = infinity
+				for(var b = 0; b < size_2; b++){
+					var temp_dron = drones_aliados[b], temp_dis = distance_sqr(aa, bb, temp_dron.a, temp_dron.b)
 					if temp_dis < closest_dis and temp_dis < 2500{//50^2
 						closest_dis = temp_dis
 						closest_dron = temp_dron
@@ -3565,13 +3602,17 @@ if not pausa{
 				if closest_dron != null_enemigo{
 					draw_set_color(c_red)
 					draw_line_off(aa, bb, closest_dron.a, closest_dron.b)
-					if --closest_dron.vida <= 0
-						ds_list_remove(drones_aliados, closest_dron)
+					if --closest_dron.vida <= 0{
+						var temp_dron = drones_aliados[array_length(drones_aliados) - 1]
+						drones_aliados[closest_dron.pointer] = temp_dron
+						temp_dron.pointer = closest_dron.pointer
+						array_pop(drones_aliados)
+					}
 				}
 			}
 		}
 		//Cambiar de chunk
-		var temp_list = ds_grid_get(chunk_enemigos, enemigo.chunk_x, enemigo.chunk_y)
+		var temp_array = ds_grid_get(chunk_enemigos, enemigo.chunk_x, enemigo.chunk_y)
 		var temp_complex = xytoab(aa, bb)
 		aa = temp_complex.a
 		bb = temp_complex.b
@@ -3581,18 +3622,22 @@ if not pausa{
 			if not ds_list_empty(edificios)
 				enemigo.target = edificio_cercano[# aa, bb]
 			if clamp(round(aa / 6), 0, ds_grid_width(chunk_enemigos) - 1) != enemigo.chunk_x or clamp(round(bb / 12), 0, ds_grid_height(chunk_enemigos) - 1) != enemigo.chunk_y{
-				ds_list_remove(temp_list, enemigo)
+				var temp_enemigo = temp_array[array_length(temp_array) - 1]
+				temp_array[enemigo.chunk_pointer] = temp_enemigo
+				temp_enemigo.chunk_pointer = enemigo.chunk_pointer
+				array_pop(temp_array)
 				enemigo.chunk_x = clamp(round(aa / 6), 0, ds_grid_width(chunk_enemigos) - 1)
 				enemigo.chunk_y = clamp(round(bb / 12), 0, ds_grid_height(chunk_enemigos) - 1)
-				temp_list = ds_grid_get(chunk_enemigos, enemigo.chunk_x, enemigo.chunk_y)
-				ds_list_add(temp_list, enemigo)
+				temp_array = ds_grid_get(chunk_enemigos, enemigo.chunk_x, enemigo.chunk_y)
+				enemigo.chunk_pointer = array_length(temp_array)
+				array_push(temp_array, enemigo)
 			}
 		}
 		aa = enemigo.a
 		bb = enemigo.b
 		//Alejarse de los enemigos cercanos
-		for(var b = 0; b < ds_list_size(temp_list); b++){
-			var temp_enemigo = temp_list[|b]
+		for(var b = 0; b < array_length(temp_array); b++){
+			var temp_enemigo = temp_array[b]
 			if temp_enemigo != enemigo{
 				var dis = sqr(aa - temp_enemigo.a) + sqr(bb - temp_enemigo.b)
 				if dis < 400{//20^2
@@ -3607,8 +3652,9 @@ if not pausa{
 		}
 	}
 	//Ciclo drones aliados
-	for(var a = 0; a < ds_list_size(drones_aliados); a++){
-		var dron = drones_aliados[|a], aa = dron.a, bb = dron.b, index = dron.index
+	size = array_length(drones_aliados)
+	for(var a = 0; a < size; a++){
+		var dron = drones_aliados[a], aa = dron.a, bb = dron.b, index = dron.index
 		draw_sprite_off(dron_sprite[index], 0, aa, bb)
 		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,,, c_blue)
 		//Indicador de Vida
@@ -3617,7 +3663,11 @@ if not pausa{
 			draw_circle_off(aa, bb - 20, 5, false)
 			draw_set_color(c_white)
 			if dron.vida <= 0{
-				ds_list_remove(drones_aliados, dron)
+				var temp_dron = drones_aliados[array_length(drones_aliados) - 1]
+				drones_aliados[dron.pointer] = temp_dron
+				temp_dron.pointer = dron.pointer
+				array_pop(drones_aliados)
+				size--
 				a--
 				continue
 			}
@@ -3634,6 +3684,7 @@ if not pausa{
 					edificio = dron.target
 					var dis = distance_sqr(aa, bb, edificio.x, edificio.y)
 					if dis > 100{//10^2
+						dis = sqrt(dis)
 						dron.a += (edificio.x - aa) / dis
 						dron.b += (edificio.y - bb) / dis
 					}
@@ -3704,8 +3755,9 @@ if not pausa{
 			}
 		}
 		//Evitar colisiones
-		for(var b = a + 1; b < ds_list_size(drones_aliados); b++){
-			var temp_dron = drones_aliados[|b], dis = sqr(aa - temp_dron.a) + sqr(bb - temp_dron.b)
+		var size_2 = array_length(drones_aliados)
+		for(var b = a + 1; b < size_2; b++){
+			var temp_dron = drones_aliados[b], dis = sqr(aa - temp_dron.a) + sqr(bb - temp_dron.b)
 			if dis < 400{//20^2
 				var aaa = (aa - temp_dron.a) / dis, bbb = (bb - temp_dron.b) / dis
 				dron.a += aaa
@@ -3729,17 +3781,19 @@ if not pausa{
 			if municion.target.vida > 0{
 				municion.target.vida -= municion.dmg
 				if municion.target.vida <= 0
-					kill_enemigo(municion.target)
+					destroy_dron(municion.target)
 			}
 			if municion.tipo = 1{
 				sound_play(snd_explosion, municion.x, municion.y)
 				array_push(efectos, add_efecto(spr_explosion, 0, municion.x, municion.y, 24, 1 / 3))
-				for(var b = 0; b < ds_list_size(enemigos); b++){
-					var enemigo = enemigos[|b], dis = distance_sqr(enemigo.a, enemigo.b, municion.x, municion.y)
+				var size_2 = array_length(enemigos)
+				for(var b = 0; b < size_2; b++){
+					var enemigo = enemigos[b], dis = distance_sqr(enemigo.a, enemigo.b, municion.x, municion.y)
 					if dis < 2500{//50^2
 						enemigo.vida -= 1000 / (10 + sqrt(dis))
 						if enemigo.vida <= 0{
-							kill_enemigo(enemigo)
+							destroy_dron(enemigo)
+							size_2--
 							b--
 						}
 					}
@@ -3818,10 +3872,11 @@ if not pausa{
 						continue
 					var enemigo = add_dron(aa, bb, 0)
 					enemigo.vida = (enemigo.vida + 5 * d) * multiplicador_vida_enemigos
-					var temp_list = ds_grid_get(chunk_enemigos, enemigo.chunk_x, enemigo.chunk_y)
-					ds_list_add(temp_list, enemigo)
+					var temp_array = ds_grid_get(chunk_enemigos, enemigo.chunk_x, enemigo.chunk_y)
+					array_push(temp_array, enemigo)
 					enemigo.target = edificio_cercano[# aa, bb]
-					ds_list_add(enemigos, enemigo)
+					enemigo.pointer = array_length(enemigos)
+					array_push(enemigos, enemigo)
 				}
 			}
 		}

@@ -1,4 +1,5 @@
 function delete_edificio(aa, bb, enemigo = false){
+	var time = current_time
 	with control{
 		if not edificio_bool[# aa, bb]
 			exit
@@ -30,6 +31,10 @@ function delete_edificio(aa, bb, enemigo = false){
 		desactivar_edificio(edificio)
 		for(var i = real(var_edificio_nombre = "Procesador"); i < array_length(edificio.procesador_link); i++)
 			array_remove(edificio.procesador_link[i].procesador_link, edificio)
+		var temp_array = chunk_edificios[# edificio.chunk_x, edificio.chunk_y], temp_edificio = temp_array[array_length(temp_array) - 1]
+		temp_array[edificio.chunk_pointer] = temp_edificio
+		temp_edificio.chunk_pointer = edificio.chunk_pointer
+		array_pop(temp_array)
 		//Cancelar coordenadas
 		var size = ds_list_size(edificio.coordenadas)
 		for(var i = 0; i < size; i++){
@@ -55,7 +60,7 @@ function delete_edificio(aa, bb, enemigo = false){
 					if terreno_caminable[terreno[# a, b]]{
 						var temp_priority = ds_grid_get(edificio_cercano_priority, a, b)
 						if not ds_priority_empty(temp_priority){
-							var temp_edificio = ds_priority_find_min(temp_priority)
+							temp_edificio = ds_priority_find_min(temp_priority)
 							while not temp_edificio.vivo{
 								ds_priority_delete_min(temp_priority)
 								temp_edificio = ds_priority_find_min(temp_priority)
@@ -84,14 +89,14 @@ function delete_edificio(aa, bb, enemigo = false){
 		//Cancelar outputs
 		size = ds_list_size(edificio.outputs)
 		for(var a = 0; a < size; a++){
-			var temp_edificio = edificio.outputs[|a]
+			temp_edificio = edificio.outputs[|a]
 			ds_list_remove(temp_edificio.inputs, edificio)
 		}
 		ds_list_destroy(edificio.outputs)
 		//Cancelar inputs
 		size = ds_list_size(edificio.inputs)
 		for(var a = 0; a < size; a++){
-			var temp_edificio = edificio.inputs[|a]
+			temp_edificio = edificio.inputs[|a]
 			ds_list_remove(temp_edificio.outputs, edificio)
 			if temp_edificio.output_index >= ds_list_size(temp_edificio.outputs)
 				temp_edificio.output_index = 0
@@ -116,14 +121,14 @@ function delete_edificio(aa, bb, enemigo = false){
 				//Eliminar conecciones directas
 				size = ds_list_size(edificio.energia_link)
 				for(var a = 0; a < size; a++){
-					var temp_edificio = edificio.energia_link[|a]
+					temp_edificio = edificio.energia_link[|a]
 					ds_list_remove(temp_edificio.energia_link, edificio)
 				}
 				//Revisar nuevo estado de red
 				var red_bateria = 0
 				size = ds_list_size(temp_red.edificios)
 				for(var a = 0; a < size; a++){
-					var temp_edificio = temp_red.edificios[|a]
+					temp_edificio = temp_red.edificios[|a]
 					if in(edificio_nombre[temp_edificio.index], "Batería")
 						red_bateria++
 				}
@@ -145,7 +150,7 @@ function delete_edificio(aa, bb, enemigo = false){
 								visited[nodo.edificio_index] = true
 								size = ds_list_size(nodo.energia_link)
 								for(var a = 0; a < size; a++){
-									var temp_edificio = nodo.energia_link[|a]
+									temp_edificio = nodo.energia_link[|a]
 									if not visited[temp_edificio.edificio_index] and not ds_list_in(agregado, temp_edificio){
 										ds_stack_push(pila, temp_edificio)
 										ds_list_add(agregado, temp_edificio)
@@ -165,7 +170,7 @@ function delete_edificio(aa, bb, enemigo = false){
 							temp_red_2.bateria = floor(temp_red.bateria * isla_bateria / red_bateria)
 						size = ds_list_size(isla)
 						for(var a = 0; a < size; a++){
-							var temp_edificio = isla[|a]
+							temp_edificio = isla[|a]
 							temp_edificio.red = temp_red_2
 							if edificio_energia_consumo[temp_edificio.index] > 0
 								temp_red_2.consumo += abs(temp_edificio.energia_consumo)
@@ -199,7 +204,7 @@ function delete_edificio(aa, bb, enemigo = false){
 					//Eliminar conecciones directas
 					size = ds_list_size(edificio.flujo_link)
 					for(var a = 0; a < size; a++){
-						var temp_edificio = edificio.flujo_link[|a]
+						temp_edificio = edificio.flujo_link[|a]
 						ds_list_remove(temp_edificio.flujo_link, edificio)
 					}
 					ds_list_clear(edificio.flujo_link)
@@ -224,7 +229,7 @@ function delete_edificio(aa, bb, enemigo = false){
 									visited[nodo.edificio_index] = true
 									size = ds_list_size(nodo.flujo_link)
 									for(var a = 0; a < size; a++){
-										var temp_edificio = nodo.flujo_link[|a]
+										temp_edificio = nodo.flujo_link[|a]
 										if not visited[temp_edificio.edificio_index] and not ds_list_in(agregado, temp_edificio){
 											ds_stack_push(pila, temp_edificio)
 											ds_list_add(agregado, temp_edificio)
@@ -245,7 +250,7 @@ function delete_edificio(aa, bb, enemigo = false){
 								temp_flujo_2.almacen = floor(temp_flujo.almacen * isla_almacen / flujo_almacen)
 							size = ds_list_size(isla)
 							for(var a = 0; a < size; a++){
-								var temp_edificio = isla[|a]
+								temp_edificio = isla[|a]
 								temp_edificio.flujo = temp_flujo_2
 								temp_flujo_2.almacen_max += edificio_flujo_almacen[temp_edificio.index]
 								if edificio_flujo_consumo[temp_edificio.index] > 0
@@ -263,7 +268,7 @@ function delete_edificio(aa, bb, enemigo = false){
 			//Eliminar links
 			size = ds_list_size(edificio.flujo_link)
 			for(var a = 0; a < size; a++){
-				var temp_edificio = edificio.flujo_link[|a]
+				temp_edificio = edificio.flujo_link[|a]
 				ds_list_remove(temp_edificio.flujo_link, edificio)
 			}
 			ds_list_destroy(edificio.flujo_link)
@@ -277,9 +282,9 @@ function delete_edificio(aa, bb, enemigo = false){
 			}
 		}
 		//Camiar target de enemigos
-		size = ds_list_size(enemigos)
+		size = array_length(enemigos)
 		for(var a = 0; a < size; a++){
-			var temp_enemigo = enemigos[|a]
+			var temp_enemigo = enemigos[a]
 			if temp_enemigo.target = edificio{
 				var temp_complex = xytoab(temp_enemigo.a, temp_enemigo.b)
 				enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
@@ -288,14 +293,48 @@ function delete_edificio(aa, bb, enemigo = false){
 		//Explosión Nuclear
 		if enemigo and var_edificio_nombre = "Planta Nuclear" and edificio.fuel > 0{
 			var xpos = edificio.x, ypos = edificio.y
-			for(var i = 0; i < ds_list_size(edificios); i++){
-				var temp_edificio = edificios[|i], dis = distance_sqr(xpos, ypos, temp_edificio.x, temp_edificio.y)
+			size = ds_list_size(edificios)
+			//Daño edificios
+			for(var i = 0; i < size; i++){
+				temp_edificio = edificios[|i]
+				var dis = distance_sqr(xpos, ypos, temp_edificio.x, temp_edificio.y)
 				if dis > 160_000 //400^2
 					continue
 				temp_edificio.vida -= 9_000_000 / dis * random_range(0.7, 1.3)
 				if temp_edificio.vida > 0
 					continue
 				delete_edificio(temp_edificio.a, temp_edificio.b, true)
+				size--
+				i--
+			}
+			//Daño enemigos
+			size = array_length(enemigos)
+			for(var i = 0; i < size; i++){
+				enemigo = enemigos[i]
+				var dis = distance_sqr(xpos, ypos, enemigo.a, enemigo.b)
+				if dis > 160_000//400^2
+					continue
+				enemigo.vida -= 9_000_000 / dis * random_range(0.7, 1.3)
+				if enemigo.vida > 0
+					continue
+				destroy_dron(enemigo)
+				size--
+				i--
+			}
+			//Daño drones aliados
+			size = array_length(drones_aliados)
+			for(var i = 0; i < size; i++){
+				var dron = drones_aliados[i], dis = distance_sqr(xpos, ypos, dron.a, dron.b)
+				if dis > 160_000//400^2
+					continue
+				dron.vida -= 9_000_000 / dis * random_range(0.7, 1.3)
+				if dron.vida > 0
+					continue
+				var temp_dron = drones_aliados[array_length(drones_aliados) - 1]
+				drones_aliados[dron.pointer] = temp_dron
+				temp_dron.pointer = dron.pointer
+				array_pop(drones_aliados)
+				size--
 				i--
 			}
 			nuclear_x = xpos
@@ -303,11 +342,15 @@ function delete_edificio(aa, bb, enemigo = false){
 			nuclear_step = 300
 			var temp_complex = xytoab(xpos, ypos)
 			var temp_list = get_size(temp_complex.a, temp_complex.b, 0, 7)
-			for(var a = 0; a < ds_list_size(temp_list); a++){
-				temp_complex = temp_list[|a]
+			for(var i = 0; i < ds_list_size(temp_list); i++){
+				temp_complex = temp_list[|i]
+				var a = temp_complex.a, b = temp_complex.b
+				if a < 0 or b < 0 or a >= xsize or b >= ysize
+					continue
 				set_terreno(temp_complex.a, temp_complex.b, 17)
 			}
 		}
 		delete(edificio)
 	}
+	show_debug_message(current_time - time)
 }

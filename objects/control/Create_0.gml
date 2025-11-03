@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "30_10_2025")
+ini_write_string("Global", "version", "03_11_2025")
 ini_close()
 #region Metadatos
 	menu = 0
@@ -189,7 +189,10 @@ null_edificio = {
 	pointer : -1,
 	procesador_link : undefined,
 	eliminar : false,
-	agregar : false
+	agregar : false,
+	chunk_x : 0,
+	chunk_y : 0,
+	chunk_pointer : 0
 }
 null_edificio.link = null_edificio
 ds_list_add(null_edificio.coordenadas, {a : 0, b : 0})
@@ -264,23 +267,19 @@ null_enemigo = {
 	target : null_edificio,
 	chunk_x : 0,
 	chunk_y : 0,
+	chunk_pointer : 0,
 	carga : [0],
 	carga_total : 0,
-	modo : 0
+	modo : 0,
+	pointer : 0
 }
-enemigos = ds_list_create()
-drones_aliados = ds_list_create()
-ds_list_add(enemigos, null_enemigo)
-ds_list_clear(enemigos)
+enemigos = array_create(0, null_enemigo)
+drones_aliados = array_create(0, null_enemigo)
 null_edificio.target = null_enemigo
 chunk_enemigos = ds_grid_create(ceil(xsize / 6), ceil(ysize / 12))
-for(var a = 0; a < xsize / 6; a++)
-	for(var b = 0; b < ysize / 12; b++){
-		var temp_list = ds_list_create()
-		ds_list_add(temp_list, null_enemigo)
-		ds_list_clear(temp_list)
-		ds_grid_set(chunk_enemigos, a, b, temp_list)
-	}
+ds_grid_clear(chunk_enemigos, array_create(0, null_enemigo))
+chunk_edificios = ds_grid_create(ceil(xsize / 6), ceil(ysize / 12))
+ds_grid_clear(chunk_edificios, array_create(0, null_edificio))
 //Disparos
 null_municion = {
 	x : 0,
@@ -504,7 +503,8 @@ lq_max = array_length(liquido_nombre)
 		"Dispara explosivos a largo alcance, devastando un área de enemigos",
 		"Procesa instrucciones lógicas",
 		"Permite escribir mensajes",
-		"Permite almacenar hasta 128 datos"
+		"Permite almacenar hasta 128 datos",
+		"Proyecta un láser de reparación a los edificios cercanos usando energía"
 	]
 	for(var a = array_length(edificio_descripcion) - 1; a >= 0; a--)
 		edificio_descripcion[a] = text_wrap(edificio_descripcion[a], 400)
@@ -632,8 +632,9 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	def_edificio("Procesador", 2, spr_procesador,, "61", 80, 1,, [0, 15, 16], [20, 40, 20]); def_edificio_2(5)
 	def_edificio("Mensaje", 1, spr_mensaje,, "62", 50,,, [0, 16], [10, 3]); def_edificio_2(,,,,, true)
 	def_edificio("Memoria", 1, spr_memoria,, "63", 50,,, [0, 16], [10, 3]); def_edificio_2(,,,,, true)
+	def_edificio("Torre Reparadora", 2, spr_torre_reparadora, spr_torre_reparadora_2, "57", 100, 1,, [2, 3, 15], [10, 15, 5]); def_edificio_2(40,,, 0, 200)
 #endregion
-categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 7, 8, 9, 22, 36, 27, 31, 33, 39], [11, 10, 12, 13, 26, 32, 37, 38], [15, 30, 14, 24], [19, 20, 21, 23, 34, 40], [41, 42, 43]]
+categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 7, 8, 9, 22, 36, 27, 31, 33, 39], [11, 10, 12, 13, 26, 32, 37, 38], [15, 30, 14, 24], [19, 20, 21, 23, 34, 40, 44], [41, 42, 43]]
 categoria_nombre = ["Transporte", "Producción", "Electricidad", "Líquidos", "Defensa", "Lógica"]
 #region planta quimica
 	planta_quimica_receta = ["Ácido", "Concreto", "Explosivos", "Combustible", "Azufre", "Baterías", "Plástico"]

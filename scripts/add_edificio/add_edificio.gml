@@ -50,7 +50,10 @@ function add_edificio(index, dir, a, b){
 			pointer : -1,
 			procesador_link : array_create(0, null_edificio),
 			eliminar : false,
-			agregar : false
+			agregar : false,
+			chunk_x : clamp(round(a / 6), 0, ds_grid_width(chunk_edificios) - 1),
+			chunk_y : clamp(round(b / 12), 0, ds_grid_height(chunk_edificios) - 1),
+			chunk_pointer : 0
 		}
 		ds_list_add(edificio.energia_link, null_edificio)
 		ds_list_clear(edificio.energia_link)
@@ -79,6 +82,8 @@ function add_edificio(index, dir, a, b){
 		else if var_edificio_nombre = "Memoria"
 			edificio.variables = array_create(128)
 		array_push(efectos, add_efecto(size_fx[edificio_size[index] - 1], 0, x, y, 3))
+		edificio.chunk_pointer = array_length(chunk_edificios[# edificio.chunk_x, edificio.chunk_y])
+		array_push(chunk_edificios[# edificio.chunk_x, edificio.chunk_y], edificio)
 		//Añadir coordenadas
 		var temp_list_size = get_size(a, b, dir, edificio_size[index])
 		var temp_list_arround = get_arround(a, b, dir, edificio_size[index])
@@ -92,9 +97,9 @@ function add_edificio(index, dir, a, b){
 		if not edificio_camino[index] and not in(var_edificio_nombre, "Tubería"){
 			edificio_pathfind(edificio)
 			ds_list_add(edificios_targeteables, edificio)
-			size = ds_list_size(enemigos)
+			size = array_length(enemigos)
 			for(var c = 0; c < size; c++){
-				var enemigo = enemigos[|c]
+				var enemigo = enemigos[c]
 				temp_complex = xytoab(enemigo.a, enemigo.b)
 				enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
 			}
