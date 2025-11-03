@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"kill_enemigo",
+  "%Name":"destroy_dron",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"kill_enemigo",
+  "name":"destroy_dron",
   "parent":{
     "name":"SCRIPTS",
     "path":"folders/SCRIPTS.yy",

@@ -16,10 +16,6 @@ function cargar_escenario(file = ""){
 			spawn_y = ini_read_real("Global", "spawn_y", 0)
 			for(var a = 0; a < rss_max; a++)
 				carga_inicial[a] = ini_read_real("Carga inicial", a, 0)
-			delete_edificio(nucleo.a, nucleo.b, false)
-			var temp_nucleo = add_edificio(0, 0, ini_read_real("Global", "nucleo_x", floor(xsize / 2)), ini_read_real("Global", "nucleo_y", floor(ysize / 2)))
-			nucleo = temp_nucleo
-			array_copy(nucleo.carga, 0, carga_inicial, 0, rss_max)
 			oleadas = bool(ini_read_real("Global", "oleadas", real(oleadas)))
 			oleadas_tiempo_primera = ini_read_real("Global", "tiempo primera oleada", oleadas_tiempo_primera)
 			oleadas_tiempo = ini_read_real("Global", "tiempo entre oleadas", oleadas_tiempo)
@@ -66,6 +62,15 @@ function cargar_escenario(file = ""){
 					ds_grid_set(ore, a, b, ini_read_real("Ore", $"{a},{b}", -1))
 					ds_grid_set(ore_amount, a, b, ini_read_real("Ore amount", $"{a},{b}", 0))
 				}
+			delete_edificio(nucleo.a, nucleo.b, false)
+			for(var a = 0; a < xsize; a++)
+				for(var b = 0; b < ysize; b++){
+					var temp_priority = ds_grid_get(edificio_cercano_priority, a, b)
+					ds_priority_clear(temp_priority)
+				}
+			var temp_nucleo = add_edificio(0, 0, ini_read_real("Global", "nucleo_x", floor(xsize / 2)), ini_read_real("Global", "nucleo_y", floor(ysize / 2)))
+			nucleo = temp_nucleo
+			array_copy(nucleo.carga, 0, carga_inicial, 0, rss_max)
 			ini_close()
 			for(var a = 0; a < xsize / chunk_width; a++)
 				for(var b = 0; b < ysize / chunk_height; b++)
