@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "03_11_2025")
+ini_write_string("Global", "version", "06_11_2025")
 ini_close()
 #region Metadatos
 	menu = 0
@@ -10,8 +10,8 @@ ini_close()
 	deslizante_id = -1
 	xsize = 48
 	ysize = 96
-	chunk_width = 12
-	chunk_height = 24
+	chunk_width = 4
+	chunk_height = 12
 	prev_x = 0
 	prev_y = 0
 	prev_change = true
@@ -141,6 +141,12 @@ ini_close()
 	nuclear_x = 0
 	nuclear_y = 0
 	nuclear_step = 0
+	win = 0
+	win_step = 0
+	timer = 0
+	edificios_construidos = 0
+	drones_construidos = 0
+	enemigos_eliminados = 0
 #endregion
 null_edificio = {
 	index : -1,
@@ -192,7 +198,8 @@ null_edificio = {
 	agregar : false,
 	chunk_x : 0,
 	chunk_y : 0,
-	chunk_pointer : 0
+	chunk_pointer : 0,
+	target_chunks : array_create(0, {a : 0, b : 0})
 }
 null_edificio.link = null_edificio
 ds_list_add(null_edificio.coordenadas, {a : 0, b : 0})
@@ -265,21 +272,26 @@ null_enemigo = {
 	index : 0,
 	vida : 5,
 	target : null_edificio,
+	temp_target : null_edificio,
 	chunk_x : 0,
 	chunk_y : 0,
 	chunk_pointer : 0,
 	carga : [0],
 	carga_total : 0,
 	modo : 0,
-	pointer : 0
+	pointer : 0,
+	torres : array_create(0, null_edificio)
 }
 enemigos = array_create(0, null_enemigo)
 drones_aliados = array_create(0, null_enemigo)
 null_edificio.target = null_enemigo
-chunk_enemigos = ds_grid_create(ceil(xsize / 6), ceil(ysize / 12))
-ds_grid_clear(chunk_enemigos, array_create(0, null_enemigo))
-chunk_edificios = ds_grid_create(ceil(xsize / 6), ceil(ysize / 12))
-ds_grid_clear(chunk_edificios, array_create(0, null_edificio))
+chunk_enemigos = ds_grid_create(ceil(xsize / chunk_width), ceil(ysize / chunk_height))
+chunk_edificios = ds_grid_create(ceil(xsize / chunk_width), ceil(ysize / chunk_height))
+for(var a = ds_grid_width(chunk_enemigos); a > 0; a--)
+	for(var b = ds_grid_height(chunk_enemigos); b > 0; b--){
+		ds_grid_set(chunk_enemigos, a - 1, b - 1, array_create(0, null_enemigo))
+		ds_grid_set(chunk_edificios, a - 1, b - 1, array_create(0, null_edificio))
+	}
 //Disparos
 null_municion = {
 	x : 0,
@@ -435,7 +447,7 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 	def_recurso("Plástico", spr_item_plastico, c_blue)
 	def_recurso("Componente", spr_item_chip, make_color_rgb(33, 94, 35))
 	def_recurso("Uranio Bruto", spr_item_uranio, make_color_rgb(153, 178, 88))
-	def_recurso("Uranio Enriquecido", spr_item_uranio_235, c_green)
+	def_recurso("Uranio Enriquecido", spr_item_uranio_235, make_color_rgb(0, 255, 0))
 	def_recurso("Uranio Empobrecido", spr_item_uranio_238, make_color_rgb(0, 127, 0))
 #endregion
 rss_max = array_length(recurso_nombre)

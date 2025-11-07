@@ -6,11 +6,16 @@ function game_start(){
 			mision_actual = -1
 			pasar_mision()
 		}
+		win_step = 0
 		menu = 1
 		image_index = 0
 		build_index = 0
 		mision_counter = 0
 		oleadas_timer = 0
+		timer = 0
+		edificios_construidos = 0
+		drones_construidos = 0
+		enemigos_eliminados = 0
 		ds_grid_clear(luz, 0)
 		for(var a = 0; a < xsize; a++)
 			for(var b = 0; b < ysize; b++){

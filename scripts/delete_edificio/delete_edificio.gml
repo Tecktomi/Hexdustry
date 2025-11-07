@@ -1,20 +1,15 @@
 function delete_edificio(aa, bb, enemigo = false){
-	var time = current_time
 	with control{
 		if not edificio_bool[# aa, bb]
 			exit
 		var edificio = edificio_id[# aa, bb], index = edificio.index, var_edificio_nombre = edificio_nombre[index]
 		edificio.vida = 0
-		if index = 0 and menu = 1{
-			if show_question("Has perdido, jugar de nuevo?")
-				game_restart()
-			else
-				game_end()
-		}
+		if index = 0 and menu = 1
+			win = 2
 		ds_list_remove(edificios, edificio)
 		edificios_counter[index]--
 		ds_grid_destroy(edificio.coordenadas_dis)
-		if not edificio_camino[index] and not in(var_edificio_nombre, "Tubería")
+		if index = 0
 			ds_list_remove(edificios_targeteables, edificio)
 		if var_edificio_nombre = "Puerto de Carga" and edificio.link != null_edificio{
 			if edificio.receptor
@@ -39,8 +34,10 @@ function delete_edificio(aa, bb, enemigo = false){
 		var size = ds_list_size(edificio.coordenadas)
 		for(var i = 0; i < size; i++){
 			var temp_coordenada_2 = edificio.coordenadas[|i], a = temp_coordenada_2.a, b = temp_coordenada_2.b
-			ds_grid_set(edificio_cercano, a, b, null_edificio)
-			ds_grid_set(edificio_cercano_dis, a, b, infinity)
+			if index = 0{
+				ds_grid_set(edificio_cercano, a, b, null_edificio)
+				ds_grid_set(edificio_cercano_dis, a, b, infinity)
+			}
 			ds_grid_set(edificio_bool, a, b, false)
 			ds_grid_set(edificio_id, a, b, null_edificio)
 			ds_grid_set(edificio_draw, a, b, false)
@@ -54,7 +51,7 @@ function delete_edificio(aa, bb, enemigo = false){
 			}
 		}
 		ds_list_destroy(edificio.coordenadas)
-		if not ds_list_empty(edificios_targeteables)
+		if index = 0 and not ds_list_empty(edificios_targeteables)
 			for(var a = 0; a < xsize; a++)
 				for(var b = 0; b < ysize; b++)
 					if terreno_caminable[terreno[# a, b]]{
@@ -83,6 +80,10 @@ function delete_edificio(aa, bb, enemigo = false){
 					}
 		edificio.vivo = false
 		ds_grid_clear(edificio_cercano_dir, -1)
+		if edificio_armas[index]{
+			if edificio.target != null_enemigo
+				array_remove(edificio.target.torres, edificio)
+		}
 		//Eliminar tuneles
 		if in(var_edificio_nombre = "Túnel", "Túnel salida") and not edificio.idle
 			edificio.link.idle = true
@@ -352,5 +353,4 @@ function delete_edificio(aa, bb, enemigo = false){
 		}
 		delete(edificio)
 	}
-	show_debug_message(current_time - time)
 }

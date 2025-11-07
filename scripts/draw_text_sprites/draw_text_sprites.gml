@@ -29,7 +29,6 @@ function draw_text_sprites(x, y, text, size = false){
 				desface /= 2
 			x -= desface
 		}
-		show_debug_message(desface)
 		while string_count("[", linea) + string_count("\n", linea) > 0{
 			var a = string_pos("[", linea), b = string_pos("]", linea), c = string_pos("\n", linea)
 			if a = 0 or c < a{
@@ -44,7 +43,6 @@ function draw_text_sprites(x, y, text, size = false){
 				xx = x - desface
 				yy += height
 				linea = string_delete(linea, 1, c)
-				show_debug_message(desface)
 			}
 			else{
 				var trozo = string_copy(linea, 1, a - 1)
