@@ -51,9 +51,10 @@ function add_edificio(index, dir, a, b){
 			procesador_link : array_create(0, null_edificio),
 			eliminar : false,
 			agregar : false,
-			chunk_x : clamp(round(a / 6), 0, ds_grid_width(chunk_edificios) - 1),
-			chunk_y : clamp(round(b / 12), 0, ds_grid_height(chunk_edificios) - 1),
-			chunk_pointer : 0
+			chunk_x : clamp(round(a / chunk_width), 0, ds_grid_width(chunk_edificios) - 1),
+			chunk_y : clamp(round(b / chunk_height), 0, ds_grid_height(chunk_edificios) - 1),
+			chunk_pointer : 0,
+			target_chunks : array_create(0, {a : 0, b : 0})
 		}
 		ds_list_add(edificio.energia_link, null_edificio)
 		ds_list_clear(edificio.energia_link)
@@ -63,6 +64,7 @@ function add_edificio(index, dir, a, b){
 		ds_list_add(edificio.coordenadas_close, {a : 0, b : 0})
 		ds_list_clear(edificio.coordenadas_close)
 		var var_edificio_nombre = edificio_nombre[index]
+		edificios_construidos++
 		if mision_actual >= 0 and mision_objetivo[mision_actual] = 2 and mision_target_id[mision_actual] = index and ++mision_counter >= mision_target_num[mision_actual]
 			pasar_mision()
 		temp_complex = {a : 0, b : 0}
@@ -93,8 +95,21 @@ function add_edificio(index, dir, a, b){
 		var size = ds_list_size(temp_list_arround)
 		for(var c = 0; c < size; c++)
 			ds_list_add(edificio.bordes, temp_list_arround[|c])
+		if edificio_armas[index]{
+			var dis = edificio_alcance_sqr[index]
+			for(var i = floor(xsize / chunk_width) - 1; i >= 0; i--)
+				for(var j = floor(ysize / chunk_height) - 1; j >= 0; j--){
+					temp_complex = abtoxy(chunk_width * i, chunk_height * j)
+					var temp_complex_2 = abtoxy(chunk_width * i, chunk_height * (j + 1) - 1), temp_complex_3 = abtoxy(chunk_width * (i + 1) - 1, chunk_height * j), temp_complex_4 = abtoxy(chunk_width * (i + 1) - 1, chunk_height * (j + 1) - 1)
+					if distance_sqr(x, y, temp_complex.a, temp_complex.b) < dis or
+						distance_sqr(x, y, temp_complex_2.a, temp_complex_2.b) < dis or
+						distance_sqr(x, y, temp_complex_3.a, temp_complex_3.b) < dis or
+						distance_sqr(x, y, temp_complex_4.a, temp_complex_4.b) < dis
+						array_push(edificio.target_chunks, {a : i, b : j})
+				}
+		}
 		//Edificios targeteables
-		if not edificio_camino[index] and not in(var_edificio_nombre, "Tubería"){
+		if index = 0{
 			edificio_pathfind(edificio)
 			ds_list_add(edificios_targeteables, edificio)
 			size = array_length(enemigos)
@@ -111,7 +126,7 @@ function add_edificio(index, dir, a, b){
 			ds_grid_set(edificio_bool, aa, bb, true)
 			ds_grid_set(edificio_id, aa, bb, edificio)
 			ds_list_add(edificio.coordenadas, temp_complex)
-			if not edificio_camino[index] and not in(var_edificio_nombre, "Tubería"){
+			if index = 0{
 				ds_grid_set(edificio.coordenadas_dis, aa, bb, 0)
 				ds_grid_set(edificio_cercano_dis, aa, bb, 0)
 				ds_grid_set(edificio_cercano, aa, bb, edificio)
