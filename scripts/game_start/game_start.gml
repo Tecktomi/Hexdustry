@@ -13,6 +13,7 @@ function game_start(){
 		mision_counter = 0
 		oleadas_timer = 0
 		timer = 0
+		enemigos_spawned = 3
 		edificios_construidos = 0
 		drones_construidos = 0
 		enemigos_eliminados = 0
@@ -27,6 +28,10 @@ function game_start(){
 						delete_edificio(a, b)
 				}
 			}
+		for(var a = array_length(enemigos); a > 0; a--)
+			destroy_dron(enemigos[a - 1])
+		for(var a = array_length(drones_aliados); a > 0; a--)
+			destroy_dron(drones_aliados[a - 1])
 		for(var a = 0; a < rss_max; a++)
 			nucleo.carga[a] = carga_inicial[a]
 		for(var a = 0; a < xsize / chunk_width; a++)
