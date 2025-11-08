@@ -86,6 +86,8 @@ function add_edificio(index, dir, a, b){
 		array_push(efectos, add_efecto(size_fx[edificio_size[index] - 1], 0, x, y, 3))
 		edificio.chunk_pointer = array_length(chunk_edificios[# edificio.chunk_x, edificio.chunk_y])
 		array_push(chunk_edificios[# edificio.chunk_x, edificio.chunk_y], edificio)
+		if index = 0
+			array_push(nucleos, edificio)
 		//Añadir coordenadas
 		var temp_list_size = get_size(a, b, dir, edificio_size[index])
 		var temp_list_arround = get_arround(a, b, dir, edificio_size[index])

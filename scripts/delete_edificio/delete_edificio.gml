@@ -4,8 +4,11 @@ function delete_edificio(aa, bb, enemigo = false){
 			exit
 		var edificio = edificio_id[# aa, bb], index = edificio.index, var_edificio_nombre = edificio_nombre[index]
 		edificio.vida = 0
-		if index = 0 and menu = 1
-			win = 2
+		if index = 0{
+			array_remove(nucleos, edificio)
+			if menu = 1 and array_length(nucleos) = 0
+				win = 2
+		}
 		ds_list_remove(edificios, edificio)
 		edificios_counter[index]--
 		ds_grid_destroy(edificio.coordenadas_dis)

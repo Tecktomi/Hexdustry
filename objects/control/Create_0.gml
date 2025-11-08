@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "06_11_2025")
+ini_write_string("Global", "version", "07_11_2025")
 ini_close()
 #region Metadatos
 	menu = 0
@@ -293,16 +293,7 @@ for(var a = ds_grid_width(chunk_enemigos); a > 0; a--)
 		ds_grid_set(chunk_edificios, a - 1, b - 1, array_create(0, null_edificio))
 	}
 //Disparos
-null_municion = {
-	x : 0,
-	y : 0,
-	hmove : 0,
-	vmove : 0,
-	tipo : 0,
-	dis : 0,
-	dmg : 0,
-	target : null_enemigo
-}
+null_municion = add_municion()
 municiones = array_create(0, null_municion)
 #region Tipos de disparos
 	armas = [
@@ -314,16 +305,22 @@ municiones = array_create(0, null_municion)
 //Drones
 #region Descripción
 	dron_descripcion = [
-		"Dispara a los enemigos cercanos",
-		"Transporta recursos entre Puertos de Carga",
-		"Repara los edificios dañados"]
+			"Dispara a los enemigos cercanos",
+			"Transporta recursos entre Puertos de Carga",
+			"Repara los edificios dañados",
+			"Se acerca a su objetivo y explota infilgiendo daño"
+		]
+	for(var a = array_length(dron_descripcion); a > 0; a--)
+		dron_descripcion[a - 1] = text_wrap(dron_descripcion[a - 1], 400)
 #endregion
-dron_nombre = ["Araña", "Dron", "Reparador"]
-dron_sprite = [spr_arana, spr_dron, spr_reparador]
-dron_sprite_color = [spr_arana_color, spr_arana_color, spr_arana_color]
-dron_vida_max = [100, 40, 60]
-dron_precio_id = [[2, 14, 16], [14, 15, 16], [7, 14, 15, 16]]
-dron_precio_num = [[3, 1, 1], [1, 3, 1], [10, 1, 3, 1]]
+dron_nombre = ["Araña", "Dron", "Reparador", "Explosivo", "Tanque"]
+dron_sprite = [spr_arana, spr_dron, spr_reparador, spr_dron_explosivo, spr_tanque]
+dron_sprite_color = [spr_arana_color, spr_arana_color, spr_arana_color, spr_arana_color, spr_tanque_2]
+dron_vida_max = [100, 40, 60, 50, 750]
+dron_size = [400, 400, 400, 400, 1600]
+dron_alcance = [6400, 100, 2500, 1600, 160_000]
+dron_precio_id = [[2, 14, 16], [14, 15, 16], [7, 14, 15, 16], [13, 14, 16], [2, 4, 16]]
+dron_precio_num = [[3, 1, 1], [1, 3, 1], [10, 1, 3, 1], [2, 1, 1], [15, 25, 10]]
 dron_max = array_length(dron_nombre)
 //Terrenos
 #region Arreglos
@@ -675,6 +672,7 @@ for(var a = 0; a < array_length(categoria_nombre); a++)
 	edificios_construibles = array_concat(edificios_construibles, categoria_edificios[a])
 edificios = ds_list_create()
 edificios_counter = array_create(edificio_max, 0)
+nucleos = array_create(0, null_edificio)
 edificios_targeteables = ds_list_create()
 torres_de_tension = array_create(0, null_edificio)
 edi_sort = array_create(edificio_max, 0)

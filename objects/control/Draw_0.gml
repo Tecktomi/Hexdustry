@@ -707,6 +707,12 @@ if menu = 2{
 				}
 			}
 	//Luz
+	if false
+		for(var a = 0; a < ds_grid_width(chunk_enemigos); a++)
+			for(var b = 0; b < ds_grid_height(chunk_enemigos); b++){
+				var temp_complex = abtoxy(a * chunk_width, b * chunk_height)
+				draw_text_off(temp_complex.a, temp_complex.b, array_length(chunk_enemigos[# a, b]))
+			}
 	if energia_solar < 1{
 		var luz_alpha = (1 - energia_solar) / 3
 		if grafic_luz{
@@ -1502,9 +1508,9 @@ if show_menu{
 			}
 			else if in(var_edificio_nombre, "Fábrica de Drones") and mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * dron_max) * zoom{
 				var a = floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))
-				draw_text_background(mouse_x + 20, mouse_y, dron_descripcion[a] + (a = 0 ? "\nNo disponible de momento" : ""))
+				draw_text_background(mouse_x + 20, mouse_y, dron_descripcion[a] + (in(a, 0, 3, 4) ? "\nNo disponible de momento" : ""))
 				cursor = cr_handpoint
-				if mouse_check_button_pressed(mb_left) and a > 0{
+				if mouse_check_button_pressed(mb_left) and not in(a, 0, 3, 4){
 					mouse_clear(mb_left)
 					show_menu = false
 					edificio.carga = array_create(rss_max, 0)
@@ -2986,16 +2992,7 @@ if not pausa{
 									aa = edificio.x + power(-1, edificio.dir) * 8
 								}
 								var dis = distance(edificio.x, edificio.y, enemigo.a, enemigo.b)
-								var municion = {
-									x : aa,
-									y : bb,
-									hmove : 25 * (enemigo.a - aa) / dis,
-									vmove : 25 * (enemigo.b - bb) / dis,
-									tipo : var_edificio_nombre = "Mortero" ? 1 : (var_edificio_nombre = "Lanzallamas" ? 2 : 0),
-									dis : dis / 25,
-									dmg : tiro_struct.dmg * dmg_factor,
-									target : enemigo
-								}
+								var municion = add_municion(aa, bb, 25 * (enemigo.a - aa) / dis, 25 * (enemigo.b - bb) / dis, var_edificio_nombre = "Mortero" ? 1 : (var_edificio_nombre = "Lanzallamas" ? 2 : 0), dis / 25, tiro_struct.dmg * dmg_factor, enemigo, null_edificio)
 								array_push(municiones, municion)
 								if var_edificio_nombre = "Lanzallamas"{
 									var angle = arctan2(bb - enemigo.b, aa - enemigo.a)
@@ -3047,7 +3044,7 @@ if not pausa{
 			}
 			else if var_edificio_nombre = "Torre Reparadora"{
 				if edificio.link = null_edificio{
-					edificio.link = edificios[|irandom(ds_list_size(edificios) - 1)]
+					edificio.link = edificios[| irandom(ds_list_size(edificios) - 1)]
 					if edificio != edificio.link and edificio.link.vida >= edificio_vida[edificio.link.index] or distance_sqr(edificio.x, edificio.y, edificio.link.x, edificio.link.y) > edificio_alcance_sqr[index]{
 						edificio.link = null_edificio
 						change_energia(0, edificio)
@@ -3545,94 +3542,117 @@ if not pausa{
 	}
 	edificios_pendientes = array_create(0, null_edificio)
 	//Ciclo de los enemigos
-	var size = array_length(enemigos)
-	for(var a = 0; a < size; a++){
-		var enemigo = enemigos[a], aa = enemigo.a, bb = enemigo.b, index = enemigo.index
-		draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb)
-		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,,, c_red)
-		if enemigo.vida < dron_vida_max[index]{
-			if enemigo.vida <= 0{
-				a--
-				size--
-				destroy_dron(enemigo)
+	for(var a = array_length(enemigos); a > 0; a--){
+		var dron = enemigos[a - 1], aa = dron.a, bb = dron.b, index = dron.index
+		if index = 4{
+			draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir_move)
+			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir)
+		}
+		else{
+			draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir)
+			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir, c_red)
+		}
+		if dron.vida < dron_vida_max[index]{
+			if dron.vida <= 0{
+				destroy_dron(dron)
 				continue
 			}
-			draw_set_color(make_color_hsv(120 * enemigo.vida / dron_vida_max[index], 255, 255))
+			draw_set_color(make_color_hsv(120 * dron.vida / dron_vida_max[index], 255, 255))
 			draw_circle_off(aa, bb - 20, 5, false)
 			draw_set_color(c_white)
 		}
-		if aa < -100 or bb < -100 or aa > xsize * 48 + 100 or bb > ysize * 14 + 100{
-			destroy_dron(enemigo)
-			a--
-			size--
-			continue
+		if aa < 0
+			dron.a++
+		else if aa > xsize * 48
+			dron.a--
+		if bb < 0
+			dron.b++
+		else if bb > ysize * 14
+			dron.b--
+		if dron.target != null_edificio and dron.target.vida <= 0
+			dron.target = null_edificio
+		if in(index, 0, 4){
+			if not ds_list_empty(edificios) and dron.target = null_edificio{
+				var temp_complex = xytoab(aa, bb)
+				dron.target = edificio_cercano[# temp_complex.a, temp_complex.b]
+			}
 		}
-		if enemigo.target != null_edificio and enemigo.target.vida <= 0
-			enemigo.target = null_edificio
-		if not ds_list_empty(edificios) and enemigo.target = null_edificio{
-			var temp_complex = xytoab(aa, bb)
-			enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
+		else if index = 3{
+			var min_dis = infinity
+			for(var i = array_length(nucleos); i > 0; i--){
+				edificio = nucleos[i - 1]
+				var dis = distance_sqr(aa, bb, edificio.x, edificio.y)
+				if dis < min_dis{
+					min_dis = dis
+					dron.target = edificio
+				}
+			}
 		}
 		//Target edificios
-		if enemigo.target != null_edificio{
-			edificio = enemigo.target
+		if dron.target != null_edificio{
+			edificio = dron.target
+			dron.dir = (9 * dron.dir + radtodeg(arctan2(edificio.y - bb, aa - edificio.x))) / 10
 			var temp_complex = xytoab(aa, bb), aaa = temp_complex.a, bbb = temp_complex.b, dir = -1, ataque = false
 			var dis = distance_sqr(aa, bb, edificio.x, edificio.y)
 			//Moverse
-			if edificio_cercano_dis[# aaa, bbb] > 1 and dis > 2500{//50^2
-				if edificio_cercano_dir[# aaa, bbb] = -1{
-					var min_dis = edificio_cercano_dis[# aaa, bbb], min_dis_eu =  infinity
-					for(var i = 0; i < 6; i++){
-						temp_complex = next_to(aaa, bbb, i)
-						var aaaa = temp_complex.a, bbbb = temp_complex.b
-						if aaaa < 0 or bbbb < 0 or aaaa >= xsize or bbbb >= ysize
-							continue
-						if not terreno_caminable[terreno[# aaaa, bbbb]]
-							continue
-						var disi = edificio_cercano_dis[# aaaa, bbbb]
-						if disi < min_dis{
-							min_dis = disi
-							dir = i
-							ds_grid_set(edificio_cercano_dir, aaa, bbb, i)
-							temp_complex = abtoxy(aaaa, bbbb)
-							min_dis_eu = distance_sqr(temp_complex.a, temp_complex.b, edificio.x, edificio.y)
-							
-						}
-						else if disi = min_dis{
-							temp_complex = abtoxy(aaaa, bbbb)
-							var c = distance_sqr(temp_complex.a, temp_complex.b, edificio.x, edificio.y)
-							if c < min_dis_eu{
+			if in(index, 0, 4){
+				if edificio_cercano_dis[# aaa, bbb] > 1 and dis > 2500{//50^2
+					if edificio_cercano_dir[# aaa, bbb] = -1{
+						var min_dis = edificio_cercano_dis[# aaa, bbb], min_dis_eu =  infinity
+						for(var i = 0; i < 6; i++){
+							temp_complex = next_to(aaa, bbb, i)
+							var aaaa = temp_complex.a, bbbb = temp_complex.b
+							if aaaa < 0 or bbbb < 0 or aaaa >= xsize or bbbb >= ysize
+								continue
+							if not terreno_caminable[terreno[# aaaa, bbbb]]
+								continue
+							var disi = edificio_cercano_dis[# aaaa, bbbb]
+							if disi < min_dis{
 								min_dis = disi
 								dir = i
 								ds_grid_set(edificio_cercano_dir, aaa, bbb, i)
-								min_dis_eu = c
+								temp_complex = abtoxy(aaaa, bbbb)
+								min_dis_eu = distance_sqr(temp_complex.a, temp_complex.b, edificio.x, edificio.y)
+							
+							}
+							else if disi = min_dis{
+								temp_complex = abtoxy(aaaa, bbbb)
+								var c = distance_sqr(temp_complex.a, temp_complex.b, edificio.x, edificio.y)
+								if c < min_dis_eu{
+									min_dis = disi
+									dir = i
+									ds_grid_set(edificio_cercano_dir, aaa, bbb, i)
+									min_dis_eu = c
+								}
 							}
 						}
 					}
+					else
+						dir = edificio_cercano_dir[# aaa, bbb]
+					if dir = -1
+						dir = 0
+					dron.a += cos_angle_dir[dir]
+					dron.b -= sin_angle_dir[dir]
+					if index = 4
+						dron.dir_move += angle_difference(dron.dir_move, radtodeg(arctan2(sin_angle_dir[dir], cos_angle_dir[dir]))) / 100
 				}
-				else
-					dir = edificio_cercano_dir[# aaa, bbb]
-				if dir = -1
-					dir = 0
-				enemigo.a += cos_angle_dir[dir]
-				enemigo.b -= sin_angle_dir[dir]
 			}
-			if dis < 6400{//80^2
+			else if index = 3{
+				var dis_2 = sqrt(dis)
+				dron.a += 2 * (edificio.x - dron.a) / dis_2
+				dron.b += 2 * (edificio.y - dron.b) / dis_2
+			}
+			if dis < dron_alcance[dron.index]{
 				ataque = true
-				draw_set_color(c_red)
-				draw_line_off(aa, bb, edificio.x, edificio.y)
-				if --edificio.vida <= 0{
-					delete_edificio(edificio.a, edificio.b, true)
-					temp_complex = xytoab(aa, bb)
-					enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
-				}
+				if atacar_dron(dron, edificio)
+					continue
 			}
 			//Targetear unidades
 			else if array_length(drones_aliados) > 0{
-				var closest_dron = null_enemigo, size_2 = array_length(drones_aliados), closest_dis = infinity
+				var closest_dron = null_enemigo, size_2 = array_length(drones_aliados), closest_dis = infinity, dis_min = dron_alcance[dron.index]
 				for(var b = 0; b < size_2; b++){
 					var temp_dron = drones_aliados[b], temp_dis = distance_sqr(aa, bb, temp_dron.a, temp_dron.b)
-					if temp_dis < closest_dis and temp_dis < 2500{//50^2
+					if temp_dis < closest_dis and temp_dis < dis_min{
 						closest_dis = temp_dis
 						closest_dron = temp_dron
 					}
@@ -3651,80 +3671,84 @@ if not pausa{
 			}
 			//Targetear edificios
 			if ataque = false{
-				if enemigo.temp_target = null_edificio{
-					var chunk = chunk_edificios[# enemigo.chunk_x, enemigo.chunk_y]
-					for(var i = array_length(chunk) - 1; i >= 0; i--){
-						edificio = chunk[i]
-						dis = distance_sqr(aa, bb, edificio.x, edificio.y)
-						if dis < 6400{//80^2
-							enemigo.temp_target = edificio
-							break
+				if dron.temp_target = null_edificio{
+					var dis_max = dron_alcance[dron.index], maxu = min(ds_grid_width(chunk_edificios) - 1, dron.chunk_x + 1), maxv = min(ds_grid_height(chunk_edificios) - 1, dron.chunk_y + 1)
+					for(var u = max(0, dron.chunk_x - 1); u <= maxu; u++)
+						for(var v = max(0, dron.chunk_y - 1); v <= maxv; v++){
+							var chunk = chunk_edificios[# u, v]
+							for(var i = array_length(chunk) - 1; i >= 0; i--){
+								edificio = chunk[i]
+								dis = distance_sqr(aa, bb, edificio.x, edificio.y)
+								if dis < dis_max{
+									dron.temp_target = edificio
+									break
+								}
+							}
 						}
-					}
 				}
 				else{
-					edificio = enemigo.temp_target
+					edificio = dron.temp_target
 					if edificio.vida <= 0
-						enemigo.temp_target = null_edificio
+						dron.temp_target = null_edificio
 					else{
 						dis = distance_sqr(aa, bb, edificio.x, edificio.y)
-						if dis > 6400//80^2
-							enemigo.temp_target = null_edificio
+						dron.dir = (9 * dron.dir + radtodeg(arctan2(edificio.y - bb, aa - edificio.x))) / 10
+						if dis > dron_alcance[dron.index]
+							dron.temp_target = null_edificio
 						else{
 							ataque = true
-							draw_set_color(c_red)
-							draw_line_off(aa, bb, edificio.x, edificio.y)
-							if --edificio.vida <= 0
-								delete_edificio(edificio.a, edificio.b, true)
+							if atacar_dron(dron, edificio)
+								continue
 						}
 					}
 				}
 			}
 		}
 		//Cambiar de chunk
-		var temp_array = ds_grid_get(chunk_enemigos, enemigo.chunk_x, enemigo.chunk_y)
+		var temp_array = ds_grid_get(chunk_enemigos, dron.chunk_x, dron.chunk_y)
 		var temp_complex = xytoab(aa, bb)
 		aa = temp_complex.a
 		bb = temp_complex.b
-		if aa != enemigo.posa or bb != enemigo.posb{
-			enemigo.posa = aa
-			enemigo.posb = bb
+		if aa != dron.posa or bb != dron.posb{
+			dron.posa = aa
+			dron.posb = bb
 			if not ds_list_empty(edificios) and terreno_caminable[terreno[# aa, bb]]
-				enemigo.target = edificio_cercano[# aa, bb]
-			if clamp(round(aa / chunk_width), 0, ds_grid_width(chunk_enemigos) - 1) != enemigo.chunk_x or clamp(round(bb / chunk_height), 0, ds_grid_height(chunk_enemigos) - 1) != enemigo.chunk_y{
+				dron.target = edificio_cercano[# aa, bb]
+			if clamp(round(aa / chunk_width), 0, ds_grid_width(chunk_enemigos) - 1) != dron.chunk_x or clamp(round(bb / chunk_height), 0, ds_grid_height(chunk_enemigos) - 1) != dron.chunk_y{
 				if array_length(temp_array) > 1{
 					var temp_enemigo = temp_array[array_length(temp_array) - 1]
-					temp_array[enemigo.chunk_pointer] = temp_enemigo
-					temp_enemigo.chunk_pointer = enemigo.chunk_pointer
+					temp_array[dron.chunk_pointer] = temp_enemigo
+					temp_enemigo.chunk_pointer = dron.chunk_pointer
 				}
 				array_pop(temp_array)
-				enemigo.chunk_x = clamp(round(aa / chunk_width), 0, ds_grid_width(chunk_enemigos) - 1)
-				enemigo.chunk_y = clamp(round(bb / chunk_height), 0, ds_grid_height(chunk_enemigos) - 1)
-				temp_array = chunk_enemigos[# enemigo.chunk_x, enemigo.chunk_y]
-				enemigo.chunk_pointer = array_length(temp_array)
-				array_push(temp_array, enemigo)
+				dron.chunk_x = clamp(round(aa / chunk_width), 0, ds_grid_width(chunk_enemigos) - 1)
+				dron.chunk_y = clamp(round(bb / chunk_height), 0, ds_grid_height(chunk_enemigos) - 1)
+				temp_array = chunk_enemigos[# dron.chunk_x, dron.chunk_y]
+				dron.chunk_pointer = array_length(temp_array)
+				array_push(temp_array, dron)
 			}
 		}
-		aa = enemigo.a
-		bb = enemigo.b
+		aa = dron.a
+		bb = dron.b
+		var temp_dron_size = dron_size[dron.index]
 		//Alejarse de los enemigos cercanos
 		for(var b = array_length(temp_array); b > 0; b--){
 			var temp_enemigo = temp_array[b - 1]
-			if temp_enemigo = enemigo or temp_enemigo.vida <= 0
+			if temp_enemigo = null_enemigo or temp_enemigo = dron or temp_enemigo.vida <= 0
 				continue
 			var dis = sqr(aa - temp_enemigo.a) + sqr(bb - temp_enemigo.b)
-			if dis < 400{//20^2
+			if dis < temp_dron_size{
 				dis = sqrt(dis)
 				var aaa = (aa - temp_enemigo.a) / dis, bbb = (bb - temp_enemigo.b) / dis
-				enemigo.a += aaa
-				enemigo.b += bbb
+				dron.a += aaa
+				dron.b += bbb
 				temp_enemigo.a -= aaa
 				temp_enemigo.b -= bbb
 			}
 		}
 	}
 	//Ciclo drones aliados
-	size = array_length(drones_aliados)
+	var size = array_length(drones_aliados)
 	for(var a = 0; a < size; a++){
 		var dron = drones_aliados[a], aa = dron.a, bb = dron.b, index = dron.index
 		draw_sprite_off(dron_sprite[index], 0, aa, bb)
@@ -3755,7 +3779,7 @@ if not pausa{
 				else{
 					edificio = dron.target
 					var dis = distance_sqr(aa, bb, edificio.x, edificio.y)
-					if dis > 100{//10^2
+					if dis > dron_alcance[dron.index]{
 						dis = sqrt(dis)
 						dron.a += (edificio.x - aa) / dis
 						dron.b += (edificio.y - bb) / dis
@@ -3812,7 +3836,7 @@ if not pausa{
 					continue
 				}
 				var dis = distance_sqr(aa, bb, edificio.x, edificio.y)
-				if dis > 2500{//50^2
+				if dis > dron_alcance[dron.index]{
 					dron.a += (edificio.x - aa) / dis
 					dron.b += (edificio.y - bb) / dis
 				}
@@ -3850,27 +3874,32 @@ if not pausa{
 		if --municion.dis <= 0{
 			municiones[a--] = municiones[array_length(municiones) - 1]
 			array_pop(municiones)
-			if municion.target.vida > 0{
+			if municion.target != null_enemigo and municion.target.vida > 0{
 				municion.target.vida -= municion.dmg
 				if municion.target.vida <= 0
 					destroy_dron(municion.target)
 			}
+			if municion.target_build != null_edificio and municion.target_build.vida > 0{
+				municion.target_build.vida -= municion.dmg
+				if municion.target_build.vida <= 0
+					delete_edificio(municion.target_build.a, municion.target_build.b)
+			}
+			//Misil aliado
 			if municion.tipo = 1{
 				sound_play(snd_explosion, municion.x, municion.y)
 				array_push(efectos, add_efecto(spr_explosion, 0, municion.x, municion.y, 24, 1 / 3))
-				var size_2 = array_length(enemigos)
-				for(var b = 0; b < size_2; b++){
-					var enemigo = enemigos[b], dis = distance_sqr(enemigo.a, enemigo.b, municion.x, municion.y)
+				for(var b = array_length(enemigos); b > 0; b--){
+					var enemigo = enemigos[b - 1], dis = distance_sqr(enemigo.a, enemigo.b, municion.x, municion.y)
 					if dis < 2500{//50^2
 						enemigo.vida -= 1000 / (10 + sqrt(dis))
-						if enemigo.vida <= 0{
+						if enemigo.vida <= 0
 							destroy_dron(enemigo)
-							size_2--
-							b--
-						}
 					}
 				}
 			}
+			//Misil enemigo
+			else if municion.tipo = 3
+				explosion(municion.x, municion.y, municion.target_build)
 		}
 	}
 	//Efectos estáticos
@@ -3939,9 +3968,16 @@ if not pausa{
 				var temp_complex_list = get_size(spawn_x, spawn_y, 0, e)
 				for(var i = 0; i < min(ds_list_size(temp_complex_list), d); i++){
 					var temp_complex = temp_complex_list[|i], aa = clamp(temp_complex.a, 0, xsize - 1), bb = clamp(temp_complex.b, 0, ysize - 1)
-					if not terreno_caminable[terreno[# aa, bb]]
-						continue
-					var enemigo = add_dron(aa, bb, 0)
+					if not terreno_caminable[terreno[# aa, bb]] or edificio_cercano[# aa, bb] = null_edificio
+						var enemigo = add_dron(aa, bb, 3)
+					else{
+						if irandom(min(ds_list_size(temp_complex_list), d)) > i + 5{
+							enemigo = add_dron(aa, bb, 4)
+							i += 4
+						}
+						else
+							enemigo = add_dron(aa, bb, 0)
+					}
 					enemigo.vida = (enemigo.vida + 5 * d) * multiplicador_vida_enemigos
 					var temp_array = ds_grid_get(chunk_enemigos, enemigo.chunk_x, enemigo.chunk_y)
 					array_push(temp_array, enemigo)

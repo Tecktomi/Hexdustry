@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"add_municion",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"add_municion",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

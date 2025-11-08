@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"atacar_dron",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"atacar_dron",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
