@@ -88,7 +88,7 @@ function delete_edificio(aa, bb, enemigo = false){
 				array_remove(edificio.target.torres, edificio)
 		}
 		//Eliminar tuneles
-		if in(var_edificio_nombre = "Túnel", "Túnel salida") and not edificio.idle
+		if in(var_edificio_nombre, "Túnel", "Túnel salida") and not edificio.idle
 			edificio.link.idle = true
 		//Cancelar outputs
 		size = ds_list_size(edificio.outputs)
@@ -344,15 +344,6 @@ function delete_edificio(aa, bb, enemigo = false){
 			nuclear_x = xpos
 			nuclear_y = ypos
 			nuclear_step = 300
-			var temp_complex = xytoab(xpos, ypos)
-			var temp_list = get_size(temp_complex.a, temp_complex.b, 0, 7)
-			for(var i = 0; i < ds_list_size(temp_list); i++){
-				temp_complex = temp_list[|i]
-				var a = temp_complex.a, b = temp_complex.b
-				if a < 0 or b < 0 or a >= xsize or b >= ysize
-					continue
-				set_terreno(temp_complex.a, temp_complex.b, 17)
-			}
 		}
 		delete(edificio)
 	}

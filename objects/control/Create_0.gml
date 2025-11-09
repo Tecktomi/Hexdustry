@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "07_11_2025")
+ini_write_string("Global", "version", "09_11_2025")
 ini_close()
 #region Metadatos
 	menu = 0
@@ -199,7 +199,8 @@ null_edificio = {
 	chunk_x : 0,
 	chunk_y : 0,
 	chunk_pointer : 0,
-	target_chunks : array_create(0, {a : 0, b : 0})
+	target_chunks : array_create(0, {a : 0, b : 0}),
+	array_real : array_create(0, 0)
 }
 null_edificio.link = null_edificio
 ds_list_add(null_edificio.coordenadas, {a : 0, b : 0})
@@ -245,26 +246,49 @@ puerto_carga_atended = 0
 	edificio_cercano_dir = ds_grid_create(xsize, ysize)
 	ds_grid_clear(edificio_cercano_dir, -1)
 	edificio_cercano_priority = ds_grid_create(xsize, ysize)
-	for(var a = 0; a < xsize; a++)
+	pre_abtoxy = ds_grid_create(xsize + 2, ysize + 2)
+	ds_grid_clear(pre_abtoxy, {a : 0, b : 0})
+	for(var a = 0; a < xsize; a++){
+		ds_grid_set(pre_abtoxy, a, 0, {
+			a : real(a + 0.5) * 48 + 16,
+			b : 0
+		})
+		ds_grid_set(pre_abtoxy, a, ysize + 1, {
+			a : real(a + 0.5) * 48 + 16,
+			b : (ysize + 2) * 14
+		})
 		for(var b = 0; b < ysize; b++){
 			var temp_priority = ds_priority_create()
 			ds_priority_add(temp_priority, null_edificio, 0)
 			ds_priority_delete_max(temp_priority)
 			ds_grid_set(edificio_cercano_priority, a, b, temp_priority)
+			var temp_complex = {
+				a : real(a + (b mod 2) / 2) * 48 + 16,
+				b : real(b + 1) * 14
+			}
+			var temp_hexagono = instance_create_layer(temp_complex.a, temp_complex.b, "instances", obj_hexagono)
+			ds_grid_set(pre_abtoxy, a + 1, b + 1, temp_complex)
+			ds_grid_set(ore_random, a, b, random(1))
+			temp_hexagono.a = a
+			temp_hexagono.b = b
+			
 		}
+	}
+	for(var b = 0; b < ysize; b++){
+		ds_grid_set(pre_abtoxy, 0, b, {
+			a : real((b mod 2) / 2) * 48 + 16,
+			b : real(b + 1) * 14
+		})
+		ds_grid_set(pre_abtoxy, xsize + 1, b, {
+			a : real(xsize + 1 + (b mod 2) / 2) * 48 + 16,
+			b : real(b + 1) * 14
+		})
+	}
 	luz = ds_grid_create(xsize, ysize)
 	ds_grid_clear(luz, 0)
 	terreno_pared_index = ds_grid_create(xsize, ysize)
 	ds_grid_clear(terreno_pared_index, 0)
 #endregion
-//Crear plantilla de fondo
-for(var a = 0; a < xsize; a++)
-	for(var b = 0; b < ysize; b++){
-		var temp_complex = abtoxy(a, b), temp_hexagono = instance_create_layer(temp_complex.a, temp_complex.b, "instances", obj_hexagono)
-		ds_grid_set(ore_random, a, b, random(1))
-		temp_hexagono.a = a
-		temp_hexagono.b = b
-	}
 //Enemigos
 null_enemigo = {
 	a : 0,
@@ -622,7 +646,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, "44", 200, 1,, [2, 4], [20, 10]); def_edificio_2(, 300,,,, true)
 	def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, "4 ", 30, 1); def_edificio_2(, 10, -999_999,,, true)
 	def_edificio("Turbina", 2, spr_turbina,, "35", 160,,, [0, 2, 4], [10, 10, 10], 20, true, false, [1, 12], [10, 10]); def_edificio_2(-150, 10, 40)
-	def_edificio("Refinería de Metales", 3, spr_refineria_minerales,, "27", 150, 80,, [2, 4, 8], [15, 15, 10], 30, true, false, [9, 10, 17], [5, 5, 10], true, false, [0, 3, 18, 19]); def_edificio_2(80, 10, 60)
+	def_edificio("Refinería de Metales", 3, spr_refineria_minerales,, "27", 150, 80,, [2, 4, 8], [15, 15, 10], 30, true, false, [9, 10, 17], [5, 5, 10], true, false, [0, 3, 18, 19]); def_edificio_2(80, 10, 2)
 	def_edificio("Fábrica de Drones", 2, spr_fabrica_drones,, "17", 200, 900,, [0, 4, 16], [20, 15, 10], 20, true, false, [14, 15, 16], [1, 3, 1]); def_edificio_2(120)
 	def_edificio("Recurso Infinito", 1, spr_recurso_infinito, spr_selector_color, "1 ", 30, 1,,,,,,,,, true, true); def_edificio_2()
 	//30
