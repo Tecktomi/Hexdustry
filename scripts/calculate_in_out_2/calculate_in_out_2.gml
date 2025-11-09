@@ -45,7 +45,7 @@ function calculate_in_out_2(edificio = control.null_edificio, set_receptor = tru
 						flag = false
 					if flag and in(var_edificio_nombre, "Enrutador", "Selector", "Overflow") and not(complex_equal(temp_complex, par_dir_5) or complex_equal(temp_complex, par_dir) or complex_equal(temp_complex, par_dir_1))
 						flag = false
-					if flag and in(var_edificio_nombre, "Túnel salida") and not(complex_equal(temp_complex, par_dir_2) or complex_equal(temp_complex, par_dir_2) or complex_equal(temp_complex, par_dir_4))
+					if flag and in(var_edificio_nombre, "Túnel salida") and not(complex_equal(temp_complex, par_dir_2) or complex_equal(temp_complex, par_dir_3) or complex_equal(temp_complex, par_dir_4))
 						flag = false
 					if flag and in(temp_var_edificio_nombre, "Enrutador", "Selector", "Overflow", "Túnel")
 						for(var d = 0; d < ds_list_size(edificio.coordenadas); d++){

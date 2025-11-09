@@ -26,21 +26,21 @@ function dibujar_edificios(){
 					else{
 						//Dibujo edificios con horno
 						if in(var_edificio_nombre, "Horno", "Generador") and edificio.fuel > 0
-							draw_sprite_off(edificio_sprite_2[index], image_index / 4, aa, bb, power(-1, dir))
+							draw_sprite_off(edificio_sprite_2[index], image_index / 4, aa, bb, edificio.array_real[2] / 8)
 						else if in(var_edificio_nombre, "Horno de Lava") and edificio.flujo.liquido = 3
-							draw_sprite_off(edificio_sprite_2[index], image_index / 4, aa, bb, power(-1, dir))
+							draw_sprite_off(edificio_sprite_2[index], image_index / 4, aa, bb, edificio.array_real[2] / 8)
 						//Dibujo de bateria
 						else if in(var_edificio_nombre, "Batería")
 							draw_sprite_off(edificio_sprite[index], floor(10 * edificio.red.bateria / edificio.red.bateria_max), aa, bb,,, dir * 60)
 						//Dibujo bomba tamaño par
 						else if in(var_edificio_nombre, "Bomba Hidráulica", "Turbina", "Generador Geotérmico"){
-							draw_sprite_off(edificio_sprite[index], 0, aa, bb, power(-1, dir))
+							draw_sprite_off(edificio_sprite[index], 0, aa, bb, edificio.array_real[2] / 8)
 							if edificio.flujo.liquido = -1
-								draw_sprite_off(spr_bomba_color, 0, aa + power(-1, dir) * 8, bb + 14)
+								draw_sprite_off(spr_bomba_color, 0, aa + edificio.array_real[2], bb + 14)
 							else
-								draw_sprite_off(spr_bomba_color, 0, aa + power(-1, dir) * 8, bb + 14,,,, liquido_color[edificio.flujo.liquido], edificio.flujo.almacen / edificio.flujo.almacen_max)
-							draw_sprite_off(spr_bomba_rotor, 1, aa + power(-1, dir) * 8, bb + 14,,, image_index)
-							draw_sprite_off(spr_bomba_cupula, 1, aa + power(-1, dir) * 8, bb + 14)
+								draw_sprite_off(spr_bomba_color, 0, aa + edificio.array_real[2], bb + 14,,,, liquido_color[edificio.flujo.liquido], edificio.flujo.almacen / edificio.flujo.almacen_max)
+							draw_sprite_off(spr_bomba_rotor, 1, aa + edificio.array_real[2], bb + 14,,, image_index)
+							draw_sprite_off(spr_bomba_cupula, 1, aa + edificio.array_real[2], bb + 14)
 						}
 						//Dibujo bomba tamaño impar
 						else if in(var_edificio_nombre, "Perforadora de Petróleo"){
@@ -68,13 +68,13 @@ function dibujar_edificios(){
 							}
 							//Torres tamaño par
 							else{
-								draw_sprite_off(edificio_sprite[index], 0, aa, bb, power(-1, dir))
-								draw_sprite_off(edificio_sprite_2[index], 0, aa + 9 * power(-1, dir), bb + 14,,, edificio.select)
+								draw_sprite_off(edificio_sprite[index], 0, aa, bb, edificio.array_real[2] / 8)
+								draw_sprite_off(edificio_sprite_2[index], 0, aa + 9 * edificio.array_real[2] / 8, bb + 14,,, edificio.select)
 							}
 						}
 						//Dibujo predeterminado tamaño par
 						else if edificio_size[index] mod 2 = 0
-							draw_sprite_off(edificio_sprite[index], image_index / 4, aa, bb, power(-1, dir))
+							draw_sprite_off(edificio_sprite[index], image_index / 4, aa, bb, edificio.array_real[2] / 8)
 						//Dibujo predeterminado tamaño impar
 						else
 							draw_sprite_off(edificio_sprite[index], image_index / 4, aa, bb,,, dir * 60)

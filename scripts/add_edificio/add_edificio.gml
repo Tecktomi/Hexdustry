@@ -54,7 +54,8 @@ function add_edificio(index, dir, a, b){
 			chunk_x : clamp(round(a / chunk_width), 0, ds_grid_width(chunk_edificios) - 1),
 			chunk_y : clamp(round(b / chunk_height), 0, ds_grid_height(chunk_edificios) - 1),
 			chunk_pointer : 0,
-			target_chunks : array_create(0, {a : 0, b : 0})
+			target_chunks : array_create(0, {a : 0, b : 0}),
+			array_real : array_create(0, 0)
 		}
 		ds_list_add(edificio.energia_link, null_edificio)
 		ds_list_clear(edificio.energia_link)
@@ -88,6 +89,19 @@ function add_edificio(index, dir, a, b){
 		array_push(chunk_edificios[# edificio.chunk_x, edificio.chunk_y], edificio)
 		if index = 0
 			array_push(nucleos, edificio)
+		if edificio_camino[index] or in(index, 6, 16){
+			var d = edificio.dir * pi / 3 + pi / 6
+			if index = 16{
+				edificio.array_real[0] = -cos(d)
+				edificio.array_real[1] = sin(d)
+			}
+			else{
+				edificio.array_real[0] = cos(d)
+				edificio.array_real[1] = -sin(d)
+			}
+		}
+		if edificio_size[index] mod 2 = 0
+			edificio.array_real[2] = power(-1, dir) * 8
 		//Añadir coordenadas
 		var temp_list_size = get_size(a, b, dir, edificio_size[index])
 		var temp_list_arround = get_arround(a, b, dir, edificio_size[index])
@@ -321,12 +335,8 @@ function add_edificio(index, dir, a, b){
 			}
 			ds_list_destroy(temp_list_flujos)
 			edificio.flujo.almacen_max += edificio_flujo_almacen[index]
-			if var_edificio_nombre = "Bomba de Evaporación"{
+			if in(var_edificio_nombre, "Bomba de Evaporación", "Generador Geotérmico"){
 				edificio.flujo.liquido = 0
-				change_flujo(edificio_flujo_consumo[index], edificio)
-			}
-			else if var_edificio_nombre = "Generador Geotérmico"{
-				edificio.flujo.liquido = 3
 				change_flujo(edificio_flujo_consumo[index], edificio)
 			}
 			if grafic_luz and edificio.flujo.liquido = 3{

@@ -665,21 +665,10 @@ if menu = 2{
 		for(var b = minb; b < maxb; b++)
 			if edificio_draw[# a, b]{
 				var edificio = edificio_id[# a, b], index = edificio.index, temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b, var_edificio_nombre = edificio_nombre[index]
-				if edificio.carga_total > 0{
-					//Dibujo de items en los caminos
-					if (edificio_camino[index] or index = 6){
-						var proceso = edificio_proceso[index]
-						var c = 1.2 * (max(edificio.proceso, edificio.waiting * proceso) - proceso / 2) * 20 / proceso
-						var d = edificio.dir * pi / 3 + pi / 6
-						draw_sprite_off(recurso_sprite[edificio.carga_id], 0, aa + c * cos(d), bb - c * sin(d))
-					}
-					//Dibujo de items saliendo del tunel
-					else if index = 16{
-						var proceso = edificio_proceso[index]
-						var c = 1.2 * (max(edificio.proceso, edificio.waiting * proceso) - proceso / 2) * 20 / proceso
-						var d = edificio.dir * pi / 3 + pi / 6
-						draw_sprite_off(recurso_sprite[edificio.carga_id], 0, aa - c * cos(d), bb + c * sin(d))
-					}
+				if (edificio_camino[index] or in(index, 6, 16)) and edificio.carga_total > 0{
+					var proceso = edificio_proceso[index]
+					var c = 1.2 * (max(edificio.proceso, edificio.waiting * proceso) - proceso / 2) * 20 / proceso
+					draw_sprite_off(recurso_sprite[edificio.carga_id], 0, aa + c * edificio.array_real[0], bb + c * edificio.array_real[1])
 				}
 				if edificio_armas[index] and not in(var_edificio_nombre, "Láser", "Torre Reparadora")
 					if edificio.carga_total = 0
@@ -2464,10 +2453,9 @@ if build_index > 0 and win = 0{
 				if in(var_edificio_nombre, "Túnel", "Túnel salida") and build_able and build_target.index = 6
 					index = 16
 				edificio = add_edificio(index, dir, mx, my)
-				if in(edificio_nombre[index], "Túnel", "Túnel salida")
-					build_dir = (dir + 3) mod 6
 				//Algoritmo link de tuneles
 				if in(var_edificio_nombre, "Túnel", "Túnel salida"){
+					build_dir = (dir + 3) mod 6
 					edificio.idle = not build_able
 					if build_able{
 						if not build_target.idle{
@@ -2989,7 +2977,7 @@ if not pausa{
 								edificio.carga_total -= tiro_struct.cantidad
 								if edificio_size[index] mod 2 = 0{
 									bb = edificio.y + 14
-									aa = edificio.x + power(-1, edificio.dir) * 8
+									aa = edificio.x + edificio.array_real[2]
 								}
 								var dis = distance(edificio.x, edificio.y, enemigo.a, enemigo.b)
 								var municion = add_municion(aa, bb, 25 * (enemigo.a - aa) / dis, 25 * (enemigo.b - bb) / dis, var_edificio_nombre = "Mortero" ? 1 : (var_edificio_nombre = "Lanzallamas" ? 2 : 0), dis / 25, tiro_struct.dmg * dmg_factor, enemigo, null_edificio)
@@ -3030,7 +3018,7 @@ if not pausa{
 					enemigo.vida -= red_power / 2
 					draw_set_alpha(red_power)
 					draw_set_color(c_red)
-					draw_line_off(edificio.x + 12, edificio.y + 14, enemigo.a, enemigo.b)
+					draw_line_off(edificio.x + edificio.array_real[2], edificio.y + 14, enemigo.a, enemigo.b)
 					draw_set_alpha(1)
 					if enemigo.vida <= 0{
 						destroy_dron(enemigo)
@@ -3059,7 +3047,7 @@ if not pausa{
 						change_energia(edificio_energia_consumo[index], edificio)
 						draw_set_color(c_green)
 						draw_set_alpha(red_power)
-						draw_line_off(edificio.x + 12, edificio.y + 14, edificio.link.x, edificio.link.y)
+						draw_line_off(edificio.x + edificio.array_real[2], edificio.y + 14, edificio.link.x, edificio.link.y)
 						edificio.link.vida += 2 * red_power
 						if edificio.link.vida >= edificio_vida[edificio.link.index]{
 							edificio.link.vida = edificio_vida[edificio.link.index]
