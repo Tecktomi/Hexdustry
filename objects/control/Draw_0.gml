@@ -273,6 +273,7 @@ if menu = 2{
 			ypos += 20
 			xpos = draw_text_xpos(xpos, ypos, "Multiplicador de vida de enemigos: ")
 			multiplicador_vida_enemigos = draw_boton_text(xpos, ypos, multiplicador_vida_enemigos)
+			draw_text_xpos(xpos + text_x, ypos, "%")
 			ypos += 20
 			ypos = draw_text_ypos(room_width / 2 + 20, ypos, "Carga inicial")
 			xpos = room_width / 2 + 40
@@ -894,7 +895,31 @@ if menu = 2{
 				}
 			}
 			else
-				draw_text_ypos(120, pos, "No es útil en el núcleo")
+				pos = draw_text_ypos(120, pos, "No es útil en el núcleo")
+			flag = false
+			for(var a = 0; a < dron_max; a++){
+				for(var b = 0; b < array_length(dron_precio_id[a]); b++)
+					if dron_precio_id[a, b] = enciclopedia_item{
+						flag = true
+						break
+					}
+				if flag
+					break
+			}
+			if flag{
+				pos = draw_text_ypos(120, pos, "Necesario para producir:")
+				for(var a = 0; a < dron_max; a++)
+					for(var b = 0; b < array_length(dron_precio_id[a]); b++)
+						if dron_precio_id[a, b] = enciclopedia_item{
+							if draw_boton(140, pos, dron_nombre[a],,,, false){
+								enciclopedia_item = a
+								enciclopedia = 6
+								exit
+							}
+							pos += 20
+							break
+						}
+			}
 			draw_sprite_ext(recurso_sprite[enciclopedia_item], 0, room_width - 200, 200, 4, 4, 0, c_white, 1)
 		}
 		//Detalles Edificio
@@ -3602,7 +3627,7 @@ if not pausa{
 				destroy_dron(dron)
 				continue
 			}
-			draw_set_color(make_color_hsv(120 * dron.vida / dron_vida_max[index], 255, 255))
+			draw_set_color(make_color_rgb(255 * (1 - dron.vida / dron.vida_max), 255 * dron.vida / dron.vida_max, 0))
 			draw_circle_off(aa, bb - 20, 5, false)
 			draw_set_color(c_white)
 		}
@@ -3797,7 +3822,7 @@ if not pausa{
 		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,,, c_blue)
 		//Indicador de Vida
 		if dron.vida < dron_vida_max[index]{
-			draw_set_color(make_color_hsv(120 * dron.vida / dron_vida_max[index], 255, 255))
+			draw_set_color(make_color_rgb(255 * (1 - dron.vida / dron.vida_max), 255 * dron.vida / dron.vida_max, 0))
 			draw_circle_off(aa, bb - 20, 5, false)
 			draw_set_color(c_white)
 			if dron.vida <= 0{
@@ -4018,7 +4043,8 @@ if not pausa{
 						else
 							enemigo = add_dron(aa, bb, 0)
 					}
-					enemigo.vida = (enemigo.vida + 5 * d) * multiplicador_vida_enemigos
+					enemigo.vida_max = enemigo.vida * (20 + d) / 20 * multiplicador_vida_enemigos / 100
+					enemigo.vida = enemigo.vida_max
 					var temp_array = ds_grid_get(chunk_enemigos, enemigo.chunk_x, enemigo.chunk_y)
 					enemigo.chunk_pointer = array_length(temp_array)
 					array_push(temp_array, enemigo)

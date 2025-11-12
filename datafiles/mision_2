@@ -9,7 +9,7 @@ oleadas="0.000000"
 tiempo primera oleada="90.000000"
 tiempo entre oleadas="30.000000"
 objetivos="10.000000"
-Multiplicador vida enemigos="1.000000"
+Multiplicador vida enemigos="100.000000"
 texto victoria="Todos los objetivos cumplidos"
 [Carga inicial]
 0="90.000000"
