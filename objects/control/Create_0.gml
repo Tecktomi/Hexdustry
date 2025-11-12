@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "09_11_2025")
+ini_write_string("Global", "version", "11_11_2025")
 ini_close()
 #region Metadatos
 	menu = 0
@@ -65,18 +65,26 @@ ini_close()
 	mision_target_id = array_create(0, 0)
 	mision_target_num = array_create(0, 0)
 	mision_tiempo = array_create(0, 0)
+	mision_tiempo_edit = array_create(0, false)
 	mision_tiempo_victoria = array_create(0, false)
 	mision_tiempo_show = array_create(0, true)
 	mision_texto = array_create(0, array_create(0, {x : 0, y : 0, texto : ""}))
+	mision_camara_move = array_create(0, false)
+	mision_camara_x = array_create(0, 0)
+	mision_camara_y = array_create(0, 0)
+	mision_camara_step = 0
+	mision_camara_x_start = 0
+	mision_camara_y_start = 0
 	mision_texto_victoria = "Todos los objetivos cumplidos"
 	mision_actual = -1
 	mision_counter = 0
 	mision_current_tiempo = 0
 	mision_choosing_coord = false
+	mision_choosing_coord_tipo = 0
 	mision_choosing_coord_i = 0
 	mision_switch_oleadas = array_create(0, false)
 	get_keyboard_string = -1
-	objetivos_nombre = ["conseguir", "tener almacenado", "construir", "tener construido", "matar", "sin objetivo"]
+	objetivos_nombre = ["conseguir", "tener almacenado", "construir", "tener construido", "matar", "sin objetivo", "apretar ADWS", "cargar edificio"]
 	oleadas = true
 	oleadas_tiempo_primera = 240
 	oleadas_tiempo = 45
@@ -147,6 +155,7 @@ ini_close()
 	edificios_construidos = 0
 	drones_construidos = 0
 	enemigos_eliminados = 0
+	tutorial = 0
 #endregion
 null_edificio = {
 	index : -1,
@@ -200,6 +209,7 @@ null_edificio = {
 	chunk_y : 0,
 	chunk_pointer : 0,
 	target_chunks : array_create(0, {a : 0, b : 0}),
+	target_pointer : 0,
 	array_real : array_create(0, 0)
 }
 null_edificio.link = null_edificio
@@ -332,7 +342,8 @@ municiones = array_create(0, null_municion)
 			"Dispara a los enemigos cercanos",
 			"Transporta recursos entre Puertos de Carga",
 			"Repara los edificios dañados",
-			"Se acerca a su objetivo y explota infilgiendo daño"
+			"Se acerca a su objetivo y explota infilgiendo daño",
+			"Unidad de asedio superior, dispara explosivos alargo alcance dañando todo a su alrededor"
 		]
 	for(var a = array_length(dron_descripcion); a > 0; a--)
 		dron_descripcion[a - 1] = text_wrap(dron_descripcion[a - 1], 400)

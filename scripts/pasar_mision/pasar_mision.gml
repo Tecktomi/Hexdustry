@@ -10,6 +10,11 @@ function pasar_mision(){
 				mision_current_tiempo = 60 * mision_tiempo[mision_actual]
 			if mision_switch_oleadas[mision_actual]
 				oleadas = not oleadas
+			if mision_camara_move[mision_actual]{
+				mision_camara_step = 60
+				mision_camara_x_start = camx
+				mision_camara_y_start = camy
+			}
 		}
 	}
 }

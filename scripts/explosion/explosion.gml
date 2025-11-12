@@ -5,26 +5,29 @@ function explosion(aa = 0, bb = 0, edificio = control.null_edificio){
 		edificio.vida -= 100
 		if edificio.vida <= 0
 			delete_edificio(edificio.a, edificio.b, true)
-		var temp_complex = xytoab(aa, bb), chunk_x = floor(temp_complex.a / chunk_width), chunk_y = floor(temp_complex.b / chunk_height), maxa = min(chunk_x + 1, xsize / chunk_width), maxb = min(chunk_y + 1, ysize / chunk_height)
-		for(var a = max(chunk_x - 1, 0); a <= maxa; a++)
-			for(var b = max(chunk_y - 1, 0); b <= maxb; b++){
-				var temp_array = chunk_edificios[# a, b]
-				for(var i = array_length(temp_array); i > 0; i--){
-					edificio = temp_array[i - 1]
-					var dis = distance_sqr(aa, bb, edificio.x, edificio.y)
-					if dis < 14_400{//120^2
-						edificio.vida -= 1000 / (10 + sqrt(dis))
-						if edificio.vida <= 0
-							delete_edificio(edificio.a, edificio.b, true)
+		var temp_complex = xytoab(aa, bb)
+		if temp_complex.a >= 0{
+			var chunk_x = floor(temp_complex.a / chunk_width), chunk_y = floor(temp_complex.b / chunk_height), maxa = min(chunk_x + 1, xsize / chunk_width), maxb = min(chunk_y + 1, ysize / chunk_height)
+			for(var a = max(chunk_x - 1, 0); a <= maxa; a++)
+				for(var b = max(chunk_y - 1, 0); b <= maxb; b++){
+					var temp_array = chunk_edificios[# a, b]
+					for(var i = array_length(temp_array); i > 0; i--){
+						edificio = temp_array[i - 1]
+						var dis = distance_sqr(aa, bb, edificio.x, edificio.y)
+						if dis < 14_400{//120^2
+							edificio.vida -= 1000 / (10 + sqrt(dis))
+							if edificio.vida <= 0
+								delete_edificio(edificio.a, edificio.b, true)
+						}
 					}
 				}
-			}
-		for(var a = array_length(drones_aliados); a > 0; a--){
-			var temp_dron = drones_aliados[a - 1], dis = distance_sqr(aa, bb, edificio.x, edificio.y)
-			if dis < 14_400{//120^2
-				temp_dron.vida -= 1000 / (10 + sqrt(dis))
-				if temp_dron.vida <= 0
-					destroy_dron(temp_dron)
+			for(var a = array_length(drones_aliados); a > 0; a--){
+				var temp_dron = drones_aliados[a - 1], dis = distance_sqr(aa, bb, edificio.x, edificio.y)
+				if dis < 14_400{//120^2
+					temp_dron.vida -= 1000 / (10 + sqrt(dis))
+					if temp_dron.vida <= 0
+						destroy_dron(temp_dron)
+				}
 			}
 		}
 	}

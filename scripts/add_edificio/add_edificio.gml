@@ -55,6 +55,7 @@ function add_edificio(index, dir, a, b){
 			chunk_y : clamp(round(b / chunk_height), 0, ds_grid_height(chunk_edificios) - 1),
 			chunk_pointer : 0,
 			target_chunks : array_create(0, {a : 0, b : 0}),
+			target_pointer : 0,
 			array_real : array_create(0, 0)
 		}
 		ds_list_add(edificio.energia_link, null_edificio)
@@ -100,8 +101,7 @@ function add_edificio(index, dir, a, b){
 				edificio.array_real[1] = -sin(d)
 			}
 		}
-		if edificio_size[index] mod 2 = 0
-			edificio.array_real[2] = power(-1, dir) * 8
+		edificio.array_real[2] = power(-1, dir) * 8
 		//Añadir coordenadas
 		var temp_list_size = get_size(a, b, dir, edificio_size[index])
 		var temp_list_arround = get_arround(a, b, dir, edificio_size[index])
@@ -132,7 +132,8 @@ function add_edificio(index, dir, a, b){
 			for(var c = 0; c < size; c++){
 				var enemigo = enemigos[c]
 				temp_complex = xytoab(enemigo.a, enemigo.b)
-				enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
+				if temp_complex.a >= 0
+					enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
 			}
 		}
 		size = ds_list_size(temp_list_size)
