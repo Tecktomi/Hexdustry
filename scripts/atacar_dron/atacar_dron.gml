@@ -12,7 +12,8 @@ function atacar_dron(dron = control.null_enemigo, edificio = control.null_edific
 			if edificio.vida <= 0{
 				delete_edificio(edificio.a, edificio.b, true)
 				var temp_complex = xytoab(aa, bb)
-				dron.target = edificio_cercano[# temp_complex.a, temp_complex.b]
+				if temp_complex.a >= 0
+					dron.target = edificio_cercano[# temp_complex.a, temp_complex.b]
 			}
 			return false
 		}

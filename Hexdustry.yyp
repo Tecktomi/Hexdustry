@@ -21,6 +21,7 @@
   "ForcedPrefabProjectReferences":[],
   "IncludedFiles":[
     {"$GMIncludedFile":"","%Name":"mision_1","CopyToMask":-1,"filePath":"datafiles","name":"mision_1","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"mision_2","CopyToMask":-1,"filePath":"datafiles","name":"mision_2","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
   ],
   "isEcma":false,
   "LibraryEmitters":[],
@@ -104,6 +105,7 @@
     {"id":{"name":"pasar_mision","path":"scripts/pasar_mision/pasar_mision.yy",},},
     {"id":{"name":"red_text","path":"scripts/red_text/red_text.yy",},},
     {"id":{"name":"redo_pathfind","path":"scripts/redo_pathfind/redo_pathfind.yy",},},
+    {"id":{"name":"remove_dron_chunk","path":"scripts/remove_dron_chunk/remove_dron_chunk.yy",},},
     {"id":{"name":"resize_grid","path":"scripts/resize_grid/resize_grid.yy",},},
     {"id":{"name":"set_terreno","path":"scripts/set_terreno/set_terreno.yy",},},
     {"id":{"name":"sound_play_edificio","path":"scripts/sound_play_edificio/sound_play_edificio.yy",},},

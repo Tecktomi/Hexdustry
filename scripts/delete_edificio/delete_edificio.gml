@@ -291,7 +291,8 @@ function delete_edificio(aa, bb, enemigo = false){
 			var temp_enemigo = enemigos[a]
 			if temp_enemigo.target = edificio{
 				var temp_complex = xytoab(temp_enemigo.a, temp_enemigo.b)
-				enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
+				if temp_complex.a >= 0
+					enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
 			}
 		}
 		//Explosión Nuclear

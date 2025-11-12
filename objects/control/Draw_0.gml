@@ -16,6 +16,7 @@ if menu = 0{
 		var file = cargar_escenario("mision_1")
 		if file != ""
 			game_start()
+		tutorial = 1
 	}
 	if draw_boton(room_width / 2, 320, "Cargar escenario"){
 		if not nucleo.vivo
@@ -62,7 +63,48 @@ if menu = 2{
 		if size > 15
 			deslizante = floor(draw_deslizante_vertical(120, pos, pos + 15 * 30, deslizante, 0, size - 15, 0))
 		for(var i = deslizante; i < min(deslizante + 15, size); i++){
-			if draw_boton(140, pos, $"'{mision_nombre[i]}'")
+			if i > 0 and draw_sprite_boton(spr_flecha, 140, pos){
+				var	temp_string = mision_nombre[i - 1]
+				mision_nombre[i - 1] = mision_nombre[i]
+				mision_nombre[i] = temp_string
+				var	temp_real = mision_objetivo[i - 1]
+				mision_objetivo[i - 1] = mision_objetivo[i]
+				mision_objetivo[i] = temp_real
+				temp_real = mision_target_id[i - 1]
+				mision_target_id[i - 1] = mision_target_id[i]
+				mision_target_id[i] = temp_real
+				temp_real = mision_target_num[i - 1]
+				mision_target_num[i - 1] = mision_target_num[i]
+				mision_target_num[i] = temp_real
+				temp_real = mision_tiempo[i - 1]
+				mision_tiempo[i - 1] = mision_tiempo[i]
+				mision_tiempo[i] = temp_real
+				var temp_bool = mision_tiempo_edit[i - 1]
+				mision_tiempo_edit[i - 1] = mision_tiempo_edit[i]
+				mision_tiempo_edit[i] = temp_real
+				temp_real = mision_tiempo_victoria[i - 1]
+				mision_tiempo_victoria[i - 1] = mision_tiempo_victoria[i]
+				mision_tiempo_victoria[i] = temp_real
+				temp_real = mision_tiempo_show[i - 1]
+				mision_tiempo_show[i - 1] = mision_tiempo_show[i]
+				mision_tiempo_show[i] = temp_real
+				temp_bool = mision_camara_move[i - 1]
+				mision_camara_move[i - 1] = mision_camara_move[i]
+				mision_camara_move[i] = temp_bool
+				temp_real = mision_camara_x[i - 1]
+				mision_camara_x[i - 1] = mision_camara_x[i]
+				mision_camara_x[i] = temp_real
+				temp_real = mision_camara_y[i - 1]
+				mision_camara_y[i - 1] = mision_camara_y[i]
+				mision_camara_y[i] = temp_real
+				var temp_array = mision_texto[i - 1]
+				mision_texto[i - 1] = mision_texto[i]
+				mision_texto[i] = temp_array
+				temp_bool = mision_switch_oleadas[i - 1]
+				mision_switch_oleadas[i - 1] = mision_switch_oleadas[i]
+				mision_switch_oleadas[i] = temp_bool
+			}
+			if draw_boton(160, pos, $"'{mision_nombre[i]}'")
 				mision_actual = i
 			pos += 30
 		}
@@ -76,8 +118,12 @@ if menu = 2{
 			array_push(mision_target_id, 0)
 			array_push(mision_target_num, 0)
 			array_push(mision_tiempo, 0)
+			array_push(mision_tiempo_edit, false)
 			array_push(mision_tiempo_victoria, 0)
 			array_push(mision_tiempo_show, 1)
+			array_push(mision_camara_move, 0)
+			array_push(mision_camara_x, 0)
+			array_push(mision_camara_y, 0)
 			array_push(mision_texto, array_create(0, {texto : "", x : 0, y : 0}))
 			array_push(mision_switch_oleadas, false)
 			mision_actual = size
@@ -98,7 +144,7 @@ if menu = 2{
 			mision_objetivo[i] = draw_boton_text_list(xpos, ypos, mision_objetivo[i], objetivos_nombre)
 			xpos += text_x
 			//Cantidad
-			if mision_objetivo[i] != 5{
+			if not in(mision_objetivo[i], 5, 7){
 				xpos = draw_text_xpos(xpos, ypos, " ")
 				mision_target_num[i] = draw_boton_text(xpos, ypos, mision_target_num[i])
 				xpos += text_x
@@ -109,7 +155,7 @@ if menu = 2{
 				mision_target_id[i] = draw_boton_text_list(xpos, ypos, mision_target_id[i], recurso_nombre,, 10)
 			}
 			//Construir / Tener construido
-			else if mision_objetivo[i] < 4{
+			else if in(mision_objetivo[i], 2, 3, 7){
 				xpos = draw_text_xpos(xpos, ypos, " ")
 				mision_target_id[i] = draw_boton_text_list(xpos, ypos, mision_target_id[i], edificio_nombre,, 10)
 			}
@@ -118,24 +164,22 @@ if menu = 2{
 				draw_text(xpos, ypos, " enemigos")
 			xpos = room_width / 2 + 40
 			ypos = 180
-			if draw_boton(xpos, ypos, (mision_tiempo[i] = 0 ? "H" : "Desh") + "abilitar cronómetro"){
+			if draw_boton(xpos, ypos, (mision_tiempo_edit[i] ? "Desh" : "H") + "abilitar cronómetro"){
 				if mision_tiempo[i] > 0
 					mision_tiempo[i] = 0
 				else
 					mision_tiempo[i] = 1
+				mision_tiempo_edit[i] = not mision_tiempo_edit[i]
 			}
-			if mision_tiempo[i] > 0{
+			if mision_tiempo_edit[i]{
 				xpos = room_width / 2 + 70
 				ypos += 30
-				xpos = draw_text_xpos(xpos, ypos, "Tiempo límite: ")
+				xpos = draw_text_xpos(xpos, ypos, "Luego de ")
 				mision_tiempo[i] = draw_boton_text(xpos, ypos, mision_tiempo[i])
-				if mision_tiempo[i] = 0
-					get_keyboard_string = -1
-				xpos += text_x + 20
+				xpos = 20 + draw_text_xpos(xpos + text_x, ypos, "s")
 				if draw_boton(xpos, ypos, mision_tiempo_victoria[i] ? "Victoria" : "Derrota")
 					mision_tiempo_victoria[i] = not mision_tiempo_victoria[i]
-				xpos += text_x + 20
-				if draw_boton(xpos, ypos, mision_tiempo_show[i] ? "Mostrar" : "Ocultar")
+				if draw_boton(xpos + text_x + 20, ypos, mision_tiempo_show[i] ? "Mostrar" : "Ocultar")
 					mision_tiempo_show[i] = not mision_tiempo_show[i]
 			}
 			ypos += 40
@@ -159,38 +203,38 @@ if menu = 2{
 					texto.texto = keyboard_string
 					exit_keyboard_input()
 				}
-				xpos += text_x
-				xpos = draw_text_xpos(xpos, ypos, " on ")
-				if draw_boton(xpos, ypos, texto.x,,,, false){
-					get_keyboard_string = 200 + b
-					keyboard_string = string(texto.x)
-				}
-				if get_keyboard_string = 200 + b{
-					draw_line(xpos, ypos + 20, xpos + text_x, ypos + 20)
-					texto.x = keyboard_string = "" ? 0 : max(0, real(string_digits(keyboard_string)))
-					exit_keyboard_input()
-				}
-				xpos += text_x
-				xpos = draw_text_xpos(xpos, ypos, ", ")
-				if draw_boton(xpos, ypos, texto.y,,,, false){
-					get_keyboard_string = 300 + b
-					keyboard_string = string(texto.y)
-				}
-				if get_keyboard_string = 300 + b{
-					draw_line(xpos, ypos + 20, xpos + text_x, ypos + 20)
-					texto.y = keyboard_string = "" ? 0 : max(0, real(string_digits(keyboard_string)))
-					exit_keyboard_input()
-				}
+				xpos = draw_text_xpos(xpos + text_x, ypos, " on ")
+				texto.x = draw_boton_text(xpos, ypos, texto.x)
+				xpos = draw_text_xpos(xpos + text_x, ypos, ", ")
+				texto.y = draw_boton_text(xpos, ypos, texto.y)
 				ypos += a
 			}
 			ypos += 10
 			if draw_boton(room_width / 2 + 40, ypos, "Añadir texto"){
 				mision_choosing_coord = true
 				mision_choosing_coord_i = i
+				mision_choosing_coord_tipo = 0
 			}
 			ypos += text_y + 10
-			if draw_boton(room_width / 2 + 40, ypos, (mision_switch_oleadas[i] ? "NO" : "") + "Activar / Desactivar Oleadas")
+			if draw_boton(room_width / 2 + 40, ypos, (mision_switch_oleadas[i] ? "NO a" : "A") + "ctivar / Desactivar Oleadas")
 				mision_switch_oleadas[i] = not mision_switch_oleadas[i]
+			ypos += text_y + 10
+			if draw_boton(room_width / 2  + 40, ypos, (mision_camara_move[i] ? "NO m" : "M") + "over cámara"){
+				mision_camara_move[i] = not mision_camara_move[i]
+				if mision_camara_move[i]{
+					mision_choosing_coord = true
+					mision_choosing_coord_i = i
+					mision_choosing_coord_tipo = 1
+				}
+			}
+			ypos += text_y + 10
+			if mision_camara_move[i]{
+				xpos = room_width / 2 + 80
+				xpos = draw_text_xpos(xpos, ypos, "Mover a ")
+				mision_camara_x[i] = draw_boton_text(xpos, ypos, mision_camara_x[i])
+				xpos = draw_text_xpos(xpos+ text_x, ypos, ", ")
+				mision_camara_y[i] = draw_boton_text(xpos, ypos, mision_camara_y[i])
+			}
 			if draw_boton(room_width / 2 + 10, room_height - 140, "Eliminar objetivo"){
 				array_delete(mision_nombre, i, 1)
 				array_delete(mision_objetivo, i, 1)
@@ -373,11 +417,16 @@ if menu = 2{
 		my = temp_hexagono.b
 		if mision_choosing_coord{
 			draw_set_halign(fa_center)
-			draw_text((room_width + 200) / 2, 100, "Clic izquiero para crear texto")
+			draw_text((room_width + 200) / 2, 100, "Clic izquiero para " + (mision_choosing_coord_tipo = 0 ? "crear texto" : "mover la cámara"))
 			draw_set_halign(fa_left)
 			if mouse_check_button_pressed(mb_left){
 				var temp_complex = abtoxy(mx, my)
-				array_push(mision_texto[mision_choosing_coord_i], {x : temp_complex.a, y : temp_complex.b, texto : ""})
+				if mision_choosing_coord_tipo = 0
+					array_push(mision_texto[mision_choosing_coord_i], {x : temp_complex.a, y : temp_complex.b, texto : ""})
+				else if mision_choosing_coord_tipo = 1{
+					mision_camara_x[mision_choosing_coord_i] = temp_complex.a
+					mision_camara_y[mision_choosing_coord_i] = temp_complex.b
+				}
 				mision_choosing_coord = false
 			}
 			if mouse_check_button_pressed(mb_right)
@@ -612,6 +661,9 @@ if menu = 2{
 				ini_write_real($"Objetivo {a}", "tiempo", mision_tiempo[a])
 				ini_write_real($"Objetivo {a}", "tiempo victoria", real(mision_tiempo_victoria[a]))
 				ini_write_real($"Objetivo {a}", "tiempo show", real(mision_tiempo_show[a]))
+				ini_write_real($"Objetivo {a}", "camara move", real(mision_camara_move[a]))
+				ini_write_real($"Objetivo {a}", "camara x", mision_camara_x[a])
+				ini_write_real($"Objetivo {a}", "camara y", mision_camara_y[a])
 				var textos = array_length(mision_texto[a])
 				ini_write_real($"Objetivo {a}", "textos", textos)
 				for(b = 0; b < textos; b++){
@@ -2416,6 +2468,9 @@ if build_index > 0 and win = 0{
 								temp_edificio.dir = dir
 								calculate_in_out_2(temp_edificio)
 								mover(aa, bb)
+								var d = temp_edificio.dir * pi / 3 + pi / 6
+								temp_edificio.array_real[0] = cos(d)
+								temp_edificio.array_real[1] = -sin(d)
 								flag = false
 								break
 							}
@@ -2503,6 +2558,8 @@ else if ((mouse_check_button(mb_right) and prev_change) or mouse_check_button_pr
 }
 //Ciclos
 if not pausa{
+	if not audio_is_playing(snd_musica) and random(1) < 0.001
+		audio_play_sound(snd_musica, 1, false)
 	timer++
 	//Ciclo edificios
 	for(var a = 0; a < array_length(edificios_activos); a++){
@@ -2935,7 +2992,7 @@ if not pausa{
 		else if edificio_arma[index] >= 0{
 			if in(var_edificio_nombre, "Torre básica", "Rifle", "Mortero", "Lanzallamas"){
 				//Buscar enemigos
-				if (image_index mod 10 = 0 and edificio.target = null_enemigo) or edificio.target.vida <= 0{
+				if ((a + image_index) mod 10 = 0 and edificio.target = null_enemigo) or edificio.target.vida <= 0{
 					edificio.target = null_enemigo
 					if array_length(enemigos) > 0{
 						if var_edificio_nombre = "Mortero"
@@ -3005,7 +3062,7 @@ if not pausa{
 					change_flujo(0, edificio)
 			}
 			else if in(var_edificio_nombre, "Láser"){
-				if edificio.target = null_enemigo or edificio.target.vida <= 0{
+				if ((a + image_index) mod 10 = 0 and edificio.target = null_enemigo) or edificio.target.vida <= 0{
 					edificio.target = null_enemigo
 					if array_length(enemigos) > 0
 						turret_target(edificio)
@@ -3692,8 +3749,25 @@ if not pausa{
 				}
 			}
 		}
+		//Alejarse de los enemigos cercanos
+		var temp_dron_size = dron_size[dron.index], temp_array = chunk_enemigos[# dron.chunk_x, dron.chunk_y]
+		for(var b = array_length(temp_array); b > 0; b--){
+			var temp_enemigo = temp_array[b - 1]
+			if temp_enemigo = null_enemigo or temp_enemigo = dron or not is_struct(temp_enemigo) or temp_enemigo.vida <= 0{
+				if not is_struct(temp_enemigo)
+					show_debug_message($"Error en el enemigo {b}/{array_length(temp_array)} de chunk_enemigos[# {dron.chunk_x}, {dron.chunk_y}] (step{image_index})")
+				continue
+			}
+			var dis = sqr(aa - temp_enemigo.a) + sqr(bb - temp_enemigo.b)
+			if dis < temp_dron_size{
+				var aaa = sign(aa - temp_enemigo.a), bbb = sign(bb - temp_enemigo.b)
+				dron.a += aaa
+				dron.b += bbb
+				temp_enemigo.a -= aaa
+				temp_enemigo.b -= bbb
+			}
+		}
 		//Cambiar de chunk
-		var temp_array = ds_grid_get(chunk_enemigos, dron.chunk_x, dron.chunk_y)
 		var temp_complex = xytoab(aa, bb)
 		aa = temp_complex.a
 		bb = temp_complex.b
@@ -3702,43 +3776,23 @@ if not pausa{
 			dron.posb = bb
 			if not ds_list_empty(edificios) and terreno_caminable[terreno[# aa, bb]]
 				dron.target = edificio_cercano[# aa, bb]
-			if clamp(round(aa / chunk_width), 0, ds_grid_width(chunk_enemigos) - 1) != dron.chunk_x or clamp(round(bb / chunk_height), 0, ds_grid_height(chunk_enemigos) - 1) != dron.chunk_y{
-				if array_length(temp_array) > 1{
-					var temp_enemigo = temp_array[array_length(temp_array) - 1]
-					temp_array[dron.chunk_pointer] = temp_enemigo
-					temp_enemigo.chunk_pointer = dron.chunk_pointer
-				}
-				array_pop(temp_array)
-				dron.chunk_x = clamp(round(aa / chunk_width), 0, ds_grid_width(chunk_enemigos) - 1)
-				dron.chunk_y = clamp(round(bb / chunk_height), 0, ds_grid_height(chunk_enemigos) - 1)
-				temp_array = chunk_enemigos[# dron.chunk_x, dron.chunk_y]
+			var chunk_x = clamp(round(aa / chunk_width), 0, ds_grid_width(chunk_enemigos) - 1), chunk_y = clamp(round(bb / chunk_height), 0, ds_grid_height(chunk_enemigos) - 1)
+			if chunk_x != dron.chunk_x or chunk_y != dron.chunk_y{
+				remove_dron_chunk(dron)
+				dron.chunk_x = chunk_x
+				dron.chunk_y = chunk_y
+				temp_array = chunk_enemigos[# chunk_x, chunk_y]
 				dron.chunk_pointer = array_length(temp_array)
 				array_push(temp_array, dron)
+				ds_grid_set(chunk_enemigos, dron.chunk_x, dron.chunk_y, temp_array)
 			}
 		}
 		aa = dron.a
 		bb = dron.b
-		var temp_dron_size = dron_size[dron.index]
-		//Alejarse de los enemigos cercanos
-		for(var b = array_length(temp_array); b > 0; b--){
-			var temp_enemigo = temp_array[b - 1]
-			if temp_enemigo = null_enemigo or temp_enemigo = dron or temp_enemigo.vida <= 0
-				continue
-			var dis = sqr(aa - temp_enemigo.a) + sqr(bb - temp_enemigo.b)
-			if dis < temp_dron_size{
-				dis = sqrt(dis)
-				var aaa = (aa - temp_enemigo.a) / dis, bbb = (bb - temp_enemigo.b) / dis
-				dron.a += aaa
-				dron.b += bbb
-				temp_enemigo.a -= aaa
-				temp_enemigo.b -= bbb
-			}
-		}
 	}
 	//Ciclo drones aliados
-	var size = array_length(drones_aliados)
-	for(var a = 0; a < size; a++){
-		var dron = drones_aliados[a], aa = dron.a, bb = dron.b, index = dron.index
+	for(var a = array_length(drones_aliados); a > 0; a--){
+		var dron = drones_aliados[a - 1], aa = dron.a, bb = dron.b, index = dron.index
 		draw_sprite_off(dron_sprite[index], 0, aa, bb)
 		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,,, c_blue)
 		//Indicador de Vida
@@ -3751,8 +3805,6 @@ if not pausa{
 				drones_aliados[dron.pointer] = temp_dron
 				temp_dron.pointer = dron.pointer
 				array_pop(drones_aliados)
-				size--
-				a--
 				continue
 			}
 		}
@@ -3942,7 +3994,7 @@ if not pausa{
 	if info
 		temp_text_right += $"FPS: {fps}\n"
 	if oleadas{
-		if ++oleadas_timer >= (60 * oleadas_tiempo_primera) or keyboard_check_pressed(vk_enter){
+		if ++oleadas_timer >= 60 * oleadas_tiempo_primera or keyboard_check_pressed(vk_enter){
 			if (oleadas_timer - 60 * oleadas_tiempo_primera) mod (60 * oleadas_tiempo) = 0 or keyboard_check_pressed(vk_enter){
 				var d = enemigos_spawned++, e = 1, flag_2 = false
 				for(var i = 0; i < array_length(size_size); i++)
@@ -3968,42 +4020,48 @@ if not pausa{
 					}
 					enemigo.vida = (enemigo.vida + 5 * d) * multiplicador_vida_enemigos
 					var temp_array = ds_grid_get(chunk_enemigos, enemigo.chunk_x, enemigo.chunk_y)
+					enemigo.chunk_pointer = array_length(temp_array)
 					array_push(temp_array, enemigo)
+					ds_grid_set(chunk_enemigos, enemigo.chunk_x, enemigo.chunk_y, temp_array)
 					enemigo.target = edificio_cercano[# aa, bb]
 					enemigo.pointer = array_length(enemigos)
 					array_push(enemigos, enemigo)
 				}
 			}
 		}
-		if oleadas_timer < (60 * oleadas_tiempo_primera){
-			var seg = floor(((60 * oleadas_tiempo_primera) - oleadas_timer) / 60)
+		if oleadas_timer < 60 * oleadas_tiempo_primera{
+			var seg = floor((60 * oleadas_tiempo_primera - oleadas_timer) / 60)
 			temp_text_right += $"{seg > 60 ? string(floor(seg / 60)) + "m " : ""}{seg mod 60}s para los enemigos\n"
 		}
 		else{
-			var seg = floor((60 * (oleadas_tiempo_primera) - image_index) mod (60 * oleadas_tiempo) / 60) + oleadas_tiempo
+			var seg = floor((60 * oleadas_tiempo_primera - image_index) mod (60 * oleadas_tiempo) / 60) + oleadas_tiempo
 			temp_text_right += $"{seg > 60 ? string(floor(seg / 60)) + "m " : ""}{seg mod 60}s para la siguiente oleada\n"
 		}
 	}
 	if mision_actual >= 0{
 		var a = mision_actual
-		if mision_objetivo[a] != 5
+		if not in(mision_objetivo[a], 5, 6)
 			temp_text_right += $"\n\n{mision_nombre[a]}\n{objetivos_nombre[mision_objetivo[a]]} {mision_target_num[a]} "
 		if mision_objetivo[a] < 2
 			temp_text_right += recurso_nombre[mision_target_id[a]]
-		else if mision_objetivo[a] < 4
+		else if in(mision_objetivo[a], 2, 3, 7)
 			temp_text_right += edificio_nombre[mision_target_id[a]]
 		else if mision_objetivo[a] = 4
 			temp_text_right += "enemigos"
-		if mision_objetivo[a] != 5
+		if not in(mision_objetivo[a], 5, 7)
 			temp_text_right += $"\n{mision_counter} / {mision_target_num[a]}"
+		else if not oleadas and keyboard_check_pressed(vk_enter){
+			keyboard_clear(vk_enter)
+			pasar_mision()
+		}
 		draw_set_halign(fa_center)
 		for(var b = 0; b < array_length(mision_texto[a]); b++){
 			var texto = mision_texto[a, b]
-			draw_text_off(texto.x, texto.y, text_wrap(texto.texto, 250))
+			draw_text_background(texto.x * zoom - camx, texto.y * zoom - camy, text_wrap(texto.texto, 250))
 		}
 		draw_set_halign(fa_left)
 		if mision_tiempo[a] > 0{
-			if --mision_current_tiempo <= 0{
+			if mision_camara_step <= 0 and --mision_current_tiempo <= 0{
 				if mision_tiempo_victoria[a]
 					pasar_mision()
 				else
@@ -4012,15 +4070,22 @@ if not pausa{
 			if mision_tiempo_show[a]
 				temp_text_right += $"\nTiempo restante: {floor(mision_current_tiempo / 60)}s"
 		}
-		if mision_objetivo[a] = 1{
+		else if mision_objetivo[a] = 1{
 			mision_counter = nucleo.carga[mision_target_id[a]]
 			if mision_counter >= mision_target_num[a]{
 				pasar_mision()
 				a++
 			}
 		}
-		if mision_objetivo[a] = 3{
+		else if mision_objetivo[a] = 3{
 			mision_counter = edificios_counter[mision_target_id[a]]
+			if mision_counter >= mision_target_num[a]{
+				pasar_mision()
+				a++
+			}
+		}
+		else if mision_objetivo[a] = 6{
+			mision_counter += (keyboard_check(ord("A")) or keyboard_check(ord("D"))or keyboard_check(ord("W")) or keyboard_check(ord("S")))
 			if mision_counter >= mision_target_num[a]{
 				pasar_mision()
 				a++
@@ -4173,8 +4238,16 @@ if keyboard_check_pressed(vk_anykey) and win = 0{
 		else
 			enciclopedia = 0
 	}
+	if cheat and mision_actual >= 0 and string_ends_with(keyboard_string, "pass")
+		pasar_mision()
 }
-control_camara()
+if --mision_camara_step > 0{
+	zoom = 1
+	camx = clamp(((mision_camara_x[mision_actual] - room_width / 2) * (60 - mision_camara_step) + mision_camara_x_start * mision_camara_step) / 60, 0, xsize * 48 * zoom - room_width)
+	camy = clamp(((mision_camara_y[mision_actual] - room_height / 2) * (60 - mision_camara_step) + mision_camara_y_start * mision_camara_step) / 60, 0, ysize * 14 * zoom - room_height)
+}
+else
+	control_camara()
 if flow > 0
 	draw_path_find()
 update_cursor()
@@ -4214,6 +4287,12 @@ if win > 0{
 			ypos = draw_text_ypos(room_width / 2, ypos, $"Drones construidos: {drones_construidos}")
 		if enemigos_eliminados > 0
 			ypos = draw_text_ypos(room_width / 2, ypos, $"Enemigos eliminados: {enemigos_eliminados}")
+		if tutorial = 1 and win = 1 and draw_boton(room_width / 2, room_height - 250, "Siguiente misión"){
+			var file = cargar_escenario("mision_2")
+			if file != ""
+				game_start()
+			tutorial = 2
+		}
 		if win = 1 and draw_boton(room_width / 2, room_height - 200, "¿Seguir jugando?"){
 			win_step = 0
 			win = 0

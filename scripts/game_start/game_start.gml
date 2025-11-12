@@ -13,6 +13,7 @@ function game_start(){
 		mision_counter = 0
 		oleadas_timer = 0
 		timer = 0
+		win = 0
 		enemigos_spawned = 3
 		edificios_construidos = 0
 		drones_construidos = 0

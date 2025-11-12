@@ -1,13 +1,6 @@
 function destroy_dron(enemigo = control.null_enemigo){
 	with control{
-		var temp_array = chunk_enemigos[# enemigo.chunk_x, enemigo.chunk_y]
-		if array_length(temp_array) > 1 and enemigo.chunk_pointer != array_length(temp_array) - 1{
-			var temp_enemigo = temp_array[array_length(temp_array) - 1]
-			temp_array[enemigo.chunk_pointer] = temp_enemigo
-			temp_enemigo.chunk_pointer = enemigo.chunk_pointer
-		}
-		array_pop(temp_array)
-		ds_grid_set(chunk_enemigos, enemigo.chunk_x, enemigo.chunk_y, temp_array)
+		remove_dron_chunk(enemigo)
 		if array_length(enemigos) > 1 and enemigo.pointer != array_length(enemigos) - 1{
 			var temp_enemigo = enemigos[array_length(enemigos) - 1]
 			enemigos[enemigo.pointer] = temp_enemigo

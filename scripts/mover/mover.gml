@@ -96,8 +96,12 @@ function mover(aa, bb){
 		if flag{
 			edificio.carga[out]--
 			edificio.carga_total--
-			if mision_actual >= 0 and mision_objetivo[mision_actual] = 0 and mision_target_id[mision_actual] = out and temp_edificio.index = 0 and ++mision_counter >= mision_target_num[mision_actual]
-				pasar_mision()
+			if mision_actual >= 0{
+				if mision_objetivo[mision_actual] = 0 and mision_target_id[mision_actual] = out and temp_edificio.index = 0 and ++mision_counter >= mision_target_num[mision_actual]
+					pasar_mision()
+				else if mision_objetivo[mision_actual] = 7 and mision_target_id[mision_actual] = temp_edificio.index
+					pasar_mision()
+			}
 			if in(out, 9, 10, 11) and edificio_nombre[temp_edificio.index] = "Base"
 				out = 6
 			temp_edificio.carga[out]++
