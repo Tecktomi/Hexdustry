@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "11_11_2025")
+ini_write_string("Global", "version", "12_11_2025")
 ini_close()
 #region Metadatos
 	menu = 0
@@ -134,7 +134,7 @@ ini_close()
 	input_layer = 0
 	show_smoke = true
 	oleadas_timer = 0
-	multiplicador_vida_enemigos = 1
+	multiplicador_vida_enemigos = 100
 	save_file = ""
 	editor_seed = random_get_seed()
 	editor_fondo = 0
@@ -305,6 +305,7 @@ null_enemigo = {
 	b : 0,
 	index : 0,
 	vida : 5,
+	vida_max : 5,
 	target : null_edificio,
 	temp_target : null_edificio,
 	chunk_x : 0,
@@ -348,14 +349,33 @@ municiones = array_create(0, null_municion)
 	for(var a = array_length(dron_descripcion); a > 0; a--)
 		dron_descripcion[a - 1] = text_wrap(dron_descripcion[a - 1], 400)
 #endregion
-dron_nombre = ["Araña", "Dron", "Reparador", "Explosivo", "Tanque"]
-dron_sprite = [spr_arana, spr_dron, spr_reparador, spr_dron_explosivo, spr_tanque]
-dron_sprite_color = [spr_arana_color, spr_arana_color, spr_arana_color, spr_arana_color, spr_tanque_2]
-dron_vida_max = [100, 40, 60, 50, 750]
-dron_size = [400, 400, 400, 400, 1600]
-dron_alcance = [6400, 100, 2500, 1600, 160_000]
-dron_precio_id = [[2, 14, 16], [14, 15, 16], [7, 14, 15, 16], [13, 14, 16], [2, 4, 16]]
-dron_precio_num = [[3, 1, 1], [1, 3, 1], [10, 1, 3, 1], [2, 1, 1], [15, 25, 10]]
+#region Arreglos
+	dron_nombre = array_create(0, "")
+	dron_sprite = array_create(0, spr_hexagono)
+	dron_sprite_color = array_create(0, spr_hexagono)
+	dron_vida_max = array_create(0, 0)
+	dron_size = array_create(0, 0)
+	dron_alcance = array_create(0, 0)
+	dron_precio_id = array_create(0, array_create(0, 0))
+	dron_precio_num = array_create(0, array_create(0, 0))
+#endregion
+function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vida = 0, size = 0, alcance = 0, precio_id = array_create(0, 0), precio_num = array_create(0, 0)){
+	array_push(dron_nombre, string(nombre))
+	array_push(dron_sprite, sprite)
+	array_push(dron_sprite_color, sprite_color)
+	array_push(dron_vida_max, vida)
+	array_push(dron_size, size)
+	array_push(dron_alcance, alcance)
+	array_push(dron_precio_id, precio_id)
+	array_push(dron_precio_num, precio_num)
+}
+#region definicion
+	def_dron("Araña", spr_arana,, 100, 400, 6400, [2, 14, 16], [3, 1, 1])
+	def_dron("Dron", spr_dron,, 40, 400, 100, [14, 15, 16], [1, 3, 1])
+	def_dron("Reparador", spr_reparador,, 60, 400, 2500, [7, 14, 15, 16], [10, 1, 3, 1])
+	def_dron("Explosivo", spr_dron_explosivo,, 50, 400, 1600, [13, 14, 16], [2, 1, 1])
+	def_dron("Tanque", spr_tanque, spr_tanque_2, 750, 1600, 160_000,[2, 4, 16], [15, 25, 10])
+#endregion
 dron_max = array_length(dron_nombre)
 //Terrenos
 #region Arreglos

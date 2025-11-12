@@ -6,6 +6,7 @@ function add_dron(a, b, index, aliado = false){
 			b : temp_complex.b,
 			index : real(index),
 			vida : dron_vida_max[index],
+			vida_max : dron_vida_max[index],
 			target : null_edificio,
 			temp_target : null_edificio,
 			chunk_x : clamp(round(a / chunk_width), 0, ds_grid_width(chunk_enemigos) - 1),

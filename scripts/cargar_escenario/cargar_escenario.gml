@@ -58,7 +58,7 @@ function cargar_escenario(file = ""){
 					})
 				mision_switch_oleadas[a] = bool(ini_read_real($"Objetivo {a}", "switch oleadas", 0))
 			}
-			multiplicador_vida_enemigos = ini_read_real("Global", "Multiplicador vida enemigos", 1)
+			multiplicador_vida_enemigos = ini_read_real("Global", "Multiplicador vida enemigos", 100)
 			ds_grid_clear(terreno, 0)
 			ds_grid_clear(ore, -1)
 			ds_grid_clear(ore_amount, 0)
