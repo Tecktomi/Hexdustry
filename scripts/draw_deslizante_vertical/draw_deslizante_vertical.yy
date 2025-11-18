@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"draw_deslizante_vertical",
   "parent":{
-    "name":"SCRIPTS",
-    "path":"folders/SCRIPTS.yy",
+    "name":"DRAW",
+    "path":"folders/SCRIPTS/DRAW.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

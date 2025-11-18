@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"get_var_real",
+  "%Name":"procesador_var",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"get_var_real",
+  "name":"procesador_var",
   "parent":{
     "name":"SCRIPTS",
     "path":"folders/SCRIPTS.yy",

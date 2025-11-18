@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"get_var",
+  "%Name":"draw_triangle_off",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"get_var",
+  "name":"draw_triangle_off",
   "parent":{
-    "name":"SCRIPTS",
-    "path":"folders/SCRIPTS.yy",
+    "name":"DRAW",
+    "path":"folders/SCRIPTS/DRAW.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

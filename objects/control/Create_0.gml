@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "12_11_2025")
+ini_write_string("Global", "version", "18_11_2025")
 ini_close()
 #region Metadatos
 	menu = 0
@@ -100,7 +100,7 @@ ini_close()
 	enciclopedia = 0
 	enciclopedia_item = 0
 	deslizante = 0
-	null_humo = add_humo(0, 0, 0, 0, 0, 0, 0, 0, 0)
+	null_humo = add_humo(0, 0, 0, 0, 0, 0, 0)
 	humos = array_create(0, null_humo)
 	direccion_viento = random(2 * pi)
 	null_fuego = add_fuego(0, 0, 0, 0, 0, 0, 0)
