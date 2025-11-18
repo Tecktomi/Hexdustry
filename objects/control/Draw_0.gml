@@ -739,7 +739,7 @@ if menu = 2{
 				//Humo
 				if grafic_humo and (image_index mod 5) = 0 and ((in(var_edificio_nombre, "Generador", "Turbina", "Planta Nuclear") and edificio.fuel > 0) or (var_edificio_nombre = "Generador Geotérmico" and edificio.flujo.liquido = 0)){
 					var dir = direccion_viento + random_range(-pi / 4, pi / 4)
-					array_push(humos, add_humo(edificio.x, edificio.y, a, b, cos(dir), sin(dir), irandom_range(70, 100), 191, 0.3))
+					array_push(humos, add_humo(edificio.x, edificio.y, a, b, cos(dir), sin(dir), irandom_range(70, 100)))
 				}
 				//Mensajes
 				if var_edificio_nombre = "Mensaje"{
@@ -749,7 +749,7 @@ if menu = 2{
 				}
 			}
 	//Luz
-	if false
+	if flow = 5
 		for(var a = 0; a < ds_grid_width(chunk_enemigos); a++)
 			for(var b = 0; b < ds_grid_height(chunk_enemigos); b++){
 				var temp_complex = abtoxy(a * chunk_width, b * chunk_height)
@@ -1117,6 +1117,7 @@ var flag = true, xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / z
 if show_menu{
 	var edificio = show_menu_build, index = edificio.index, var_edificio_nombre = edificio_nombre[index]
 	if var_edificio_nombre = "Procesador"{
+		draw_boton_text_counter = 0
 		show_smoke = false
 		draw_set_color(make_color_rgb(189, 140, 191))
 		draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
@@ -1159,39 +1160,34 @@ if show_menu{
 				draw_text(xpos, ypos, "Continue")
 			//Set {A} to [VAR]{B}
 			else if pc0 = 1{
-				xpos = draw_text_xpos(xpos, ypos, "Set ")
-				if draw_boton(xpos, ypos, $"VAR_{pc[1]}",,,, false)
-					pc[1] = clamp(floor(get_input("", pc[1])), 0, 15)
-				xpos += text_x
-				xpos = draw_text_xpos(xpos, ypos, " to ")
-				get_var(xpos, ypos, pc, 2, 3)
+				xpos = draw_text_xpos(xpos, ypos, "Set VAR_")
+				pc[1] = procesador_var(xpos, ypos, pc, 1)
+				xpos = draw_text_xpos(xpos + text_x, ypos, " to ")
+				procesador_valor(xpos, ypos, pc, 2, 3, false)
 			}
 			//Randomize {A}
 			else if pc0 = 2{
-				xpos = draw_text_xpos(xpos, ypos, "Randomize ")
-				if draw_boton(xpos, ypos, $"VAR_{pc[1]}",,,, false)
-					pc[1] = clamp(floor(get_input("", pc[1])), 0, 15)
+				xpos = draw_text_xpos(xpos, ypos, "Randomize VAR_")
+				pc[1] = procesador_var(xpos, ypos, pc, 1)
 			}
 			//Set {A} to [VAR]{B} [+, -, *, /, div, mod, or, and, xor, <<, >>] [VAR]{C}
 			else if pc0 = 3{
 				var signs = ["+", "-", "*", "/", "div", "mod", "or", "and", "xor", "<<", ">>"]
-				xpos = draw_text_xpos(xpos, ypos, "Set ")
-				if draw_boton(xpos, ypos, $"VAR_{pc[1]}",,,, false)
-					pc[1] = clamp(floor(get_input("", pc[1])), 0, 15)
-				xpos += text_x
-				xpos = draw_text_xpos(xpos, ypos, " to ")
-				get_var(xpos, ypos, pc, 2, 3)
+				xpos = draw_text_xpos(xpos, ypos, "Set VAR_")
+				pc[1] = procesador_var(xpos, ypos, pc, 1)
+				xpos = draw_text_xpos(xpos + text_x, ypos, " to ")
+				procesador_valor(xpos, ypos, pc, 2, 3)
 				xpos += text_x
 				if draw_boton(xpos, ypos, $" {signs[pc[4]]} ",,,, false)
 					pc[4] = (pc[4] + 1) mod array_length(signs)
 				xpos += text_x
-				get_var(xpos, ypos, pc, 5, 6)
+				procesador_valor(xpos, ypos, pc, 5, 6)
 			}
 			//If [VAR]{A} [yes, no][<, >, =] [VAR]{B}, jump to [VAR]{C}
 			else if pc0 = 4{
 				var signs = ["<", ">", "="]
 				xpos = draw_text_xpos(xpos, ypos, "If ")
-				get_var(xpos, ypos, pc, 1, 2)
+				procesador_valor(xpos, ypos, pc, 1, 2, false)
 				xpos += text_x
 				if draw_boton(xpos, ypos, pc[3] ? " is" : " is not",,,, false)
 					pc[3] = 1 - pc[3]
@@ -1199,14 +1195,15 @@ if show_menu{
 				if draw_boton(xpos, ypos, $" {signs[pc[4]]} ",,,, false)
 					pc[4] = (pc[4] + 1) mod 3
 				xpos += text_x
-				get_var(xpos, ypos, pc, 5, 6)
-				xpos += text_x
-				xpos = draw_text_xpos(xpos, ypos, ", jump to ")
-				get_var_real(xpos, ypos, pc, 7, 8)
+				procesador_valor(xpos, ypos, pc, 5, 6, false)
+				xpos = draw_text_xpos(xpos + text_x, ypos, ", jump to ")
+				procesador_valor(xpos, ypos, pc, 7, 8, true)
+				if not pc[7]
+					pc[8] = clamp(pc[8], 0, size)
 				xpos += text_x
 				var val = 0
 				flag = true
-				if pc[7]{
+				if pc[7] = 0{
 					if is_real(edificio.variables[pc[8]])
 						val = real(edificio.variables[pc[8]])
 					else
@@ -1226,66 +1223,55 @@ if show_menu{
 			else if pc0 = 5{
 				var signs = ["Eneabled"]
 				xpos = draw_text_xpos(xpos, ypos, "Control LINK_")
-				get_var(xpos, ypos, pc, 1, 2)
-				xpos += text_x
-				xpos = draw_text_xpos(xpos, ypos, " to set ")
+				procesador_valor(xpos, ypos, pc, 1, 2, true)
+				xpos = draw_text_xpos(xpos + text_x, ypos, " to set ")
 				if draw_boton(xpos, ypos, signs[pc[3]],,,, false)
 					pc[3] = (pc[3] + 1) mod array_length(signs)
-				xpos += text_x
-				xpos = draw_text_xpos(xpos, ypos, " to ")
-				get_var(xpos, ypos, pc, 4, 5)
+				xpos = draw_text_xpos(xpos + text_x, ypos, " to ")
+				procesador_valor(xpos, ypos, pc, 4, 5, false)
 			}
 			//Set VAR_{A} to [eneabled, carga, etc...][VAR]{B} from LINK[VAR]{C}
 			else if pc0 = 6{
 				var signs = ["eneabled", "carga", "líquido tipo", "líquido almacen", "líquido capacidad", "líquido produccion", "líquido consumo", "energía almacenada", "energía capacidad", "energía producida", "energía consumida"]
 				var signs_subindex = [false, true, false, false, false, false, false, false, false, false, false]
-				xpos = draw_text_xpos(xpos, ypos, "Set ")
-				if draw_boton(xpos, ypos, $"VAR_{pc[1]}",,,, false)
-					pc[1] = clamp(floor(get_input("", pc[1])), 0, 15)
-				xpos += text_x
-				xpos = draw_text_xpos(xpos, ypos, " to ")
+				xpos = draw_text_xpos(xpos, ypos, "Set VAR_")
+				pc[1] = procesador_var(xpos, ypos, pc, 1)
+				xpos = draw_text_xpos(xpos + text_x, ypos, " to ")
 				if draw_boton(xpos, ypos, signs[pc[2]],,,, false)
 					pc[2] = (pc[2] + 1) mod array_length(signs)
 				xpos += text_x
 				if signs_subindex[pc[2]]{
 					xpos = draw_text_xpos(xpos, ypos, "[")
-					get_var(xpos, ypos, pc, 3, 4)
-					xpos += text_x
-					xpos = draw_text_xpos(xpos, ypos, "]")
+					procesador_valor(xpos, ypos, pc, 3, 4, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, "]")
 				}
 				xpos = draw_text_xpos(xpos, ypos, " from LINK_")
-				get_var_real(xpos, ypos, pc, 5, 6)
+				procesador_valor(xpos, ypos, pc, 5, 6, true)
 			}
 			//Write [VAR]{A} to LINK[VAR]{B}
 			else if pc0 = 7{
 				xpos = draw_text_xpos(xpos, ypos, "Write ")
-				get_var(xpos, ypos, pc, 1, 2)
-				xpos += text_x
-				xpos = draw_text_xpos(xpos, ypos, " to LINK_")
-				get_var_real(xpos, ypos, pc, 3, 4)
+				procesador_valor(xpos, ypos, pc, 1, 2, false)
+				xpos = draw_text_xpos(xpos + text_x, ypos, " to LINK_")
+				procesador_valor(xpos, ypos, pc, 3, 4, true)
 			}
 			//Set VAR_{A} to value of cell [VAR]{B} of LINK[VAR]{C}
 			else if pc0 = 8{
-				xpos = draw_text_xpos(xpos, ypos, "Set ")
-				if draw_boton(xpos, ypos, $"VAR_{pc[1]}",,,, false)
-					pc[1] = clamp(floor(get_input("", pc[1])), 0, 15)
-				xpos += text_x
-				xpos = draw_text_xpos(xpos, ypos, " to value of cell ")
-				get_var_real(xpos, ypos, pc, 2, 3)
-				xpos += text_x
-				xpos = draw_text_xpos(xpos, ypos, " of LINK_")
-				get_var_real(xpos, ypos, pc, 4, 5)
+				xpos = draw_text_xpos(xpos, ypos, "Set VAR_")
+				pc[1] = procesador_var(xpos, ypos, pc, 1)
+				xpos = draw_text_xpos(xpos + text_x, ypos, " to value of cell ")
+				procesador_valor(xpos, ypos, pc, 2, 3, true)
+				xpos = draw_text_xpos(xpos + text_x, ypos, " of LINK_")
+				procesador_valor(xpos, ypos, pc, 4, 5, true)
 			}
 			//Write [VAR]{A} into value of cell [VAR]{B} of LINK[VAR]{c}
 			else if pc0 = 9{
 				xpos = draw_text_xpos(xpos, ypos, "Write ")
-				get_var(xpos, ypos, pc, 1, 2)
-				xpos += text_x
-				xpos = draw_text_xpos(xpos, ypos, " into value of cell ")
-				get_var_real(xpos, ypos, pc, 3, 4)
-				xpos += text_x
-				xpos = draw_text_xpos(xpos, ypos, " of LINK_")
-				get_var_real(xpos, ypos, pc, 5, 6)
+				procesador_valor(xpos, ypos, pc, 1, 2, false)
+				xpos = draw_text_xpos(xpos + text_x, ypos, " into value of cell ")
+				procesador_valor(xpos, ypos, pc, 3, 4, true)
+				xpos = draw_text_xpos(xpos + text_x, ypos, " of LINK_")
+				procesador_valor(xpos, ypos, pc, 5, 6, true)
 			}
 			ypos += 20
 		}
@@ -1318,22 +1304,22 @@ if show_menu{
 					break
 				}
 			draw_set_halign(fa_left)
-			if mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape){
-				keyboard_clear(vk_escape)
+			if mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_enter){
+				keyboard_clear(vk_enter)
 				mouse_clear(mb_right)
 				procesador_add = false
 				input_layer = 0
 			}
 		}
+		ypos = 150
+		for(var a = 0; a < array_length(edificio.variables); a++){
+			draw_set_halign(fa_right)
+			draw_text(room_width - 120, ypos, $"VAR_{a}: ")
+			draw_set_halign(fa_left)
+			edificio.variables[a] = draw_boton_text(room_width - 120, ypos, edificio.variables[a],, true)
+			ypos += 20
+		}
 		draw_set_halign(fa_right)
-		for(var a = 0; a < array_length(edificio.variables); a++)
-			if draw_boton(room_width - 120, 150 + 20 * a, $"VAR_{a}: {edificio.variables[a]}",,,, false){
-				var val = get_string("", edificio.variables[a])
-				if string_digits(val) = val
-					edificio.variables[a] = real(val)
-				else
-					edificio.variables[a] = string(val)
-			}
 		if draw_boton(room_width - 120, 500, "NEXT STEP",,,, false) or keyboard_check_pressed(vk_space){
 			keyboard_clear(vk_space)
 			edificio.proceso = 1
@@ -1377,6 +1363,7 @@ if show_menu{
 		draw_set_halign(fa_left)
 	}
 	else if var_edificio_nombre = "Memoria"{
+		draw_boton_text_counter = 0
 		show_smoke = false
 		draw_set_color(make_color_rgb(189, 140, 191))
 		draw_rectangle((room_width - 840) / 2, 100, (room_width + 840) / 2, 480, false)
@@ -1402,13 +1389,7 @@ if show_menu{
 				temp_text = string_copy(edificio.variables[a], 1, 6) + "..."
 			else
 				temp_text = edificio.variables[a]
-			if draw_boton(xpos + 100 * (is_real(edificio.variables[a])), ypos, temp_text,,,, false){
-				var val = get_string("", edificio.variables[a])
-				if string_digits(val) = val
-					edificio.variables[a] = real(val)
-				else
-					edificio.variables[a] = string(val)
-			}
+			edificio.variables[a] = draw_boton_text(xpos + 100 * (is_real(edificio.variables[a])), ypos, temp_text,, true)
 		}
 		draw_set_halign(fa_left)
 	}
@@ -2011,7 +1992,7 @@ if sonido
 	}
 #endregion
 //Acceso directo
-if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastchar, "A", "D", "W", "S", " ") or cheat) and win = 0{
+if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastchar, "A", "D", "W", "S", " ") or cheat) and win = 0 and not show_menu{
 	for(var a = 1; a < edificio_max; a++)
 		if edificio_key[a] != "" and string_ends_with(keyboard_string, edificio_key[a]){
 			keyboard_string = ""
@@ -2021,7 +2002,7 @@ if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastchar, "A", "D", "W
 		}
 	keyboard_step = 30
 }
-if keyboard_step-- = 0
+if keyboard_step-- = 0 and not show_menu
 	keyboard_string = ""
 //Cancelar construcción o cerrar menú del selector
 if (mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape)) and (build_index > 0 or show_menu){
@@ -3028,8 +3009,8 @@ if not pausa{
 				}
 				var enemigo = edificio.target
 				if enemigo != null_enemigo{
-					var dmg_factor = 1
-					edificio.select = radtodeg(-arctan2(edificio.x - enemigo.a, enemigo.b - edificio.y)) - 90
+					var dmg_factor = 1, angle = -arctan2(edificio.x - enemigo.a, enemigo.b - edificio.y) - pi / 2
+					edificio.select = radtodeg(angle)
 					if ((in(var_edificio_nombre, "Torre básica", "Rifle") and flujo.liquido = 0) or (var_edificio_nombre = "Lanzallamas" and flujo.liquido = 2)){
 						change_flujo(edificio_flujo_consumo[index], edificio)
 						if in(var_edificio_nombre, "Torre básica", "Rifle")
@@ -3050,22 +3031,29 @@ if not pausa{
 						}
 						if tiro >= 0{
 							if enemigo.vida > 0{
-								if var_edificio_nombre = "Lanzallamas"
-									sound_play(snd_disparo, edificio.x, edificio.y, 0.01)
+								var tiro_struct = armas[arma, tiro], aa = edificio.x, bb = edificio.y
+								if edificio_size[index] mod 2 = 0{
+									bb = bb + 14
+									aa = aa + edificio.array_real[2]
+								}
+								if var_edificio_nombre = "Lanzallamas"{
+									sound_play(snd_disparo, aa, bb, 0.01)
+									var temp_array = chunk_enemigos[# enemigo.chunk_x, enemigo.chunk_y], dis = edificio_alcance[index], x1 = aa + dis * cos(angle + pi / 6), y1 = bb - dis * sin(angle + pi / 6), x2 = aa + dis * cos(angle - pi / 6), y2 = bb - dis * sin(angle - pi / 6)
+									for(var c = array_length(temp_array) - 1; c >= 0; c--){
+										var temp_enemigo = temp_array[c]
+										if point_in_triangle(temp_enemigo.a, temp_enemigo.b, aa, bb, x1, y1, x2, y2) and --temp_enemigo.vida <= 0
+											destroy_dron(temp_enemigo)
+									}
+								}
 								else
 									sound_play(snd_disparo, edificio.x, edificio.y, 0.1)
-								var tiro_struct = armas[arma, tiro], aa = edificio.x, bb = edificio.y
 								edificio.carga[tiro_struct.recurso] -= tiro_struct.cantidad
 								edificio.carga_total -= tiro_struct.cantidad
-								if edificio_size[index] mod 2 = 0{
-									bb = edificio.y + 14
-									aa = edificio.x + edificio.array_real[2]
-								}
 								var dis = distance(edificio.x, edificio.y, enemigo.a, enemigo.b)
 								var municion = add_municion(aa, bb, 25 * (enemigo.a - aa) / dis, 25 * (enemigo.b - bb) / dis, var_edificio_nombre = "Mortero" ? 1 : (var_edificio_nombre = "Lanzallamas" ? 2 : 0), dis / 25, tiro_struct.dmg * dmg_factor, enemigo, null_edificio)
 								array_push(municiones, municion)
 								if var_edificio_nombre = "Lanzallamas"{
-									var angle = arctan2(bb - enemigo.b, aa - enemigo.a)
+									angle = arctan2(bb - enemigo.b, aa - enemigo.a)
 									var b = angle + random_range(-pi / 16, pi / 16)
 									array_push(fuegos, add_fuego(aa - 20 * cos(angle), bb - 20 * sin(angle), edificio.a, edificio.b, 12 * -cos(b), 12 * -sin(b), 40))
 								}
@@ -3353,10 +3341,12 @@ if not pausa{
 					continue
 				//Set {A} to {val}
 				else if pc0 = 1{
-					if pc[2]
+					if pc[2] = 0
 						edificio.variables[pc[1]] = edificio.variables[pc[3]]
+					else if pc[2] = 1
+						edificio.variables[pc[1]] = real(string_digits(string(pc[3])))
 					else
-						edificio.variables[pc[1]] = pc[3]
+						edificio.variables[pc[1]] = string(pc[3])
 				}
 				//Randomize {A}
 				else if pc0 = 2
@@ -3364,11 +3354,11 @@ if not pausa{
 				//Set {A} to [VAR]{B} [+, -, *, /, div, mod, or, and, xor, <<, >>] [VAR]{C}
 				else if pc0 = 3{
 					var val = edificio.variables[pc[1]]
-					if pc[2]
+					if pc[2] = 0
 						var val2 = edificio.variables[pc[3]]
 					else
 						val2 = pc[3]
-					if pc[5]
+					if pc[5] = 0
 						var val3 = edificio.variables[pc[6]]
 					else
 						val3 = pc[6]
@@ -3404,7 +3394,7 @@ if not pausa{
 				//If [VAR]{A} [yes, no][<, >, =] [VAR]{B}, jump to [VAR]{int}
 				else if pc0 = 4{
 					var val3 = 0, val1 = undefined, val2 = undefined
-					if pc[1]
+					if pc[1] = 0
 						val1 = edificio.variables[pc[2]]
 					else
 						val1 = pc[2]
@@ -3412,7 +3402,7 @@ if not pausa{
 						val1 = real(val1)
 					else
 						val1 = string(val1)
-					if pc[5]
+					if pc[5] = 0
 						val2 = edificio.variables[pc[6]]
 					else
 						val2 = pc[6]
@@ -3424,7 +3414,7 @@ if not pausa{
 						show_debug_message($"{val1}, {val2}")
 						continue
 					}
-					if pc[7]
+					if pc[7] = 0
 						val3 = edificio.variables[pc[8]] - 1
 					else
 						val3 = pc[8] - 1
@@ -3440,7 +3430,7 @@ if not pausa{
 					var b = array_length(edificio.procesador_link), temp_edificio = null_edificio, val = undefined
 					if b = 0
 						continue
-					if pc[1]{
+					if pc[1] = 0{
 						if not is_real(edificio.variables[pc[2]])
 							continue
 						temp_edificio = edificio.procesador_link[clamp(edificio.variables[pc[2]], 0, b - 1)]
@@ -3450,7 +3440,7 @@ if not pausa{
 							continue
 						temp_edificio = edificio.procesador_link[clamp(pc[2], 0, b - 1)]
 					}
-					if pc[4]
+					if pc[4] = 0
 						val = edificio.variables[pc[5]]
 					else
 						val = pc[5]
@@ -3466,7 +3456,7 @@ if not pausa{
 					var b = array_length(edificio.procesador_link), temp_edificio = null_edificio, val = -1
 					if b = 0 or not is_real(pc[6])
 						continue
-					if pc[5]{
+					if pc[5] = 0{
 						if not is_real(edificio.variables[pc[6]])
 							continue
 						temp_edificio = edificio.procesador_link[clamp(edificio.variables[pc[6]], 0, b - 1)]
@@ -3480,7 +3470,7 @@ if not pausa{
 						if not is_real(pc[4])
 							continue
 						var val2 = 0
-						if pc[3]{
+						if pc[3] = 0{
 							val2 = edificio.variables[pc[4]]
 							if not is_real(val2)
 								continue
@@ -3532,11 +3522,11 @@ if not pausa{
 					var b = array_length(edificio.procesador_link), val = "", temp_edificio = null_edificio
 					if b = 0 or not is_real(pc[4])
 						continue
-					if pc[1]
+					if pc[1] = 0
 						val = string(edificio.variables[pc[2]])
 					else
 						val = string(pc[2])
-					if pc[3]{
+					if pc[3] = 0{
 						if not is_real(edificio.variables[pc[4]])
 							continue
 						temp_edificio = edificio.procesador_link[clamp(edificio.variables[pc[4]], 0, b - 1)]
@@ -3550,7 +3540,7 @@ if not pausa{
 					var b = array_length(edificio.procesador_link), val = 0, temp_edificio = null_edificio
 					if b = 0 or not is_real(pc[3]) or not is_real(pc[5])
 						continue
-					if pc[4]{
+					if pc[4] = 0{
 						if not is_real(edificio.variables[pc[5]])
 							continue
 						temp_edificio = edificio.procesador_link[clamp(edificio.variables[pc[5]], 0, b - 1)]
@@ -3559,7 +3549,7 @@ if not pausa{
 						temp_edificio = edificio.procesador_link[clamp(pc[5], 0, b - 1)]
 					if edificio_nombre[temp_edificio.index] != "Memoria"
 						continue
-					if pc[2]
+					if pc[2] = 0
 						val = real(edificio.variables[pc[3]])
 					else
 						val = real(pc[3])
@@ -3570,7 +3560,7 @@ if not pausa{
 					var b = array_length(edificio.procesador_link), val = undefined, val2 = 0, temp_edificio = null_edificio
 					if b = 0 or not is_real(pc[4]) or not is_real(pc[6])
 						continue
-					if pc[5]{
+					if pc[5] = 0{
 						if not is_real(edificio.variables[pc[6]])
 							continue
 						temp_edificio = edificio.procesador_link[clamp(edificio.variables[pc[6]], 0, b - 1)]
@@ -3579,13 +3569,13 @@ if not pausa{
 						temp_edificio = edificio.procesador_link[clamp(pc[6], 0, b - 1)]
 					if edificio_nombre[temp_edificio.index] != "Memoria"
 						continue
-					if pc[3]
+					if pc[3] = 0
 						val2 = edificio.variables[pc[4]]
 					else
 						val2 = pc[4]
 					if not is_real(val2)
 						continue
-					if pc[1]
+					if pc[1] = 0
 						val = edificio.variables[pc[2]]
 					else
 						val = pc[2]
@@ -3982,9 +3972,7 @@ if not pausa{
 	for(var a = 0; a < array_length(humos); a++){
 		var humo = humos[a]
 		if show_smoke and humo.a >= mina and humo.b >= minb and humo.a <= maxa and humo.b <= maxb{
-			draw_set_alpha(humo.alpha)
-			draw_set_color(make_color_hsv(0, 0, humo.value))
-			draw_circle_off(humo.x, humo.y, 10, false)
+			draw_sprite_off(spr_blur_32, 0, humo.x, humo.y)
 			humo.x += humo.hmove
 			humo.y += humo.vmove
 		}
@@ -4005,13 +3993,13 @@ if not pausa{
 			fuego.hmove *= 0.9
 			fuego.vmove *= 0.9
 			if grafic_humo and random(1) < 0.05
-				array_push(humos, add_humo(fuego.x, fuego.y, fuego.a, fuego.b, random_range(-1, 1), random_range(-1, 1), 15, random(255), 0.3))
+				array_push(humos, add_humo(fuego.x, fuego.y, fuego.a, fuego.b, random_range(-1, 1), random_range(-1, 1), 15))
 		}
 		if --fuego.intensidad <= 0{
 			fuegos[a--] = fuegos[array_length(fuegos) - 1]
 			array_pop(fuegos)
 			if grafic_humo and fuego.a >= mina and fuego.b >= minb and fuego.a <= maxa and fuego.b <= maxb
-				array_push(humos, add_humo(fuego.x, fuego.y, fuego.a, fuego.b, random_range(-1, 1), random_range(-1, 1), 15, random(255), 0.3))
+				array_push(humos, add_humo(fuego.x, fuego.y, fuego.a, fuego.b, random_range(-1, 1), random_range(-1, 1), 15))
 		}
 	}
 	draw_set_alpha(1)
@@ -4161,7 +4149,7 @@ if not pausa{
 	}
 }
 //Input
-if keyboard_check_pressed(vk_anykey) and win = 0{
+if keyboard_check_pressed(vk_anykey) and win = 0 and not show_menu{
 	if keyboard_check_pressed(ord("P")){
 		pausa = not pausa
 		if pausa{

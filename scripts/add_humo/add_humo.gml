@@ -1,4 +1,4 @@
-function add_humo(x, y, a, b, hmove, vmove, time, value, alpha){
+function add_humo(x, y, a, b, hmove, vmove, time){
 	var humo = {
 		x : real(x),
 		y : real(y),
@@ -6,9 +6,7 @@ function add_humo(x, y, a, b, hmove, vmove, time, value, alpha){
 		b : real(b),
 		hmove : real(hmove),
 		vmove : real(vmove),
-		time : real(time),
-		value : real(value),
-		alpha : real(alpha)
+		time : real(time)
 	}
 	return humo
 }
