@@ -106,6 +106,7 @@
     {"id":{"name":"redo_pathfind","path":"scripts/redo_pathfind/redo_pathfind.yy",},},
     {"id":{"name":"remove_dron_chunk","path":"scripts/remove_dron_chunk/remove_dron_chunk.yy",},},
     {"id":{"name":"resize_grid","path":"scripts/resize_grid/resize_grid.yy",},},
+    {"id":{"name":"scan_files","path":"scripts/scan_files/scan_files.yy",},},
     {"id":{"name":"set_terreno","path":"scripts/set_terreno/set_terreno.yy",},},
     {"id":{"name":"sound_play_edificio","path":"scripts/sound_play_edificio/sound_play_edificio.yy",},},
     {"id":{"name":"sound_play","path":"scripts/sound_play/sound_play.yy",},},

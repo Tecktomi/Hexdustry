@@ -21,13 +21,30 @@ if menu = 0{
 	if draw_boton(room_width / 2, 320, "Cargar escenario"){
 		if not nucleo.vivo
 			game_restart()
-		var file = cargar_escenario()
-		if file != ""
-			game_start()
+		get_file = 1
+		input_layer = 1
+		save_files = scan_files("*.txt", fa_none)
 	}
 	if draw_boton(room_width / 2, 370, "Editor")
 		menu = 2
 	draw_set_halign(fa_left)
+	if get_file{
+		draw_set_color(c_dkgray)
+		draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
+		draw_set_color(c_white)
+		for(var a = 0; a < array_length(save_files); a++)
+			if draw_boton(140, 160 + 30 * a, save_files[a],,,,, 1){
+				get_file = 0
+				input_layer = 0
+				cargar_escenario(save_files[a])
+				game_start()
+			}
+		if draw_boton(120, 120, "Cancelar",,,,, 1) or keyboard_check_pressed(vk_escape){
+			keyboard_clear(vk_escape)
+			get_file = 0
+				input_layer = 0
+		}
+	}
 	draw_set_valign(fa_bottom)
 	draw_text(10, room_height - 10, "Tomás Ramdohr")
 	draw_set_valign(fa_top)
@@ -629,13 +646,12 @@ if menu = 2{
 		exit
 	}
 	build_size = round(draw_deslizante(50, 150, room_height - 200, build_size, 1, 5, 2))
-	if draw_boton(10, room_height - 140, "Volver") or keyboard_check_pressed(vk_escape){
-		menu = 0
-		redo_pathfind()
-	}
 	if draw_boton(10, room_height - 100, "Guardar") or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("S"))){
+		get_file = 2
+		input_layer = 1
+		save_files = scan_files("*.txt", fa_none)/*
 		if save_file = ""
-			save_file = get_save_filename("*.txt", game_save_id + "save.txt")
+			save_file = get_save_filename("*.txt", game_save_id + "save.txt") + ".txt"
 		if save_file != ""{
 			ini_open(save_file)
 			ini_write_real("Global", "xsize", xsize)
@@ -696,10 +712,119 @@ if menu = 2{
 			ini_open(game_save_id + "settings.ini")
 			ini_write_real("Saves", save_file, current_day)
 			ini_close()
+		}*/
+	}
+	if draw_boton(10, room_height - 60, "Cargar") or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("A"))){
+		get_file = 1
+		input_layer = 1
+		save_files = scan_files("*.txt", fa_none)
+	}
+	if get_file > 0{
+		draw_set_color(c_dkgray)
+		draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
+		draw_set_color(c_white)
+		if get_file = 1{
+			for(var a = 0; a < array_length(save_files); a++)
+				if draw_boton(140, 160 + 30 * a, save_files[a],,,,, 1){
+					input_layer = 0
+					get_file = 0
+					save_file = cargar_escenario(save_files[a])
+					if string_pos(".", save_file) > 0
+						save_file = string_delete(save_file, string_pos(".", save_file), 4)
+				}
+		}
+		else{
+			draw_boton_text_counter = 0
+			var flag = false
+			for(var a = 0; a < array_length(save_files); a++)
+				if draw_boton(140, 160 + 30 * a, save_files[a],,,,, 1){
+					save_file = save_files[a]
+					flag = true
+				}
+			save_file = string(draw_boton_text(140, 160 + 30 * (array_length(save_files) + 1), save_file, false,,, 1))
+			draw_text(140 + text_x, 160 + 30 * (array_length(save_files) + 1), ".txt")
+			input_layer = 1
+			if save_file != "" and (draw_boton(120, 160 + 30 * array_length(save_files), "Nuevo archivo",,,,, 1) or keyboard_check_pressed(vk_enter)){
+				keyboard_clear(vk_enter)
+				save_file += ".txt"
+				flag = true
+			}
+			if flag{
+				ini_open(save_file)
+				ini_write_real("Global", "xsize", xsize)
+				ini_write_real("Global", "ysize", ysize)
+				ini_write_real("Global", "spawn_x", spawn_x)
+				ini_write_real("Global", "spawn_y", spawn_y)
+				ini_write_real("Global", "nucleo_x", nucleo.a)
+				ini_write_real("Global", "nucleo_y", nucleo.b)
+				for(b = 0; b < rss_max; b++)
+					ini_write_real("Carga inicial", b, carga_inicial[b])
+				ini_write_real("Global", "oleadas", oleadas)
+				ini_write_real("Global", "tiempo primera oleada", oleadas_tiempo_primera)
+				ini_write_real("Global", "tiempo entre oleadas", oleadas_tiempo)
+				ini_write_real("Global", "objetivos", array_length(mision_nombre))
+				if array_length(mision_nombre) > 0
+					ini_write_string("Global", "texto victoria", mision_texto_victoria)
+				for(b = 0; ini_section_exists($"Objetivo {b}"); b++)
+					ini_section_delete($"Objetivo {b}")
+				for(b = 0; b < array_length(mision_nombre); b++){
+					ini_write_string($"Objetivo {b}", "nombre", mision_nombre[b])
+					ini_write_real($"Objetivo {b}", "objetivo", mision_objetivo[b])
+					ini_write_real($"Objetivo {b}", "target_id", mision_target_id[b])
+					ini_write_real($"Objetivo {b}", "target_num", mision_target_num[b])
+					ini_write_real($"Objetivo {b}", "tiempo", mision_tiempo[b])
+					ini_write_real($"Objetivo {b}", "tiempo victoria", real(mision_tiempo_victoria[b]))
+					ini_write_real($"Objetivo {b}", "tiempo show", real(mision_tiempo_show[b]))
+					ini_write_real($"Objetivo {b}", "camara move", real(mision_camara_move[b]))
+					ini_write_real($"Objetivo {b}", "camara x", mision_camara_x[b])
+					ini_write_real($"Objetivo {b}", "camara y", mision_camara_y[b])
+					var textos = array_length(mision_texto[b])
+					ini_write_real($"Objetivo {b}", "textos", textos)
+					for(var c = 0; c < textos; c++){
+						var texto = mision_texto[b, c]
+						ini_write_real($"Objetivo {b}", $"x {c}", texto.x)
+						ini_write_real($"Objetivo {b}", $"y {c}", texto.y)
+						ini_write_string($"Objetivo {b}", $"texto {c}", texto.texto)
+					}
+					ini_write_real($"Objetivo {b}", "switch oleadas", real(mision_switch_oleadas[b]))
+				}
+				ini_write_real("Global", "Multiplicador vida enemigos", multiplicador_vida_enemigos)
+				for(b = 0; b < xsize; b++)
+					for(var c = 0; c < ysize; c++){
+						ini_write_real("Terreno", $"{b},{c}", terreno[# b, c])
+						if terreno_pared[terreno[# b, c]]
+							ini_write_real("Terreno pared index", $"{b},{c}", terreno_pared_index[# b, c])
+						else
+							ini_key_delete("Terreno pared index", $"{b},{c}")
+						if ore[# b, c] = -1{
+							ini_key_delete("Ore", $"{b},{c}")
+							ini_key_delete("Ore amount", $"{b},{c}")
+						}
+						else{
+							ini_write_real("Ore", $"{b},{c}", ore[# b, c])
+							ini_write_real("Ore amount", $"{b},{c}", ore_amount[# b, c])
+						}
+					}
+				ini_close()
+				ini_open(game_save_id + "settings.ini")
+				ini_write_real("Saves", save_file, current_day)
+				ini_close()
+				input_layer = 0
+				get_file = 0
+				if string_pos(".", save_file) > 0
+					save_file = string_delete(save_file, string_pos(".", save_file), 4)
+			}
+		}
+		if draw_boton(120, 120, "Cancelar",,,,, 1) or keyboard_check_pressed(vk_escape){
+			keyboard_clear(vk_escape)
+			input_layer = 0
+			get_file = 0
 		}
 	}
-	if draw_boton(10, room_height - 60, "Cargar") or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("A")))
-		save_file = cargar_escenario()
+	if draw_boton(10, room_height - 140, "Volver") or keyboard_check_pressed(vk_escape){
+		menu = 0
+		redo_pathfind()
+	}
 	control_camara(-200)
 	update_cursor()
 	exit
