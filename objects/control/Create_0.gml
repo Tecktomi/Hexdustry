@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "18_11_2025")
+ini_write_string("Global", "version", "23_11_2025")
 ini_close()
 #region Metadatos
 	menu = 0
@@ -84,6 +84,9 @@ ini_close()
 	mision_choosing_coord_i = 0
 	mision_switch_oleadas = array_create(0, false)
 	get_keyboard_string = -1
+	get_keyboard_cursor = 0
+	get_keyboard_text = ""
+	get_keyboard_string_text = ""
 	objetivos_nombre = ["conseguir", "tener almacenado", "construir", "tener construido", "matar", "sin objetivo", "apretar ADWS", "cargar edificio"]
 	oleadas = true
 	oleadas_tiempo_primera = 240
