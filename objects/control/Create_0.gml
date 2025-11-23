@@ -4,6 +4,9 @@ directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
 ini_write_string("Global", "version", "23_11_2025")
 ini_close()
+show_debug_message(directorio)
+save_files = scan_files("*.txt", fa_none)
+show_debug_message(save_files)
 #region Metadatos
 	menu = 0
 	cursor = cr_arrow
@@ -159,6 +162,7 @@ ini_close()
 	drones_construidos = 0
 	enemigos_eliminados = 0
 	tutorial = 0
+	get_file = 0
 #endregion
 null_edificio = {
 	index : -1,
