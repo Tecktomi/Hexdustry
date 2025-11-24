@@ -275,13 +275,35 @@ function add_edificio(index, dir, a, b){
 					continue
 				if edificio_bool[# aa, bb]{
 					var temp_edificio = edificio_id[# aa, bb]
-					if edificio_flujo[temp_edificio.index] and (in(var_edificio_nombre, "Tubería", "Depósito", "Líquido Infinito") or in(edificio_nombre[temp_edificio.index], "Tubería", "Depósito", "Líquido Infinito")){
+					if edificio_flujo[temp_edificio.index] and (in(var_edificio_nombre, "Tubería", "Depósito", "Líquido Infinito", "Tubería Subterranea") or in(edificio_nombre[temp_edificio.index], "Tubería", "Depósito", "Líquido Infinito", "Tubería Subterranea")){
 						ds_list_add(edificio.flujo_link, temp_edificio)
 						ds_list_add(temp_edificio.flujo_link, edificio)
 						if not ds_list_in(temp_list_flujos, temp_edificio.flujo)
 							ds_list_add(temp_list_flujos, temp_edificio.flujo)
 					}
 				}
+			}
+			if var_edificio_nombre = "Tubería Subterranea"{
+				var temp_list = get_size(a, b, 0, 5), flag = false, temp_edificio = null_edificio
+				for(var c = ds_list_size(temp_list) - 1; c >= 0; c--){
+					temp_complex = temp_list[|c]
+					if edificio_bool[# temp_complex.a, temp_complex.b] and not (temp_complex.a = a and temp_complex.b = b){
+						temp_edificio = edificio_id[# temp_complex.a, temp_complex.b]
+						if temp_edificio.index = index and temp_edificio.link = null_edificio{
+							flag = true
+							break
+						}
+					}
+				}
+				if flag{
+					edificio.link = temp_edificio
+					temp_edificio.link = edificio
+					ds_list_add(edificio.flujo_link, temp_edificio)
+					ds_list_add(temp_edificio.flujo_link, edificio)
+					if not ds_list_in(temp_list_flujos, temp_edificio.flujo)
+						ds_list_add(temp_list_flujos, temp_edificio.flujo)
+				}
+				
 			}
 			if ds_list_empty(temp_list_flujos){
 				var new_flujo ={
@@ -296,7 +318,7 @@ function add_edificio(index, dir, a, b){
 				edificio.flujo = new_flujo
 				ds_list_add(new_flujo.edificios, edificio)
 			}
-			else if in(var_edificio_nombre, "Tubería", "Depósito", "Líquido Infinito"){
+			else if in(var_edificio_nombre, "Tubería", "Depósito", "Líquido Infinito", "Tubería Subterranea"){
 				var new_flujo ={
 					edificios : ds_list_create(),
 					liquido : -1,

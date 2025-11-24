@@ -33,6 +33,16 @@ function atacar_dron(dron = control.null_enemigo, edificio = control.null_edific
 			}
 			return false
 		}
+		//Ataque Helicoptero
+		else if dron.index = 5{
+			if ++dron.step = 15{
+				dron.step = 0
+				var dis = distance(dron.a, dron.b, edificio.x, edificio.y)
+				var municion = add_municion(dron.a, dron.b, 25 * (edificio.x - dron.a) / dis, 25 * (edificio.y - dron.b) / dis, 0, dis / 25, 10, null_enemigo, edificio)
+				array_push(municiones, municion)
+			}
+			return false
+		}
 		return false
 	}
 }
