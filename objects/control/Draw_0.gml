@@ -1142,6 +1142,8 @@ if menu = 2{
 			draw_set_font(ft_letra)
 			pos = draw_text_ypos(120, pos, dron_descripcion[enciclopedia_item])
 			pos = draw_text_ypos(120, pos, $"Vida máxima: {dron_vida_max[enciclopedia_item]}")
+			if dron_aereo[enciclopedia_item]
+				pos = draw_text_ypos(140, pos, "Unidad aerea")
 			if array_length(dron_precio_id[enciclopedia_item]) > 0{
 				pos += 10
 				pos = draw_text_ypos(120, pos, "Coste de construcción:")
@@ -1155,6 +1157,7 @@ if menu = 2{
 				}
 			}
 			draw_sprite_ext(dron_sprite[enciclopedia_item], image_index / 2, room_width - 200, 200, 2, 2, 0, c_white, 1)
+			draw_sprite_ext(dron_sprite_color[enciclopedia_item], image_index / 2, room_width - 200, 200, 2, 2, 0, c_white, 1)
 		}
 		if keyboard_check_pressed(vk_escape) or keyboard_check_pressed(ord("Y")) or (mouse_check_button_pressed(mb_any) and (mouse_x < 100 or mouse_y < 100 or mouse_x > room_width - 100 or mouse_y > room_height - 100)){
 			mouse_clear(mouse_lastbutton)
@@ -1924,14 +1927,18 @@ if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio
 				}
 			}
 		}
-		if var_edificio_nombre = "Fábrica de Drones"{
+		else if var_edificio_nombre = "Fábrica de Drones"{
 			if edificio.proceso > 0
 				temp_text += $"Creando Dron ({array_length(drones_aliados)}/8)\n"
 			else if array_length(drones_aliados) = 8
 				temp_text += "Límite de Drones alcanzado (8/8)\n"
 		}
-		if var_edificio_nombre = "Mensaje"
+		else if var_edificio_nombre = "Mensaje"
 			temp_text += $"{edificio.variables[0]}\n"
+		else if var_edificio_nombre = "Tubería Subterranea" and edificio.link != null_edificio{
+			draw_set_color(c_blue)
+			draw_line_off(edificio.x, edificio.y, edificio.link.x, edificio.link.y)
+		}
 		//Mostrar inputs
 		if info and edificio.receptor{
 			if edificio_input_all[index]
@@ -2547,6 +2554,24 @@ if build_index > 0 and win = 0{
 						draw_circle_off(temp_complex_2.a, temp_complex_2.b, edificio_alcance[build_index], true)
 						if var_edificio_nombre = "Mortero"
 							draw_circle_off(temp_complex_2.a, temp_complex_2.b, 100, true)
+					}
+					//Taberías subterraneas
+					else if var_edificio_nombre = "Tubería Subterranea"{
+						var temp_list = get_size(mx, my, 0, 5), flag_2 = false, temp_edificio = null_edificio
+						for(var c = ds_list_size(temp_list) - 1; c >= 0; c--){
+							temp_complex = temp_list[|c]
+							if edificio_bool[# temp_complex.a, temp_complex.b] and not (temp_complex.a = mx and temp_complex.b = my){
+								temp_edificio = edificio_id[# temp_complex.a, temp_complex.b]
+								if temp_edificio.index = build_index and temp_edificio.link = null_edificio{
+									flag_2 = true
+									break
+								}
+							}
+						}
+						if flag_2{
+							draw_set_color(c_blue)
+							draw_line_off(temp_complex_2.a, temp_complex_2.b, temp_edificio.x, temp_edificio.y)
+						}
 					}
 				}
 				if mouse_check_button_pressed(mb_left) and flag and comprable and (not edificio_bool[# mx, my] or ((in(var_edificio_nombre, "Túnel", "Túnel salida")) and edificio_camino[edificio_id[# mx, my].index]))
@@ -3733,6 +3758,10 @@ if not pausa{
 			draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir_move)
 			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir)
 		}
+		else if index = 5{
+			draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir)
+			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, image_index * 15, c_red)
+		}
 		else{
 			draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir)
 			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir, c_red)
@@ -3762,7 +3791,7 @@ if not pausa{
 				dron.target = edificio_cercano[# temp_complex.a, temp_complex.b]
 			}
 		}
-		else if index = 3{
+		else if dron_aereo[index]{
 			var min_dis = infinity
 			for(var i = array_length(nucleos); i > 0; i--){
 				edificio = nucleos[i - 1]
@@ -3822,7 +3851,7 @@ if not pausa{
 						dron.dir_move += angle_difference(dron.dir_move, radtodeg(arctan2(sin_angle_dir[dir], cos_angle_dir[dir]))) / 100
 				}
 			}
-			else if index = 3{
+			else if dron_aereo[index]{
 				var dis_2 = sqrt(dis)
 				dron.a += 2 * (edificio.x - dron.a) / dis_2
 				dron.b += 2 * (edificio.y - dron.b) / dis_2
@@ -4145,9 +4174,15 @@ if not pausa{
 					e = array_length(size_size)
 				var temp_complex_list = get_size(spawn_x, spawn_y, 0, e)
 				for(var i = 0; i < min(ds_list_size(temp_complex_list), d); i++){
-					var temp_complex = temp_complex_list[|i], aa = clamp(temp_complex.a, 0, xsize - 1), bb = clamp(temp_complex.b, 0, ysize - 1)
-					if not terreno_caminable[terreno[# aa, bb]] or edificio_cercano[# aa, bb] = null_edificio
-						var enemigo = add_dron(aa, bb, 3)
+					var temp_complex = temp_complex_list[|i], aa = clamp(temp_complex.a, 0, xsize - 1), bb = clamp(temp_complex.b, 0, ysize - 1), enemigo
+					if not terreno_caminable[terreno[# aa, bb]] or edificio_cercano[# aa, bb] = null_edificio{
+						if irandom(min(ds_list_size(temp_complex_list), d)) > i + 5{
+							enemigo = add_dron(aa, bb, 5)
+							i += 4
+						}
+						else
+							enemigo = add_dron(aa, bb, 3)
+					}
 					else{
 						if irandom(min(ds_list_size(temp_complex_list), d)) > i + 5{
 							enemigo = add_dron(aa, bb, 4)

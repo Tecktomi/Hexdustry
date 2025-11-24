@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "23_11_2025")
+ini_write_string("Global", "version", "24_11_2025")
 ini_close()
 show_debug_message(directorio)
 save_files = scan_files("*.txt", fa_none)
@@ -351,7 +351,8 @@ municiones = array_create(0, null_municion)
 			"Transporta recursos entre Puertos de Carga",
 			"Repara los edificios dañados",
 			"Se acerca a su objetivo y explota infilgiendo daño",
-			"Unidad de asedio superior, dispara explosivos alargo alcance dañando todo a su alrededor"
+			"Unidad de asedio superior, dispara explosivos alargo alcance dañando todo a su alrededor",
+			"Unidad aerea superior, dispara a distancia"
 		]
 	for(var a = array_length(dron_descripcion); a > 0; a--)
 		dron_descripcion[a - 1] = text_wrap(dron_descripcion[a - 1], 400)
@@ -365,8 +366,9 @@ municiones = array_create(0, null_municion)
 	dron_alcance = array_create(0, 0)
 	dron_precio_id = array_create(0, array_create(0, 0))
 	dron_precio_num = array_create(0, array_create(0, 0))
+	dron_aereo = array_create(0, false)
 #endregion
-function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vida = 0, size = 0, alcance = 0, precio_id = array_create(0, 0), precio_num = array_create(0, 0)){
+function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vida = 0, size = 0, alcance = 0, precio_id = array_create(0, 0), precio_num = array_create(0, 0), aereo = false){
 	array_push(dron_nombre, string(nombre))
 	array_push(dron_sprite, sprite)
 	array_push(dron_sprite_color, sprite_color)
@@ -375,13 +377,15 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 	array_push(dron_alcance, alcance)
 	array_push(dron_precio_id, precio_id)
 	array_push(dron_precio_num, precio_num)
+	array_push(dron_aereo, aereo)
 }
 #region definicion
 	def_dron("Araña", spr_arana,, 100, 400, 6400, [2, 14, 16], [3, 1, 1])
-	def_dron("Dron", spr_dron,, 40, 400, 100, [14, 15, 16], [1, 3, 1])
-	def_dron("Reparador", spr_reparador,, 60, 400, 2500, [7, 14, 15, 16], [10, 1, 3, 1])
-	def_dron("Explosivo", spr_dron_explosivo,, 50, 400, 1600, [13, 14, 16], [2, 1, 1])
-	def_dron("Tanque", spr_tanque, spr_tanque_2, 750, 1600, 160_000,[2, 4, 16], [15, 25, 10])
+	def_dron("Dron", spr_dron,, 40, 400, 100, [14, 15, 16], [1, 3, 1], true)
+	def_dron("Reparador", spr_reparador,, 60, 400, 2500, [7, 14, 15, 16], [10, 1, 3, 1], true)
+	def_dron("Explosivo", spr_dron_explosivo,, 50, 400, 1600, [13, 14, 16], [2, 1, 1], true)
+	def_dron("Tanque", spr_tanque, spr_tanque_2, 750, 1600, 90_000, [2, 4, 16], [15, 25, 10])
+	def_dron("Helicoptero", spr_helicoptero, spr_helicoptero_2, 400, 1600, 40_000, [2, 4, 16], [10, 15, 15], true)
 #endregion
 dron_max = array_length(dron_nombre)
 //Terrenos
@@ -575,7 +579,8 @@ lq_max = array_length(liquido_nombre)
 		"Procesa instrucciones lógicas",
 		"Permite escribir mensajes",
 		"Permite almacenar hasta 128 datos",
-		"Proyecta un láser de reparación a los edificios cercanos usando energía"
+		"Proyecta un láser de reparación a los edificios cercanos usando energía",
+		"Conecta líneas de líquidos por debajo tierra"
 	]
 	for(var a = array_length(edificio_descripcion) - 1; a >= 0; a--)
 		edificio_descripcion[a] = text_wrap(edificio_descripcion[a], 400)
@@ -704,8 +709,9 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	def_edificio("Mensaje", 1, spr_mensaje,, "62", 50,,, [0, 16], [10, 3]); def_edificio_2(,,,,, true)
 	def_edificio("Memoria", 1, spr_memoria,, "63", 50,,, [0, 16], [10, 3]); def_edificio_2(,,,,, true)
 	def_edificio("Torre Reparadora", 2, spr_torre_reparadora, spr_torre_reparadora_2, "57", 100, 1,, [2, 3, 7], [10, 15, 15]); def_edificio_2(40,,, 0, 200)
+	def_edificio("Tubería Subterranea", 1, spr_tuberia_subterranea,, "45", 30, 1,, [2, 3], [5, 5]); def_edificio_2(, 10,,,, true)
 #endregion
-categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 7, 8, 9, 22, 36, 27, 31, 33, 39], [11, 10, 12, 13, 26, 32, 37, 38], [15, 30, 14, 24], [19, 20, 21, 23, 34, 40, 44], [41, 42, 43]]
+categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 7, 8, 9, 22, 36, 27, 31, 33, 39], [11, 10, 12, 13, 26, 32, 37, 38], [15, 30, 14, 24, 45], [19, 20, 21, 23, 34, 40, 44], [41, 42, 43]]
 categoria_nombre = ["Transporte", "Producción", "Electricidad", "Líquidos", "Defensa", "Lógica"]
 #region planta quimica
 	planta_quimica_receta = ["Ácido", "Concreto", "Explosivos", "Combustible", "Azufre", "Baterías", "Plástico"]

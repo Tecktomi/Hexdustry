@@ -276,6 +276,8 @@ function delete_edificio(aa, bb, enemigo = false){
 				ds_list_remove(temp_edificio.flujo_link, edificio)
 			}
 			ds_list_destroy(edificio.flujo_link)
+			if var_edificio_nombre = "Tubería Subterranea"
+				edificio.link.link = null_edificio
 		}
 		//Retorno de recursos
 		if not cheat and not enemigo{
