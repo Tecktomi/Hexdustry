@@ -13,7 +13,7 @@ if menu = 0{
 	if draw_boton(room_width / 2, 200, "Juego rápido")
 		game_start()
 	if draw_boton(room_width / 2, 250, "Tutorial"){
-		var file = cargar_escenario("mision_1")
+		var file = cargar_escenario("mision_1.txt")
 		if file != ""
 			game_start()
 		tutorial = 1
@@ -233,10 +233,10 @@ if menu = 2{
 				mision_choosing_coord_tipo = 0
 			}
 			ypos += text_y + 10
-			if draw_boton(room_width / 2 + 40, ypos, (mision_switch_oleadas[i] ? "NO a" : "A") + "ctivar / Desactivar Oleadas")
+			if draw_boton(room_width / 2 + 40, ypos, (mision_switch_oleadas[i] ? "A" : "No a") + "ctivar / Desactivar Oleadas")
 				mision_switch_oleadas[i] = not mision_switch_oleadas[i]
 			ypos += text_y + 10
-			if draw_boton(room_width / 2  + 40, ypos, (mision_camara_move[i] ? "NO m" : "M") + "over cámara"){
+			if draw_boton(room_width / 2  + 40, ypos, (mision_camara_move[i] ? "M" : "No m") + "over cámara"){
 				mision_camara_move[i] = not mision_camara_move[i]
 				if mision_camara_move[i]{
 					mision_choosing_coord = true
@@ -3210,7 +3210,7 @@ if not pausa{
 					edificio.select = radtodeg(-arctan2(edificio.x - enemigo.a, enemigo.b - edificio.y)) - 90
 					change_energia(edificio_energia_consumo[index], edificio)
 					edificio.mode = true
-					enemigo.vida -= red_power / 2
+					enemigo.vida -= red_power
 					draw_set_alpha(red_power)
 					draw_set_color(c_red)
 					draw_line_off(edificio.x + edificio.array_real[2], edificio.y + 14, enemigo.a, enemigo.b)
@@ -4377,10 +4377,10 @@ if keyboard_check_pressed(vk_anykey) and win = 0 and not show_menu{
 		else
 			enciclopedia = 0
 	}
-	if cheat and mision_actual >= 0 and string_ends_with(keyboard_string, "pass")
+	if cheat and mision_actual >= 0 and string_ends_with(keyboard_string, "uwu")
 		pasar_mision()
 }
-if --mision_camara_step > 0{
+if mision_actual >= 0 and --mision_camara_step > 0{
 	zoom = 1
 	camx = clamp(((mision_camara_x[mision_actual] - room_width / 2) * (60 - mision_camara_step) + mision_camara_x_start * mision_camara_step) / 60, 0, xsize * 48 * zoom - room_width)
 	camy = clamp(((mision_camara_y[mision_actual] - room_height / 2) * (60 - mision_camara_step) + mision_camara_y_start * mision_camara_step) / 60, 0, ysize * 14 * zoom - room_height)
@@ -4426,15 +4426,20 @@ if win > 0{
 			ypos = draw_text_ypos(room_width / 2, ypos, $"Drones construidos: {drones_construidos}")
 		if enemigos_eliminados > 0
 			ypos = draw_text_ypos(room_width / 2, ypos, $"Enemigos eliminados: {enemigos_eliminados}")
-		if tutorial = 1 and win = 1 and draw_boton(room_width / 2, room_height - 250, "Siguiente misión"){
-			var file = cargar_escenario("mision_2")
-			if file != ""
-				game_start()
-			tutorial = 2
-		}
-		if win = 1 and draw_boton(room_width / 2, room_height - 200, "¿Seguir jugando?"){
-			win_step = 0
-			win = 0
+		if win = 1{
+			if in(tutorial, 1, 2) and draw_boton(room_width / 2, room_height - 250, "Siguiente misión"){
+				if tutorial = 1
+					var file = cargar_escenario("mision_2.txt")
+				else if tutorial = 2
+					file = cargar_escenario("mision_3.txt")
+				if file != ""
+					game_start()
+				tutorial++
+			}
+			if draw_boton(room_width / 2, room_height - 200, "¿Seguir jugando?"){
+				win_step = 0
+				win = 0
+			}
 		}
 		if draw_boton(room_width / 2, room_height - 150, "Salir al menú") or keyboard_check_pressed(vk_escape){
 			keyboard_clear(vk_escape)
