@@ -4427,11 +4427,13 @@ if win > 0{
 		if enemigos_eliminados > 0
 			ypos = draw_text_ypos(room_width / 2, ypos, $"Enemigos eliminados: {enemigos_eliminados}")
 		if win = 1{
-			if in(tutorial, 1, 2) and draw_boton(room_width / 2, room_height - 250, "Siguiente misión"){
+			if in(tutorial, 1, 2, 3) and draw_boton(room_width / 2, room_height - 250, "Siguiente misión"){
 				if tutorial = 1
 					var file = cargar_escenario("mision_2.txt")
 				else if tutorial = 2
 					file = cargar_escenario("mision_3.txt")
+				else if tutorial = 3
+					file = cargar_escenario("mision_4.txt")
 				if file != ""
 					game_start()
 				tutorial++
@@ -4440,6 +4442,15 @@ if win > 0{
 				win_step = 0
 				win = 0
 			}
+		}
+		if win = 2 and tutorial > 0 and draw_boton(room_width / 2, room_height - 250, "Intentar de nuevo"){
+			if tutorial = 1
+				cargar_escenario("mision_1.txt")
+			if tutorial = 2
+				cargar_escenario("mision_2.txt")
+			if tutorial = 3
+				cargar_escenario("mision_3.txt")
+			game_start()
 		}
 		if draw_boton(room_width / 2, room_height - 150, "Salir al menú") or keyboard_check_pressed(vk_escape){
 			keyboard_clear(vk_escape)

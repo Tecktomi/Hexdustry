@@ -21,9 +21,10 @@
   ],
   "ForcedPrefabProjectReferences":[],
   "IncludedFiles":[
-    {"$GMIncludedFile":"","%Name":"mision_3.txt","CopyToMask":-1,"filePath":"datafiles","name":"mision_3.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"mision_1.txt","CopyToMask":-1,"filePath":"datafiles","name":"mision_1.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"mision_2.txt","CopyToMask":-1,"filePath":"datafiles","name":"mision_2.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"mision_3.txt","CopyToMask":-1,"filePath":"datafiles","name":"mision_3.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"mision_4.txt","CopyToMask":-1,"filePath":"datafiles","name":"mision_4.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
   ],
   "isEcma":false,
   "LibraryEmitters":[],
