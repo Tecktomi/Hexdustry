@@ -422,7 +422,7 @@ function def_terreno(nombre, sprite = spr_piedra, recurso = 0, caminable = true,
 	def_terreno("Pared de Nieve", spr_pared_nieve,, false,, true)
 	def_terreno("Lava", spr_lava,, false, true)
 	//15
-	def_terreno("Hielo", spr_hielo)
+	def_terreno("Hielo", spr_hielo,,,, true)
 	def_terreno("Basalto", spr_basalto)
 	def_terreno("Ceniza", spr_ceniza)
 #endregion
