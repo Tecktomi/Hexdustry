@@ -703,7 +703,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	def_edificio("Procesador", 2, spr_procesador,, "61", 80, 1,, [0, 15, 16], [20, 40, 20]); def_edificio_2(5)
 	def_edificio("Mensaje", 1, spr_mensaje,, "62", 50,,, [0, 16], [10, 3]); def_edificio_2(,,,,, true)
 	def_edificio("Memoria", 1, spr_memoria,, "63", 50,,, [0, 16], [10, 3]); def_edificio_2(,,,,, true)
-	def_edificio("Torre Reparadora", 2, spr_torre_reparadora, spr_torre_reparadora_2, "57", 100, 1,, [2, 3, 15], [10, 15, 5]); def_edificio_2(40,,, 0, 200)
+	def_edificio("Torre Reparadora", 2, spr_torre_reparadora, spr_torre_reparadora_2, "57", 100, 1,, [2, 3, 7], [10, 15, 15]); def_edificio_2(40,,, 0, 200)
 #endregion
 categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 7, 8, 9, 22, 36, 27, 31, 33, 39], [11, 10, 12, 13, 26, 32, 37, 38], [15, 30, 14, 24], [19, 20, 21, 23, 34, 40, 44], [41, 42, 43]]
 categoria_nombre = ["Transporte", "Producción", "Electricidad", "Líquidos", "Defensa", "Lógica"]
