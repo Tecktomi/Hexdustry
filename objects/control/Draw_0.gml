@@ -649,75 +649,14 @@ if menu = 2{
 	if draw_boton(10, room_height - 100, "Guardar") or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("S"))){
 		get_file = 2
 		input_layer = 1
-		save_files = scan_files("*.txt", fa_none)/*
-		if save_file = ""
-			save_file = get_save_filename("*.txt", game_save_id + "save.txt") + ".txt"
-		if save_file != ""{
-			ini_open(save_file)
-			ini_write_real("Global", "xsize", xsize)
-			ini_write_real("Global", "ysize", ysize)
-			ini_write_real("Global", "spawn_x", spawn_x)
-			ini_write_real("Global", "spawn_y", spawn_y)
-			ini_write_real("Global", "nucleo_x", nucleo.a)
-			ini_write_real("Global", "nucleo_y", nucleo.b)
-			for(var a = 0; a < rss_max; a++)
-				ini_write_real("Carga inicial", a, carga_inicial[a])
-			ini_write_real("Global", "oleadas", oleadas)
-			ini_write_real("Global", "tiempo primera oleada", oleadas_tiempo_primera)
-			ini_write_real("Global", "tiempo entre oleadas", oleadas_tiempo)
-			ini_write_real("Global", "objetivos", array_length(mision_nombre))
-			if array_length(mision_nombre) > 0
-				ini_write_string("Global", "texto victoria", mision_texto_victoria)
-			for(var a = 0; ini_section_exists($"Objetivo {a}"); a++)
-				ini_section_delete($"Objetivo {a}")
-			for(var a = 0; a < array_length(mision_nombre); a++){
-				ini_write_string($"Objetivo {a}", "nombre", mision_nombre[a])
-				ini_write_real($"Objetivo {a}", "objetivo", mision_objetivo[a])
-				ini_write_real($"Objetivo {a}", "target_id", mision_target_id[a])
-				ini_write_real($"Objetivo {a}", "target_num", mision_target_num[a])
-				ini_write_real($"Objetivo {a}", "tiempo", mision_tiempo[a])
-				ini_write_real($"Objetivo {a}", "tiempo victoria", real(mision_tiempo_victoria[a]))
-				ini_write_real($"Objetivo {a}", "tiempo show", real(mision_tiempo_show[a]))
-				ini_write_real($"Objetivo {a}", "camara move", real(mision_camara_move[a]))
-				ini_write_real($"Objetivo {a}", "camara x", mision_camara_x[a])
-				ini_write_real($"Objetivo {a}", "camara y", mision_camara_y[a])
-				var textos = array_length(mision_texto[a])
-				ini_write_real($"Objetivo {a}", "textos", textos)
-				for(b = 0; b < textos; b++){
-					var texto = mision_texto[a, b]
-					ini_write_real($"Objetivo {a}", $"x {b}", texto.x)
-					ini_write_real($"Objetivo {a}", $"y {b}", texto.y)
-					ini_write_string($"Objetivo {a}", $"texto {b}", texto.texto)
-				}
-				ini_write_real($"Objetivo {a}", "switch oleadas", real(mision_switch_oleadas[a]))
-			}
-			ini_write_real("Global", "Multiplicador vida enemigos", multiplicador_vida_enemigos)
-			for(var a = 0; a < xsize; a++)
-				for(b = 0; b < ysize; b++){
-					ini_write_real("Terreno", $"{a},{b}", terreno[# a, b])
-					if terreno_pared[terreno[# a, b]]
-						ini_write_real("Terreno pared index", $"{a},{b}", terreno_pared_index[# a, b])
-					else
-						ini_key_delete("Terreno pared index", $"{a},{b}")
-					if ore[# a, b] = -1{
-						ini_key_delete("Ore", $"{a},{b}")
-						ini_key_delete("Ore amount", $"{a},{b}")
-					}
-					else{
-						ini_write_real("Ore", $"{a},{b}", ore[# a, b])
-						ini_write_real("Ore amount", $"{a},{b}", ore_amount[# a, b])
-					}
-				}
-			ini_close()
-			ini_open(game_save_id + "settings.ini")
-			ini_write_real("Saves", save_file, current_day)
-			ini_close()
-		}*/
+		save_files = scan_files("*.txt", fa_none)
+		keyboard_clear(ord("S"))
 	}
 	if draw_boton(10, room_height - 60, "Cargar") or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("A"))){
 		get_file = 1
 		input_layer = 1
 		save_files = scan_files("*.txt", fa_none)
+		keyboard_clear(ord("A"))
 	}
 	if get_file > 0{
 		draw_set_color(c_dkgray)
@@ -858,7 +797,7 @@ if menu = 2{
 						var edificio_2 = edificio.energia_link[|c]
 						draw_line_off(edificio.x, edificio.y, edificio_2.x, edificio_2.y)
 					}
-					if edificio.red.generacion = 0 and edificio.red.bateria = 0
+					if edificio.red.generacion = 0 and edificio.red.bateria = 0 and edificio_energia[edificio.index] > 0
 						draw_sprite_off(spr_no_ammo, 1, edificio.x, edificio.y - 28)
 				}
 				//Humo
@@ -1453,42 +1392,79 @@ if show_menu{
 			edificio.proceso = 1
 		}
 		if draw_boton(room_width - 120, 530, "Guardar Código",,,, false) or (keyboard_check(vk_control) and keyboard_check_pressed(ord("S"))){
+			save_codes = scan_files("*.code", fa_none)
+			get_file = 1
+			input_layer = 1
 			keyboard_clear(ord("S"))
-			var file = get_save_filename("*.txt", game_save_id + "codigo.txt")
-			if file != ""{
-				ini_open(file)
-				ini_write_real("Largo", "", size)
-				for(var a = 0; a < size; a++){
-					var size_2 = array_length(edificio.instruccion[a])
-					ini_write_real("Largo", a, size_2)
-					for(b = 0; b < size_2; b++)
-						ini_write_string(string(a), string(b), string(edificio.instruccion[a, b]))
-				}
-				ini_close()
-			}
 		}
-		if draw_boton(room_width - 120, 560, "Cargar Código",,,, false) or (keyboard_check(vk_control) and keyboard_check_pressed(ord("O"))){
-			keyboard_clear(ord("O"))
-			var file = get_open_filename("*.txt", game_save_id + "codigo.txt")
-			if file != ""{
-				ini_open(file)
-				size = ini_read_real("Largo", "", 0)
-				edificio.instruccion = array_create(size, [])
-				for(var a = 0; a < size; a++){
-					var size_2 = ini_read_real("Largo", a, 0)
-					edificio.instruccion[a] = array_create(size_2)
-					for(b = 0; b < size_2; b++){
-						var val = ini_read_string(string(a), string(b), "0")
-						if string_digits(val) = val and val != ""
-							array_set(edificio.instruccion[a], b, real(val))
-						else
-							array_set(edificio.instruccion[a], b, string(val))
-					}
-				}
-				ini_close()
-			}
+		if draw_boton(room_width - 120, 560, "Cargar Código",,,, false) or (keyboard_check(vk_control) and keyboard_check_pressed(ord("A"))){
+			save_codes = scan_files("*.code", fa_none)
+			get_file = 2
+			input_layer = 1
+			keyboard_clear(ord("A"))
 		}
 		draw_set_halign(fa_left)
+		if get_file > 0{
+			draw_set_color(c_dkgray)
+			draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
+			draw_set_color(c_white)
+			if get_file = 2{
+				for(var a = 0; a < array_length(save_codes); a++)
+					if draw_boton(140, 160 + 30 * a, save_codes[a],,,,, 1){
+						input_layer = 0
+						get_file = 0
+						ini_open(save_codes[a])
+						size = ini_read_real("Largo", "", 0)
+						edificio.instruccion = array_create(size, [])
+						for(b = 0; b < size; b++){
+							var size_2 = ini_read_real("Largo", b, 0)
+							edificio.instruccion[b] = array_create(size_2)
+							for(var c = 0; c < size_2; c++){
+								var val = ini_read_string(string(b), string(c), "0")
+								if string_digits(val) = val and val != ""
+									array_set(edificio.instruccion[b], c, real(val))
+								else
+									array_set(edificio.instruccion[b], c, string(val))
+							}
+						}
+						ini_close()
+					}
+			}
+			else{
+				var flag = false
+				for(var a = 0; a < array_length(save_codes); a++)
+					if draw_boton(140, 160 + 30 * a, save_codes[a],,,,, 1){
+						save_file = save_codes[a]
+						flag = true
+					}
+				save_file = string(draw_boton_text(140, 160 + 30 * (array_length(save_codes) + 1), save_file, false,,, 1))
+				draw_text(140 + text_x, 160 + 30 * (array_length(save_codes) + 1), ".code")
+				input_layer = 1
+				if save_file != "" and (draw_boton(120, 160 + 30 * array_length(save_codes), "Nuevo archivo",,,,, 1) or keyboard_check_pressed(vk_enter)){
+					keyboard_clear(vk_enter)
+					save_file += ".code"
+					flag = true
+					input_layer = 0
+					get_file = 0
+				}
+				if flag{
+					ini_open(save_file)
+					ini_write_real("Largo", "", size)
+					for(var a = 0; a < size; a++){
+						var size_2 = array_length(edificio.instruccion[a])
+						ini_write_real("Largo", a, size_2)
+						for(b = 0; b < size_2; b++)
+							ini_write_string(string(a), string(b), string(edificio.instruccion[a, b]))
+					}
+					ini_close()
+				}
+			}
+			if draw_boton(120, 120, "Cancelar",,,,, 1) or keyboard_check_pressed(vk_escape){
+				keyboard_clear(vk_escape)
+				input_layer = 0
+				get_file = 0
+			}
+		}
 	}
 	else if var_edificio_nombre = "Memoria"{
 		draw_boton_text_counter = 0
@@ -1976,9 +1952,9 @@ if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio
 				else
 					temp_text += $"Produciendo {abs(edificio.energia_consumo)} energía\n"
 			}
-			temp_text += $"  {red.generacion > red.consumo ? "Produciendo" : "Consumiendo"} {abs(red.generacion - red.consumo)} energía\n"
+			temp_text += $"  {red.generacion > red.consumo ? "Produciendo" : "Consumiendo"} {round(abs(red.generacion - red.consumo))} energía\n"
 			if red.bateria_max > 0
-				temp_text += $"  Almacenado: {red.bateria}/{red.bateria_max}\n"
+				temp_text += $"  Almacenado: {round(red.bateria)}/{round(red.bateria_max)}\n"
 			if info
 				temp_text += red_text(red)
 			for(var a = 0; a < ds_list_size(edificio.energia_link); a++){
@@ -1996,12 +1972,12 @@ if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio
 				temp_text += "Sin líquidos!"
 			else{
 				if edificio_flujo_consumo[index] > 0{
-					temp_text += $"Consumiendo {edificio.flujo_consumo} {liquido_nombre[flujo.liquido]}\n"
+					temp_text += $"Consumiendo {round(edificio.flujo_consumo)} {liquido_nombre[flujo.liquido]}\n"
 					temp_text += $"Funcionando al {floor(100 * clamp((flujo.generacion + flujo.almacen) / max(flujo.consumo, 1), 0, 1))}% de su capacidad\n"
 				}
-				temp_text += $"  {flujo.generacion > flujo.consumo ? "Produciendo" : "Consumiendo"} {abs(flujo.generacion - flujo.consumo)} {liquido_nombre[flujo.liquido]}\n"
+				temp_text += $"  {flujo.generacion > flujo.consumo ? "Produciendo" : "Consumiendo"} {round(abs(flujo.generacion - flujo.consumo))} {liquido_nombre[flujo.liquido]}\n"
 				if flujo.almacen_max > 0
-					temp_text += $"  Almacenado: {flujo.almacen}/{flujo.almacen_max}\n"
+					temp_text += $"  Almacenado: {round(flujo.almacen)}/{round(flujo.almacen_max)}\n"
 			}
 			if info
 				temp_text += flujo_text(flujo)
@@ -2714,8 +2690,6 @@ else if ((mouse_check_button(mb_right) and prev_change) or mouse_check_button_pr
 }
 //Ciclos
 if not pausa{
-	if not audio_is_playing(snd_musica) and random(1) < 0.001
-		audio_play_sound(snd_musica, 1, false)
 	timer++
 	//Ciclo edificios
 	for(var a = 0; a < array_length(edificios_activos); a++){
@@ -4191,7 +4165,7 @@ if not pausa{
 						else
 							enemigo = add_dron(aa, bb, 0)
 					}
-					enemigo.vida_max = enemigo.vida * (20 + d) / 20 * multiplicador_vida_enemigos / 100
+					enemigo.vida_max = enemigo.vida * power(d / 3, 1.1) * multiplicador_vida_enemigos / 100
 					enemigo.vida = enemigo.vida_max
 					var temp_array = ds_grid_get(chunk_enemigos, enemigo.chunk_x, enemigo.chunk_y)
 					enemigo.chunk_pointer = array_length(temp_array)
@@ -4434,7 +4408,7 @@ if sprite_boton_text != ""{
 	else
 		draw_text_background(mouse_x, mouse_y + 20, sprite_boton_text)
 }
-if sonido
+if sonido{
 	for(var a = 0; a < sonidos_max; a++){
 		if not audio_is_paused(sonido_id[a]) and volumen[a] = 0
 			audio_pause_sound(sonido_id[a])
@@ -4442,6 +4416,17 @@ if sonido
 			audio_resume_sound(sonido_id[a])
 		audio_sound_gain(sonido_id[a], volumen[a], 0)
 	}
+	if random(1) < 0.001{
+		var flag = true
+		for(var a = array_length(musica) - 1; a >= 0; a--)
+			if audio_is_playing(musica[a]){
+				flag = false
+				break
+			}
+		if flag
+			audio_play_sound(musica[irandom(array_length(musica) - 1)], 1, false)
+	}
+}
 if win > 0{
 	draw_set_color(c_black)
 	draw_set_alpha(min(++win_step / 100, 0.5))
