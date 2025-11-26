@@ -124,6 +124,7 @@
     {"id":{"name":"snd_maquina","path":"sounds/snd_maquina/snd_maquina.yy",},},
     {"id":{"name":"snd_motor","path":"sounds/snd_motor/snd_motor.yy",},},
     {"id":{"name":"snd_musica","path":"sounds/snd_musica/snd_musica.yy",},},
+    {"id":{"name":"snd_theme_2","path":"sounds/snd_theme_2/snd_theme_2.yy",},},
     {"id":{"name":"fx_construir_1","path":"sprites/fx_construir_1/fx_construir_1.yy",},},
     {"id":{"name":"fx_construir_2","path":"sprites/fx_construir_2/fx_construir_2.yy",},},
     {"id":{"name":"fx_construir_3","path":"sprites/fx_construir_3/fx_construir_3.yy",},},

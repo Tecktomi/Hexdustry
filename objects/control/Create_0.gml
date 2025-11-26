@@ -7,6 +7,8 @@ ini_close()
 show_debug_message(directorio)
 save_files = scan_files("*.txt", fa_none)
 show_debug_message(save_files)
+save_codes = scan_files("*.code", fa_none)
+show_debug_message(save_codes)
 #region Metadatos
 	menu = 0
 	cursor = cr_arrow
@@ -93,7 +95,7 @@ show_debug_message(save_files)
 	objetivos_nombre = ["conseguir", "tener almacenado", "construir", "tener construido", "matar", "sin objetivo", "apretar ADWS", "cargar edificio"]
 	oleadas = true
 	oleadas_tiempo_primera = 240
-	oleadas_tiempo = 45
+	oleadas_tiempo = 60
 	null_efecto = add_efecto()
 	efectos = array_create(0, null_efecto)
 	grafic_tile_animation = true
@@ -118,6 +120,7 @@ show_debug_message(save_files)
 	sonido = true
 	sonidos = [snd_motor, snd_maquina, snd_horno]
 	sonidos_max = array_length(sonidos)
+	musica = [snd_musica, snd_theme_2]
 	volumen = array_create(sonidos_max, 0)
 	sonido_id = array_create(sonidos_max)
 	for(var a = 0; a < sonidos_max; a++){
