@@ -7,7 +7,7 @@ function flujo_text(flujo = control.null_flujo){
 			temp_array[flujo.edificios[|a].index]++
 		for(var a = 0; a < edificio_max; a++)
 			if temp_array[a] > 0
-				temp_text += $"    {edificio_nombre[a]}: {temp_array[a]}\n"
+				temp_text += $"    {edificio_nombre_display[a]}: {temp_array[a]}\n"
 		return temp_text
 	}
 }

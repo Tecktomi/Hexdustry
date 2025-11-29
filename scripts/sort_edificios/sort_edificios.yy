@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"sort_edificios",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"sort_edificios",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

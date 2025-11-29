@@ -90,17 +90,7 @@ function add_edificio(index, dir, a, b){
 		array_push(chunk_edificios[# edificio.chunk_x, edificio.chunk_y], edificio)
 		if index = 0
 			array_push(nucleos, edificio)
-		if edificio_camino[index] or in(index, 6, 16){
-			var d = edificio.dir * pi / 3 + pi / 6
-			if index = 16{
-				edificio.array_real[0] = -cos(d)
-				edificio.array_real[1] = sin(d)
-			}
-			else{
-				edificio.array_real[0] = cos(d)
-				edificio.array_real[1] = -sin(d)
-			}
-		}
+		set_camino_dir(edificio)
 		edificio.array_real[2] = power(-1, dir) * 8
 		//Añadir coordenadas
 		var temp_list_size = get_size(a, b, dir, edificio_size[index])
@@ -361,6 +351,13 @@ function add_edificio(index, dir, a, b){
 			if in(var_edificio_nombre, "Bomba de Evaporación", "Generador Geotérmico"){
 				edificio.flujo.liquido = 0
 				change_flujo(edificio_flujo_consumo[index], edificio)
+				if var_edificio_nombre = "Generador Geotérmico"{
+					edificio.select = 0
+					for(var c = ds_list_size(temp_list_size) - 1; c >= 0; c--){
+						var temp_complex_2 = temp_list_size[|c], aa = temp_complex_2.a, bb = temp_complex_2.b
+						edificio.select += (terreno_nombre[terreno[# aa, bb]] = "Lava")
+					}
+				}
 			}
 			if grafic_luz and edificio.flujo.liquido = 3{
 				edificio.luz = true
