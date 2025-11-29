@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"set_camino_dir",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"set_camino_dir",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

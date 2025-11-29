@@ -22,5 +22,5 @@
   "resourceVersion":"2.0",
   "sampleRate":48000,
   "soundFile":"snd_theme_2.mp3",
-  "volume":1.0,
+  "volume":0.3,
 }
