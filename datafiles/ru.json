@@ -180,6 +180,7 @@
 
 "editor_nuevo_objetivo": "Название цели",
 "editor_configuracion": "Настройки",
+"editor_edificios_disponibles": "доступные здания",
 "editor_objetivo": "Цель",
 "editor_de": "из",
 "editor_enemigos": "врагов",
@@ -363,6 +364,7 @@
 "enciclopedia_consume": "Потребляет",
 "enciclopedia_produce": "Производит",
 "enciclopedia_construir": "Построить",
+"enciclopedia_investigar": "Расследовать",
 "enciclopedia_aerea": "Воздушная единица",
 
 "objetivo_conseguir": "получить",

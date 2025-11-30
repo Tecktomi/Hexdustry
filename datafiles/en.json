@@ -180,6 +180,7 @@
 
 "editor_nuevo_objetivo": "Objective name",
 "editor_configuracion": "Configuration",
+"editor_edificios_disponibles": "Buildings availables",
 "editor_objetivo": "Objective",
 "editor_de": "of",
 "editor_enemigos": "enemies",
@@ -363,6 +364,7 @@
 "enciclopedia_consume": "Consumes",
 "enciclopedia_produce": "Produces",
 "enciclopedia_construir": "Build",
+"enciclopedia_investigar": "Investigate",
 "enciclopedia_aerea": "Air unit",
 
 "objetivo_conseguir": "obtain",

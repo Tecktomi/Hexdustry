@@ -265,7 +265,7 @@ function add_edificio(index, dir, a, b){
 					continue
 				if edificio_bool[# aa, bb]{
 					var temp_edificio = edificio_id[# aa, bb]
-					if edificio_flujo[temp_edificio.index] and (in(var_edificio_nombre, "Tubería", "Depósito", "Líquido Infinito", "Tubería Subterranea") or in(edificio_nombre[temp_edificio.index], "Tubería", "Depósito", "Líquido Infinito", "Tubería Subterranea")){
+					if edificio_flujo[temp_edificio.index] and (in(var_edificio_nombre, "Tubería", "Depósito", "Líquido Infinito", "Tubería Subterránea") or in(edificio_nombre[temp_edificio.index], "Tubería", "Depósito", "Líquido Infinito", "Tubería Subterránea")){
 						ds_list_add(edificio.flujo_link, temp_edificio)
 						ds_list_add(temp_edificio.flujo_link, edificio)
 						if not ds_list_in(temp_list_flujos, temp_edificio.flujo)
@@ -273,7 +273,7 @@ function add_edificio(index, dir, a, b){
 					}
 				}
 			}
-			if var_edificio_nombre = "Tubería Subterranea"{
+			if var_edificio_nombre = "Tubería Subterránea"{
 				var temp_list = get_size(a, b, 0, 5), flag = false, temp_edificio = null_edificio
 				for(var c = ds_list_size(temp_list) - 1; c >= 0; c--){
 					temp_complex = temp_list[|c]
@@ -308,7 +308,7 @@ function add_edificio(index, dir, a, b){
 				edificio.flujo = new_flujo
 				ds_list_add(new_flujo.edificios, edificio)
 			}
-			else if in(var_edificio_nombre, "Tubería", "Depósito", "Líquido Infinito", "Tubería Subterranea"){
+			else if in(var_edificio_nombre, "Tubería", "Depósito", "Líquido Infinito", "Tubería Subterránea"){
 				var new_flujo ={
 					edificios : ds_list_create(),
 					liquido : -1,
