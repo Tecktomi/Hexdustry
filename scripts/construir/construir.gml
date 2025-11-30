@@ -1,0 +1,117 @@
+function construir(index, dir, mx, my){
+	with control{
+		var flag = true, flag_2 = false, build_list = get_size(mx, my, dir, edificio_size[index]), edificio, var_edificio_nombre = edificio_nombre[index], temp_complex = abtoxy(mx, my)
+		for(var a = 0; a < ds_list_size(build_list); a++){
+			var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
+			//Asegurarse de que esté dentro del mundo
+			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize{
+				flag = false
+				break
+			}
+			var temp_terreno_terreno = terreno[# aa, bb]
+			if in(terreno_nombre[temp_terreno_terreno], "Pared de Piedra", "Pared de Arena", "Pared de Nieve", "Pared de Pasto"){
+				flag = false
+				break
+			}
+			//Checkear coliciones
+			if edificio_bool[# aa, bb] and not ((edificio_camino[index] or in(var_edificio_nombre, "Túnel", "Túnel salida")) and edificio_camino[edificio_id[# aa, bb].index]){
+				flag = false
+				break
+			}
+			//Checkear agua
+			if not in(var_edificio_nombre, "Bomba de Evaporación", "Bomba Hidráulica", "Tubería", "Generador Geotérmico") and terreno_liquido[temp_terreno_terreno]{
+				flag = false
+				break
+			}
+			//Reemplazar caminos
+			if edificio_bool[# aa, bb]{
+				var temp_edificio = edificio_id[# aa, bb]
+				if (edificio_camino[index] or (in(var_edificio_nombre, "Túnel", "Túnel salida"))) and edificio_camino[temp_edificio.index]{
+					if index = temp_edificio.index{
+						temp_edificio.dir = dir
+						calculate_in_out_2(temp_edificio)
+						mover(aa, bb)
+						var d = temp_edificio.dir * pi / 3 + pi / 6
+						temp_edificio.array_real[0] = cos(d)
+						temp_edificio.array_real[1] = -sin(d)
+						flag = false
+						break
+					}
+					else
+						delete_edificio(aa, bb)
+				}
+			}
+			//Checkear minerales
+			if in(var_edificio_nombre, "Taladro", "Taladro Eléctrico") and ore[# aa, bb] >= 0
+				flag_2 = true
+			//Checkear minerales
+			if in(var_edificio_nombre, "Taladro Eléctrico") and terreno_recurso_bool[temp_terreno_terreno]
+				flag_2 = true
+			//Checkear agua
+			if in(var_edificio_nombre, "Bomba Hidráulica") and not terreno_liquido[temp_terreno_terreno]
+				flag = false
+			if in(var_edificio_nombre, "Bomba de Evaporación") and not in(terreno_nombre[temp_terreno_terreno], "Agua", "Agua Profunda")
+				flag = false
+		}
+		//Detectar enemigos cerca
+		if flag and not cheat{
+			var size_2 = array_length(enemigos)
+			for(var a = 0; a < size_2; a++){
+				var enemigo = enemigos[a]
+				if (sqr(enemigo.a - temp_complex.a) + sqr(enemigo.b - temp_complex.b)) < 10_000{//100^2
+					flag = false
+					break
+				}
+			}
+		}
+		if flag and in(var_edificio_nombre, "Taladro", "Taladro Eléctrico") and not flag_2
+			flag = false
+		if not flag
+			return
+		if in(var_edificio_nombre, "Túnel", "Túnel salida") and build_able and build_target.index = 6
+			index = 16
+		edificio = add_edificio(index, dir, mx, my)
+		//Algoritmo link de tuneles
+		if in(var_edificio_nombre, "Túnel", "Túnel salida"){
+			build_dir = (dir + 3) mod 6
+			edificio.idle = not build_able
+			if build_able{
+				if not build_target.idle{
+					build_target.link.idle = true
+					if build_target.index = 16{
+						ds_list_remove(build_target.inputs, build_target.link)
+						ds_list_remove(build_target.link.outputs, build_target)
+					}
+					else{
+						ds_list_remove(build_target.outputs, build_target.link)
+						ds_list_remove(build_target.link.inputs, build_target)
+					}
+				}
+				build_target.idle = false
+				if index = 16{
+					ds_list_add(edificio.inputs, build_target)
+					ds_list_add(build_target.outputs, edificio)
+				}
+				else{
+					ds_list_add(edificio.outputs, build_target)
+					ds_list_add(build_target.inputs, edificio)
+				}
+				edificio.link = build_target
+				build_target.link = edificio
+				if build_target.waiting
+					mover(build_target.a, build_target.b)
+			}
+		}
+		//Actualizar recursos
+		if not cheat
+			for(var a = 0; a < array_length(edificio_precio_id[index]); a++){
+				nucleo.carga[edificio_precio_id[index, a]] -= edificio_precio_num[index, a]
+				nucleo.carga_total -= edificio_precio_num[index, a]
+			}
+		if in(var_edificio_nombre, "Planta Química", "Fábrica de Drones"){
+			show_menu = true
+			show_menu_build = edificio
+			build_index = 0
+		}
+	}
+}

@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "28_11_2025")
+ini_write_string("Global", "version", "30_11_2025")
 ini_close()
 save_files = scan_files("*.txt", fa_none)
 save_codes = scan_files("*.code", fa_none)
@@ -312,6 +312,10 @@ puerto_carga_atended = 0
 	ds_grid_clear(luz, 0)
 	terreno_pared_index = ds_grid_create(xsize, ysize)
 	ds_grid_clear(terreno_pared_index, 0)
+	repair_id = ds_grid_create(xsize, ysize)
+	ds_grid_clear(repair_id, -1)
+	repair_dir = ds_grid_create(xsize, ysize)
+	ds_grid_clear(repair_dir, 0)
 #endregion
 //Enemigos
 null_enemigo = {
@@ -778,7 +782,7 @@ function def_tecnologia(edificio){
 	var b = edificio_index[? string_lower(edificio)]
 	edificio_tecnologia_precio[b] = []
 	for(var a = 0; a < array_length(edificio_precio_id[b]); a++)
-		array_push(edificio_tecnologia_precio[b], {id: edificio_precio_id[b, a], num : (20 + 5 * edificio_precio_num[b, a])})
+		array_push(edificio_tecnologia_precio[b], {id: edificio_precio_id[b, a], num : (20 + 3 * edificio_precio_num[b, a])})
 	for(var a = 1; a < argument_count; a++){
 		var temp_edificio = edificio_index[? string_lower(argument[a])]
 		array_push(edificio_tecnologia_prev[b], temp_edificio)
@@ -797,7 +801,7 @@ def_tecnologia("cable", "generador")
 def_tecnologia("batería", "planta química")
 def_tecnologia("panel solar", "generador")
 def_tecnologia("bomba hidráulica", "bomba de evaporación", "generador")
-def_tecnologia("tubería", "bomba hidráulica")
+def_tecnologia("tubería", "bomba de evaporación")
 def_tecnologia("cinta magnética", "cinta transportadora")
 def_tecnologia("rifle", "torre básica")
 def_tecnologia("lanzallamas", "torre básica")

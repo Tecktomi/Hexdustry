@@ -53,6 +53,10 @@ function delete_edificio(aa, bb, enemigo = false){
 				add_luz(temp_complex.a, temp_complex.b, -1)
 			}
 		}
+		if enemigo{
+			ds_grid_set(repair_id, aa, bb, index)
+			ds_grid_set(repair_dir, aa, bb, edificio.dir)
+		}
 		ds_list_destroy(edificio.coordenadas)
 		if index = 0 and not ds_list_empty(edificios_targeteables)
 			for(var a = 0; a < xsize; a++)
