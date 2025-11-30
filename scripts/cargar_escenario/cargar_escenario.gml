@@ -58,6 +58,11 @@ function cargar_escenario(file = ""){
 					})
 				mision_switch_oleadas[a] = bool(ini_read_real($"Objetivo {a}", "switch oleadas", 0))
 			}
+			for(var a = 0; a < edificio_max; a++){
+				mision_edificios[a] = bool(ini_read_real("Edificios", a, 1))
+				edificio_tecnologia[a] = mision_edificios[a]
+				edificio_tecnologia_desbloqueable[a] = false
+			}
 			multiplicador_vida_enemigos = ini_read_real("Global", "Multiplicador vida enemigos", 100)
 			ds_grid_clear(terreno, 0)
 			ds_grid_clear(ore, -1)
