@@ -132,6 +132,7 @@ function add_edificio(index, dir, a, b){
 			var aa = temp_complex.a, bb = temp_complex.b
 			ds_grid_set(edificio_bool, aa, bb, true)
 			ds_grid_set(edificio_id, aa, bb, edificio)
+			ds_grid_set(repair_id, aa, bb, -1)
 			ds_list_add(edificio.coordenadas, temp_complex)
 			if index = 0{
 				ds_grid_set(edificio.coordenadas_dis, aa, bb, 0)
