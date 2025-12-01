@@ -4178,15 +4178,17 @@ if not pausa{
 		if --municion.dis <= 0{
 			municiones[a--] = municiones[array_length(municiones) - 1]
 			array_pop(municiones)
+			//Daño objetivo unidad
 			if municion.target != null_enemigo and municion.target.vida > 0{
 				municion.target.vida -= municion.dmg
 				if municion.target.vida <= 0
 					destroy_dron(municion.target)
 			}
+			//Daño objetivo edificio
 			if municion.target_build != null_edificio and municion.target_build.vida > 0{
 				municion.target_build.vida -= municion.dmg
 				if municion.target_build.vida <= 0
-					delete_edificio(municion.target_build.a, municion.target_build.b)
+					delete_edificio(municion.target_build.a, municion.target_build.b, true)
 			}
 			//Misil aliado
 			if municion.tipo = 1{
