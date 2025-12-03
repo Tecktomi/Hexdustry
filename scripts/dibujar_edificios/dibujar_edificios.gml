@@ -1,8 +1,7 @@
 function dibujar_edificios(){
 	with control{
-		var mina = max(floor(camx / zoom / 48), 0), minb = max(floor(camy / zoom / 14) - 1, 0), maxa = ceil((camx + room_width) / zoom / 48), maxb = ceil((camy + room_height) / zoom / 14)
-		for(var a = mina; a < maxa; a++)
-			for(var b = minb; b < maxb; b++)
+		for(var a = mina; a <= maxa; a++)
+			for(var b = minb; b <= maxb; b++)
 				if edificio_draw[# a, b]{
 					var edificio = edificio_id[# a, b], index = edificio.index, var_edificio_nombre = edificio_nombre[index], dir = edificio.dir, aa = edificio.x, bb = edificio.y
 					//Dibujo caminos
@@ -91,10 +90,10 @@ function dibujar_edificios(){
 						draw_circle_off(aa, bb + 8, 4, false)
 					}
 					if edificio.vida < edificio_vida[index]{
-						draw_set_color(make_color_hsv(120 * edificio.vida / edificio_vida[index], 255, 255))
+						draw_set_color(make_color_rgb(255 * (1 - edificio.vida / edificio_vida[index]), 255 * edificio.vida / edificio_vida[index], 0))
 						draw_circle_off(aa, bb, 5, false)
-						draw_set_color(c_white)
 					}
 				}
+	draw_set_color(c_white)
 	}
 }

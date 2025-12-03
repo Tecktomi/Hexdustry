@@ -1,5 +1,9 @@
 //Menú principal
 if menu = 0{
+	mina = max(0, floor(camx / zoom / 48))
+	minb = max(0, floor(camy / zoom / 14) - 1)
+	maxa = min(xsize - 1, ceil((camx + room_width) / zoom / 48))
+	maxb = min(ysize - 1, ceil((camy + room_height) / zoom / 14))
 	dibujar_fondo(1)
 	draw_set_alpha(0.5)
 	draw_set_color(c_black)
@@ -813,15 +817,14 @@ if menu = 2{
 	exit
 }
 #region Dibujo
+	mina = max(0, floor(camx / zoom / 48))
+	minb = max(0, floor(camy / zoom / 14) - 1)
+	maxa = min(xsize - 1, ceil(1 + (camx + room_width) / zoom / 48))
+	maxb = min(ysize - 1, ceil(1 + (camy + room_height) / zoom / 14))
 	dibujar_fondo()
 	if grafic_tile_animation
 		dibujar_fondo(2)
 	dibujar_edificios()
-	//Dibujo items y links electricos
-	mina = max(0, floor(camx / zoom / 48))
-	minb = max(0, floor(camy / zoom / 14) - 1)
-	maxa = min(xsize - 1, ceil((camx + room_width) / zoom / 48))
-	maxb = min(ysize - 1, ceil((camy + room_height) / zoom / 14))
 	for(var a = mina; a < maxa; a++)
 		for(var b = minb; b < maxb; b++)
 			if edificio_draw[# a, b]{
@@ -831,10 +834,10 @@ if menu = 2{
 					var c = 1.2 * (max(edificio.proceso, edificio.waiting * proceso) - proceso / 2) * 20 / proceso
 					draw_sprite_off(recurso_sprite[edificio.carga_id], 0, aa + c * edificio.array_real[0], bb + c * edificio.array_real[1])
 				}
-				if edificio_armas[index] and not in(var_edificio_nombre, "Láser", "Torre Reparadora") and edificio.carga_total = 0
+				else if edificio_armas[index] and not in(var_edificio_nombre, "Láser", "Torre Reparadora") and edificio.carga_total = 0
 					draw_sprite_off(spr_no_ammo, 0, edificio.x, edificio.y - 28)
 				//Dibujo de los links eléctricos
-				if edificio_energia[index]{
+				else if edificio_energia[index]{
 					draw_set_color(c_yellow)
 					for(var c = 0; c < ds_list_size(edificio.energia_link); c++){
 						var edificio_2 = edificio.energia_link[|c]
@@ -3260,6 +3263,11 @@ if not pausa{
 					//Disparo
 					if ++edificio.proceso >= edificio_proceso[index]{
 						edificio.proceso = 0
+						var dis = distance_sqr(edificio.x, edificio.y, enemigo.a, enemigo.b)
+						if dis > edificio_alcance_sqr[index]{
+							edificio.target = null_edificio
+							continue
+						}
 						var tiro = -1, arma = edificio_arma[index]
 						for(var b = 0; b < array_length(armas[arma]); b++){
 							var tiro_struct = armas[arma, b]
@@ -3277,7 +3285,7 @@ if not pausa{
 								}
 								if var_edificio_nombre = "Lanzallamas"{
 									sound_play(snd_disparo, aa, bb, 0.01)
-									var temp_array = chunk_enemigos[# enemigo.chunk_x, enemigo.chunk_y], dis = edificio_alcance[index], x1 = aa + dis * cos(angle + pi / 6), y1 = bb - dis * sin(angle + pi / 6), x2 = aa + dis * cos(angle - pi / 6), y2 = bb - dis * sin(angle - pi / 6)
+									var temp_array = chunk_enemigos[# enemigo.chunk_x, enemigo.chunk_y], disi = edificio_alcance[index], x1 = aa + disi * cos(angle + pi / 6), y1 = bb - disi * sin(angle + pi / 6), x2 = aa + disi * cos(angle - pi / 6), y2 = bb - disi * sin(angle - pi / 6)
 									for(var c = array_length(temp_array) - 1; c >= 0; c--){
 										var temp_enemigo = temp_array[c]
 										if point_in_triangle(temp_enemigo.a, temp_enemigo.b, aa, bb, x1, y1, x2, y2) and --temp_enemigo.vida <= 0
@@ -3288,7 +3296,7 @@ if not pausa{
 									sound_play(snd_disparo, edificio.x, edificio.y, 0.1)
 								edificio.carga[tiro_struct.recurso] -= tiro_struct.cantidad
 								edificio.carga_total -= tiro_struct.cantidad
-								var dis = distance(edificio.x, edificio.y, enemigo.a, enemigo.b)
+								dis = sqrt(dis)
 								var municion = add_municion(aa, bb, 25 * (enemigo.a - aa) / dis, 25 * (enemigo.b - bb) / dis, var_edificio_nombre = "Mortero" ? 1 : (var_edificio_nombre = "Lanzallamas" ? 2 : 0), dis / 25, tiro_struct.dmg * dmg_factor, enemigo, null_edificio)
 								array_push(municiones, municion)
 								if var_edificio_nombre = "Lanzallamas"{
@@ -3336,8 +3344,10 @@ if not pausa{
 						turret_target(edificio)
 					}
 				}
-				else
+				else{
 					change_energia(0, edificio)
+					edificio.target = null_edificio
+				}
 			}
 			else if var_edificio_nombre = "Torre Reparadora"{
 				if edificio.link = null_edificio{

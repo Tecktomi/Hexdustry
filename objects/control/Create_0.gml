@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "1_12_2025")
+ini_write_string("Global", "version", "2_12_2025")
 ini_close()
 save_files = scan_files("*.txt", fa_none)
 save_codes = scan_files("*.code", fa_none)
