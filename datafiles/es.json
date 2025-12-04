@@ -55,6 +55,7 @@
 "Memoria": "Memoria",
 "Torre Reparadora": "Torre Reparadora",
 "Tubería Subterranea": "Tubería Subterranea",
+"Onda de Choque": "Onda de Choque",
 
 "descripcion_Núcleo": "Es el centro de mando, aquí se almacenan todos los recursos y debes protegerlo a toda costa",
 "descripcion_Taladro": "Permite minar cobre, hierro y carbón sin coste alguno.    Puede potenciarse con Agua",
@@ -102,6 +103,7 @@
 "descripcion_Memoria": "Permite almacenar hasta 128 datos",
 "descripcion_Torre Reparadora": "Proyecta un láser de reparación a los edificios cercanos usando energía",
 "descripcion_Tubería Subterranea": "Conecta líneas de líquidos por debajo tierra",
+"descripcion_Onda de Choque": "Carga y libera una gran onda de choque que daña y ralentiza a todos los enemigos en su rango",
 
 "Cobre": "Cobre",
 "Carbón": "Carbón",
@@ -172,6 +174,7 @@
 "Helicoptero": "Helicoptero",
 
 "Transporte": "Transporte",
+"Extracción": "Extracción",
 "Producción": "Producción",
 "Electricidad": "Electricidad",
 "Líquidos": "Líquidos",

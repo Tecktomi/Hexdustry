@@ -1,8 +1,10 @@
 randomize()
 draw_set_font(ft_letra)
+game_set_speed(60, gamespeed_fps)
+vel = 60 / game_get_speed(gamespeed_fps)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "2_12_2025")
+ini_write_string("Global", "version", "4_12_2025")
 ini_close()
 save_files = scan_files("*.txt", fa_none)
 save_codes = scan_files("*.code", fa_none)
@@ -224,7 +226,10 @@ null_edificio = {
 	chunk_pointer : 0,
 	target_chunks : array_create(0, {a : 0, b : 0}),
 	target_pointer : 0,
-	array_real : array_create(0, 0)
+	array_real : array_create(0, 0),
+	xscale : 1,
+	yscale : 1,
+	draw_rot : 0
 }
 null_edificio.link = null_edificio
 ds_list_add(null_edificio.coordenadas, {a : 0, b : 0})
@@ -318,6 +323,8 @@ puerto_carga_atended = 0
 	ds_grid_clear(repair_dir, 0)
 #endregion
 //Enemigos
+efectos_nombre = ["shock", "fuego"]
+efectos_max = array_length(efectos_nombre)
 null_enemigo = {
 	a : 0,
 	b : 0,
@@ -333,7 +340,11 @@ null_enemigo = {
 	carga_total : 0,
 	modo : 0,
 	pointer : 0,
-	torres : array_create(0, null_edificio)
+	torres : array_create(0, null_edificio),
+	dir : 0,
+	dir_move : 0,
+	step : 0,
+	efecto : array_create(efectos_max, 0)
 }
 enemigos = array_create(0, null_enemigo)
 drones_aliados = array_create(0, null_enemigo)
@@ -534,6 +545,8 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 #endregion
 rss_max = array_length(recurso_nombre)
 sort_recursos()
+for(var a = 0; a < rss_max; a++)
+	recurso_combustion_time[a] /= vel
 //Liquidos
 liquido_nombre = ["Agua", "Ácido", "Petróleo", "Lava"]
 liquido_color = [make_color_rgb(37, 109, 123), make_color_rgb(255, 245, 0), make_color_rgb(0, 10, 10), make_color_rgb(251, 175, 93)]
@@ -590,7 +603,8 @@ lq_max = array_length(liquido_nombre)
 		"Permite escribir mensajes",
 		"Permite almacenar hasta 128 datos",
 		"Proyecta un láser de reparación a los edificios cercanos usando energía",
-		"Conecta líneas de líquidos por debajo tierra"
+		"Conecta líneas de líquidos por debajo tierra",
+		"Carga y libera una gran onda de choque que daña y ralentiza a todos los enemigos en su rango"
 	]
 	for(var a = array_length(edificio_descripcion) - 1; a >= 0; a--)
 		edificio_descripcion[a] = text_wrap(edificio_descripcion[a], 400)
@@ -636,7 +650,7 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, key = 
 	array_push(edificio_sprite, sprite)
 	array_push(edificio_sprite_2, (sprite_2 = spr_base) ? sprite : sprite_2)
 	array_push(edificio_key, key)
-	array_push(edificio_rotable, ((size mod 2) = 0 or camino))
+	array_push(edificio_rotable, (((size mod 2) = 0) or camino))
 	array_push(edificio_vida, vida)
 	array_push(edificio_proceso, proceso)
 	array_push(edificio_camino, camino)
@@ -681,7 +695,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	def_edificio("Selector", 1, spr_selector, spr_selector_color, "13", 60, 10, true, [0], [4], 1, true,,,, true); def_edificio_2()
 	def_edificio("Overflow", 1, spr_overflow,, "14", 60, 10, true, [0], [4], 1, true,,,, true); def_edificio_2()
 	def_edificio("Túnel", 1, spr_tunel,, "15", 60, 10,, [0, 3], [4, 4], 1, true, true,,, true, true); def_edificio_2()
-	def_edificio("Horno", 2, spr_horno, spr_horno_encendido, "22", 250, 150,, [0, 3], [10, 20], 26, true, false, [0, 1, 3, 5, 12], [4, 10, 4, 4, 4], true, false, [2, 4, 7]); def_edificio_2()
+	def_edificio("Horno", 2, spr_horno, spr_horno_encendido, "22", 250, 150,, [0, 3], [10, 20], 80, true, false, [0, 1, 3, 5, 12], [10, 10, 10, 10, 10], true, false, [2, 4, 7]); def_edificio_2()
 	def_edificio("Taladro Eléctrico", 3, spr_taladro_electrico,, "23", 400, 45,, [2, 4], [20, 10], 20,,,,, true, false, [0, 1, 3, 5, 6, 9, 10, 11]); def_edificio_2(50, 10, 3)
 	def_edificio("Triturador", 2, spr_triturador,, "24", 250, 20,, [2, 4], [10, 25], 50, true, false, [6, 9, 10, 11], [10, 10, 10, 10], true, false, [5]); def_edificio_2(30)
 	//10
@@ -724,9 +738,10 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	def_edificio("Memoria", 1, spr_memoria,, "63", 50,,, [0, 16], [10, 3]); def_edificio_2(,,,,, true)
 	def_edificio("Torre Reparadora", 2, spr_torre_reparadora, spr_torre_reparadora_2, "57", 100, 1,, [2, 3, 7], [10, 15, 15]); def_edificio_2(40,,, 0, 200)
 	def_edificio("Tubería Subterránea", 1, spr_tuberia_subterranea,, "45", 30, 1,, [2, 3], [5, 5]); def_edificio_2(, 10,,,, true)
+	def_edificio("Onda de Choque", 2, spr_onda_de_choque,, "58", 600, 150,, [0, 14, 16], [20, 10, 10]); def_edificio_2(300,,, 0, 100)
 #endregion
-categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 7, 8, 9, 22, 36, 27, 31, 33, 39], [11, 10, 12, 13, 26, 32, 37, 38], [15, 30, 14, 24, 45], [19, 20, 21, 23, 34, 40, 44], [41, 42, 43]]
-categoria_nombre = ["Transporte", "Producción", "Electricidad", "Líquidos", "Defensa", "Lógica"]
+categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 8, 33, 39], [7, 9, 22, 36, 27, 31], [11, 10, 12, 13, 26, 32, 37, 38], [15, 30, 14, 24, 45], [19, 20, 21, 23, 34, 40, 44, 46], [41, 42, 43]]
+categoria_nombre = ["Transporte", "Extracción", "Producción", "Electricidad", "Líquidos", "Defensa", "Lógica"]
 categoria_nombre_display = []
 array_copy(categoria_nombre_display, 0, categoria_nombre, 0, array_length(categoria_nombre))
 #region planta quimica
@@ -775,6 +790,7 @@ edificio_tecnologia_prev = array_create(edificio_max)
 edificio_tecnologia_next = array_create(edificio_max)
 edificio_tecnologia_precio = array_create(edificio_max)
 for(var a = 0; a < edificio_max; a++){
+	edificio_proceso[a] /= vel
 	edificio_tecnologia_prev[a] = array_create(0, 0)
 	edificio_tecnologia_next[a] = array_create(0, 0)
 }
@@ -827,6 +843,7 @@ def_tecnologia("mensaje", "procesador")
 def_tecnologia("memoria", "procesador")
 def_tecnologia("torre reparadora", "torre básica", "generador")
 def_tecnologia("tubería subterránea", "tubería")
+def_tecnologia("onda de choque", "láser", "batería", "ensambladora")
 edificio_tecnologia_nivel = array_create(edificio_max, -1)
 tecnologia_nivel_edificios = [array_create(0, 0)]
 var edi_count = 0

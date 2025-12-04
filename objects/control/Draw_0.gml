@@ -834,7 +834,7 @@ if menu = 2{
 					var c = 1.2 * (max(edificio.proceso, edificio.waiting * proceso) - proceso / 2) * 20 / proceso
 					draw_sprite_off(recurso_sprite[edificio.carga_id], 0, aa + c * edificio.array_real[0], bb + c * edificio.array_real[1])
 				}
-				else if edificio_armas[index] and not in(var_edificio_nombre, "Láser", "Torre Reparadora") and edificio.carga_total = 0
+				else if edificio_armas[index] and not in(var_edificio_nombre, "Láser", "Torre Reparadora", "Onda de Choque") and edificio.carga_total = 0
 					draw_sprite_off(spr_no_ammo, 0, edificio.x, edificio.y - 28)
 				//Dibujo de los links eléctricos
 				else if edificio_energia[index]{
@@ -1113,7 +1113,7 @@ if menu = 2{
 				build_index = ei
 			}
 			draw_sprite_ext(edificio_sprite[ei], 0, room_width - 200, 200, 2, 2, 0, c_white, 1)
-			if edificio_armas[ei]
+			if edificio_armas[ei] and edificio_nombre[ei] != "Onda de Choque"
 				if edificio_size[ei] mod 2 = 0
 					draw_sprite_ext(edificio_sprite_2[ei], 0, room_width - 184, 224, 2, 2, 0, c_white, 1)
 				else
@@ -2155,8 +2155,11 @@ if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio
 			if info
 				temp_text += flujo_text(flujo)
 		}
-		if info and edificio_proceso[index] > 1
-			temp_text += $"{L.almacen_proceso}: {floor(edificio.proceso)}/{edificio_proceso[index]}\n"
+		if info{
+			if edificio_proceso[index] > 1
+				temp_text += $"{L.almacen_proceso}: {floor(edificio.proceso)}/{edificio_proceso[index]}\n"
+			temp_text += $"{edificio.select}\n"
+		}
 	}
 	//Reconstruir edificios
 	else if keyboard_check(ord("Q")){
@@ -2758,7 +2761,7 @@ if build_index > 0 and win = 0{
 					}
 					//Taberías subterraneas
 					else if var_edificio_nombre = "Tubería Subterránea"{
-						var temp_list = get_size(mx, my, 0, 5), flag_2 = false, temp_edificio = null_edificio
+						var temp_list = get_size(mx, my, 0, 7), flag_2 = false, temp_edificio = null_edificio
 						for(var c = ds_list_size(temp_list) - 1; c >= 0; c--){
 							temp_complex = temp_list[|c]
 							if edificio_bool[# temp_complex.a, temp_complex.b] and not (temp_complex.a = mx and temp_complex.b = my){
@@ -2808,7 +2811,7 @@ else{
 }
 //Ciclos
 if not pausa{
-	timer++
+	timer += vel
 	//Ciclo edificios
 	for(var a = 0; a < array_length(edificios_activos); a++){
 		edificio = edificios_activos[a]
@@ -2923,63 +2926,63 @@ if not pausa{
 		}
 		//Acción horno
 		else if var_edificio_nombre = "Horno"{
-			if (edificio.carga[0] > 1 or edificio.carga[3] > 1 or edificio.carga[5] > 1) and (edificio.carga[1] > 0 or edificio.carga[12] > 0 or edificio.fuel > 0){
-				if edificio.fuel > 0{
-					edificio.fuel--
-					sound_play_edificio(2, edificio.x, edificio.y)
-				}
-				if edificio.carga[2] < 2 and edificio.carga[4] < 2 and edificio.carga[7] < 2{
-					if edificio.fuel = 0
-						if (edificio.carga[1] > 0 or edificio.carga[12] > 0){
-							if edificio.carga[12] > 0{
-								edificio.fuel = recurso_combustion_time[12]
-								edificio.carga[12]--
-							}
-							else if edificio.carga[1] > 0{
-								edificio.fuel = recurso_combustion_time[1]
-								edificio.carga[1]--
-							}
-							if grafic_luz and not edificio.luz{
-								edificio.luz = true
-								var temp_list = edificio.coordenadas, size = ds_list_size(temp_list)
-								for(var b = 0; b < size; b++){
-									var temp_complex = temp_list[|b]
-									add_luz(temp_complex.a, temp_complex.b, 1)
-								}
-							}
-							edificio.carga_total--
-							mover_in(edificio)
+			if edificio.fuel > 0{
+				edificio.fuel--
+				sound_play_edificio(2, edificio.x, edificio.y)
+			}
+			if (edificio.carga[0] > 1 or edificio.carga[3] > 1 or edificio.carga[5] > 1) and
+				(edificio.carga[1] > 0 or edificio.carga[12] > 0 or edificio.fuel > 0) and
+				(edificio.carga[2] < 10 and edificio.carga[4] < 10 and edificio.carga[7] < 10){
+				if edificio.fuel = 0
+					if (edificio.carga[1] > 0 or edificio.carga[12] > 0){
+						if edificio.carga[12] > 0{
+							edificio.fuel = recurso_combustion_time[12]
+							edificio.carga[12]--
 						}
-						else if grafic_luz and edificio.luz{
-							edificio.luz = false
+						else if edificio.carga[1] > 0{
+							edificio.fuel = recurso_combustion_time[1]
+							edificio.carga[1]--
+						}
+						if grafic_luz and not edificio.luz{
+							edificio.luz = true
 							var temp_list = edificio.coordenadas, size = ds_list_size(temp_list)
 							for(var b = 0; b < size; b++){
 								var temp_complex = temp_list[|b]
-								add_luz(temp_complex.a, temp_complex.b, -1)
+								add_luz(temp_complex.a, temp_complex.b, 1)
 							}
 						}
-					edificio.proceso++
-					if edificio.proceso >= edificio_proceso[index]{
-						if edificio.carga[5] > 1{
-							edificio.carga[5] -= 2
-							edificio.carga[7]++
-							edificio.carga_total--
-							edificio.proceso = 0
-						}
-						else if edificio.carga[3] > 1{
-							edificio.carga[3] -= 2
-							edificio.carga[4]++
-							edificio.carga_total--
-							edificio.proceso = -edificio_proceso[index] / 2
-						}
-						else if edificio.carga[0] > 1{
-							edificio.carga[0] -= 2
-							edificio.carga[2]++
-							edificio.carga_total--
-							edificio.proceso = 0
-						}
-						edificio.waiting = not mover(edificio.a, edificio.b)
+						edificio.carga_total--
+						mover_in(edificio)
 					}
+					else if grafic_luz and edificio.luz{
+						edificio.luz = false
+						var temp_list = edificio.coordenadas, size = ds_list_size(temp_list)
+						for(var b = 0; b < size; b++){
+							var temp_complex = temp_list[|b]
+							add_luz(temp_complex.a, temp_complex.b, -1)
+						}
+					}
+				edificio.proceso++
+				if edificio.proceso >= edificio_proceso[index]{
+					if edificio.carga[5] > 1{
+						edificio.carga[5] -= 2
+						edificio.carga[7]++
+						edificio.carga_total--
+						edificio.proceso = 0
+					}
+					else if edificio.carga[3] > 1{
+						edificio.carga[3] -= 2
+						edificio.carga[4]++
+						edificio.carga_total--
+						edificio.proceso = -edificio_proceso[index] / 2
+					}
+					else if edificio.carga[0] > 1{
+						edificio.carga[0] -= 2
+						edificio.carga[2]++
+						edificio.carga_total--
+						edificio.proceso = 0
+					}
+					edificio.waiting = not mover(edificio.a, edificio.b)
 				}
 			}
 		}
@@ -3288,8 +3291,12 @@ if not pausa{
 									var temp_array = chunk_enemigos[# enemigo.chunk_x, enemigo.chunk_y], disi = edificio_alcance[index], x1 = aa + disi * cos(angle + pi / 6), y1 = bb - disi * sin(angle + pi / 6), x2 = aa + disi * cos(angle - pi / 6), y2 = bb - disi * sin(angle - pi / 6)
 									for(var c = array_length(temp_array) - 1; c >= 0; c--){
 										var temp_enemigo = temp_array[c]
-										if point_in_triangle(temp_enemigo.a, temp_enemigo.b, aa, bb, x1, y1, x2, y2) and --temp_enemigo.vida <= 0
-											destroy_dron(temp_enemigo)
+										if point_in_triangle(temp_enemigo.a, temp_enemigo.b, aa, bb, x1, y1, x2, y2){
+											temp_enemigo.vida -= vel
+											temp_enemigo.efecto[1] = 300 / vel
+											if temp_enemigo.vida <= 0
+												destroy_dron(temp_enemigo)
+										}
 									}
 								}
 								else
@@ -3297,7 +3304,7 @@ if not pausa{
 								edificio.carga[tiro_struct.recurso] -= tiro_struct.cantidad
 								edificio.carga_total -= tiro_struct.cantidad
 								dis = sqrt(dis)
-								var municion = add_municion(aa, bb, 25 * (enemigo.a - aa) / dis, 25 * (enemigo.b - bb) / dis, var_edificio_nombre = "Mortero" ? 1 : (var_edificio_nombre = "Lanzallamas" ? 2 : 0), dis / 25, tiro_struct.dmg * dmg_factor, enemigo, null_edificio)
+								var municion = add_municion(aa, bb, vel * 25 * (enemigo.a - aa) / dis, vel * 25 * (enemigo.b - bb) / dis, var_edificio_nombre = "Mortero" ? 1 : (var_edificio_nombre = "Lanzallamas" ? 2 : 0), dis / 25, tiro_struct.dmg * dmg_factor, enemigo, null_edificio)
 								array_push(municiones, municion)
 								if var_edificio_nombre = "Lanzallamas"{
 									angle = arctan2(bb - enemigo.b, aa - enemigo.a)
@@ -3321,7 +3328,7 @@ if not pausa{
 				else
 					change_flujo(0, edificio)
 			}
-			else if in(var_edificio_nombre, "Láser"){
+			else if var_edificio_nombre = "Láser"{
 				if ((a + image_index) mod 10 = 0 and edificio.target = null_enemigo) or edificio.target.vida <= 0{
 					edificio.target = null_enemigo
 					if array_length(enemigos) > 0
@@ -3332,7 +3339,7 @@ if not pausa{
 					edificio.select = radtodeg(-arctan2(edificio.x - enemigo.a, enemigo.b - edificio.y)) - 90
 					change_energia(edificio_energia_consumo[index], edificio)
 					edificio.mode = true
-					enemigo.vida -= red_power
+					enemigo.vida -= 3 * red_power * vel
 					draw_set_alpha(red_power)
 					draw_set_color(c_red)
 					draw_line_off(edificio.x + edificio.array_real[2], edificio.y + 14, enemigo.a, enemigo.b)
@@ -3367,7 +3374,7 @@ if not pausa{
 						draw_set_color(c_green)
 						draw_set_alpha(red_power)
 						draw_line_off(edificio.x + edificio.array_real[2], edificio.y + 14, edificio.link.x, edificio.link.y)
-						edificio.link.vida += 2 * red_power
+						edificio.link.vida += 2 * red_power * vel
 						if edificio.link.vida >= edificio_vida[edificio.link.index]{
 							edificio.link.vida = edificio_vida[edificio.link.index]
 							edificio.link = null_edificio
@@ -3376,6 +3383,51 @@ if not pausa{
 							edificio.select = radtodeg(-arctan2(edificio.x + 12 - edificio.link.x, edificio.link.y - edificio.y - 14)) - 90
 						draw_set_alpha(1)
 						draw_set_color(c_black)
+					}
+				}
+			}
+			else if var_edificio_nombre = "Onda de Choque"{
+				if edificio.proceso < edificio_proceso[index]{
+					change_energia(edificio_energia_consumo[index], edificio)
+					edificio.proceso += red_power
+				}
+				else{
+					change_energia(0, edificio)
+					if edificio.select = 0{
+						var dis = edificio_alcance_sqr[index]
+						for(var b = array_length(edificio.target_chunks) - 1; b >= 0; b--){
+							var temp_complex = edificio.target_chunks[b], temp_array = chunk_enemigos[# temp_complex.a, temp_complex.b]
+							for(var c = array_length(temp_array) - 1; c >= 0; c--){
+								var enemigo = temp_array[c], temp_dis = distance_sqr(edificio.x, edificio.y, enemigo.a, enemigo.b)
+								if temp_dis < dis{
+									edificio.select = 20
+									break
+								}
+							}
+							if edificio.select > 0
+								break
+						}
+					}
+					else{
+						edificio.select -= vel
+						if edificio.select <= 0{
+							edificio.select = 0
+							var dis = edificio_alcance_sqr[index]
+							for(var b = array_length(edificio.target_chunks) - 1; b >= 0; b--){
+								var temp_complex = edificio.target_chunks[b], temp_array = chunk_enemigos[# temp_complex.a, temp_complex.b]
+								for(var c = array_length(temp_array) - 1; c >= 0; c--){
+									var enemigo = temp_array[c], temp_dis = distance_sqr(edificio.x, edificio.y, enemigo.a, enemigo.b)
+									if temp_dis < dis{
+										enemigo.vida -= 100
+										enemigo.efecto[0] = 30 * vel
+										if enemigo.vida <= 0
+											destroy_dron(enemigo)
+									}
+								}
+							}
+							array_push(efectos, add_efecto(spr_shokwave, 0, edificio.x, edificio.y, 5, 1))
+							edificio.proceso = 0
+						}
 					}
 				}
 			}
@@ -3579,7 +3631,7 @@ if not pausa{
 		else if var_edificio_nombre = "Procesador"{
 			if procesador_select != edificio
 				edificio.proceso += red_power
-			if edificio.proceso >= 1{
+			while edificio.proceso >= 1{
 				edificio.proceso--
 				if array_length(edificio.instruccion) = 0
 					continue
@@ -3853,7 +3905,7 @@ if not pausa{
 	//Ciclo de los enemigos
 	var cam_center_x = (camx + room_width * zoom / 2), cam_center_y = (camy + room_height * zoom / 2)
 	for(var a = array_length(enemigos); a > 0; a--){
-		var dron = enemigos[a - 1], aa = dron.a, bb = dron.b, index = dron.index
+		var dron = enemigos[a - 1], aa = dron.a, bb = dron.b, index = dron.index, dron_vel = vel
 		if index = 4{
 			draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir_move)
 			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir)
@@ -3871,6 +3923,14 @@ if not pausa{
 			var angle = arctan2(cam_center_y - bb, cam_center_x - aa), cosa = cos(angle), sina = sin(angle)
 			draw_line(room_width / 2 - 60 * cosa, room_height / 2 - 60 * sina, room_width / 2 - 90 * cosa, room_height / 2 - 90 * sina)
 		}
+		for(var b = 0; b < efectos_max; b++)
+			if dron.efecto[b] > 0{
+				dron.efecto[b]--
+				if b = 0
+					dron_vel /= 2
+				else if b = 1
+					dron.vida -= vel / 4
+			}
 		if dron.vida < dron.vida_max{
 			if dron.vida <= 0{
 				destroy_dron(dron)
@@ -3881,13 +3941,13 @@ if not pausa{
 			draw_set_color(c_white)
 		}
 		if aa < 0
-			dron.a++
+			dron.a += vel
 		else if aa > xsize * 48
-			dron.a--
+			dron.a -= vel
 		if bb < 0
-			dron.b++
+			dron.b += vel
 		else if bb > ysize * 14
-			dron.b--
+			dron.b -= vel
 		if dron.target != null_edificio and dron.target.vida <= 0
 			dron.target = null_edificio
 		if in(index, 0, 4){
@@ -3950,16 +4010,16 @@ if not pausa{
 						dir = edificio_cercano_dir[# aaa, bbb]
 					if dir = -1
 						dir = 0
-					dron.a += cos_angle_dir[dir]
-					dron.b -= sin_angle_dir[dir]
+					dron.a += dron_vel * cos_angle_dir[dir]
+					dron.b -= dron_vel * sin_angle_dir[dir]
 					if index = 4
 						dron.dir_move += angle_difference(dron.dir_move, radtodeg(arctan2(sin_angle_dir[dir], cos_angle_dir[dir]))) / 100
 				}
 			}
 			else if dron_aereo[index]{
 				var dis_2 = sqrt(dis)
-				dron.a += 2 * (edificio.x - dron.a) / dis_2
-				dron.b += 2 * (edificio.y - dron.b) / dis_2
+				dron.a += 2 * dron_vel * (edificio.x - dron.a) / dis_2
+				dron.b += 2 * dron_vel * (edificio.y - dron.b) / dis_2
 			}
 			if dis < dron_alcance[dron.index]{
 				ataque = true
@@ -3980,7 +4040,8 @@ if not pausa{
 					ataque = true
 					draw_set_color(c_red)
 					draw_line_off(aa, bb, closest_dron.a, closest_dron.b)
-					if --closest_dron.vida <= 0{
+					closest_dron.vida -= vel
+					if closest_dron.vida <= 0{
 						var temp_dron = drones_aliados[array_length(drones_aliados) - 1]
 						drones_aliados[closest_dron.pointer] = temp_dron
 						temp_dron.pointer = closest_dron.pointer
@@ -4034,7 +4095,7 @@ if not pausa{
 			}
 			var dis = sqr(aa - temp_enemigo.a) + sqr(bb - temp_enemigo.b)
 			if dis < temp_dron_size{
-				var aaa = sign(aa - temp_enemigo.a), bbb = sign(bb - temp_enemigo.b)
+				var aaa = vel * sign(aa - temp_enemigo.a), bbb = vel * sign(bb - temp_enemigo.b)
 				dron.a += aaa
 				dron.b += bbb
 				temp_enemigo.a -= aaa
@@ -4095,8 +4156,8 @@ if not pausa{
 					var dis = distance_sqr(aa, bb, edificio.x, edificio.y)
 					if dis > dron_alcance[dron.index]{
 						dis = sqrt(dis)
-						dron.a += (edificio.x - aa) / dis
-						dron.b += (edificio.y - bb) / dis
+						dron.a += vel * (edificio.x - aa) / dis
+						dron.b += vel * (edificio.y - bb) / dis
 					}
 					else{
 						if dron.modo = 1{
@@ -4151,8 +4212,8 @@ if not pausa{
 				}
 				var dis = distance_sqr(aa, bb, edificio.x, edificio.y)
 				if dis > dron_alcance[dron.index]{
-					dron.a += (edificio.x - aa) / dis
-					dron.b += (edificio.y - bb) / dis
+					dron.a += vel * (edificio.x - aa) / dis
+					dron.b += vel * (edificio.y - bb) / dis
 				}
 				else{
 					draw_set_color(c_green)
@@ -4169,7 +4230,7 @@ if not pausa{
 		for(var b = a + 1; b < size_2; b++){
 			var temp_dron = drones_aliados[b], dis = sqr(aa - temp_dron.a) + sqr(bb - temp_dron.b)
 			if dis < 400{//20^2
-				var aaa = (aa - temp_dron.a) / dis, bbb = (bb - temp_dron.b) / dis
+				var aaa = vel * (aa - temp_dron.a) / dis, bbb = vel * (bb - temp_dron.b) / dis
 				dron.a += aaa
 				dron.b += bbb
 				temp_dron.a -= aaa
@@ -4185,7 +4246,8 @@ if not pausa{
 			draw_circle_off(municion.x, municion.y, 2, false)
 		municion.x += municion.hmove
 		municion.y += municion.vmove
-		if --municion.dis <= 0{
+		municion.dis -= vel
+		if municion.dis <= 0{
 			municiones[a--] = municiones[array_length(municiones) - 1]
 			array_pop(municiones)
 			//Daño objetivo unidad
@@ -4224,7 +4286,8 @@ if not pausa{
 		if show_smoke
 			draw_sprite_off(efecto.sprite, efecto.subsprite, efecto.x, efecto.y)
 		efecto.subsprite += efecto.frame_speed
-		if --efecto.tiempo <= 0{
+		efecto.tiempo -= vel
+		if efecto.tiempo <= 0{
 			efectos[a--] = efectos[array_length(efectos) - 1]
 			array_pop(efectos)
 		}
@@ -4237,7 +4300,8 @@ if not pausa{
 			humo.x += humo.hmove
 			humo.y += humo.vmove
 		}
-		if --humo.time <= 0{
+		humo.time -= vel
+		if humo.time <= 0{
 			humos[a--] = humos[array_length(humos) - 1]
 			array_pop(humos)
 		}
@@ -4256,7 +4320,8 @@ if not pausa{
 			if grafic_humo and random(1) < 0.05
 				array_push(humos, add_humo(fuego.x, fuego.y, fuego.a, fuego.b, random_range(-1, 1), random_range(-1, 1), 15))
 		}
-		if --fuego.intensidad <= 0{
+		fuego.intensidad -= vel
+		if fuego.intensidad <= 0{
 			fuegos[a--] = fuegos[array_length(fuegos) - 1]
 			array_pop(fuegos)
 			if grafic_humo and fuego.a >= mina and fuego.b >= minb and fuego.a <= maxa and fuego.b <= maxb
@@ -4268,7 +4333,8 @@ if not pausa{
 	if info
 		temp_text_right += $"FPS: {fps}\n"
 	if oleadas{
-		if ++oleadas_timer >= 60 * oleadas_tiempo_primera or keyboard_check_pressed(vk_enter){
+		oleadas_timer += vel
+		if oleadas_timer >= 60 * oleadas_tiempo_primera or keyboard_check_pressed(vk_enter){
 			if (oleadas_timer - 60 * oleadas_tiempo_primera) mod (60 * oleadas_tiempo) = 0 or keyboard_check_pressed(vk_enter){
 				var d = enemigos_spawned++, e = 1, flag_2 = false
 				for(var i = 0; i < array_length(size_size); i++)
@@ -4419,7 +4485,8 @@ if not pausa{
 			flujo.liquido = -1
 		}
 	}
-	if nuclear_step-- > 0{
+	nuclear_step -= vel
+	if nuclear_step > 0{
 		if nuclear_step > 150{
 			draw_set_color(c_white)
 			draw_set_alpha((nuclear_step - 150) / 150)
@@ -4537,7 +4604,8 @@ if keyboard_check_pressed(vk_anykey) and win = 0 and not show_menu{
 	if cheat and mision_actual >= 0 and string_ends_with(keyboard_string, "uwu")
 		pasar_mision()
 }
-if mision_actual >= 0 and --mision_camara_step > 0{
+if mision_actual >= 0 and mision_camara_step > 0{
+	mision_camara_step -= vel
 	zoom = 1
 	camx = clamp(((mision_camara_x[mision_actual] - room_width / 2) * (60 - mision_camara_step) + mision_camara_x_start * mision_camara_step) / 60, 0, xsize * 48 * zoom - room_width)
 	camy = clamp(((mision_camara_y[mision_actual] - room_height / 2) * (60 - mision_camara_step) + mision_camara_y_start * mision_camara_step) / 60, 0, ysize * 14 * zoom - room_height)
@@ -4586,7 +4654,8 @@ if win > 0{
 		draw_set_halign(fa_center)
 		draw_text(room_width / 2, 100, win = 1 ? L.win_victoria : L.win_derrota)
 		draw_set_font(ft_letra)
-		var ypos = 200, sec = floor(--timer / 60)
+		timer -= vel
+		var ypos = 200, sec = floor(timer / 60 * vel)
 		ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_tiempo}: {sec >= 60 ? string(floor(sec / 60)) + "m " : ""}{sec mod 60}s")
 		if edificios_construidos > 0
 			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_edificios}: {edificios_construidos}")

@@ -88,7 +88,7 @@ function delete_edificio(aa, bb, enemigo = false){
 		edificio.vivo = false
 		ds_grid_clear(edificio_cercano_dir, -1)
 		if edificio_armas[index]{
-			if edificio.target != null_enemigo
+			if edificio.target != null_enemigo and edificio.target.vida > 0
 				array_remove(edificio.target.torres, edificio)
 		}
 		//Eliminar tuneles
