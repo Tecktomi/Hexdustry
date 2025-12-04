@@ -843,7 +843,7 @@ if menu = 2{
 						var edificio_2 = edificio.energia_link[|c]
 						draw_line_off(edificio.x, edificio.y, edificio_2.x, edificio_2.y)
 					}
-					if edificio.red.generacion = 0 and edificio.red.bateria = 0 and edificio_energia_consumo[index] > 0
+					if edificio.red.generacion = 0 and edificio.red.bateria = 0 and edificio.energia_consumo_max > 0
 						draw_sprite_off(spr_no_ammo, 1, edificio.x, edificio.y - 28)
 				}
 				//Humo
@@ -1773,13 +1773,16 @@ if show_menu{
 						edificio.carga_total = 0
 						edificio.select = a
 						edificio.fuel = 0
+						edificio.proceso = -1
+						//Ácido
 						if a = 0{
-							edificio.carga_max[5] = 5
 							edificio.carga_max[11] = 5
 							edificio.receptor = true
 							edificio.emisor = false
 							edificio.flujo_consumo_max = -5
+							edificio.energia_consumo_max = 80
 						}
+						//Concreto
 						else if a = 1{
 							edificio.carga_max[5] = 5
 							edificio.carga_max[6] = 5
@@ -1789,39 +1792,51 @@ if show_menu{
 							edificio.carga_output[8] = true
 							edificio.receptor = true
 							edificio.emisor = true
+							edificio.flujo_consumo_max = 15
+							edificio.energia_consumo_max = 0
 						}
+						//Explosivos
 						else if a = 2{
 							edificio.carga_max[1] = 5
 							edificio.carga_max[11] = 5
 							edificio.carga_output[13] = true
 							edificio.receptor = true
 							edificio.emisor = true
+							edificio.flujo_consumo_max = 0
+							edificio.energia_consumo_max = 0
 						}
+						//Combustible
 						else if a = 3{
 							edificio.carga_output[12] = true
 							edificio.receptor = false
 							edificio.emisor = true
 							edificio.flujo_consumo_max = 4
+							edificio.energia_consumo_max = 50
 						}
+						//Azufre
 						else if a = 4{
 							edificio.carga_output[11] = true
 							edificio.receptor = false
 							edificio.emisor = true
 							edificio.flujo_consumo_max = 6
+							edificio.energia_consumo_max = 50
 						}
+						//Baterías
 						else if a = 5{
-							edificio.carga_max[0] = 5
 							edificio.carga_max[3] = 5
 							edificio.carga_output[14] = true
 							edificio.receptor = true
 							edificio.emisor = true
 							edificio.flujo_consumo_max = 4
+							edificio.energia_consumo_max = 80
 						}
+						//Plástico
 						else if a = 6{
 							edificio.carga_output[15] = true
 							edificio.receptor = false
 							edificio.emisor = true
 							edificio.flujo_consumo_max = 8
+							edificio.energia_consumo_max = 150
 						}
 						calculate_in_out_2(edificio)
 						mover_in(edificio)
@@ -2145,9 +2160,11 @@ if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio
 				temp_text += $"{L.flujo_sin_liquido}!\n"
 			else{
 				if edificio_flujo_consumo[index] > 0{
-					temp_text += $"{L.almacen_produciendo} {round(edificio.flujo_consumo)} {liquido_nombre[flujo.liquido]}\n"
+					temp_text += $"{L.almacen_consumiendo} {round(edificio.flujo_consumo)} {liquido_nombre[flujo.liquido]}\n"
 					temp_text += $"{L.almacen_funcionando_al} {floor(100 * clamp((flujo.generacion + flujo.almacen) / max(flujo.consumo, 1), 0, 1))}% {L.almacen_de_su_capacidad}\n"
 				}
+				else
+					temp_text += $"{L.almacen_produciendo} {abs(round(edificio.flujo_consumo))} {liquido_nombre[flujo.liquido]}\n"
 				temp_text += $"  {flujo.generacion > flujo.consumo ? L.almacen_produciendo : L.almacen_consumiendo} {round(abs(flujo.generacion - flujo.consumo))} {liquido_nombre[flujo.liquido]}\n"
 				if flujo.almacen_max > 0
 					temp_text += $"  {L.flujo_almacenado}: {round(flujo.almacen)}/{round(flujo.almacen_max)}\n"
@@ -3027,7 +3044,7 @@ if not pausa{
 			//Ya está encendido
 			if edificio.fuel > 0{
 				edificio.fuel--
-				if flujo.liquido = 0
+				if in(flujo.liquido, -1, 0)
 					change_energia(edificio_energia_consumo[index] * flujo_power, edificio)
 				sound_play_edificio(2, edificio.x, edificio.y)
 			}
@@ -3173,7 +3190,7 @@ if not pausa{
 		}
 		//Acción de triturador
 		else if in(var_edificio_nombre, "Triturador"){
-			if edificio.carga[6] > 0 or edificio.carga[9] > 0 or edificio.carga[10] > 0 or edificio.carga[11] > 0{
+			if (edificio.carga[6] > 0 or edificio.carga[9] > 0 or edificio.carga[10] > 0 or edificio.carga[11] > 0) and edificio.carga[5] < 10{
 				//Encender
 				if edificio.proceso < 0{
 					change_energia(edificio_energia_consumo[index], edificio)
@@ -3201,6 +3218,12 @@ if not pausa{
 		//Refinería de Minerales
 		else if in(var_edificio_nombre, "Refinería de Metales"){
 			if flujo.liquido = 1 and (edificio.carga[9] > 2 or edificio.carga[10] > 2 or edificio.carga[17] > 0){
+				//Apagar
+				if red_power = 0{
+					change_flujo(0, edificio)
+					change_energia(0, edificio)
+					continue
+				}
 				//Encender
 				if edificio.proceso < 0{
 					change_energia(edificio_energia_consumo[index], edificio)
@@ -3214,7 +3237,7 @@ if not pausa{
 					edificio.proceso = -1
 					if edificio.carga[17] > 0{
 						repeat(edificio.carga[17]){
-							if random(1) < 0.993
+							if random(1) < 0.99
 								edificio.carga[19]++
 							else
 								edificio.carga[18]++
@@ -3234,6 +3257,10 @@ if not pausa{
 					change_energia(0, edificio)
 					change_flujo(0, edificio)
 				}
+			}
+			else{
+				change_flujo(0, edificio)
+				change_energia(0, edificio)
 			}
 			//Vaciar interior
 			if edificio.waiting and edificio.carga[18] > 0 or edificio.carga[19] > 0
@@ -3440,33 +3467,39 @@ if not pausa{
 				if edificio.fuel = 0
 					change_flujo(0, edificio)
 			}
-			if (edificio.select = 0 and edificio.carga[5] > 1 and edificio.carga[11] > 0 and in(flujo.liquido, -1, 1) and flujo.almacen < flujo.almacen_max) or
-				(edificio.select = 1 and edificio.carga[5] > 0 and (edificio.carga[6] > 0 or edificio.carga[9] > 0 or edificio.carga[10] > 0 or edificio.carga[11] > 0) and flujo.liquido = 0) or
-				(edificio.select = 2 and edificio.carga[1] > 0 and edificio.carga[11] > 0) or
-				(edificio.select = 3 and flujo.liquido = 2) or
-				(edificio.select = 4 and flujo.liquido = 2) or
-				(edificio.select = 5 and flujo.liquido = 1 and edificio.carga[0] > 0 and edificio.carga[3] > 0) or
-				(edificio.select = 6 and flujo.liquido = 2){
+			if (edificio.select = 0 and edificio.carga[11] > 0 and in(flujo.liquido, -1, 1) and flujo.almacen < flujo.almacen_max) or
+				(edificio.select = 1 and edificio.carga[5] > 0 and (edificio.carga[6] > 0 or edificio.carga[9] > 0 or edificio.carga[10] > 0 or edificio.carga[11] > 0) and edificio.carga[8] < 10 and flujo.liquido = 0) or
+				(edificio.select = 2 and edificio.carga[1] > 0 and edificio.carga[11] > 0 and edificio.carga[13] < 10) or
+				(edificio.select = 3 and flujo.liquido = 2 and edificio.carga[12] < 10) or
+				(edificio.select = 4 and flujo.liquido = 2 and edificio.carga[11] < 10) or
+				(edificio.select = 5 and flujo.liquido = 1 and edificio.carga[3] > 0 and edificio.carga[14] < 10) or
+				(edificio.select = 6 and flujo.liquido = 2 and edificio.carga[15] < 10){
+				//Apagar
+				if edificio.energia_consumo_max > 0 and red_power = 0{
+					change_flujo(0, edificio)
+					change_energia(0, edificio)
+					continue
+				}
 				//Encender
 				if edificio.proceso < 0{
-					change_energia(edificio_energia_consumo[index], edificio)
-					if in(edificio.select, 3, 4, 5, 6)
+					change_energia(edificio.energia_consumo_max, edificio)
+					if edificio.flujo_consumo_max > 0
 						change_flujo(edificio.flujo_consumo_max, edificio)
 					edificio.proceso++
 				}
-				if in(edificio.select, 3, 4, 5, 6)
-					edificio.proceso += red_power * flujo_power
-				else
-					edificio.proceso += red_power
+				var c = 1
+				if edificio.flujo_consumo_max > 0
+					c *= flujo_power
+				if edificio.energia_consumo_max > 0
+					c *= red_power
+				edificio.proceso += c
 				//Producir / Apagar
 				if edificio.proceso >= edificio_proceso[index]{
 					if edificio.select = 0{
-						edificio.carga[5] -= 2
 						edificio.carga[11]--
 						edificio.carga_total -= 3
 						flujo.liquido = 1
-						edificio.fuel = 30
-						change_flujo(-2, edificio)
+						edificio.fuel = 60 / vel
 						mover_in(edificio)
 					}
 					else if edificio.select = 1{
@@ -3477,11 +3510,10 @@ if not pausa{
 							edificio.carga[9]--
 						else if edificio.carga[10] > 0
 							edificio.carga[10]--
-						else
+						else if edificio.carga[11] > 0
 							edificio.carga[11]--
 						edificio.carga[8]++
 						edificio.carga_total--
-						change_flujo(0, edificio)
 					}
 					else if edificio.select = 2{
 						edificio.carga[1]--
@@ -3492,15 +3524,12 @@ if not pausa{
 					else if edificio.select = 3{
 						edificio.carga[12]++
 						edificio.carga_total++
-						change_flujo(0, edificio)
 					}
 					else if edificio.select = 4{
 						edificio.carga[11]++
 						edificio.carga_total++
-						change_flujo(0, edificio)
 					}
 					else if edificio.select = 5{
-						edificio.carga[0]--
 						edificio.carga[3]--
 						edificio.carga[14]++
 						edificio.carga_total--
@@ -3508,12 +3537,19 @@ if not pausa{
 					else if edificio.select = 6{
 						edificio.carga[15]++
 						edificio.carga_total++
-						change_flujo(0, edificio)
 					}
+					if edificio.flujo_consumo_max > 0
+						change_flujo(0, edificio)
+					else
+						change_flujo(edificio.flujo_consumo_max, edificio)
 					edificio.proceso = -1
 					change_energia(0, edificio)
 					edificio.waiting = not mover(edificio.a, edificio.b)
 				}
+			}
+			else if edificio.fuel = 0{
+				change_flujo(0, edificio)
+				change_energia(0, edificio)
 			}
 		}
 		else if in(var_edificio_nombre, "Ensambladora"){
@@ -3586,7 +3622,7 @@ if not pausa{
 			change_flujo(energia_solar * edificio_flujo_consumo[index], edificio)
 		//Horno de Lava
 		else if in(var_edificio_nombre, "Horno de Lava"){
-			if flujo.liquido = 3 and (edificio.carga[0] > 1 or edificio.carga[3] > 1 or edificio.carga[5] > 1){
+			if flujo.liquido = 3 and (edificio.carga[0] > 1 or edificio.carga[3] > 1 or edificio.carga[5] > 1) and edificio.carga[2] < 10 and edificio.carga[4] < 10 and edificio.carga[7] < 10{
 				//Encender
 				if edificio.proceso < 0{
 					change_flujo(edificio_flujo_consumo[index], edificio)
@@ -3599,7 +3635,7 @@ if not pausa{
 						edificio.carga[5] -= 2
 						edificio.carga[7]++
 						edificio.carga_total--
-						edificio.proceso = 0
+						edificio.proceso = -1
 					}
 					else if edificio.carga[3] > 1{
 						edificio.carga[3] -= 2
@@ -3611,7 +3647,7 @@ if not pausa{
 						edificio.carga[0] -= 2
 						edificio.carga[2]++
 						edificio.carga_total--
-						edificio.proceso = 0
+						edificio.proceso = -1
 					}
 					edificio.waiting = not mover(edificio.a, edificio.b)
 					change_flujo(0, edificio)
@@ -3619,7 +3655,7 @@ if not pausa{
 			}
 		}
 		else if in(var_edificio_nombre, "Generador Geotérmico"){
-			if edificio.flujo.liquido = 0{
+			if in(edificio.flujo.liquido, -1, 0){
 				change_energia(flujo_power * edificio_energia_consumo[index] * edificio.select / 3, edificio)
 				change_flujo(edificio_flujo_consumo[index], edificio)
 			}
@@ -4473,7 +4509,7 @@ if not pausa{
 	for(var a = 0; a < ds_list_size(flujos); a++){
 		var flujo = flujos[|a]
 		flujo.almacen = clamp(flujo.almacen + (flujo.generacion - flujo.consumo) / 30, 0, flujo.almacen_max)
-		if flujo.almacen = 0 and flujo.generacion = 0{
+		if flujo.almacen < 1 and flujo.generacion = 0{
 			if grafic_luz and flujo.liquido = 3
 				for(var b = 0; b < ds_list_size(flujo.edificios); b++){
 					edificio = flujo.edificios[|b]

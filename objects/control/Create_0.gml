@@ -1,6 +1,6 @@
 randomize()
 draw_set_font(ft_letra)
-game_set_speed(60, gamespeed_fps)
+game_set_speed(30, gamespeed_fps)
 vel = 60 / game_get_speed(gamespeed_fps)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
@@ -323,7 +323,7 @@ puerto_carga_atended = 0
 	ds_grid_clear(repair_dir, 0)
 #endregion
 //Enemigos
-efectos_nombre = ["shock", "fuego"]
+efectos_nombre = ["Shock", "Fuego"]
 efectos_max = array_length(efectos_nombre)
 null_enemigo = {
 	a : 0,
@@ -604,7 +604,8 @@ lq_max = array_length(liquido_nombre)
 		"Permite almacenar hasta 128 datos",
 		"Proyecta un láser de reparación a los edificios cercanos usando energía",
 		"Conecta líneas de líquidos por debajo tierra",
-		"Carga y libera una gran onda de choque que daña y ralentiza a todos los enemigos en su rango"
+		"Carga y libera una gran onda de choque que daña y ralentiza a todos los enemigos en su rango",
+		"Versión mejorada del muro, más duro y mejor"
 	]
 	for(var a = array_length(edificio_descripcion) - 1; a >= 0; a--)
 		edificio_descripcion[a] = text_wrap(edificio_descripcion[a], 400)
@@ -712,7 +713,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	//20
 	def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, "52", 400, 45,, [0, 3, 4], [10, 10, 10], 40, true, false, [2, 4, 17, 19], [10, 10, 10, 10]); def_edificio_2(, 10, 60, 1, 300)
 	def_edificio("Lanzallamas", 2, spr_lanzallamas, spr_lanzallamas_2, "53", 400, 1,, [0, 2, 3], [15, 15, 10], 20, true, false, [1, 12], [10, 10]); def_edificio_2(, 10, 4, 3, 130)
-	def_edificio("Planta Química", 3, spr_planta_quimica,, "25", 200, 60,, [0, 2, 3, 7], [20, 10, 20, 10], 30, true, false, [0, 1, 3, 5, 6, 9, 10, 11], [0, 0, 0, 0, 0, 0, 0, 0], true, false, [8, 11, 12, 13, 14, 15]); def_edificio_2(50, 10)
+	def_edificio("Planta Química", 3, spr_planta_quimica,, "25", 200, 60,, [0, 2, 3, 7], [20, 10, 20, 10], 60, true, false, [1, 3, 5, 6, 9, 10, 11], [0, 0, 0, 0, 0, 0, 0], true, false, [8, 11, 12, 13, 14, 15]); def_edificio_2(50, 10)
 	def_edificio("Láser", 2, spr_laser, spr_laser_2, "54", 400, 1,, [0, 4, 16], [10, 10, 5]); def_edificio_2(90,,, 0, 220)
 	def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, "44", 200, 1,, [2, 4], [20, 10]); def_edificio_2(, 300,,,, true)
 	def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, "4 ", 30, 1); def_edificio_2(, 10, -999_999,,, true)
@@ -722,7 +723,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	def_edificio("Recurso Infinito", 1, spr_recurso_infinito, spr_selector_color, "1 ", 30, 1,,,,,,,,, true, true); def_edificio_2()
 	//30
 	def_edificio("Bomba de Evaporación", 1, spr_bomba_evaporacion, spr_tuberia_color, "42", 30, 1,, [2], [15]); def_edificio_2(, 10, -5)
-	def_edificio("Horno de Lava", 2, spr_horno_lava, spr_horno_lava_encendido, "28", 400, 90,, [4, 8], [15, 10], 15, true, false, [0, 3, 5], [5, 5, 5], true, false, [2, 4, 7]); def_edificio_2(, 10, 1)
+	def_edificio("Horno de Lava", 2, spr_horno_lava, spr_horno_lava_encendido, "28", 400, 90,, [4, 8], [15, 10], 60, true, false, [0, 3, 5], [10, 10, 10], true, false, [2, 4, 7]); def_edificio_2(, 10, 1)
 	def_edificio("Generador Geotérmico", 2, spr_generador_geotermico,, "36", 200, 1,, [0, 4, 8], [10, 10, 10]); def_edificio_2(-90, 10, 30)
 	def_edificio("Taladro de Explosión", 3, spr_taladro_explosivo,, "29", 300, 300,, [2, 4, 8], [40, 40, 30], 40, true, false, [13], [10], true, false, [0, 1, 3, 5, 6, 9, 10, 11, 17]); def_edificio_2()
 	def_edificio("Muro", 1, spr_hexagono,, "56", 500,,, [8], [1]); def_edificio_2(,,,,, true)
@@ -738,22 +739,25 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	def_edificio("Memoria", 1, spr_memoria,, "63", 50,,, [0, 16], [10, 3]); def_edificio_2(,,,,, true)
 	def_edificio("Torre Reparadora", 2, spr_torre_reparadora, spr_torre_reparadora_2, "57", 100, 1,, [2, 3, 7], [10, 15, 15]); def_edificio_2(40,,, 0, 200)
 	def_edificio("Tubería Subterránea", 1, spr_tuberia_subterranea,, "45", 30, 1,, [2, 3], [5, 5]); def_edificio_2(, 10,,,, true)
-	def_edificio("Onda de Choque", 2, spr_onda_de_choque,, "58", 600, 150,, [0, 14, 16], [20, 10, 10]); def_edificio_2(300,,, 0, 100)
+	def_edificio("Onda de Choque", 2, spr_onda_de_choque,, "58", 800, 150,, [0, 14, 16], [20, 10, 10]); def_edificio_2(300,,, 0, 100)
+	def_edificio("Muro Reforzado", 2, spr_muro_reforzado,, "59", 2400,,, [4, 8, 19], [2, 3, 1]); def_edificio_2(,,,,, true)
 #endregion
-categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 8, 33, 39], [7, 9, 22, 36, 27, 31], [11, 10, 12, 13, 26, 32, 37, 38], [15, 30, 14, 24, 45], [19, 20, 21, 23, 34, 40, 44, 46], [41, 42, 43]]
+categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 8, 33, 39], [7, 9, 22, 36, 27, 31], [11, 10, 12, 13, 26, 32, 37, 38], [15, 30, 14, 24, 45], [19, 20, 21, 23, 34, 40, 44, 46, 47], [41, 42, 43]]
 categoria_nombre = ["Transporte", "Extracción", "Producción", "Electricidad", "Líquidos", "Defensa", "Lógica"]
 categoria_nombre_display = []
 array_copy(categoria_nombre_display, 0, categoria_nombre, 0, array_length(categoria_nombre))
 #region planta quimica
-	planta_quimica_receta = ["Ácido", "Concreto", "Explosivos", "Combustible", "Azufre", "Baterías", "Plástico"]
+	planta_quimica_receta = ["Ácido", "Concreto", "Explosivos", "Combustible", "Piedra Sulfatada", "Baterías", "Plástico"]
 	planta_quimica_descripcion = [
-		"Consume Arena y Piedra Sulfatada para producir\nÁcido",
+		"Consume Piedra Sulfatada y energía para producir Ácido",
 		"Utiliza Arena, Piedra y Agua para producir Concreto",
-		"Utiliza Carbón y Azufre para producir Explosivos",
-		"Utiliza Petróleo para producir compuestos\ncombustibles de larga duración",
-		"Extrae el Azufre del Petróleo",
-		"Utiliza Ácido, Cobre y Hierro para producir\nBaterías",
-		"Utiliza Petróleo para producir Plástico"]
+		"Utiliza Carbón y Piedra Sulfatada para producir Explosivos",
+		"Utiliza Petróleo y energía para producir compuestos combustibles de larga duración",
+		"Extrae Piedra Sulfatada del Petróleo usando energía",
+		"Utiliza Ácido, Hierro y energía para producir Baterías",
+		"Utiliza Petróleo y mucha energía para producir Plástico"]
+	for(var a = array_length(planta_quimica_descripcion) - 1; a >= 0; a--)
+		planta_quimica_descripcion[a] = text_wrap(planta_quimica_descripcion[a], 300)
 #endregion
 edificio_max = array_length(edificio_nombre)
 edificio_construible = array_create(edificio_max, true)
@@ -844,6 +848,7 @@ def_tecnologia("memoria", "procesador")
 def_tecnologia("torre reparadora", "torre básica", "generador")
 def_tecnologia("tubería subterránea", "tubería")
 def_tecnologia("onda de choque", "láser", "batería", "ensambladora")
+def_tecnologia("muro reforzado", "muro", "refinería de metales")
 edificio_tecnologia_nivel = array_create(edificio_max, -1)
 tecnologia_nivel_edificios = [array_create(0, 0)]
 var edi_count = 0

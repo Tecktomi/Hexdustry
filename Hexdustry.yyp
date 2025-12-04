@@ -233,6 +233,7 @@
     {"id":{"name":"spr_mensaje","path":"sprites/spr_mensaje/spr_mensaje.yy",},},
     {"id":{"name":"spr_mortero_2","path":"sprites/spr_mortero_2/spr_mortero_2.yy",},},
     {"id":{"name":"spr_mortero","path":"sprites/spr_mortero/spr_mortero.yy",},},
+    {"id":{"name":"spr_muro_reforzado","path":"sprites/spr_muro_reforzado/spr_muro_reforzado.yy",},},
     {"id":{"name":"spr_negro","path":"sprites/spr_negro/spr_negro.yy",},},
     {"id":{"name":"spr_nieve","path":"sprites/spr_nieve/spr_nieve.yy",},},
     {"id":{"name":"spr_no_ammo","path":"sprites/spr_no_ammo/spr_no_ammo.yy",},},
