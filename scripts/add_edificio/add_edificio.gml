@@ -76,6 +76,8 @@ function add_edificio(index, dir, a, b){
 		if in(var_edificio_nombre, "Planta Química", "Fábrica de Drones"){
 			edificio.carga_max = array_create(rss_max, 0)
 			edificio.carga_output = array_create(rss_max, 0)
+			if var_edificio_nombre = "Planta Química"
+				edificio.proceso = -1
 		}
 		calculate_in_out(edificio)
 		activar_edificio(edificio)
