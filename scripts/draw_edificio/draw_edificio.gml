@@ -3,9 +3,9 @@ function draw_edificio(x, y, index, dir, alpha = 1){
 		var var_edificio_nombre = edificio_nombre[index]
 		if edificio_camino[index] or in(var_edificio_nombre, "Túnel", "Túnel salida"){
 			if in(var_edificio_nombre, "Cinta Transportadora", "Enrutador", "Cinta Magnética"){
-				var c = image_index / 2
+				var c = vel * image_index >> 1
 				if in(var_edificio_nombre, "Cinta Magnética")
-					c = image_index
+					c = vel * image_index
 				if dir mod 3 = 1
 					draw_sprite_off(edificio_sprite[index], c, x, y, 1, power(-1, dir > 1),,, alpha)
 				else

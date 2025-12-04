@@ -1,7 +1,7 @@
 function dibujar_fondo(editor = 0){
 	with control{
 		if editor = 1{
-			var step = image_index / 10
+			var step = image_index / 10 * vel
 			for(var a = mina; a <= maxa; a++)
 				for(var b = minb; b <= maxb; b++){
 					var temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b, d = terreno[# a, b], e = ore[# a, b]

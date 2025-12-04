@@ -35,6 +35,16 @@ function construir(index, dir, mx, my){
 						temp_edificio.array_real[0] = cos(d)
 						temp_edificio.array_real[1] = -sin(d)
 						flag = false
+						if in(var_edificio_nombre, "Cinta Transportadora", "Enrutador", "Cinta Magnética"){
+							if (dir mod 3) = 1
+								temp_edificio.yscale = power(-1, dir > 1)
+							else{
+								temp_edificio.xscale = power(-1, ((dir + 1) mod 6) > 1)
+								temp_edificio.yscale = power(-1, dir > 2)
+							}
+						}
+						else
+							temp_edificio.draw_rot = (dir - 1) * 60
 						break
 					}
 					else

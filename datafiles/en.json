@@ -55,6 +55,7 @@
 "Memoria": "Memory",
 "Torre Reparadora": "Repair Tower",
 "Tubería Subterranea": "Underground Pipe",
+"Onda de Choque": "Shockwave",
 
 "descripcion_Núcleo": "It is the command center. All resources are stored here, and you must protect it at all costs.",
 "descripcion_Taladro": "Mines copper, iron, and coal at no cost. Can be boosted with Water.",
@@ -102,6 +103,7 @@
 "descripcion_Memoria": "Stores up to 128 data values.",
 "descripcion_Torre Reparadora": "Projects a repair laser onto nearby buildings using energy.",
 "descripcion_Tubería Subterranea": "Connects liquid pipelines underground.",
+"descripcion_Onda de Choque": "Charges and releases a powerful shockwave that damages and slows all enemies within its range.",
 
 "Cobre": "Copper",
 "Carbón": "Coal",
@@ -172,6 +174,7 @@
 "Helicoptero": "Helicopter",
 
 "Transporte": "Transport",
+"Extracción": "Extraction",
 "Producción": "Production",
 "Electricidad": "Electricity",
 "Líquidos": "Liquids",

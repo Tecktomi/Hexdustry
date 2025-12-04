@@ -56,7 +56,10 @@ function add_edificio(index, dir, a, b){
 			chunk_pointer : 0,
 			target_chunks : array_create(0, {a : 0, b : 0}),
 			target_pointer : 0,
-			array_real : array_create(0, 0)
+			array_real : array_create(0, 0),
+			xscale : 1,
+			yscale : 1,
+			draw_rot : 0
 		}
 		ds_list_add(edificio.energia_link, null_edificio)
 		ds_list_clear(edificio.energia_link)
@@ -113,6 +116,18 @@ function add_edificio(index, dir, a, b){
 						distance_sqr(x, y, temp_complex_4.a, temp_complex_4.b) < dis
 						array_push(edificio.target_chunks, {a : i, b : j})
 				}
+		}
+		if edificio_camino[index] or in(var_edificio_nombre, "Túnel", "Túnel salida"){
+			if in(var_edificio_nombre, "Cinta Transportadora", "Enrutador", "Cinta Magnética"){
+				if (dir mod 3) = 1
+					edificio.yscale = power(-1, dir > 1)
+				else{
+					edificio.xscale = power(-1, ((dir + 1) mod 6) > 1)
+					edificio.yscale = power(-1, dir > 2)
+				}
+			}
+			else
+				edificio.draw_rot = (dir - 1) * 60
 		}
 		//Edificios targeteables
 		if index = 0{
@@ -275,7 +290,7 @@ function add_edificio(index, dir, a, b){
 				}
 			}
 			if var_edificio_nombre = "Tubería Subterránea"{
-				var temp_list = get_size(a, b, 0, 5), flag = false, temp_edificio = null_edificio
+				var temp_list = get_size(a, b, 0, 7), flag = false, temp_edificio = null_edificio
 				for(var c = ds_list_size(temp_list) - 1; c >= 0; c--){
 					temp_complex = temp_list[|c]
 					if edificio_bool[# temp_complex.a, temp_complex.b] and not (temp_complex.a = a and temp_complex.b = b){
@@ -367,7 +382,7 @@ function add_edificio(index, dir, a, b){
 		}
 		if var_edificio_nombre = "Láser"
 			edificio.mode = true
-		else if in(var_edificio_nombre = "Rifle", "Mortero")
+		else if in(var_edificio_nombre, "Rifle", "Mortero", "Onda de Choque")
 			edificio.select = 0
 		else if in(var_edificio_nombre, "Planta Química", "Fábrica de Drones")
 			edificio.select = -1

@@ -21,7 +21,8 @@ function add_dron(a, b, index, aliado = false){
 			torres : array_create(0, null_edificio),
 			dir : 0,
 			dir_move : 0,
-			step : 0
+			step : 0,
+			efecto : array_create(efectos_max, 0)
 		}
 		if aliado
 			drones_construidos++

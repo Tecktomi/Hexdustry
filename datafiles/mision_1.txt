@@ -5495,7 +5495,7 @@ y 0="450.000000"
 texto 0="Haz clic derecho para abrir el menú de construcción."
 x 1="1360.000000"
 y 1="510.000000"
-texto 1="Luego busca el ícono de Producción y dentro el Taladro."
+texto 1="Luego busca el ícono de Extracción y dentro el Taladro."
 switch oleadas="0.000000"
 [Objetivo 3]
 nombre="Conectar Caminos"
