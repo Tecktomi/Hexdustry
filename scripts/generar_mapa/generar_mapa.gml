@@ -18,11 +18,7 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 							var temp_complex = temp_list[|j], aa = temp_complex.a, bb = temp_complex.b
 							if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 								continue
-							if not caminable and ore[# aa, bb] >= 0{
-								ds_grid_add(ore, aa, bb, -1)
-								ds_grid_set(ore_amount, aa, bb, 0)
-							}
-							ds_grid_set(terreno, aa, bb, dat1)
+							set_terreno(aa, bb, dat1)
 						}
 						var c = irandom(5)
 						repeat(2){
@@ -43,25 +39,15 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 								var temp_complex = next_to(a, b, j), aa = temp_complex.a, bb = temp_complex.b
 								if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or dat2 != terreno[# aa, bb]
 									continue
-								if not caminable{
-									ds_grid_set(ore, aa, bb, -1)
-									ds_grid_set(ore_amount, aa, bb, 0)
-								}
-								ds_grid_set(terreno, aa, bb, dat3)
+								set_terreno(aa, bb, dat3)
 							}
 			}
 			//Ruido Aleatorio
 			else if tipo = 2{
-				var caminable = terreno_caminable[dat2]
 				repeat(xsize * ysize * dat3 / 100){
 					var a = irandom(xsize - 1), b = irandom(ysize - 1)
-					if terreno[# a, b] = dat1{
-						ds_grid_set(terreno, a, b, dat2)
-						if not caminable{
-							ds_grid_set(ore, a, b, -1)
-							ds_grid_set(ore_amount, a, b, 0)
-						}
-					}
+					if terreno[# a, b] = dat1
+						set_terreno(a, b, dat2)
 				}
 			}
 			//Menas de Recursos

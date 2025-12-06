@@ -14,13 +14,16 @@ if menu = 0{
 	draw_set_color(c_white)
 	draw_text(room_width / 2, 100, L.menu_hexdustry)
 	draw_set_font(ft_letra)
-	if draw_boton(room_width / 2, 200, L.menu_juego_rapido)
-		game_start()
+	if draw_boton(room_width / 2, 200, L.menu_juego_rapido){
+		input_layer = 1
+		get_file = 2
+	}
 	if draw_boton(room_width / 2, 250, L.menu_tutorial){
 		var file = cargar_escenario("mision_1.txt")
 		if file != ""
 			game_start()
 		tutorial = 1
+		tecnologia = true
 	}
 	if draw_boton(room_width / 2, 320, L.menu_cargar_escenario){
 		if not nucleo.vivo
@@ -32,17 +35,59 @@ if menu = 0{
 	if draw_boton(room_width / 2, 370, L.menu_editor)
 		menu = 2
 	draw_set_halign(fa_left)
-	if get_file{
+	if get_file > 0{
 		draw_set_color(c_dkgray)
 		draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
 		draw_set_color(c_white)
-		for(var a = 0; a < array_length(save_files); a++)
-			if draw_boton(140, 160 + 30 * a, save_files[a],,,,, 1){
-				get_file = 0
+		draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
+		draw_set_halign(fa_center)
+		draw_text(room_width / 2, 110, get_file = 1 ? L.menu_cargar_escenario : L.menu_juego_rapido)
+		draw_set_halign(fa_left)
+		//Cargar Archivo
+		if get_file = 1{
+			for(var a = 0; a < array_length(save_files); a++)
+				if draw_boton(140, 160 + 30 * a, save_files[a],,,,, 1){
+					get_file = 0
+					input_layer = 0
+					tecnologia = true
+					cargar_escenario(save_files[a])
+					game_start()
+				}
+		}
+		//Partida Nueva
+		else if get_file = 2{
+			var pos = 160
+			if draw_boton(140, pos, $"{tecnologia ? L.desactivar : L.activar} {L.enciclopedia_tecnologia}",,,,, 1)
+				tecnologia = not tecnologia
+			pos += 40
+			if tecnologia{
+				if draw_boton(180, pos, $"{L.menu_precio_tecnologia}: {100 * tecnologia_precio_multiplicador}%",,,,, 1)
+					tecnologia_precio_multiplicador = 0.5 + (tecnologia_precio_multiplicador mod 5)
+				pos += 40
+			}
+			if draw_boton(140, pos, $"{L.editor_primera_ronda}: {oleadas_tiempo_primera >= 60 ? string(floor(oleadas_tiempo_primera / 60)) + "m " : ""}{oleadas_tiempo_primera mod 60}s",,,,, 1)
+				oleadas_tiempo_primera = 30 + (oleadas_tiempo_primera mod 300)
+			pos += 40
+			if draw_boton(140, pos, $"{L.editor_siguiente_ronda}: {oleadas_tiempo >= 60 ? string(floor(oleadas_tiempo / 60)) + "m " : ""}{oleadas_tiempo mod 60}s",,,,, 1)
+				oleadas_tiempo = 15 + (oleadas_tiempo mod 120)
+			pos += 40
+			if draw_boton(140, pos, $"{L.editor_multiplicador_vida}: {multiplicador_vida_enemigos}%",,,,, 1)
+				multiplicador_vida_enemigos = 25 + (multiplicador_vida_enemigos mod 250)
+			pos += 40
+			draw_set_halign(fa_center)
+			if draw_boton(room_width / 2, room_height - 150, L.menu_juego_rapido,,,,, 1){
+				if tecnologia
+					for(var a = 0; a < edificio_max; a++){
+						var temp_array = edificio_tecnologia_precio[a]
+						for(var b = 0; b < array_length(temp_array); b++)
+							temp_array[b].num = round(tecnologia_precio_multiplicador * (5 + edificio_precio_num[a, b]))
+					}
 				input_layer = 0
-				cargar_escenario(save_files[a])
+				get_file = 0
 				game_start()
 			}
+			draw_set_halign(fa_left)
+		}
 		if draw_boton(120, 120, L.cancelar,,,,, 1) or keyboard_check_pressed(vk_escape){
 			keyboard_clear(vk_escape)
 			get_file = 0
@@ -68,6 +113,10 @@ if menu = 0{
 }
 //Editor
 if menu = 2{
+	mina = max(0, floor(camx / zoom / 48))
+	minb = max(0, floor(camy / zoom / 14) - 1)
+	maxa = min(xsize - 1, ceil(1 + (camx + room_width) / zoom / 48))
+	maxb = min(ysize - 1, ceil(1 + (camy + room_height) / zoom / 14))
 	dibujar_fondo(1)
 	dibujar_edificios()
 	var xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / zoom
@@ -175,7 +224,7 @@ if menu = 2{
 			xpos = room_width / 2 + 20
 			
 			var a
-			xpos = draw_text_xpos(xpos, ypos, L.editor_nuevo_objetivo+ ": ")
+			xpos = draw_text_xpos(xpos, ypos, L.editor_nuevo_objetivo + ": ")
 			mision_nombre[i] = draw_boton_text(xpos, ypos, mision_nombre[i], false)
 			xpos = room_width / 2 + 40
 			ypos = 150
@@ -610,7 +659,7 @@ if menu = 2{
 								ds_grid_add(ore_amount, a, b, floor(random_range(0.3, 1) * ore_size[build_index - offset]))
 								update_background(a, b)
 							}
-							else if mouse_check_button(mb_left) and ore[# a, b] != build_index - offset{
+							else if mouse_check_button(mb_left) and ore[# a, b] != build_index - offset and terreno_caminable[terreno[# a, b]]{
 								ds_grid_set(ore, a, b, build_index - offset)
 								ds_grid_set(ore_amount, a, b, floor(random_range(0.3, 1) * ore_size[build_index - offset]))
 								update_background(a, b)
@@ -846,6 +895,8 @@ if menu = 2{
 					if edificio.red.generacion = 0 and edificio.red.bateria = 0 and edificio.energia_consumo_max > 0
 						draw_sprite_off(spr_no_ammo, 1, edificio.x, edificio.y - 28)
 				}
+				if var_edificio_nombre = "Planta Química" and edificio.select >= 0
+					draw_sprite_off(planta_quimica_sprite[edificio.select], 0, aa, bb)
 				//Humo
 				if grafic_humo and (image_index mod 5) = 0 and ((in(var_edificio_nombre, "Generador", "Turbina", "Planta Nuclear") and edificio.fuel > 0) or (var_edificio_nombre = "Generador Geotérmico" and edificio.flujo.liquido = 0)){
 					var dir = direccion_viento + random_range(-pi / 4, pi / 4)
@@ -858,6 +909,7 @@ if menu = 2{
 					draw_set_halign(fa_left)
 				}
 			}
+	//Reconstruir
 	if keyboard_check(ord("Q"))
 		for(var a = mina; a < maxa; a++)
 			for(var b = minb; b < maxb; b++)
@@ -918,7 +970,7 @@ if menu = 2{
 			enciclopedia = 5
 		}
 		width += text_x + 20
-		if draw_boton(width, 100, L.enciclopedia_tecnologia){
+		if tecnologia and draw_boton(width, 100, L.enciclopedia_tecnologia){
 			deslizante = 0
 			enciclopedia = 7
 		}
@@ -1118,95 +1170,97 @@ if menu = 2{
 					draw_sprite_ext(edificio_sprite_2[ei], 0, room_width - 184, 224, 2, 2, 0, c_white, 1)
 				else
 					draw_sprite_ext(edificio_sprite_2[ei], 0, room_width - 200, 200, 2, 2, 0, c_white, 1)
-			sprite_boton_text = ""
-			var size = array_length(edificio_tecnologia_prev[ei]), xpos = 800, ypos = 200
-			for(var a = 0; a < size; a++){
-				var b = edificio_tecnologia_prev[ei, a]
-				if edificio_tecnologia[b]
-					draw_set_color(c_green)
-				else if edificio_tecnologia_desbloqueable[b]
-					draw_set_color(c_yellow)
-				else
-					draw_set_color(c_red)
-				draw_line(xpos + 50 * a - 25 * (size - 1), ypos, xpos, ypos + 100)
-				draw_circle(xpos + 50 * a - 25 * (size - 1), ypos, 25, false)
-				draw_set_color(c_black)
-				draw_circle(xpos + 50 * a - 25 * (size - 1), ypos, 25, true)
-				if draw_sprite_boton(edificio_sprite[b], xpos - 20 + 50 * a - 25 * (size - 1), ypos - 20, 40, 40, edificio_nombre[b]){
-					enciclopedia_item = b
-					enciclopedia = 4
-					exit
-				}
-				draw_text_background(mouse_x + 20, mouse_y, sprite_boton_text)
-			}
-			size = array_length(edificio_tecnologia_next[ei])
-			for(var a = 0; a < size; a++){
-				var b = edificio_tecnologia_next[ei, a]
-				if edificio_tecnologia[b]
-					draw_set_color(c_green)
-				else if edificio_tecnologia_desbloqueable[b]
-					draw_set_color(c_yellow)
-				else
-					draw_set_color(c_red)
-				draw_line(xpos + 50 * a - 25 * (size - 1), ypos + 200, xpos, ypos + 100)
-				draw_circle(xpos + 50 * a - 25 * (size - 1), ypos + 200, 25, false)
-				draw_set_color(c_black)
-				draw_circle(xpos + 50 * a - 25 * (size - 1), ypos + 200, 25, true)
-				if draw_sprite_boton(edificio_sprite[b], xpos - 20 + 50 * a - 25 * (size - 1), ypos + 180, 40, 40, edificio_nombre[b]){
-					enciclopedia_item = b
-					enciclopedia = 4
-					exit
-				}
-				draw_text_background(mouse_x + 20, mouse_y, sprite_boton_text)
-			}
-			if edificio_tecnologia[ei]
-				draw_set_color(c_green)
-			else if edificio_tecnologia_desbloqueable[ei]{
-				var flag = true
-				temp_text = ""
-				if not cheat
-					for(var a = 0; a < array_length(edificio_tecnologia_precio[ei]); a++){
-						var temp_precio = edificio_tecnologia_precio[ei, a]
-						temp_text += $"\n{recurso_nombre[temp_precio.id]}: {temp_precio.num}"
-						if nucleo.carga[temp_precio.id] < temp_precio.num{
-							flag = false
-							temp_text += " !!"
-						}
+			if tecnologia{
+				sprite_boton_text = ""
+				var size = array_length(edificio_tecnologia_prev[ei]), xpos = 800, ypos = 200
+				for(var a = 0; a < size; a++){
+					var b = edificio_tecnologia_prev[ei, a]
+					if edificio_tecnologia[b]
+						draw_set_color(c_green)
+					else if edificio_tecnologia_desbloqueable[b]
+						draw_set_color(c_yellow)
+					else
+						draw_set_color(c_red)
+					draw_line(xpos + 50 * a - 25 * (size - 1), ypos, xpos, ypos + 100)
+					draw_circle(xpos + 50 * a - 25 * (size - 1), ypos, 25, false)
+					draw_set_color(c_black)
+					draw_circle(xpos + 50 * a - 25 * (size - 1), ypos, 25, true)
+					if draw_sprite_boton(edificio_sprite[b], xpos - 20 + 50 * a - 25 * (size - 1), ypos - 20, 40, 40, edificio_nombre[b]){
+						enciclopedia_item = b
+						enciclopedia = 4
+						exit
 					}
-				draw_set_valign(fa_middle)
-				if draw_boton(xpos + 100, ypos + 100, (flag ? L.enciclopedia_investigar : L.almacen_sin_recursos) + temp_text) and flag{
+					draw_text_background(mouse_x + 20, mouse_y, sprite_boton_text)
+				}
+				size = array_length(edificio_tecnologia_next[ei])
+				for(var a = 0; a < size; a++){
+					var b = edificio_tecnologia_next[ei, a]
+					if edificio_tecnologia[b]
+						draw_set_color(c_green)
+					else if edificio_tecnologia_desbloqueable[b]
+						draw_set_color(c_yellow)
+					else
+						draw_set_color(c_red)
+					draw_line(xpos + 50 * a - 25 * (size - 1), ypos + 200, xpos, ypos + 100)
+					draw_circle(xpos + 50 * a - 25 * (size - 1), ypos + 200, 25, false)
+					draw_set_color(c_black)
+					draw_circle(xpos + 50 * a - 25 * (size - 1), ypos + 200, 25, true)
+					if draw_sprite_boton(edificio_sprite[b], xpos - 20 + 50 * a - 25 * (size - 1), ypos + 180, 40, 40, edificio_nombre[b]){
+						enciclopedia_item = b
+						enciclopedia = 4
+						exit
+					}
+					draw_text_background(mouse_x + 20, mouse_y, sprite_boton_text)
+				}
+				if edificio_tecnologia[ei]
+					draw_set_color(c_green)
+				else if edificio_tecnologia_desbloqueable[ei]{
+					var flag = true
+					temp_text = ""
 					if not cheat
 						for(var a = 0; a < array_length(edificio_tecnologia_precio[ei]); a++){
 							var temp_precio = edificio_tecnologia_precio[ei, a]
-							nucleo.carga[temp_precio.id] -= temp_precio.num
-						}
-					edificio_tecnologia_desbloqueable[ei] = false
-					edificio_tecnologia[ei] = true
-					for(var a = 0; a < array_length(edificio_tecnologia_next[ei]); a++){
-						var b = edificio_tecnologia_next[ei, a]
-						if not edificio_tecnologia[b]{
-							flag = true
-							for(var c = 0; c < array_length(edificio_tecnologia_prev[b]); c++){
-								var d = edificio_tecnologia_prev[b, c]
-								if not edificio_tecnologia[d]{
-									flag = false
-									break
-								}
+							temp_text += $"\n{recurso_nombre[temp_precio.id]}: {temp_precio.num}"
+							if nucleo.carga[temp_precio.id] < temp_precio.num{
+								flag = false
+								temp_text += " !!"
 							}
-							if flag
-								edificio_tecnologia_desbloqueable[b] = true
+						}
+					draw_set_valign(fa_middle)
+					if draw_boton(xpos + 100, ypos + 100, (flag ? L.enciclopedia_investigar : L.almacen_sin_recursos) + temp_text) and flag{
+						if not cheat
+							for(var a = 0; a < array_length(edificio_tecnologia_precio[ei]); a++){
+								var temp_precio = edificio_tecnologia_precio[ei, a]
+								nucleo.carga[temp_precio.id] -= temp_precio.num
+							}
+						edificio_tecnologia_desbloqueable[ei] = false
+						edificio_tecnologia[ei] = true
+						for(var a = 0; a < array_length(edificio_tecnologia_next[ei]); a++){
+							var b = edificio_tecnologia_next[ei, a]
+							if not edificio_tecnologia[b]{
+								flag = true
+								for(var c = 0; c < array_length(edificio_tecnologia_prev[b]); c++){
+									var d = edificio_tecnologia_prev[b, c]
+									if not edificio_tecnologia[d]{
+										flag = false
+										break
+									}
+								}
+								if flag
+									edificio_tecnologia_desbloqueable[b] = true
+							}
 						}
 					}
+					draw_set_valign(fa_top)
+					draw_set_color(c_yellow)
 				}
-				draw_set_valign(fa_top)
-				draw_set_color(c_yellow)
+				else
+					draw_set_color(c_red)
+				draw_circle(xpos, ypos + 100, 25, false)
+				draw_set_color(c_black)
+				draw_circle(xpos, ypos + 100, 25, true)
+				draw_sprite_stretched(edificio_sprite[ei], 0, xpos - 20, ypos + 80, 40, 40)
 			}
-			else
-				draw_set_color(c_red)
-			draw_circle(xpos, ypos + 100, 25, false)
-			draw_set_color(c_black)
-			draw_circle(xpos, ypos + 100, 25, true)
-			draw_sprite_stretched(edificio_sprite[ei], 0, xpos - 20, ypos + 80, 40, 40)
 		}
 		//Menú Unidades
 		else if enciclopedia = 5{
@@ -1268,10 +1322,10 @@ if menu = 2{
 						draw_set_color(c_yellow)
 					else
 						draw_set_color(c_red)
-					draw_circle(xpos + 50 * b - 25 * (width - 1), pos, 25, false)
+					draw_circle(xpos + 60 * b - 30 * (width - 1), pos, 25, false)
 					draw_set_color(c_black)
-					draw_circle(xpos + 50 * b - 25 * (width - 1), pos, 25, true)
-					if draw_sprite_boton(edificio_sprite[c], xpos - 20 + 50 * b - 25 * (width - 1), pos - 20, 40, 40, edificio_nombre[c]){
+					draw_circle(xpos + 60 * b - 30 * (width - 1), pos, 25, true)
+					if draw_sprite_boton(edificio_sprite[c], xpos - 20 + 60 * b - 30 * (width - 1), pos - 20, 40, 40, edificio_nombre[c]){
 						enciclopedia_item = c
 						enciclopedia = 4
 						exit
@@ -1677,7 +1731,7 @@ if show_menu{
 		else if in(var_edificio_nombre, "Líquido Infinito")
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * lq_max) * zoom, false)
 		else if var_edificio_nombre = "Planta Química"
-			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, false)
+			draw_rectangle(aa - 90 * zoom, bb + 40 * zoom, aa + 90 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, false)
 		else if var_edificio_nombre = "Fábrica de Drones"
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * dron_max) * zoom, false)
 		draw_set_color(c_dkgray)
@@ -1697,10 +1751,12 @@ if show_menu{
 				draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, liquido_nombre[a])
 		}
 		if var_edificio_nombre = "Planta Química"{
-			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, true)
+			draw_rectangle(aa - 90 * zoom, bb + 40 * zoom, aa + 90 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, true)
 			draw_text(aa - 80 * zoom, bb + 20 * zoom, L.show_menu_receta)
-			for(var a = 0; a < array_length(planta_quimica_receta); a++)
-				draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, planta_quimica_receta[a])
+			for(var a = 0; a < array_length(planta_quimica_receta); a++){
+				draw_sprite(planta_quimica_sprite[a], 0, aa - 80 * zoom, bb + (50 + 20 * a) * zoom)
+				draw_text(aa - 70 * zoom, bb + (40 + 20 * a) * zoom, planta_quimica_receta[a])
+			}
 		}
 		if var_edificio_nombre = "Fábrica de Drones"{
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * dron_max) * zoom, true)
@@ -2103,6 +2159,12 @@ if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio
 			draw_set_color(c_blue)
 			draw_line_off(edificio.x, edificio.y, edificio.link.x, edificio.link.y)
 		}
+		else if var_edificio_nombre = "Planta Química"{
+			if edificio.select = -1
+				temp_text += $"{L.almacen_sin_receta}\n"
+			else
+				temp_text += $"{L.almacen_produciendo} {planta_quimica_receta[edificio.select]}\n  {planta_quimica_descripcion[edificio.select]}\n"
+		}
 		//Mostrar inputs
 		if info and edificio.receptor{
 			if edificio_input_all[index]
@@ -2238,8 +2300,8 @@ if sonido
 		mouse_clear(mb_right)
 		if build_menu = 0{
 			build_menu = 1
-			menu_x = mouse_x
-			menu_y = mouse_y
+			menu_x = clamp(mouse_x, 100, room_width - 100)
+			menu_y = clamp(mouse_y, 100, room_height - 100)
 		}
 		else if build_menu = 1
 			build_menu = 0
@@ -2284,7 +2346,7 @@ if sonido
 			var angle = a * b, comprable = true, index = menu_array[a]
 			draw_line(menu_x, menu_y, menu_x + 100 * cos(angle), menu_y - 100 * sin(angle))
 			if not cheat{
-				comprable = edificio_tecnologia[index]
+				comprable = edificio_tecnologia[index] or not tecnologia
 				if comprable
 					for(var c = 0; c < array_length(edificio_precio_id[index]); c++)
 						if nucleo.carga[edificio_precio_id[index, c]] < edificio_precio_num[index, c]{
@@ -2311,7 +2373,7 @@ if sonido
 			a = menu_array[a]
 			temp_text = $"{edificio_nombre_display[a]} (hotkey: {edificio_key[a]})\n"
 			if not cheat{
-				if not edificio_tecnologia[a]
+				if tecnologia and not edificio_tecnologia[a]
 					temp_text += "  Falta Tecnología\n"
 				for(var c = 0; c < array_length(edificio_precio_id[a]); c++)
 					temp_text += $"  {recurso_nombre_display[edificio_precio_id[a, c]]}: {edificio_precio_num[a, c]}\n"
@@ -2321,7 +2383,7 @@ if sonido
 			if mouse_check_button_pressed(mb_left){
 				mouse_clear(mb_left)
 				build_menu = 0
-				if not cheat and not edificio_tecnologia[a]{
+				if tecnologia and not cheat and not edificio_tecnologia[a]{
 					enciclopedia_item = a
 					enciclopedia = 4
 				}
@@ -2341,7 +2403,7 @@ if sonido
 //Acceso directo
 if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastchar, "A", "D", "W", "S", " ") or cheat) and win = 0 and not show_menu{
 	for(var a = 1; a < edificio_max; a++)
-		if edificio_key[a] != "" and string_ends_with(keyboard_string, edificio_key[a]) and (cheat or edificio_tecnologia[a]){
+		if edificio_key[a] != "" and string_ends_with(keyboard_string, edificio_key[a]) and (cheat or edificio_tecnologia[a] or not tecnologia){
 			keyboard_string = ""
 			build_index = a
 			build_menu = 0
