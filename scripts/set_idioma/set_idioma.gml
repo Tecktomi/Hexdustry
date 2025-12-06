@@ -27,6 +27,10 @@ function set_idioma(file, change = true){
 					objetivos_nombre_display[a] = variable_struct_get(L, $"objetivo_{objetivos_nombre[a]}")
 				for(var a = 0; a < array_length(procesador_instrucciones_nombre); a++)
 					procesador_instrucciones_nombre_display[a] = variable_struct_get(L, $"procesador_{procesador_instrucciones_nombre[a]}")
+				for(var a = 0; a < array_length(planta_quimica_receta); a++){
+					planta_quimica_receta[a] = variable_struct_get(L, $"planta_quimica_receta {a}")
+					planta_quimica_descripcion[a] = text_wrap(variable_struct_get(L, $"planta_quimica_descripcion {a}"), 300)
+				}
 			}
 		}
 	}

@@ -1,14 +1,16 @@
 randomize()
 draw_set_font(ft_letra)
-game_set_speed(30, gamespeed_fps)
+game_set_speed(60, gamespeed_fps)
 vel = 60 / game_get_speed(gamespeed_fps)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "4_12_2025")
+ini_write_string("Global", "version", "6_12_2025")
 ini_close()
 save_files = scan_files("*.txt", fa_none)
 save_codes = scan_files("*.code", fa_none)
 idiomas = scan_files("*.json", fa_none)
+for(var a = array_length(idiomas) - 1; a >= 0; a--)
+	idioma_name[a] = string_delete(idiomas[a], string_pos(".", idiomas[a]), 5)
 idioma = 1
 set_idioma(idiomas[idioma], false)
 #region Metadatos
@@ -98,8 +100,8 @@ set_idioma(idiomas[idioma], false)
 	objetivos_nombre_display = []
 	array_copy(objetivos_nombre_display, 0, objetivos_nombre, 0, array_length(objetivos_nombre))
 	oleadas = true
-	oleadas_tiempo_primera = 300
-	oleadas_tiempo = 90
+	oleadas_tiempo_primera = 210
+	oleadas_tiempo = 75
 	null_efecto = add_efecto()
 	efectos = array_create(0, null_efecto)
 	grafic_tile_animation = true
@@ -172,6 +174,8 @@ set_idioma(idiomas[idioma], false)
 	enemigos_eliminados = 0
 	tutorial = 0
 	get_file = 0
+	tecnologia = false
+	tecnologia_precio_multiplicador = 3
 #endregion
 null_edificio = {
 	index : -1,
@@ -533,7 +537,7 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 	//10
 	def_recurso("Piedra Férrica", spr_item_piedra_hierro, make_color_hsv(0, 100, 127))
 	def_recurso("Piedra Sulfatada", spr_item_piedra_azufre, make_color_hsv(42, 100, 127))
-	def_recurso("Compuesto Incendiario", spr_item_incendiario, make_color_rgb(191, 127, 0), 900)
+	def_recurso("Compuesto Incendiario", spr_item_combustible, make_color_rgb(191, 127, 0), 900)
 	def_recurso("Explosivo", spr_item_explosivos, c_red)
 	def_recurso("Batería", spr_item_bateria, make_color_rgb(163, 98, 10))
 	//15
@@ -707,7 +711,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	def_edificio("Bomba Hidráulica", 2, spr_bomba,, "43", 200, 1,, [0, 2, 3], [10, 25, 10]); def_edificio_2(25, 60, -40)
 	def_edificio("Tubería", 1, spr_tuberia, spr_tuberia_color, "41", 30, 1,, [2], [1]); def_edificio_2(, 10,,,, true)
 	def_edificio("Túnel salida", 1, spr_tunel_salida,, "", 60, 10,, [0, 3], [4, 4], 1,,,,, true, true); def_edificio_2()
-	def_edificio("Energía Infinita", 1, spr_energia_infinita,, "3 ", 100); def_edificio_2(-999_999,,,,, true)
+	def_edificio("Energía Infinita", 1, spr_energia_infinita,, "4 ", 100); def_edificio_2(-999_999,,,,, true)
 	def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, "16", 60, 10, true, [2, 3], [1, 1], 1, true,,,, true); def_edificio_2()
 	def_edificio("Torre básica", 1, spr_torre, spr_torre_2, "51", 300, 30,, [0, 3], [10, 25], 20, true, false, [0, 3], [10, 10]); def_edificio_2(, 10, 60, 0, 180)
 	//20
@@ -716,7 +720,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	def_edificio("Planta Química", 3, spr_planta_quimica,, "25", 200, 60,, [0, 2, 3, 7], [20, 10, 20, 10], 60, true, false, [1, 3, 5, 6, 9, 10, 11], [0, 0, 0, 0, 0, 0, 0], true, false, [8, 11, 12, 13, 14, 15]); def_edificio_2(50, 10)
 	def_edificio("Láser", 2, spr_laser, spr_laser_2, "54", 400, 1,, [0, 4, 16], [10, 10, 5]); def_edificio_2(90,,, 0, 220)
 	def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, "44", 200, 1,, [2, 4], [20, 10]); def_edificio_2(, 300,,,, true)
-	def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, "4 ", 30, 1); def_edificio_2(, 10, -999_999,,, true)
+	def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, "5 ", 30, 1); def_edificio_2(, 10, -999_999,,, true)
 	def_edificio("Turbina", 2, spr_turbina,, "35", 160,,, [0, 2, 4], [10, 10, 10], 20, true, false, [1, 12], [10, 10]); def_edificio_2(-160, 10, 40)
 	def_edificio("Refinería de Metales", 3, spr_refineria_minerales,, "27", 150, 80,, [2, 4, 8], [15, 15, 10], 30, true, false, [9, 10, 17], [5, 5, 10], true, false, [0, 3, 18, 19]); def_edificio_2(50, 10, 2)
 	def_edificio("Fábrica de Drones", 2, spr_fabrica_drones,, "17", 200, 900,, [0, 4, 16], [20, 15, 10], 20, true, false, [14, 15, 16], [1, 3, 1]); def_edificio_2(120)
@@ -743,11 +747,15 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	def_edificio("Muro Reforzado", 2, spr_muro_reforzado,, "59", 2400,,, [4, 8, 19], [2, 3, 1]); def_edificio_2(,,,,, true)
 #endregion
 categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 8, 33, 39], [7, 9, 22, 36, 27, 31], [11, 10, 12, 13, 26, 32, 37, 38], [15, 30, 14, 24, 45], [19, 20, 21, 23, 34, 40, 44, 46, 47], [41, 42, 43]]
+for(var a = 0; a < array_length(categoria_edificios); a++)
+	for(var b = 0; b < array_length(categoria_edificios[a]); b++)
+		edificio_key[categoria_edificios[a, b]] = $"{a + 1}{b + 1}"
 categoria_nombre = ["Transporte", "Extracción", "Producción", "Electricidad", "Líquidos", "Defensa", "Lógica"]
 categoria_nombre_display = []
 array_copy(categoria_nombre_display, 0, categoria_nombre, 0, array_length(categoria_nombre))
 #region planta quimica
 	planta_quimica_receta = ["Ácido", "Concreto", "Explosivos", "Combustible", "Piedra Sulfatada", "Baterías", "Plástico"]
+	planta_quimica_sprite = [spr_item_acido, spr_item_concreto, spr_item_explosivos, spr_item_combustible, spr_item_piedra_azufre, spr_item_bateria, spr_item_plastico]
 	planta_quimica_descripcion = [
 		"Consume Piedra Sulfatada y energía para producir Ácido",
 		"Utiliza Arena, Piedra y Agua para producir Concreto",
@@ -789,113 +797,117 @@ edificios_targeteables = ds_list_create()
 torres_de_tension = array_create(0, null_edificio)
 edi_sort = array_create(edificio_max, 0)
 sort_edificios()
-//Tecnología
-edificio_tecnologia_prev = array_create(edificio_max)
-edificio_tecnologia_next = array_create(edificio_max)
-edificio_tecnologia_precio = array_create(edificio_max)
-for(var a = 0; a < edificio_max; a++){
-	edificio_proceso[a] /= vel
-	edificio_tecnologia_prev[a] = array_create(0, 0)
-	edificio_tecnologia_next[a] = array_create(0, 0)
-}
-function def_tecnologia(edificio){
-	var b = edificio_index[? string_lower(edificio)]
-	edificio_tecnologia_precio[b] = []
-	for(var a = 0; a < array_length(edificio_precio_id[b]); a++)
-		array_push(edificio_tecnologia_precio[b], {id: edificio_precio_id[b, a], num : (20 + 3 * edificio_precio_num[b, a])})
-	for(var a = 1; a < argument_count; a++){
-		var temp_edificio = edificio_index[? string_lower(argument[a])]
-		array_push(edificio_tecnologia_prev[b], temp_edificio)
-		array_push(edificio_tecnologia_next[temp_edificio], b)
+#region Tecnologia
+	edificio_tecnologia_prev = array_create(edificio_max)
+	edificio_tecnologia_next = array_create(edificio_max)
+	edificio_tecnologia_precio = array_create(edificio_max)
+	for(var a = 0; a < edificio_max; a++){
+		edificio_proceso[a] /= vel
+		edificio_tecnologia_prev[a] = array_create(0, 0)
+		edificio_tecnologia_next[a] = array_create(0, 0)
 	}
-}
-def_tecnologia("enrutador", "cinta transportadora")
-def_tecnologia("selector", "enrutador")
-def_tecnologia("overflow", "enrutador")
-def_tecnologia("túnel", "enrutador")
-def_tecnologia("horno", "taladro")
-def_tecnologia("generador", "horno")
-def_tecnologia("taladro eléctrico", "generador", "taladro")
-def_tecnologia("triturador", "taladro eléctrico")
-def_tecnologia("cable", "generador")
-def_tecnologia("batería", "planta química")
-def_tecnologia("panel solar", "generador")
-def_tecnologia("bomba hidráulica", "bomba de evaporación", "generador")
-def_tecnologia("tubería", "bomba de evaporación")
-def_tecnologia("cinta magnética", "cinta transportadora")
-def_tecnologia("rifle", "torre básica")
-def_tecnologia("lanzallamas", "torre básica")
-def_tecnologia("planta química", "horno", "bomba hidráulica", "generador")
-def_tecnologia("láser", "generador", "torre básica")
-def_tecnologia("depósito", "tubería")
-def_tecnologia("turbina", "generador", "bomba hidráulica")
-def_tecnologia("refinería de metales", "planta química")
-def_tecnologia("fábrica de drones", "planta química", "ensambladora")
-def_tecnologia("bomba de evaporación", "horno")
-def_tecnologia("horno de lava", "horno", "bomba hidráulica")
-def_tecnologia("generador geotérmico", "horno de lava", "turbina")
-def_tecnologia("taladro de explosión", "taladro eléctrico", "planta química")
-def_tecnologia("muro", "rifle", "planta química")
-def_tecnologia("puerto de carga", "fábrica de drones", "cinta magnética")
-def_tecnologia("ensambladora", "taladro eléctrico", "horno")
-def_tecnologia("planta nuclear", "horno de lava", "taladro de explosión", "refinería de metales")
-def_tecnologia("torre de alta tensión", "cable")
-def_tecnologia("perforadora de petróleo", "bomba hidráulica", "planta química")
-def_tecnologia("mortero", "rifle", "planta química")
-def_tecnologia("procesador", "planta química", "ensambladora")
-def_tecnologia("mensaje", "procesador")
-def_tecnologia("memoria", "procesador")
-def_tecnologia("torre reparadora", "torre básica", "generador")
-def_tecnologia("tubería subterránea", "tubería")
-def_tecnologia("onda de choque", "láser", "batería", "ensambladora")
-def_tecnologia("muro reforzado", "muro", "refinería de metales")
-edificio_tecnologia_nivel = array_create(edificio_max, -1)
-tecnologia_nivel_edificios = [array_create(0, 0)]
-var edi_count = 0
-for(var a = 0; a < edificio_max; a++)
-	if edificio_construible[a]{
-		if array_length(edificio_tecnologia_prev[a]) = 0{
-			edi_count++
-			edificio_tecnologia_nivel[a] = 0
-			array_push(tecnologia_nivel_edificios[0], a)
-			edificio_tecnologia[a] = true
+	function def_tecnologia(edificio){
+		var b = edificio_index[? string_lower(edificio)]
+		edificio_tecnologia_precio[b] = []
+		for(var a = 0; a < array_length(edificio_precio_id[b]); a++)
+			array_push(edificio_tecnologia_precio[b], {
+				id: edificio_precio_id[b, a],
+				num : round(tecnologia_precio_multiplicador * (5 + edificio_precio_num[b, a]))
+			})
+		for(var a = 1; a < argument_count; a++){
+			var temp_edificio = edificio_index[? string_lower(argument[a])]
+			array_push(edificio_tecnologia_prev[b], temp_edificio)
+			array_push(edificio_tecnologia_next[temp_edificio], b)
 		}
 	}
-	else
-		edi_count++
-while edi_count < edificio_max{
-	var stable = true
-	array_push(tecnologia_nivel_edificios, array_create(0, 0))
-	for(var b = 0; b < edificio_max; b++)
-		if edificio_construible[b] and edificio_tecnologia_nivel[b] = -1{
-			var flag = true
-			for(var c = 0; c < array_length(edificio_tecnologia_prev[b]); c++)
-				if edificio_tecnologia_nivel[edificio_tecnologia_prev[b, c]] = -1 or edificio_tecnologia_nivel[edificio_tecnologia_prev[b, c]] = array_length(tecnologia_nivel_edificios){
-					flag = false
-					break
-				}
-			if flag{
-				stable = false
+	def_tecnologia("enrutador", "cinta transportadora")
+	def_tecnologia("selector", "enrutador")
+	def_tecnologia("overflow", "enrutador")
+	def_tecnologia("túnel", "enrutador")
+	def_tecnologia("horno", "taladro")
+	def_tecnologia("generador", "horno")
+	def_tecnologia("taladro eléctrico", "generador", "taladro")
+	def_tecnologia("triturador", "taladro eléctrico")
+	def_tecnologia("cable", "generador")
+	def_tecnologia("batería", "planta química")
+	def_tecnologia("panel solar", "generador")
+	def_tecnologia("bomba hidráulica", "bomba de evaporación", "generador")
+	def_tecnologia("tubería", "bomba de evaporación")
+	def_tecnologia("cinta magnética", "cinta transportadora")
+	def_tecnologia("rifle", "torre básica")
+	def_tecnologia("lanzallamas", "torre básica")
+	def_tecnologia("planta química", "horno", "bomba hidráulica", "generador")
+	def_tecnologia("láser", "generador", "torre básica")
+	def_tecnologia("depósito", "tubería")
+	def_tecnologia("turbina", "generador", "bomba hidráulica")
+	def_tecnologia("refinería de metales", "planta química")
+	def_tecnologia("fábrica de drones", "planta química", "ensambladora")
+	def_tecnologia("bomba de evaporación", "horno")
+	def_tecnologia("horno de lava", "horno", "bomba hidráulica")
+	def_tecnologia("generador geotérmico", "horno de lava", "turbina")
+	def_tecnologia("taladro de explosión", "taladro eléctrico", "planta química")
+	def_tecnologia("muro", "rifle", "planta química")
+	def_tecnologia("puerto de carga", "fábrica de drones", "cinta magnética")
+	def_tecnologia("ensambladora", "taladro eléctrico", "horno")
+	def_tecnologia("planta nuclear", "horno de lava", "taladro de explosión", "refinería de metales")
+	def_tecnologia("torre de alta tensión", "cable")
+	def_tecnologia("perforadora de petróleo", "bomba hidráulica", "planta química")
+	def_tecnologia("mortero", "rifle", "planta química")
+	def_tecnologia("procesador", "planta química", "ensambladora")
+	def_tecnologia("mensaje", "procesador")
+	def_tecnologia("memoria", "procesador")
+	def_tecnologia("torre reparadora", "torre básica", "generador")
+	def_tecnologia("tubería subterránea", "tubería")
+	def_tecnologia("onda de choque", "láser", "batería", "ensambladora")
+	def_tecnologia("muro reforzado", "muro", "refinería de metales")
+	edificio_tecnologia_nivel = array_create(edificio_max, -1)
+	tecnologia_nivel_edificios = [array_create(0, 0)]
+	var edi_count = 0
+	for(var a = 0; a < edificio_max; a++)
+		if edificio_construible[a]{
+			if array_length(edificio_tecnologia_prev[a]) = 0{
 				edi_count++
-				edificio_tecnologia_nivel[b] = array_length(tecnologia_nivel_edificios)
-				array_push(tecnologia_nivel_edificios[array_length(tecnologia_nivel_edificios) - 1], b)
+				edificio_tecnologia_nivel[a] = 0
+				array_push(tecnologia_nivel_edificios[0], a)
+				edificio_tecnologia[a] = true
 			}
 		}
-	if stable{
-		show_debug_message("Hay ciclos imposibles")
-		break
-	}
-}
-for(var a = 0; a < array_length(tecnologia_nivel_edificios[1]); a++){
-	var b = tecnologia_nivel_edificios[1, a], flag = true
-	for(var c = 0; c < array_length(edificio_tecnologia_prev[b]); c++)
-		if not edificio_tecnologia[edificio_tecnologia_prev[b, c]]{
-			flag = false
+		else
+			edi_count++
+	while edi_count < edificio_max{
+		var stable = true
+		array_push(tecnologia_nivel_edificios, array_create(0, 0))
+		for(var b = 0; b < edificio_max; b++)
+			if edificio_construible[b] and edificio_tecnologia_nivel[b] = -1{
+				var flag = true
+				for(var c = 0; c < array_length(edificio_tecnologia_prev[b]); c++)
+					if edificio_tecnologia_nivel[edificio_tecnologia_prev[b, c]] = -1 or edificio_tecnologia_nivel[edificio_tecnologia_prev[b, c]] = array_length(tecnologia_nivel_edificios){
+						flag = false
+						break
+					}
+				if flag{
+					stable = false
+					edi_count++
+					edificio_tecnologia_nivel[b] = array_length(tecnologia_nivel_edificios)
+					array_push(tecnologia_nivel_edificios[array_length(tecnologia_nivel_edificios) - 1], b)
+				}
+			}
+		if stable{
+			show_debug_message("Hay ciclos imposibles")
 			break
 		}
-	if flag
-		edificio_tecnologia_desbloqueable[b] = true
-}
+	}
+	for(var a = 0; a < array_length(tecnologia_nivel_edificios[1]); a++){
+		var b = tecnologia_nivel_edificios[1, a], flag = true
+		for(var c = 0; c < array_length(edificio_tecnologia_prev[b]); c++)
+			if not edificio_tecnologia[edificio_tecnologia_prev[b, c]]{
+				flag = false
+				break
+			}
+		if flag
+			edificio_tecnologia_desbloqueable[b] = true
+	}
+#endregion
 //Redes electricas
 null_red = {
 	edificios : ds_list_create(),
@@ -1037,7 +1049,7 @@ size = ds_list_size(temp_list)
 for(var a = 0; a < size; a++){
 	var temp_complex = temp_list[|a], aa = temp_complex.a, bb = temp_complex.b
 	if not terreno_caminable[terreno[# aa, bb]]
-		ds_grid_set(terreno, aa, bb, 1)
+		set_terreno(aa, bb, 1)
 	ds_grid_set(ore, aa, bb, -1)
 	ds_grid_set(ore_amount, aa, bb, 0)
 }

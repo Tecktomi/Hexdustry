@@ -4,10 +4,13 @@
 "menu_tutorial": "Tutorial",
 "menu_cargar_escenario": "Load Map",
 "menu_editor": "Editor",
+"menu_precio_tecnologia": "Technology Price",
 
 "cancelar": "Cancel",
 "volver": "Back",
 "nuevo_archivo": "New file",
+"activar": "Activate",
+"desactivar": "Deactivate",
 
 "Núcleo": "Nucleus",
 "Taladro": "Drill",
@@ -260,6 +263,7 @@
 "almacen_proceso": "Process",
 "almacen_consumiendo": "Consuming",
 "almacen_produciendo": "Producing",
+"almacen_sin_receta": "No Recipe",
 
 "red_red": "Grid",
 "red_consumo": "Consumption",
@@ -381,4 +385,19 @@
 "objetivo_apretar ADWS": "press ADWS",
 "objetivo_cargar edificio": "load building",
 
+"planta_quimica_receta 0": "Acid",
+"planta_quimica_receta 1": "Concrete",
+"planta_quimica_receta 2": "Explosives",
+"planta_quimica_receta 3": "Fuel",
+"planta_quimica_receta 4": "Sulfated Stone",
+"planta_quimica_receta 5": "Batteries",
+"planta_quimica_receta 6": "Plastic",
+
+"planta_quimica_descripcion 0": "Consumes Sulfated Stone and energy to produce Acid",
+"planta_quimica_descripcion 1": "Uses Sand, Stone, and Water to produce Concrete",
+"planta_quimica_descripcion 2": "Uses Coal and Sulfated Stone to produce Explosives",
+"planta_quimica_descripcion 3": "Uses Oil and energy to produce long-lasting fuel compounds",
+"planta_quimica_descripcion 4": "Extracts Sulfated Stone from Oil using energy",
+"planta_quimica_descripcion 5": "Uses Acid, Iron, and energy to produce Batteries",
+"planta_quimica_descripcion 6": "Uses Oil and a large amount of energy to produce Plastic",
 }

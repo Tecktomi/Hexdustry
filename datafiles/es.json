@@ -4,10 +4,13 @@
 "menu_tutorial": "Tutorial",
 "menu_cargar_escenario": "Cargar Escenario",
 "menu_editor": "Editor",
+"menu_precio_tecnologia": "Precio Tecnología",
 
 "cancelar": "Cancelar",
 "volver": "Volver",
 "nuevo_archivo": "Nuevo archivo",
+"activar": "Activar",
+"desactivar": "Desactivar",
 
 "Núcleo": "Núcleo",
 "Taladro": "Taladro",
@@ -260,6 +263,7 @@
 "almacen_proceso": "Proceso",
 "almacen_consumiendo": "Consumiendo",
 "almacen_produciendo": "Produciendo",
+"almacen_sin_receta": "Sin Receta",
 
 "red_red": "Red",
 "red_consumo": "Consumo",
@@ -381,4 +385,19 @@
 "objetivo_apretar ADWS": "apretar ADWS",
 "objetivo_cargar edificio": "cargar edificio",
 
+"planta_quimica_receta 0": "Ácido",
+"planta_quimica_receta 1": "Concreto",
+"planta_quimica_receta 2": "Explosivos",
+"planta_quimica_receta 3": "Combustible",
+"planta_quimica_receta 4": "Piedra Sulfatada",
+"planta_quimica_receta 5": "Baterías",
+"planta_quimica_receta 6": "Plástico",
+
+"planta_quimica_descripcion 0": "Consume Piedra Sulfatada y energía para producir Ácido",
+"planta_quimica_descripcion 1": "Utiliza Arena, Piedra y Agua para producir Concreto",
+"planta_quimica_descripcion 2": "Utiliza Carbón y Piedra Sulfatada para producir Explosivos",
+"planta_quimica_descripcion 3": "Utiliza Petróleo y energía para producir compuestos combustibles de larga duración",
+"planta_quimica_descripcion 4": "Extrae Piedra Sulfatada del Petróleo usando energía",
+"planta_quimica_descripcion 5": "Utiliza Ácido, Hierro y energía para producir Baterías",
+"planta_quimica_descripcion 6": "Utiliza Petróleo y mucha energía para producir Plástico",
 }
