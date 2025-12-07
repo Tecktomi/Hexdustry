@@ -2069,7 +2069,7 @@ if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio
 				temp_text += $"    {L.almacen_total}: {floor(edificio.carga_total)}\n"
 		}
 		//Mostrar recursos subterraneos
-		if in(var_edificio_nombre, "Taladro", "Taladro Eléctrico")
+		if in(var_edificio_nombre, "Taladro", "Taladro Eléctrico"){
 			if edificio.idle
 				temp_text += $"{L.almacen_sin_recursos}\n"
 			else{
@@ -2091,6 +2091,30 @@ if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio
 				if temp_text_2 != ""
 					temp_text += $"{L.almacen_recursos_disponibles}:\n{temp_text_2}"
 			}
+		}
+		else if var_edificio_nombre = "Taladro de Explosión"{
+			if edificio.idle
+				temp_text += $"{L.almacen_sin_recursos}\n"
+			else{
+				var temp_array = [0], temp_text_2 = "", temp_array_coord = get_size(edificio.a, edificio.b, 0, 5)
+				for(var a = 0; a < rss_max; a++)
+					temp_array[a] = 0
+				for(var a = 0; a < ds_list_size(temp_array_coord); a++){
+					var temp_complex = temp_array_coord[|a], aa = temp_complex.a, bb = temp_complex.b
+					if in(ore[# aa, bb], 0, 1, 2)
+						temp_array[ore_recurso[ore[# aa, bb]]] += ore_amount[# aa, bb]
+					else if terreno_recurso_bool[terreno[# aa, bb]]
+						temp_array[terreno_recurso_id[terreno[# aa, bb]]] = -1
+				}
+				for(var a = 0; a < rss_max; a++)
+					if temp_array[a] > 0
+						temp_text_2 += $"  {recurso_nombre_display[a]}: {temp_array[a]}\n"
+					else if temp_array[a] = -1
+						temp_text_2 += $"  {recurso_nombre_display[a]}\n"
+				if temp_text_2 != ""
+					temp_text += $"{L.almacen_recursos_disponibles}:\n{temp_text_2}"
+			}
+		}
 		//Mostrar combustión
 		if in(var_edificio_nombre, "Horno", "Generador", "Turbina", "Planta Nuclear")
 			temp_text += $"{L.almacen_combustion}: {floor(edificio.fuel / 30)} s\n"
