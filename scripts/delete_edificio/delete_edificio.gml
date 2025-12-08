@@ -3,6 +3,7 @@ function delete_edificio(aa, bb, enemigo = false){
 		if not edificio_bool[# aa, bb]
 			exit
 		var edificio = edificio_id[# aa, bb], index = edificio.index, var_edificio_nombre = edificio_nombre[index]
+		var pre_vida = edificio.vida
 		edificio.vida = 0
 		if index = 0{
 			array_remove(nucleos, edificio)
@@ -33,6 +34,24 @@ function delete_edificio(aa, bb, enemigo = false){
 		temp_array[edificio.chunk_pointer] = temp_edificio
 		temp_edificio.chunk_pointer = edificio.chunk_pointer
 		array_pop(temp_array)
+		#region Torres reparadoras
+			if var_edificio_nombre = "Torre Reparadora"{
+				array_remove(torres_reparadoras, edificio)
+				for(var c = array_length(edificio.edificios_cercanos) - 1; c >= 0; c--){
+					temp_edificio = edificio.edificios_cercanos[c]
+					array_remove(temp_edificio.reparadores_cercanos, edificio)
+				}
+			}
+			var flag = pre_vida < edificio_vida[index]
+			for(var c = array_length(edificio.reparadores_cercanos) - 1; c >= 0; c--){
+				temp_edificio = edificio.reparadores_cercanos[c]
+				array_remove(temp_edificio.edificios_cercanos, edificio)
+				if flag
+					array_remove(temp_edificio.edificios_cercanos_heridos, edificio)
+				if temp_edificio.link = edificio
+					temp_edificio.link = null_edificio
+			}
+		#endregion
 		//Cancelar coordenadas
 		var size = ds_list_size(edificio.coordenadas)
 		for(var i = 0; i < size; i++){
@@ -285,10 +304,11 @@ function delete_edificio(aa, bb, enemigo = false){
 		}
 		//Retorno de recursos
 		if not cheat and not enemigo{
-			size = array_length(edificio_precio_id[index])
-			for(var a = 0; a < size; a++){
-				nucleo.carga[edificio_precio_id[index, a]] += floor(edificio_precio_num[index, a] / 2)
-				nucleo.carga_total += floor(edificio_precio_num[index, a] / 2)
+			var b = pre_vida / edificio_vida[index]
+			for(var a = array_length(edificio_precio_id[index]) - 1; a >= 0; a--){
+				var c = floor(b * edificio_precio_num[index, a] / 2)
+				nucleo.carga[edificio_precio_id[index, a]] += c
+				nucleo.carga_total += c
 			}
 		}
 		//Camiar target de enemigos
@@ -311,12 +331,10 @@ function delete_edificio(aa, bb, enemigo = false){
 				var dis = distance_sqr(xpos, ypos, temp_edificio.x, temp_edificio.y)
 				if dis > 160_000 //400^2
 					continue
-				temp_edificio.vida -= 9_000_000 / dis * random_range(0.7, 1.3)
-				if temp_edificio.vida > 0
-					continue
-				delete_edificio(temp_edificio.a, temp_edificio.b, true)
-				size--
-				i--
+				if edificio_herir(temp_edificio, 9_000_000 / dis * random_range(0.7, 1.3)){
+					size--
+					i--
+				}
 			}
 			//Daño enemigos
 			size = array_length(enemigos)
