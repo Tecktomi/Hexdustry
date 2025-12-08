@@ -24,13 +24,7 @@ if menu = 0{
 			game_start()
 		tutorial = 1
 		tecnologia = true
-	}
-	if draw_boton(room_width / 2, 320, L.menu_cargar_escenario){
-		if not nucleo.vivo
-			game_restart()
-		get_file = 1
-		input_layer = 1
-		save_files = scan_files("*.txt", fa_none)
+		cheat = false
 	}
 	if draw_boton(room_width / 2, 370, L.menu_editor)
 		menu = 2
@@ -45,14 +39,36 @@ if menu = 0{
 		draw_set_halign(fa_left)
 		//Cargar Archivo
 		if get_file = 1{
-			for(var a = 0; a < array_length(save_files); a++)
-				if draw_boton(140, 160 + 30 * a, save_files[a],,,,, 1){
+			draw_set_valign(fa_bottom)
+			for(var a = 0; a < array_length(save_files); a++){
+				var xpos = 120 + 120 * (a mod 10), ypos = 200 + 120 * floor(a / 10)
+				var temp_text = string_delete(save_files[a], string_pos(".", save_files[a]), 4)
+				if draw_sprite_boton(save_files_png[a], xpos, ypos, 96, 96,, 1){
 					get_file = 0
 					input_layer = 0
 					tecnologia = true
 					cargar_escenario(save_files[a])
 					game_start()
 				}
+				if draw_sprite_boton(spr_basura, xpos - 10, ypos - 30,,,, 1){
+					file_delete(temp_text + ".txt")
+					file_delete(temp_text + ".png")
+					array_delete(save_files, a, 1)
+					array_delete(save_files_png, a, 1)
+					continue
+				}
+				draw_text(xpos + 20, ypos, text_wrap(temp_text, 100))
+			}
+			draw_set_valign(fa_top)
+			if array_length(save_files) = 0{
+				draw_set_halign(fa_center)
+				draw_text(room_width / 2, 200, L.menu_sin_archivos)
+				draw_set_halign(fa_left)
+			}
+			if draw_boton(120, 120, L.cancelar,,,,, 1) or keyboard_check_pressed(vk_escape){
+				keyboard_clear(vk_escape)
+				get_file = 2
+			}
 		}
 		//Partida Nueva
 		else if get_file = 2{
@@ -74,7 +90,17 @@ if menu = 0{
 			if draw_boton(140, pos, $"{L.editor_multiplicador_vida}: {multiplicador_vida_enemigos}%",,,,, 1)
 				multiplicador_vida_enemigos = 25 + (multiplicador_vida_enemigos mod 250)
 			pos += 40
+			if draw_boton(140, pos, $"{cheat ? L.desactivar : L.activar} {L.menu_claves}",,,,, 1)
+				cheat = not cheat
+			pos += 40
 			draw_set_halign(fa_center)
+			if draw_boton(room_width / 2, room_height - 200, L.menu_cargar_escenario,,,,, 1){
+				if not nucleo.vivo
+					game_restart()
+				get_file = 1
+				input_layer = 1
+				scan_files_save()
+			}
 			if draw_boton(room_width / 2, room_height - 150, L.menu_juego_rapido,,,,, 1){
 				if tecnologia
 					for(var a = 0; a < edificio_max; a++){
@@ -87,11 +113,11 @@ if menu = 0{
 				game_start()
 			}
 			draw_set_halign(fa_left)
-		}
-		if draw_boton(120, 120, L.cancelar,,,,, 1) or keyboard_check_pressed(vk_escape){
-			keyboard_clear(vk_escape)
-			get_file = 0
+			if draw_boton(120, 120, L.cancelar,,,,, 1) or keyboard_check_pressed(vk_escape){
+				keyboard_clear(vk_escape)
+				get_file = 0
 				input_layer = 0
+			}
 		}
 	}
 	draw_set_valign(fa_bottom)
@@ -744,30 +770,50 @@ if menu = 2{
 	if draw_boton(10, room_height - 100, L.editor_guardar) or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("S"))){
 		get_file = 2
 		input_layer = 1
-		save_files = scan_files("*.txt", fa_none)
+		scan_files_save()
 		keyboard_clear(ord("S"))
 	}
 	if draw_boton(10, room_height - 60, L.editor_cargar) or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("A"))){
 		get_file = 1
 		input_layer = 1
-		save_files = scan_files("*.txt", fa_none)
+		scan_files_save()
 		keyboard_clear(ord("A"))
 	}
 	if get_file > 0{
 		draw_set_color(c_dkgray)
 		draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
 		draw_set_color(c_white)
+		//Cargar
 		if get_file = 1{
-			for(var a = 0; a < array_length(save_files); a++)
-				if draw_boton(140, 160 + 30 * a, save_files[a],,,,, 1){
+			draw_set_valign(fa_bottom)
+			for(var a = 0; a < array_length(save_files); a++){
+				var xpos = 120 + 120 * (a mod 10), ypos = 200 + 120 * floor(a / 10)
+				var temp_text = string_delete(save_files[a], string_pos(".", save_files[a]), 4)
+				if draw_sprite_boton(save_files_png[a], xpos, ypos, 96, 96,, 1){
 					input_layer = 0
 					get_file = 0
 					save_file = cargar_escenario(save_files[a])
 					if string_pos(".", save_file) > 0
 						save_file = string_delete(save_file, string_pos(".", save_file), 4)
 				}
+				if draw_sprite_boton(spr_basura, xpos - 10, ypos - 30,,,, 1){
+					file_delete(temp_text + ".txt")
+					file_delete(temp_text + ".png")
+					array_delete(save_files, a, 1)
+					array_delete(save_files_png, a, 1)
+					continue
+				}
+				draw_text(xpos + 20, ypos, text_wrap(temp_text, 100))
+			}
+			draw_set_valign(fa_top)
+			if array_length(save_files) = 0{
+				draw_set_halign(fa_center)
+				draw_text(room_width / 2, 200, L.menu_sin_archivos)
+				draw_set_halign(fa_left)
+			}
 		}
-		else{
+		//Guardar
+		else if get_file = 2{
 			draw_boton_text_counter = 0
 			var flag = false
 			for(var a = 0; a < array_length(save_files); a++)
@@ -847,8 +893,12 @@ if menu = 2{
 				ini_close()
 				input_layer = 0
 				get_file = 0
-				if string_pos(".", save_file) > 0
-					save_file = string_delete(save_file, string_pos(".", save_file), 4)
+				var c = array_get_index(save_files, save_file), temp_text = string_delete(save_file, string_pos(".", save_file), 4)
+				save_file = temp_text
+				var temp_sprite = minimapa(terreno)
+				sprite_save(temp_sprite, 0, temp_text + ".png")
+				if c = -1
+					array_push(save_files_png, temp_sprite)
 			}
 		}
 		if draw_boton(120, 120, L.cancelar,,,,, 1) or keyboard_check_pressed(vk_escape){
@@ -2927,7 +2977,7 @@ if not pausa{
 			var flujo = edificio.flujo, flujo_power = clamp((flujo.generacion + flujo.almacen) / max(1, flujo.consumo), 0, 1)
 		//Accion caminos
 		if (edificio_camino[index] or in(var_edificio_nombre, "Túnel", "Túnel salida")){
-			if edificio.carga_total > 0 and not edificio.waiting and ++edificio.proceso = edificio_proceso[index]{
+			if edificio.carga_total > 0 and not edificio.waiting and ++edificio.proceso >= edificio_proceso[index]{
 				edificio.proceso = 0
 				edificio.waiting = not mover(edificio.a, edificio.b)
 			}
@@ -3179,16 +3229,16 @@ if not pausa{
 			if edificio.fuel > 0{
 				edificio.fuel--
 				if flujo.liquido != 0{
-					edificio.vida -= 4
-					if edificio.vida <= 0{
-						delete_edificio(edificio.a, edificio.b, true)
+					if edificio_herir(edificio, 4){
 						a--
 						continue
 					}
 				}
 				else{
-					if flujo_power < 1
-						edificio.vida -= (1 - flujo_power)
+					if flujo_power < 1 and edificio_herir(edificio, 1 - flujo_power){
+						a--
+						continue
+					}
 					change_energia(edificio_energia_consumo[index] * flujo_power, edificio)
 				}
 			}
@@ -3470,8 +3520,10 @@ if not pausa{
 				}
 			}
 			else if var_edificio_nombre = "Torre Reparadora"{
+				if array_length(edificio.edificios_cercanos_heridos) = 0 or red_power = 0
+					continue
 				if edificio.link = null_edificio{
-					edificio.link = edificios[| irandom(ds_list_size(edificios) - 1)]
+					edificio.link = edificio.edificios_cercanos_heridos[0]
 					if edificio != edificio.link and edificio.link.vida >= edificio_vida[edificio.link.index] or distance_sqr(edificio.x, edificio.y, edificio.link.x, edificio.link.y) > edificio_alcance_sqr[index]{
 						edificio.link = null_edificio
 						change_energia(0, edificio)
@@ -3483,17 +3535,13 @@ if not pausa{
 						change_energia(0, edificio)
 					}
 					else{
+						var target = edificio.link
 						change_energia(edificio_energia_consumo[index], edificio)
 						draw_set_color(c_green)
 						draw_set_alpha(red_power)
-						draw_line_off(edificio.x + edificio.array_real[2], edificio.y + 14, edificio.link.x, edificio.link.y)
-						edificio.link.vida += 2 * red_power * vel
-						if edificio.link.vida >= edificio_vida[edificio.link.index]{
-							edificio.link.vida = edificio_vida[edificio.link.index]
-							edificio.link = null_edificio
-						}
-						else
-							edificio.select = radtodeg(-arctan2(edificio.x + 12 - edificio.link.x, edificio.link.y - edificio.y - 14)) - 90
+						draw_line_off(edificio.x + edificio.array_real[2], edificio.y + 14, target.x, target.y)
+						edificio_curar(target.vida, red_power * vel)
+						edificio.select = radtodeg(-arctan2(edificio.x + 12 - target.x, target.y - edificio.y - 14)) - 90
 						draw_set_alpha(1)
 						draw_set_color(c_black)
 					}
@@ -4319,8 +4367,7 @@ if not pausa{
 		//Dron Reparador
 		else if dron.index = 2{
 			if dron.modo = 0{
-				var b = irandom(ds_list_size(edificios) - 1)
-				edificio = edificios[|b]
+				edificio = edificios[|irandom(ds_list_size(edificios) - 1)]
 				if edificio.vida < edificio_vida[edificio.index]{
 					dron.modo = 1
 					dron.target = edificio
@@ -4340,10 +4387,8 @@ if not pausa{
 				else{
 					draw_set_color(c_green)
 					draw_line_off(aa, bb, edificio.x, edificio.y)
-					if ++edificio.vida >= edificio_vida[edificio.index]{
-						edificio.vida = edificio_vida[edificio.index]
+					if edificio_curar(edificio, vel)
 						dron.modo = 0
-					}
 				}
 			}
 		}
@@ -4379,11 +4424,8 @@ if not pausa{
 					destroy_dron(municion.target)
 			}
 			//Daño objetivo edificio
-			if municion.target_build != null_edificio and municion.target_build.vida > 0{
-				municion.target_build.vida -= municion.dmg
-				if municion.target_build.vida <= 0
-					delete_edificio(municion.target_build.a, municion.target_build.b, true)
-			}
+			if municion.target_build != null_edificio and municion.target_build.vida > 0
+				edificio_herir(municion.target_build, municion.dmg)
 			//Misil aliado
 			if municion.tipo = 1{
 				sound_play(snd_explosion, municion.x, municion.y)

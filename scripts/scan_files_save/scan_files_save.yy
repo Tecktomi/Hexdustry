@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scan_files_save",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scan_files_save",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"minimapa",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"minimapa",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

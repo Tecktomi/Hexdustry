@@ -5,9 +5,7 @@ function atacar_dron(dron = control.null_enemigo, edificio = control.null_edific
 		if dron.index = 0{
 			draw_set_color(c_red)
 			draw_line_off(aa, bb, edificio.x, edificio.y)
-			edificio.vida -= vel
-			if edificio.vida <= 0{
-				delete_edificio(edificio.a, edificio.b, true)
+			if edificio_herir(edificio, vel){
 				var temp_complex = xytoab(aa, bb)
 				if temp_complex.a >= 0
 					dron.target = edificio_cercano[# temp_complex.a, temp_complex.b]

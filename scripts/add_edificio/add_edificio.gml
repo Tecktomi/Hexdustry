@@ -59,7 +59,10 @@ function add_edificio(index, dir, a, b){
 			array_real : array_create(0, 0),
 			xscale : 1,
 			yscale : 1,
-			draw_rot : 0
+			draw_rot : 0,
+			edificios_cercanos : array_create(0, null_edificio),
+			edificios_cercanos_heridos : array_create(0, null_edificio),
+			reparadores_cercanos : array_create(0, null_edificio),
 		}
 		ds_list_add(edificio.energia_link, null_edificio)
 		ds_list_clear(edificio.energia_link)
@@ -131,6 +134,28 @@ function add_edificio(index, dir, a, b){
 			else
 				edificio.draw_rot = (dir - 1) * 60
 		}
+		#region Torres reparadoras
+			var alc = edificio_alcance_sqr[44]
+			if var_edificio_nombre = "Torre Reparadora"{
+				array_push(torres_reparadoras, edificio)
+				for(var c = ds_list_size(edificios) - 2; c >= 0; c--){
+					var temp_edificio = edificios[|c]
+					if distance_sqr(temp_edificio.x, temp_edificio.y, x, y) < alc{
+						array_push(edificio.edificios_cercanos, temp_edificio)
+						array_push(temp_edificio.reparadores_cercanos, edificio)
+						if temp_edificio.vida < edificio_vida[temp_edificio.index]
+							array_push(edificio.edificios_cercanos_heridos, temp_edificio)
+					}
+				}
+			}
+			for(var c = array_length(torres_reparadoras) - 1; c >= 0; c--){
+				var temp_edificio = torres_reparadoras[c]
+				if distance_sqr(temp_edificio.x, temp_edificio.y, x, y) < alc{
+					array_push(temp_edificio.edificios_cercanos, edificio)
+					array_push(edificio.reparadores_cercanos, temp_edificio)
+				}
+			}
+		#endregion
 		//Edificios targeteables
 		if index = 0{
 			edificio_pathfind(edificio)

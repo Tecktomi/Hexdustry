@@ -4,9 +4,18 @@ game_set_speed(60, gamespeed_fps)
 vel = 60 / game_get_speed(gamespeed_fps)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "6_12_2025")
+ini_write_string("Global", "version", "8_12_2025")
 ini_close()
 save_files = scan_files("*.txt", fa_none)
+for(var a = array_length(save_files) - 1; a >= 0; a--){
+	save_file = save_files[a]
+	var temp_text = string_delete(save_file, string_pos(".", save_file), 4)
+	if file_exists(temp_text + ".png")
+		var temp_image = sprite_add(temp_text + ".png", 1, false, false, 0, 0)
+	else
+		temp_image = spr_null_image
+	save_files_png[a] = temp_image
+}
 save_codes = scan_files("*.code", fa_none)
 idiomas = scan_files("*.json", fa_none)
 for(var a = array_length(idiomas) - 1; a >= 0; a--)
@@ -233,7 +242,10 @@ null_edificio = {
 	array_real : array_create(0, 0),
 	xscale : 1,
 	yscale : 1,
-	draw_rot : 0
+	draw_rot : 0,
+	edificios_cercanos : [],
+	edificios_cercanos_heridos : [],
+	reparadores_cercanos : [],
 }
 null_edificio.link = null_edificio
 ds_list_add(null_edificio.coordenadas, {a : 0, b : 0})
@@ -247,6 +259,9 @@ ds_list_clear(null_edificio.flujo_link)
 ds_grid_clear(null_edificio.coordenadas_dis, 0)
 ds_list_add(null_edificio.coordenadas_close, {a : 0, b : 0})
 ds_list_clear(null_edificio.coordenadas_close)
+null_edificio.edificios_cercanos = array_create(0, null_edificio)
+null_edificio.edificios_cercanos_heridos = array_create(0, null_edificio)
+null_edificio.reparadores_cercanos = array_create(0, null_edificio)
 build_target = null_edificio
 edificios_activos = array_create(0, null_edificio)
 procesador_select = null_edificio
@@ -426,8 +441,9 @@ dron_max = array_length(dron_nombre)
 	terreno_caminable = []
 	terreno_liquido = []
 	terreno_pared = []
+	terreno_color = []
 #endregion
-function def_terreno(nombre, sprite = spr_piedra, recurso = 0, caminable = true, liquido = false, pared = false){
+function def_terreno(nombre, sprite = spr_piedra, recurso = 0, caminable = true, liquido = false, pared = false, color = c_black){
 	array_push(terreno_nombre, string(nombre))
 	array_push(terreno_nombre_display, string(nombre))
 	array_push(terreno_sprite, sprite)
@@ -436,29 +452,30 @@ function def_terreno(nombre, sprite = spr_piedra, recurso = 0, caminable = true,
 	array_push(terreno_caminable, caminable)
 	array_push(terreno_liquido, liquido)
 	array_push(terreno_pared, pared)
+	array_push(terreno_color, color)
 }
 #region Definición
-	def_terreno("Piedra", spr_piedra, 6)
-	def_terreno("Pasto", spr_pasto)
-	def_terreno("Agua", spr_agua,, false, true)
-	def_terreno("Arena", spr_arena, 5)
-	def_terreno("Agua Profunda", spr_agua_profunda,, false, true)
+	def_terreno("Piedra", spr_piedra, 6,,,, #808080)
+	def_terreno("Pasto", spr_pasto,,,,, #ACD473)
+	def_terreno("Agua", spr_agua,, false, true,, #5FC8F0)
+	def_terreno("Arena", spr_arena, 5,,,, #F7DFB1)
+	def_terreno("Agua Profunda", spr_agua_profunda,, false, true,, #238BB2)
 	//5
-	def_terreno("Petróleo", spr_petroleo,, false, true)
-	def_terreno("Piedra Cúprica", spr_piedra_cobre, 9)
-	def_terreno("Piedra Férrica", spr_piedra_hierro, 10)
-	def_terreno("Basalto Sulfatado", spr_basalto_azufre, 11)
-	def_terreno("Pared de Piedra", spr_pared_piedra,, false,, true)
+	def_terreno("Petróleo", spr_petroleo,, false, true,, #000707)
+	def_terreno("Piedra Cúprica", spr_piedra_cobre, 9,,,, #667F66)
+	def_terreno("Piedra Férrica", spr_piedra_hierro, 10,,,, #806666)
+	def_terreno("Basalto Sulfatado", spr_basalto_azufre, 11,,,, #555541)
+	def_terreno("Pared de Piedra", spr_pared_piedra,, false,, true, #707070)
 	//10
-	def_terreno("Pared de Pasto", spr_pared_pasto,, false,, true)
-	def_terreno("Pared de Arena", spr_pared_arena,, false,, true)
-	def_terreno("Nieve", spr_nieve)
-	def_terreno("Pared de Nieve", spr_pared_nieve,, false,, true)
-	def_terreno("Lava", spr_lava,, false, true)
+	def_terreno("Pared de Pasto", spr_pared_pasto,, false,, true, #ABA000)
+	def_terreno("Pared de Arena", spr_pared_arena,, false,, true, #F7DFB1)
+	def_terreno("Nieve", spr_nieve,,,,, #E5FFFF)
+	def_terreno("Pared de Nieve", spr_pared_nieve,, false,, true, #CEE5E5)
+	def_terreno("Lava", spr_lava,, false, true,, #FBAF5D)
 	//15
-	def_terreno("Hielo", spr_hielo,,,, true)
-	def_terreno("Basalto", spr_basalto)
-	def_terreno("Ceniza", spr_ceniza)
+	def_terreno("Hielo", spr_hielo,,,, true, #9DD2D5)
+	def_terreno("Basalto", spr_basalto,,,,, #555555)
+	def_terreno("Ceniza", spr_ceniza,,,, true, #191919)
 #endregion
 terreno_max = array_length(terreno_nombre)
 //Ores
@@ -713,15 +730,15 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	def_edificio("Túnel salida", 1, spr_tunel_salida,, "", 60, 10,, [0, 3], [4, 4], 1,,,,, true, true); def_edificio_2()
 	def_edificio("Energía Infinita", 1, spr_energia_infinita,, "4 ", 100); def_edificio_2(-999_999,,,,, true)
 	def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, "16", 60, 10, true, [2, 3], [1, 1], 1, true,,,, true); def_edificio_2()
-	def_edificio("Torre básica", 1, spr_torre, spr_torre_2, "51", 300, 30,, [0, 3], [10, 25], 20, true, false, [0, 3], [10, 10]); def_edificio_2(, 10, 60, 0, 180)
+	def_edificio("Torre básica", 1, spr_torre, spr_torre_2, "51", 300, 30,, [0, 3], [10, 25], 20, true, false, [0, 3], [10, 10]); def_edificio_2(, 10, 20, 0, 180)
 	//20
-	def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, "52", 400, 45,, [0, 3, 4], [10, 10, 10], 40, true, false, [2, 4, 17, 19], [10, 10, 10, 10]); def_edificio_2(, 10, 60, 1, 300)
+	def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, "52", 400, 45,, [0, 3, 4], [10, 10, 10], 40, true, false, [2, 4, 17, 19], [10, 10, 10, 10]); def_edificio_2(, 10, 30, 1, 300)
 	def_edificio("Lanzallamas", 2, spr_lanzallamas, spr_lanzallamas_2, "53", 400, 1,, [0, 2, 3], [15, 15, 10], 20, true, false, [1, 12], [10, 10]); def_edificio_2(, 10, 4, 3, 130)
 	def_edificio("Planta Química", 3, spr_planta_quimica,, "25", 200, 60,, [0, 2, 3, 7], [20, 10, 20, 10], 60, true, false, [1, 3, 5, 6, 9, 10, 11], [0, 0, 0, 0, 0, 0, 0], true, false, [8, 11, 12, 13, 14, 15]); def_edificio_2(50, 10)
 	def_edificio("Láser", 2, spr_laser, spr_laser_2, "54", 400, 1,, [0, 4, 16], [10, 10, 5]); def_edificio_2(90,,, 0, 220)
 	def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, "44", 200, 1,, [2, 4], [20, 10]); def_edificio_2(, 300,,,, true)
 	def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, "5 ", 30, 1); def_edificio_2(, 10, -999_999,,, true)
-	def_edificio("Turbina", 2, spr_turbina,, "35", 160,,, [0, 2, 4], [10, 10, 10], 20, true, false, [1, 12], [10, 10]); def_edificio_2(-160, 10, 40)
+	def_edificio("Turbina", 2, spr_turbina,, "35", 160,,, [0, 2, 4], [10, 10, 10], 20, true, false, [1, 12], [10, 10]); def_edificio_2(-120, 10, 40)
 	def_edificio("Refinería de Metales", 3, spr_refineria_minerales,, "27", 150, 80,, [2, 4, 8], [15, 15, 10], 30, true, false, [9, 10, 17], [5, 5, 10], true, false, [0, 3, 18, 19]); def_edificio_2(50, 10, 2)
 	def_edificio("Fábrica de Drones", 2, spr_fabrica_drones,, "17", 200, 900,, [0, 4, 16], [20, 15, 10], 20, true, false, [14, 15, 16], [1, 3, 1]); def_edificio_2(120)
 	def_edificio("Recurso Infinito", 1, spr_recurso_infinito, spr_selector_color, "1 ", 30, 1,,,,,,,,, true, true); def_edificio_2()
@@ -791,6 +808,7 @@ edificios_construibles = array_create(0, 0)
 for(var a = 0; a < array_length(categoria_nombre); a++)
 	edificios_construibles = array_concat(edificios_construibles, categoria_edificios[a])
 edificios = ds_list_create()
+torres_reparadoras = array_create(0, null_edificio)
 edificios_counter = array_create(edificio_max, 0)
 nucleos = array_create(0, null_edificio)
 edificios_targeteables = ds_list_create()
