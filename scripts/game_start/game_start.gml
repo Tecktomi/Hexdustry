@@ -35,8 +35,8 @@ function game_start(){
 			destroy_dron(drones_aliados[a - 1])
 		for(var a = 0; a < rss_max; a++)
 			nucleo.carga[a] = carga_inicial[a]
-		for(var a = 0; a < xsize / chunk_width; a++)
-			for(var b = 0; b < ysize / chunk_height; b++)
+		for(var a = 0; a < chunk_xsize; a++)
+			for(var b = 0; b < chunk_ysize; b++)
 				update_background(a * chunk_width, b * chunk_height)
 	}
 }

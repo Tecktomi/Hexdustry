@@ -30,6 +30,8 @@ set_idioma(idiomas[idioma], false)
 	ysize = 96
 	chunk_width = 4
 	chunk_height = 12
+	chunk_xsize = ceil(xsize / chunk_width)
+	chunk_ysize = ceil(ysize / chunk_height)
 	prev_x = 0
 	prev_y = 0
 	prev_change = true
@@ -73,8 +75,8 @@ set_idioma(idiomas[idioma], false)
 	pre_build_list = ds_list_create()
 	ds_list_add(pre_build_list, {a : 0, b : 0})
 	ds_list_clear(pre_build_list)
-	for(var a = 0; a < xsize / chunk_width; a++)
-		for(var b = 0; b < ysize / chunk_height; b++)
+	for(var a = 0; a < chunk_xsize; a++)
+		for(var b = 0; b < chunk_ysize; b++)
 			background[a, b] = spr_hexagono
 	sprite_boton_text = ""
 	editor_menu = 0
@@ -185,6 +187,7 @@ set_idioma(idiomas[idioma], false)
 	get_file = 0
 	tecnologia = false
 	tecnologia_precio_multiplicador = 3
+	chunk_update = true
 #endregion
 null_edificio = {
 	index : -1,
@@ -340,6 +343,8 @@ puerto_carga_atended = 0
 	ds_grid_clear(repair_id, -1)
 	repair_dir = ds_grid_create(xsize, ysize)
 	ds_grid_clear(repair_dir, 0)
+	background_bool = ds_grid_create(chunk_xsize, chunk_ysize)
+	ds_grid_clear(background_bool, false)
 #endregion
 //Enemigos
 efectos_nombre = ["Shock", "Fuego"]
@@ -368,8 +373,8 @@ null_enemigo = {
 enemigos = array_create(0, null_enemigo)
 drones_aliados = array_create(0, null_enemigo)
 null_edificio.target = null_enemigo
-chunk_enemigos = ds_grid_create(ceil(xsize / chunk_width), ceil(ysize / chunk_height))
-chunk_edificios = ds_grid_create(ceil(xsize / chunk_width), ceil(ysize / chunk_height))
+chunk_enemigos = ds_grid_create(chunk_xsize, chunk_ysize)
+chunk_edificios = ds_grid_create(chunk_xsize, chunk_ysize)
 for(var a = ds_grid_width(chunk_enemigos); a > 0; a--)
 	for(var b = ds_grid_height(chunk_enemigos); b > 0; b--){
 		ds_grid_set(chunk_enemigos, a - 1, b - 1, array_create(0, null_enemigo))

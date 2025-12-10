@@ -927,37 +927,41 @@ if menu = 2{
 	for(var a = mina; a < maxa; a++)
 		for(var b = minb; b < maxb; b++)
 			if edificio_draw[# a, b]{
-				var edificio = edificio_id[# a, b], index = edificio.index, temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b, var_edificio_nombre = edificio_nombre[index]
+				var edificio = edificio_id[# a, b], index = edificio.index, aa = edificio.x, bb = edificio.y, var_edificio_nombre = edificio_nombre[index], aaa = aa * zoom - camx, bbb = bb * zoom - camy
+				//Recursos sobre caminos
 				if (edificio_camino[index] or in(index, 6, 16)) and edificio.carga_total > 0{
 					var proceso = edificio_proceso[index]
 					var c = 1.2 * (max(edificio.proceso, edificio.waiting * proceso) - proceso / 2) * 20 / proceso
 					draw_sprite_off(recurso_sprite[edificio.carga_id], 0, aa + c * edificio.array_real[0], bb + c * edificio.array_real[1])
 				}
+				//Munición armas
 				else if edificio_armas[index] and not in(var_edificio_nombre, "Láser", "Torre Reparadora", "Onda de Choque") and edificio.carga_total = 0
-					draw_sprite_off(spr_no_ammo, 0, edificio.x, edificio.y - 28)
+					draw_sprite_off(spr_no_ammo, 0, aa, bb - 28)
 				//Dibujo de los links eléctricos
 				else if edificio_energia[index]{
 					draw_set_color(c_yellow)
 					for(var c = 0; c < ds_list_size(edificio.energia_link); c++){
 						var edificio_2 = edificio.energia_link[|c]
-						draw_line_off(edificio.x, edificio.y, edificio_2.x, edificio_2.y)
+						draw_line_off(aa, bb, edificio_2.x, edificio_2.y)
 					}
 					if edificio.red.generacion = 0 and edificio.red.bateria = 0 and edificio.energia_consumo_max > 0
-						draw_sprite_off(spr_no_ammo, 1, edificio.x, edificio.y - 28)
+						draw_sprite_off(spr_no_ammo, 1, aa, bb - 28)
 				}
+				//Receta planta química
 				if var_edificio_nombre = "Planta Química" and edificio.select >= 0
 					draw_sprite_off(planta_quimica_sprite[edificio.select], 0, aa, bb)
 				//Humo
-				if grafic_humo and (image_index mod 5) = 0 and ((in(var_edificio_nombre, "Generador", "Turbina", "Planta Nuclear") and edificio.fuel > 0) or (var_edificio_nombre = "Generador Geotérmico" and edificio.flujo.liquido = 0)){
+				if grafic_humo and ((image_index mod 5) = 0) and ((in(var_edificio_nombre, "Generador", "Turbina", "Planta Nuclear") and edificio.fuel > 0) or (var_edificio_nombre = "Generador Geotérmico" and edificio.flujo.liquido = 0)){
 					var dir = direccion_viento + random_range(-pi / 4, pi / 4)
-					array_push(humos, add_humo(edificio.x, edificio.y, a, b, cos(dir), sin(dir), irandom_range(70, 100)))
+					array_push(humos, add_humo(aa, bb, a, b, cos(dir), sin(dir), irandom_range(70, 100)))
 				}
 				//Mensajes
 				if var_edificio_nombre = "Mensaje"{
 					draw_set_halign(fa_center)
-					draw_text_background(edificio.x * zoom - camx, edificio.y * zoom - camy + 20, edificio.variables[0])
+					draw_text_background(aaa, bbb + 20, edificio.variables[0])
 					draw_set_halign(fa_left)
 				}
+				draw_vida(aaa, bbb, edificio.vida, edificio_vida[index])
 			}
 	//Reconstruir
 	if keyboard_check(ord("Q"))
@@ -3540,7 +3544,7 @@ if not pausa{
 						draw_set_color(c_green)
 						draw_set_alpha(red_power)
 						draw_line_off(edificio.x + edificio.array_real[2], edificio.y + 14, target.x, target.y)
-						edificio_curar(target.vida, red_power * vel)
+						edificio_curar(target, red_power * vel)
 						edificio.select = radtodeg(-arctan2(edificio.x + 12 - target.x, target.y - edificio.y - 14)) - 90
 						draw_set_alpha(1)
 						draw_set_color(c_black)
@@ -4074,8 +4078,8 @@ if not pausa{
 	edificios_pendientes = array_create(0, null_edificio)
 	//Ciclo de los enemigos
 	var cam_center_x = (camx + room_width * zoom / 2), cam_center_y = (camy + room_height * zoom / 2)
-	for(var a = array_length(enemigos); a > 0; a--){
-		var dron = enemigos[a - 1], aa = dron.a, bb = dron.b, index = dron.index, dron_vel = vel
+	for(var a = array_length(enemigos) - 1; a >= 0; a--){
+		var dron = enemigos[a], aa = dron.a, bb = dron.b, index = dron.index, dron_vel = vel
 		if index = 4{
 			draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir_move)
 			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir)
@@ -4101,14 +4105,9 @@ if not pausa{
 				else if b = 1
 					dron.vida -= vel / 4
 			}
-		if dron.vida < dron.vida_max{
-			if dron.vida <= 0{
-				destroy_dron(dron)
-				continue
-			}
-			draw_set_color(make_color_rgb(255 * (1 - dron.vida / dron.vida_max), 255 * dron.vida / dron.vida_max, 0))
-			draw_circle_off(aa, bb - 20, 5, false)
-			draw_set_color(c_white)
+		if dron.vida <= 0{
+			destroy_dron(dron)
+			continue
 		}
 		if aa < 0
 			dron.a += vel
@@ -4295,23 +4294,21 @@ if not pausa{
 		aa = dron.a
 		bb = dron.b
 	}
+	for(var a = array_length(enemigos) - 1; a >= 0; a--){
+		var dron = enemigos[a]
+		draw_vida(dron.a * zoom - camx, dron.b * zoom - camy, dron.vida, dron.vida_max)
+	}
 	//Ciclo drones aliados
-	for(var a = array_length(drones_aliados); a > 0; a--){
-		var dron = drones_aliados[a - 1], aa = dron.a, bb = dron.b, index = dron.index
+	for(var a = array_length(drones_aliados) - 1; a >= 0; a--){
+		var dron = drones_aliados[a], aa = dron.a, bb = dron.b, index = dron.index
 		draw_sprite_off(dron_sprite[index], 0, aa, bb)
 		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,,, c_blue)
-		//Indicador de Vida
-		if dron.vida < dron_vida_max[index]{
-			draw_set_color(make_color_rgb(255 * (1 - dron.vida / dron.vida_max), 255 * dron.vida / dron.vida_max, 0))
-			draw_circle_off(aa, bb - 20, 5, false)
-			draw_set_color(c_white)
-			if dron.vida <= 0{
-				var temp_dron = drones_aliados[array_length(drones_aliados) - 1]
-				drones_aliados[dron.pointer] = temp_dron
-				temp_dron.pointer = dron.pointer
-				array_pop(drones_aliados)
-				continue
-			}
+		if dron.vida <= 0{
+			var temp_dron = drones_aliados[array_length(drones_aliados) - 1]
+			drones_aliados[dron.pointer] = temp_dron
+			temp_dron.pointer = dron.pointer
+			array_pop(drones_aliados)
+			continue
 		}
 		//Dron de Transporte
 		if dron.index = 1{
@@ -4404,6 +4401,10 @@ if not pausa{
 				temp_dron.b -= bbb
 			}
 		}
+	}
+	for(var a = array_length(drones_aliados) - 1; a >= 0; a--){
+		var dron = drones_aliados[a]
+		draw_vida(dron.a * zoom - camx, dron.b * zoom - camy, dron.vida, dron.vida_max)
 	}
 	//Ciclo de disparos
 	draw_set_color(c_black)

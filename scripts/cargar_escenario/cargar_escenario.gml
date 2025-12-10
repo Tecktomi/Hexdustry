@@ -95,8 +95,8 @@ function cargar_escenario(file = ""){
 			nucleo = add_edificio(0, 0, ini_read_real("Global", "nucleo_x", floor(xsize / 2)), ini_read_real("Global", "nucleo_y", floor(ysize / 2)))
 			array_copy(nucleo.carga, 0, carga_inicial, 0, rss_max)
 			ini_close()
-			for(var a = 0; a < xsize / chunk_width; a++)
-				for(var b = 0; b < ysize / chunk_height; b++)
+			for(var a = 0; a < chunk_xsize; a++)
+				for(var b = 0; b < chunk_ysize; b++)
 					update_background(chunk_width * a, chunk_height * b)
 		}
 		return file

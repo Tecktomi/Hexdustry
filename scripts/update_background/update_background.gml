@@ -4,5 +4,7 @@ function update_background(a, b){
 		if background[aa, bb] != spr_hexagono
 			sprite_delete(background[aa, bb])
 		array_set(background[aa], bb, spr_hexagono)
+		chunk_update = true
+		ds_grid_set(background_bool, aa, bb, false)
 	}
 }

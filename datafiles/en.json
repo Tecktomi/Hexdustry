@@ -59,8 +59,9 @@
 "Mensaje": "Message",
 "Memoria": "Memory",
 "Torre Reparadora": "Repair Tower",
-"Tubería Subterranea": "Underground Pipe",
+"Tubería Subterránea": "Underground Pipe",
 "Onda de Choque": "Shockwave",
+"Muro Reforzado": "Reinforced Wall",
 
 "descripcion_Núcleo": "It is the command center. All resources are stored here, and you must protect it at all costs.",
 "descripcion_Taladro": "Mines copper, iron, and coal at no cost. Can be boosted with Water.",
@@ -107,8 +108,9 @@
 "descripcion_Mensaje": "Allows writing messages.",
 "descripcion_Memoria": "Stores up to 128 data values.",
 "descripcion_Torre Reparadora": "Projects a repair laser onto nearby buildings using energy.",
-"descripcion_Tubería Subterranea": "Connects liquid pipelines underground.",
+"descripcion_Tubería Subterránea": "Connects liquid pipelines underground.",
 "descripcion_Onda de Choque": "Charges and releases a powerful shockwave that damages and slows all enemies within its range.",
+"descripcion_Muro Reforzado": "An improved version of the wall, harder and better",
 
 "Cobre": "Copper",
 "Carbón": "Coal",
