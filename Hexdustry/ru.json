@@ -5,6 +5,8 @@
 "menu_cargar_escenario": "Загрузить карту",
 "menu_editor": "Редактор",
 "menu_precio_tecnologia": "Цена Технологии",
+"menu_claves": "Песочница",
+"menu_sin_archivos": "Сценариев пока нет",
 
 "cancelar": "Отмена",
 "volver": "Назад",
@@ -57,8 +59,9 @@
 "Mensaje": "Сообщение",
 "Memoria": "Память",
 "Torre Reparadora": "Ремонтная башня",
-"Tubería Subterranea": "Подземная труба",
+"Tubería Subterránea": "Подземная труба",
 "Onda de Choque": "Ударная волна",
+"Muro Reforzado": "Укреплённая стена",
 
 "descripcion_Núcleo": "Командный центр. Все ресурсы хранятся здесь. Его необходимо защищать любой ценой.",
 "descripcion_Taladro": "Добывает медь, железо и уголь бесплатно. Может быть усилен водой.",
@@ -105,8 +108,9 @@
 "descripcion_Mensaje": "Позволяет писать сообщения.",
 "descripcion_Memoria": "Хранит до 128 значений.",
 "descripcion_Torre Reparadora": "Использует энергию для ремонта зданий лазером.",
-"descripcion_Tubería Subterranea": "Проводит жидкости под землёй.",
+"descripcion_Tubería Subterránea": "Проводит жидкости под землёй.",
 "descripcion_Onda de Choque": "Заряжает и выпускает мощную ударную волну, которая наносит урон и замедляет всех врагов в радиусе действия.",
+"descripcion_Muro Reforzado": "Улучшенная версия стены — прочнее и лучше",
 
 "Cobre": "Медь",
 "Carbón": "Уголь",

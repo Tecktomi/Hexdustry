@@ -5,6 +5,8 @@
 "menu_cargar_escenario": "Cargar Escenario",
 "menu_editor": "Editor",
 "menu_precio_tecnologia": "Precio Tecnología",
+"menu_claves": "Sandbox",
+"menu_sin_archivos": "Sin escenarios aún",
 
 "cancelar": "Cancelar",
 "volver": "Volver",
@@ -57,8 +59,9 @@
 "Mensaje": "Mensaje",
 "Memoria": "Memoria",
 "Torre Reparadora": "Torre Reparadora",
-"Tubería Subterranea": "Tubería Subterranea",
+"Tubería Subterránea": "Tubería Subterránea",
 "Onda de Choque": "Onda de Choque",
+"Muro Reforzado": "Muro Reforzado",
 
 "descripcion_Núcleo": "Es el centro de mando, aquí se almacenan todos los recursos y debes protegerlo a toda costa",
 "descripcion_Taladro": "Permite minar cobre, hierro y carbón sin coste alguno.    Puede potenciarse con Agua",
@@ -105,8 +108,9 @@
 "descripcion_Mensaje": "Permite escribir mensajes",
 "descripcion_Memoria": "Permite almacenar hasta 128 datos",
 "descripcion_Torre Reparadora": "Proyecta un láser de reparación a los edificios cercanos usando energía",
-"descripcion_Tubería Subterranea": "Conecta líneas de líquidos por debajo tierra",
+"descripcion_Tubería Subterránea": "Conecta líneas de líquidos por debajo tierra",
 "descripcion_Onda de Choque": "Carga y libera una gran onda de choque que daña y ralentiza a todos los enemigos en su rango",
+"descripcion_Muro Reforzado": "Versión mejorada del muro, más duro y mejor",
 
 "Cobre": "Cobre",
 "Carbón": "Carbón",

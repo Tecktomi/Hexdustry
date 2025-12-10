@@ -89,6 +89,7 @@
     {"id":{"name":"draw_text_xpos","path":"scripts/draw_text_xpos/draw_text_xpos.yy",},},
     {"id":{"name":"draw_text_ypos","path":"scripts/draw_text_ypos/draw_text_ypos.yy",},},
     {"id":{"name":"draw_triangle_off","path":"scripts/draw_triangle_off/draw_triangle_off.yy",},},
+    {"id":{"name":"draw_vida","path":"scripts/draw_vida/draw_vida.yy",},},
     {"id":{"name":"ds_list_in","path":"scripts/ds_list_in/ds_list_in.yy",},},
     {"id":{"name":"ds_list_remove","path":"scripts/ds_list_remove/ds_list_remove.yy",},},
     {"id":{"name":"edificio_curar","path":"scripts/edificio_curar/edificio_curar.yy",},},

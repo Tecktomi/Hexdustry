@@ -91,10 +91,6 @@ function dibujar_edificios(){
 						draw_set_color(c_red)
 						draw_circle_off(aa, bb + 8, 4, false)
 					}
-					if edificio.vida < edificio_vida[index]{
-						draw_set_color(make_color_rgb(255 * (1 - edificio.vida / edificio_vida[index]), 255 * edificio.vida / edificio_vida[index], 0))
-						draw_circle_off(aa, bb, 5, false)
-					}
 				}
 	draw_set_color(c_white)
 	}

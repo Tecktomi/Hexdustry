@@ -111,8 +111,8 @@ function add_edificio(index, dir, a, b){
 			ds_list_add(edificio.bordes, temp_list_arround[|c])
 		if edificio_armas[index]{
 			var dis = edificio_alcance_sqr[index]
-			for(var i = floor(xsize / chunk_width) - 1; i >= 0; i--)
-				for(var j = floor(ysize / chunk_height) - 1; j >= 0; j--){
+			for(var i = chunk_xsize; i >= 0; i--)
+				for(var j = chunk_ysize; j >= 0; j--){
 					temp_complex = abtoxy(chunk_width * i, chunk_height * j)
 					var temp_complex_2 = abtoxy(chunk_width * i, chunk_height * (j + 1) - 1), temp_complex_3 = abtoxy(chunk_width * (i + 1) - 1, chunk_height * j), temp_complex_4 = abtoxy(chunk_width * (i + 1) - 1, chunk_height * (j + 1) - 1)
 					if distance_sqr(x, y, temp_complex.a, temp_complex.b) < dis or
