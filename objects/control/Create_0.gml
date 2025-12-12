@@ -39,7 +39,7 @@ set_idioma(idiomas[idioma], false)
 	my_clic = 0
 	show_menu = false
 	show_menu_build = undefined
-	pausa = false
+	pausa = 0
 	show_menu_x = 0
 	show_menu_y = 0
 	edificio_count = 0
@@ -199,7 +199,7 @@ null_edificio = {
 	y : 0,
 	coordenadas : ds_list_create(),
 	bordes : ds_list_create(),
-	inputs : ds_list_create(),
+	inputs : [],
 	input_index : 0,
 	outputs : ds_list_create(),
 	output_index : 0,
@@ -825,6 +825,117 @@ edificios_targeteables = ds_list_create()
 torres_de_tension = array_create(0, null_edificio)
 edi_sort = array_create(edificio_max, 0)
 sort_edificios()
+#region Caminos
+	#region Camino 0
+		camino_0 = array_create(64, spr_camino_0_in)
+		camino_0[2] = spr_camino_0_in_2
+		camino_0[4] = spr_camino_0_in_4
+		camino_0[6] = spr_camino_0_in_6
+		camino_0[16] = spr_camino_0_in_16
+		camino_0[18] = spr_camino_0_in_18
+		camino_0[20] = spr_camino_0_in_20
+		camino_0[22] = spr_camino_0_in_22
+		camino_0[32] = spr_camino_0_in_32
+		camino_0[34] = spr_camino_0_in_34
+		camino_0[36] = spr_camino_0_in_36
+		camino_0[38] = spr_camino_0_in_38
+		camino_0[48] = spr_camino_0_in_48
+		camino_0[50] = spr_camino_0_in_50
+		camino_0[52] = spr_camino_0_in_52
+		camino_0[54] = spr_camino_0_in_54
+	#endregion
+	#region Camino 1
+		camino_1 = array_create(64, spr_camino)
+		camino_1[1] = spr_camino_1_in_1
+		camino_1[4] = spr_camino_1_in_4
+		camino_1[5] = spr_camino_1_in_5
+		camino_1[8] = spr_camino_1_in_8
+		camino_1[9] = spr_camino_1_in_9
+		camino_1[12] = spr_camino_1_in_12
+		camino_1[13] = spr_camino_1_in_13
+		camino_1[32] = spr_camino_1_in_32
+		camino_1[33] = spr_camino_1_in_33
+		camino_1[36] = spr_camino_1_in_36
+		camino_1[37] = spr_camino_1_in_37
+		camino_1[40] = spr_camino_1_in_40
+		camino_1[41] = spr_camino_1_in_41
+		camino_1[44] = spr_camino_1_in_44
+		camino_1[45] = spr_camino_1_in_45
+	#endregion
+	#region Camino 2
+		camino_2 = array_create(64, spr_camino_2_in)
+		camino_2[1] = spr_camino_2_in_1
+		camino_2[2] = spr_camino_2_in_2
+		camino_2[3] = spr_camino_2_in_3
+		camino_2[8] = spr_camino_2_in_8
+		camino_2[9] = spr_camino_2_in_9
+		camino_2[10] = spr_camino_2_in_10
+		camino_2[11] = spr_camino_2_in_11
+		camino_2[16] = spr_camino_2_in_16
+		camino_2[17] = spr_camino_2_in_17
+		camino_2[18] = spr_camino_2_in_18
+		camino_2[19] = spr_camino_2_in_19
+		camino_2[24] = spr_camino_2_in_24
+		camino_2[25] = spr_camino_2_in_25
+		camino_2[26] = spr_camino_2_in_26
+		camino_2[27] = spr_camino_2_in_27
+	#endregion
+	#region Camino 3
+		camino_3 = array_create(64, spr_camino_3_in)
+		camino_3[2] = spr_camino_3_in_2
+		camino_3[4] = spr_camino_3_in_4
+		camino_3[6] = spr_camino_3_in_6
+		camino_3[16] = spr_camino_3_in_16
+		camino_3[18] = spr_camino_3_in_18
+		camino_3[20] = spr_camino_3_in_20
+		camino_3[22] = spr_camino_3_in_22
+		camino_3[32] = spr_camino_3_in_32
+		camino_3[34] = spr_camino_3_in_34
+		camino_3[36] = spr_camino_3_in_36
+		camino_3[38] = spr_camino_3_in_38
+		camino_3[48] = spr_camino_3_in_48
+		camino_3[50] = spr_camino_3_in_50
+		camino_3[52] = spr_camino_3_in_52
+		camino_3[54] = spr_camino_3_in_54
+	#endregion
+	#region Camino 4
+		camino_4 = array_create(64, spr_camino_4_in)
+		camino_4[1] = spr_camino_4_in_1
+		camino_4[4] = spr_camino_4_in_4
+		camino_4[5] = spr_camino_4_in_5
+		camino_4[8] = spr_camino_4_in_8
+		camino_4[9] = spr_camino_4_in_9
+		camino_4[12] = spr_camino_4_in_12
+		camino_4[13] = spr_camino_4_in_13
+		camino_4[32] = spr_camino_4_in_32
+		camino_4[33] = spr_camino_4_in_33
+		camino_4[36] = spr_camino_4_in_36
+		camino_4[37] = spr_camino_4_in_37
+		camino_4[40] = spr_camino_4_in_40
+		camino_4[41] = spr_camino_4_in_41
+		camino_4[44] = spr_camino_4_in_44
+		camino_4[45] = spr_camino_4_in_45
+	#endregion
+	#region Camino 5
+		camino_5 = array_create(64, spr_camino_5_in)
+		camino_5[1] = spr_camino_5_in_1
+		camino_5[2] = spr_camino_5_in_2
+		camino_5[3] = spr_camino_5_in_3
+		camino_5[8] = spr_camino_5_in_8
+		camino_5[9] = spr_camino_5_in_9
+		camino_5[10] = spr_camino_5_in_10
+		camino_5[11] = spr_camino_5_in_11
+		camino_5[16] = spr_camino_5_in_16
+		camino_5[17] = spr_camino_5_in_17
+		camino_5[18] = spr_camino_5_in_18
+		camino_5[19] = spr_camino_5_in_19
+		camino_5[24] = spr_camino_5_in_24
+		camino_5[25] = spr_camino_5_in_25
+		camino_5[26] = spr_camino_5_in_26
+		camino_5[27] = spr_camino_5_in_27
+	#endregion
+	camino_general = [camino_0, camino_1, camino_2, camino_3, camino_4, camino_5]
+#endregion
 #region Tecnologia
 	edificio_tecnologia_prev = array_create(edificio_max)
 	edificio_tecnologia_next = array_create(edificio_max)

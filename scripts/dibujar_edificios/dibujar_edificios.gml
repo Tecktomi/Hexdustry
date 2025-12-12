@@ -7,9 +7,11 @@ function dibujar_edificios(){
 					var edificio = edificio_id[# a, b], index = edificio.index, var_edificio_nombre = edificio_nombre[index], dir = edificio.dir, aa = edificio.x, bb = edificio.y
 					//Dibujo caminos
 					if edificio_camino[index] or in(var_edificio_nombre, "Túnel", "Túnel salida"){
-						if in(var_edificio_nombre, "Selector", "Overflow")
+						if var_edificio_nombre = "Cinta Transportadora"
+							draw_sprite_off(camino_general[dir, edificio.array_real[4]], c >> 1, aa, bb)
+						else if in(var_edificio_nombre, "Selector", "Overflow")
 							draw_sprite_off(edificio_sprite[index], real(edificio.mode), aa, bb,,, edificio.draw_rot)
-						else if in(var_edificio_nombre, "Cinta Transportadora", "Enrutador", "Cinta Magnética"){
+						else if in(var_edificio_nombre, "Enrutador", "Cinta Magnética"){
 							var d = c >> 1
 							if var_edificio_nombre = "Cinta Magnética"
 								d = c
@@ -27,10 +29,10 @@ function dibujar_edificios(){
 						//Dibujo edificios con horno
 						if in(var_edificio_nombre, "Horno", "Generador") and edificio.fuel > 0
 							draw_sprite_off(edificio_sprite_2[index], c << 2, aa, bb, edificio.array_real[2] / 8)
-						else if in(var_edificio_nombre, "Horno de Lava") and edificio.flujo.liquido = 3
+						else if var_edificio_nombre = "Horno de Lava" and edificio.flujo.liquido = 3
 							draw_sprite_off(edificio_sprite_2[index], c << 2, aa, bb, edificio.array_real[2] / 8)
 						//Dibujo de bateria
-						else if in(var_edificio_nombre, "Batería")
+						else if var_edificio_nombre = "Batería"
 							draw_sprite_off(edificio_sprite[index], floor(10 * edificio.red.bateria / edificio.red.bateria_max), aa, bb,,, dir * 60)
 						//Dibujo bomba tamaño par
 						else if in(var_edificio_nombre, "Bomba Hidráulica", "Turbina", "Generador Geotérmico"){
@@ -43,7 +45,7 @@ function dibujar_edificios(){
 							draw_sprite_off(spr_bomba_cupula, 1, aa + edificio.array_real[2], bb + 14)
 						}
 						//Dibujo bomba tamaño impar
-						else if in(var_edificio_nombre, "Perforadora de Petróleo"){
+						else if var_edificio_nombre = "Perforadora de Petróleo"{
 							draw_sprite_off(edificio_sprite[index], 0, aa, bb)
 							if edificio.flujo.liquido = -1
 								draw_sprite_off(spr_bomba_color, 0, aa, bb)

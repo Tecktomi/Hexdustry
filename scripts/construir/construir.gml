@@ -89,22 +89,22 @@ function construir(index, dir, mx, my){
 				if not build_target.idle{
 					build_target.link.idle = true
 					if build_target.index = 16{
-						ds_list_remove(build_target.inputs, build_target.link)
+						array_remove(build_target.inputs, build_target.link)
 						ds_list_remove(build_target.link.outputs, build_target)
 					}
 					else{
 						ds_list_remove(build_target.outputs, build_target.link)
-						ds_list_remove(build_target.link.inputs, build_target)
+						array_remove(build_target.link.inputs, build_target)
 					}
 				}
 				build_target.idle = false
 				if index = 16{
-					ds_list_add(edificio.inputs, build_target)
+					array_push(edificio.inputs, build_target)
 					ds_list_add(build_target.outputs, edificio)
 				}
 				else{
 					ds_list_add(edificio.outputs, build_target)
-					ds_list_add(build_target.inputs, edificio)
+					array_push(build_target.inputs, edificio)
 				}
 				edificio.link = build_target
 				build_target.link = edificio

@@ -12,7 +12,7 @@ function add_edificio(index, dir, a, b){
 			y : y,
 			coordenadas : ds_list_create(),
 			bordes : ds_list_create(),
-			inputs : ds_list_create(),
+			inputs : array_create(0, null_edificio),
 			input_index : 0,
 			outputs : ds_list_create(),
 			output_index : 0,

@@ -117,18 +117,20 @@ function delete_edificio(aa, bb, enemigo = false){
 		size = ds_list_size(edificio.outputs)
 		for(var a = 0; a < size; a++){
 			temp_edificio = edificio.outputs[|a]
-			ds_list_remove(temp_edificio.inputs, edificio)
+			array_remove(temp_edificio.inputs, edificio)
+			if edificio_nombre[temp_edificio.index] = "Cinta Transportadora"
+				camino_calcular_in(temp_edificio)
 		}
 		ds_list_destroy(edificio.outputs)
 		//Cancelar inputs
-		size = ds_list_size(edificio.inputs)
+		size = array_length(edificio.inputs)
 		for(var a = 0; a < size; a++){
-			temp_edificio = edificio.inputs[|a]
+			temp_edificio = edificio.inputs[a]
 			ds_list_remove(temp_edificio.outputs, edificio)
 			if temp_edificio.output_index >= ds_list_size(temp_edificio.outputs)
 				temp_edificio.output_index = 0
 		}
-		ds_list_destroy(edificio.inputs)
+		delete(edificio.inputs)
 		//Cancelar red
 		if edificio_energia[index]{
 			var temp_red = edificio.red
