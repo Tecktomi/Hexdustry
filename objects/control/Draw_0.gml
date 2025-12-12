@@ -537,12 +537,14 @@ if menu = 2{
 		ypos += text_y
 		var prev_xsize = xsize
 		xsize = round(draw_deslizante(xpos, xpos + 100, ypos + 10, xsize, 28, 96, 0))
+		chunk_xsize = ceil(xsize / chunk_width)
 		draw_text(xpos + 100, ypos, $"{xsize}")
 		if xsize > prev_xsize
 			resize_grid(prev_xsize, 0)
 		ypos += text_y
 		var prev_ysize = ysize
 		ysize = round(draw_deslizante(xpos, xpos + 100, ypos + 10, ysize, 60, 192, 1))
+		chunk_ysize = ceil(ysize / chunk_height)
 		draw_text(xpos + 100, ypos, $"{ysize}")
 		if ysize > prev_ysize
 			resize_grid(0, prev_ysize)
@@ -1365,6 +1367,7 @@ if menu = 2{
 			draw_set_font(ft_titulo)
 			pos = draw_text_ypos(120, pos, L.enciclopedia_tecnologia)
 			draw_set_font(ft_letra)
+			pos = 140
 			for(var a = 0; a < array_length(tecnologia_nivel_edificios); a++){
 				pos += 60
 				width = array_length(tecnologia_nivel_edificios[a])
@@ -1384,9 +1387,9 @@ if menu = 2{
 						enciclopedia = 4
 						exit
 					}
-					draw_text_background(mouse_x + 20, mouse_y, sprite_boton_text)
 				}
 			}
+			draw_text_background(mouse_x + 20, mouse_y, sprite_boton_text)
 		}
 		if keyboard_check_pressed(vk_escape) or keyboard_check_pressed(ord("Y")) or mouse_check_button_pressed(mb_right) or (mouse_check_button_pressed(mb_left) and (mouse_x < 100 or mouse_y < 100 or mouse_x > room_width - 100 or mouse_y > room_height - 100)){
 			mouse_clear(mouse_lastbutton)
@@ -2114,7 +2117,7 @@ if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio
 			}
 		}
 		//Mostrar carga
-		if edificio.carga_total > 0{
+		if edificio.carga_total > 0 and var_edificio_nombre != "Silo de Misiles"{
 			temp_text += $"{L.almacen_almacen}:\n"
 			for(var a = 0; a < rss_max; a++)
 				if edificio.carga[a] > 0
@@ -2242,6 +2245,13 @@ if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio
 				temp_text += $"{L.almacen_sin_receta}\n"
 			else
 				temp_text += $"{L.almacen_produciendo} {planta_quimica_receta[edificio.select]}\n  {planta_quimica_descripcion[edificio.select]}\n"
+		}
+		else if var_edificio_nombre = "Silo de Misiles"{
+			for(var a = 0; a < array_length(edificio_input_id[index]); a++)
+				temp_text += $"  {recurso_nombre_display[edificio_input_id[index, a]]}: {edificio.carga[edificio_input_id[index, a]]}/{edificio_input_num[index, a]}\n"
+			temp_text += $"  {terreno_nombre_display[5]}: {floor(edificio.select)}/4000\n"
+			if edificio.proceso > 0
+				temp_text += $"  {floor(100 * edificio.proceso / edificio_proceso[index])}%\n"
 		}
 		//Mostrar inputs
 		if info and edificio.receptor{
@@ -3748,18 +3758,18 @@ if not pausa{
 				edificio.waiting = mover(edificio.a, edificio.b)
 		}
 		//Recursos Infinitos
-		else if in(var_edificio_nombre, "Recurso Infinito"){
+		else if var_edificio_nombre = "Recurso Infinito"{
 			if edificio.select != -1{
 				edificio.carga[edificio.select] = 1
 				edificio.waiting = not mover(edificio.a, edificio.b)
 			}
 		}
-		else if in(var_edificio_nombre, "Panel Solar")
+		else if var_edificio_nombre = "Panel Solar"
 			change_energia(energia_solar * edificio_energia_consumo[index], edificio)
-		else if in(var_edificio_nombre, "Bomba de Evaporación")
+		else if var_edificio_nombre = "Bomba de Evaporación"
 			change_flujo(energia_solar * edificio_flujo_consumo[index], edificio)
 		//Horno de Lava
-		else if in(var_edificio_nombre, "Horno de Lava"){
+		else if var_edificio_nombre = "Horno de Lava"{
 			if flujo.liquido = 3 and (edificio.carga[0] > 1 or edificio.carga[3] > 1 or edificio.carga[5] > 1) and edificio.carga[2] < 10 and edificio.carga[4] < 10 and edificio.carga[7] < 10{
 				//Encender
 				if edificio.proceso < 0{
@@ -3792,10 +3802,44 @@ if not pausa{
 				}
 			}
 		}
-		else if in(var_edificio_nombre, "Generador Geotérmico"){
+		else if var_edificio_nombre = "Generador Geotérmico"{
 			if in(edificio.flujo.liquido, -1, 0){
 				change_energia(flujo_power * edificio_energia_consumo[index] * edificio.select / 3, edificio)
 				change_flujo(edificio_flujo_consumo[index], edificio)
+			}
+			else{
+				change_energia(0, edificio)
+				change_flujo(0, edificio)
+			}
+		}
+		else if var_edificio_nombre = "Silo de Misiles"{
+			if edificio.proceso < edificio_proceso[index]{
+				var flag2 = true
+				for(var b = 0; b < array_length(edificio_input_id[index]); b++)
+					if edificio.carga[edificio_input_id[index, b]] < edificio_input_num[index, b]{
+						flag2 = false
+						break
+					}
+				if flag2{
+					change_energia(edificio_energia_consumo[index], edificio)
+					edificio.proceso += red_power
+					if edificio.proceso >= edificio_proceso[index] and edificio.select >= 4000{
+						win = 1
+						mision_camara_step = 90
+						mision_actual = 0
+						mision_camara_x[0] = edificio.x
+						mision_camara_y[0] = edificio.y
+					}
+				}
+				else
+					change_energia(0, edificio)
+				if edificio.select >= 4000
+					change_flujo(0, edificio)
+				else{
+					change_flujo(edificio_flujo_consumo[index], edificio)
+					if edificio.flujo.liquido = 2
+						edificio.select += flujo_power
+				}
 			}
 			else{
 				change_energia(0, edificio)
@@ -4550,7 +4594,7 @@ if not pausa{
 			temp_text_right += $"{seg > 60 ? string(floor(seg / 60)) + "m " : ""}{seg mod 60}s {L.game_next_wave}\n"
 		}
 	}
-	if mision_actual >= 0{
+	if mision_actual >= 0 and win = 0{
 		var a = mision_actual
 		if not in(mision_objetivo[a], 5, 6)
 			temp_text_right += $"\n\n{mision_nombre[a]}\n{objetivos_nombre_display[mision_objetivo[a]]} {mision_target_num[a]} "
@@ -4828,6 +4872,7 @@ if win > 0{
 			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_drones}: {drones_construidos}")
 		if enemigos_eliminados > 0
 			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_enemigos}: {enemigos_eliminados}")
+		//Victoria
 		if win = 1{
 			if in(tutorial, 1, 2, 3) and draw_boton(room_width / 2, room_height - 250, L.win_siguiente_mision){
 				if tutorial = 1
@@ -4845,6 +4890,7 @@ if win > 0{
 				win = 0
 			}
 		}
+		//Derrota
 		if win = 2 and tutorial > 0 and draw_boton(room_width / 2, room_height - 250, L.win_reintentar){
 			if tutorial = 1
 				cargar_escenario("mision_1.txt")

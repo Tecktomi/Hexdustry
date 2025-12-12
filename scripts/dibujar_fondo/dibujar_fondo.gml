@@ -56,20 +56,20 @@ function dibujar_fondo(editor = 0){
 										draw_sprite(ore_sprite[e], round(ore_random[# c, d]) + 2 * (ore_amount[# c, d] < 50), aa, bb)
 								}
 						}
-						array_set(background[a], b, sprite_create_from_surface(temp_surf, 0, 0, room_width, room_height, false, false, 0, 0))
+						ds_grid_set(background, a, b, sprite_create_from_surface(temp_surf, 0, 0, room_width, room_height, false, false, 0, 0))
 						ds_grid_set(background_bool, a, b, true)
 						chunk_update = false
 						surface_reset_target()
 						surface_free(temp_surf)
 					}
-					draw_sprite_stretched(background[a, b], 0, -camx + a * xpos, -camy + b * ypos, xsize2, ysize2)
+					draw_sprite_stretched(background[# a, b], 0, -camx + a * xpos, -camy + b * ypos, xsize2, ysize2)
 				}
 		}
 		else{
 			var mina2 = max(0, floor(mina / chunk_width)), minb2 = max(0, floor(minb / chunk_height)), maxa2 = min(ceil(maxa / chunk_width), chunk_xsize), maxb2 = min(ceil(maxb / chunk_height), chunk_ysize)
 			for(var a = mina2; a < maxa2; a++)
 				for(var b = minb2; b < maxb2; b++)
-					draw_sprite_stretched(background[a, b], 0, -camx + a * xpos, -camy + b * ypos, xsize2, ysize2)
+					draw_sprite_stretched(background[# a, b], 0, -camx + a * xpos, -camy + b * ypos, xsize2, ysize2)
 		}
 	}
 }

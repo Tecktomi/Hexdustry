@@ -32,7 +32,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.14.1.210",
+    "IDEVersion":"2024.14.2.212",
   },
   "name":"Hexdustry",
   "resources":[
@@ -271,6 +271,7 @@
     {"id":{"name":"spr_selector","path":"sprites/spr_selector/spr_selector.yy",},},
     {"id":{"name":"spr_shokwave","path":"sprites/spr_shokwave/spr_shokwave.yy",},},
     {"id":{"name":"spr_siguiente","path":"sprites/spr_siguiente/spr_siguiente.yy",},},
+    {"id":{"name":"spr_silo_de_misiles","path":"sprites/spr_silo_de_misiles/spr_silo_de_misiles.yy",},},
     {"id":{"name":"spr_taladro_electrico","path":"sprites/spr_taladro_electrico/spr_taladro_electrico.yy",},},
     {"id":{"name":"spr_taladro_explosivo","path":"sprites/spr_taladro_explosivo/spr_taladro_explosivo.yy",},},
     {"id":{"name":"spr_taladro","path":"sprites/spr_taladro/spr_taladro.yy",},},

@@ -409,7 +409,7 @@ function add_edificio(index, dir, a, b){
 		}
 		if var_edificio_nombre = "Láser"
 			edificio.mode = true
-		else if in(var_edificio_nombre, "Rifle", "Mortero", "Onda de Choque")
+		else if in(var_edificio_nombre, "Rifle", "Mortero", "Onda de Choque", "Silo de Misiles")
 			edificio.select = 0
 		else if in(var_edificio_nombre, "Planta Química", "Fábrica de Drones")
 			edificio.select = -1

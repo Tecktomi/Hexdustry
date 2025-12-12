@@ -62,6 +62,7 @@
 "Tubería Subterránea": "Tubería Subterránea",
 "Onda de Choque": "Onda de Choque",
 "Muro Reforzado": "Muro Reforzado",
+"Silo de Misiles": "Silo de Misiles",
 
 "descripcion_Núcleo": "Es el centro de mando, aquí se almacenan todos los recursos y debes protegerlo a toda costa",
 "descripcion_Taladro": "Permite minar cobre, hierro y carbón sin coste alguno.    Puede potenciarse con Agua",
@@ -111,6 +112,7 @@
 "descripcion_Tubería Subterránea": "Conecta líneas de líquidos por debajo tierra",
 "descripcion_Onda de Choque": "Carga y libera una gran onda de choque que daña y ralentiza a todos los enemigos en su rango",
 "descripcion_Muro Reforzado": "Versión mejorada del muro, más duro y mejor",
+"descripcion_Silo de Misiles": "Aquí se puede construir un misíl nuclear usándo acero, explosivos, petróleo y uranio enriquecido al 90%",
 
 "Cobre": "Cobre",
 "Carbón": "Carbón",
