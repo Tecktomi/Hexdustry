@@ -1409,7 +1409,8 @@ if menu = 2{
 	}
 	sprite_boton_text = ""
 #endregion
-if pausa{
+//Pausa - Menú
+if pausa = 1{
 	var size = array_length(enemigos)
 	for(var a = 0; a < size; a++){
 		var enemigo = enemigos[a], aa = enemigo.a, bb = enemigo.b, index = enemigo.index
@@ -1456,8 +1457,20 @@ if pausa{
 		if sonido for(var b = 0; b < sonidos_max; b++)
 			audio_resume_sound(sonido_id[b])
 	}
+	if draw_boton(a, 600, L.salir)
+		menu = 0
 	draw_set_halign(fa_left)
 	draw_set_color(color)
+}
+//Solo pausa
+if pausa = 2{
+	image_index--
+	draw_set_color(c_white)
+	draw_set_halign(fa_center)
+	draw_set_font(ft_titulo)
+	draw_text(room_width / 2, 100, L.pausa)
+	draw_set_halign(fa_left)
+	draw_set_font(ft_letra)
 }
 var flag = true, xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / zoom
 //Seleccionar recurso
@@ -2000,7 +2013,7 @@ if temp_hexagono != noone{
 }
 var edificio = edificio_id[# mx, my], temp_coordenada = edificio.coordenadas
 //Mostrar detalles de edificios al pasar el mouse_por encima
-if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio_nombre[show_menu_build.index] = "Procesador"){
+if pausa != 1 and temp_hexagono != noone and flag and not (show_menu and edificio_nombre[show_menu_build.index] = "Procesador"){
 	//Mostrar terreno
 	temp_text = $"{terreno_nombre_display[terreno[# mx, my]]}\n"
 	if ore[# mx, my] >= 0
@@ -2105,8 +2118,8 @@ if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio
 		if info{
 			//Mostrar inputs
 			draw_set_color(c_blue)
-			for(var a = 0; a < ds_list_size(edificio.inputs); a++){
-				var edificio_2 = edificio.inputs[|a]
+			for(var a = 0; a < array_length(edificio.inputs); a++){
+				var edificio_2 = edificio.inputs[a]
 				draw_arrow_off(edificio_2.x, edificio_2.y, edificio.x, edificio.y, 12)
 			}
 			//Mostrar outputs
@@ -2212,7 +2225,7 @@ if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio
 					calculate_in_out_2(edificio)
 					calculate_in_out_2(edificio.link)
 					ds_list_add(edificio.outputs, edificio.link)
-					ds_list_add(edificio.link.inputs, edificio)
+					array_push(edificio.link.inputs, edificio)
 				}
 				else{
 					edificio.index = 16
@@ -2221,7 +2234,7 @@ if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio
 					calculate_in_out(edificio.link)
 					calculate_in_out_2(edificio)
 					calculate_in_out_2(edificio.link)
-					ds_list_add(edificio.inputs, edificio.link)
+					array_push(edificio.inputs, edificio.link)
 					ds_list_add(edificio.link.outputs, edificio)
 				}
 				set_camino_dir(edificio)
@@ -2253,6 +2266,8 @@ if not pausa and temp_hexagono != noone and flag and not (show_menu and edificio
 			if edificio.proceso > 0
 				temp_text += $"  {floor(100 * edificio.proceso / edificio_proceso[index])}%\n"
 		}
+		else if var_edificio_nombre = "Cinta Transportadora"
+			temp_text += $"{edificio.array_real[4]}\n"
 		//Mostrar inputs
 		if info and edificio.receptor{
 			if edificio_input_all[index]
@@ -2976,8 +2991,9 @@ else{
 		delete_edificio(mx, my)
 	}
 }
+var temp_text_right = ""
 //Ciclos
-if not pausa{
+if pausa = 0{
 	timer += vel
 	//Ciclo edificios
 	for(var a = 0; a < array_length(edificios_activos); a++){
@@ -4538,9 +4554,6 @@ if not pausa{
 		}
 	}
 	draw_set_alpha(1)
-	var temp_text_right = ""
-	if info
-		temp_text_right += $"FPS: {fps}\n"
 	if oleadas{
 		oleadas_timer += vel
 		if oleadas_timer >= 60 * oleadas_tiempo_primera or keyboard_check_pressed(vk_enter){
@@ -4585,28 +4598,10 @@ if not pausa{
 				}
 			}
 		}
-		if oleadas_timer < 60 * oleadas_tiempo_primera{
-			var seg = floor((60 * oleadas_tiempo_primera - oleadas_timer) / 60)
-			temp_text_right += $"{seg > 60 ? string(floor(seg / 60)) + "m " : ""}{seg mod 60}s {L.game_first_wave}\n"
-		}
-		else{
-			var seg = floor((60 * oleadas_tiempo_primera - image_index) mod (60 * oleadas_tiempo) / 60) + oleadas_tiempo
-			temp_text_right += $"{seg > 60 ? string(floor(seg / 60)) + "m " : ""}{seg mod 60}s {L.game_next_wave}\n"
-		}
 	}
 	if mision_actual >= 0 and win = 0{
 		var a = mision_actual
-		if not in(mision_objetivo[a], 5, 6)
-			temp_text_right += $"\n\n{mision_nombre[a]}\n{objetivos_nombre_display[mision_objetivo[a]]} {mision_target_num[a]} "
-		if mision_objetivo[a] < 2
-			temp_text_right += recurso_nombre_display[mision_target_id[a]]
-		else if in(mision_objetivo[a], 2, 3, 7)
-			temp_text_right += edificio_nombre_display[mision_target_id[a]]
-		else if mision_objetivo[a] = 4
-			temp_text_right += L.mision_enemigos
-		if not in(mision_objetivo[a], 5, 7)
-			temp_text_right += $"\n{mision_counter} / {mision_target_num[a]}"
-		else if not oleadas and keyboard_check_pressed(vk_enter){
+		if in(mision_objetivo[a], 5, 7) and not oleadas and keyboard_check_pressed(vk_enter){
 			keyboard_clear(vk_enter)
 			pasar_mision()
 		}
@@ -4623,8 +4618,6 @@ if not pausa{
 				else
 					win = 2
 			}
-			if mision_tiempo_show[a]
-				temp_text_right += $"\n{L.mision_tiempo}: {floor(mision_current_tiempo / 60)}s"
 		}
 		else if mision_objetivo[a] = 1{
 			mision_counter = nucleo.carga[mision_target_id[a]]
@@ -4648,14 +4641,6 @@ if not pausa{
 			}
 		}
 	}
-	if temp_text_right != ""{
-		temp_text_right = string_trim(temp_text_right)
-		draw_set_halign(fa_right)
-		draw_text_background(room_width, 0, temp_text_right)
-		draw_set_halign(fa_left)
-	}
-	if draw_sprite_boton(spr_manual, room_width - 64, string_height(temp_text_right), 64, 64, $"{L.game_enciclopedia} (Y)")
-		enciclopedia = true
 	if mision_actual = -1 and in(tutorial, 1, 2, 3) and win = 0{
 		draw_set_halign(fa_right)
 		if draw_boton(room_width - 20, string_height(temp_text_right) + 64, L.win_siguiente_mision){
@@ -4706,18 +4691,48 @@ if not pausa{
 		draw_set_alpha(1)
 	}
 }
+if info
+	temp_text_right += $"FPS: {fps}\n"
+if oleadas{
+	if oleadas_timer < 60 * oleadas_tiempo_primera{
+		var seg = floor((60 * oleadas_tiempo_primera - oleadas_timer) / 60)
+		temp_text_right += $"{seg > 60 ? string(floor(seg / 60)) + "m " : ""}{seg mod 60}s {L.game_first_wave}\n"
+	}
+	else{
+		var seg = floor((60 * oleadas_tiempo_primera - image_index) mod (60 * oleadas_tiempo) / 60) + oleadas_tiempo
+		temp_text_right += $"{seg > 60 ? string(floor(seg / 60)) + "m " : ""}{seg mod 60}s {L.game_next_wave}\n"
+	}
+}
+if mision_actual >= 0 and win = 0{
+	var a = mision_actual
+	if not in(mision_objetivo[a], 5, 6)
+		temp_text_right += $"\n\n{mision_nombre[a]}\n{objetivos_nombre_display[mision_objetivo[a]]} {mision_target_num[a]} "
+	if mision_objetivo[a] < 2
+		temp_text_right += recurso_nombre_display[mision_target_id[a]]
+	else if in(mision_objetivo[a], 2, 3, 7)
+		temp_text_right += edificio_nombre_display[mision_target_id[a]]
+	else if mision_objetivo[a] = 4
+		temp_text_right += L.mision_enemigos
+	if not in(mision_objetivo[a], 5, 7)
+		temp_text_right += $"\n{mision_counter} / {mision_target_num[a]}"
+	if mision_tiempo[a] > 0 and mision_tiempo_show[a]
+		temp_text_right += $"\n{L.mision_tiempo}: {floor(mision_current_tiempo / 60)}s"
+}
+if temp_text_right != ""{
+	temp_text_right = string_trim(temp_text_right)
+	draw_set_halign(fa_right)
+	draw_text_background(room_width, 0, temp_text_right)
+	draw_set_halign(fa_left)
+}
+if draw_sprite_boton(spr_manual, room_width - 64, string_height(temp_text_right), 64, 64, $"{L.game_enciclopedia} (Y)")
+	enciclopedia = true
 //Input
 if keyboard_check_pressed(vk_anykey) and win = 0 and not show_menu{
 	if keyboard_check_pressed(ord("P")){
-		pausa = not pausa
-		if pausa{
-			build_index = 0
-			show_menu = false
-			puerto_carga_bool = false
-			build_menu = 0
-			mouse_clear(mb_any)
-			keyboard_clear(vk_anykey)
-		}
+		if pausa = 2
+			pausa = 0
+		else if pausa = 0
+			pausa = 2
 	}
 	if keyboard_check_pressed(ord("R"))
 		game_restart()
@@ -4780,10 +4795,17 @@ if keyboard_check_pressed(vk_anykey) and win = 0 and not show_menu{
 		build_index = 0
 	}
 	if keyboard_check_pressed(vk_escape){
-		if pausa
-			pausa = false
-		else
-			menu = 0
+		if pausa > 0
+			pausa = 0
+		else{
+			pausa = 1
+			build_index = 0
+			show_menu = false
+			puerto_carga_bool = false
+			build_menu = 0
+			mouse_clear(mb_any)
+			keyboard_clear(vk_anykey)
+		}
 	}
 	if keyboard_check_pressed(ord("G"))
 		grafic_tile_animation = not grafic_tile_animation
