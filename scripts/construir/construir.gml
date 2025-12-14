@@ -35,7 +35,7 @@ function construir(index, dir, mx, my){
 						temp_edificio.array_real[0] = cos(d)
 						temp_edificio.array_real[1] = -sin(d)
 						flag = false
-						if in(var_edificio_nombre, "Cinta Transportadora", "Enrutador", "Cinta Magnética"){
+						if in(var_edificio_nombre, "Enrutador", "Cinta Magnética"){
 							if (dir mod 3) = 1
 								temp_edificio.yscale = power(-1, dir > 1)
 							else{
