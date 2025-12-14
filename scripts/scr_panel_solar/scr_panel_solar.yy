@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_panel_solar",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_panel_solar",
+  "parent":{
+    "name":"Acciones",
+    "path":"folders/SCRIPTS/Acciones.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

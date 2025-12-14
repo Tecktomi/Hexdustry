@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_taladro_explosion",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_taladro_explosion",
+  "parent":{
+    "name":"Acciones",
+    "path":"folders/SCRIPTS/Acciones.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -11,6 +11,8 @@ function calculate_in_out_2(edificio = control.null_edificio, set_receptor = tru
 		for(var i = 0; i < ds_list_size(edificio.outputs); i++){
 			var temp_edificio = edificio.outputs[|i]
 			array_remove(temp_edificio.inputs, edificio)
+			if edificio_nombre[temp_edificio.index] = "Cinta Transportadora"
+				camino_calcular_in(temp_edificio)
 		}
 		ds_list_clear(edificio.outputs)
 		if set_receptor

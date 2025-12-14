@@ -345,7 +345,8 @@ function add_edificio(index, dir, a, b){
 					generacion: 0,
 					consumo: 0,
 					almacen : 0,
-					almacen_max : 0
+					almacen_max : 0,
+					eficiencia : 0
 				}
 				ds_list_add(flujos, new_flujo)
 				edificio.flujo = new_flujo
@@ -358,7 +359,8 @@ function add_edificio(index, dir, a, b){
 					generacion: 0,
 					consumo: 0,
 					almacen : 0,
-					almacen_max : 0
+					almacen_max : 0,
+					eficiencia : 0
 				}
 				size = ds_list_size(temp_list_flujos)
 				for(var c = 0; c < size; c++){

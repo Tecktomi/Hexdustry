@@ -193,7 +193,8 @@ function delete_edificio(aa, bb, enemigo = false){
 							generacion: 0,
 							consumo: 0,
 							bateria: 0,
-							bateria_max : 0
+							bateria_max : 0,
+							eficiencia : 0
 						}
 						if red_bateria > 0
 							temp_red_2.bateria = floor(temp_red.bateria * isla_bateria / red_bateria)
@@ -273,7 +274,8 @@ function delete_edificio(aa, bb, enemigo = false){
 								generacion: 0,
 								consumo: 0,
 								almacen: 0,
-								almacen_max : 0
+								almacen_max : 0,
+								eficiencia : 0
 							}
 							if flujo_almacen > 0
 								temp_flujo_2.almacen = floor(temp_flujo.almacen * isla_almacen / flujo_almacen)
