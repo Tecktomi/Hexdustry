@@ -29,10 +29,10 @@ function game_start(){
 						delete_edificio(a, b)
 				}
 			}
-		for(var a = array_length(enemigos); a > 0; a--)
-			destroy_dron(enemigos[a - 1])
-		for(var a = array_length(drones_aliados); a > 0; a--)
-			destroy_dron(drones_aliados[a - 1])
+		for(var a = array_length(enemigos) - 1; a >= 0; a--)
+			destroy_dron(enemigos[a])
+		for(var a = array_length(drones_aliados) - 1; a >= 0; a--)
+			destroy_dron(drones_aliados[a])
 		for(var a = 0; a < rss_max; a++)
 			nucleo.carga[a] = carga_inicial[a]
 		for(var a = 0; a < chunk_xsize; a++)

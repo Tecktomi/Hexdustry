@@ -18,8 +18,8 @@ function scr_bomba_hidraulica(edificio = control.null_edificio){
 				change_flujo(0, edificio)
 			}
 			if grafic_luz and flujo.liquido != 3 and edificio.select = 3 and not edificio.luz
-				for(var b = 0; b < ds_list_size(flujo.edificios); b++){
-					var temp_edificio = flujo.edificios[|b]
+				for(var b = ds_list_size(flujo.edificios) - 1; b >= 0; b--){
+					var temp_edificio = flujo.edificios[b]
 					if not temp_edificio.luz{
 						temp_edificio.luz = true
 						add_luz(temp_edificio.a, temp_edificio.b, 1)

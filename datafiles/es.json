@@ -64,6 +64,7 @@
 "Onda de Choque": "Onda de Choque",
 "Muro Reforzado": "Muro Reforzado",
 "Silo de Misiles": "Silo de Misiles",
+"Planta de Enriquecimiento": "Planta de Enriquecimiento",
 
 "descripcion_Núcleo": "Es el centro de mando, aquí se almacenan todos los recursos y debes protegerlo a toda costa",
 "descripcion_Taladro": "Permite minar cobre, hierro y carbón sin coste alguno.    Puede potenciarse con Agua",
@@ -114,6 +115,7 @@
 "descripcion_Onda de Choque": "Carga y libera una gran onda de choque que daña y ralentiza a todos los enemigos en su rango",
 "descripcion_Muro Reforzado": "Versión mejorada del muro, más duro y mejor",
 "descripcion_Silo de Misiles": "Aquí se puede construir un misíl nuclear usándo acero, explosivos, petróleo y uranio enriquecido al 90%",
+"descripcion_Planta de Enriquecimiento": "Permite reciclar el uranio consumiendo grandes cantidades de agua y energía de manera constante",
 
 "Cobre": "Cobre",
 "Carbón": "Carbón",

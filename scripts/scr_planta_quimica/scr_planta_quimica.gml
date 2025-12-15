@@ -43,7 +43,7 @@ function scr_planta_quimica(edificio = control.null_edificio){
 					edificio.carga[11]--
 					edificio.carga_total -= 3
 					flujo.liquido = 1
-					edificio.fuel = 60 / vel
+					edificio.fuel = 60
 					mover_in(edificio)
 				}
 				else if edificio.select = 1{

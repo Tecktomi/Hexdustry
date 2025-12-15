@@ -53,9 +53,8 @@ function scr_torres_basicas(edificio = control.null_edificio){
 							for(var c = array_length(temp_array) - 1; c >= 0; c--){
 								var temp_enemigo = temp_array[c]
 								if point_in_triangle(temp_enemigo.a, temp_enemigo.b, aa, bb, x1, y1, x2, y2){
-									temp_enemigo.vida -= vel
-									temp_enemigo.efecto[1] = 300 / vel
-									if temp_enemigo.vida <= 0
+									temp_enemigo.efecto[1] = 300
+									if --temp_enemigo.vida <= 0
 										destroy_dron(temp_enemigo)
 								}
 							}
@@ -65,7 +64,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 						edificio.carga[tiro_struct.recurso] -= tiro_struct.cantidad
 						edificio.carga_total -= tiro_struct.cantidad
 						dis = sqrt(dis)
-						var municion = add_municion(aa, bb, vel * 25 * (enemigo.a - aa) / dis, vel * 25 * (enemigo.b - bb) / dis, var_edificio_nombre = "Mortero" ? 1 : (var_edificio_nombre = "Lanzallamas" ? 2 : 0), dis / 25, tiro_struct.dmg * dmg_factor, enemigo, null_edificio)
+						var municion = add_municion(aa, bb, 25 * (enemigo.a - aa) / dis, 25 * (enemigo.b - bb) / dis, var_edificio_nombre = "Mortero" ? 1 : (var_edificio_nombre = "Lanzallamas" ? 2 : 0), dis / 25, tiro_struct.dmg * dmg_factor, enemigo, null_edificio)
 						array_push(municiones, municion)
 						if var_edificio_nombre = "Lanzallamas"{
 							angle = arctan2(bb - enemigo.b, aa - enemigo.a)

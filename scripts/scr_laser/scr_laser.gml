@@ -13,7 +13,7 @@ function scr_laser(edificio = control.null_edificio){
 			edificio.select = radtodeg(-arctan2(edificio.x - enemigo.a, enemigo.b - edificio.y)) - 90
 			change_energia(edificio_energia_consumo[index], edificio)
 			edificio.mode = true
-			enemigo.vida -= 3 * red_power * vel
+			enemigo.vida -= 3 * red_power
 			draw_set_alpha(red_power)
 			draw_set_color(c_red)
 			draw_line_off(edificio.x + edificio.array_real[2], edificio.y + 14, enemigo.a, enemigo.b)

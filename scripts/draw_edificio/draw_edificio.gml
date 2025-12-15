@@ -1,11 +1,11 @@
 function draw_edificio(x, y, index, dir, alpha = 1){
 	with control{
 		var var_edificio_nombre = edificio_nombre[index]
-		if edificio_camino[index] or in(var_edificio_nombre, "Túnel", "Túnel salida"){
-			if in(var_edificio_nombre, "Cinta Transportadora", "Enrutador", "Cinta Magnética"){
-				var c = vel * image_index >> 1
-				if in(var_edificio_nombre, "Cinta Magnética")
-					c = vel * image_index
+		if edificio_camino[index] or in(index, id_tunel, id_tunel_salida){
+			if in(index, id_cinta_transportadora, id_enrutador, id_cinta_magnetica){
+				var c = image_index >> 1
+				if index = id_cinta_magnetica
+					c = image_index
 				if dir mod 3 = 1
 					draw_sprite_off(edificio_sprite[index], c, x, y, 1, power(-1, dir > 1),,, alpha)
 				else
@@ -16,7 +16,7 @@ function draw_edificio(x, y, index, dir, alpha = 1){
 		}
 		else if edificio_size[index] mod 2 = 0
 			draw_sprite_off(edificio_sprite[index], 0, x, y, power(-1, dir),,,, alpha)
-		else if in(var_edificio_nombre, "Tubería")
+		else if index = id_turbina
 			draw_sprite_off(edificio_sprite[index], 0, x, y,,,,, alpha)
 		else
 			draw_sprite_off(edificio_sprite[index], 0, x, y,,, dir * 60,, alpha)

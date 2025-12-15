@@ -1,10 +1,8 @@
 randomize()
 draw_set_font(ft_letra)
-game_set_speed(60, gamespeed_fps)
-vel = 60 / game_get_speed(gamespeed_fps)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "11_12_2025")
+ini_write_string("Global", "version", "14_12_2025")
 ini_close()
 save_files = scan_files("*.txt", fa_none)
 for(var a = array_length(save_files) - 1; a >= 0; a--){
@@ -72,9 +70,7 @@ set_idioma(idiomas[idioma], false)
 		cos_angle_dir[a] = cos(angle_dir[a])
 		sin_angle_dir[a] = sin(angle_dir[a])
 	}
-	pre_build_list = ds_list_create()
-	ds_list_add(pre_build_list, {a : 0, b : 0})
-	ds_list_clear(pre_build_list)
+	pre_build_list = array_create(0, {a : 0, b : 0})
 	background = ds_grid_create(chunk_xsize, chunk_ysize)
 	for(var a = 0; a < chunk_xsize; a++)
 		for(var b = 0; b < chunk_ysize; b++)
@@ -189,6 +185,8 @@ set_idioma(idiomas[idioma], false)
 	tecnologia = true
 	tecnologia_precio_multiplicador = 1
 	chunk_update = true
+	LOGIC_DT = 1 / 60
+	acumulator = 0
 #endregion
 null_edificio = {
 	index : -1,
@@ -201,7 +199,7 @@ null_edificio = {
 	bordes : ds_list_create(),
 	inputs : [],
 	input_index : 0,
-	outputs : ds_list_create(),
+	outputs : [],
 	output_index : 0,
 	proceso : 0,
 	carga : [0],
@@ -216,9 +214,9 @@ null_edificio = {
 	idle : false,
 	link : undefined,
 	red : undefined,
-	energia_link : ds_list_create(),
+	energia_link : [],
 	flujo : undefined,
-	flujo_link: ds_list_create(),
+	flujo_link: [],
 	vida : 0,
 	target : undefined,
 	flujo_consumo : 0,
@@ -256,10 +254,8 @@ ds_list_add(null_edificio.coordenadas, {a : 0, b : 0})
 ds_list_clear(null_edificio.coordenadas)
 ds_list_add(null_edificio.bordes, {a : 0, b : 0})
 ds_list_clear(null_edificio.bordes)
-ds_list_add(null_edificio.energia_link, null_edificio)
-ds_list_clear(null_edificio.energia_link)
-ds_list_add(null_edificio.flujo_link, null_edificio)
-ds_list_clear(null_edificio.flujo_link)
+null_edificio.energia_link = array_create(0, null_edificio)
+null_edificio.flujo_link = array_create(0, null_edificio)
 ds_grid_clear(null_edificio.coordenadas_dis, 0)
 ds_list_add(null_edificio.coordenadas_close, {a : 0, b : 0})
 ds_list_clear(null_edificio.coordenadas_close)
@@ -375,10 +371,10 @@ drones_aliados = array_create(0, null_enemigo)
 null_edificio.target = null_enemigo
 chunk_enemigos = ds_grid_create(chunk_xsize, chunk_ysize)
 chunk_edificios = ds_grid_create(chunk_xsize, chunk_ysize)
-for(var a = ds_grid_width(chunk_enemigos); a > 0; a--)
-	for(var b = ds_grid_height(chunk_enemigos); b > 0; b--){
-		ds_grid_set(chunk_enemigos, a - 1, b - 1, array_create(0, null_enemigo))
-		ds_grid_set(chunk_edificios, a - 1, b - 1, array_create(0, null_edificio))
+for(var a = ds_grid_width(chunk_enemigos) - 1; a >= 0; a--)
+	for(var b = ds_grid_height(chunk_enemigos) - 1; b >= 0; b--){
+		ds_grid_set(chunk_enemigos, a, b, array_create(0, null_enemigo))
+		ds_grid_set(chunk_edificios, a, b, array_create(0, null_edificio))
 	}
 //Disparos
 null_municion = add_municion()
@@ -400,8 +396,8 @@ municiones = array_create(0, null_municion)
 			"Unidad de asedio superior, dispara explosivos alargo alcance dañando todo a su alrededor",
 			"Unidad aerea superior, dispara a distancia"
 		]
-	for(var a = array_length(dron_descripcion); a > 0; a--)
-		dron_descripcion[a - 1] = text_wrap(dron_descripcion[a - 1], 400)
+	for(var a = array_length(dron_descripcion) - 1; a >= 0; a--)
+		dron_descripcion[a] = text_wrap(dron_descripcion[a], 400)
 #endregion
 #region Arreglos
 	dron_nombre = array_create(0, "")
@@ -571,8 +567,6 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 #endregion
 rss_max = array_length(recurso_nombre)
 sort_recursos()
-for(var a = 0; a < rss_max; a++)
-	recurso_combustion_time[a] /= vel
 //Liquidos
 liquido_nombre = ["Agua", "Ácido", "Petróleo", "Lava"]
 liquido_color = [make_color_rgb(37, 109, 123), make_color_rgb(255, 245, 0), make_color_rgb(0, 10, 10), make_color_rgb(251, 175, 93)]
@@ -632,7 +626,8 @@ lq_max = array_length(liquido_nombre)
 		"Conecta líneas de líquidos por debajo tierra",
 		"Carga y libera una gran onda de choque que daña y ralentiza a todos los enemigos en su rango",
 		"Versión mejorada del muro, más duro y mejor",
-		"Aquí se puede construir un misíl nuclear usándo acero, explosivos, petróleo y uranio enriquecido al 90%"
+		"Aquí se puede construir un misíl nuclear usándo acero, explosivos, petróleo y uranio enriquecido al 90%",
+		"Permite reciclar el uranio consumiendo grandes cantidades de agua y energía de manera constante"
 	]
 	for(var a = array_length(edificio_descripcion) - 1; a >= 0; a--)
 		edificio_descripcion[a] = text_wrap(edificio_descripcion[a], 400)
@@ -704,6 +699,7 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, vida =
 	else
 		array_push(edificio_output_id, array_create(0, 0))
 	ds_map_add(edificio_index, string_lower(name), array_length(edificio_energia))
+	return array_length(edificio_energia)
 }
 function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alcance = 0, inerte = false){
 	array_push(edificio_energia, (energia != 0))
@@ -718,61 +714,62 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	array_push(edificio_inerte, inerte)
 }
 #region Definición
-	def_edificio("Núcleo", 3, spr_base,, 1200,,,,,,, true); def_edificio_2(,,,,, true)
-	def_edificio("Taladro", 2, spr_taladro,, 200, 120, scr_taladro,, [0], [15], 10,,,,, true, false, [0, 1, 3]); def_edificio_2(, 10, 3)
-	def_edificio("Cinta Transportadora", 1, spr_camino, spr_camino_diagonal, 30, 20, scr_caminos, true, [0], [1], 1, true,,,, true); def_edificio_2()
-	def_edificio("Enrutador", 1, spr_enrutador, spr_enrutador_2, 60, 10, scr_caminos, true, [0], [4], 1, true,,,, true); def_edificio_2()
-	def_edificio("Selector", 1, spr_selector, spr_selector_color, 60, 10, scr_caminos, true, [0], [4], 1, true,,,, true); def_edificio_2()
-	def_edificio("Overflow", 1, spr_overflow,, 60, 10, scr_caminos, true, [0], [4], 1, true,,,, true); def_edificio_2()
-	def_edificio("Túnel", 1, spr_tunel,, 60, 10, scr_caminos,, [0, 3], [4, 4], 1, true, true,,, true, true); def_edificio_2()
-	def_edificio("Horno", 2, spr_horno, spr_horno_encendido, 250, 150, scr_horno,, [0, 3], [10, 20], 80, true, false, [0, 1, 3, 5, 12], [10, 10, 10, 10, 10], true, false, [2, 4, 7]); def_edificio_2()
-	def_edificio("Taladro Eléctrico", 3, spr_taladro_electrico,, 400, 45, scr_taladro,, [2, 4], [20, 10], 20,,,,, true, false, [0, 1, 3, 5, 6, 9, 10, 11]); def_edificio_2(50, 10, 3)
-	def_edificio("Triturador", 2, spr_triturador,, 250, 20, scr_triturador,, [2, 4], [10, 25], 50, true, false, [6, 9, 10, 11], [10, 10, 10, 10], true, false, [5]); def_edificio_2(30)
+	id_nucleo = def_edificio("Núcleo", 3, spr_base,, 1200,,,,,,, true); def_edificio_2(,,,,, true)
+	id_taladro = def_edificio("Taladro", 2, spr_taladro,, 200, 120, scr_taladro,, [0], [15], 10,,,,, true, false, [0, 1, 3]); def_edificio_2(, 10, 3)
+	id_cinta_transportadora = def_edificio("Cinta Transportadora", 1, spr_camino, spr_camino_diagonal, 30, 20, scr_caminos, true, [0], [1], 1, true,,,, true); def_edificio_2()
+	id_enrutador = def_edificio("Enrutador", 1, spr_enrutador, spr_enrutador_2, 60, 10, scr_caminos, true, [0], [4], 1, true,,,, true); def_edificio_2()
+	id_selector = def_edificio("Selector", 1, spr_selector, spr_selector_color, 60, 10, scr_caminos, true, [0], [4], 1, true,,,, true); def_edificio_2()
+	id_overflow = def_edificio("Overflow", 1, spr_overflow,, 60, 10, scr_caminos, true, [0], [4], 1, true,,,, true); def_edificio_2()
+	id_tunel = def_edificio("Túnel", 1, spr_tunel,, 60, 10, scr_caminos,, [0, 3], [4, 4], 1, true, true,,, true, true); def_edificio_2()
+	id_horno = def_edificio("Horno", 2, spr_horno, spr_horno_encendido, 250, 150, scr_horno,, [0, 3], [10, 20], 80, true, false, [0, 1, 3, 5, 12], [10, 10, 10, 10, 10], true, false, [2, 4, 7]); def_edificio_2()
+	id_taladro_electrico = def_edificio("Taladro Eléctrico", 3, spr_taladro_electrico,, 400, 45, scr_taladro,, [2, 4], [20, 10], 20,,,,, true, false, [0, 1, 3, 5, 6, 9, 10, 11]); def_edificio_2(50, 10, 3)
+	id_triturador = def_edificio("Triturador", 2, spr_triturador,, 250, 20, scr_triturador,, [2, 4], [10, 25], 50, true, false, [6, 9, 10, 11], [10, 10, 10, 10], true, false, [5]); def_edificio_2(30)
 	//10
-	def_edificio("Generador", 1, spr_generador, spr_generador_encendido, 100,, scr_generador,, [0, 3], [20, 5], 20, true, false, [1, 12], [10, 10], false); def_edificio_2(-30)
-	def_edificio("Cable", 1, spr_cable,, 30,,,, [0, 3], [5, 1]); def_edificio_2(,,,,, true)
-	def_edificio("Batería", 1, spr_bateria,, 60,,,, [2, 14], [5, 3]); def_edificio_2(,,,,, true)
-	def_edificio("Panel Solar", 2, spr_panel_solar,, 150,, scr_panel_solar,, [0, 2, 7], [10, 10, 5]); def_edificio_2(-6)
-	def_edificio("Bomba Hidráulica", 2, spr_bomba,, 200,, scr_bomba_hidraulica,, [0, 2, 3], [10, 25, 10]); def_edificio_2(25, 60, -40)
-	def_edificio("Tubería", 1, spr_tuberia, spr_tuberia_color, 30,,,, [2], [1]); def_edificio_2(, 10,,,, true)
-	def_edificio("Túnel salida", 1, spr_tunel_salida,, 60, 10, scr_caminos,, [0, 3], [4, 4], 1,,,,, true, true); def_edificio_2()
-	def_edificio("Energía Infinita", 1, spr_energia_infinita,, 100); def_edificio_2(-999_999,,,,, true)
-	def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, 60, 10, scr_caminos, true, [2, 3], [1, 1], 1, true,,,, true); def_edificio_2()
-	def_edificio("Torre básica", 1, spr_torre, spr_torre_2, 300, 30, scr_torres_basicas,, [0, 3], [10, 25], 20, true, false, [0, 3], [10, 10]); def_edificio_2(, 10, 20, 0, 180)
+	id_generador = def_edificio("Generador", 1, spr_generador, spr_generador_encendido, 100,, scr_generador,, [0, 3], [20, 5], 20, true, false, [1, 12], [10, 10], false); def_edificio_2(-30)
+	id_cable = def_edificio("Cable", 1, spr_cable,, 30,,,, [0, 3], [5, 1]); def_edificio_2(,,,,, true)
+	id_bateria = def_edificio("Batería", 1, spr_bateria,, 60,,,, [2, 14], [5, 3]); def_edificio_2(,,,,, true)
+	id_panel_solar = def_edificio("Panel Solar", 2, spr_panel_solar,, 150,, scr_panel_solar,, [0, 2, 7], [10, 10, 5]); def_edificio_2(-6)
+	id_bomba_hidraulica = def_edificio("Bomba Hidráulica", 2, spr_bomba,, 200,, scr_bomba_hidraulica,, [0, 2, 3], [10, 25, 10]); def_edificio_2(25, 60, -40)
+	id_tuberia = def_edificio("Tubería", 1, spr_tuberia, spr_tuberia_color, 30,,,, [2], [1]); def_edificio_2(, 10,,,, true)
+	id_tunel_salida = def_edificio("Túnel salida", 1, spr_tunel_salida,, 60, 10, scr_caminos,, [0, 3], [4, 4], 1,,,,, true, true); def_edificio_2()
+	id_energia_infinita = def_edificio("Energía Infinita", 1, spr_energia_infinita,, 100); def_edificio_2(-999_999,,,,, true)
+	id_cinta_magnetica = def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, 60, 10, scr_caminos, true, [2, 3], [1, 1], 1, true,,,, true); def_edificio_2()
+	id_torre_basica = def_edificio("Torre básica", 1, spr_torre, spr_torre_2, 300, 30, scr_torres_basicas,, [0, 3], [10, 25], 20, true, false, [0, 3], [10, 10]); def_edificio_2(, 10, 20, 0, 180)
 	//20
-	def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, 400, 45, scr_torres_basicas,, [0, 3, 4], [10, 10, 10], 40, true, false, [2, 4, 17, 19], [10, 10, 10, 10]); def_edificio_2(, 10, 30, 1, 300)
-	def_edificio("Lanzallamas", 2, spr_lanzallamas, spr_lanzallamas_2, 400, 1, scr_torres_basicas,, [0, 2, 3], [15, 15, 10], 20, true, false, [1, 12], [10, 10]); def_edificio_2(, 10, 4, 3, 130)
-	def_edificio("Planta Química", 3, spr_planta_quimica,, 200, 60, scr_planta_quimica,, [0, 2, 3, 7], [20, 10, 20, 10], 60, true, false, [1, 3, 5, 6, 9, 10, 11], [0, 0, 0, 0, 0, 0, 0], true, false, [8, 11, 12, 13, 14, 15]); def_edificio_2(50, 10)
-	def_edificio("Láser", 2, spr_laser, spr_laser_2, 400, 1, scr_laser,, [0, 4, 16], [10, 10, 5]); def_edificio_2(90,,, 0, 220)
-	def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, 200,,,, [2, 4], [20, 10]); def_edificio_2(, 300,,,, true)
-	def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, 30); def_edificio_2(, 10, -999_999,,, true)
-	def_edificio("Turbina", 2, spr_turbina,, 160,, scr_turbina,, [0, 2, 4], [10, 10, 10], 20, true, false, [1, 12], [10, 10]); def_edificio_2(-120, 10, 40)
-	def_edificio("Refinería de Metales", 3, spr_refineria_minerales,, 150, 80, scr_refineria_metales,, [2, 4, 8], [15, 15, 10], 30, true, false, [9, 10, 17], [5, 5, 10], true, false, [0, 3, 18, 19]); def_edificio_2(50, 10, 2)
-	def_edificio("Fábrica de Drones", 2, spr_fabrica_drones,, 200, 900, scr_fabrica_drones,, [0, 4, 16], [20, 15, 10], 20, true, false, [14, 15, 16], [1, 3, 1]); def_edificio_2(120)
-	def_edificio("Recurso Infinito", 1, spr_recurso_infinito, spr_selector_color, 30,, scr_recurso_infinito,,,,,,,,, true, true); def_edificio_2()
+	id_rifle = def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, 400, 45, scr_torres_basicas,, [0, 3, 4], [10, 10, 10], 40, true, false, [2, 4, 17, 19], [10, 10, 10, 10]); def_edificio_2(, 10, 30, 1, 300)
+	id_lanzallamas = def_edificio("Lanzallamas", 2, spr_lanzallamas, spr_lanzallamas_2, 400, 1, scr_torres_basicas,, [0, 2, 3], [15, 15, 10], 20, true, false, [1, 12], [10, 10]); def_edificio_2(, 10, 4, 3, 130)
+	id_planta_quimica = def_edificio("Planta Química", 3, spr_planta_quimica,, 200, 60, scr_planta_quimica,, [0, 2, 3, 7], [20, 10, 20, 10], 60, true, false, [1, 3, 5, 6, 9, 10, 11], [0, 0, 0, 0, 0, 0, 0], true, false, [8, 11, 12, 13, 14, 15]); def_edificio_2(50, 10)
+	id_laser = def_edificio("Láser", 2, spr_laser, spr_laser_2, 400, 1, scr_laser,, [0, 4, 16], [10, 10, 5]); def_edificio_2(90,,, 0, 220)
+	id_deposito = def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, 200,,,, [2, 4], [20, 10]); def_edificio_2(, 300,,,, true)
+	id_liquido_infinito = def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, 30); def_edificio_2(, 10, -999_999,,, true)
+	id_turbina = def_edificio("Turbina", 2, spr_turbina,, 160,, scr_turbina,, [0, 2, 4], [10, 10, 10], 20, true, false, [1, 12], [10, 10]); def_edificio_2(-120, 10, 40)
+	id_refineria_de_metales = def_edificio("Refinería de Metales", 3, spr_refineria_minerales,, 150, 80, scr_refineria_metales,, [2, 4, 8], [15, 15, 10], 30, true, false, [9, 10, 17], [5, 5, 10], true, false, [0, 3, 18, 19]); def_edificio_2(50, 10, 2)
+	id_fabrica_de_drones = def_edificio("Fábrica de Drones", 2, spr_fabrica_drones,, 200, 900, scr_fabrica_drones,, [0, 4, 16], [20, 15, 10], 20, true, false, [14, 15, 16], [1, 3, 1]); def_edificio_2(120)
+	id_recurso_infinito = def_edificio("Recurso Infinito", 1, spr_recurso_infinito, spr_selector_color, 30,, scr_recurso_infinito,,,,,,,,, true, true); def_edificio_2()
 	//30
-	def_edificio("Bomba de Evaporación", 1, spr_bomba_evaporacion, spr_tuberia_color, 30,, scr_bomba_evaporacion,, [2], [15]); def_edificio_2(, 10, -5)
-	def_edificio("Horno de Lava", 2, spr_horno_lava, spr_horno_lava_encendido, 400, 90, scr_horno_lava,, [4, 8], [15, 10], 60, true, false, [0, 3, 5], [10, 10, 10], true, false, [2, 4, 7]); def_edificio_2(, 10, 1)
-	def_edificio("Generador Geotérmico", 2, spr_generador_geotermico,, 200,, scr_generador_geotermico,, [0, 4, 8], [10, 10, 10]); def_edificio_2(-90, 10, 30)
-	def_edificio("Taladro de Explosión", 3, spr_taladro_explosivo,, 300, 300, scr_taladro_explosion,, [2, 4, 8], [40, 40, 30], 40, true, false, [13], [10], true, false, [0, 1, 3, 5, 6, 9, 10, 11, 17]); def_edificio_2()
-	def_edificio("Muro", 1, spr_hexagono,, 500,,,, [8], [1]); def_edificio_2(,,,,, true)
-	def_edificio("Puerto de Carga", 2, spr_punto_carga,, 150,, scr_puerto_carga,, [0, 3, 16], [10, 10, 1], 25,, true,,,, true); def_edificio_2()
-	def_edificio("Ensambladora", 3, spr_ensambladora,, 400, 150, scr_ensambladora,, [2, 3, 4, 7], [10, 20, 10, 10], 20, true, false, [0, 7], [5, 5], true, false, [16]); def_edificio_2(100)
-	def_edificio("Planta Nuclear", 4, spr_planta_nuclear,, 500,, scr_planta_nuclear,, [0, 4, 8, 16], [100, 80, 50, 20], 21, true, false, [18, 19], [1, 20]); def_edificio_2(-1500, 150, 300)
-	def_edificio("Torre de Alta Tensión", 2, spr_cable_tension,, 100,,,, [0, 4, 16], [30, 10, 2]); def_edificio_2(5,,,,, true)
-	def_edificio("Perforadora de Petróleo", 3, spr_perforadora,, 200,, scr_perforadora_petroleo,, [2, 4, 8], [10, 15, 10]); def_edificio_2(120, 10, -2)
+	id_bomba_de_evaporacion = def_edificio("Bomba de Evaporación", 1, spr_bomba_evaporacion, spr_tuberia_color, 30,, scr_bomba_evaporacion,, [2], [15]); def_edificio_2(, 10, -5)
+	id_horno_de_lava = def_edificio("Horno de Lava", 2, spr_horno_lava, spr_horno_lava_encendido, 400, 90, scr_horno_lava,, [4, 8], [15, 10], 60, true, false, [0, 3, 5], [10, 10, 10], true, false, [2, 4, 7]); def_edificio_2(, 10, 1)
+	id_generador_geotermico = def_edificio("Generador Geotérmico", 2, spr_generador_geotermico,, 200,, scr_generador_geotermico,, [0, 4, 8], [10, 10, 10]); def_edificio_2(-90, 10, 30)
+	id_taladro_de_explosion = def_edificio("Taladro de Explosión", 3, spr_taladro_explosivo,, 300, 300, scr_taladro_explosion,, [2, 4, 8], [40, 40, 30], 40, true, false, [13], [10], true, false, [0, 1, 3, 5, 6, 9, 10, 11, 17]); def_edificio_2()
+	id_muro = def_edificio("Muro", 1, spr_hexagono,, 500,,,, [8], [1]); def_edificio_2(,,,,, true)
+	id_puerto_de_carga = def_edificio("Puerto de Carga", 2, spr_punto_carga,, 150,, scr_puerto_carga,, [0, 3, 16], [10, 10, 1], 25,, true,,,, true); def_edificio_2()
+	id_ensambladora = def_edificio("Ensambladora", 3, spr_ensambladora,, 400, 150, scr_ensambladora,, [2, 3, 4, 7], [10, 20, 10, 10], 20, true, false, [0, 7], [5, 5], true, false, [16]); def_edificio_2(100)
+	id_planta_nuclear = def_edificio("Planta Nuclear", 4, spr_planta_nuclear,, 500,, scr_planta_nuclear,, [0, 4, 8, 16], [100, 80, 50, 20], 21, true, false, [18, 19], [1, 20]); def_edificio_2(-1500, 150, 300)
+	id_torre_de_alta_tension = def_edificio("Torre de Alta Tensión", 2, spr_cable_tension,, 100,,,, [0, 4, 16], [30, 10, 2]); def_edificio_2(5,,,,, true)
+	id_perforadora_de_petroleo = def_edificio("Perforadora de Petróleo", 3, spr_perforadora,, 200,, scr_perforadora_petroleo,, [2, 4, 8], [10, 15, 10]); def_edificio_2(120, 10, -2)
 	//40
-	def_edificio("Mortero", 3, spr_mortero, spr_mortero_2, 600, 180, scr_torres_basicas,, [4, 8], [50, 30], 10, true, false, [13], [10]); def_edificio_2(,,, 2, 600)
-	def_edificio("Procesador", 2, spr_procesador,, 80,, scr_procesador,, [0, 15, 16], [20, 40, 20]); def_edificio_2(5)
-	def_edificio("Mensaje", 1, spr_mensaje,, 50,,,, [0, 16], [10, 3]); def_edificio_2(,,,,, true)
-	def_edificio("Memoria", 1, spr_memoria,, 50,,,, [0, 16], [10, 3]); def_edificio_2(,,,,, true)
-	def_edificio("Torre Reparadora", 2, spr_torre_reparadora, spr_torre_reparadora_2, 100,, scr_torre_reparadora,, [2, 3, 7], [10, 15, 15]); def_edificio_2(40,,, 0, 200)
-	def_edificio("Tubería Subterránea", 1, spr_tuberia_subterranea,, 30,,,, [2, 3], [5, 5]); def_edificio_2(, 10,,,, true)
-	def_edificio("Onda de Choque", 2, spr_onda_de_choque,, 800, 150, scr_onda_choque,, [0, 14, 16], [20, 10, 10]); def_edificio_2(300,,, 0, 100)
-	def_edificio("Muro Reforzado", 2, spr_muro_reforzado,, 2400,,,, [4, 8, 19], [2, 3, 1]); def_edificio_2(,,,,, true)
-	def_edificio("Silo de Misiles", 4, spr_silo_de_misiles,, 1600, 1200, scr_silo_misiles,, [3, 8, 16], [200, 100, 50], 200, true, false, [4, 13, 18, 19], [120, 30, 45, 5]); def_edificio_2(300, 10, 10)
+	id_mortero = def_edificio("Mortero", 3, spr_mortero, spr_mortero_2, 600, 180, scr_torres_basicas,, [4, 8], [50, 30], 10, true, false, [13], [10]); def_edificio_2(,,, 2, 600)
+	id_procesador = def_edificio("Procesador", 2, spr_procesador,, 80,, scr_procesador,, [0, 15, 16], [20, 40, 20]); def_edificio_2(5)
+	id_mensaje = def_edificio("Mensaje", 1, spr_mensaje,, 50,,,, [0, 16], [10, 3]); def_edificio_2(,,,,, true)
+	id_memoria = def_edificio("Memoria", 1, spr_memoria,, 50,,,, [0, 16], [10, 3]); def_edificio_2(,,,,, true)
+	id_torre_reparadora = def_edificio("Torre Reparadora", 2, spr_torre_reparadora, spr_torre_reparadora_2, 100,, scr_torre_reparadora,, [2, 3, 7], [10, 15, 15]); def_edificio_2(40,,, 0, 200)
+	id_tuberia_subterranea = def_edificio("Tubería Subterránea", 1, spr_tuberia_subterranea,, 30,,,, [2, 3], [5, 5]); def_edificio_2(, 10,,,, true)
+	id_onda_de_choque = def_edificio("Onda de Choque", 2, spr_onda_de_choque,, 800, 150, scr_onda_choque,, [0, 14, 16], [20, 10, 10]); def_edificio_2(300,,, 0, 100)
+	id_muro_reforzado = def_edificio("Muro Reforzado", 2, spr_muro_reforzado,, 2400,,,, [4, 8, 19], [2, 3, 1]); def_edificio_2(,,,,, true)
+	id_silo_de_misiles = def_edificio("Silo de Misiles", 4, spr_silo_de_misiles,, 1600, 1200, scr_silo_misiles,, [3, 8, 16], [200, 100, 50], 200, true, false, [4, 13, 18, 19], [120, 30, 45, 5]); def_edificio_2(300, 10, 10)
+	id_planta_de_enriquecimiento = def_edificio("Planta de Enriquecimiento", 4, spr_planta_breeding,, 600, 600, scr_planta_enriquecimiento,, [0, 4, 8, 16], [100, 80, 40, 50], 21, true, false, [18, 19], [20, 1], true, false, [18]); def_edificio_2(200, 10, 150)
 #endregion
-categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 8, 33, 39], [7, 9, 22, 36, 27, 31], [11, 10, 12, 13, 26, 32, 37, 38], [15, 30, 14, 24, 45], [19, 20, 21, 23, 34, 40, 44, 46, 47, 48], [41, 42, 43]]
+categoria_edificios = [[2, 3, 4, 5, 6, 18, 28, 35], [1, 8, 33, 39], [7, 9, 22, 36, 27, 31, 49], [11, 10, 12, 13, 26, 32, 37, 38], [15, 30, 14, 24, 45], [19, 20, 21, 23, 34, 40, 44, 46, 47, 48], [41, 42, 43]]
 for(var a = 0; a < array_length(categoria_edificios); a++)
 	for(var b = 0; b < array_length(categoria_edificios[a]); b++)
 		edificio_key[categoria_edificios[a, b]] = $"{a + 1}{(b + 1) mod 10}"
@@ -798,32 +795,32 @@ edificio_construible = array_create(edificio_max, true)
 edificio_tecnologia = array_create(edificio_max, false)
 edificio_tecnologia_desbloqueable = array_create(edificio_max, false)
 mision_edificios = array_create(edificio_max, true)
-edificio_rotable[6] = true
-edificio_input_all[16] = true
-edificio_energia[11] = true
-edificio_energia[12] = true
-edificio_input_all[35] = true
-edificio_output_all[35] = true
-edificio_energia[38] = true
-edificio_construible[0] = false
-edificio_construible[16] = false
-edificio_construible[17] = false
-edificio_construible[25] = false
-edificio_construible[29] = false
-edificio_key[17] = "4 "
-edificio_key[25] = "5 "
-edificio_key[29] = "1 "
+edificio_rotable[id_tunel] = true
+edificio_input_all[id_tunel_salida] = true
+edificio_energia[id_cable] = true
+edificio_energia[id_bateria] = true
+edificio_input_all[id_puerto_de_carga] = true
+edificio_output_all[id_puerto_de_carga] = true
+edificio_energia[id_torre_de_alta_tension] = true
+edificio_construible[id_nucleo] = false
+edificio_construible[id_tunel_salida] = false
+edificio_construible[id_energia_infinita] = false
+edificio_construible[id_liquido_infinito] = false
+edificio_construible[id_recurso_infinito] = false
+edificio_key[id_energia_infinita] = "4 "
+edificio_key[id_liquido_infinito] = "5 "
+edificio_key[id_recurso_infinito] = "1 "
 size_size = [1, 3, 7, 12, 19]
 size_borde = [6, 9, 12, 15, 18, 21]
 size_fx = [fx_construir_1, fx_construir_2, fx_construir_3, fx_construir_4, spr_hexagono_5]
 edificios_construibles = array_create(0, 0)
 for(var a = 0; a < array_length(categoria_nombre); a++)
 	edificios_construibles = array_concat(edificios_construibles, categoria_edificios[a])
-edificios = ds_list_create()
+edificios = array_create(0, null_edificio)
 torres_reparadoras = array_create(0, null_edificio)
 edificios_counter = array_create(edificio_max, 0)
 nucleos = array_create(0, null_edificio)
-edificios_targeteables = ds_list_create()
+edificios_targeteables = array_create(0, null_edificio)
 torres_de_tension = array_create(0, null_edificio)
 edi_sort = array_create(edificio_max, 0)
 sort_edificios()
@@ -943,7 +940,6 @@ sort_edificios()
 	edificio_tecnologia_next = array_create(edificio_max)
 	edificio_tecnologia_precio = array_create(edificio_max)
 	for(var a = 0; a < edificio_max; a++){
-		edificio_proceso[a] /= vel
 		edificio_tecnologia_prev[a] = array_create(0, 0)
 		edificio_tecnologia_next[a] = array_create(0, 0)
 	}
@@ -1002,6 +998,7 @@ sort_edificios()
 	def_tecnologia("onda de choque", "láser", "batería", "ensambladora")
 	def_tecnologia("muro reforzado", "muro", "refinería de metales")
 	def_tecnologia("silo de misiles", "planta nuclear", "procesador", "mortero", "depósito")
+	def_tecnologia("planta de enriquecimiento", "planta nuclear", "procesador")
 	edificio_tecnologia_nivel = array_create(edificio_max, -1)
 	tecnologia_nivel_edificios = [array_create(0, 0)]
 	var edi_count = 0
@@ -1052,7 +1049,7 @@ sort_edificios()
 #endregion
 //Redes electricas
 null_red = {
-	edificios : ds_list_create(),
+	edificios : array_create(0, null_edificio),
 	generacion: 0,
 	consumo : 0,
 	bateria : 0,
@@ -1060,14 +1057,10 @@ null_red = {
 	eficiencia : 0
 }
 null_edificio.red = null_red
-ds_list_add(null_red.edificios, null_edificio)
-ds_list_clear(null_red.edificios)
-redes = ds_list_create()
-ds_list_add(redes, null_red)
-ds_list_clear(redes)
+redes = array_create(0, null_red)
 //Flujos de líquidos
 null_flujo ={
-	edificios : ds_list_create(),
+	edificios : array_create(0, null_edificio),
 	liquido : 0,
 	generacion: 0,
 	consumo: 0,
@@ -1076,11 +1069,7 @@ null_flujo ={
 	eficiencia : 0
 }
 null_edificio.flujo = null_flujo
-ds_list_add(null_flujo.edificios, null_edificio)
-ds_list_clear(null_flujo.edificios)
-flujos = ds_list_create()
-ds_list_add(flujos, null_flujo)
-ds_list_clear(flujos)
+flujos = array_create(0, null_flujo)
 //Agua, piedra, petróleo y lava
 var temp_peso = [0, 0, 0, 0, 0, 1, 1, 2, 3, 3, 3, 4]
 var temp_peso_data = [[0, 20], [2, 20], [5, 10], [9, 50], [14, 15]], size = array_length(temp_peso)
