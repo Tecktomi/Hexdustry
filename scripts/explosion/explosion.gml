@@ -9,15 +9,15 @@ function explosion(aa = 0, bb = 0, edificio = control.null_edificio){
 			for(var a = max(chunk_x - 1, 0); a <= maxa; a++)
 				for(var b = max(chunk_y - 1, 0); b <= maxb; b++){
 					var temp_array = chunk_edificios[# a, b]
-					for(var i = array_length(temp_array); i > 0; i--){
-						edificio = temp_array[i - 1]
+					for(var i = array_length(temp_array) - 1; i >= 0; i--){
+						edificio = temp_array[i]
 						var dis = distance_sqr(aa, bb, edificio.x, edificio.y)
 						if dis < 14_400//120^2
 							edificio_herir(edificio, 1000 / (10 + sqrt(dis)))
 					}
 				}
-			for(var a = array_length(drones_aliados); a > 0; a--){
-				var temp_dron = drones_aliados[a - 1], dis = distance_sqr(aa, bb, edificio.x, edificio.y)
+			for(var a = array_length(drones_aliados) - 1; a >= 0; a--){
+				var temp_dron = drones_aliados[a], dis = distance_sqr(aa, bb, edificio.x, edificio.y)
 				if dis < 14_400{//120^2
 					temp_dron.vida -= 1000 / (10 + sqrt(dis))
 					if temp_dron.vida <= 0

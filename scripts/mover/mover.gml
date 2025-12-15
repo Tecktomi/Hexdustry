@@ -8,13 +8,13 @@ function mover(aa, bb){
 		for(out = 0; out < rss_max; out++)
 			if edificio.carga[out] > 0 and edificio.carga_output[out]{
 				//Output selector
-				if in(var_edificio_nombre, "Selector"){
+				if var_edificio_nombre = "Selector"{
 					//Output selector frontal
 					if (edificio.carga_id = edificio.select xor edificio.mode){
 						var temp_complex = next_to(edificio.a, edificio.b, edificio.dir), aaa = temp_complex.a, bbb = temp_complex.b
 						if edificio_bool[# aaa, bbb]{
 							temp_edificio = edificio_id[# aaa, bbb]
-							if ds_list_in(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
+							if array_contains(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
 								flag = true
 								break
 							}
@@ -29,7 +29,7 @@ function mover(aa, bb){
 						var temp_complex = next_to(edificio.a, edificio.b, (edificio.dir + 1 + b * 4) mod 6), aaa = temp_complex.a, bbb = temp_complex.b
 						if edificio_bool[# aaa, bbb]{
 							temp_edificio = edificio_id[# aaa, bbb]
-							if ds_list_in(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
+							if array_contains(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
 								flag = true
 								edificio.output_index = 1 - b
 								break
@@ -38,13 +38,13 @@ function mover(aa, bb){
 					}
 				}
 				//Output overflow
-				else if in(var_edificio_nombre, "Overflow"){
+				else if var_edificio_nombre = "Overflow"{
 					//Output frontal
 					if not edificio.mode{
 						var temp_complex = next_to(edificio.a, edificio.b, edificio.dir), aaa = temp_complex.a, bbb = temp_complex.b
 						if edificio_bool[# aaa, bbb]{
 							temp_edificio = edificio_id[# aaa, bbb]
-							if ds_list_in(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
+							if array_contains(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
 								flag = true
 								break
 							}
@@ -59,7 +59,7 @@ function mover(aa, bb){
 						var temp_complex = next_to(edificio.a, edificio.b, (edificio.dir + 1 + b * 4) mod 6), aaa = temp_complex.a, bbb = temp_complex.b
 						if edificio_bool[# aaa, bbb]{
 							temp_edificio = edificio_id[# aaa, bbb]
-							if ds_list_in(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
+							if array_contains(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
 								flag = true
 								edificio.output_index = 1 - b
 								break
@@ -71,7 +71,7 @@ function mover(aa, bb){
 						var temp_complex = next_to(edificio.a, edificio.b, edificio.dir), aaa = temp_complex.a, bbb = temp_complex.b
 						if edificio_bool[# aaa, bbb]{
 							temp_edificio = edificio_id[# aaa, bbb]
-							if ds_list_in(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
+							if array_contains(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
 								flag = true
 								break
 							}
@@ -80,11 +80,11 @@ function mover(aa, bb){
 				}
 				//Output general
 				else{
-					for(var a = 0; a < ds_list_size(edificio.outputs); a++){
-						temp_edificio = edificio.outputs[|(edificio.output_index + a) mod ds_list_size(edificio.outputs)]
+					for(var a = 0; a < array_length(edificio.outputs); a++){
+						temp_edificio = edificio.outputs[(edificio.output_index + a) mod array_length(edificio.outputs)]
 						if (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = 0{
 							flag = true
-							edificio.output_index = (edificio.output_index + a + 1) mod ds_list_size(edificio.outputs)
+							edificio.output_index = (edificio.output_index + a + 1) mod array_length(edificio.outputs)
 							break
 						}
 					}

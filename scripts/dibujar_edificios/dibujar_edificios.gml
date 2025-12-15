@@ -1,6 +1,5 @@
 function dibujar_edificios(){
 	with control{
-		var c = image_index * vel
 		for(var a = mina; a <= maxa; a++)
 			for(var b = minb; b <= maxb; b++)
 				if edificio_draw[# a, b]{
@@ -8,29 +7,29 @@ function dibujar_edificios(){
 					//Dibujo caminos
 					if edificio_camino[index] or in(var_edificio_nombre, "Túnel", "Túnel salida"){
 						if var_edificio_nombre = "Cinta Transportadora"
-							draw_sprite_off(camino_general[dir, edificio.array_real[4]], c >> 1, aa, bb)
+							draw_sprite_off(camino_general[dir, edificio.array_real[4]], image_index >> 1, aa, bb)
 						else if in(var_edificio_nombre, "Selector", "Overflow")
 							draw_sprite_off(edificio_sprite[index], real(edificio.mode), aa, bb,,, edificio.draw_rot)
 						else if in(var_edificio_nombre, "Enrutador", "Cinta Magnética"){
-							var d = c >> 1
+							var d = image_index >> 1
 							if var_edificio_nombre = "Cinta Magnética"
-								d = c
+								d = image_index
 							if (dir mod 3) = 1
 								draw_sprite_off(edificio_sprite[index], d, aa, bb,, edificio.yscale)
 							else
 								draw_sprite_off(edificio_sprite_2[index], d, aa, bb, edificio.xscale, edificio.yscale)
 						}
 						else
-							draw_sprite_off(edificio_sprite[index], c << 2, aa, bb,,, edificio.draw_rot)
+							draw_sprite_off(edificio_sprite[index], image_index << 2, aa, bb,,, edificio.draw_rot)
 						if var_edificio_nombre = "Selector" and edificio.select >= 0
-							draw_sprite_off(edificio_sprite_2[index], c << 2, aa, bb,,, edificio.draw_rot, recurso_color[edificio.select])
+							draw_sprite_off(edificio_sprite_2[index], image_index << 2, aa, bb,,, edificio.draw_rot, recurso_color[edificio.select])
 					}
 					else{
 						//Dibujo edificios con horno
 						if in(var_edificio_nombre, "Horno", "Generador") and edificio.fuel > 0
-							draw_sprite_off(edificio_sprite_2[index], c << 2, aa, bb, edificio.array_real[2] / 8)
+							draw_sprite_off(edificio_sprite_2[index], image_index << 2, aa, bb, edificio.array_real[2] / 8)
 						else if var_edificio_nombre = "Horno de Lava" and edificio.flujo.liquido = 3
-							draw_sprite_off(edificio_sprite_2[index], c << 2, aa, bb, edificio.array_real[2] / 8)
+							draw_sprite_off(edificio_sprite_2[index], image_index << 2, aa, bb, edificio.array_real[2] / 8)
 						//Dibujo de bateria
 						else if var_edificio_nombre = "Batería"
 							draw_sprite_off(edificio_sprite[index], floor(10 * edificio.red.bateria / edificio.red.bateria_max), aa, bb,,, dir * 60)
@@ -41,7 +40,7 @@ function dibujar_edificios(){
 								draw_sprite_off(spr_bomba_color, 0, aa + edificio.array_real[2], bb + 14)
 							else
 								draw_sprite_off(spr_bomba_color, 0, aa + edificio.array_real[2], bb + 14,,,, liquido_color[edificio.flujo.liquido], edificio.flujo.almacen / edificio.flujo.almacen_max)
-							draw_sprite_off(spr_bomba_rotor, 1, aa + edificio.array_real[2], bb + 14,,, c)
+							draw_sprite_off(spr_bomba_rotor, 1, aa + edificio.array_real[2], bb + 14,,, image_index)
 							draw_sprite_off(spr_bomba_cupula, 1, aa + edificio.array_real[2], bb + 14)
 						}
 						//Dibujo bomba tamaño impar
@@ -51,7 +50,7 @@ function dibujar_edificios(){
 								draw_sprite_off(spr_bomba_color, 0, aa, bb)
 							else
 								draw_sprite_off(spr_bomba_color, 0, aa, bb,,,, liquido_color[edificio.flujo.liquido], edificio.flujo.almacen / edificio.flujo.almacen_max)
-							draw_sprite_off(spr_bomba_rotor, 1, aa, bb,,, c)
+							draw_sprite_off(spr_bomba_rotor, 1, aa, bb,,, image_index)
 							draw_sprite_off(spr_bomba_cupula, 1, aa, bb)
 						}
 						//Dibujo líquido sin bomba
@@ -77,12 +76,12 @@ function dibujar_edificios(){
 						}
 						//Dibujo predeterminado tamaño par
 						else if edificio_size[index] mod 2 = 0
-							draw_sprite_off(edificio_sprite[index], c << 2, aa, bb, edificio.array_real[2] / 8)
+							draw_sprite_off(edificio_sprite[index], image_index << 2, aa, bb, edificio.array_real[2] / 8)
 						//Dibujo predeterminado tamaño impar
 						else
-							draw_sprite_off(edificio_sprite[index], c << 2, aa, bb,,, dir * 60)
+							draw_sprite_off(edificio_sprite[index], image_index << 2, aa, bb,,, dir * 60)
 						if var_edificio_nombre = "Recurso Infinito" and edificio.select >= 0
-							draw_sprite_off(edificio_sprite_2[index], c << 2, aa, bb,,,, recurso_color[edificio.select])
+							draw_sprite_off(edificio_sprite_2[index], image_index << 2, aa, bb,,,, recurso_color[edificio.select])
 					}
 					//Dibujo estados
 					if info and edificio.waiting{

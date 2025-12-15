@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_planta_enriquecimiento",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_planta_enriquecimiento",
+  "parent":{
+    "name":"Acciones",
+    "path":"folders/SCRIPTS/Acciones.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

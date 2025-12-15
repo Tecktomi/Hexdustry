@@ -90,20 +90,20 @@ function construir(index, dir, mx, my){
 					build_target.link.idle = true
 					if build_target.index = 16{
 						array_remove(build_target.inputs, build_target.link)
-						ds_list_remove(build_target.link.outputs, build_target)
+						array_remove(build_target.link.outputs, build_target)
 					}
 					else{
-						ds_list_remove(build_target.outputs, build_target.link)
+						array_remove(build_target.outputs, build_target.link)
 						array_remove(build_target.link.inputs, build_target)
 					}
 				}
 				build_target.idle = false
 				if index = 16{
 					array_push(edificio.inputs, build_target)
-					ds_list_add(build_target.outputs, edificio)
+					array_push(build_target.outputs, edificio)
 				}
 				else{
-					ds_list_add(edificio.outputs, build_target)
+					array_push(edificio.outputs, build_target)
 					array_push(build_target.inputs, edificio)
 				}
 				edificio.link = build_target

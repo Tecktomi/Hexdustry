@@ -34,9 +34,8 @@ function edificio_pathfind(edificio = control.null_edificio){
 			}
 		}
 		ds_grid_clear(edificio_cercano_dir, -1)
-		size = ds_list_size(edificios_targeteables)
-		for(var c = 0; c < size; c++){
-			var temp_edificio = edificios_targeteables[|c]
+		for(var c = array_length(edificios_targeteables) - 1; c >= 0; c--){
+			var temp_edificio = edificios_targeteables[c]
 			ds_list_clear(temp_edificio.coordenadas_close)
 		}
 		for(var c = 0; c < xsize; c++)

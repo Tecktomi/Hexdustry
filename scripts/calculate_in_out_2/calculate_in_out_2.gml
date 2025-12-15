@@ -1,20 +1,20 @@
 function calculate_in_out_2(edificio = control.null_edificio, set_receptor = true){
 	var index = edificio.index, a = edificio.a, b = edificio.b, dir = edificio.dir, var_edificio_nombre = edificio_nombre[index]
 	with control{
-		for(var i = 0; i < array_length(edificio.inputs); i++){
+		for(var i = array_length(edificio.inputs) - 1; i >= 0; i--){
 			var temp_edificio = edificio.inputs[i]
-			ds_list_remove(temp_edificio.outputs, edificio)
+			array_remove(temp_edificio.outputs, edificio)
 		}
 		edificio.inputs = []
 		if set_receptor
 			edificio.receptor = edificio_receptor[index]
-		for(var i = 0; i < ds_list_size(edificio.outputs); i++){
-			var temp_edificio = edificio.outputs[|i]
+		for(var i = array_length(edificio.outputs) - 1; i >= 0; i--){
+			var temp_edificio = edificio.outputs[i]
 			array_remove(temp_edificio.inputs, edificio)
 			if edificio_nombre[temp_edificio.index] = "Cinta Transportadora"
 				camino_calcular_in(temp_edificio)
 		}
-		ds_list_clear(edificio.outputs)
+		edificio.outputs = []
 		if set_receptor
 			edificio.emisor = edificio_emisor[index]
 		//Añadir inputs y outputs
@@ -31,15 +31,19 @@ function calculate_in_out_2(edificio = control.null_edificio, set_receptor = tru
 				var flag = false
 				if edificio_input_all[temp_index] or edificio_output_all[index]
 					flag = true
-				else for(var d = 0; d < array_length(edificio_input_id[temp_index]); d++)
-					for(var e = 0; e < array_length(edificio_output_id[index]); e++)
-						if edificio_input_id[temp_index, d] = edificio_output_id[index, e]{
+				else for(var d = array_length(edificio_input_id[temp_index]) - 1; d >= 0; d--){
+					var f = edificio_input_id[temp_index, d]
+					for(var e = array_length(edificio_output_id[index]) - 1; e >= 0; e--)
+						if f = edificio_output_id[index, e]{
 							flag = true
 							break
 						}
+					if flag
+						break
+				}
 				if var_edificio_nombre = "Túnel"
 					flag = false
-				if flag and temp_edificio.receptor and edificio.emisor and ds_list_find_index(edificio.outputs, temp_edificio) = -1{
+				if flag and temp_edificio.receptor and edificio.emisor and not array_contains(edificio.outputs, temp_edificio){
 					flag = true
 					if flag and in(var_edificio_nombre, "Cinta Transportadora", "Cinta Magnética") and not complex_equal(temp_complex, par_dir)
 						flag = false
@@ -59,19 +63,23 @@ function calculate_in_out_2(edificio = control.null_edificio, set_receptor = tru
 						}
 					if flag{
 						array_push(temp_edificio.inputs, edificio)
-						ds_list_add(edificio.outputs, temp_edificio)
+						array_push(edificio.outputs, temp_edificio)
 					}
 				}
 				//INPUTS del nuevo edificio
 				flag = false
 				if edificio_output_all[temp_index] or edificio_input_all[index]
 					flag = true
-				else for(var d = 0; d < array_length(edificio_output_id[temp_index]); d++)
-					for(var e = 0; e < array_length(edificio_input_id[index]); e++)
-						if edificio_output_id[temp_index, d] = edificio_input_id[index, e]{
+				else for(var d = array_length(edificio_output_id[temp_index]) - 1; d >= 0; d--){
+					var f = edificio_output_id[temp_index, d]
+					for(var e = array_length(edificio_input_id[index]) - 1; e >= 0; e--)
+						if f = edificio_input_id[index, e]{
 							flag = true
 							break
 						}
+					if flag
+						break
+				}
 				if flag and temp_edificio.emisor and edificio.receptor and not array_contains(edificio.inputs, temp_edificio){
 					flag = true
 					if temp_var_edificio_nombre = "Túnel"
@@ -103,7 +111,7 @@ function calculate_in_out_2(edificio = control.null_edificio, set_receptor = tru
 						}
 					}
 					if flag{
-						ds_list_add(temp_edificio.outputs, edificio)
+						array_push(temp_edificio.outputs, edificio)
 						array_push(edificio.inputs, temp_edificio)
 						if temp_edificio.waiting
 							mover(temp_a, temp_b)
@@ -114,8 +122,8 @@ function calculate_in_out_2(edificio = control.null_edificio, set_receptor = tru
 		ds_list_destroy(temp_list)
 		if var_edificio_nombre = "Cinta Transportadora"
 			camino_calcular_in(edificio)
-		for(var c = 0; c < ds_list_size(edificio.outputs); c++){
-			var temp_edificio = edificio.outputs[|c]
+		for(var c = array_length(edificio.outputs) - 1; c >= 0; c--){
+			var temp_edificio = edificio.outputs[c]
 			if edificio_nombre[temp_edificio.index] = "Cinta Transportadora"
 				camino_calcular_in(temp_edificio)
 		}

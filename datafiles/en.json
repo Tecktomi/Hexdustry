@@ -64,6 +64,7 @@
 "Onda de Choque": "Shockwave",
 "Muro Reforzado": "Reinforced Wall",
 "Silo de Misiles": "Missile Silo",
+"Planta de Enriquecimiento": "Enrichment Plant",
 
 "descripcion_Núcleo": "It is the command center. All resources are stored here, and you must protect it at all costs.",
 "descripcion_Taladro": "Mines copper, iron, and coal at no cost. Can be boosted with Water.",
@@ -114,6 +115,7 @@
 "descripcion_Onda de Choque": "Charges and releases a powerful shockwave that damages and slows all enemies within its range.",
 "descripcion_Muro Reforzado": "An improved version of the wall, harder and better",
 "descripcion_Silo de Misiles": "Here you can build a nuclear missile using steel, explosives, oil, and 90% enriched uranium.",
+"descripcion_Planta de Enriquecimiento": "Allows recycling uranium by consuming large amounts of water and energy continuously",
 
 "Cobre": "Copper",
 "Carbón": "Coal",

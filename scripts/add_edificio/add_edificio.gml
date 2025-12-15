@@ -14,7 +14,7 @@ function add_edificio(index, dir, a, b){
 			bordes : ds_list_create(),
 			inputs : array_create(0, null_edificio),
 			input_index : 0,
-			outputs : ds_list_create(),
+			outputs : array_create(0, null_edificio),
 			output_index : 0,
 			proceso : 0,
 			carga : array_create(rss_max, 0),
@@ -29,9 +29,9 @@ function add_edificio(index, dir, a, b){
 			idle : false,
 			link : null_edificio,
 			red : null_red,
-			energia_link : ds_list_create(),
+			energia_link : array_create(0, null_edificio),
 			flujo : null_flujo,
-			flujo_link : ds_list_create(),
+			flujo_link : array_create(0, null_edificio),
 			vida : edificio_vida[index],
 			target : null_enemigo,
 			flujo_consumo : 0,
@@ -64,10 +64,6 @@ function add_edificio(index, dir, a, b){
 			edificios_cercanos_heridos : array_create(0, null_edificio),
 			reparadores_cercanos : array_create(0, null_edificio),
 		}
-		ds_list_add(edificio.energia_link, null_edificio)
-		ds_list_clear(edificio.energia_link)
-		ds_list_add(edificio.flujo_link, null_edificio)
-		ds_list_clear(edificio.flujo_link)
 		ds_grid_clear(edificio.coordenadas_dis, infinity)
 		ds_list_add(edificio.coordenadas_close, {a : 0, b : 0})
 		ds_list_clear(edificio.coordenadas_close)
@@ -104,7 +100,7 @@ function add_edificio(index, dir, a, b){
 		var temp_list_size = get_size(a, b, dir, edificio_size[index])
 		var temp_list_arround = get_arround(a, b, dir, edificio_size[index])
 		ds_grid_set(edificio_draw, a, b, true)
-		ds_list_add(edificios, edificio)
+		array_push(edificios, edificio)
 		edificios_counter[index]++
 		var size = ds_list_size(temp_list_arround)
 		for(var c = 0; c < size; c++)
@@ -138,8 +134,8 @@ function add_edificio(index, dir, a, b){
 			var alc = edificio_alcance_sqr[44]
 			if var_edificio_nombre = "Torre Reparadora"{
 				array_push(torres_reparadoras, edificio)
-				for(var c = ds_list_size(edificios) - 2; c >= 0; c--){
-					var temp_edificio = edificios[|c]
+				for(var c = array_length(edificios) - 2; c >= 0; c--){
+					var temp_edificio = edificios[c]
 					if distance_sqr(temp_edificio.x, temp_edificio.y, x, y) < alc{
 						array_push(edificio.edificios_cercanos, temp_edificio)
 						array_push(temp_edificio.reparadores_cercanos, edificio)
@@ -159,7 +155,7 @@ function add_edificio(index, dir, a, b){
 		//Edificios targeteables
 		if index = 0{
 			edificio_pathfind(edificio)
-			ds_list_add(edificios_targeteables, edificio)
+			array_push(edificios_targeteables, edificio)
 			size = array_length(enemigos)
 			for(var c = 0; c < size; c++){
 				var enemigo = enemigos[c]
@@ -199,8 +195,8 @@ function add_edificio(index, dir, a, b){
 				if edificio_bool[# aa, bb]{
 					var temp_edificio = edificio_id[# aa, bb]
 					if (edificio_energia[temp_edificio.index] and in(var_edificio_nombre, "Generador", "Batería", "Panel Solar", "Energía Infinita", "Turbina", "Generador Geotérmico", "Planta Nuclear", "Torre de Alta Tensión")) or (edificio_energia[index] and in(edificio_nombre[temp_edificio.index], "Generador", "Batería", "Panel Solar", "Energía Infinita", "Turbina", "Generador Geotérmico", "Planta Nuclear", "Torre de Alta Tensión")){
-						ds_list_add(edificio.energia_link, temp_edificio)
-						ds_list_add(temp_edificio.energia_link, edificio)
+						array_push(edificio.energia_link, temp_edificio)
+						array_push(temp_edificio.energia_link, edificio)
 						if not ds_list_in(temp_list_redes, temp_edificio.red)
 							ds_list_add(temp_list_redes, temp_edificio.red)
 					}
@@ -217,8 +213,8 @@ function add_edificio(index, dir, a, b){
 				if (aa != a or bb != b) and edificio_draw[# aa, bb]{
 					var temp_edificio = edificio_id[# aa, bb]
 					if (var_edificio_nombre = "Cable" and edificio_energia[temp_edificio.index]) or edificio_nombre[temp_edificio.index] = "Cable"{
-						ds_list_add(edificio.energia_link, temp_edificio)
-						ds_list_add(temp_edificio.energia_link, edificio)
+						array_push(edificio.energia_link, temp_edificio)
+						array_push(temp_edificio.energia_link, edificio)
 						if not ds_list_in(temp_list_redes, temp_edificio.red)
 							ds_list_add(temp_list_redes, temp_edificio.red)
 					}
@@ -231,8 +227,8 @@ function add_edificio(index, dir, a, b){
 				for(var c = 0; c < size; c++){
 					var temp_edificio = torres_de_tension[c]
 					if sqr(temp_edificio.x - edificio.x) + sqr(temp_edificio.y - edificio.y) < 1_000_000{//1000^2
-						ds_list_add(edificio.energia_link, temp_edificio)
-						ds_list_add(temp_edificio.energia_link, edificio)
+						array_push(edificio.energia_link, temp_edificio)
+						array_push(temp_edificio.energia_link, edificio)
 						if not ds_list_in(temp_list_redes, temp_edificio.red)
 							ds_list_add(temp_list_redes, temp_edificio.red)
 					}
@@ -241,30 +237,30 @@ function add_edificio(index, dir, a, b){
 			}
 			//Añadir red
 			var temp_red = {
-				edificios: ds_list_create(),
+				edificios: array_create(0, null_edificio),
 				generacion: 0,
 				consumo: 0,
 				bateria: 0,
 				bateria_max : 0,
 				eficiencia : 0
 			}
-			ds_list_add(redes, temp_red)
+			array_push(redes, temp_red)
 			//Combinar otras redes si las hay cerca
 			if not ds_list_empty(temp_list_redes){
 				size = ds_list_size(temp_list_redes)
 				for(var c = 0; c < size; c++){
-					var temp_red_2 = temp_list_redes[|c], size_2 = ds_list_size(temp_red_2.edificios)
-					for(var d = 0; d < size_2; d++){
-						var temp_edificio = temp_red_2.edificios[|d]
+					var temp_red_2 = temp_list_redes[|c]
+					for(var d = array_length(temp_red_2.edificios) - 1; d >= 0; d--){
+						var temp_edificio = temp_red_2.edificios[d]
 						temp_edificio.red = temp_red
-						ds_list_add(temp_red.edificios, temp_edificio)
+						array_push(temp_red.edificios, temp_edificio)
 					}
 					temp_red.consumo += temp_red_2.consumo
 					temp_red.generacion += temp_red_2.generacion
 					temp_red.bateria += temp_red_2.bateria
 					temp_red.bateria_max += temp_red_2.bateria_max
-					ds_list_destroy(temp_red_2.edificios)
-					ds_list_remove(redes, temp_red_2)
+					delete(temp_red_2.edificios)
+					array_remove(redes, temp_red_2)
 					delete(temp_red_2)
 				}
 			}
@@ -281,7 +277,7 @@ function add_edificio(index, dir, a, b){
 				temp_red.bateria_max += 2500
 			else if in(var_edificio_nombre, "Panel Solar", "Procesador")
 				change_energia(edificio_energia_consumo[index], edificio)
-			ds_list_add(temp_red.edificios, edificio)
+			array_push(temp_red.edificios, edificio)
 		}
 		//Detectar cañerías cercanas
 		if edificio_flujo[index]{
@@ -309,8 +305,8 @@ function add_edificio(index, dir, a, b){
 				if edificio_bool[# aa, bb]{
 					var temp_edificio = edificio_id[# aa, bb]
 					if edificio_flujo[temp_edificio.index] and (in(var_edificio_nombre, "Tubería", "Depósito", "Líquido Infinito", "Tubería Subterránea") or in(edificio_nombre[temp_edificio.index], "Tubería", "Depósito", "Líquido Infinito", "Tubería Subterránea")){
-						ds_list_add(edificio.flujo_link, temp_edificio)
-						ds_list_add(temp_edificio.flujo_link, edificio)
+						array_push(edificio.flujo_link, temp_edificio)
+						array_push(temp_edificio.flujo_link, edificio)
 						if not ds_list_in(temp_list_flujos, temp_edificio.flujo)
 							ds_list_add(temp_list_flujos, temp_edificio.flujo)
 					}
@@ -331,8 +327,8 @@ function add_edificio(index, dir, a, b){
 				if flag{
 					edificio.link = temp_edificio
 					temp_edificio.link = edificio
-					ds_list_add(edificio.flujo_link, temp_edificio)
-					ds_list_add(temp_edificio.flujo_link, edificio)
+					array_push(edificio.flujo_link, temp_edificio)
+					array_push(temp_edificio.flujo_link, edificio)
 					if not ds_list_in(temp_list_flujos, temp_edificio.flujo)
 						ds_list_add(temp_list_flujos, temp_edificio.flujo)
 				}
@@ -340,7 +336,7 @@ function add_edificio(index, dir, a, b){
 			}
 			if ds_list_empty(temp_list_flujos){
 				var new_flujo ={
-					edificios : ds_list_create(),
+					edificios : array_create(0, null_edificio),
 					liquido : -1,
 					generacion: 0,
 					consumo: 0,
@@ -348,13 +344,13 @@ function add_edificio(index, dir, a, b){
 					almacen_max : 0,
 					eficiencia : 0
 				}
-				ds_list_add(flujos, new_flujo)
+				array_push(flujos, new_flujo)
 				edificio.flujo = new_flujo
-				ds_list_add(new_flujo.edificios, edificio)
+				array_push(new_flujo.edificios, edificio)
 			}
 			else if in(var_edificio_nombre, "Tubería", "Depósito", "Líquido Infinito", "Tubería Subterránea"){
 				var new_flujo ={
-					edificios : ds_list_create(),
+					edificios : array_create(0, null_edificio),
 					liquido : -1,
 					generacion: 0,
 					consumo: 0,
@@ -366,11 +362,10 @@ function add_edificio(index, dir, a, b){
 				for(var c = 0; c < size; c++){
 					var temp_flujo = temp_list_flujos[|c]
 					if new_flujo.liquido = -1 or temp_flujo.liquido = -1 or new_flujo.liquido = temp_flujo.liquido{
-						var size_2 = ds_list_size(temp_flujo.edificios)
-						for(var d = 0; d < size_2; d++){
-							var temp_edificio = temp_flujo.edificios[|d]
+						for(var d = array_length(temp_flujo.edificios) - 1; d >= 0; d--){
+							var temp_edificio = temp_flujo.edificios[d]
 							temp_edificio.flujo = new_flujo
-							ds_list_add(new_flujo.edificios, temp_edificio)
+							array_push(new_flujo.edificios, temp_edificio)
 						}
 						if new_flujo.liquido = -1
 							new_flujo.liquido = temp_flujo.liquido
@@ -378,18 +373,18 @@ function add_edificio(index, dir, a, b){
 						new_flujo.generacion += temp_flujo.generacion
 						new_flujo.almacen += temp_flujo.almacen
 						new_flujo.almacen_max += temp_flujo.almacen_max
-						ds_list_destroy(temp_flujo.edificios)
-						ds_list_remove(flujos, temp_flujo)
+						delete(temp_flujo.edificios)
+						array_push(flujos, temp_flujo)
 					}
 				}
-				ds_list_add(flujos, new_flujo)
+				array_push(flujos, new_flujo)
 				edificio.flujo = new_flujo
-				ds_list_add(new_flujo.edificios, edificio)
+				array_push(new_flujo.edificios, edificio)
 			}
 			else{
 				var temp_flujo = temp_list_flujos[|0]
 				edificio.flujo = temp_flujo
-				ds_list_add(temp_flujo.edificios, edificio)
+				array_push(temp_flujo.edificios, edificio)
 			}
 			ds_list_destroy(temp_list_flujos)
 			edificio.flujo.almacen_max += edificio_flujo_almacen[index]
@@ -415,6 +410,8 @@ function add_edificio(index, dir, a, b){
 			edificio.select = 0
 		else if in(var_edificio_nombre, "Planta Química", "Fábrica de Drones")
 			edificio.select = -1
+		else if var_edificio_nombre = "Planta de Enriquecimiento"
+			edificio.proceso = -1
 		ds_list_destroy(temp_list_size)
 		ds_list_destroy(temp_list_arround)
 		return edificio
