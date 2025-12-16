@@ -79,7 +79,10 @@ function add_edificio(index, dir, a, b){
 				edificio.proceso = -1
 		}
 		calculate_in_out(edificio)
-		activar_edificio(edificio)
+		if not edificio_inerte[edificio.index]{
+			edificio.pointer = array_length(edificios_activos)
+			array_push(edificios_activos, edificio)
+		}
 		if var_edificio_nombre = "Procesador"{
 			array_push(edificio.procesador_link, edificio)
 			edificio.variables = array_create(16)
