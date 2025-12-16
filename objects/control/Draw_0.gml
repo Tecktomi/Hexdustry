@@ -331,10 +331,10 @@ if menu = 2{
 				mision_choosing_coord_tipo = 0
 			}
 			ypos += text_y + 10
-			if draw_boton(room_width / 2 + 40, ypos, (mision_switch_oleadas[i] ? "" : L.editor_no) + L.editor_cambiar_oleadas)
+			if draw_boton(room_width / 2 + 40, ypos, (mision_switch_oleadas[i] ? "" : L.editor_no + " ") + L.editor_cambiar_oleadas)
 				mision_switch_oleadas[i] = not mision_switch_oleadas[i]
 			ypos += text_y + 10
-			if draw_boton(room_width / 2  + 40, ypos, (mision_camara_move[i] ? "" : L.editor_no) + L.editor_mover_camara){
+			if draw_boton(room_width / 2  + 40, ypos, (mision_camara_move[i] ? "" : L.editor_no + " ") + L.editor_mover_camara){
 				mision_camara_move[i] = not mision_camara_move[i]
 				if mision_camara_move[i]{
 					mision_choosing_coord = true
@@ -382,7 +382,7 @@ if menu = 2{
 				xpos = room_width / 2 + 40
 				ypos += 20
 				xpos = draw_text_xpos(xpos, ypos, $"{L.editor_texto_victoria}: ")
-				mision_texto_victoria = draw_boton_text(xpos, ypos, mision_texto_victoria)
+				mision_texto_victoria = draw_boton_text(xpos, ypos, mision_texto_victoria, false)
 			}
 			xpos = room_width / 2 + 40
 			ypos += 20
@@ -2376,6 +2376,8 @@ if pausa != 1 and temp_hexagono != noone and flag and not (show_menu and edifici
 			}
 			else if mouse_check_button(mb_left)
 				construir(b, repair_dir[# mx, my], mx, my)
+			if mouse_check_button(mb_right)
+				ds_grid_set(repair_id, mx, my, -1)
 		}
 	}
 	draw_text_background(0, 0, temp_text)
@@ -2399,7 +2401,7 @@ if sonido
 		volumen[a] = 0
 #region Menú de edificios
 	var just_pressed = false
-	if mouse_check_button_pressed(mb_right) and build_index = 0 and not edificio_bool[# mx, my]{
+	if mouse_check_button_pressed(mb_right) and build_index = 0 and not edificio_bool[# mx, my] and not keyboard_check(ord("Q")){
 		mouse_clear(mb_right)
 		if build_menu = 0{
 			build_menu = 1
@@ -3596,8 +3598,10 @@ if mision_actual >= 0 and win = 0{
 		temp_text_right += L.mision_enemigos
 	if not in(mision_objetivo[a], 5, 7)
 		temp_text_right += $"\n{mision_counter} / {mision_target_num[a]}"
-	if mision_tiempo[a] > 0 and mision_tiempo_show[a]
-		temp_text_right += $"\n{L.mision_tiempo}: {floor(mision_current_tiempo / 60)}s"
+	if mision_tiempo[a] > 0 and mision_tiempo_show[a]{
+		var seg = floor(mision_current_tiempo / 60)
+		temp_text_right += $"\n{L.mision_tiempo}: {seg > 60 ? string(floor(seg / 60)) + "m " + string(seg mod 60) : seg}s"
+	}
 }
 if temp_text_right != ""{
 	temp_text_right = string_trim(temp_text_right)
