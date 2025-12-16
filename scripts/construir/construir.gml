@@ -83,6 +83,23 @@ function construir(index, dir, mx, my){
 		edificio = add_edificio(index, dir, mx, my)
 		//Algoritmo link de tuneles
 		if in(var_edificio_nombre, "Túnel", "Túnel salida"){
+			build_able = false
+			var a = mx, b = my
+			repeat(10){
+				var temp_complex_2 = next_to(a, b, dir)
+				a = temp_complex_2.a
+				b = temp_complex_2.b
+				if a < 0 or b < 0 or a >= xsize or b >= ysize
+					break
+				if edificio_bool[# a, b]{
+					var edificio_2 = edificio_id[# a, b]
+					if in(edificio_nombre[edificio_2.index], "Túnel", "Túnel salida") and edificio_2.dir = (dir + 3) mod 6{
+						build_target = edificio_2
+						build_able = true
+						break
+					}
+				}
+			}
 			build_dir = (dir + 3) mod 6
 			edificio.idle = not build_able
 			if build_able{

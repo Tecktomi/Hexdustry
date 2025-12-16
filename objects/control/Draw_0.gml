@@ -1458,7 +1458,7 @@ if pausa = 1{
 			audio_resume_sound(sonido_id[b])
 	}
 	if draw_boton(a, 600, L.salir)
-		menu = 0
+		game_restart()
 	draw_set_halign(fa_left)
 	draw_set_color(color)
 }
@@ -2996,7 +2996,7 @@ var temp_text_right = ""
 if pausa = 0{
 	var frame_time = min(delta_time / 1_000_000, 0.25)
 	acumulator += frame_time
-	for(ticks = 0; acumulator >= LOGIC_DT and ticks < 5; ticks++){
+	for(ticks = 0; (acumulator >= LOGIC_DT and ticks < 5) or ticks = 0; ticks++){
 		acumulator -= LOGIC_DT
 		timer++
 		//Ciclo edificios
@@ -3006,9 +3006,8 @@ if pausa = 0{
 				continue
 			edificio_script[edificio.index](edificio)
 		}
-		var size_edificios = array_length(edificios_pendientes)
-		for(var a = 0; a < size_edificios; a++){
-			edificio = edificios_pendientes[a]
+		for(var a = array_length(edificios_pendientes) - 1; a >= 0; a--){
+			edificio = array_pop(edificios_pendientes)
 			if edificio.eliminar and edificio.pointer >= 0{
 				edificio.eliminar = false
 				edificios_activos[edificio.pointer] = edificios_activos[array_length(edificios_activos) - 1]
@@ -3022,7 +3021,6 @@ if pausa = 0{
 				array_push(edificios_activos, edificio)
 			}
 		}
-		edificios_pendientes = array_create(0, null_edificio)
 		//Ciclo de los enemigos
 		var cam_center_x = (camx + room_width * zoom / 2), cam_center_y = (camy + room_height * zoom / 2)
 		for(var a = array_length(enemigos) - 1; a >= 0; a--){
@@ -3436,8 +3434,9 @@ if pausa = 0{
 			}
 		}
 		draw_set_alpha(1)
-		if oleadas and ++oleadas_timer >= 60 * oleadas_tiempo_primera or keyboard_check_pressed(vk_enter){
-			if (oleadas_timer - 60 * oleadas_tiempo_primera) mod (60 * oleadas_tiempo) = 0 or keyboard_check_pressed(vk_enter){
+		if oleadas and (++oleadas_timer >= 60 * oleadas_tiempo_primera or keyboard_check_pressed(vk_enter)){
+			var time = oleadas_timer / 60 - oleadas_tiempo_primera
+			if (time mod oleadas_tiempo) = 0 or keyboard_check_pressed(vk_enter){
 				var d = enemigos_spawned++, e = 1, flag_2 = false
 				for(var i = 0; i < array_length(size_size); i++)
 					if d <= size_size[i]{
@@ -3575,11 +3574,13 @@ if info
 	temp_text_right += $"FPS: {fps}\n"
 if oleadas{
 	if oleadas_timer < 60 * oleadas_tiempo_primera{
-		var seg = floor((60 * oleadas_tiempo_primera - oleadas_timer) / 60)
+		var time = oleadas_timer / 60
+		var seg = floor(oleadas_tiempo_primera - time)
 		temp_text_right += $"{seg > 60 ? string(floor(seg / 60)) + "m " : ""}{seg mod 60}s {L.game_first_wave}\n"
 	}
 	else{
-		var seg = floor((60 * oleadas_tiempo_primera - image_index) mod (60 * oleadas_tiempo) / 60) + oleadas_tiempo
+		var time = (oleadas_timer / 60) - oleadas_tiempo_primera
+		var seg = floor(oleadas_tiempo - (time mod oleadas_tiempo))
 		temp_text_right += $"{seg > 60 ? string(floor(seg / 60)) + "m " : ""}{seg mod 60}s {L.game_next_wave}\n"
 	}
 }

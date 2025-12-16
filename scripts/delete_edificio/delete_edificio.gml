@@ -286,7 +286,7 @@ function delete_edificio(aa, bb, enemigo = false){
 				}
 			}
 			//Eliminar links
-			for(var a = array_length(temp_edificio.flujo_link) - 1; a >= 0; a--){
+			for(var a = array_length(edificio.flujo_link) - 1; a >= 0; a--){
 				temp_edificio = edificio.flujo_link[a]
 				array_remove(temp_edificio.flujo_link, edificio)
 			}
