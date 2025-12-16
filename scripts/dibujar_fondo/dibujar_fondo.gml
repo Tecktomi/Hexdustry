@@ -26,12 +26,12 @@ function dibujar_fondo(editor = 0){
 					}
 			break
 		}
-		var xsize2 = room_width * zoom, ysize2 = room_height * zoom, xpos = chunk_width * 48 * zoom, ypos = chunk_height * 14 * zoom
+		var xsize2 = (chunk_width + 1) * 48 * zoom, ysize2 = (chunk_height + 1) * 14 * zoom, xpos = chunk_width * 48 * zoom, ypos = chunk_height * 14 * zoom
 		if chunk_update{
 			for(var a = 0; a < chunk_xsize; a++)
 				for(var b = 0; b < chunk_ysize; b++){
 					if not background_bool[# a, b]{
-						var temp_surf = surface_create(room_width, room_height)
+						var temp_surf = surface_create((chunk_width + 1) * 48, (chunk_height + 1) * 14)
 						surface_set_target(temp_surf)
 						var minc = a * chunk_width, mind = b * chunk_height, maxc = min((a + 1) * chunk_width, xsize), maxd = min((b + 1) * chunk_height, ysize)
 						if grafic_pared{
@@ -56,7 +56,7 @@ function dibujar_fondo(editor = 0){
 										draw_sprite(ore_sprite[e], round(ore_random[# c, d]) + 2 * (ore_amount[# c, d] < 50), aa, bb)
 								}
 						}
-						ds_grid_set(background, a, b, sprite_create_from_surface(temp_surf, 0, 0, room_width, room_height, false, false, 0, 0))
+						ds_grid_set(background, a, b, sprite_create_from_surface(temp_surf, 0, 0, (chunk_width + 1) * 48, (chunk_height + 1) * 14, false, false, 0, 0))
 						ds_grid_set(background_bool, a, b, true)
 						chunk_update = false
 						surface_reset_target()

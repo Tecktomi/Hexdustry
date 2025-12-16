@@ -60,10 +60,10 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 							var temp_complex = temp_list[|j], aa = temp_complex.a, bb = temp_complex.b
 							if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or not terreno_caminable[terreno[# aa, bb]]
 								continue
-							if ore[# aa, bb] != dat1
-								ds_grid_add(ore_amount, aa, bb, floor(random_range(0.3, 1) * mena_ore_size))
+							if ore[# aa, bb] = dat1
+								ds_grid_add(ore_amount, aa, bb, floor(random_range(0.3, 1) * ore_size[dat1]))
 							else
-								ds_grid_set(ore_amount, aa, bb, floor(random_range(0.3, 1) * mena_ore_size))
+								ds_grid_set(ore_amount, aa, bb, floor(random_range(0.3, 1) * ore_size[dat1]))
 							ds_grid_set(ore, aa, bb, dat1)
 						}
 						var c = irandom(5)
