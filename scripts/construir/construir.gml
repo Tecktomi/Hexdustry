@@ -1,7 +1,7 @@
 function construir(index, dir, mx, my){
 	with control{
 		var flag = true, flag_2 = false, build_list = get_size(mx, my, dir, edificio_size[index]), edificio, var_edificio_nombre = edificio_nombre[index], temp_complex = abtoxy(mx, my)
-		for(var a = 0; a < ds_list_size(build_list); a++){
+		for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
 			var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
 			//Asegurarse de que esté dentro del mundo
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize{

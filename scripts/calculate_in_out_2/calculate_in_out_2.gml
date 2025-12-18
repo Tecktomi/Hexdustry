@@ -19,7 +19,7 @@ function calculate_in_out_2(edificio = control.null_edificio, set_receptor = tru
 			edificio.emisor = edificio_emisor[index]
 		//Añadir inputs y outputs
 		var temp_list = get_arround(a, b, dir, edificio_size[index])
-		for(var c = 0; c < ds_list_size(temp_list); c++){
+		for(var c = ds_list_size(temp_list) - 1; c >= 0; c--){
 			var temp_complex = temp_list[|c], aa = temp_complex.a, bb = temp_complex.b
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 				continue
@@ -54,7 +54,7 @@ function calculate_in_out_2(edificio = control.null_edificio, set_receptor = tru
 					if flag and in(index, id_tunel_salida) and not(complex_equal(temp_complex, par_dir_2) or complex_equal(temp_complex, par_dir_3) or complex_equal(temp_complex, par_dir_4))
 						flag = false
 					if flag and in(temp_index, id_enrutador, id_selector, id_overflow, id_tunel)
-						for(var d = 0; d < ds_list_size(edificio.coordenadas); d++){
+						for(var d = ds_list_size(edificio.coordenadas) - 1; d >= 0; d--){
 							var temp_complex_2 = edificio.coordenadas[|d]
 							if complex_equal(par_dir_a_5, temp_complex_2) or complex_equal(par_dir_a, temp_complex_2) or complex_equal(par_dir_a_1, temp_complex_2){
 								flag = false
@@ -92,7 +92,7 @@ function calculate_in_out_2(edificio = control.null_edificio, set_receptor = tru
 						flag = false
 					if flag and in(temp_index, id_enrutador, id_selector, id_overflow){
 						flag = false
-						for(var d = 0; d < ds_list_size(edificio.coordenadas); d++){
+						for(var d = ds_list_size(edificio.coordenadas) - 1; d >= 0; d--){
 							var temp_complex_2 = edificio.coordenadas[|d]
 							if complex_equal(par_dir_a_5, temp_complex_2) or complex_equal(par_dir_a, temp_complex_2) or complex_equal(par_dir_a_1, temp_complex_2){
 								flag = true
@@ -102,7 +102,7 @@ function calculate_in_out_2(edificio = control.null_edificio, set_receptor = tru
 					}
 					if flag and temp_index = id_tunel_salida{
 						flag = false
-						for(var d = 0; d < ds_list_size(edificio.coordenadas); d++){
+						for(var d = ds_list_size(edificio.coordenadas) - 1; d >= 0; d--){
 							var temp_complex_2 = edificio.coordenadas[|d]
 							if complex_equal(par_dir_a_2, temp_complex_2) or complex_equal(par_dir_a_3, temp_complex_2) or complex_equal(par_dir_a_4, temp_complex_2){
 								flag = true

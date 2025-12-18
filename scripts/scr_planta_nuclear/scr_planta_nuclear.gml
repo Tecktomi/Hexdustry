@@ -24,8 +24,8 @@ function scr_planta_nuclear(edificio = control.null_edificio){
 				edificio.carga[19]--
 				if grafic_luz and not edificio.luz{
 					edificio.luz = true
-					var temp_list = edificio.coordenadas, size = ds_list_size(temp_list)
-					for(var b = 0; b < size; b++){
+					var temp_list = edificio.coordenadas
+					for(var b = ds_list_size(temp_list) - 1; b >= 0; b--){
 						var temp_complex = temp_list[|b]
 						add_luz(temp_complex.a, temp_complex.b, 1)
 					}
@@ -39,8 +39,8 @@ function scr_planta_nuclear(edificio = control.null_edificio){
 			else{
 				if grafic_luz and edificio.luz{
 					edificio.luz = false
-					var temp_list = edificio.coordenadas, size = ds_list_size(temp_list)
-					for(var b = 0; b < size; b++){
+					var temp_list = edificio.coordenadas
+					for(var b = ds_list_size(temp_list) - 1; b >= 0; b--){
 						var temp_complex = temp_list[|b]
 						add_luz(temp_complex.a, temp_complex.b, -1)
 					}

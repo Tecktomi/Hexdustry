@@ -366,18 +366,20 @@ null_enemigo = {
 	dir : 0,
 	dir_move : 0,
 	step : 0,
-	efecto : array_create(efectos_max, 0)
+	efecto : array_create(efectos_max, 0),
+	array_real : array_create(0, 0)
 }
 enemigos = array_create(0, null_enemigo)
 drones_aliados = array_create(0, null_enemigo)
 null_edificio.target = null_enemigo
 chunk_enemigos = ds_grid_create(chunk_xsize, chunk_ysize)
 chunk_edificios = ds_grid_create(chunk_xsize, chunk_ysize)
-for(var a = ds_grid_width(chunk_enemigos) - 1; a >= 0; a--)
-	for(var b = ds_grid_height(chunk_enemigos) - 1; b >= 0; b--){
+for(var a = chunk_xsize - 1; a >= 0; a--)
+	for(var b = chunk_ysize - 1; b >= 0; b--){
 		ds_grid_set(chunk_enemigos, a, b, array_create(0, null_enemigo))
 		ds_grid_set(chunk_edificios, a, b, array_create(0, null_edificio))
 	}
+selected_dron = null_enemigo
 //Recursos
 #region Definición
 	recurso_descripcion = [
@@ -545,6 +547,8 @@ ore_max = array_length(ore_sprite)
 	dron_vida_max = array_create(0, 0)
 	dron_size = array_create(0, 0)
 	dron_alcance = array_create(0, 0)
+	dron_alcance_chunk_x = array_create(0, 0)
+	dron_alcance_chunk_y = array_create(0, 0)
 	dron_precio_id = array_create(0, array_create(0, 0))
 	dron_precio_num = array_create(0, array_create(0, 0))
 	dron_aereo = array_create(0, false)
@@ -557,6 +561,9 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 	array_push(dron_vida_max, vida)
 	array_push(dron_size, size)
 	array_push(dron_alcance, alcance)
+	var alcance_sqrt = sqrt(alcance)
+	array_push(dron_alcance_chunk_x, ceil(alcance_sqrt / chunk_width / 48))
+	array_push(dron_alcance_chunk_y, ceil(alcance_sqrt / chunk_height / 14))
 	array_push(dron_precio_id, precio_id)
 	array_push(dron_precio_num, precio_num)
 	array_push(dron_aereo, aereo)
@@ -565,7 +572,7 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 	def_dron("Araña", spr_arana,, 100, 400, 6400, [id_bronce, id_baterias, id_electronico], [6, 1, 3])
 	def_dron("Dron", spr_dron,, 40, 400, 100, [id_cobre, id_baterias, id_electronico], [10, 1, 3], true)
 	def_dron("Reparador", spr_reparador,, 60, 400, 2500, [id_silicio, id_baterias, id_plastico, id_electronico], [10, 1, 5, 3], true)
-	def_dron("Explosivo", spr_dron_explosivo,, 50, 400, 1600, [id_hierro, id_explosivo, id_baterias, id_electronico], [6, 1, 1, 3], true)
+	def_dron("Explosivo", spr_dron_explosivo,, 50, 400, 1600, [id_hierro, id_explosivo, id_electronico], [6, 2, 2], true)
 	def_dron("Tanque", spr_tanque, spr_tanque_2, 750, 1600, 90_000, [id_bronce, id_acero, id_electronico], [15, 25, 10])
 	def_dron("Helicoptero", spr_helicoptero, spr_helicoptero_2, 400, 1600, 40_000, [id_bronce, id_acero, id_electronico], [10, 15, 15], true)
 #endregion
@@ -751,7 +758,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	id_liquido_infinito = def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, 30); def_edificio_2(, 10, -999_999,,, true)
 	id_turbina = def_edificio("Turbina", 2, spr_turbina,, 160,, scr_turbina,, [id_cobre, id_bronce, id_acero], [10, 10, 10], 20, true, false, [id_carbon, id_combustible], [10, 10]); def_edificio_2(-120, 10, 50)
 	id_refineria_de_metales = def_edificio("Refinería de Metales", 3, spr_refineria_minerales,, 150, 80, scr_refineria_metales,, [id_bronce, id_acero, id_silicio], [15, 15, 10], 30, true, false, [id_piedra_cuprica, id_piedra_ferrica, id_uranio_bruto], [5, 5, 10], true, false, [id_cobre, id_hierro, id_uranio_enriquecido, id_uranio_empobrecido]); def_edificio_2(50, 10, 2)
-	id_fabrica_de_drones = def_edificio("Fábrica de Drones", 2, spr_fabrica_drones,, 200, 900, scr_fabrica_drones,, [id_cobre, id_acero, id_electronico], [20, 15, 10], 20, true, false, [14, 15, 16], [1, 3, 1]); def_edificio_2(120)
+	id_fabrica_de_drones = def_edificio("Fábrica de Drones", 2, spr_fabrica_drones,, 200, 900, scr_fabrica_drones,, [id_cobre, id_acero, id_electronico], [20, 15, 10], 20, true, false, [], []); def_edificio_2(120)
 	id_recurso_infinito = def_edificio("Recurso Infinito", 1, spr_recurso_infinito, spr_selector_color, 30,, scr_recurso_infinito,,,,,,,,, true, true); def_edificio_2()
 	//30
 	id_bomba_de_evaporacion = def_edificio("Bomba de Evaporación", 1, spr_bomba_evaporacion, spr_tuberia_color, 30,, scr_bomba_evaporacion,, [id_bronce, id_hierro], [10, 5]); def_edificio_2(, 10, -5)
@@ -765,7 +772,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	id_torre_de_alta_tension = def_edificio("Torre de Alta Tensión", 2, spr_cable_tension,, 100,,,, [id_cobre, id_acero, id_electronico], [10, 5, 1]); def_edificio_2(5,,,,, true)
 	id_perforadora_de_petroleo = def_edificio("Perforadora de Petróleo", 3, spr_perforadora,, 200,, scr_perforadora_petroleo,, [id_hierro, id_acero, id_concreto], [10, 15, 10]); def_edificio_2(120, 10, -2)
 	//40
-	id_mortero = def_edificio("Mortero", 3, spr_mortero, spr_mortero_2, 600, 180, scr_torres_basicas,, [id_acero, id_concreto], [50, 30], 10, true, false, [id_explosivo, id_uranio_bruto, id_uranio_empobrecido], [10]); def_edificio_2(,,, 2, 600)
+	id_mortero = def_edificio("Mortero", 3, spr_mortero, spr_mortero_2, 600, 180, scr_torres_basicas,, [id_acero, id_concreto], [50, 30], 30, true, false, [id_explosivo, id_uranio_bruto, id_uranio_empobrecido], [10, 10, 10]); def_edificio_2(,,, 2, 600)
 	id_procesador = def_edificio("Procesador", 2, spr_procesador,, 80,, scr_procesador,, [id_cobre, id_plastico, id_electronico], [20, 40, 20]); def_edificio_2(10)
 	id_mensaje = def_edificio("Mensaje", 1, spr_mensaje,, 50,,,, [id_cobre, id_electronico], [10, 3]); def_edificio_2(,,,,, true)
 	id_memoria = def_edificio("Memoria", 1, spr_memoria,, 50,,,, [id_cobre, id_electronico], [10, 3]); def_edificio_2(,,,,, true)
@@ -820,6 +827,13 @@ edificio_construible[id_recurso_infinito] = false
 edificio_key[id_energia_infinita] = "4 "
 edificio_key[id_liquido_infinito] = "5 "
 edificio_key[id_recurso_infinito] = "1 "
+for(var a = 0; a < dron_max; a++){
+	var c = 0
+	for(var b = array_length(dron_precio_id[a]) - 1; b >= 0; b--)
+		c += dron_precio_num[a, b]
+	edificio_carga_max[id_fabrica_de_drones] = max(edificio_carga_max[id_fabrica_de_drones], 2 * c)
+}
+show_debug_message(edificio_carga_max[id_fabrica_de_drones])
 size_size = [1, 3, 7, 12, 19]
 size_borde = [6, 9, 12, 15, 18, 21]
 size_fx = [fx_construir_1, fx_construir_2, fx_construir_3, fx_construir_4, spr_hexagono_5]
@@ -1093,8 +1107,8 @@ for(var e = 0; e < size; e++){
 	repeat(f){
 		if terreno[# a, b] != 2
 			set_terreno(a, b, c)
-		var temp_list = get_arround(a, b, 0, 1), size_2 = ds_list_size(temp_list)
-		for(var d = 0; d < size_2; d++){
+		var temp_list = get_arround(a, b, 0, 1)
+		for(var d = ds_list_size(temp_list) - 1; d >= 0; d--){
 			var temp_complex = temp_list[|d], aa = temp_complex.a, bb = temp_complex.b
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 				continue
@@ -1190,8 +1204,7 @@ for(var a = 0; a < xsize; a++)
 	}
 //Crear nucelo
 var temp_list = get_size(floor(xsize / 2), floor(ysize / 2), 0, 7)
-size = ds_list_size(temp_list)
-for(var a = 0; a < size; a++){
+for(var a = ds_list_size(temp_list) - 1; a >= 0; a--){
 	var temp_complex = temp_list[|a], aa = temp_complex.a, bb = temp_complex.b
 	if not terreno_caminable[terreno[# aa, bb]]
 		set_terreno(aa, bb, 1)

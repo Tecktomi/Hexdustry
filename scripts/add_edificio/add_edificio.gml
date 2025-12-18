@@ -106,8 +106,7 @@ function add_edificio(index, dir, a, b){
 		ds_grid_set(edificio_draw, a, b, true)
 		array_push(edificios, edificio)
 		edificios_counter[index]++
-		var size = ds_list_size(temp_list_arround)
-		for(var c = 0; c < size; c++)
+		for(var c = ds_list_size(temp_list_arround) - 1; c >= 0; c--)
 			ds_list_add(edificio.bordes, temp_list_arround[|c])
 		if edificio_armas[index]{
 			var dis = edificio_alcance_sqr[index]
@@ -136,7 +135,7 @@ function add_edificio(index, dir, a, b){
 		}
 		#region Torres reparadoras
 			var alc = edificio_alcance_sqr[44]
-			if var_edificio_nombre = "Torre Reparadora"{
+			if index = id_torre_reparadora{
 				array_push(torres_reparadoras, edificio)
 				for(var c = array_length(edificios) - 2; c >= 0; c--){
 					var temp_edificio = edificios[c]
@@ -168,8 +167,7 @@ function add_edificio(index, dir, a, b){
 					enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
 			}
 		}
-		size = ds_list_size(temp_list_size)
-		for(var c = 0; c < size; c++){
+		for(var c = ds_list_size(temp_list_size) - 1; c >= 0; c--){
 			temp_complex = temp_list_size[|c]
 			var aa = temp_complex.a, bb = temp_complex.b
 			ds_grid_set(edificio_bool, aa, bb, true)
@@ -190,8 +188,7 @@ function add_edificio(index, dir, a, b){
 				edificio.energia_consumo = edificio_energia_consumo[index]
 			//Buscar edificios electricos colindantes
 			var temp_list_redes = ds_list_create()
-			size = ds_list_size(temp_list_arround)
-			for(var c = 0; c < size; c++){
+			for(var c = ds_list_size(temp_list_arround) - 1; c >= 0; c--){
 				temp_complex = temp_list_arround[|c]
 				var aa = temp_complex.a, bb = temp_complex.b
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
@@ -208,8 +205,7 @@ function add_edificio(index, dir, a, b){
 			}
 			//Buscar cables cerca
 			var temp_list = get_size(a, b, dir, 7)
-			size = ds_list_size(temp_list)
-			for(var c = 0; c < size; c++){
+			for(var c = ds_list_size(temp_list) - 1; c >= 0; c--){
 				temp_complex = temp_list[|c]
 				var aa = temp_complex.a, bb = temp_complex.b
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
@@ -251,8 +247,7 @@ function add_edificio(index, dir, a, b){
 			array_push(redes, temp_red)
 			//Combinar otras redes si las hay cerca
 			if not ds_list_empty(temp_list_redes){
-				size = ds_list_size(temp_list_redes)
-				for(var c = 0; c < size; c++){
+				for(var c = ds_list_size(temp_list_redes) - 1; c >= 0; c--){
 					var temp_red_2 = temp_list_redes[|c]
 					for(var d = array_length(temp_red_2.edificios) - 1; d >= 0; d--){
 						var temp_edificio = temp_red_2.edificios[d]
@@ -299,8 +294,7 @@ function add_edificio(index, dir, a, b){
 				}
 			}
 			var temp_list_flujos = ds_list_create()
-			size = ds_list_size(temp_list_arround)
-			for(var c = 0; c < size; c++){
+			for(var c = ds_list_size(temp_list_arround) - 1; c >= 0; c--){
 				temp_complex = temp_list_arround[|c]
 				var aa = temp_complex.a, bb = temp_complex.b
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
@@ -361,8 +355,7 @@ function add_edificio(index, dir, a, b){
 					almacen_max : 0,
 					eficiencia : 0
 				}
-				size = ds_list_size(temp_list_flujos)
-				for(var c = 0; c < size; c++){
+				for(var c = ds_list_size(temp_list_flujos) - 1; c >= 0; c--){
 					var temp_flujo = temp_list_flujos[|c]
 					if new_flujo.liquido = -1 or temp_flujo.liquido = -1 or new_flujo.liquido = temp_flujo.liquido{
 						for(var d = array_length(temp_flujo.edificios) - 1; d >= 0; d--){
@@ -407,13 +400,13 @@ function add_edificio(index, dir, a, b){
 				add_luz(a, b, 1)
 			}
 		}
-		if var_edificio_nombre = "Láser"
+		if index = id_laser
 			edificio.mode = true
-		else if in(var_edificio_nombre, "Rifle", "Mortero", "Onda de Choque", "Silo de Misiles")
+		if in(index, id_rifle, id_mortero, id_onda_de_choque, id_silo_de_misiles)
 			edificio.select = 0
-		else if in(var_edificio_nombre, "Planta Química", "Fábrica de Drones")
+		if in(index, id_planta_quimica, id_fabrica_de_drones)
 			edificio.select = -1
-		else if var_edificio_nombre = "Planta de Enriquecimiento"
+		if in(index, id_planta_de_enriquecimiento, id_fabrica_de_drones)
 			edificio.proceso = -1
 		ds_list_destroy(temp_list_size)
 		ds_list_destroy(temp_list_arround)
