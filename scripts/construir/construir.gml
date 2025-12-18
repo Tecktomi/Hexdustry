@@ -14,19 +14,19 @@ function construir(index, dir, mx, my){
 				break
 			}
 			//Checkear coliciones
-			if edificio_bool[# aa, bb] and not ((edificio_camino[index] or in(var_edificio_nombre, "Túnel", "Túnel salida")) and edificio_camino[edificio_id[# aa, bb].index]){
+			if edificio_bool[# aa, bb] and not ((edificio_camino[index] or in(index, id_tunel, id_tunel_salida)) and edificio_camino[edificio_id[# aa, bb].index]){
 				flag = false
 				break
 			}
 			//Checkear agua
-			if not in(var_edificio_nombre, "Bomba de Evaporación", "Bomba Hidráulica", "Tubería", "Generador Geotérmico") and terreno_liquido[temp_terreno_terreno]{
+			if not in(index, id_bomba_de_evaporacion, id_bomba_hidraulica, id_tuberia, id_generador_geotermico) and terreno_liquido[temp_terreno_terreno]{
 				flag = false
 				break
 			}
 			//Reemplazar caminos
 			if edificio_bool[# aa, bb]{
 				var temp_edificio = edificio_id[# aa, bb]
-				if (edificio_camino[index] or (in(var_edificio_nombre, "Túnel", "Túnel salida"))) and edificio_camino[temp_edificio.index]{
+				if (edificio_camino[index] or (in(index, id_tunel, id_tunel_salida))) and edificio_camino[temp_edificio.index]{
 					if index = temp_edificio.index{
 						temp_edificio.dir = dir
 						calculate_in_out_2(temp_edificio)
@@ -35,7 +35,7 @@ function construir(index, dir, mx, my){
 						temp_edificio.array_real[0] = cos(d)
 						temp_edificio.array_real[1] = -sin(d)
 						flag = false
-						if in(var_edificio_nombre, "Enrutador", "Cinta Magnética"){
+						if in(index, id_enrutador, id_cinta_magnetica){
 							if (dir mod 3) = 1
 								temp_edificio.yscale = power(-1, dir > 1)
 							else{
@@ -52,15 +52,15 @@ function construir(index, dir, mx, my){
 				}
 			}
 			//Checkear minerales
-			if in(var_edificio_nombre, "Taladro", "Taladro Eléctrico") and ore[# aa, bb] >= 0
+			if in(index, id_taladro, id_taladro_electrico) and ore[# aa, bb] >= 0
 				flag_2 = true
 			//Checkear minerales
-			if in(var_edificio_nombre, "Taladro Eléctrico") and terreno_recurso_bool[temp_terreno_terreno]
+			if in(index, id_taladro_electrico) and terreno_recurso_bool[temp_terreno_terreno]
 				flag_2 = true
 			//Checkear agua
-			if in(var_edificio_nombre, "Bomba Hidráulica") and not terreno_liquido[temp_terreno_terreno]
+			if in(index, id_bomba_hidraulica) and not terreno_liquido[temp_terreno_terreno]
 				flag = false
-			if in(var_edificio_nombre, "Bomba de Evaporación") and not in(terreno_nombre[temp_terreno_terreno], "Agua", "Agua Profunda")
+			if in(index, id_bomba_de_evaporacion) and not in(terreno_nombre[temp_terreno_terreno], "Agua", "Agua Profunda")
 				flag = false
 		}
 		//Detectar enemigos cerca
@@ -74,15 +74,15 @@ function construir(index, dir, mx, my){
 				}
 			}
 		}
-		if flag and in(var_edificio_nombre, "Taladro", "Taladro Eléctrico") and not flag_2
+		if flag and in(index, id_taladro, id_taladro_electrico) and not flag_2
 			flag = false
 		if not flag
 			return
-		if in(var_edificio_nombre, "Túnel", "Túnel salida") and build_able and build_target.index = 6
+		if in(index, id_tunel, id_tunel_salida) and build_able and build_target.index = 6
 			index = 16
 		edificio = add_edificio(index, dir, mx, my)
 		//Algoritmo link de tuneles
-		if in(var_edificio_nombre, "Túnel", "Túnel salida"){
+		if in(index, id_tunel, id_tunel_salida){
 			build_able = false
 			var a = mx, b = my
 			repeat(10){
@@ -93,7 +93,7 @@ function construir(index, dir, mx, my){
 					break
 				if edificio_bool[# a, b]{
 					var edificio_2 = edificio_id[# a, b]
-					if in(edificio_nombre[edificio_2.index], "Túnel", "Túnel salida") and edificio_2.dir = (dir + 3) mod 6{
+					if in(edificio_2.index, id_tunel, id_tunel_salida) and edificio_2.dir = (dir + 3) mod 6{
 						build_target = edificio_2
 						build_able = true
 						break
@@ -135,7 +135,7 @@ function construir(index, dir, mx, my){
 				nucleo.carga[edificio_precio_id[index, a]] -= edificio_precio_num[index, a]
 				nucleo.carga_total -= edificio_precio_num[index, a]
 			}
-		if in(var_edificio_nombre, "Planta Química", "Fábrica de Drones"){
+		if in(index, id_planta_quimica, id_fabrica_de_drones){
 			show_menu = true
 			show_menu_build = edificio
 			build_index = 0

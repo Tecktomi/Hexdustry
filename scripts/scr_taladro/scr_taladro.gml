@@ -1,18 +1,17 @@
 function scr_taladro(edificio = control.null_edificio){
 	with control{
-		var index = edificio.index, var_edificio_nombre = edificio_nombre[index]
+		var index = edificio.index
 		if edificio_energia[index]
 			var red = edificio.red
-		if edificio_flujo[index]
-			var flujo = edificio.flujo
+		var flujo = edificio.flujo
 		if edificio.carga_total < edificio_carga_max[index]{
-			if var_edificio_nombre = "Taladro Eléctrico"{
+			if index = id_taladro_electrico{
 				change_energia(edificio_energia_consumo[index], edificio)
 				if red.eficiencia > 0 and edificio.flujo_consumo = 0 and flujo.liquido = 0
 					change_flujo(edificio_flujo_consumo[index], edificio)
 				edificio.proceso += red.eficiencia * (1 + 0.6 * (flujo.liquido = 0 ? flujo.eficiencia : 0))
 			}
-			else if var_edificio_nombre = "Taladro"{
+			else if index = id_taladro{
 				change_flujo(edificio_flujo_consumo[index], edificio)
 				edificio.proceso += 1 + 0.6 * (flujo.liquido = 0 ? flujo.eficiencia : 0)
 			}
@@ -40,7 +39,7 @@ function scr_taladro(edificio = control.null_edificio){
 						flag = true
 						break
 					}
-					else if terreno_recurso_bool[terreno[# aa, bb]] and var_edificio_nombre = "Taladro Eléctrico"{
+					else if terreno_recurso_bool[terreno[# aa, bb]] and index = id_taladro_electrico{
 						edificio.carga[terreno_recurso_id[terreno[# aa, bb]]]++
 						edificio.carga_total++
 						if edificio.carga_total = edificio_carga_max[index]
@@ -56,9 +55,9 @@ function scr_taladro(edificio = control.null_edificio){
 					edificio.idle = true
 					change_energia(0, edificio)
 				}
-				if var_edificio_nombre = "Taladro Eléctrico" and flujo.liquido = 0
+				if index = id_taladro_electrico and flujo.liquido = 0
 					change_flujo(0, edificio)
-				if var_edificio_nombre = "Taladro" and flujo.liquido = 0
+				if index = id_taladro and flujo.liquido = 0
 					change_flujo(0, edificio)
 			}
 		}

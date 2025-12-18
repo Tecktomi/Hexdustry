@@ -154,7 +154,7 @@ function delete_edificio(aa, bb, enemigo = false){
 				var red_bateria = 0
 				for(var a = array_length(temp_red.edificios) - 1; a >= 0; a--){
 					temp_edificio = temp_red.edificios[a]
-					if in(edificio_nombre[temp_edificio.index], "Batería")
+					if temp_edificio.index = id_bateria
 						red_bateria++
 				}
 				var agregado = ds_list_create(), visited = array_create(edificio_count, false)
@@ -166,7 +166,7 @@ function delete_edificio(aa, bb, enemigo = false){
 						ds_list_add(agregado, nodo)
 						while not ds_stack_empty(pila){
 							nodo = ds_stack_pop(pila)
-							if in(edificio_nombre[nodo.index], "Batería")
+							if nodo.index = id_bateria
 								isla_bateria++
 							array_push(isla, nodo)
 							array_remove(temp_red.edificios, nodo)
@@ -199,7 +199,7 @@ function delete_edificio(aa, bb, enemigo = false){
 								temp_red_2.consumo += abs(temp_edificio.energia_consumo)
 							else
 								temp_red_2.generacion += abs(temp_edificio.energia_consumo)
-							if in(edificio_nombre[temp_edificio.index], "Batería")
+							if temp_edificio.index = id_bateria
 								temp_red_2.bateria_max += 2500
 						}
 						array_push(redes, temp_red_2)

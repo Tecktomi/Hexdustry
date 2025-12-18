@@ -32,6 +32,8 @@ function draw_boton_text(xpos, ypos, variable, es_real = true, detect_real = fal
 					if new_input != "" and ord(new_input) >= 32 and ord(new_input) < 127
 						get_keyboard_text = string_insert(new_input, get_keyboard_text, get_keyboard_cursor++)
 				}
+				if not keyboard_check_pressed(vk_escape)
+					keyboard_clear(keyboard_key)
 			}
 			keyboard_string = get_keyboard_text
 			if es_real

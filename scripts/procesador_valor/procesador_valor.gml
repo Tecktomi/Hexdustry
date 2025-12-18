@@ -1,6 +1,6 @@
 function procesador_valor(xpos, ypos, pc, a, b, es_real = false){
 	with control{
-		if draw_boton(xpos, ypos, (pc[a] = 0 ? "VAR" : (pc[a] = 1 ? "Número" : "Texto")),,,, false){
+		if draw_boton(xpos, ypos, (pc[a] = 0 ? "VAR" : (pc[a] = 1 ? "int" : "str")),,,, false){
 			if es_real
 				pc[a] = ++pc[a] mod 2
 			else

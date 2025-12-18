@@ -1510,11 +1510,19 @@ if show_menu{
 				array_insert(edificio.instruccion, a + 1, temp_array)
 			}
 			xpos += 20
-			if a > 0 and draw_sprite_boton(spr_flecha, xpos, ypos, 20, 20, L.procesador_subir){
-				edificio.instruccion[a] = edificio.instruccion[a - 1]
-				edificio.instruccion[a - 1] = pc
-			}
+			if draw_sprite_boton(spr_flecha, xpos, ypos, 20, 20, L.procesador_subir)
+				procesador_move = a
 			xpos += 20
+			if procesador_move >= 0 and mouse_y > ypos and mouse_y < ypos + text_y{
+				draw_set_alpha(0.3)
+				draw_rectangle(150, ypos, xpos, ypos + text_y, false)
+				draw_set_alpha(1)
+				if mouse_check_button_released(mb_left) and a != procesador_move{
+					edificio.instruccion[a] = edificio.instruccion[procesador_move]
+					edificio.instruccion[procesador_move] = pc
+					procesador_move = -1
+				}
+			}
 			//Continue
 			if pc0 = 0
 				draw_text(xpos, ypos, L.procesador_continue)
@@ -1525,14 +1533,22 @@ if show_menu{
 				xpos = draw_text_xpos(xpos + text_x, ypos, " to ")
 				procesador_valor(xpos, ypos, pc, 2, 3, false)
 			}
-			//Randomize {A}
+			//Set {A} to [sin, cos, tan, random, floor, round, ceil, sqr, sqrt, pi] [VAR]{B}
 			else if pc0 = 2{
-				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_random} VAR_")
+				var signs = ["sin", "cos", "tan", "random", "floor", "round", "ceil", "sqr", "sqrt", "pi"]
+				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_set} VAR_")
 				pc[1] = procesador_var(xpos, ypos, pc, 1)
+				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to} ")
+				if draw_boton(xpos, ypos, $"{signs[pc[2]]}",,,, false)
+					pc[2] = (pc[2] + 1) mod array_length(signs)
+				if not in(signs[pc[2]], "pi"){
+					xpos = draw_text_xpos(xpos + text_x, ypos, $" ")
+					procesador_valor(xpos, ypos, pc, 3, 4)
+				}
 			}
-			//Set {A} to [VAR]{B} [+, -, *, /, div, mod, or, and, xor, <<, >>] [VAR]{C}
+			//Set {A} to [VAR]{B} [+, -, *, /, div, mod, or, and, xor, <<, >>, power] [VAR]{C}
 			else if pc0 = 3{
-				var signs = ["+", "-", "*", "/", "div", "mod", "or", "and", "xor", "<<", ">>"]
+				var signs = ["+", "-", "*", "/", "div", "mod", "or", "and", "xor", "<<", ">>", "power"]
 				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_set} VAR_")
 				pc[1] = procesador_var(xpos, ypos, pc, 1)
 				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to} ")
@@ -1540,8 +1556,7 @@ if show_menu{
 				xpos += text_x
 				if draw_boton(xpos, ypos, $" {signs[pc[4]]} ",,,, false)
 					pc[4] = (pc[4] + 1) mod array_length(signs)
-				xpos += text_x
-				procesador_valor(xpos, ypos, pc, 5, 6)
+				procesador_valor(xpos + text_x, ypos, pc, 5, 6)
 			}
 			//If [VAR]{A} [yes, no][<, >, =] [VAR]{B}, jump to [VAR]{C}
 			else if pc0 = 4{
@@ -1579,19 +1594,8 @@ if show_menu{
 					draw_set_color(c_white)
 				}
 			}
-			//Control LINK[VAR]{A} to set [Eneable] to [VAR]{B}
-			else if pc0 = 5{
-				var signs = ["Eneabled"]
-				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_control} LINK_")
-				procesador_valor(xpos, ypos, pc, 1, 2, true)
-				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to_set} ")
-				if draw_boton(xpos, ypos, signs[pc[3]],,,, false)
-					pc[3] = (pc[3] + 1) mod array_length(signs)
-				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to} ")
-				procesador_valor(xpos, ypos, pc, 4, 5, false)
-			}
 			//Set VAR_{A} to [eneabled, carga, etc...][VAR]{B} from LINK[VAR]{C}
-			else if pc0 = 6{
+			else if pc0 = 5{
 				var signs = ["eneabled", "carga", "líquido tipo", "líquido almacen", "líquido capacidad", "líquido produccion", "líquido consumo", "energía almacenada", "energía capacidad", "energía producida", "energía consumida"]
 				var signs_subindex = [false, true, false, false, false, false, false, false, false, false, false]
 				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_set} VAR_")
@@ -1608,15 +1612,19 @@ if show_menu{
 				xpos = draw_text_xpos(xpos, ypos, $" {L.procesador_from} LINK_")
 				procesador_valor(xpos, ypos, pc, 5, 6, true)
 			}
-			//Write [VAR]{A} to LINK[VAR]{B}
-			else if pc0 = 7{
-				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_write} ")
-				procesador_valor(xpos, ypos, pc, 1, 2, false)
-				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to} LINK_")
-				procesador_valor(xpos, ypos, pc, 3, 4, true)
+			//Control LINK[VAR]{A} to set [Eneable] to [VAR]{B}
+			else if pc0 = 6{
+				var signs = ["Eneabled"]
+				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_control} LINK_")
+				procesador_valor(xpos, ypos, pc, 1, 2, true)
+				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to_set} ")
+				if draw_boton(xpos, ypos, signs[pc[3]],,,, false)
+					pc[3] = (pc[3] + 1) mod array_length(signs)
+				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to} ")
+				procesador_valor(xpos, ypos, pc, 4, 5, false)
 			}
 			//Set VAR_{A} to value of cell [VAR]{B} of LINK[VAR]{C}
-			else if pc0 = 8{
+			else if pc0 = 7{
 				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_set} VAR_")
 				pc[1] = procesador_var(xpos, ypos, pc, 1)
 				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to_value_of_cell} ")
@@ -1625,13 +1633,104 @@ if show_menu{
 				procesador_valor(xpos, ypos, pc, 4, 5, true)
 			}
 			//Write [VAR]{A} into value of cell [VAR]{B} of LINK[VAR]{c}
-			else if pc0 = 9{
+			else if pc0 = 8{
 				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_write} ")
 				procesador_valor(xpos, ypos, pc, 1, 2, false)
 				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_into_value_of_cell} ")
 				procesador_valor(xpos, ypos, pc, 3, 4, true)
 				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_of} LINK_")
 				procesador_valor(xpos, ypos, pc, 5, 6, true)
+			}
+			//Draw to LINK[VAR]{B} [clear(), color(r, g, b), rectangle(x, y, w, h), line(x1, y1, x2, y2), triangle(x1, y1, x2, y2, x3, y3), circle(x, y, radio), draw_flush()]
+			else if pc0 = 9{
+				var signs = ["Clear", "Color grb", "Color hsv", "Rectangle", "Line", "Triangle", "Circle", "Texto", "Draw_flush"]
+				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_write} {L.procesador_to} LINK_")
+				procesador_valor(xpos, ypos, pc, 1, 2, true)
+				xpos += text_x
+				if draw_boton(xpos, ypos, $" {signs[pc[3]]}",,,, false){
+					if pc[3] = 7{
+						pc[8] = 0
+						pc[9] = 0
+					}
+					pc[3] = (pc[3] + 1) mod array_length(signs)
+				}
+				if pc[3] = 0
+					xpos = draw_text_xpos(xpos + text_x, ypos, "()")
+				else if pc[3] = 1{
+					xpos = draw_text_xpos(xpos + text_x, ypos, "(R:")
+					procesador_valor(xpos, ypos, pc, 4, 5, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ", G:")
+					procesador_valor(xpos, ypos, pc, 6, 7, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ", B:")
+					procesador_valor(xpos, ypos, pc, 8, 9, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ")")
+				}
+				else if pc[3] = 2{
+					xpos = draw_text_xpos(xpos + text_x, ypos, "(H:")
+					procesador_valor(xpos, ypos, pc, 4, 5, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ", S:")
+					procesador_valor(xpos, ypos, pc, 6, 7, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ", V:")
+					procesador_valor(xpos, ypos, pc, 8, 9, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ")")
+				}
+				else if pc[3] = 3{
+					xpos = draw_text_xpos(xpos + text_x, ypos, "(X:")
+					procesador_valor(xpos, ypos, pc, 4, 5, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ", Y:")
+					procesador_valor(xpos, ypos, pc, 6, 7, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ", width:")
+					procesador_valor(xpos, ypos, pc, 8, 9, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ", height:")
+					procesador_valor(xpos, ypos, pc, 10, 11, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ")")
+				}
+				else if pc[3] = 4{
+					xpos = draw_text_xpos(xpos + text_x, ypos, "(X1:")
+					procesador_valor(xpos, ypos, pc, 4, 5, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ", Y1:")
+					procesador_valor(xpos, ypos, pc, 6, 7, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ", X2:")
+					procesador_valor(xpos, ypos, pc, 8, 9, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ", Y2:")
+					procesador_valor(xpos, ypos, pc, 10, 11, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ")")
+				}
+				else if pc[3] = 5{
+					xpos = draw_text_xpos(xpos + text_x, ypos, "(X1:")
+					procesador_valor(xpos, ypos, pc, 4, 5, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ", Y1:")
+					procesador_valor(xpos, ypos, pc, 6, 7, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ", X2:")
+					procesador_valor(xpos, ypos, pc, 8, 9, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ", Y2:")
+					procesador_valor(xpos, ypos, pc, 10, 11, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ", X3:")
+					procesador_valor(xpos, ypos, pc, 12, 13, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ", Y3:")
+					procesador_valor(xpos, ypos, pc, 14, 15, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ")")
+				}
+				else if pc[3] = 6{
+					xpos = draw_text_xpos(xpos + text_x, ypos, "(X:")
+					procesador_valor(xpos, ypos, pc, 4, 5, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ", Y:")
+					procesador_valor(xpos, ypos, pc, 6, 7, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ", radio:")
+					procesador_valor(xpos, ypos, pc, 8, 9, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ")")
+				}
+				else if pc[3] = 7{
+					xpos = draw_text_xpos(xpos + text_x, ypos, "(X:")
+					procesador_valor(xpos, ypos, pc, 4, 5, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ", Y:")
+					procesador_valor(xpos, ypos, pc, 6, 7, true)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ", text:")
+					procesador_valor(xpos, ypos, pc, 8, 9, false)
+					xpos = draw_text_xpos(xpos + text_x, ypos, ")")
+				}
+				else if pc[3] = 8
+					xpos = draw_text_xpos(xpos + text_x, ypos, "()")
 			}
 			ypos += 20
 		}
@@ -1881,7 +1980,7 @@ if show_menu{
 				}
 			}
 			else if in(var_edificio_nombre, "Planta Química") and mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom{
-				var a = floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))
+				var a = clamp(floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom)), 0, array_length(planta_quimica_receta) - 1)
 				draw_text_background(mouse_x + 20, mouse_y, planta_quimica_descripcion[a])
 				cursor = cr_handpoint
 				if mouse_check_button_pressed(mb_left){
@@ -1902,63 +2001,49 @@ if show_menu{
 						edificio.proceso = -1
 						//Ácido
 						if a = 0{
-							edificio.carga_max[11] = 5
+							edificio.carga_max[id_piedra_sulfatada] = 5
 							edificio.receptor = true
 							edificio.emisor = false
 							edificio.flujo_consumo_max = -5
 							edificio.energia_consumo_max = 80
 						}
-						//Concreto
-						else if a = 1{
-							edificio.carga_max[5] = 5
-							edificio.carga_max[6] = 5
-							edificio.carga_max[9] = 5
-							edificio.carga_max[10] = 5
-							edificio.carga_max[11] = 5
-							edificio.carga_output[8] = true
-							edificio.receptor = true
-							edificio.emisor = true
-							edificio.flujo_consumo_max = 15
-							edificio.energia_consumo_max = 0
-						}
 						//Explosivos
-						else if a = 2{
-							edificio.carga_max[1] = 5
-							edificio.carga_max[11] = 5
-							edificio.carga_output[13] = true
+						else if a = 1{
+							edificio.carga_max[id_combustible] = 5
+							edificio.carga_output[id_explosivo] = true
 							edificio.receptor = true
 							edificio.emisor = true
-							edificio.flujo_consumo_max = 0
+							edificio.flujo_consumo_max = 3
 							edificio.energia_consumo_max = 0
 						}
 						//Combustible
-						else if a = 3{
-							edificio.carga_output[12] = true
+						else if a = 2{
+							edificio.carga_output[id_combustible] = true
 							edificio.receptor = false
 							edificio.emisor = true
-							edificio.flujo_consumo_max = 4
+							edificio.flujo_consumo_max = 6
 							edificio.energia_consumo_max = 50
 						}
 						//Azufre
-						else if a = 4{
-							edificio.carga_output[11] = true
+						else if a = 3{
+							edificio.carga_output[id_piedra_sulfatada] = true
 							edificio.receptor = false
 							edificio.emisor = true
 							edificio.flujo_consumo_max = 6
 							edificio.energia_consumo_max = 50
 						}
 						//Baterías
-						else if a = 5{
-							edificio.carga_max[3] = 5
-							edificio.carga_output[14] = true
+						else if a = 4{
+							edificio.carga_max[id_cobre] = 5
+							edificio.carga_output[id_baterias] = true
 							edificio.receptor = true
 							edificio.emisor = true
 							edificio.flujo_consumo_max = 4
 							edificio.energia_consumo_max = 80
 						}
 						//Plástico
-						else if a = 6{
-							edificio.carga_output[15] = true
+						else if a = 5{
+							edificio.carga_output[id_plastico] = true
 							edificio.receptor = false
 							edificio.emisor = true
 							edificio.flujo_consumo_max = 8
@@ -2013,7 +2098,7 @@ if temp_hexagono != noone{
 }
 var edificio = edificio_id[# mx, my], temp_coordenada = edificio.coordenadas
 //Mostrar detalles de edificios al pasar el mouse_por encima
-if pausa != 1 and temp_hexagono != noone and flag and not (show_menu and edificio_nombre[show_menu_build.index] = "Procesador"){
+if pausa != 1 and temp_hexagono != noone and flag and not (show_menu and show_menu_build.index = id_procesador){
 	//Mostrar terreno
 	temp_text = $"{terreno_nombre_display[terreno[# mx, my]]}\n"
 	if ore[# mx, my] >= 0
@@ -2139,7 +2224,7 @@ if pausa != 1 and temp_hexagono != noone and flag and not (show_menu and edifici
 				temp_text += $"    {L.almacen_total}: {floor(edificio.carga_total)}\n"
 		}
 		//Mostrar recursos subterraneos
-		if in(var_edificio_nombre, "Taladro", "Taladro Eléctrico"){
+		if in(var_edificio_nombre, id_taladro, "Taladro Eléctrico"){
 			if edificio.idle
 				temp_text += $"{L.almacen_sin_recursos}\n"
 			else{
@@ -2686,7 +2771,7 @@ if build_index > 0 and win = 0{
 			}
 		}
 		//Detectar que los taladros tengan recursos
-		if in(var_edificio_nombre, "Taladro", "Taladro Eléctrico"){
+		if in(build_index, id_taladro, id_taladro_electrico){
 			var temp_array = array_create(rss_max, 0), temp_array_2 = array_create(rss_max, 0), b = 0
 			flag = false
 			//Buscar minerales superficiales
@@ -2700,7 +2785,7 @@ if build_index > 0 and win = 0{
 				}
 			}
 			//Buscar piedra o arena
-			if in(var_edificio_nombre, "Taladro Eléctrico"){
+			if build_index = id_taladro_electrico{
 				for(var a = 0; a < ds_list_size(build_list); a++){
 					var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
 					if not in(ore[# aa, bb], 0, 1, 2) and in(terreno_nombre[terreno[# aa, bb]], "Piedra", "Arena", "Piedra Cúprica", "Piedra Férrica", "Basalto Sulfatado"){
@@ -2713,9 +2798,9 @@ if build_index > 0 and win = 0{
 			}
 			if not flag{
 				comprable = false
-				if in(var_edificio_nombre, "Taladro")
+				if build_index = id_taladro
 					temp_text += L.construir_sobre_minerales
-				else if in(var_edificio_nombre, "Taladro Eléctrico")
+				else if build_index = id_taladro_electrico
 					temp_text += L.construir_sobre_minerales_piedra
 			}
 			//Escribir porcentajes de recursos
