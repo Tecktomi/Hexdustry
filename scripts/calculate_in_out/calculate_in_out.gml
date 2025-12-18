@@ -1,32 +1,20 @@
-function calculate_in_out(edificio = null_edificio){
+function calculate_in_out(edificio = control.null_edificio){
 	var index = edificio.index
 	with control{
-		if edificio_input_all[index]{
-			for(var c = 0; c < rss_max; c++)
-				edificio.carga_max[c] = edificio_carga_max[index]
-		}
+		if edificio_input_all[index]
+			edificio.carga_max = array_create(rss_max, edificio_carga_max[index])
 		else{
-			var d = 0
-			for(var c = 0; c < rss_max; c++)
-				if d < array_length(edificio_input_id[index]) and c = edificio_input_id[index, d]
-					edificio.carga_max[c] = edificio_input_num[index, d++]
-				else
-					edificio.carga_max[c] = 0
+			edificio.carga_max = array_create(rss_max, 0)
+			for(var a = array_length(edificio_input_id[index]) - 1; a >= 0; a--)
+				edificio.carga_max[edificio_input_id[index, a]] = edificio_input_num[index, a]
 		}
 		if edificio_output_all[index]{
-			for(var c = 0; c < rss_max; c++)
-				edificio.carga_output[c] = true
+			edificio.carga_output = array_create(rss_max, true)
 		}
 		else{
-			var d = 0
-			for(var c = 0; c < rss_max; c++){
-				if d < array_length(edificio_output_id[index]) and edificio_output_id[index, d] = c{
-					edificio.carga_output[c] = true
-					d++
-				}
-				else
-					edificio.carga_output[c] = false
-			}
+			edificio.carga_output = array_create(rss_max, false)
+			for(var a = array_length(edificio_output_id[index]) - 1; a >= 0; a--)
+				edificio.carga_output[edificio_output_id[index, a]] = true
 		}
 	}
 }

@@ -63,6 +63,7 @@ function add_edificio(index, dir, a, b){
 			edificios_cercanos : array_create(0, null_edificio),
 			edificios_cercanos_heridos : array_create(0, null_edificio),
 			reparadores_cercanos : array_create(0, null_edificio),
+			imagen : spr_hexagono,
 		}
 		ds_grid_clear(edificio.coordenadas_dis, infinity)
 		ds_list_add(edificio.coordenadas_close, {a : 0, b : 0})
@@ -197,7 +198,7 @@ function add_edificio(index, dir, a, b){
 					continue
 				if edificio_bool[# aa, bb]{
 					var temp_edificio = edificio_id[# aa, bb]
-					if (edificio_energia[temp_edificio.index] and in(var_edificio_nombre, "Generador", "Batería", "Panel Solar", "Energía Infinita", "Turbina", "Generador Geotérmico", "Planta Nuclear", "Torre de Alta Tensión")) or (edificio_energia[index] and in(edificio_nombre[temp_edificio.index], "Generador", "Batería", "Panel Solar", "Energía Infinita", "Turbina", "Generador Geotérmico", "Planta Nuclear", "Torre de Alta Tensión")){
+					if (edificio_energia[temp_edificio.index] and in(index, id_generador, id_bateria, id_panel_solar, id_energia_infinita, id_turbina, id_generador_geotermico, id_planta_nuclear, id_torre_de_alta_tension)) or (edificio_energia[index] and in(temp_edificio.index, id_generador, id_bateria, id_panel_solar, id_energia_infinita, id_turbina, id_generador_geotermico, id_planta_nuclear, id_torre_de_alta_tension)){
 						array_push(edificio.energia_link, temp_edificio)
 						array_push(temp_edificio.energia_link, edificio)
 						if not ds_list_in(temp_list_redes, temp_edificio.red)
@@ -215,7 +216,7 @@ function add_edificio(index, dir, a, b){
 					continue
 				if (aa != a or bb != b) and edificio_draw[# aa, bb]{
 					var temp_edificio = edificio_id[# aa, bb]
-					if (var_edificio_nombre = "Cable" and edificio_energia[temp_edificio.index]) or edificio_nombre[temp_edificio.index] = "Cable"{
+					if (index = id_cable and edificio_energia[temp_edificio.index]) or temp_edificio.index = id_cable{
 						array_push(edificio.energia_link, temp_edificio)
 						array_push(temp_edificio.energia_link, edificio)
 						if not ds_list_in(temp_list_redes, temp_edificio.red)
@@ -285,8 +286,7 @@ function add_edificio(index, dir, a, b){
 		//Detectar cañerías cercanas
 		if edificio_flujo[index]{
 			if var_edificio_nombre = "Bomba Hidráulica"{
-				size = ds_list_size(temp_list_size)
-				for(var c = 0; c < size; c++){
+				for(var c = ds_list_size(temp_list_size) - 1; c >= 0; c--){
 					temp_complex = temp_list_size[|c]
 					var aa = temp_complex.a, bb = temp_complex.b
 					if in(terreno_nombre[terreno[# aa, bb]], "Agua", "Agua Profunda")
@@ -307,7 +307,7 @@ function add_edificio(index, dir, a, b){
 					continue
 				if edificio_bool[# aa, bb]{
 					var temp_edificio = edificio_id[# aa, bb]
-					if edificio_flujo[temp_edificio.index] and (in(var_edificio_nombre, "Tubería", "Depósito", "Líquido Infinito", "Tubería Subterránea") or in(edificio_nombre[temp_edificio.index], "Tubería", "Depósito", "Líquido Infinito", "Tubería Subterránea")){
+					if edificio_flujo[temp_edificio.index] and (in(index, id_tuberia, id_deposito, id_liquido_infinito, id_tuberia_subterranea) or in(temp_edificio.index, id_tuberia, id_deposito, id_liquido_infinito, id_tuberia_subterranea)){
 						array_push(edificio.flujo_link, temp_edificio)
 						array_push(temp_edificio.flujo_link, edificio)
 						if not ds_list_in(temp_list_flujos, temp_edificio.flujo)
@@ -351,7 +351,7 @@ function add_edificio(index, dir, a, b){
 				edificio.flujo = new_flujo
 				array_push(new_flujo.edificios, edificio)
 			}
-			else if in(var_edificio_nombre, "Tubería", "Depósito", "Líquido Infinito", "Tubería Subterránea"){
+			else if in(index, id_tuberia, id_deposito, id_liquido_infinito, id_tuberia_subterranea){
 				var new_flujo ={
 					edificios : array_create(0, null_edificio),
 					liquido : -1,
