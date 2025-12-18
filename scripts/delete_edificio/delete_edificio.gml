@@ -53,8 +53,7 @@ function delete_edificio(aa, bb, enemigo = false){
 			}
 		#endregion
 		//Cancelar coordenadas
-		var size = ds_list_size(edificio.coordenadas)
-		for(var i = 0; i < size; i++){
+		for(var i = ds_list_size(edificio.coordenadas) - 1; i >= 0; i--){
 			var temp_coordenada_2 = edificio.coordenadas[|i], a = temp_coordenada_2.a, b = temp_coordenada_2.b
 			if index = 0{
 				ds_grid_set(edificio_cercano, a, b, null_edificio)
@@ -66,8 +65,7 @@ function delete_edificio(aa, bb, enemigo = false){
 		}
 		if grafic_luz and edificio.luz{
 			var temp_list = edificio.coordenadas
-			size = ds_list_size(temp_list)
-			for(var b = 0; b < size; b++){
+			for(var b = ds_list_size(temp_list) - 1; b >= 0; b--){
 				var temp_complex = temp_list[|b]
 				add_luz(temp_complex.a, temp_complex.b, -1)
 			}

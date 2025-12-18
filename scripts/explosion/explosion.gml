@@ -1,28 +1,41 @@
-function explosion(aa = 0, bb = 0, edificio = control.null_edificio){
+function explosion(aa = 0, bb = 0, edificio = control.null_edificio, enemigo = true, radio = 14_400, dmg = 1000){
 	with control{
 		sound_play(snd_explosion, aa, bb)
 		array_push(efectos, add_efecto(spr_explosion, 0, aa, bb, 24, 1 / 3))
-		edificio_herir(edificio, 100)
+		if edificio != null_edificio
+			edificio_herir(edificio, dmg / 10)
 		var temp_complex = xytoab(aa, bb)
 		if temp_complex.a >= 0{
 			var chunk_x = floor(temp_complex.a / chunk_width), chunk_y = floor(temp_complex.b / chunk_height), maxa = min(chunk_x + 1, chunk_xsize), maxb = min(chunk_y + 1, chunk_ysize)
-			for(var a = max(chunk_x - 1, 0); a <= maxa; a++)
-				for(var b = max(chunk_y - 1, 0); b <= maxb; b++){
-					var temp_array = chunk_edificios[# a, b]
-					for(var i = array_length(temp_array) - 1; i >= 0; i--){
-						edificio = temp_array[i]
-						var dis = distance_sqr(aa, bb, edificio.x, edificio.y)
-						if dis < 14_400//120^2
-							edificio_herir(edificio, 1000 / (10 + sqrt(dis)))
+			if enemigo{
+				for(var a = max(chunk_x - 1, 0); a <= maxa; a++)
+					for(var b = max(chunk_y - 1, 0); b <= maxb; b++)
+						for(var i = array_length(chunk_edificios[# a, b]) - 1; i >= 0; i--){
+							edificio = chunk_edificios[# a, b][i]
+							var dis = distance_sqr(aa, bb, edificio.x, edificio.y)
+							if dis < radio//120^2
+								edificio_herir(edificio, dmg / (10 + sqrt(dis)))
+						}
+				for(var a = array_length(drones_aliados) - 1; a >= 0; a--){
+					var temp_dron = drones_aliados[a], dis = distance_sqr(aa, bb, temp_dron.a, temp_dron.b)
+					if dis < radio{//120^2
+						temp_dron.vida -= dmg / (10 + sqrt(dis))
+						if temp_dron.vida <= 0
+							destroy_dron(temp_dron, false)
 					}
 				}
-			for(var a = array_length(drones_aliados) - 1; a >= 0; a--){
-				var temp_dron = drones_aliados[a], dis = distance_sqr(aa, bb, edificio.x, edificio.y)
-				if dis < 14_400{//120^2
-					temp_dron.vida -= 1000 / (10 + sqrt(dis))
-					if temp_dron.vida <= 0
-						destroy_dron(temp_dron)
-				}
+			}
+			else{
+				for(var a = max(chunk_x - 1, 0); a <= maxa; a++)
+					for(var b = max(chunk_y - 1, 0); b <= maxb; b++)
+						for(var i = array_length(chunk_enemigos[# a, b]) - 1; i >= 0; i--){
+							var temp_dron = chunk_enemigos[# a, b][i], dis = distance_sqr(aa, bb, temp_dron.a, temp_dron.b)
+							if dis < radio{//120^2
+								temp_dron.vida -= dmg / (10 + sqrt(dis))
+								if temp_dron.vida <= 0
+									destroy_dron(temp_dron)
+							}
+						}
 			}
 		}
 	}

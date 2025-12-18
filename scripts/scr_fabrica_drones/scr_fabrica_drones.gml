@@ -1,35 +1,36 @@
 function scr_fabrica_drones(edificio = control.null_edificio){
 	with control{
 		var index = edificio.index
-		if edificio_energia[index]
-			var red = edificio.red, red_power = red.eficiencia
+		var red = edificio.red, red_power = red.eficiencia
 		if edificio.select >= 0 and array_length(drones_aliados) < 8{
-			var size = array_length(dron_precio_id[edificio.select]), flag = false
-			for(var b = 0; b < size; b++)
+			var flag = true
+			for(var b = array_length(dron_precio_id[edificio.select]) - 1; b >= 0; b--)
 				if edificio.carga[dron_precio_id[edificio.select, b]] < dron_precio_num[edificio.select, b]{
-					flag = true
+					flag = false
 					break
 				}
-			if flag
-				return
-			//Encender
-			if edificio.proceso < 0{
-				change_energia(edificio_energia_consumo[index], edificio)
-				edificio.proceso++
-			}
-			edificio.proceso += red_power
-			//Producir / Apagar
-			if edificio.proceso >= edificio_proceso[index]{
-				edificio.proceso -= edificio_proceso[index] + 1
-				for(var b = 0; b < size; b++){
-					edificio.carga_total -= dron_precio_num[edificio.select, b]
-					edificio.carga[dron_precio_id[edificio.select, b]] -= dron_precio_num[edificio.select, b]
+			if flag{
+				//Encender
+				if edificio.proceso < 0{
+					change_energia(edificio_energia_consumo[index], edificio)
+					edificio.proceso++
 				}
-				var dron = add_dron(edificio.a, edificio.b, edificio.select, true)
-				dron.pointer = array_length(drones_aliados)
-				array_push(drones_aliados, dron)
-				edificio.waiting = not mover_in(edificio)
-				change_energia(0, edificio)
+				edificio.proceso += red_power
+				//Producir / Apagar
+				if edificio.proceso >= edificio_proceso[index]{
+					edificio.proceso = -1
+					for(var b = array_length(dron_precio_id[edificio.select]) - 1; b >= 0; b--){
+						edificio.carga_total -= dron_precio_num[edificio.select, b]
+						edificio.carga[dron_precio_id[edificio.select, b]] -= dron_precio_num[edificio.select, b]
+					}
+					var dron = add_dron(edificio.a + random(0.1), edificio.b + random(0.1), edificio.select, true)
+					dron.pointer = array_length(drones_aliados)
+					array_push(drones_aliados, dron)
+					dron.a += random(5)
+					dron.b += random(5)
+					edificio.waiting = not mover_in(edificio)
+					change_energia(0, edificio)
+				}
 			}
 		}
 		else

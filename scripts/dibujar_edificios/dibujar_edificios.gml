@@ -79,9 +79,9 @@ function dibujar_edificios(){
 							if edificio.mode{
 								var d = array_create(0, array_create(1, 0)), color = draw_get_color()
 								draw_set_font(ft_mini)
-								var temp_surf = surface_create(60, 50)
+								var temp_surf = surface_create(60, 50), size = array_length(edificio.instruccion)
 								surface_set_target(temp_surf)
-								for(var c = 0; c < array_length(edificio.instruccion); c++){
+								for(var c = 0; c < size; c++){
 									d = edificio.instruccion[c]
 									var e = d[0]
 									if e = 0

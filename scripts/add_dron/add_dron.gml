@@ -1,7 +1,7 @@
 function add_dron(a, b, index, aliado = false){
 	with control{
 		var temp_complex = abtoxy(a, b)
-		var enemigo = {
+		var dron = {
 			a : temp_complex.a,
 			b : temp_complex.b,
 			index : real(index),
@@ -22,10 +22,11 @@ function add_dron(a, b, index, aliado = false){
 			dir : 0,
 			dir_move : 0,
 			step : 0,
-			efecto : array_create(efectos_max, 0)
+			efecto : array_create(efectos_max, 0),
+			array_real : array_create(0, 0)
 		}
 		if aliado
 			drones_construidos++
-		return enemigo
+		return dron
 	}
 }
