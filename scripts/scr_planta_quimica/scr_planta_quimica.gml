@@ -11,10 +11,7 @@ function scr_planta_quimica(edificio = control.null_edificio){
 		}
 		if (edificio.select = 0 and edificio.carga[id_piedra_sulfatada] > 0 and in(flujo.liquido, -1, 1) and flujo.almacen < flujo.almacen_max) or
 			(edificio.select = 1 and flujo.liquido = 1 and edificio.carga[id_combustible] > 0 and edificio.carga[id_explosivo] < 10) or
-			(edificio.select = 2 and flujo.liquido = 2 and edificio.carga[id_combustible] < 10) or
-			(edificio.select = 3 and flujo.liquido = 2 and edificio.carga[id_piedra_sulfatada] < 10) or
-			(edificio.select = 4 and flujo.liquido = 1 and edificio.carga[id_cobre] > 0 and edificio.carga[id_baterias] < 10) or
-			(edificio.select = 5 and flujo.liquido = 2 and edificio.carga[id_plastico] < 10){
+			(edificio.select = 2 and flujo.liquido = 1 and edificio.carga[id_cobre] > 0 and edificio.carga[id_baterias] < 10){
 			//Apagar
 			if edificio.energia_consumo_max > 0 and red_power = 0{
 				change_flujo(0, edificio)
@@ -49,25 +46,11 @@ function scr_planta_quimica(edificio = control.null_edificio){
 					edificio.carga[id_combustible]--
 					edificio.carga[id_explosivo]++
 				}
-				//Combustible
-				else if edificio.select = 2{
-					edificio.carga[id_combustible]++
-					edificio.carga_total++
-				}
-				//Azufre
-				else if edificio.select = 3{
-					edificio.carga[id_piedra_sulfatada]++
-					edificio.carga_total++
-				}
 				//Baterías
-				else if edificio.select = 4{
-					edificio.carga[id_cobre]--
+				else if edificio.select = 2{
+					edificio.carga[id_cobre] -= 2
 					edificio.carga[id_baterias]++
-				}
-				//Plástico
-				else if edificio.select = 5{
-					edificio.carga[id_plastico]++
-					edificio.carga_total++
+					edificio.carga_total--
 				}
 				if edificio.flujo_consumo_max > 0
 					change_flujo(0, edificio)

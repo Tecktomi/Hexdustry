@@ -8,10 +8,7 @@ function scr_bomba_hidraulica(edificio = control.null_edificio){
 		//Está encendido
 		if in(flujo.liquido, -1, edificio.select) and red_power > 0{
 			change_energia(edificio_energia_consumo[index], edificio)
-			if edificio.select = 0
-				change_flujo(red_power * edificio_flujo_consumo[index], edificio)
-			else
-				change_flujo(red_power * edificio_flujo_consumo[index] / 10, edificio)
+			change_flujo(red_power * edificio_flujo_consumo[index], edificio)
 			flujo.generacion -= edificio.proceso
 			if flujo.almacen >= flujo.almacen_max and flujo.generacion >= flujo.consumo{
 				change_energia(0, edificio)

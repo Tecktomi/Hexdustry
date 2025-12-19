@@ -19,7 +19,7 @@ function scr_planta_nuclear(edificio = control.null_edificio){
 		if edificio.fuel = 0 and flujo.liquido = 0{
 			//Encender
 			if edificio.carga[18] > 0 and edificio.carga[19] > 0 and flujo_power > 0{
-				edificio.fuel = 900
+				edificio.fuel = 120
 				edificio.carga[18] -= 0.05
 				edificio.carga[19]--
 				if grafic_luz and not edificio.luz{

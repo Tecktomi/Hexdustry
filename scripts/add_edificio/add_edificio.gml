@@ -93,6 +93,8 @@ function add_edificio(index, dir, a, b){
 			edificio.variables = array_create(1, "")
 		else if var_edificio_nombre = "Memoria"
 			edificio.variables = array_create(128)
+		else if index = id_planta_de_reciclaje
+			array_push(plantas_de_reciclaje, edificio)
 		array_push(efectos, add_efecto(size_fx[edificio_size[index] - 1], 0, x, y, 3))
 		edificio.chunk_pointer = array_length(chunk_edificios[# edificio.chunk_x, edificio.chunk_y])
 		array_push(chunk_edificios[# edificio.chunk_x, edificio.chunk_y], edificio)
@@ -274,7 +276,7 @@ function add_edificio(index, dir, a, b){
 				temp_red.generacion += abs(edificio.energia_consumo)
 			if in(var_edificio_nombre, "Batería")
 				temp_red.bateria_max += 2500
-			else if in(var_edificio_nombre, "Panel Solar", "Procesador")
+			else if in(index, id_panel_solar, id_procesador, id_planta_de_reciclaje)
 				change_energia(edificio_energia_consumo[index], edificio)
 			array_push(temp_red.edificios, edificio)
 		}
@@ -394,6 +396,10 @@ function add_edificio(index, dir, a, b){
 						edificio.select += (terreno_nombre[terreno[# aa, bb]] = "Lava")
 					}
 				}
+			}
+			else if index = id_planta_de_reciclaje{
+				edificio.flujo.liquido = 1
+				change_flujo(edificio_flujo_consumo[index], edificio)
 			}
 			if grafic_luz and edificio.flujo.liquido = 3{
 				edificio.luz = true

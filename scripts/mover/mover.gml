@@ -13,7 +13,7 @@ function mover(aa, bb){
 						var temp_complex = next_to(edificio.a, edificio.b, edificio.dir), aaa = temp_complex.a, bbb = temp_complex.b
 						if edificio_bool[# aaa, bbb]{
 							temp_edificio = edificio_id[# aaa, bbb]
-							if array_contains(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = id_nucleo{
+							if mover_check(out, edificio, temp_edificio){
 								flag = true
 								break
 							}
@@ -28,7 +28,7 @@ function mover(aa, bb){
 						var temp_complex = next_to(edificio.a, edificio.b, (edificio.dir + 1 + b * 4) mod 6), aaa = temp_complex.a, bbb = temp_complex.b
 						if edificio_bool[# aaa, bbb]{
 							temp_edificio = edificio_id[# aaa, bbb]
-							if array_contains(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = id_nucleo{
+							if mover_check(out, edificio, temp_edificio){
 								flag = true
 								edificio.output_index = 1 - b
 								break
@@ -43,7 +43,7 @@ function mover(aa, bb){
 						var temp_complex = next_to(edificio.a, edificio.b, edificio.dir), aaa = temp_complex.a, bbb = temp_complex.b
 						if edificio_bool[# aaa, bbb]{
 							temp_edificio = edificio_id[# aaa, bbb]
-							if array_contains(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = id_nucleo{
+							if mover_check(out, edificio, temp_edificio){
 								flag = true
 								break
 							}
@@ -58,7 +58,7 @@ function mover(aa, bb){
 						var temp_complex = next_to(edificio.a, edificio.b, (edificio.dir + 1 + b * 4) mod 6), aaa = temp_complex.a, bbb = temp_complex.b
 						if edificio_bool[# aaa, bbb]{
 							temp_edificio = edificio_id[# aaa, bbb]
-							if array_contains(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = id_nucleo{
+							if mover_check(out, edificio, temp_edificio){
 								flag = true
 								edificio.output_index = 1 - b
 								break
@@ -70,7 +70,7 @@ function mover(aa, bb){
 						var temp_complex = next_to(edificio.a, edificio.b, edificio.dir), aaa = temp_complex.a, bbb = temp_complex.b
 						if edificio_bool[# aaa, bbb]{
 							temp_edificio = edificio_id[# aaa, bbb]
-							if array_contains(edificio.outputs, temp_edificio) and (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = id_nucleo{
+							if mover_check(out, edificio, temp_edificio){
 								flag = true
 								break
 							}
@@ -81,7 +81,7 @@ function mover(aa, bb){
 				else{
 					for(var a = 0; a < array_length(edificio.outputs); a++){
 						temp_edificio = edificio.outputs[(edificio.output_index + a) mod array_length(edificio.outputs)]
-						if (temp_edificio.carga_total < edificio_carga_max[temp_edificio.index] and temp_edificio.carga[out] < temp_edificio.carga_max[out]) or temp_edificio.index = id_nucleo{
+						if mover_check(out, edificio, temp_edificio){
 							flag = true
 							edificio.output_index = (edificio.output_index + a + 1) mod array_length(edificio.outputs)
 							break
@@ -101,8 +101,10 @@ function mover(aa, bb){
 				else if mision_objetivo[mision_actual] = 7 and mision_target_id[mision_actual] = temp_edificio.index
 					pasar_mision()
 			}
-			if in(out, 9, 10, 11) and temp_edificio.index = id_nucleo
-				out = 6
+			if in(out, id_piedra_cuprica, id_piedra_ferrica, id_piedra_sulfatada) and temp_edificio.index = id_nucleo
+				out = id_piedra
+			else if in(out, id_uranio_enriquecido, id_uranio_empobrecido) and in(temp_edificio.index, id_nucleo, id_rifle, id_mortero)
+				out = id_uranio_bruto
 			temp_edificio.carga[out]++
 			temp_edificio.carga_total++
 			temp_edificio.carga_id = out
