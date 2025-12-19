@@ -1,11 +1,11 @@
 {
   "$GMSprite":"v2",
-  "%Name":"spr_mortero_2",
+  "%Name":"spr_planta_de_reciclaje",
   "bboxMode":0,
-  "bbox_bottom":56,
-  "bbox_left":24,
+  "bbox_bottom":83,
+  "bbox_left":0,
   "bbox_right":79,
-  "bbox_top":27,
+  "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
   "DynamicTexturePage":false,
@@ -19,9 +19,9 @@
   "height":84,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"1bfbcf1f-037d-4558-a948-693dc69be8e2","blendMode":0,"displayName":"default","isLocked":false,"name":"1bfbcf1f-037d-4558-a948-693dc69be8e2","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"9c2eaf7a-55d3-4370-be8d-bf4dc584418a","blendMode":0,"displayName":"default","isLocked":false,"name":"9c2eaf7a-55d3-4370-be8d-bf4dc584418a","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
-  "name":"spr_mortero_2",
+  "name":"spr_planta_de_reciclaje",
   "nineSlice":null,
   "origin":4,
   "parent":{
@@ -33,7 +33,7 @@
   "resourceVersion":"2.0",
   "sequence":{
     "$GMSequence":"v1",
-    "%Name":"spr_mortero_2",
+    "%Name":"spr_planta_de_reciclaje",
     "autoRecord":true,
     "backdropHeight":768,
     "backdropImageOpacity":0.5,
@@ -57,7 +57,7 @@
       "resourceType":"KeyframeStore<MomentsEventKeyframe>",
       "resourceVersion":"2.0",
     },
-    "name":"spr_mortero_2",
+    "name":"spr_planta_de_reciclaje",
     "playback":1,
     "playbackSpeed":30.0,
     "playbackSpeedType":0,
@@ -71,7 +71,7 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"0bef1d77-ea84-455b-a9df-98299163fc8b","path":"sprites/spr_mortero_2/spr_mortero_2.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"0bef1d77-ea84-455b-a9df-98299163fc8b","path":"sprites/spr_planta_de_reciclaje/spr_planta_de_reciclaje.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"a61fc14a-950f-4165-b3a8-4e5e56e0c400","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],

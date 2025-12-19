@@ -7,8 +7,10 @@ function delete_edificio(aa, bb, enemigo = false){
 		edificio.vida = 0
 		if index = 0{
 			array_remove(nucleos, edificio)
-			if menu = 1 and array_length(nucleos) = 0
+			if menu = 1 and array_length(nucleos) = 0{
 				win = 2
+				selected_dron = null_enemigo
+			}
 		}
 		array_remove(edificios, edificio)
 		edificios_counter[index]--
@@ -52,6 +54,8 @@ function delete_edificio(aa, bb, enemigo = false){
 					temp_edificio.link = null_edificio
 			}
 		#endregion
+		if index = id_planta_de_reciclaje
+			array_remove(plantas_de_reciclaje, edificio)
 		//Cancelar coordenadas
 		for(var i = ds_list_size(edificio.coordenadas) - 1; i >= 0; i--){
 			var temp_coordenada_2 = edificio.coordenadas[|i], a = temp_coordenada_2.a, b = temp_coordenada_2.b

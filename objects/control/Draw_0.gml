@@ -246,22 +246,24 @@ if menu = 2{
 		draw_rectangle(room_width / 2, 110, room_width - 110, room_height - 110, true)
 		//Editar Objetivo
 		if mision_actual >= 0{
-			var i = mision_actual, ypos = 120
-			xpos = room_width / 2 + 20
-			
-			var a
-			xpos = draw_text_xpos(xpos, ypos, L.editor_nuevo_objetivo + ": ")
+			var i = mision_actual, ypos = 120, a
+			xpos = draw_text_xpos(room_width / 2 + 20, ypos, L.editor_nuevo_objetivo + ": ")
 			mision_nombre[i] = draw_boton_text(xpos, ypos, mision_nombre[i], false)
 			xpos = room_width / 2 + 40
 			ypos = 150
 			xpos = draw_text_xpos(xpos, ypos, $"{L.editor_objetivo}: ")
 			//Objetivo
+			var prev_objetivo = mision_objetivo[i]
 			mision_objetivo[i] = draw_boton_text_list(xpos, ypos, mision_objetivo[i], objetivos_nombre)
+			if mision_objetivo[i] != prev_objetivo{
+				mision_target_id[i] = 0
+				mision_target_num[i] = 0
+			}
 			xpos += text_x
 			//Cantidad
 			if not in(mision_objetivo[i], 5, 7){
 				xpos = draw_text_xpos(xpos, ypos, " ")
-				mision_target_num[i] = draw_boton_text(xpos, ypos, mision_target_num[i])
+				mision_target_num[i] = draw_boton_text(xpos, ypos, mision_target_num[i], true)
 				xpos += text_x
 			}
 			//Conseguir recurso / Tener almacenado
@@ -2004,7 +2006,7 @@ if show_menu{
 							edificio.carga_max[id_piedra_sulfatada] = 5
 							edificio.receptor = true
 							edificio.emisor = false
-							edificio.flujo_consumo_max = -5
+							edificio.flujo_consumo_max = -50
 							edificio.energia_consumo_max = 80
 						}
 						//Explosivos
@@ -2013,41 +2015,17 @@ if show_menu{
 							edificio.carga_output[id_explosivo] = true
 							edificio.receptor = true
 							edificio.emisor = true
-							edificio.flujo_consumo_max = 3
+							edificio.flujo_consumo_max = 30
 							edificio.energia_consumo_max = 0
 						}
-						//Combustible
-						else if a = 2{
-							edificio.carga_output[id_combustible] = true
-							edificio.receptor = false
-							edificio.emisor = true
-							edificio.flujo_consumo_max = 6
-							edificio.energia_consumo_max = 50
-						}
-						//Azufre
-						else if a = 3{
-							edificio.carga_output[id_piedra_sulfatada] = true
-							edificio.receptor = false
-							edificio.emisor = true
-							edificio.flujo_consumo_max = 6
-							edificio.energia_consumo_max = 50
-						}
 						//Baterías
-						else if a = 4{
+						else if a = 2{
 							edificio.carga_max[id_cobre] = 5
 							edificio.carga_output[id_baterias] = true
 							edificio.receptor = true
 							edificio.emisor = true
-							edificio.flujo_consumo_max = 4
+							edificio.flujo_consumo_max = 40
 							edificio.energia_consumo_max = 80
-						}
-						//Plástico
-						else if a = 5{
-							edificio.carga_output[id_plastico] = true
-							edificio.receptor = false
-							edificio.emisor = true
-							edificio.flujo_consumo_max = 8
-							edificio.energia_consumo_max = 150
 						}
 						calculate_in_out_2(edificio)
 						mover_in(edificio)
@@ -2055,7 +2033,8 @@ if show_menu{
 				}
 			}
 			else if in(var_edificio_nombre, "Fábrica de Drones") and mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * dron_max) * zoom{
-				var a = floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom)), temp_text = $"{dron_descripcion[a]}\n"
+				var a = floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))
+				temp_text = $"{dron_descripcion[a]}\n"
 				if in(a, 0, 4)
 					temp_text += $"  {L.show_menu_no_disponible}\n"
 				else for(var b = array_length(dron_precio_id[a]) - 1; b >= 0; b--)
@@ -2106,10 +2085,10 @@ if pausa != 1 and temp_hexagono != noone and flag and not (show_menu and show_me
 	//Mostrar terreno
 	temp_text = $"{terreno_nombre_display[terreno[# mx, my]]}\n"
 	if mouse_check_button_pressed(mb_left){
-		var flag_dron = true, min_dis = 900 * sqr(zoom)
+		var flag_dron = true, min_dis = 900 * sqr(zoom) //(30 / zoom)^2
 		for(var a = array_length(drones_aliados) - 1; a >= 0; a--){
 			var temp_dron = drones_aliados[a], dis = distance_sqr(mouse_x, mouse_y, temp_dron.a * zoom - camx, temp_dron.b * zoom - camy)
-			if dis < min_dis{ //(20 / zoom)^2
+			if dis < min_dis{
 				mouse_clear(mb_left)
 				min_dis = dis
 				selected_dron = temp_dron
@@ -2233,7 +2212,7 @@ if pausa != 1 and temp_hexagono != noone and flag and not (show_menu and show_me
 			}
 		}
 		//Mostrar carga
-		if edificio.carga_total > 0 and var_edificio_nombre != "Silo de Misiles"{
+		if edificio.carga_total > 0 and index != id_silo_de_misiles{
 			temp_text += $"{L.almacen_almacen}:\n"
 			for(var a = 0; a < rss_max; a++)
 				if edificio.carga[a] > 0
@@ -2626,6 +2605,7 @@ if sonido
 if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastchar, "A", "D", "W", "S", " ") or cheat) and win = 0 and not show_menu{
 	for(var a = 1; a < edificio_max; a++)
 		if edificio_key[a] != "" and string_ends_with(keyboard_string, edificio_key[a]) and (cheat or edificio_tecnologia[a] or not tecnologia){
+			selected_dron = null_enemigo
 			keyboard_string = ""
 			build_index = a
 			build_menu = 0
@@ -2715,7 +2695,7 @@ if build_index > 0 and win = 0{
 		}
 		for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
 			var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb =  temp_complex_2.b
-			if in(terreno_nombre[terreno[# aa, bb]], "Pared de Piedra"){
+			if in(terreno_nombre[terreno[# aa, bb]], "Pared de Piedra", "Pared de Pasto", "Pared de Arena", "Pared de Nieve", "Hielo"){
 				temp_text += $"{L.construir_terreno_invalido}\n"
 				comprable = false
 				break
@@ -3819,6 +3799,7 @@ if keyboard_check_pressed(vk_anykey) and win = 0 and not show_menu{
 		if pausa > 0
 			pausa = 0
 		else{
+			selected_dron = null_enemigo
 			pausa = 1
 			build_index = 0
 			show_menu = false
