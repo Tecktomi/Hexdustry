@@ -1643,7 +1643,7 @@ if show_menu{
 				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_of} LINK_")
 				procesador_valor(xpos, ypos, pc, 5, 6, true)
 			}
-			//Draw to LINK[VAR]{B} [clear(), color(r, g, b), rectangle(x, y, w, h), line(x1, y1, x2, y2), triangle(x1, y1, x2, y2, x3, y3), circle(x, y, radio), draw_flush()]
+			//Draw to LINK[VAR]{B} [clear(), color(r, g, b), color(h, s, v), rectangle(x, y, w, h), line(x1, y1, x2, y2), triangle(x1, y1, x2, y2, x3, y3), circle(x, y, radio), draw_flush()]
 			else if pc0 = 9{
 				var signs = ["Clear", "Color grb", "Color hsv", "Rectangle", "Line", "Triangle", "Circle", "Texto", "Draw_flush"]
 				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_write} {L.procesador_to} LINK_")
@@ -3445,7 +3445,8 @@ if pausa = 0{
 					dron.dir = (9 * dron.dir + radtodeg(arctan2(dron.array_real[1], -dron.array_real[0]))) / 10
 					dron.a += 2 * dron.array_real[0]
 					dron.b += 2 * dron.array_real[1]
-					if --dron.array_real[2] <= 0
+					dron.array_real[2] -= 2
+					if dron.array_real[2] <= 0
 						dron.modo = 0
 				}
 				if array_length(enemigos) > 0{
@@ -3491,9 +3492,17 @@ if pausa = 0{
 				array_pop(municiones)
 				//Daño objetivo unidad
 				if municion.target != null_enemigo and municion.target.vida > 0{
-					municion.target.vida -= municion.dmg
-					if municion.target.vida <= 0
-						destroy_dron(municion.target)
+					var target = municion.target, c = target.posa, d = target.posb, temp_array = chunk_enemigos[# target.chunk_x, target.chunk_y]
+					for(var b = array_length(temp_array) - 1; b >= 0; b--){
+						target = temp_array[b]
+						if target.posa = c and target.posb = d{
+							target.vida -= municion.dmg
+							if target.vida <= 0
+								destroy_dron(target)
+						}
+					}
+					var temp_complex = abtoxy(c, d)
+					array_push(efectos, add_efecto(spr_impacto, 0, temp_complex.a, temp_complex.b, 7, 1))
 				}
 				//Daño objetivo edificio
 				if municion.target_build != null_edificio and municion.target_build.vida > 0
