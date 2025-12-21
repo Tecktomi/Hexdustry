@@ -44,8 +44,6 @@ if menu = 0{
 				var xpos = 120 + 120 * (a mod 10), ypos = 200 + 120 * floor(a / 10)
 				var temp_text = string_delete(save_files[a], string_pos(".", save_files[a]), 4)
 				if draw_sprite_boton(save_files_png[a], xpos, ypos, 96, 96,, 1){
-					get_file = 0
-					input_layer = 0
 					tecnologia = true
 					cargar_escenario(save_files[a])
 					game_start()
@@ -92,7 +90,27 @@ if menu = 0{
 			pos += 40
 			if draw_boton(140, pos, $"{cheat ? L.desactivar : L.activar} {L.menu_claves}",,,,, 1)
 				cheat = not cheat
-			pos += 40
+			pos += 60
+			var xpos = 200
+			if draw_boton(xpos, pos, L.praderas,,,,, 1){
+				generar_mapa(, 1, [[ 0,0,50,5 ],[ 0,4,5,2 ],[ 1,4,1,2 ],[ 1,4,0,2 ],[ 1,2,0,3 ],[ 1,2,1,3 ],[ 0,5,6,1 ],[ 1,5,0,16 ],[ 1,5,1,16 ],[ 0,14,6,1 ],[ 1,14,1,0 ],[ 2,0,6,3 ],[ 2,0,7,3 ],[ 2,16,8,15 ],[ 0,9,50,3 ],[ 1,9,1,0 ],[ 3,0,12,3 ],[ 3,2,10,3 ],[ 3,1,6,3 ],[ 3,3,4,2 ]])
+				game_start()
+			}
+			xpos += text_x + 20
+			if draw_boton(xpos, pos, L.cuevas,,,,, 1){
+				generar_mapa(, 0, [ [ 0,17,50,5 ],[ 0,4,5,3 ],[ 1,4,0,2 ],[ 1,2,0,16 ],[ 0,5,5,2 ],[ 1,5,0,16 ],[ 0,14,5,2 ],[ 1,14,0,16 ],[ 2,16,8,15 ],[ 0,9,80,5 ],[ 2,17,16,100 ],[ 2,0,6,3 ],[ 2,0,7,3 ],[ 3,0,12,3 ],[ 3,2,10,3 ],[ 3,1,8,2 ],[ 3,3,5,2 ] ])
+				game_start()
+			}
+			xpos += text_x + 20
+			if draw_boton(xpos, pos, L.desierto,,,,, 1){
+				generar_mapa(, 3, [ [ 0,0,50,5 ],[ 0,4,15,2 ],[ 1,4,0,2 ],[ 1,4,3,2 ],[ 1,2,3,1 ],[ 0,11,50,5 ],[ 0,5,10,2 ],[ 1,5,5,16 ],[ 0,14,15,1 ],[ 1,14,14,16 ],[ 2,0,7,3 ],[ 2,0,6,3 ],[ 2,16,8,15 ],[ 3,0,10,3 ],[ 3,2,8,3 ],[ 3,1,8,3 ],[ 3,3,6,2 ] ])
+				game_start()
+			}
+			xpos += text_x + 20
+			if draw_boton(xpos, pos, L.nieve,,,,, 1){
+				generar_mapa(, 12, [ [ 0,13,50,5 ],[ 0,0,50,5 ],[ 0,15,10,4 ],[ 1,15,12,0 ],[ 0,9,50,2 ],[ 1,9,9,0 ],[ 0,5,6,1 ],[ 1,5,5,0 ],[ 0,14,6,1 ],[ 1,14,14,16 ],[ 2,0,6,3 ],[ 2,0,7,3 ],[ 2,16,8,15 ],[ 3,0,12,3 ],[ 3,2,10,3 ],[ 3,1,8,3 ],[ 3,3,6,2 ] ])
+				game_start()
+			}
 			draw_set_halign(fa_center)
 			if draw_boton(room_width / 2, room_height - 200, L.menu_cargar_escenario,,,,, 1){
 				if not nucleo.vivo
@@ -101,17 +119,8 @@ if menu = 0{
 				input_layer = 1
 				scan_files_save()
 			}
-			if draw_boton(room_width / 2, room_height - 150, L.menu_juego_rapido,,,,, 1){
-				if tecnologia
-					for(var a = 0; a < edificio_max; a++){
-						var temp_array = edificio_tecnologia_precio[a]
-						for(var b = 0; b < array_length(temp_array); b++)
-							temp_array[b].num = round(tecnologia_precio_multiplicador * (5 + edificio_precio_num[a, b]))
-					}
-				input_layer = 0
-				get_file = 0
+			if draw_boton(room_width / 2, room_height - 150, L.menu_juego_rapido,,,,, 1)
 				game_start()
-			}
 			draw_set_halign(fa_left)
 			if draw_boton(120, 120, L.cancelar,,,,, 1) or keyboard_check_pressed(vk_escape){
 				keyboard_clear(vk_escape)
@@ -173,8 +182,8 @@ if menu = 2{
 		}
 		var size = array_length(mision_nombre), pos = 150
 		if size > 15
-			deslizante = floor(draw_deslizante_vertical(120, pos, pos + 15 * 30, deslizante, 0, size - 15, 0))
-		for(var i = deslizante; i < min(deslizante + 15, size); i++){
+			deslizante[0] = floor(draw_deslizante_vertical(120, pos, pos + 15 * 30, deslizante[0], 0, size - 15, 0))
+		for(var i = deslizante[0]; i < min(deslizante[0] + 15, size); i++){
 			if i > 0 and draw_sprite_boton(spr_flecha, 140, pos){
 				var	temp_string = mision_nombre[i - 1]
 				mision_nombre[i - 1] = mision_nombre[i]
@@ -220,10 +229,10 @@ if menu = 2{
 				mision_actual = i
 			pos += 30
 		}
-		if deslizante + 15 < size and mouse_wheel_down()
-			deslizante++
-		if deslizante > 0 and mouse_wheel_up()
-			deslizante--
+		if deslizante[0] + 15 < size and mouse_wheel_down()
+			deslizante[0]++
+		if deslizante[0] > 0 and mouse_wheel_up()
+			deslizante[0]--
 		if draw_boton(140, 600, L.editor_nuevo_objetivo){
 			array_push(mision_nombre, $"{L.editor_objetivo} {size}")
 			array_push(mision_objetivo, 0)
@@ -362,7 +371,7 @@ if menu = 2{
 				array_delete(mision_tiempo_show, i, 1)
 				array_delete(mision_texto, i, 1)
 				mision_actual = -1
-				deslizante = 0
+				deslizante[0] = 0
 			}
 		}
 		//Opciones generales
@@ -445,32 +454,48 @@ if menu = 2{
 			get_keyboard_string = -1
 			editor_menu = 0
 		}
-		if draw_boton(110, 180, L.editor_generar_terreno)
+		if draw_boton(110, 180, L.editor_generar_terreno){
+			show_debug_message(editor_instrucciones)
 			generar_mapa(editor_seed, editor_fondo, editor_instrucciones)
+		}
+		draw_set_color(c_dkgray)
 		var xpos = 120, ypos = 220
 		draw_boton_text_counter = 0
+		deslizante_counter = 0
 		xpos = draw_text_xpos(xpos, ypos, $"{L.editor_seed}: ")
 		editor_seed = draw_boton_text(xpos, ypos, editor_seed)
 		xpos = 120
 		ypos += text_y
 		xpos = draw_text_xpos(xpos, ypos, $"{L.editor_terreno_base}: ")
 		editor_fondo = draw_boton_text_list(xpos, ypos, editor_fondo, terreno_nombre,, 10)
-		var ore_names = []
+		ypos += text_y
+		var ore_names = [], size = array_length(editor_instrucciones)
 		for(var j = 0; j < ore_max; j++)
 			array_push(ore_names, recurso_nombre_display[ore_recurso[j]])
-		for(var i = 0; i < array_length(editor_instrucciones); i++){
+		if size > 18
+			deslizante[0] = floor(draw_deslizante_vertical(110, ypos, ypos + 20 * 18, deslizante[0], 0, size - 18, 0))
+		for(var i = deslizante[0]; i < min(deslizante[0] + 18, size); i++){
 			var instruccion = editor_instrucciones[i], tipo = instruccion[0], dat1 = instruccion[1], dat2 = instruccion[2], dat3 = instruccion[3]
 			xpos = 140
-			ypos += text_y
 			if draw_sprite_boton(spr_basura, xpos, ypos, 20, 20){
 				array_delete(editor_instrucciones, i, 1)
+				size--
+				i--
 				continue
 			}
 			xpos += 20
-			if i > 0 and draw_sprite_boton(spr_flecha, xpos, ypos, 20, 20){
-				editor_instrucciones[i] = editor_instrucciones[i - 1]
-				editor_instrucciones[i - 1] = instruccion
-				continue
+			if draw_sprite_boton(spr_flecha, xpos, ypos, 20, 20)
+				procesador_move = i
+			if procesador_move >= 0 and mouse_y > ypos and mouse_y < ypos + text_y{
+				draw_set_alpha(0.3)
+				draw_rectangle(140, ypos, xpos + text_x, ypos + text_y, false)
+				draw_set_alpha(1)
+				if mouse_check_button_released(mb_left) and i != procesador_move{
+					editor_instrucciones[i] = editor_instrucciones[procesador_move]
+					editor_instrucciones[procesador_move] = instruccion
+					procesador_move = -1
+					continue
+				}
 			}
 			xpos += 20
 			//Bloques de Terreno
@@ -488,22 +513,29 @@ if menu = 2{
 			}
 			//Bordes de Terreno
 			else if tipo = 1{
+				var temp_text
 				xpos = draw_text_xpos(xpos, ypos, $"{L.editor_al_rededor} ")
-				instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre)
+				instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
 				xpos += text_x
 				xpos = draw_text_xpos(xpos, ypos, $" {L.editor_reemplazar} ")
-				instruccion[2] = draw_boton_text_list(xpos, ypos, dat2, terreno_nombre)
+				if dat1 = dat2{
+					temp_text = terreno_nombre[dat1]
+					terreno_nombre[dat1] = L.editor_cualquiera
+				}
+				instruccion[2] = draw_boton_text_list(xpos, ypos, dat2, terreno_nombre,, 10)
+				if dat1 = dat2
+					terreno_nombre[dat1] = temp_text
 				xpos += text_x
 				xpos = draw_text_xpos(xpos, ypos, $" {L.editor_con} ")
-				instruccion[3] = draw_boton_text_list(xpos, ypos, dat3, terreno_nombre)
+				instruccion[3] = draw_boton_text_list(xpos, ypos, dat3, terreno_nombre,, 10)
 			}
 			//Ruido Aleatorio
 			else if tipo = 2{
 				xpos = draw_text_xpos(xpos, ypos, $"{L.editor_Reemplazar} ")
-				instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre)
+				instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
 				xpos += text_x
 				xpos = draw_text_xpos(xpos, ypos, $" {L.editor_con} ")
-				instruccion[2] = draw_boton_text_list(xpos, ypos, dat2, terreno_nombre)
+				instruccion[2] = draw_boton_text_list(xpos, ypos, dat2, terreno_nombre,, 10)
 				xpos += text_x
 				xpos = draw_text_xpos(xpos, ypos, $" {L.editor_el} ")
 				instruccion[3] = draw_boton_text(xpos, ypos, dat3)
@@ -513,7 +545,7 @@ if menu = 2{
 			//Menas de Recursos
 			else if tipo = 3{
 				xpos = draw_text_xpos(xpos, ypos, $"{L.editor_add} ")
-				instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, ore_names)
+				instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, ore_names,, 10)
 				xpos += text_x
 				xpos = draw_text_xpos(xpos, ypos, $" {L.editor_size} ")
 				instruccion[2] = draw_boton_text(xpos, ypos, dat2)
@@ -523,15 +555,22 @@ if menu = 2{
 				xpos += text_x
 				xpos = draw_text_xpos(xpos, ypos, $" {L.editor_veces}")
 			}
+			ypos += text_y
 		}
+		if deslizante[0] + 18 < size and mouse_wheel_down()
+			deslizante[0]++
+		if deslizante[0] > 0 and mouse_wheel_up()
+			deslizante[0]--
 		xpos = 120
 		ypos += text_y
 		xpos = draw_text_xpos(xpos, ypos, $"{L.editor_add} ")
 		var a = draw_boton_text_list(xpos, ypos, 0, ["...", L.editor_manchas, L.editor_borde, L.editor_ruido, L.editor_menas])
 		if a > 0{
-			array_push(editor_instrucciones, [a - 1, 0, 0, 0])
+			var temp_array_array = [[a - 1, 0, 50, 5], [a - 1, 4, 0, 2], [a - 1, 0, 6, 3], [a - 1, 0, 10, 3]]
+			array_push(editor_instrucciones, temp_array_array[a - 1])
 			a = 0
 		}
+		draw_set_color(c_black)
 		xpos = room_width / 2 + 20
 		ypos = 120
 		draw_text(xpos, ypos, L.editor_size_map)
@@ -552,6 +591,8 @@ if menu = 2{
 			resize_grid(0, prev_ysize)
 		draw_boton_text_list_end()
 		update_cursor()
+		if keyboard_check_pressed(ord("F"))
+			editor_instrucciones = [ [ 0,0,50,5 ],[ 0,4,15,2 ],[ 1,4,0,2 ],[ 1,4,3,2 ],[ 1,2,3,1 ],[ 0,11,50,5 ],[ 0,5,10,3 ],[ 1,5,3,16 ],[ 1,5,1,16 ],[ 1,5,11,16 ],[ 1,5,2,16 ],[ 1,5,4,16 ],[ 1,5,0,16 ],[ 0,14,15,1 ],[ 1,14,2,16 ],[ 1,14,3,16 ],[ 2,0,7,3 ],[ 2,0,6,3 ],[ 2,16,8,15 ] ]
 		exit
 	}
 	//click en mapa
@@ -1014,30 +1055,30 @@ if menu = 2{
 		draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
 		var width = 100
 		if draw_boton(width, 100, L.enciclopedia_recursos){
-			deslizante = 0
+			deslizante[0] = 0
 			enciclopedia = 1
 		}
 		width += text_x + 20
 		if draw_boton(width, 100, L.enciclopedia_edificios){
-			deslizante = 0
+			deslizante[0] = 0
 			enciclopedia = 2
 		}
 		width += text_x + 20
 		if draw_boton(width, 100, L.enciclopedia_unidades){
-			deslizante = 0
+			deslizante[0] = 0
 			enciclopedia = 5
 		}
 		width += text_x + 20
 		if tecnologia and draw_boton(width, 100, L.enciclopedia_tecnologia){
-			deslizante = 0
+			deslizante[0] = 0
 			enciclopedia = 7
 		}
 		//Menú Recursos
 		if enciclopedia = 1{
 			var pos = 140
 			if rss_max > 25
-				deslizante = floor(draw_deslizante_vertical(110, pos, pos + 25 * 20, deslizante, 0, rss_max - 25, 0))
-			for(var a = deslizante; a < min(deslizante + 25, rss_max); a++){
+				deslizante[0] = floor(draw_deslizante_vertical(110, pos, pos + 25 * 20, deslizante[0], 0, rss_max - 25, 0))
+			for(var a = deslizante[0]; a < min(deslizante[0] + 25, rss_max); a++){
 				draw_sprite(recurso_sprite[rss_sort[a]], 0, 120, pos + 10)
 				if draw_boton(140, pos, recurso_nombre_display[rss_sort[a]],,,, false){
 					enciclopedia_item = rss_sort[a]
@@ -1045,17 +1086,17 @@ if menu = 2{
 				}
 				pos += 20
 			}
-			if deslizante + 25 < rss_max and mouse_wheel_down()
-				deslizante++
-			if deslizante > 0 and mouse_wheel_up()
-				deslizante--
+			if deslizante[0] + 25 < rss_max and mouse_wheel_down()
+				deslizante[0]++
+			if deslizante[0] > 0 and mouse_wheel_up()
+				deslizante[0]--
 		}
 		//Menú Edificios
 		else if enciclopedia = 2{
 			var pos = 140
 			if edificio_max > 25
-				deslizante = floor(draw_deslizante_vertical(110, pos, pos + 25 * 20, deslizante, 0, edificio_max - 25, 0))
-			for(var a = deslizante; a < min(deslizante + 25, edificio_max); a++){
+				deslizante[0] = floor(draw_deslizante_vertical(110, pos, pos + 25 * 20, deslizante[0], 0, edificio_max - 25, 0))
+			for(var a = deslizante[0]; a < min(deslizante[0] + 25, edificio_max); a++){
 				draw_sprite_stretched(edificio_sprite[edi_sort[a]], 0, 120, pos, 18, 18)
 				if draw_boton(150, pos, edificio_nombre_display[edi_sort[a]],,,, false){
 					enciclopedia_item = edi_sort[a]
@@ -1063,10 +1104,10 @@ if menu = 2{
 				}
 				pos += 20
 			}
-			if deslizante + 25 < edificio_max and mouse_wheel_down()
-				deslizante++
-			if deslizante > 0 and mouse_wheel_up()
-				deslizante--
+			if deslizante[0] + 25 < edificio_max and mouse_wheel_down()
+				deslizante[0]++
+			if deslizante[0] > 0 and mouse_wheel_up()
+				deslizante[0]--
 		}
 		//Detalles Recurso
 		else if enciclopedia = 3{
@@ -1324,18 +1365,18 @@ if menu = 2{
 		else if enciclopedia = 5{
 			var pos = 140
 			if dron_max > 25
-				deslizante = floor(draw_deslizante_vertical(110, pos, pos + 25 * 20, deslizante, 0, dron_max - 25, 0))
-			for(var a = deslizante; a < min(deslizante + 25, dron_max); a++){
+				deslizante[0] = floor(draw_deslizante_vertical(110, pos, pos + 25 * 20, deslizante[0], 0, dron_max - 25, 0))
+			for(var a = deslizante[0]; a < min(deslizante[0] + 25, dron_max); a++){
 				if draw_boton(120, pos, dron_nombre_display[a],,,, false){
 					enciclopedia_item = a
 					enciclopedia = 6
 				}
 				pos += 20
 			}
-			if deslizante + 25 < dron_max and mouse_wheel_down()
-				deslizante++
-			if deslizante > 0 and mouse_wheel_up()
-				deslizante--
+			if deslizante[0] + 25 < dron_max and mouse_wheel_down()
+				deslizante[0]++
+			if deslizante[0] > 0 and mouse_wheel_up()
+				deslizante[0]--
 		}
 		//Detalles Dron
 		else if enciclopedia = 6{
@@ -1494,8 +1535,8 @@ if show_menu{
 		draw_set_halign(fa_left)
 		var xpos, ypos = 150, size = array_length(edificio.instruccion)
 		if size > 25
-			deslizante = floor(draw_deslizante_vertical(110, ypos, ypos + 25 * 20, deslizante, 0, size - 25, 0))
-		for(var a = deslizante; a < min(deslizante + 25, size); a++){
+			deslizante[0] = floor(draw_deslizante_vertical(110, ypos, ypos + 25 * 20, deslizante[0], 0, size - 25, 0))
+		for(var a = deslizante[0]; a < min(deslizante[0] + 25, size); a++){
 			var pc = edificio.instruccion[a], pc0 = pc[0]
 			xpos = 150
 			draw_set_halign(fa_right)
@@ -1736,10 +1777,10 @@ if show_menu{
 			}
 			ypos += 20
 		}
-		if deslizante + 25 < size and mouse_wheel_down()
-			deslizante++
-		if deslizante > 0 and mouse_wheel_up()
-			deslizante--
+		if deslizante[0] + 25 < size and mouse_wheel_down()
+			deslizante[0]++
+		if deslizante[0] > 0 and mouse_wheel_up()
+			deslizante[0]--
 		xpos = 150
 		if draw_boton(xpos, ypos, L.procesador_add,,,, false) or keyboard_check_pressed(vk_enter){
 			keyboard_clear(vk_enter)
@@ -3147,6 +3188,8 @@ if pausa = 0{
 						dron_vel /= 2
 					else if b = 1
 						dron.vida -= 0.25
+					else if b = 2
+						dron_vel *= 1.2
 				}
 			if dron.vida <= 0{
 				destroy_dron(dron)
@@ -3329,8 +3372,8 @@ if pausa = 0{
 					ds_grid_set(chunk_enemigos, dron.chunk_x, dron.chunk_y, temp_array)
 				}
 			}
-			aa = dron.a
-			bb = dron.b
+			if terreno_nombre[terreno[# dron.posa, dron.posb]] = "Hielo"
+				dron.efecto[2] = 30
 		}
 		for(var a = array_length(enemigos) - 1; a >= 0; a--){
 			var dron = enemigos[a]

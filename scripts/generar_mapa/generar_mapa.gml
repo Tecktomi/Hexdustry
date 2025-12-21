@@ -32,23 +32,34 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 			//Bordes de Terrenos
 			else if tipo = 1{
 				var caminable = terreno_caminable[dat3]
-				for(var a = 0; a < xsize; a++)
-					for(var b = 0; b < ysize; b++)
-						if terreno[# a, b] = dat1
-							for(var j = 0; j < 6; j++){
-								var temp_complex = next_to(a, b, j), aa = temp_complex.a, bb = temp_complex.b
-								if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or dat2 != terreno[# aa, bb]
-									continue
-								set_terreno(aa, bb, dat3)
-							}
+				if dat1 = dat2{
+					for(var a = 0; a < xsize; a++)
+						for(var b = 0; b < ysize; b++)
+							if terreno[# a, b] = dat1
+								for(var j = 0; j < 6; j++){
+									var temp_complex = next_to(a, b, j), aa = temp_complex.a, bb = temp_complex.b
+									if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or dat1 = terreno[# aa, bb]
+										continue
+									set_terreno(aa, bb, dat3)
+								}
+				}
+				else
+					for(var a = 0; a < xsize; a++)
+						for(var b = 0; b < ysize; b++)
+							if terreno[# a, b] = dat1
+								for(var j = 0; j < 6; j++){
+									var temp_complex = next_to(a, b, j), aa = temp_complex.a, bb = temp_complex.b
+									if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or dat2 != terreno[# aa, bb]
+										continue
+									set_terreno(aa, bb, dat3)
+								}
 			}
 			//Ruido Aleatorio
 			else if tipo = 2{
-				repeat(xsize * ysize * dat3 / 100){
-					var a = irandom(xsize - 1), b = irandom(ysize - 1)
-					if terreno[# a, b] = dat1
-						set_terreno(a, b, dat2)
-				}
+				for(var a = 0; a < xsize; a++)
+					for(var b = 0; b < ysize; b++)
+						if irandom(99) < dat3 and terreno[# a, b] = dat1
+							set_terreno(a, b, dat2)
 			}
 			//Menas de Recursos
 			else if tipo = 3{

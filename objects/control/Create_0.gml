@@ -104,7 +104,7 @@ set_idioma(idiomas[idioma], false)
 	get_keyboard_cursor = 0
 	get_keyboard_text = ""
 	get_keyboard_string_text = ""
-	objetivos_nombre = ["conseguir", "tener almacenado", "construir", "tener construido", "matar", "sin objetivo", "apretar ADWS", "cargar edificio"]
+	objetivos_nombre = ["conseguir", "tener almacenado", "construir", "tener construido", "sobrevivir oleadas", "sin objetivo", "apretar ADWS", "cargar edificio"]
 	objetivos_nombre_display = []
 	array_copy(objetivos_nombre_display, 0, objetivos_nombre, 0, array_length(objetivos_nombre))
 	oleadas = true
@@ -121,7 +121,6 @@ set_idioma(idiomas[idioma], false)
 	text_y = 0
 	enciclopedia = 0
 	enciclopedia_item = 0
-	deslizante = 0
 	null_humo = add_humo(0, 0, 0, 0, 0, 0, 0)
 	humos = array_create(0, null_humo)
 	direccion_viento = random(2 * pi)
@@ -188,6 +187,7 @@ set_idioma(idiomas[idioma], false)
 	chunk_update = true
 	LOGIC_DT = 1 / 60
 	acumulator = 0
+	deslizante = array_create(1, 0)
 #endregion
 null_edificio = {
 	index : -1,
@@ -345,7 +345,7 @@ puerto_carga_atended = 0
 	ds_grid_clear(background_bool, false)
 #endregion
 //Enemigos
-efectos_nombre = ["Shock", "Fuego"]
+efectos_nombre = ["Shock", "Fuego", "Deslizando"]
 efectos_max = array_length(efectos_nombre)
 null_enemigo = {
 	a : 0,
@@ -367,7 +367,8 @@ null_enemigo = {
 	dir_move : 0,
 	step : 0,
 	efecto : array_create(efectos_max, 0),
-	array_real : array_create(0, 0)
+	array_real : array_create(0, 0),
+	oleada : 0
 }
 enemigos = array_create(0, null_enemigo)
 drones_aliados = array_create(0, null_enemigo)

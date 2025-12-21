@@ -6,6 +6,14 @@ function game_start(){
 			mision_actual = -1
 			pasar_mision()
 		}
+		if tecnologia
+			for(var a = 0; a < edificio_max; a++){
+				var temp_array = edificio_tecnologia_precio[a]
+				for(var b = 0; b < array_length(temp_array); b++)
+					temp_array[b].num = round(tecnologia_precio_multiplicador * (5 + edificio_precio_num[a, b]))
+			}
+		input_layer = 0
+		get_file = 0
 		win_step = 0
 		menu = 1
 		image_index = 0

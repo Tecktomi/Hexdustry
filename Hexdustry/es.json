@@ -14,6 +14,10 @@
 "activar": "Activar",
 "desactivar": "Desactivar",
 "salir": "Salir",
+"praderas": "Praderas",
+"cuevas": "Cuevas",
+"desierto": "Desierto",
+"nieve": "Nieve",
 
 "Núcleo": "Núcleo",
 "Taladro": "Taladro",
@@ -247,6 +251,7 @@
 "editor_editar_mapa": "Editar mapa",
 "editor_guardar": "Guardar escenario",
 "editor_cargar": "Cargar escenario",
+"editor_cualquiera": "cualquiera",
 
 "game_activar": "Activar",
 "game_first_wave": "para la primera oleada",
