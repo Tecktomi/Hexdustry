@@ -14,6 +14,10 @@
 "activar": "Activate",
 "desactivar": "Deactivate",
 "salir": "Exit",
+"praderas": "Grasslands",
+"cuevas": "Caves",
+"desierto": "Desert",
+"nieve": "Snow",
 
 "Núcleo": "Nucleus",
 "Taladro": "Drill",
@@ -247,6 +251,7 @@
 "editor_editar_mapa": "Edit map",
 "editor_guardar": "Save map",
 "editor_cargar": "Load map",
+"editor_cualquiera": "any",
 
 "game_activar": "Activate",
 "game_first_wave": "for the first wave",

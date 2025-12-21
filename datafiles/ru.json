@@ -14,6 +14,10 @@
 "activar": "Активировать",
 "desactivar": "Деактивировать",
 "salir": "Выходить",
+"praderas": "Луга",
+"cuevas": "Пещеры",
+"desierto": "Пустыня",
+"nieve": "Снег",
 
 "Нúcleo": "Ядро",
 "Taladro": "Бур",
@@ -247,6 +251,7 @@
 "editor_editar_mapa": "Редактировать карту",
 "editor_guardar": "Сохранить карту",
 "editor_cargar": "Загрузить карту",
+"editor_cualquiera": "любой",
 
 "game_activar": "Активировать",
 "game_first_wave": "для первой волны",
