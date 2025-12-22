@@ -14,6 +14,8 @@ if menu = 0{
 	draw_set_color(c_white)
 	draw_text(room_width / 2, 100, L.menu_hexdustry)
 	draw_set_font(ft_letra)
+	if os_browser != browser_not_a_browser
+		draw_text(room_width / 2, 140, L.menu_html)
 	if draw_boton(room_width / 2, 200, L.menu_juego_rapido){
 		input_layer = 1
 		get_file = 2
@@ -135,11 +137,12 @@ if menu = 0{
 	update_cursor()
 	if keyboard_check_pressed(vk_escape)
 		game_end()
-	for(var a = 0; a < array_length(idiomas); a++)
-		if draw_sprite_boton(spr_bandera, 20 + 80 * a, 20, 64, 48,,, a){
-			idioma = a
-			set_idioma(idiomas[a])
-		}
+	if os_type == os_windows
+		for(var a = 0; a < array_length(idiomas); a++)
+			if draw_sprite_boton(spr_bandera, 20 + 80 * a, 20, 64, 48,,, a){
+				idioma = a
+				set_idioma(idiomas[a])
+			}
 	if keyboard_check_pressed(vk_f4){
 		keyboard_clear(vk_f4)
 		window_set_fullscreen(not window_get_fullscreen())

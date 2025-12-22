@@ -1,21 +1,25 @@
-randomize()
+ randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "19_12_2025")
+ini_write_string("Global", "version", "22_12_2025")
 ini_close()
-save_files = scan_files("*.txt", fa_none)
-for(var a = array_length(save_files) - 1; a >= 0; a--){
-	save_file = save_files[a]
-	var temp_text = string_delete(save_file, string_pos(".", save_file), 4)
-	if file_exists(temp_text + ".png")
-		var temp_image = sprite_add(temp_text + ".png", 1, false, false, 0, 0)
-	else
-		temp_image = spr_null_image
-	save_files_png[a] = temp_image
+save_files = (os_browser == browser_not_a_browser) ? scan_files("*.txt", fa_none) : []
+if os_browser == browser_not_a_browser{
+	for(var a = array_length(save_files) - 1; a >= 0; a--){
+		save_file = save_files[a]
+		var temp_text = string_delete(save_file, string_pos(".", save_file), 4)
+		if file_exists(temp_text + ".png")
+			var temp_image = sprite_add(temp_text + ".png", 1, false, false, 0, 0)
+		else
+			temp_image = spr_null_image
+		save_files_png[a] = temp_image
+	}
 }
-save_codes = scan_files("*.code", fa_none)
-idiomas = scan_files("*.json", fa_none)
+else
+	game_set_speed(30, gamespeed_fps)
+save_codes = (os_browser == browser_not_a_browser) ? scan_files("*.code", fa_none) : []
+idiomas = (os_browser == browser_not_a_browser) ? scan_files("*.json", fa_none) : ["en.json", "es.json", "ru.json"]
 for(var a = array_length(idiomas) - 1; a >= 0; a--)
 	idioma_name[a] = string_delete(idiomas[a], string_pos(".", idiomas[a]), 5)
 idioma = 1
