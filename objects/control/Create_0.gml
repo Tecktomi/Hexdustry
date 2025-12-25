@@ -1,8 +1,8 @@
- randomize()
+randomize()
 draw_set_font(ft_letra)
 directorio = game_save_id
 ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "22_12_2025")
+ini_write_string("Global", "version", "25_12_2025")
 ini_close()
 save_files = (os_browser == browser_not_a_browser) ? scan_files("*.txt", fa_none) : []
 if os_browser == browser_not_a_browser{
@@ -193,6 +193,19 @@ set_idioma(idiomas[idioma], false)
 	acumulator = 0
 	deslizante = array_create(1, 0)
 #endregion
+#region UI
+	ui_fondo = #282828
+	ui_panel_secundario = #383838
+	ui_borde = #606060
+	ui_sombra = #141414
+	ui_texto = #E9E9E9
+	ui_texto_secundario = #B3B3B3
+	ui_texto_inhabilitado = #7F7F7F
+	ui_boton_verde = #448A20
+	ui_boton_azul = #4169E1
+	ui_boton_gris = #606060
+	ui_boton_rojo = #A00000
+#endregion
 null_edificio = {
 	index : -1,
 	dir : 0,
@@ -372,7 +385,8 @@ null_enemigo = {
 	step : 0,
 	efecto : array_create(efectos_max, 0),
 	array_real : array_create(0, 0),
-	oleada : 0
+	oleada : 0,
+	random_int : random(1)
 }
 enemigos = array_create(0, null_enemigo)
 drones_aliados = array_create(0, null_enemigo)
@@ -577,9 +591,10 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 	def_dron("Araña", spr_arana,, 100, 400, 6400, [id_bronce, id_baterias, id_electronico], [6, 1, 3])
 	def_dron("Dron", spr_dron,, 40, 400, 100, [id_cobre, id_baterias, id_electronico], [10, 1, 3], true)
 	def_dron("Reparador", spr_reparador,, 60, 400, 2500, [id_silicio, id_baterias, id_plastico, id_electronico], [10, 1, 5, 3], true)
-	def_dron("Explosivo", spr_dron_explosivo,, 50, 400, 1600, [id_hierro, id_explosivo, id_electronico], [6, 2, 2], true)
+	def_dron("Explosivo", spr_dron_explosivo,, 50, 400, 400, [id_hierro, id_explosivo, id_electronico], [6, 2, 2], true)
 	def_dron("Tanque", spr_tanque, spr_tanque_2, 750, 1600, 90_000, [id_bronce, id_acero, id_electronico], [15, 25, 10])
 	def_dron("Helicoptero", spr_helicoptero, spr_helicoptero_2, 400, 1600, 40_000, [id_bronce, id_acero, id_electronico], [10, 15, 15], true)
+	def_dron("Titán", spr_titan, spr_titan_leg, 1500, 2500, 160_000, [id_bronce, id_acero, id_electronico, id_uranio_bruto], [30, 40, 40, 75])
 #endregion
 dron_max = array_length(dron_nombre)
 //Liquidos

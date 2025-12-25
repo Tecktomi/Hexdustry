@@ -65,6 +65,25 @@ function atacar_dron(dron = control.null_enemigo, edificio = control.null_edific
 			}
 			return false
 		}
+		//Ataque Titán
+		else if dron.index = 6{
+			if in(++dron.step, 75, 90, 105, 120){
+				if dron.step = 120
+					dron.step = 0
+				var municion
+				if edificio != null_edificio{
+					var dis = distance(dron.a, dron.b, edificio.x, edificio.y)
+					municion = add_municion(dron.a, dron.b, 15 * (edificio.x - dron.a) / dis, 15 * (edificio.y - dron.b) / dis, 3, dis / 15, 50,, edificio)
+				}
+				if target_enemigo != null_enemigo
+					target = target_enemigo
+				if target != null_enemigo{
+					var dis = distance(dron.a, dron.b, target.a, target.b)
+					municion = add_municion(dron.a, dron.b, 15 * (target.a - dron.a) / dis, 15 * (target.b - dron.b) / dis, 3, dis / 15, 50, target)
+				}
+				array_push(municiones, municion)
+			}
+		}
 		return false
 	}
 }
