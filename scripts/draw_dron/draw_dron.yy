@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"draw_dron",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"draw_dron",
+  "parent":{
+    "name":"DRAW",
+    "path":"folders/SCRIPTS/DRAW.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

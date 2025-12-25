@@ -24,7 +24,8 @@ function add_dron(a, b, index, aliado = false){
 			step : 0,
 			efecto : array_create(efectos_max, 0),
 			array_real : array_create(0, 0),
-			oleada : 0
+			oleada : 0,
+			random_int : random(1)
 		}
 		if aliado
 			drones_construidos++

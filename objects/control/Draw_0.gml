@@ -4,6 +4,18 @@ if menu = 0{
 	minb = max(0, floor(camy / zoom / 14) - 1)
 	maxa = min(xsize - 1, ceil((camx + room_width) / zoom / 48))
 	maxb = min(ysize - 1, ceil((camy + room_height) / zoom / 14))
+	if keyboard_check_pressed(ord("G")){
+		var temp_surf = surface_create(32, 28)
+		surface_set_target(temp_surf)
+		for(var a = 0; a < 60; a++){
+			draw_sprite(spr_lava, 0, 15, 13)
+			draw_sprite_ext(spr_lava_glow, 0, 15, 13, 1, 1, 0, c_white, 0.1 * sin(a * pi / 60))
+			var sprite = sprite_create_from_surface(temp_surf, 0, 0, 32, 28, false, false, 0, 0)
+			sprite_save(sprite, 0, $"lava_ani_{a}.png")
+		}
+		surface_reset_target()
+		surface_free(temp_surf)
+	}
 	dibujar_fondo(1)
 	draw_set_alpha(0.5)
 	draw_set_color(c_black)
@@ -16,11 +28,11 @@ if menu = 0{
 	draw_set_font(ft_letra)
 	if os_browser != browser_not_a_browser
 		draw_text(room_width / 2, 140, L.menu_html)
-	if draw_boton(room_width / 2, 200, L.menu_juego_rapido){
+	if draw_boton(room_width / 2, 200, L.menu_juego_rapido, ui_boton_verde){
 		input_layer = 1
 		get_file = 2
 	}
-	if draw_boton(room_width / 2, 250, L.menu_tutorial){
+	if draw_boton(room_width / 2, 250, L.menu_tutorial, ui_boton_verde){
 		var file = cargar_escenario("mision_1.txt")
 		if file != ""
 			game_start()
@@ -28,7 +40,7 @@ if menu = 0{
 		tecnologia = true
 		cheat = false
 	}
-	if draw_boton(room_width / 2, 370, L.menu_editor)
+	if draw_boton(room_width / 2, 370, L.menu_editor, ui_boton_verde)
 		menu = 2
 	draw_set_halign(fa_left)
 	if get_file > 0{
@@ -65,66 +77,76 @@ if menu = 0{
 				draw_text(room_width / 2, 200, L.menu_sin_archivos)
 				draw_set_halign(fa_left)
 			}
-			if draw_boton(120, 120, L.cancelar,,,,, 1) or keyboard_check_pressed(vk_escape){
+			if draw_boton(120, 120, L.cancelar, ui_boton_rojo,,,, 1) or keyboard_check_pressed(vk_escape){
 				keyboard_clear(vk_escape)
 				get_file = 2
 			}
 		}
 		//Partida Nueva
 		else if get_file = 2{
-			var pos = 160
-			if draw_boton(140, pos, $"{tecnologia ? L.desactivar : L.activar} {L.enciclopedia_tecnologia}",,,,, 1)
-				tecnologia = not tecnologia
-			pos += 40
+			var xpos = 140, ypos = 160, des_count = 0
+			draw_boton_text_counter = 0
+			//Tecnología
+			draw_text_xpos(xpos, ypos, $"{tecnologia ? L.desactivar : L.activar} {L.enciclopedia_tecnologia}")
+			xpos += max(string_width($"{L.activar} {L.enciclopedia_tecnologia}"), string_width($"{L.desactivar} {L.enciclopedia_tecnologia}"))
+			tecnologia = draw_toggle(xpos + 10, ypos - 5, tecnologia, 1)
+			ypos += text_y + 10
 			if tecnologia{
-				if draw_boton(180, pos, $"{L.menu_precio_tecnologia}: {100 * tecnologia_precio_multiplicador}%",,,,, 1)
-					tecnologia_precio_multiplicador = 0.5 + (tecnologia_precio_multiplicador mod 5)
-				pos += 40
+				xpos = draw_text_xpos(160, ypos, $"{L.menu_precio_tecnologia}")
+				tecnologia_precio_multiplicador = draw_deslizante(xpos + 10, xpos + 135, ypos + 10, tecnologia_precio_multiplicador, 0.5, 3, des_count++, 1)
+				ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{floor(100 * tecnologia_precio_multiplicador)}%")
 			}
-			if draw_boton(140, pos, $"{L.editor_primera_ronda}: {oleadas_tiempo_primera >= 60 ? string(floor(oleadas_tiempo_primera / 60)) + "m " : ""}{oleadas_tiempo_primera mod 60}s",,,,, 1)
-				oleadas_tiempo_primera = 30 + (oleadas_tiempo_primera mod 300)
-			pos += 40
-			if draw_boton(140, pos, $"{L.editor_siguiente_ronda}: {oleadas_tiempo >= 60 ? string(floor(oleadas_tiempo / 60)) + "m " : ""}{oleadas_tiempo mod 60}s",,,,, 1)
-				oleadas_tiempo = 15 + (oleadas_tiempo mod 120)
-			pos += 40
-			if draw_boton(140, pos, $"{L.editor_multiplicador_vida}: {multiplicador_vida_enemigos}%",,,,, 1)
-				multiplicador_vida_enemigos = 25 + (multiplicador_vida_enemigos mod 250)
-			pos += 40
-			if draw_boton(140, pos, $"{cheat ? L.desactivar : L.activar} {L.menu_claves}",,,,, 1)
-				cheat = not cheat
-			pos += 60
-			var xpos = 200
-			if draw_boton(xpos, pos, L.praderas,,,,, 1){
+			//Primera oleada
+			xpos = draw_text_xpos(140, ypos, $"{L.editor_primera_ronda}")
+			oleadas_tiempo_primera = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, oleadas_tiempo_primera, 60, 300, des_count++, 1))
+			ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{oleadas_tiempo_primera >= 60 ? string(floor(oleadas_tiempo_primera / 60)) + "m " : ""}{oleadas_tiempo_primera mod 60}s")
+			//Siguientes oleadas
+			xpos = draw_text_xpos(140, ypos, $"{L.editor_siguiente_ronda}")
+			oleadas_tiempo = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, oleadas_tiempo, 30, 120, des_count++, 1))
+			ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{oleadas_tiempo >= 60 ? string(floor(oleadas_tiempo / 60)) + "m " : ""}{oleadas_tiempo mod 60}s")
+			//Multiplicador de vida
+			xpos = draw_text_xpos(140, ypos, $"{L.editor_multiplicador_vida}")
+			multiplicador_vida_enemigos = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, multiplicador_vida_enemigos, 20, 200, des_count++, 1))
+			ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{multiplicador_vida_enemigos}%")
+			//Modo creativo
+			xpos = 140
+			draw_text_xpos(xpos, ypos, $"{cheat ? L.desactivar : L.activar} {L.menu_claves}")
+			xpos += max(string_width($"{L.activar} {L.menu_claves}"), string_width($"{L.desactivar} {L.menu_claves}"))
+			cheat = draw_toggle(xpos + 10, ypos - 5, cheat, 1)
+			ypos += text_y + 10
+			//Biomas
+			xpos = 200
+			if draw_boton(xpos, ypos, L.praderas,,,,, 1){
 				generar_mapa(, 1, [[ 0,0,50,5 ],[ 0,4,5,2 ],[ 1,4,1,2 ],[ 1,4,0,2 ],[ 1,2,0,3 ],[ 1,2,1,3 ],[ 0,5,6,1 ],[ 1,5,0,16 ],[ 1,5,1,16 ],[ 0,14,6,1 ],[ 1,14,1,0 ],[ 2,0,6,3 ],[ 2,0,7,3 ],[ 2,16,8,15 ],[ 0,9,50,3 ],[ 1,9,1,0 ],[ 3,0,12,3 ],[ 3,2,10,3 ],[ 3,1,6,3 ],[ 3,3,4,2 ]])
 				game_start()
 			}
 			xpos += text_x + 20
-			if draw_boton(xpos, pos, L.cuevas,,,,, 1){
+			if draw_boton(xpos, ypos, L.cuevas,,,,, 1){
 				generar_mapa(, 0, [ [ 0,17,50,5 ],[ 0,4,5,3 ],[ 1,4,0,2 ],[ 1,2,0,16 ],[ 0,5,5,2 ],[ 1,5,0,16 ],[ 0,14,5,2 ],[ 1,14,0,16 ],[ 2,16,8,15 ],[ 0,9,80,5 ],[ 2,17,16,100 ],[ 2,0,6,3 ],[ 2,0,7,3 ],[ 3,0,12,3 ],[ 3,2,10,3 ],[ 3,1,8,2 ],[ 3,3,5,2 ] ])
 				game_start()
 			}
 			xpos += text_x + 20
-			if draw_boton(xpos, pos, L.desierto,,,,, 1){
+			if draw_boton(xpos, ypos, L.desierto,,,,, 1){
 				generar_mapa(, 3, [ [ 0,0,50,5 ],[ 0,4,15,2 ],[ 1,4,0,2 ],[ 1,4,3,2 ],[ 1,2,3,1 ],[ 0,11,50,5 ],[ 0,5,10,2 ],[ 1,5,5,16 ],[ 0,14,15,1 ],[ 1,14,14,16 ],[ 2,0,7,3 ],[ 2,0,6,3 ],[ 2,16,8,15 ],[ 3,0,10,3 ],[ 3,2,8,3 ],[ 3,1,8,3 ],[ 3,3,6,2 ] ])
 				game_start()
 			}
 			xpos += text_x + 20
-			if draw_boton(xpos, pos, L.nieve,,,,, 1){
+			if draw_boton(xpos, ypos, L.nieve,,,,, 1){
 				generar_mapa(, 12, [ [ 0,13,50,5 ],[ 0,0,50,5 ],[ 0,15,10,4 ],[ 1,15,12,0 ],[ 0,9,50,2 ],[ 1,9,9,0 ],[ 0,5,6,1 ],[ 1,5,5,0 ],[ 0,14,6,1 ],[ 1,14,14,16 ],[ 2,0,6,3 ],[ 2,0,7,3 ],[ 2,16,8,15 ],[ 3,0,12,3 ],[ 3,2,10,3 ],[ 3,1,8,3 ],[ 3,3,6,2 ] ])
 				game_start()
 			}
 			draw_set_halign(fa_center)
-			if draw_boton(room_width / 2, room_height - 200, L.menu_cargar_escenario,,,,, 1){
+			if draw_boton(room_width / 2, room_height - 200, L.menu_cargar_escenario, ui_boton_azul,,,, 1){
 				if not nucleo.vivo
 					game_restart()
 				get_file = 1
 				input_layer = 1
 				scan_files_save()
 			}
-			if draw_boton(room_width / 2, room_height - 150, L.menu_juego_rapido,,,,, 1)
+			if draw_boton(room_width / 2, room_height - 150, L.menu_juego_rapido, ui_boton_verde,,,, 1)
 				game_start()
 			draw_set_halign(fa_left)
-			if draw_boton(120, 120, L.cancelar,,,,, 1) or keyboard_check_pressed(vk_escape){
+			if draw_boton(120, 120, L.cancelar, ui_boton_rojo,,,, 1) or keyboard_check_pressed(vk_escape){
 				keyboard_clear(vk_escape)
 				get_file = 0
 				input_layer = 0
@@ -167,7 +189,7 @@ if menu = 2{
 		draw_set_color(c_black)
 		draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
 		var xpos = 110
-		if draw_boton(110, 110, L.volver) or keyboard_check_pressed(vk_escape){
+		if draw_boton(110, 110, L.volver, ui_boton_rojo) or keyboard_check_pressed(vk_escape){
 			keyboard_clear(vk_escape)
 			mision_actual = -1
 			get_keyboard_string = -1
@@ -236,7 +258,7 @@ if menu = 2{
 			deslizante[0]++
 		if deslizante[0] > 0 and mouse_wheel_up()
 			deslizante[0]--
-		if draw_boton(140, 600, L.editor_nuevo_objetivo){
+		if draw_boton(140, 600, L.editor_nuevo_objetivo, ui_boton_verde){
 			array_push(mision_nombre, $"{L.editor_objetivo} {size}")
 			array_push(mision_objetivo, 0)
 			array_push(mision_target_id, 0)
@@ -339,7 +361,7 @@ if menu = 2{
 				ypos += a
 			}
 			ypos += 10
-			if draw_boton(room_width / 2 + 40, ypos, L.editor_add_text){
+			if draw_boton(room_width / 2 + 40, ypos, L.editor_add_text, ui_boton_azul){
 				mision_choosing_coord = true
 				mision_choosing_coord_i = i
 				mision_choosing_coord_tipo = 0
@@ -364,7 +386,7 @@ if menu = 2{
 				xpos = draw_text_xpos(xpos+ text_x, ypos, ", ")
 				mision_camara_y[i] = draw_boton_text(xpos, ypos, mision_camara_y[i])
 			}
-			if draw_boton(room_width / 2 + 10, room_height - 140, L.editor_eliminar_objetivo){
+			if draw_boton(room_width / 2 + 10, room_height - 140, L.editor_eliminar_objetivo, ui_boton_rojo){
 				array_delete(mision_nombre, i, 1)
 				array_delete(mision_objetivo, i, 1)
 				array_delete(mision_target_id, i, 1)
@@ -451,20 +473,19 @@ if menu = 2{
 		draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
 		draw_set_color(c_black)
 		draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
-		if draw_boton(110, 110, L.volver) or keyboard_check_pressed(vk_escape){
+		if draw_boton(110, 110, L.volver, ui_boton_rojo) or keyboard_check_pressed(vk_escape){
 			keyboard_clear(vk_escape)
 			mision_actual = -1
 			get_keyboard_string = -1
 			editor_menu = 0
 		}
-		if draw_boton(110, 180, L.editor_generar_terreno){
+		if draw_boton(110, 180, L.editor_generar_terreno, ui_boton_azul){
 			show_debug_message(editor_instrucciones)
 			generar_mapa(editor_seed, editor_fondo, editor_instrucciones)
 		}
 		draw_set_color(c_dkgray)
 		var xpos = 120, ypos = 220
 		draw_boton_text_counter = 0
-		deslizante_counter = 0
 		xpos = draw_text_xpos(xpos, ypos, $"{L.editor_seed}: ")
 		editor_seed = draw_boton_text(xpos, ypos, editor_seed)
 		xpos = 120
@@ -806,22 +827,22 @@ if menu = 2{
 	b++
 	if sprite_boton_text != ""
 		draw_text_background(mouse_x + 20, mouse_y, sprite_boton_text)
-	if draw_boton(10, room_height - 390, L.editor_objetivos){
+	if draw_boton(10, room_height - 390, L.editor_objetivos, ui_boton_azul){
 		editor_menu = 1
 		exit
 	}
-	if draw_boton(10, room_height - 340, L.editor_editar_mapa){
+	if draw_boton(10, room_height - 340, L.editor_editar_mapa, ui_boton_azul){
 		editor_menu = 2
 		exit
 	}
 	build_size = round(draw_deslizante(50, 150, room_height - 200, build_size, 1, 5, 2))
-	if draw_boton(10, room_height - 100, L.editor_guardar) or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("S"))){
+	if draw_boton(10, room_height - 100, L.editor_guardar, ui_boton_azul) or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("S"))){
 		get_file = 2
 		input_layer = 1
 		scan_files_save()
 		keyboard_clear(ord("S"))
 	}
-	if draw_boton(10, room_height - 60, L.editor_cargar) or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("A"))){
+	if draw_boton(10, room_height - 60, L.editor_cargar, ui_boton_azul) or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("A"))){
 		get_file = 1
 		input_layer = 1
 		scan_files_save()
@@ -949,13 +970,13 @@ if menu = 2{
 					array_push(save_files_png, temp_sprite)
 			}
 		}
-		if draw_boton(120, 120, L.cancelar,,,,, 1) or keyboard_check_pressed(vk_escape){
+		if draw_boton(120, 120, L.cancelar, ui_boton_rojo,,,, 1) or keyboard_check_pressed(vk_escape){
 			keyboard_clear(vk_escape)
 			input_layer = 0
 			get_file = 0
 		}
 	}
-	if draw_boton(10, room_height - 140, L.volver) or keyboard_check_pressed(vk_escape){
+	if draw_boton(10, room_height - 140, L.volver, ui_boton_rojo) or keyboard_check_pressed(vk_escape){
 		menu = 0
 		redo_pathfind()
 	}
@@ -1262,7 +1283,7 @@ if menu = 2{
 				else if edificio_flujo_consumo[ei] < 0
 					pos = draw_text_ypos(120, pos, $"{L.enciclopedia_produce} {abs(edificio_flujo_consumo[ei])} {L.flujo_liquido}/s")
 			}
-			if (edificio_tecnologia[ei] or cheat) and draw_boton(120, pos + 40, L.enciclopedia_construir){
+			if (edificio_tecnologia[ei] or cheat) and draw_boton(120, pos + 40, L.enciclopedia_construir, ui_boton_verde){
 				enciclopedia = 0
 				build_index = ei
 			}
@@ -1457,18 +1478,10 @@ if menu = 2{
 #endregion
 //Pausa - Menú
 if pausa = 1{
-	var size = array_length(enemigos)
-	for(var a = 0; a < size; a++){
-		var enemigo = enemigos[a], aa = enemigo.a, bb = enemigo.b, index = enemigo.index
-		draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb)
-		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,,, c_red)
-	}
-	size = array_length(drones_aliados)
-	for(var a = 0; a < size; a++){
-		var dron = drones_aliados[a], aa = dron.a, bb = dron.b, index = dron.index
-		draw_sprite_off(dron_sprite[index], 0, aa, bb)
-		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,,, c_blue)
-	}
+	for(var a = array_length(enemigos) - 1; a >= 0; a--)
+		draw_dron(enemigos[a], true)
+	for(var a = array_length(drones_aliados) - 1; a >= 0; a--)
+		draw_dron(drones_aliados[a], false)
 	image_index--
 	var color = draw_get_color()
 	draw_set_color(c_black)
@@ -1503,13 +1516,17 @@ if pausa = 1{
 		if sonido for(var b = 0; b < sonidos_max; b++)
 			audio_resume_sound(sonido_id[b])
 	}
-	if draw_boton(a, 600, L.salir)
+	if draw_boton(a, 600, L.salir, ui_boton_rojo)
 		game_restart()
 	draw_set_halign(fa_left)
 	draw_set_color(color)
 }
 //Solo pausa
 if pausa = 2{
+	for(var a = array_length(enemigos) - 1; a >= 0; a--)
+		draw_dron(enemigos[a], true)
+	for(var a = array_length(drones_aliados) - 1; a >= 0; a--)
+		draw_dron(drones_aliados[a], false)
 	image_index--
 	draw_set_color(c_white)
 	draw_set_halign(fa_center)
@@ -1785,7 +1802,7 @@ if show_menu{
 		if deslizante[0] > 0 and mouse_wheel_up()
 			deslizante[0]--
 		xpos = 150
-		if draw_boton(xpos, ypos, L.procesador_add,,,, false) or keyboard_check_pressed(vk_enter){
+		if draw_boton(xpos, ypos, L.procesador_add, ui_boton_azul,,, false) or keyboard_check_pressed(vk_enter){
 			keyboard_clear(vk_enter)
 			procesador_add = true
 			input_layer = 1
@@ -1825,17 +1842,17 @@ if show_menu{
 			ypos += 20
 		}
 		draw_set_halign(fa_right)
-		if draw_boton(room_width - 120, 500, L.procesador_next_step,,,, false) or keyboard_check_pressed(vk_space){
+		if draw_boton(room_width - 120, 500, L.procesador_next_step, ui_boton_azul,,, false) or keyboard_check_pressed(vk_space){
 			keyboard_clear(vk_space)
 			edificio.proceso = 1
 		}
-		if draw_boton(room_width - 120, 530, L.procesador_guardar,,,, false) or (keyboard_check(vk_control) and keyboard_check_pressed(ord("S"))){
+		if draw_boton(room_width - 120, 530, L.procesador_guardar, ui_boton_azul,,, false) or (keyboard_check(vk_control) and keyboard_check_pressed(ord("S"))){
 			save_codes = scan_files("*.code", fa_none)
 			get_file = 1
 			input_layer = 1
 			keyboard_clear(ord("S"))
 		}
-		if draw_boton(room_width - 120, 560, L.procesador_cargar,,,, false) or (keyboard_check(vk_control) and keyboard_check_pressed(ord("A"))){
+		if draw_boton(room_width - 120, 560, L.procesador_cargar, ui_boton_azul,,, false) or (keyboard_check(vk_control) and keyboard_check_pressed(ord("A"))){
 			save_codes = scan_files("*.code", fa_none)
 			get_file = 2
 			input_layer = 1
@@ -1897,7 +1914,7 @@ if show_menu{
 					ini_close()
 				}
 			}
-			if draw_boton(120, 120, L.cancelar,,,,, 1) or keyboard_check_pressed(vk_escape){
+			if draw_boton(120, 120, L.cancelar, ui_boton_rojo,,,, 1) or keyboard_check_pressed(vk_escape){
 				keyboard_clear(vk_escape)
 				input_layer = 0
 				get_file = 0
@@ -3167,18 +3184,7 @@ if pausa = 0{
 		var cam_center_x = (camx + room_width * zoom / 2), cam_center_y = (camy + room_height * zoom / 2)
 		for(var a = array_length(enemigos) - 1; a >= 0; a--){
 			var dron = enemigos[a], aa = dron.a, bb = dron.b, index = dron.index, dron_vel = 1
-			if index = 4{
-				draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir_move)
-				draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir)
-			}
-			else if index = 5{
-				draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir)
-				draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, image_index * 15, c_red)
-			}
-			else{
-				draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir)
-				draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir, c_red)
-			}
+			draw_dron(dron, true)
 			if distance_sqr(cam_center_x, cam_center_y, aa, bb) > 250_000{
 				draw_set_color(c_red)
 				var angle = arctan2(cam_center_y - bb, cam_center_x - aa), cosa = cos(angle), sina = sin(angle)
@@ -3208,7 +3214,7 @@ if pausa = 0{
 				dron.b--
 			if dron.target != null_edificio and dron.target.vida <= 0
 				dron.target = null_edificio
-			if in(index, 0, 4){
+			if in(index, 0, 4, 6){
 				if array_length(edificios) > 0 and dron.target = null_edificio{
 					var temp_complex = xytoab(aa, bb)
 					dron.target = edificio_cercano[# temp_complex.a, temp_complex.b]
@@ -3232,7 +3238,7 @@ if pausa = 0{
 				var temp_complex = xytoab(aa, bb), aaa = temp_complex.a, bbb = temp_complex.b, dir = -1, ataque = false
 				var dis = distance_sqr(aa, bb, edificio.x, edificio.y)
 				//Moverse
-				if in(index, 0, 4){
+				if in(index, 0, 4, 6){
 					if edificio_cercano_dis[# aaa, bbb] > 1 and dis > 2500{//50^2
 						if edificio_cercano_dir[# aaa, bbb] = -1{
 							var min_dis = edificio_cercano_dis[# aaa, bbb], min_dis_eu =  infinity
@@ -3385,18 +3391,7 @@ if pausa = 0{
 		//Ciclo drones aliados
 		for(var a = array_length(drones_aliados) - 1; a >= 0; a--){
 			var dron = drones_aliados[a], aa = dron.a, bb = dron.b, index = dron.index
-			if index = 4{
-				draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir_move)
-				draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir)
-			}
-			else if index = 5{
-				draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir)
-				draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, image_index * 15, c_blue)
-			}
-			else{
-				draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir)
-				draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir, c_blue)
-			}
+			draw_dron(dron, false)
 			if dron.vida <= 0{
 				var temp_dron = drones_aliados[array_length(drones_aliados) - 1]
 				drones_aliados[dron.pointer] = temp_dron
@@ -3631,7 +3626,11 @@ if pausa = 0{
 							enemigo = add_dron(aa, bb, 3)
 					}
 					else{
-						if irandom(min(ds_list_size(temp_complex_list), d)) > i + 5{
+						if irandom(min(ds_list_size(temp_complex_list), d)) > i + 10{
+							enemigo = add_dron(aa, bb, 6)
+							i += 9
+						}
+						else if irandom(min(ds_list_size(temp_complex_list), d)) > i + 5{
 							enemigo = add_dron(aa, bb, 4)
 							i += 4
 						}
@@ -3694,7 +3693,7 @@ if pausa = 0{
 		}
 		if mision_actual = -1 and in(tutorial, 1, 2, 3) and win = 0{
 			draw_set_halign(fa_right)
-			if draw_boton(room_width - 20, string_height(temp_text_right) + 64, L.win_siguiente_mision){
+			if draw_boton(room_width - 20, string_height(temp_text_right) + 64, L.win_siguiente_mision, ui_boton_verde){
 				if tutorial = 1
 					var file = cargar_escenario("mision_2.txt")
 				else if tutorial = 2
@@ -3955,7 +3954,7 @@ if win > 0{
 			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_enemigos}: {enemigos_eliminados}")
 		//Victoria
 		if win = 1{
-			if in(tutorial, 1, 2, 3) and draw_boton(room_width / 2, room_height - 250, L.win_siguiente_mision){
+			if in(tutorial, 1, 2, 3) and draw_boton(room_width / 2, room_height - 250, L.win_siguiente_mision, ui_boton_verde){
 				if tutorial = 1
 					var file = cargar_escenario("mision_2.txt")
 				else if tutorial = 2
@@ -3972,7 +3971,7 @@ if win > 0{
 			}
 		}
 		//Derrota
-		if win = 2 and tutorial > 0 and draw_boton(room_width / 2, room_height - 250, L.win_reintentar){
+		if win = 2 and tutorial > 0 and draw_boton(room_width / 2, room_height - 250, L.win_reintentar, ui_boton_azul){
 			if tutorial = 1
 				cargar_escenario("mision_1.txt")
 			if tutorial = 2
@@ -3981,7 +3980,7 @@ if win > 0{
 				cargar_escenario("mision_3.txt")
 			game_start()
 		}
-		if draw_boton(room_width / 2, room_height - 150, L.win_salir) or keyboard_check_pressed(vk_escape){
+		if draw_boton(room_width / 2, room_height - 150, L.win_salir, ui_boton_rojo) or keyboard_check_pressed(vk_escape){
 			keyboard_clear(vk_escape)
 			game_restart()
 		}
