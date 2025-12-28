@@ -101,7 +101,7 @@ function mover(aa, bb){
 				else if mision_objetivo[mision_actual] = 7 and mision_target_id[mision_actual] = temp_edificio.index
 					pasar_mision()
 			}
-			if in(out, id_piedra_cuprica, id_piedra_ferrica, id_piedra_sulfatada) and temp_edificio.index = id_nucleo
+			if in(out, id_piedra_cuprica, id_piedra_ferrica, id_piedra_sulfatada) and in(temp_edificio.index, id_nucleo, id_triturador, id_fabrica_de_concreto)
 				out = id_piedra
 			else if in(out, id_uranio_enriquecido, id_uranio_empobrecido) and in(temp_edificio.index, id_nucleo, id_rifle, id_mortero)
 				out = id_uranio_bruto

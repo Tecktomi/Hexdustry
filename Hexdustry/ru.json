@@ -7,6 +7,7 @@
 "menu_precio_tecnologia": "Цена Технологии",
 "menu_claves": "Песочница",
 "menu_sin_archivos": "Сценариев пока нет",
+"menu_html": "Сниженная производительность в HTML5",
 
 "cancelar": "Отмена",
 "volver": "Назад",
@@ -18,6 +19,8 @@
 "cuevas": "Пещеры",
 "desierto": "Пустыня",
 "nieve": "Снег",
+"activado": "Включено",
+"desactivado": "Выключено",
 
 "Нúcleo": "Ядро",
 "Taladro": "Бур",
@@ -259,7 +262,7 @@
 "game_enciclopedia": "Энциклопедия",
 "game_puerto_carga": "Соединяется с другим портом погрузки",
 "game_vincular_procesador": "Связывается с любым зданием",
-"game_creando_dron": "Создание дрона",
+"game_creando_dron": "Создание",
 "game_limite_dron": "Лимит дронов достигнут",
 
 "mision_enemigos": "врагов",
@@ -360,7 +363,7 @@
 "show_menu_no_disponible": "Пока недоступно",
 
 "pausa": "П А У З А",
-"pausa_continuar": "Нажмите P чтобы продолжить",
+"pausa_continuar": "Нажмите Esc чтобы продолжить",
 "pausa_red": "\n\"O\" чтобы увидеть энергосеть",
 "pausa_liquido": "\n\"I\" чтобы увидеть сети жидкости",
 "pausa_enciclopedia": "\n\"Y\" чтобы открыть энциклопедию",
@@ -404,18 +407,10 @@
 "objetivo_cargar edificio": "загрузить здание",
 
 "planta_quimica_receta 0": "Кислота",
-"planta_quimica_receta 1": "Бетон",
-"planta_quimica_receta 2": "Взрывчатка",
-"planta_quimica_receta 3": "Топливо",
-"planta_quimica_receta 4": "Сульфатный камень",
-"planta_quimica_receta 5": "Батареи",
-"planta_quimica_receta 6": "Пластик",
+"planta_quimica_receta 1": "Взрывчатка",
+"planta_quimica_receta 2": "Батареи",
 
 "planta_quimica_descripcion 0": "Потребляет сульфатный камень и энергию для производства кислоты",
-"planta_quimica_descripcion 1": "Использует песок, камень и воду для производства бетона",
-"planta_quimica_descripcion 2": "Использует уголь и сульфатный камень для производства взрывчатки",
-"planta_quimica_descripcion 3": "Использует нефть и энергию для производства долговечных топливных соединений",
-"planta_quimica_descripcion 4": "Извлекает сульфатный камень из нефти, используя энергию",
-"planta_quimica_descripcion 5": "Использует кислоту, железо и энергию для производства батарей",
-"planta_quimica_descripcion 6": "Использует нефть и большое количество энергии для производства пластика",
+"planta_quimica_descripcion 1": "Использует уголь и сульфатный камень для производства взрывчатки",
+"planta_quimica_descripcion 2": "Использует кислоту, железо и энергию для производства батарей"
 }

@@ -1,7 +1,7 @@
 function cargar_escenario(file = ""){
 	with control{
 		if file = ""
-			file = get_open_filename("*.txt", game_save_id + "save.txt")
+			file = get_open_filename("*.txt", "save.txt")
 		if file != ""{
 			ini_open(file)
 			var prev_xsize = xsize

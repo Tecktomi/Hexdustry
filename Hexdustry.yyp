@@ -397,6 +397,7 @@
     {"id":{"name":"spr_pared_arena","path":"sprites/spr_pared_arena/spr_pared_arena.yy",},},
     {"id":{"name":"spr_pared_nieve","path":"sprites/spr_pared_nieve/spr_pared_nieve.yy",},},
     {"id":{"name":"spr_pared_pasto","path":"sprites/spr_pared_pasto/spr_pared_pasto.yy",},},
+    {"id":{"name":"spr_pared_piedra_borde","path":"sprites/spr_pared_piedra_borde/spr_pared_piedra_borde.yy",},},
     {"id":{"name":"spr_pared_piedra","path":"sprites/spr_pared_piedra/spr_pared_piedra.yy",},},
     {"id":{"name":"spr_pasto","path":"sprites/spr_pasto/spr_pasto.yy",},},
     {"id":{"name":"spr_perforadora","path":"sprites/spr_perforadora/spr_perforadora.yy",},},

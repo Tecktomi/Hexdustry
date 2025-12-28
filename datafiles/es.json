@@ -19,6 +19,8 @@
 "cuevas": "Cuevas",
 "desierto": "Desierto",
 "nieve": "Nieve",
+"activado": "Activado",
+"desactivado": "Desactivado",
 
 "Núcleo": "Núcleo",
 "Taladro": "Taladro",
@@ -260,7 +262,7 @@
 "game_enciclopedia": "Enciclopedia",
 "game_puerto_carga": "Conecta con otro Puerto de Carga",
 "game_vincular_procesador": "Vincula con cualquier edificio",
-"game_creando_dron": "Creando dron",
+"game_creando_dron": "Creando",
 "game_limite_dron": "Límite de Drones alcanzado",
 
 "mision_enemigos": "enemigos",
@@ -361,7 +363,7 @@
 "show_menu_no_disponible": "No disponible de momento",
 
 "pausa": "P A U S A",
-"pausa_continuar": "Presiona P para continuar",
+"pausa_continuar": "Presiona Esc para continuar",
 "pausa_red": "\n\"O\" para ver las redes eléctricas",
 "pausa_liquido": "\n\"I\" para ver las redes de líquidos",
 "pausa_enciclopedia": "\n\"Y\" para abrir la enciclopedia",

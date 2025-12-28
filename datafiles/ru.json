@@ -19,6 +19,8 @@
 "cuevas": "Пещеры",
 "desierto": "Пустыня",
 "nieve": "Снег",
+"activado": "Включено",
+"desactivado": "Выключено",
 
 "Нúcleo": "Ядро",
 "Taladro": "Бур",
@@ -260,7 +262,7 @@
 "game_enciclopedia": "Энциклопедия",
 "game_puerto_carga": "Соединяется с другим портом погрузки",
 "game_vincular_procesador": "Связывается с любым зданием",
-"game_creando_dron": "Создание дрона",
+"game_creando_dron": "Создание",
 "game_limite_dron": "Лимит дронов достигнут",
 
 "mision_enemigos": "врагов",
@@ -361,7 +363,7 @@
 "show_menu_no_disponible": "Пока недоступно",
 
 "pausa": "П А У З А",
-"pausa_continuar": "Нажмите P чтобы продолжить",
+"pausa_continuar": "Нажмите Esc чтобы продолжить",
 "pausa_red": "\n\"O\" чтобы увидеть энергосеть",
 "pausa_liquido": "\n\"I\" чтобы увидеть сети жидкости",
 "pausa_enciclopedia": "\n\"Y\" чтобы открыть энциклопедию",

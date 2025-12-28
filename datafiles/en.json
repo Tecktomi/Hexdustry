@@ -19,6 +19,8 @@
 "cuevas": "Caves",
 "desierto": "Desert",
 "nieve": "Snow",
+"activado": "Enabled",
+"desactivado": "Disabled",
 
 "Núcleo": "Nucleus",
 "Taladro": "Drill",
@@ -260,7 +262,7 @@
 "game_enciclopedia": "Encyclopedia",
 "game_puerto_carga": "Connects to another Cargo Port",
 "game_vincular_procesador": "Links with any building",
-"game_creando_dron": "Creating drone",
+"game_creando_dron": "Creating",
 "game_limite_dron": "Drone limit reached",
 
 "mision_enemigos": "enemies",
@@ -361,7 +363,7 @@
 "show_menu_no_disponible": "Not available yet",
 
 "pausa": "P A U S E",
-"pausa_continuar": "Press P to continue",
+"pausa_continuar": "Press Esc to continue",
 "pausa_red": "\n\"O\" to view the power grid",
 "pausa_liquido": "\n\"I\" to view the liquid networks",
 "pausa_enciclopedia": "\n\"Y\" to open the encyclopedia",

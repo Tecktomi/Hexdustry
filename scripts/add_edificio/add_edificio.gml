@@ -410,9 +410,9 @@ function add_edificio(index, dir, a, b){
 			edificio.mode = true
 		if in(index, id_rifle, id_mortero, id_onda_de_choque, id_silo_de_misiles)
 			edificio.select = 0
-		if in(index, id_planta_quimica, id_fabrica_de_drones)
+		if in(index, id_planta_quimica, id_fabrica_de_drones, id_planta_de_reciclaje)
 			edificio.select = -1
-		if in(index, id_planta_de_enriquecimiento, id_fabrica_de_drones)
+		if in(index, id_planta_de_enriquecimiento, id_fabrica_de_drones, id_planta_de_reciclaje)
 			edificio.proceso = -1
 		ds_list_destroy(temp_list_size)
 		ds_list_destroy(temp_list_arround)
