@@ -1,8 +1,8 @@
 randomize()
 draw_set_font(ft_letra)
-directorio = game_save_id
-ini_open(game_save_id + "settings.ini")
-ini_write_string("Global", "version", "25_12_2025")
+ini_open("settings.ini")
+sonido = bool(ini_read_real("", "sonido", 1))
+ini_write_string("Global", "version", "28_12_2025")
 ini_close()
 save_files = (os_browser == browser_not_a_browser) ? scan_files("*.txt", fa_none) : []
 if os_browser == browser_not_a_browser{
@@ -134,7 +134,6 @@ set_idioma(idiomas[idioma], false)
 	minb = 0
 	maxa = 0
 	maxb = 0
-	sonido = true
 	sonidos = [snd_motor, snd_maquina, snd_horno]
 	sonidos_max = array_length(sonidos)
 	musica = [snd_musica, snd_theme_2]
@@ -571,8 +570,9 @@ ore_max = array_length(ore_sprite)
 	dron_precio_id = array_create(0, array_create(0, 0))
 	dron_precio_num = array_create(0, array_create(0, 0))
 	dron_aereo = array_create(0, false)
+	dron_time = array_create(0, 0)
 #endregion
-function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vida = 0, size = 0, alcance = 0, precio_id = array_create(0, 0), precio_num = array_create(0, 0), aereo = false){
+function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vida = 0, size = 0, alcance = 0, precio_id = array_create(0, 0), precio_num = array_create(0, 0), time = 0, aereo = false){
 	array_push(dron_nombre, string(nombre))
 	array_push(dron_nombre_display, string(nombre))
 	array_push(dron_sprite, sprite)
@@ -586,15 +586,16 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 	array_push(dron_precio_id, precio_id)
 	array_push(dron_precio_num, precio_num)
 	array_push(dron_aereo, aereo)
+	array_push(dron_time, time)
 }
 #region definicion
-	def_dron("Araña", spr_arana,, 100, 400, 6400, [id_bronce, id_baterias, id_electronico], [6, 1, 3])
-	def_dron("Dron", spr_dron,, 40, 400, 100, [id_cobre, id_baterias, id_electronico], [10, 1, 3], true)
-	def_dron("Reparador", spr_reparador,, 60, 400, 2500, [id_silicio, id_baterias, id_plastico, id_electronico], [10, 1, 5, 3], true)
-	def_dron("Explosivo", spr_dron_explosivo,, 50, 400, 400, [id_hierro, id_explosivo, id_electronico], [6, 2, 2], true)
-	def_dron("Tanque", spr_tanque, spr_tanque_2, 750, 1600, 90_000, [id_bronce, id_acero, id_electronico], [15, 25, 10])
-	def_dron("Helicoptero", spr_helicoptero, spr_helicoptero_2, 400, 1600, 40_000, [id_bronce, id_acero, id_electronico], [10, 15, 15], true)
-	def_dron("Titán", spr_titan, spr_titan_leg, 1500, 2500, 160_000, [id_bronce, id_acero, id_electronico, id_uranio_bruto], [30, 40, 40, 75])
+	def_dron("Araña", spr_arana,, 100, 400, 6400, [id_bronce, id_baterias, id_electronico], [6, 1, 3], 600)
+	def_dron("Dron", spr_dron,, 40, 400, 100, [id_cobre, id_baterias, id_electronico], [10, 1, 3], 900, true)
+	def_dron("Reparador", spr_reparador,, 60, 400, 2500, [id_silicio, id_baterias, id_plastico, id_electronico], [10, 1, 5, 3], 1200, true)
+	def_dron("Explosivo", spr_dron_explosivo,, 50, 400, 400, [id_hierro, id_explosivo, id_electronico], [6, 2, 2], 450, true)
+	def_dron("Tanque", spr_tanque, spr_tanque_2, 750, 1600, 90_000, [id_bronce, id_acero, id_electronico], [15, 25, 10], 1800)
+	def_dron("Helicoptero", spr_helicoptero, spr_helicoptero_2, 400, 1600, 40_000, [id_bronce, id_acero, id_electronico], [10, 15, 15], 1800, true)
+	def_dron("Titán", spr_titan, spr_titan_leg, 1500, 2500, 160_000, [id_bronce, id_acero, id_electronico, id_uranio_bruto], [30, 40, 40, 75], 3000)
 #endregion
 dron_max = array_length(dron_nombre)
 //Liquidos
@@ -780,7 +781,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	id_liquido_infinito = def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, 30); def_edificio_2(, 10, -999_999,,, true)
 	id_turbina = def_edificio("Turbina", 2, spr_turbina,, 160,, scr_turbina,, [id_cobre, id_bronce, id_acero], [10, 10, 10], 20, true, false, [id_carbon, id_combustible], [10, 10]); def_edificio_2(-120, 10, 50)
 	id_refineria_de_metales = def_edificio("Refinería de Metales", 3, spr_refineria_minerales,, 150, 80, scr_refineria_metales,, [id_bronce, id_acero, id_silicio], [15, 15, 10], 30, true, false, [id_piedra_cuprica, id_piedra_ferrica, id_uranio_bruto], [5, 5, 10], true, false, [id_cobre, id_hierro, id_uranio_enriquecido, id_uranio_empobrecido]); def_edificio_2(50, 10, 20)
-	id_fabrica_de_drones = def_edificio("Fábrica de Drones", 2, spr_fabrica_drones,, 200, 900, scr_fabrica_drones,, [id_cobre, id_acero, id_electronico], [20, 15, 10], 20, true, false, [], []); def_edificio_2(120)
+	id_fabrica_de_drones = def_edificio("Fábrica de Drones", 2, spr_fabrica_drones,, 200,, scr_fabrica_drones,, [id_cobre, id_acero, id_electronico], [20, 15, 10], 20, true, false, [], []); def_edificio_2(120)
 	id_recurso_infinito = def_edificio("Recurso Infinito", 1, spr_recurso_infinito, spr_selector_color, 30,, scr_recurso_infinito,,,,,,,,, true, true); def_edificio_2()
 	//30
 	id_bomba_de_evaporacion = def_edificio("Bomba de Evaporación", 1, spr_bomba_evaporacion, spr_tuberia_color, 30,, scr_bomba_evaporacion,, [id_bronce, id_hierro], [10, 5]); def_edificio_2(, 10, -5)
@@ -809,7 +810,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	id_fabrica_de_concreto = def_edificio("Fábrica de Concreto", 3, spr_fabrica_de_concreto,, 300, 60, scr_fabrica_de_concreto,, [id_bronce, id_acero, id_silicio], [10, 5, 10], 60, true, false, [id_arena, id_piedra, id_piedra_cuprica, id_piedra_ferrica, id_piedra_sulfatada], [10, 10, 10, 10, 10], true, false, [id_concreto]); def_edificio_2(, 10, 30)
 	id_pantalla = def_edificio("Pantalla", 3, spr_pantalla,, 100,,,, [id_cobre, id_silicio, id_plastico, id_electronico], [15, 15, 10, 20]); def_edificio_2()
 	id_refineria_de_petroleo = def_edificio("Refinería de Petróleo", 4, spr_refineria_de_petroleo,, 400, 50, scr_refineria_petroleo,, [id_bronce, id_acero, id_concreto, id_electronico], [30, 20, 40, 20], 20,,,,, true, false, [id_piedra_sulfatada, id_combustible, id_plastico]); def_edificio_2(240, 10, 125)
-	id_planta_de_reciclaje = def_edificio("Planta de Reciclaje", 3, spr_planta_de_reciclaje,, 300, 30, scr_planta_de_reciclaje,, [id_bronce, id_silicio, id_concreto], [20, 15, 15],,,,,, true, false); def_edificio_2(60, 10, 20)
+	id_planta_de_reciclaje = def_edificio("Planta de Reciclaje", 3, spr_planta_de_reciclaje,, 300,, scr_planta_de_reciclaje,, [id_bronce, id_silicio, id_concreto], [20, 15, 15],,,,,, true, false); def_edificio_2(60, 10, 20)
 #endregion
 categoria_edificios = [
 	[id_cinta_transportadora, id_cinta_magnetica, id_enrutador, id_selector, id_overflow, id_tunel, id_almacen, id_fabrica_de_drones, id_puerto_de_carga],
@@ -1048,21 +1049,21 @@ sort_edificios()
 	def_tecnologia("ensambladora", "taladro eléctrico", "horno")
 	def_tecnologia("planta nuclear", "horno de lava", "taladro de explosión", "refinería de metales")
 	def_tecnologia("torre de alta tensión", "cable")
-	def_tecnologia("perforadora de petróleo", "bomba hidráulica", "planta química")
+	def_tecnologia("perforadora de petróleo", "bomba hidráulica", "fábrica de concreto")
 	def_tecnologia("mortero", "rifle", "planta química", "fábrica de concreto")
-	def_tecnologia("procesador", "planta química", "ensambladora")
+	def_tecnologia("procesador", "refinería de petróleo", "ensambladora")
 	def_tecnologia("mensaje", "procesador")
 	def_tecnologia("memoria", "procesador")
 	def_tecnologia("torre reparadora", "torre básica", "generador")
 	def_tecnologia("tubería subterránea", "tubería")
 	def_tecnologia("onda de choque", "láser", "batería", "ensambladora")
-	def_tecnologia("muro reforzado", "muro", "refinería de metales")
+	def_tecnologia("muro reforzado", "muro")
 	def_tecnologia("silo de misiles", "planta nuclear", "procesador", "mortero", "fábrica de drones")
 	def_tecnologia("planta de enriquecimiento", "planta nuclear", "procesador")
 	def_tecnologia("almacén", "cinta magnética")
 	def_tecnologia("fábrica de concreto", "horno", "bomba hidráulica")
-	def_tecnologia("pantalla", "procesador")
-	def_tecnologia("refinería de petróleo", "refinería de metales")
+	def_tecnologia("pantalla", "procesador", "refinería de petróleo")
+	def_tecnologia("refinería de petróleo", "fábrica de concreto", "ensambladora")
 	def_tecnologia("planta de reciclaje", "refinería de metales", "horno de lava")
 	edificio_tecnologia_nivel = array_create(edificio_max, -1)
 	tecnologia_nivel_edificios = [array_create(0, 0)]

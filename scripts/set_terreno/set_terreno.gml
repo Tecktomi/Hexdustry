@@ -7,7 +7,7 @@ function set_terreno(a, b, index){
 					var temp_complex = next_to(a, b, i), aa = temp_complex.a, bb = temp_complex.b
 					if aa < 0 or bb < 0 or aa >= xsize
 						continue
-					if terreno[# aa, bb] = index
+					if terreno_pared[terreno[# aa, bb]]
 						ds_grid_set(terreno_pared_index, aa, bb, terreno_pared_index[# aa, bb] ^ (1 << (2 - i)))
 				}
 				var c = 0
@@ -15,10 +15,19 @@ function set_terreno(a, b, index){
 					var temp_complex = next_to(a, b, 3 + i), aa = temp_complex.a, bb = temp_complex.b
 					if aa < 0 or aa >= xsize or bb >= ysize
 						continue
-					if terreno[# aa, bb] = index
+					if terreno_pared[terreno[# aa, bb]]
 						c += 1 << (2 - i)
 				}
 				ds_grid_set(terreno_pared_index, a, b, c)
+			}
+			else{
+				for(var i = 0; i < 3; i++){
+					var temp_complex = next_to(a, b, i), aa = temp_complex.a, bb = temp_complex.b
+					if aa < 0 or bb < 0 or aa >= xsize
+						continue
+					if terreno_pared[terreno[# aa, bb]]
+						ds_grid_set(terreno_pared_index, aa, bb, terreno_pared_index[# aa, bb] ^ (1 << (2 - i)))
+				}
 			}
 			if not terreno_caminable[index]{
 				ds_grid_set(ore, a, b, -1)
