@@ -1,13 +1,13 @@
 function scr_torres_basicas(edificio = control.null_edificio){
 	with control{
-		var index = edificio.index, var_edificio_nombre = edificio_nombre[index]
+		var index = edificio.index
 		if edificio_flujo[index]
 			var flujo = edificio.flujo, flujo_power = flujo.eficiencia
 		//Buscar enemigos
 		if (image_index mod 10 = 0 and edificio.target = null_enemigo) or edificio.target.vida <= 0{
 			edificio.target = null_enemigo
 			if array_length(enemigos) > 0{
-				if var_edificio_nombre = "Mortero"
+				if index = id_mortero
 					turret_target(edificio, 10000)//100^2
 				else
 					turret_target(edificio)
@@ -17,11 +17,11 @@ function scr_torres_basicas(edificio = control.null_edificio){
 		if enemigo != null_enemigo{
 			var dmg_factor = 1, angle = -arctan2(edificio.x - enemigo.a, enemigo.b - edificio.y) - pi / 2
 			edificio.select = radtodeg(angle)
-			if ((in(var_edificio_nombre, "Torre básica", "Rifle") and flujo.liquido = 0) or (var_edificio_nombre = "Lanzallamas" and flujo.liquido = 2)){
+			if ((in(index, id_torre_basica, id_rifle) and flujo.liquido = 0) or (index = id_lanzallamas and flujo.liquido = 2)){
 				change_flujo(edificio_flujo_consumo[index], edificio)
-				if in(var_edificio_nombre, "Torre básica", "Rifle")
+				if in(index, id_torre_basica, id_rifle)
 					edificio.proceso += 0.5
-				else if var_edificio_nombre = "Lanzallamas"
+				else if index = id_lanzallamas
 					dmg_factor = 2
 			}
 			//Disparo
@@ -47,7 +47,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 							bb = bb + 14
 							aa = aa + edificio.array_real[2]
 						}
-						if var_edificio_nombre = "Lanzallamas"{
+						if index = id_lanzallamas{
 							sound_play(snd_disparo, aa, bb, 0.01)
 							var temp_array = chunk_enemigos[# enemigo.chunk_x, enemigo.chunk_y], disi = edificio_alcance[index], x1 = aa + disi * cos(angle + pi / 6), y1 = bb - disi * sin(angle + pi / 6), x2 = aa + disi * cos(angle - pi / 6), y2 = bb - disi * sin(angle - pi / 6)
 							for(var c = array_length(temp_array) - 1; c >= 0; c--){
@@ -64,9 +64,17 @@ function scr_torres_basicas(edificio = control.null_edificio){
 						edificio.carga[tiro_struct.recurso] -= tiro_struct.cantidad
 						edificio.carga_total -= tiro_struct.cantidad
 						dis = sqrt(dis)
-						var municion = add_municion(aa, bb, 25 * (enemigo.a - aa) / dis, 25 * (enemigo.b - bb) / dis, var_edificio_nombre = "Mortero" ? 1 : (var_edificio_nombre = "Lanzallamas" ? 2 : 0), dis / 25, tiro_struct.dmg * dmg_factor, enemigo, null_edificio)
+						var municion
+						if index = id_lanzallamas
+							municion = add_municion(aa, bb, 20 * (enemigo.a - aa) / dis, 20 * (enemigo.b - bb) / dis, 2, dis / 20, tiro_struct.dmg * dmg_factor, enemigo, null_edificio)
+						else if index = id_mortero
+							municion = add_municion(aa, bb, 20 * (enemigo.a - aa) / dis, 20 * (enemigo.b - bb) / dis, 1, dis / 20, tiro_struct.dmg * dmg_factor, enemigo, null_edificio)
+						else if index = id_rifle
+							municion = add_municion(aa, bb, 30 * (enemigo.a - aa) / dis, 30 * (enemigo.b - bb) / dis, 4, dis / 30 + 2, tiro_struct.dmg * dmg_factor, enemigo, null_edificio)
+						else 
+							municion = add_municion(aa, bb, 25 * (enemigo.a - aa) / dis, 25 * (enemigo.b - bb) / dis, 0, dis / 25, tiro_struct.dmg * dmg_factor, enemigo, null_edificio)
 						array_push(municiones, municion)
-						if var_edificio_nombre = "Lanzallamas"{
+						if index = id_lanzallamas{
 							angle = arctan2(bb - enemigo.b, aa - enemigo.a)
 							var b = angle + random_range(-pi / 16, pi / 16)
 							array_push(fuegos, add_fuego(aa - 20 * cos(angle), bb - 20 * sin(angle), edificio.a, edificio.b, 12 * -cos(b), 12 * -sin(b), 40))
@@ -76,7 +84,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 					else{
 						edificio.target = null_enemigo
 						if array_length(enemigos) > 0{
-							if var_edificio_nombre = "Mortero"
+							if index = id_mortero
 								turret_target(edificio, 10000)//100^2
 							else
 								turret_target(edificio)

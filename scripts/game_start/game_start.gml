@@ -22,7 +22,7 @@ function game_start(){
 		oleadas_timer = 0
 		timer = 0
 		win = 0
-		enemigos_spawned = 3
+		oleada_count = 0
 		edificios_construidos = 0
 		drones_construidos = 0
 		enemigos_eliminados = 0

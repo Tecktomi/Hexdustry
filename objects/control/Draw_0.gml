@@ -5,21 +5,16 @@ if menu = 0{
 	maxa = min(xsize - 1, ceil((camx + room_width) / zoom / 48))
 	maxb = min(ysize - 1, ceil((camy + room_height) / zoom / 14))
 	if keyboard_check_pressed(ord("G")){
-		var temp_surf = surface_create(32, 28)
-		surface_set_target(temp_surf)
-		for(var a = 0; a < 8; a++){
-			draw_sprite(spr_pared_pasto, 0, 16, 14)
-			if a & 1
-				draw_sprite(spr_pared_piedra_borde, 0, 16, 14)
-			if a & 2
-				draw_sprite(spr_pared_piedra_borde, 1, 16, 14)
-			if a & 4
-				draw_sprite(spr_pared_piedra_borde, 2, 16, 14)
-			var sprite = sprite_create_from_surface(temp_surf, 0, 0, 32, 28, false, false, 0, 0)
-			sprite_save(sprite, 0, $"pared_pasto_{a}.png")
+		ini_open("mision_5.txt")
+		for(var a = 0; ini_section_exists($"Objetivo {a}"); a++){
+			var text = ini_read_string($"Objetivo {a}", "nombre", "")
+			show_debug_message($"nombre=\"{text}\"")
+			for(var b = 0; b < ini_read_real($"Objetivo {a}", "textos", 0); b++){
+				text = ini_read_string($"Objetivo {a}", $"texto {b}", "")
+				show_debug_message($"texto {b}=\"{text}\"")
+			}
 		}
-		surface_reset_target()
-		surface_free(temp_surf)
+		ini_close()
 	}
 	dibujar_fondo(1)
 	draw_set_alpha(0.5)
@@ -278,6 +273,8 @@ if menu = 2{
 			array_push(mision_texto, array_create(0, {texto : "", x : 0, y : 0}))
 			array_push(mision_switch_oleadas, false)
 			mision_actual = size
+			if save_file != ""
+				save_escenario(save_file + ".txt")
 		}
 		draw_set_color(c_ltgray)
 		draw_rectangle(room_width / 2, 110, room_width - 110, room_height - 110, false)
@@ -345,6 +342,7 @@ if menu = 2{
 				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_write} ")
 				if draw_boton(xpos, ypos, $"'{text_wrap(texto.texto, 250)}'",,, mb_any, false){
 					if mouse_lastbutton = mb_left{
+						editor_list = false
 						get_keyboard_string = 100 + b
 						keyboard_string = texto.texto
 					}
@@ -485,7 +483,7 @@ if menu = 2{
 			editor_menu = 0
 		}
 		if draw_boton(110, 180, L.editor_generar_terreno, ui_boton_azul){
-			show_debug_message(editor_instrucciones)
+			//show_debug_message(editor_instrucciones)
 			generar_mapa(editor_seed, editor_fondo, editor_instrucciones)
 		}
 		draw_set_color(c_dkgray)
@@ -779,7 +777,7 @@ if menu = 2{
 			}
 		}
 		//Borrar edificio
-		if mouse_check_button_pressed(mb_right) and edificio_bool[# mx, my]{
+		if mouse_check_button_pressed(mb_right) and edificio_bool[# mx, my] and not edificio_id[# mx, my].index = id_nucleo{
 			mouse_clear(mb_right)
 			delete_edificio(mx, my)
 		}
@@ -903,77 +901,8 @@ if menu = 2{
 				save_file += ".txt"
 				flag = true
 			}
-			if flag{
-				ini_open(save_file)
-				ini_write_real("Global", "xsize", xsize)
-				ini_write_real("Global", "ysize", ysize)
-				ini_write_real("Global", "spawn_x", spawn_x)
-				ini_write_real("Global", "spawn_y", spawn_y)
-				ini_write_real("Global", "nucleo_x", nucleo.a)
-				ini_write_real("Global", "nucleo_y", nucleo.b)
-				for(b = 0; b < rss_max; b++)
-					ini_write_real("Carga inicial", b, carga_inicial[b])
-				ini_write_real("Global", "oleadas", oleadas)
-				ini_write_real("Global", "tiempo primera oleada", oleadas_tiempo_primera)
-				ini_write_real("Global", "tiempo entre oleadas", oleadas_tiempo)
-				ini_write_real("Global", "objetivos", array_length(mision_nombre))
-				if array_length(mision_nombre) > 0
-					ini_write_string("Global", "texto victoria", mision_texto_victoria)
-				for(b = 0; ini_section_exists($"Objetivo {b}"); b++)
-					ini_section_delete($"Objetivo {b}")
-				for(b = 0; b < array_length(mision_nombre); b++){
-					ini_write_string($"Objetivo {b}", "nombre", mision_nombre[b])
-					ini_write_real($"Objetivo {b}", "objetivo", mision_objetivo[b])
-					ini_write_real($"Objetivo {b}", "target_id", mision_target_id[b])
-					ini_write_real($"Objetivo {b}", "target_num", mision_target_num[b])
-					ini_write_real($"Objetivo {b}", "tiempo", mision_tiempo[b])
-					ini_write_real($"Objetivo {b}", "tiempo victoria", real(mision_tiempo_victoria[b]))
-					ini_write_real($"Objetivo {b}", "tiempo show", real(mision_tiempo_show[b]))
-					ini_write_real($"Objetivo {b}", "camara move", real(mision_camara_move[b]))
-					ini_write_real($"Objetivo {b}", "camara x", mision_camara_x[b])
-					ini_write_real($"Objetivo {b}", "camara y", mision_camara_y[b])
-					var textos = array_length(mision_texto[b])
-					ini_write_real($"Objetivo {b}", "textos", textos)
-					for(var c = 0; c < textos; c++){
-						var texto = mision_texto[b, c]
-						ini_write_real($"Objetivo {b}", $"x {c}", texto.x)
-						ini_write_real($"Objetivo {b}", $"y {c}", texto.y)
-						ini_write_string($"Objetivo {b}", $"texto {c}", texto.texto)
-					}
-					ini_write_real($"Objetivo {b}", "switch oleadas", real(mision_switch_oleadas[b]))
-				}
-				for(b = 0; b < edificio_max; b++)
-					ini_write_real("Edificios", b, mision_edificios[b])
-				ini_write_real("Global", "Multiplicador vida enemigos", multiplicador_vida_enemigos)
-				for(b = 0; b < xsize; b++)
-					for(var c = 0; c < ysize; c++){
-						ini_write_real("Terreno", $"{b},{c}", terreno[# b, c])
-						if terreno_pared[terreno[# b, c]]
-							ini_write_real("Terreno pared index", $"{b},{c}", terreno_pared_index[# b, c])
-						else
-							ini_key_delete("Terreno pared index", $"{b},{c}")
-						if ore[# b, c] = -1{
-							ini_key_delete("Ore", $"{b},{c}")
-							ini_key_delete("Ore amount", $"{b},{c}")
-						}
-						else{
-							ini_write_real("Ore", $"{b},{c}", ore[# b, c])
-							ini_write_real("Ore amount", $"{b},{c}", ore_amount[# b, c])
-						}
-					}
-				ini_close()
-				ini_open("settings.ini")
-				ini_write_real("Saves", save_file, current_day)
-				ini_close()
-				input_layer = 0
-				get_file = 0
-				var c = array_get_index(save_files, save_file), temp_text = string_delete(save_file, string_pos(".", save_file), 4)
-				save_file = temp_text
-				var temp_sprite = minimapa(terreno)
-				sprite_save(temp_sprite, 0, temp_text + ".png")
-				if c = -1
-					array_push(save_files_png, temp_sprite)
-			}
+			if flag
+				save_escenario(save_file)
 		}
 		if draw_boton(120, 120, L.cancelar, ui_boton_rojo,,,, 1) or keyboard_check_pressed(vk_escape){
 			keyboard_clear(vk_escape)
@@ -1001,7 +930,7 @@ if menu = 2{
 	for(var a = mina; a < maxa; a++)
 		for(var b = minb; b < maxb; b++)
 			if edificio_draw[# a, b]{
-				var edificio = edificio_id[# a, b], index = edificio.index, aa = edificio.x, bb = edificio.y, var_edificio_nombre = edificio_nombre[index], aaa = aa * zoom - camx, bbb = bb * zoom - camy
+				var edificio = edificio_id[# a, b], index = edificio.index, aa = edificio.x, bb = edificio.y, aaa = aa * zoom - camx, bbb = bb * zoom - camy
 				//Recursos sobre caminos
 				if (edificio_camino[index] or in(index, 6, 16)) and edificio.carga_total > 0{
 					var proceso = edificio_proceso[index]
@@ -1569,7 +1498,7 @@ if pausa = 2{
 var flag = true, xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / zoom
 //Seleccionar recurso
 if show_menu{
-	var edificio = show_menu_build, index = edificio.index, var_edificio_nombre = edificio_nombre[index]
+	var edificio = show_menu_build, index = edificio.index
 	if index = id_procesador{
 		draw_boton_text_counter = 0
 		show_smoke = false
@@ -1600,7 +1529,8 @@ if show_menu{
 			xpos += 20
 			if draw_sprite_boton(spr_clonar, xpos, ypos, 20, 20, L.procesador_clonar){
 				var temp_array = []
-				array_copy(temp_array, 0, pc, 0, array_length(pc))
+				for(var c = 0; c < array_length(pc); c++)
+					array_push(temp_array, pc[c])
 				array_insert(edificio.instruccion, a + 1, temp_array)
 			}
 			xpos += 20
@@ -1894,6 +1824,7 @@ if show_menu{
 			draw_set_color(c_dkgray)
 			draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
 			draw_set_color(c_white)
+			//Cargar
 			if get_file = 2{
 				for(var a = 0; a < array_length(save_codes); a++)
 					if draw_boton(140, 160 + 30 * a, save_codes[a],,,,, 1){
@@ -1917,11 +1848,14 @@ if show_menu{
 						edificio.select = 0
 					}
 			}
+			//Guardar
 			else{
 				flag = false
 				for(var a = 0; a < array_length(save_codes); a++)
 					if draw_boton(140, 160 + 30 * a, save_codes[a],,,,, 1){
 						save_file = save_codes[a]
+						if string_count(".code", save_file)
+							save_file = string_delete(save_file, string_pos(".code", save_file), string_length(save_file))
 						flag = true
 					}
 				save_file = string(draw_boton_text(140, 160 + 30 * (array_length(save_codes) + 1), save_file, false,,, 1))
@@ -1990,31 +1924,31 @@ if show_menu{
 		draw_set_color(c_gray)
 		draw_triangle(aa - 10 * zoom, bb + 20 * zoom, aa + 10 * zoom, bb + 20 * zoom, aa, bb + 10 * zoom, false)
 		draw_rectangle(aa - 80 * zoom, bb + 20 * zoom, aa + 80 * zoom, bb + 40 * zoom, false)
-		if in(var_edificio_nombre, "Selector", "Recurso Infinito")
+		if in(index, id_selector, id_recurso_infinito)
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 28 * ceil(rss_max / 5)) * zoom, false)
-		else if in(var_edificio_nombre, "Líquido Infinito")
+		else if index = id_liquido_infinito
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * lq_max) * zoom, false)
-		else if var_edificio_nombre = "Planta Química"
+		else if index = id_planta_quimica
 			draw_rectangle(aa - 90 * zoom, bb + 40 * zoom, aa + 90 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, false)
-		else if var_edificio_nombre = "Fábrica de Drones"
+		else if index = id_fabrica_de_drones
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * dron_max) * zoom, false)
 		draw_set_color(c_dkgray)
 		draw_triangle(aa - 10 * zoom, bb + 20 * zoom, aa + 10 * zoom, bb + 20 * zoom, aa, bb + 10 * zoom, true)
 		draw_rectangle(aa - 80 * zoom, bb + 20 * zoom, aa + 80 * zoom, bb + 40 * zoom, true)
-		if in(var_edificio_nombre, "Selector", "Overflow")
+		if in(index, id_selector, id_overflow)
 			draw_text(aa - 80 * zoom, bb + 20 * zoom, L.show_menu_invertir)
-		if in(var_edificio_nombre, "Selector", "Recurso Infinito"){
+		if in(index, id_selector, id_recurso_infinito){
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 28 * ceil(rss_max / 5)) * zoom, true)
 			for(var a = 0; a < rss_max; a++)
 				draw_sprite_stretched(recurso_sprite[a], 0, aa + (-80 + 32 * (a mod 5)) * zoom, bb + (40 + 28 * floor(a / 5)) * zoom, 32 * zoom, 28 * zoom)
 		}
-		if in(var_edificio_nombre, "Líquido Infinito"){
+		if index = id_liquido_infinito{
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * lq_max) * zoom, true)
 			draw_text(aa - 80 * zoom, bb + 20 * zoom, L.show_menu_ningun_liquido)
 			for(var a = 0; a < lq_max; a++)
 				draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, liquido_nombre[a])
 		}
-		if var_edificio_nombre = "Planta Química"{
+		if index = id_planta_quimica{
 			draw_rectangle(aa - 90 * zoom, bb + 40 * zoom, aa + 90 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, true)
 			draw_text(aa - 80 * zoom, bb + 20 * zoom, L.show_menu_receta)
 			for(var a = 0; a < array_length(planta_quimica_receta); a++){
@@ -2022,14 +1956,14 @@ if show_menu{
 				draw_text(aa - 70 * zoom, bb + (40 + 20 * a) * zoom, planta_quimica_receta[a])
 			}
 		}
-		if var_edificio_nombre = "Fábrica de Drones"{
+		if index = id_fabrica_de_drones{
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * dron_max) * zoom, true)
 			draw_text(aa - 80 * zoom, bb + 20 * zoom, L.show_menu_unidad)
 			for(var a = 0; a < dron_max; a++)
 				draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, dron_nombre_display[a])
 		}
 		if mouse_x > aa - 80 * zoom and mouse_y > bb + 20 * zoom and mouse_x < aa + 80 * zoom{
-			if in(var_edificio_nombre, "Selector", "Overflow") and mouse_y < bb + 40 * zoom{
+			if in(index, id_selector, id_overflow) and mouse_y < bb + 40 * zoom{
 				if mouse_check_button_pressed(mb_left){
 					mouse_clear(mb_left)
 					show_menu = false
@@ -2037,7 +1971,7 @@ if show_menu{
 					mover(edificio.a, edificio.b)
 				}
 			}
-			else if in(var_edificio_nombre, "Selector", "Recurso Infinito") and mouse_y < bb + (40 + 28 * ceil(rss_max / 5)) * zoom{
+			else if in(index, id_selector, id_recurso_infinito) and mouse_y < bb + (40 + 28 * ceil(rss_max / 5)) * zoom{
 				var a = floor((mouse_x - (aa - 80 * zoom)) / (32 * zoom)) + 5 * floor((mouse_y - (bb + 40 * zoom)) / (28 * zoom))
 				if a >= 0 and a < rss_max{
 					draw_text_background(mouse_x + 20, mouse_y, recurso_nombre_display[a])
@@ -2050,7 +1984,7 @@ if show_menu{
 					}
 				}
 			}
-			else if in(var_edificio_nombre, "Líquido Infinito") and mouse_y < bb + (40 + 20 * lq_max) * zoom{
+			else if index = id_liquido_infinito and mouse_y < bb + (40 + 20 * lq_max) * zoom{
 				if mouse_check_button_pressed(mb_left){
 					mouse_clear(mb_left)
 					show_menu = false
@@ -2074,7 +2008,7 @@ if show_menu{
 					}
 				}
 			}
-			else if in(var_edificio_nombre, "Planta Química") and mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom{
+			else if index = id_planta_quimica and mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom{
 				var a = clamp(floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom)), 0, array_length(planta_quimica_receta) - 1)
 				draw_text_background(mouse_x + 20, mouse_y, planta_quimica_descripcion[a])
 				cursor = cr_handpoint
@@ -2125,7 +2059,7 @@ if show_menu{
 					}
 				}
 			}
-			else if in(var_edificio_nombre, "Fábrica de Drones") and mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * dron_max) * zoom{
+			else if index = id_fabrica_de_drones and mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * dron_max) * zoom{
 				var a = floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))
 				temp_text = $"{dron_descripcion[a]}\n"
 				if in(a, 0, 4)
@@ -2194,7 +2128,7 @@ if pausa != 1 and temp_hexagono != noone and flag and not (show_menu and show_me
 	if ore[# mx, my] >= 0
 		temp_text += $"{recurso_nombre_display[ore_recurso[ore[# mx, my]]]}: {ore_amount[# mx, my]}\n"
 	if edificio_bool[# mx, my]{
-		var index = edificio.index, var_edificio_nombre = edificio_nombre[index]
+		var index = edificio.index
 		if not edificio_inerte[index] and edificio.pointer = -1{
 			draw_sprite_off(spr_diseneabled, 0, edificio.x, edificio.y)
 			if draw_boton(edificio.x * zoom - camx, edificio.y * zoom - camy, L.game_activar)
@@ -2216,7 +2150,7 @@ if pausa != 1 and temp_hexagono != noone and flag and not (show_menu and show_me
 				}
 				procesador_select = null_edificio
 			}
-			else if in(var_edificio_nombre, "Selector", "Overflow", "Líquido Infinito", "Recurso Infinito", "Planta Química", "Fábrica de Drones", "Procesador", "Memoria"){
+			else if in(index, id_selector, id_overflow, id_liquido_infinito, id_recurso_infinito, id_planta_quimica, id_fabrica_de_drones, id_procesador, id_memoria){
 				mouse_clear(mb_left)
 				show_menu = true
 				show_menu_build = edificio
@@ -2325,7 +2259,7 @@ if pausa != 1 and temp_hexagono != noone and flag and not (show_menu and show_me
 					var temp_complex = edificio.coordenadas[|a], aa = temp_complex.a, bb = temp_complex.b
 					if in(ore[# aa, bb], 0, 1, 2)
 						temp_array[ore_recurso[ore[# aa, bb]]] += ore_amount[# aa, bb]
-					else if terreno_recurso_bool[terreno[# aa, bb]] and in(var_edificio_nombre, "Taladro Eléctrico")
+					else if terreno_recurso_bool[terreno[# aa, bb]] and index = id_taladro_electrico
 						temp_array[terreno_recurso_id[terreno[# aa, bb]]] = -1
 				}
 				for(var a = 0; a < rss_max; a++)
@@ -2721,9 +2655,8 @@ if (mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape)) a
 	show_menu = false
 	procesador_select = null_edificio
 }
-//Vista previa y construcción
+//CONSTRUCCIÓN
 if build_index > 0 and win = 0{
-	var var_edificio_nombre = edificio_nombre[build_index]
 	if flag and not edificio_rotable[build_index]
 		build_dir = 0
 	if flag and edificio_size[build_index] mod 2 = 0
@@ -2748,7 +2681,7 @@ if build_index > 0 and win = 0{
 	}
 	if last_mx != mx or last_my != my or flag{
 		build_list = get_size(mx, my, build_dir, edificio_size[build_index])
-		if var_edificio_nombre = "Taladro de Explosión"
+		if build_index = id_taladro_de_explosion
 			build_list_arround = get_size(mx, my, build_dir, edificio_size[build_index] + 2)
 		show_menu = false
 	}
@@ -3050,7 +2983,7 @@ if build_index > 0 and win = 0{
 				if mouse_check_button_released(mb_left) and clicked{
 					flag = false
 					clicked = false
-					for(var a = array_length(pre_build_list) - 1; a >= 0; a--){
+					for(var a = 0; a < array_length(pre_build_list); a++){
 						comprable = true
 						if not cheat
 							for(var b = array_length(edificio_precio_id[build_index]) - 1; b >= 0; b--)
@@ -3058,10 +2991,101 @@ if build_index > 0 and win = 0{
 									comprable = false
 									break
 								}
-						if build_index = id_tuberia
+						if in(build_index, id_tuberia, id_muro)
 							build_dir = 0
 						if comprable{
 							var temp_complex_2 = pre_build_list[a]
+							construir(build_index, build_dir, temp_complex_2.a, temp_complex_2.b)
+						}
+					}
+				}
+			}
+			//Cables
+			else if build_index = id_cable{
+				//Empezar a construir
+				if mouse_check_button_pressed(mb_left){
+					mx_clic = mx
+					my_clic = my
+					clicked = true
+				}
+				//Dibujar nodos cercanos
+				var temp_complex_2 = abtoxy(mx, my), aa = temp_complex_2.a, bb = temp_complex_2.b
+				draw_circle_off(aa, bb, 90, true)
+				var temp_list_complex = get_size(mx, my, build_dir, 7)
+				for(var a = ds_list_size(temp_list_complex) - 1; a >= 0; a--){
+					var temp_complex_3 = temp_list_complex[|a], aaaa = temp_complex_3.a, bbbb = temp_complex_3.b
+					if aaaa < 0 or bbbb < 0 or aaaa >= xsize or bbbb >= ysize
+						continue
+					if (aaaa != mx or bbbb != my) and edificio_draw[# aaaa, bbbb]{
+						var temp_edificio = edificio_id[# aaaa, bbbb]
+						if edificio_energia[temp_edificio.index]
+							draw_line_off(aa, bb, temp_edificio.x, temp_edificio.y)
+					}
+				}
+				//Extender
+				if mouse_check_button(mb_left){
+					pre_build_list = []
+					temp_complex_2 = abtoxy(mx_clic, my_clic)
+					aa = temp_complex_2.a
+					bb = temp_complex_2.b
+					var mxc = mx_clic, myc = my_clic
+					draw_edificio(aa, bb, build_index, build_dir, 0.5)
+					array_push(pre_build_list, {a : mx_clic, b : my_clic})
+					if mx_clic != mx or my_clic != my{
+						var temp_complex_3 = abtoxy(mx, my), aaaa = temp_complex_3.a, bbbb = temp_complex_3.b
+						var dir = (360 + point_direction(aa, bb, aaaa, bbbb)) mod 360, dis = point_distance(aa, bb, aaaa, bbbb), flag_2 = false
+						for(var a = 0; a < floor(dis / 70); a++){
+							repeat(3){
+								var temp_complex_4 = next_to(mxc, myc, floor(dir / 60))
+								var temp_complex_6 = abtoxy(temp_complex_4.a, temp_complex_4.b)
+								var temp_dis = point_distance(temp_complex_6.a, temp_complex_6.b, aaaa, bbbb)
+								var temp_complex_5 = next_to(mxc, myc, ceil(dir / 60))
+								var temp_complex_7 = abtoxy(temp_complex_5.a, temp_complex_5.b)
+								var temp_dis_2 = point_distance(temp_complex_7.a, temp_complex_7.b, aaaa, bbbb)
+								if temp_dis > temp_dis_2{
+									temp_complex_4 = temp_complex_5
+									temp_dis = temp_dis_2
+								}
+								mxc = temp_complex_4.a
+								myc = temp_complex_4.b
+								if mxc < 0 or myc < 0 or mxc >= xsize or myc >= ysize
+									break
+								temp_complex_4 = abtoxy(mxc, myc)
+								dir = point_direction(temp_complex_4.a, temp_complex_4.b, aaaa, bbbb)
+								if temp_dis = 0{
+									flag_2 = true
+									break
+								}
+							}
+							if mxc < 0 or myc < 0 or mxc >= xsize or myc >= ysize
+								break
+							array_push(pre_build_list, {a : mxc, b : myc})
+							temp_complex_3 = abtoxy(mxc, myc)
+							draw_edificio(temp_complex_3.a, temp_complex_3.b, build_index, 0, 0.5)
+							if edificio_bool[# mxc, myc] or not terreno_caminable[terreno[# mxc, myc]]
+								draw_sprite_off(spr_rojo, 0, temp_complex_3.a, temp_complex_3.b,,,,, 0.5)
+							if flag_2
+								break
+						}
+						if not (mxc = mx and myc = my)
+							array_push(pre_build_list, {a : mx, b : my})
+						draw_text(mouse_x, mouse_y + 20, temp_text)
+					}
+				}
+				//Construir
+				if mouse_check_button_released(mb_left) and clicked{
+					flag = false
+					clicked = false
+					for(var a = 0; a < array_length(pre_build_list); a++){
+						comprable = true
+						if not cheat
+							for(var b = array_length(edificio_precio_id[build_index]) - 1; b >= 0; b--)
+								if nucleo.carga[edificio_precio_id[build_index, b]] < edificio_precio_num[build_index, b]{
+									comprable = false
+									break
+								}
+						if comprable{
+							temp_complex_2 = pre_build_list[a]
 							construir(build_index, build_dir, temp_complex_2.a, temp_complex_2.b)
 						}
 					}
@@ -3162,7 +3186,7 @@ if build_index > 0 and win = 0{
 						draw_circle_off(temp_complex_2.a, temp_complex_2.b, 250, true)
 					}
 				}
-				if mouse_check_button_pressed(mb_left) and flag and comprable and (not edificio_bool[# mx, my] or ((in(build_index, id_tunel, id_tunel_salida)) and edificio_camino[edificio_id[# mx, my].index]))
+				if mouse_check_button_pressed(mb_left) and flag and comprable and not edificio_bool[# mx, my]
 					construir(build_index, build_dir, mx, my)
 			}
 			if edificio_energia[build_index] and build_index != id_cable{
@@ -3566,29 +3590,35 @@ if pausa = 0{
 		//Ciclo de disparos
 		draw_set_color(c_black)
 		for(var a = 0; a < array_length(municiones); a++){
-			var municion = municiones[a]
+			var municion = municiones[a], target = municion.target
 			if municion.tipo != 2
 				draw_circle_off(municion.x, municion.y, 2, false)
 			municion.x += municion.hmove
 			municion.y += municion.vmove
+			//Munición perforadora
+			if municion.tipo = 4{
+				var temp_complex = xytoab(municion.x, municion.y)
+				herir_hexagono(temp_complex.a, temp_complex.b, floor(municion.dmg / 2), false)
+			}
 			if --municion.dis <= 0{
 				municiones[a--] = municiones[array_length(municiones) - 1]
 				array_pop(municiones)
-				//Daño objetivo unidad
-				if municion.target != null_enemigo and municion.target.vida > 0{
-					var target = municion.target, c = target.posa, d = target.posb, temp_array = chunk_enemigos[# target.chunk_x, target.chunk_y]
-					for(var b = array_length(temp_array) - 1; b >= 0; b--){
-						target = temp_array[b]
-						if target.posa = c and target.posb = d{
-							target.vida -= municion.dmg
-							if target.vida <= 0
-								destroy_dron(target)
-						}
+				//Daño unidad
+				if target != null_enemigo and target.vida > 0{
+					//Daño fuego
+					if municion.tipo = 2
+						target.efecto[1] = 60
+					//Daño área
+					else
+						herir_hexagono(target.posa, target.posb, municion.dmg)
+					if target.vida > 0{
+						target.vida -= municion.dmg
+						if target.vida <= 0
+							destroy_dron(target)
 					}
-					var temp_complex = abtoxy(c, d)
-					array_push(efectos, add_efecto(spr_impacto, 0, temp_complex.a, temp_complex.b, 7, 1))
+						
 				}
-				//Daño objetivo edificio
+				//Daño edificio
 				if municion.target_build != null_edificio and municion.target_build.vida > 0
 					edificio_herir(municion.target_build, municion.dmg)
 				//Misil aliado
@@ -3648,7 +3678,9 @@ if pausa = 0{
 		if oleadas and (++oleadas_timer >= 60 * oleadas_tiempo_primera or keyboard_check_pressed(vk_enter)){
 			var time = oleadas_timer / 60 - oleadas_tiempo_primera
 			if (time mod oleadas_tiempo) = 0 or keyboard_check_pressed(vk_enter){
-				var d = enemigos_spawned++, e = 1, flag_2 = false
+				var d = oleada_count++ + 3, e = 1, flag_2 = false
+				if mision_actual >= 0 and mision_objetivo[mision_actual] = 4 and ++mision_counter >= mision_target_num[mision_actual]
+					oleadas = false
 				for(var i = 0; i < array_length(size_size); i++)
 					if d <= size_size[i]{
 						e = i + 1
@@ -3669,9 +3701,9 @@ if pausa = 0{
 							enemigo = add_dron(aa, bb, 3)
 					}
 					else{
-						if irandom(min(ds_list_size(temp_complex_list), d)) > i + 10{
+						if irandom(min(ds_list_size(temp_complex_list), d)) > i + 15{
 							enemigo = add_dron(aa, bb, 6)
-							i += 9
+							i += 14
 						}
 						else if irandom(min(ds_list_size(temp_complex_list), d)) > i + 5{
 							enemigo = add_dron(aa, bb, 4)
@@ -3997,13 +4029,15 @@ if win > 0{
 			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_enemigos}: {enemigos_eliminados}")
 		//Victoria
 		if win = 1{
-			if in(tutorial, 1, 2, 3) and draw_boton(room_width / 2, room_height - 250, L.win_siguiente_mision, ui_boton_verde){
+			if in(tutorial, 1, 2, 3, 4) and draw_boton(room_width / 2, room_height - 250, L.win_siguiente_mision, ui_boton_verde){
 				if tutorial = 1
 					var file = cargar_escenario("mision_2.txt")
 				else if tutorial = 2
 					file = cargar_escenario("mision_3.txt")
 				else if tutorial = 3
 					file = cargar_escenario("mision_4.txt")
+				else if tutorial = 4
+					file = cargar_escenario("mision_5.txt")
 				if file != ""
 					game_start()
 				tutorial++

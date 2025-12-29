@@ -2,7 +2,7 @@ function mover(aa, bb){
 	with control{
 		if not edificio_bool[# aa, bb]
 			exit
-		var edificio = edificio_id[# aa, bb], flag = false, out = 0, temp_edificio = null_edificio, b = 0, index = edificio.index, var_edificio_nombre = edificio_nombre[index]
+		var edificio = edificio_id[# aa, bb], flag = false, out = 0, temp_edificio = null_edificio, b = 0, index = edificio.index
 		//Selección de recursos
 		for(out = 0; out < rss_max; out++)
 			if edificio.carga[out] > 0 and edificio.carga_output[out]{
