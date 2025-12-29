@@ -9,7 +9,7 @@ function destroy_dron(dron = control.null_enemigo, enemigo = true){
 			}
 			array_pop(enemigos)
 			enemigos_eliminados++
-			if mision_actual >= 0 and mision_objetivo[mision_actual] = 4 and ++mision_counter >= mision_target_num[mision_actual]
+			if mision_actual >= 0 and mision_objetivo[mision_actual] = 4 and array_length(enemigos) = 0 and mision_counter >= mision_target_num[mision_actual]
 				pasar_mision()
 			for(var i = array_length(dron.torres) - 1; i >= 0; i--){
 				var edificio = dron.torres[i]

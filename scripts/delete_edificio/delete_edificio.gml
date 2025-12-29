@@ -2,7 +2,7 @@ function delete_edificio(aa, bb, enemigo = false){
 	with control{
 		if not edificio_bool[# aa, bb]
 			exit
-		var edificio = edificio_id[# aa, bb], index = edificio.index, var_edificio_nombre = edificio_nombre[index]
+		var edificio = edificio_id[# aa, bb], index = edificio.index
 		var pre_vida = edificio.vida
 		edificio.vida = 0
 		if index = 0{
@@ -17,7 +17,7 @@ function delete_edificio(aa, bb, enemigo = false){
 		ds_grid_destroy(edificio.coordenadas_dis)
 		if index = 0
 			array_remove(edificios_targeteables, edificio)
-		if var_edificio_nombre = "Puerto de Carga" and edificio.link != null_edificio{
+		if index = id_puerto_de_carga and edificio.link != null_edificio{
 			if edificio.receptor
 				array_remove(puerto_carga_array, edificio)
 			else
@@ -30,14 +30,14 @@ function delete_edificio(aa, bb, enemigo = false){
 			edificio.link.link = null_edificio
 		}
 		desactivar_edificio(edificio)
-		for(var i = real(var_edificio_nombre = "Procesador"); i < array_length(edificio.procesador_link); i++)
+		for(var i = real(index = id_procesador); i < array_length(edificio.procesador_link); i++)
 			array_remove(edificio.procesador_link[i].procesador_link, edificio)
 		var temp_array = chunk_edificios[# edificio.chunk_x, edificio.chunk_y], temp_edificio = temp_array[array_length(temp_array) - 1]
 		temp_array[edificio.chunk_pointer] = temp_edificio
 		temp_edificio.chunk_pointer = edificio.chunk_pointer
 		array_pop(temp_array)
 		#region Torres reparadoras
-			if var_edificio_nombre = "Torre Reparadora"{
+			if index = id_torre_reparadora{
 				array_remove(torres_reparadoras, edificio)
 				for(var c = array_length(edificio.edificios_cercanos) - 1; c >= 0; c--){
 					temp_edificio = edificio.edificios_cercanos[c]
@@ -113,7 +113,7 @@ function delete_edificio(aa, bb, enemigo = false){
 				array_remove(edificio.target.torres, edificio)
 		}
 		//Eliminar tuneles
-		if in(var_edificio_nombre, "Túnel", "Túnel salida") and not edificio.idle
+		if in(index, id_tunel, id_tunel_salida) and not edificio.idle
 			edificio.link.idle = true
 		//Cancelar outputs
 		for(var a = array_length(edificio.outputs) - 1; a >= 0; a--){
@@ -135,7 +135,7 @@ function delete_edificio(aa, bb, enemigo = false){
 		if edificio_energia[index]{
 			var temp_red = edificio.red
 			array_remove(temp_red.edificios, edificio)
-			if var_edificio_nombre = "Torre de Alta Tensión"{
+			if index = id_torre_de_alta_tension{
 				var a = array_get_index(torres_de_tension, edificio)
 				torres_de_tension[a] = torres_de_tension[array_length(torres_de_tension) - 1]
 				array_pop(torres_de_tension)
@@ -293,7 +293,7 @@ function delete_edificio(aa, bb, enemigo = false){
 				array_remove(temp_edificio.flujo_link, edificio)
 			}
 			delete(edificio.flujo_link)
-			if var_edificio_nombre = "Tubería Subterránea"
+			if index = id_tuberia_subterranea
 				edificio.link.link = null_edificio
 		}
 		//Retorno de recursos
@@ -316,7 +316,7 @@ function delete_edificio(aa, bb, enemigo = false){
 			}
 		}
 		//Explosión Nuclear
-		if enemigo and var_edificio_nombre = "Planta Nuclear" and edificio.fuel > 0{
+		if enemigo and index = id_planta_nuclear and edificio.fuel > 0{
 			var xpos = edificio.x, ypos = edificio.y
 			//Daño edificios
 			for(var i = array_length(edificios) - 1; i >= 0; i--){

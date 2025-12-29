@@ -68,15 +68,14 @@ function add_edificio(index, dir, a, b){
 		ds_grid_clear(edificio.coordenadas_dis, infinity)
 		ds_list_add(edificio.coordenadas_close, {a : 0, b : 0})
 		ds_list_clear(edificio.coordenadas_close)
-		var var_edificio_nombre = edificio_nombre[index]
 		edificios_construidos++
 		if mision_actual >= 0 and mision_objetivo[mision_actual] = 2 and mision_target_id[mision_actual] = index and ++mision_counter >= mision_target_num[mision_actual]
 			pasar_mision()
 		temp_complex = {a : 0, b : 0}
-		if in(var_edificio_nombre, "Planta Química", "Fábrica de Drones"){
+		if in(index, id_planta_quimica, id_fabrica_de_drones){
 			edificio.carga_max = array_create(rss_max, 0)
 			edificio.carga_output = array_create(rss_max, 0)
-			if var_edificio_nombre = "Planta Química"
+			if index = id_planta_quimica
 				edificio.proceso = -1
 		}
 		calculate_in_out(edificio)
@@ -84,14 +83,14 @@ function add_edificio(index, dir, a, b){
 			edificio.pointer = array_length(edificios_activos)
 			array_push(edificios_activos, edificio)
 		}
-		if var_edificio_nombre = "Procesador"{
+		if index = id_procesador{
 			array_push(edificio.procesador_link, edificio)
 			edificio.variables = array_create(16)
 			edificio.variables_nombre = array_create(16, "")
 		}
-		else if var_edificio_nombre = "Mensaje"
+		else if index = id_mensaje
 			edificio.variables = array_create(1, "")
-		else if var_edificio_nombre = "Memoria"
+		else if index = id_memoria
 			edificio.variables = array_create(128)
 		else if index = id_planta_de_reciclaje
 			array_push(plantas_de_reciclaje, edificio)
@@ -123,8 +122,8 @@ function add_edificio(index, dir, a, b){
 						array_push(edificio.target_chunks, {a : i, b : j})
 				}
 		}
-		if edificio_camino[index] or in(var_edificio_nombre, "Túnel", "Túnel salida"){
-			if in(var_edificio_nombre, "Cinta Transportadora", "Enrutador", "Cinta Magnética"){
+		if edificio_camino[index] or in(index, id_tunel, id_tunel_salida){
+			if in(index, id_cinta_transportadora, id_enrutador, id_cinta_magnetica){
 				if (dir mod 3) = 1
 					edificio.yscale = power(-1, dir > 1)
 				else{
@@ -186,7 +185,7 @@ function add_edificio(index, dir, a, b){
 		calculate_in_out_2(edificio)
 		//Añadir a la red electrica
 		if edificio_energia[index]{
-			if var_edificio_nombre = "Energía Infinita"
+			if index = id_energia_infinita
 				edificio.energia_consumo = edificio_energia_consumo[index]
 			//Buscar edificios electricos colindantes
 			var temp_list_redes = ds_list_create()
@@ -224,7 +223,7 @@ function add_edificio(index, dir, a, b){
 			}
 			ds_list_destroy(temp_list)
 			//Buscar otras torres de alta tensión
-			if var_edificio_nombre = "Torre de Alta Tensión"{
+			if index = id_torre_de_alta_tension{
 				size = array_length(torres_de_tension)
 				for(var c = 0; c < size; c++){
 					var temp_edificio = torres_de_tension[c]
@@ -269,12 +268,12 @@ function add_edificio(index, dir, a, b){
 			//Modificar valores de la red resultante
 			edificio.red = temp_red
 			if edificio_energia_consumo[index] > 0{
-				if in(var_edificio_nombre, "Cable", "Batería", "Taladro Eléctrico")
+				if in(index, id_cable, id_bateria, id_taladro_electrico)
 					change_energia(abs(edificio_energia_consumo[index]), edificio)
 			}
 			else
 				temp_red.generacion += abs(edificio.energia_consumo)
-			if in(var_edificio_nombre, "Batería")
+			if index = id_bateria
 				temp_red.bateria_max += 2500
 			else if in(index, id_panel_solar, id_procesador, id_planta_de_reciclaje)
 				change_energia(edificio_energia_consumo[index], edificio)
@@ -282,7 +281,7 @@ function add_edificio(index, dir, a, b){
 		}
 		//Detectar cañerías cercanas
 		if edificio_flujo[index]{
-			if var_edificio_nombre = "Bomba Hidráulica"{
+			if index = id_bomba_hidraulica{
 				for(var c = ds_list_size(temp_list_size) - 1; c >= 0; c--){
 					temp_complex = temp_list_size[|c]
 					var aa = temp_complex.a, bb = temp_complex.b
@@ -311,7 +310,7 @@ function add_edificio(index, dir, a, b){
 					}
 				}
 			}
-			if var_edificio_nombre = "Tubería Subterránea"{
+			if index = id_tuberia_subterranea{
 				var temp_list = get_size(a, b, 0, 7), flag = false, temp_edificio = null_edificio
 				for(var c = ds_list_size(temp_list) - 1; c >= 0; c--){
 					temp_complex = temp_list[|c]
@@ -386,10 +385,10 @@ function add_edificio(index, dir, a, b){
 			}
 			ds_list_destroy(temp_list_flujos)
 			edificio.flujo.almacen_max += edificio_flujo_almacen[index]
-			if in(var_edificio_nombre, "Bomba de Evaporación", "Generador Geotérmico"){
+			if in(index, id_bomba_de_evaporacion, id_generador_geotermico){
 				edificio.flujo.liquido = 0
 				change_flujo(edificio_flujo_consumo[index], edificio)
-				if var_edificio_nombre = "Generador Geotérmico"{
+				if index = id_generador_geotermico{
 					edificio.select = 0
 					for(var c = ds_list_size(temp_list_size) - 1; c >= 0; c--){
 						var temp_complex_2 = temp_list_size[|c], aa = temp_complex_2.a, bb = temp_complex_2.b

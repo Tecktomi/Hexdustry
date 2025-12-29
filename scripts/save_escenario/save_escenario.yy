@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"save_escenario",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"save_escenario",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

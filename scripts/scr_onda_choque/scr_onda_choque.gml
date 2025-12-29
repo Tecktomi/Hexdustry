@@ -32,7 +32,7 @@ function scr_onda_choque(edificio = control.null_edificio){
 					for(var c = array_length(temp_array) - 1; c >= 0; c--){
 						var enemigo = temp_array[c], temp_dis = distance_sqr(edificio.x, edificio.y, enemigo.a, enemigo.b)
 						if temp_dis < dis{
-							enemigo.vida -= 100
+							enemigo.vida -= 130
 							enemigo.efecto[0] = 30
 							if enemigo.vida <= 0
 								destroy_dron(enemigo)

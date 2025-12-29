@@ -3,7 +3,7 @@ function dibujar_edificios(){
 		for(var a = mina; a <= maxa; a++)
 			for(var b = minb; b <= maxb; b++)
 				if edificio_draw[# a, b]{
-					var edificio = edificio_id[# a, b], index = edificio.index, var_edificio_nombre = edificio_nombre[index], dir = edificio.dir, aa = edificio.x, bb = edificio.y
+					var edificio = edificio_id[# a, b], index = edificio.index, dir = edificio.dir, aa = edificio.x, bb = edificio.y
 					//Dibujo caminos
 					if index = id_cinta_transportadora
 						draw_sprite_off(camino_general[dir, edificio.array_real[4]], image_index >> 1, aa, bb)

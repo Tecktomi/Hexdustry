@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"herir_hexagono",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"herir_hexagono",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
