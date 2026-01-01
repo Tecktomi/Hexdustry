@@ -13,14 +13,16 @@ function scr_laser(edificio = control.null_edificio){
 			edificio.select = radtodeg(-arctan2(edificio.x - enemigo.a, enemigo.b - edificio.y)) - 90
 			change_energia(edificio_energia_consumo[index], edificio)
 			edificio.mode = true
-			enemigo.vida -= 3 * red_power
-			draw_set_alpha(red_power)
+			enemigo.vida -= red_power * edificio.fuel
+			edificio.fuel = (74 * edificio.fuel + 8) / 75
+			draw_set_alpha(red_power * edificio.fuel / 8)
 			draw_set_color(c_red)
 			draw_line_off(edificio.x + edificio.array_real[2], edificio.y + 14, enemigo.a, enemigo.b)
 			draw_set_alpha(1)
 			if enemigo.vida <= 0{
 				destroy_dron(enemigo)
 				change_energia(0, edificio)
+				edificio.fuel = 1
 				edificio.target = null_enemigo
 				turret_target(edificio)
 			}
@@ -28,6 +30,7 @@ function scr_laser(edificio = control.null_edificio){
 		else{
 			change_energia(0, edificio)
 			edificio.target = null_edificio
+			edificio.fuel = 1
 		}
 	}
 }

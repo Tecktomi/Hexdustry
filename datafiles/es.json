@@ -8,6 +8,10 @@
 "menu_claves": "Sandbox",
 "menu_sin_archivos": "Sin escenarios aún",
 "menu_html": "Rendimiento reducido por HTML5",
+"menu_modo_infinito": "Modo infinito",
+"menu_modo_oleadas": "Modo oleadas",
+"menu_modo_misiones": "Modo misiones",
+"menu_numero_oleadas": "Número de oleadas",
 
 "cancelar": "Cancelar",
 "volver": "Volver",
@@ -19,6 +23,7 @@
 "cuevas": "Cuevas",
 "desierto": "Desierto",
 "nieve": "Nieve",
+"islas": "Islas",
 "activado": "Activado",
 "desactivado": "Desactivado",
 
@@ -303,6 +308,8 @@
 "win_edificios": "Edificios construidos",
 "win_drones": "Drones construidos",
 "win_enemigos": "Enemigos eliminados",
+"win_tecnologias": "Tecnologías estudiadas",
+"win_misiones": "Objetivos cumplidos",
 "win_siguiente_mision": "Siguiente misión",
 "win_seguir_jugando": "¿Seguir jugando?",
 "win_reintentar": "Intentar de nuevo",

@@ -26,6 +26,8 @@ function game_start(){
 		edificios_construidos = 0
 		drones_construidos = 0
 		enemigos_eliminados = 0
+		tecnologias_estudiadas = 0
+		flow = 0
 		ds_grid_clear(luz, 0)
 		for(var a = 0; a < xsize; a++)
 			for(var b = 0; b < ysize; b++){

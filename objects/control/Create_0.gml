@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
-ini_write_string("Global", "version", "29_12_2025")
+ini_write_string("Global", "version", "01_01_2026")
 ini_close()
 save_files = (os_browser == browser_not_a_browser) ? scan_files("*.txt", fa_none) : []
 if os_browser == browser_not_a_browser{
@@ -183,6 +183,8 @@ set_idioma(idiomas[idioma], false)
 	edificios_construidos = 0
 	drones_construidos = 0
 	enemigos_eliminados = 0
+	tecnologias_estudiadas = 0
+	misiones_pasadas = 0
 	tutorial = 0
 	get_file = 0
 	tecnologia = true
@@ -191,6 +193,7 @@ set_idioma(idiomas[idioma], false)
 	LOGIC_DT = 1 / 60
 	acumulator = 0
 	deslizante = array_create(1, 0)
+	modo_misiones = false
 #endregion
 #region UI
 	ui_fondo = #282828
@@ -432,40 +435,42 @@ selected_dron = null_enemigo
 	recurso_color = []
 	recurso_combustion = []
 	recurso_combustion_time = []
+	recurso_tier = []
 #endregion
-function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion = 0){
+function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion = 0, tier = 0){
 	array_push(recurso_nombre, string(name))
 	array_push(recurso_nombre_display, string(name))
 	array_push(recurso_sprite, sprite)
 	array_push(recurso_color, color)
 	array_push(recurso_combustion_time, combustion)
 	array_push(recurso_combustion, (combustion > 0))
+	array_push(recurso_tier, tier)
 	return array_length(recurso_nombre) - 1
 }
 #region Definición
-	id_cobre = def_recurso("Cobre", spr_item_cobre, c_orange)
-	id_carbon = def_recurso("Carbón", spr_item_carbon, c_black, 300)
-	id_bronce = def_recurso("Bronce", spr_item_bronce, make_color_rgb(228, 148, 29))
-	id_hierro = def_recurso("Hierro", spr_item_hierro, c_gray)
-	id_acero = def_recurso("Acero", spr_item_acero, c_dkgray)
+	id_cobre = def_recurso("Cobre", spr_item_cobre, c_orange,, 0)
+	id_carbon = def_recurso("Carbón", spr_item_carbon, c_black, 300, 0)
+	id_bronce = def_recurso("Bronce", spr_item_bronce, make_color_rgb(228, 148, 29),, 1)
+	id_hierro = def_recurso("Hierro", spr_item_hierro, c_gray,, 0)
+	id_acero = def_recurso("Acero", spr_item_acero, c_dkgray,, 1)
 	//5
-	id_arena = def_recurso("Arena", spr_item_arena, c_yellow)
-	id_piedra = def_recurso("Piedra", spr_item_piedra, c_dkgray)
-	id_silicio = def_recurso("Silicio", spr_item_vidrio, c_aqua)
-	id_concreto = def_recurso("Concreto", spr_item_concreto, c_ltgray)
-	id_piedra_cuprica = def_recurso("Piedra Cúprica", spr_item_piedra_cobre, make_color_hsv(90, 100, 127))
+	id_arena = def_recurso("Arena", spr_item_arena, c_yellow,, 2)
+	id_piedra = def_recurso("Piedra", spr_item_piedra, c_dkgray,, 2)
+	id_silicio = def_recurso("Silicio", spr_item_vidrio, c_aqua,, 2)
+	id_concreto = def_recurso("Concreto", spr_item_concreto, c_ltgray,, 3)
+	id_piedra_cuprica = def_recurso("Piedra Cúprica", spr_item_piedra_cobre, make_color_hsv(90, 100, 127),, 2)
 	//10
-	id_piedra_ferrica = def_recurso("Piedra Férrica", spr_item_piedra_hierro, make_color_hsv(0, 100, 127))
-	id_piedra_sulfatada = def_recurso("Piedra Sulfatada", spr_item_piedra_azufre, make_color_hsv(42, 100, 127))
-	id_combustible = def_recurso("Compuesto Incendiario", spr_item_combustible, make_color_rgb(191, 127, 0), 900)
-	id_explosivo = def_recurso("Explosivo", spr_item_explosivos, c_red)
-	id_baterias = def_recurso("Batería", spr_item_bateria, make_color_rgb(163, 98, 10))
+	id_piedra_ferrica = def_recurso("Piedra Férrica", spr_item_piedra_hierro, make_color_hsv(0, 100, 127),, 2)
+	id_piedra_sulfatada = def_recurso("Piedra Sulfatada", spr_item_piedra_azufre, make_color_hsv(42, 100, 127),, 2)
+	id_combustible = def_recurso("Compuesto Incendiario", spr_item_combustible, make_color_rgb(191, 127, 0), 900, 3)
+	id_explosivo = def_recurso("Explosivo", spr_item_explosivos, c_red,, 3)
+	id_baterias = def_recurso("Batería", spr_item_bateria, make_color_rgb(163, 98, 10),, 4)
 	//15
-	id_plastico = def_recurso("Plástico", spr_item_plastico, c_blue)
-	id_electronico = def_recurso("Electrónicos", spr_item_chip, make_color_rgb(33, 94, 35))
-	id_uranio_bruto = def_recurso("Uranio Bruto", spr_item_uranio, make_color_rgb(153, 178, 88))
-	id_uranio_enriquecido = def_recurso("Uranio Enriquecido", spr_item_uranio_235, make_color_rgb(0, 255, 0))
-	id_uranio_empobrecido = def_recurso("Uranio Empobrecido", spr_item_uranio_238, make_color_rgb(0, 127, 0))
+	id_plastico = def_recurso("Plástico", spr_item_plastico, c_blue,, 3)
+	id_electronico = def_recurso("Electrónicos", spr_item_chip, make_color_rgb(33, 94, 35),, 3)
+	id_uranio_bruto = def_recurso("Uranio Bruto", spr_item_uranio, make_color_rgb(153, 178, 88),, 4)
+	id_uranio_enriquecido = def_recurso("Uranio Enriquecido", spr_item_uranio_235, make_color_rgb(0, 255, 0),, 4)
+	id_uranio_empobrecido = def_recurso("Uranio Empobrecido", spr_item_uranio_238, make_color_rgb(0, 127, 0),, 4)
 #endregion
 rss_max = array_length(recurso_nombre)
 sort_recursos()
@@ -703,6 +708,7 @@ lq_max = array_length(liquido_nombre)
 	edificio_armas = []
 	edificio_inerte = []
 	edificio_index = ds_map_create()
+	edificio_precio = array_create(0, 0)
 #endregion
 function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, vida = 100, proceso = 0, accion = scr_null, camino = false, precio_id = array_create(0, 0), precio_num = array_create(0, 0), carga = 0, receptor = false, in_all = true, in_id = array_create(0, 0), in_num = array_create(0, 0), emisor = false, out_all = true, out_id = array_create(0, 0)){
 	array_push(edificio_nombre, string(name))
@@ -766,7 +772,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, arma = -1, alca
 	id_cable = def_edificio("Cable", 1, spr_cable,, 30,,,, [id_cobre, id_hierro], [5, 1]); def_edificio_2(,,,,, true)
 	id_bateria = def_edificio("Batería", 1, spr_bateria,, 60,,,, [id_bronce, id_baterias], [5, 3]); def_edificio_2(,,,,, true)
 	id_panel_solar = def_edificio("Panel Solar", 2, spr_panel_solar,, 150,, scr_panel_solar,, [id_cobre, id_bronce, id_silicio], [10, 10, 5]); def_edificio_2(-6)
-	id_bomba_hidraulica = def_edificio("Bomba Hidráulica", 2, spr_bomba,, 200,, scr_bomba_hidraulica,, [id_cobre, id_bronce, id_hierro], [10, 25, 10]); def_edificio_2(25, 60, -40)
+	id_bomba_hidraulica = def_edificio("Bomba Hidráulica", 2, spr_bomba,, 200,, scr_bomba_hidraulica,, [id_cobre, id_bronce, id_hierro], [10, 25, 10]); def_edificio_2(40, 60, -80)
 	id_tuberia = def_edificio("Tubería", 1, spr_tuberia, spr_tuberia_color, 30,,,, [id_bronce], [1]); def_edificio_2(, 10,,,, true)
 	id_tunel_salida = def_edificio("Túnel salida", 1, spr_tunel_salida,, 60, 10, scr_caminos,, [id_cobre, id_hierro], [4, 4], 1,,,,, true, true); def_edificio_2()
 	id_energia_infinita = def_edificio("Energía Infinita", 1, spr_energia_infinita,, 100); def_edificio_2(-999_999,,,,, true)
@@ -869,6 +875,12 @@ for(var a = 0; a < rss_max; a++){
 	if flag_rss[a]
 		array_push(edificio_output_id[id_planta_de_reciclaje], a)
 	edificio_carga_max[id_planta_de_reciclaje] += 10
+}
+for(var a = 0; a < edificio_max; a++){
+	edificio_precio[a] = 0
+	if edificio_construible[a]
+		for(var b = 0; b < array_length(edificio_precio_id[a]); b++)
+			edificio_precio[a] += edificio_precio_num[a, b] * (1 + recurso_tier[edificio_precio_id[a, b]])
 }
 size_size = [1, 3, 7, 12, 19]
 size_borde = [6, 9, 12, 15, 18, 21]
@@ -1251,8 +1263,8 @@ for(var a = ds_list_size(temp_list) - 1; a >= 0; a--){
 	ds_grid_set(ore_amount, aa, bb, 0)
 }
 nucleo = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
-nucleo.carga[0] = 90
-nucleo.carga_total = 90
+nucleo.carga[0] = 100
+nucleo.carga_total = 100
 carga_inicial = array_create(rss_max, 0)
 array_copy(carga_inicial, 0, nucleo.carga, 0, rss_max)
 //Natural Ores

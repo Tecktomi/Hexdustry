@@ -1,5 +1,10 @@
 function pasar_mision(){
 	with control{
+		if modo_misiones and mision_actual >= 0{
+			add_mision()
+			mision_actual--
+			misiones_pasadas++
+		}
 		if ++mision_actual >= array_length(mision_nombre){
 			mision_actual = -1
 			win = 1
