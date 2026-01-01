@@ -113,6 +113,7 @@ if menu = 0{
 			draw_text_xpos(xpos, ypos, $"{L.menu_claves}: {cheat ? L.activado : L.desactivado}")
 			xpos += max(string_width($"{L.menu_claves}: {L.activado}"), string_width($"{L.menu_claves}: {L.desactivado}"))
 			cheat = draw_toggle(xpos + 10, ypos - 5, cheat, 1)
+			oleadas = not cheat
 			ypos += text_y + 10
 			//Biomas
 			xpos = 200
@@ -128,12 +129,42 @@ if menu = 0{
 			if draw_boton(xpos, ypos, L.nieve,,,,, 1)
 				generar_mapa(, 12, [ [ 0,13,50,5 ],[ 0,0,50,5 ],[ 0,15,10,4 ],[ 1,15,12,0 ],[ 0,9,50,2 ],[ 1,9,9,0 ],[ 0,5,6,1 ],[ 1,5,5,0 ],[ 0,14,6,1 ],[ 1,14,14,16 ],[ 2,0,6,3 ],[ 2,0,7,3 ],[ 2,16,8,15 ],[ 3,0,12,3 ],[ 3,2,10,3 ],[ 3,1,8,3 ],[ 3,3,6,2 ] ])
 			xpos += text_x + 20
-			if draw_boton(xpos, ypos, "Islas",,,,, 1){
+			if draw_boton(xpos, ypos, L.islas,,,,, 1){
 				do{
 					randomize()
 					generar_mapa(, 4, [ [ 0,1,50,5 ],[ 1,1,4,3 ],[ 1,3,4,2 ],[ 0,0,4,8 ],[ 1,0,4,2 ],[ 2,0,6,8 ],[ 2,0,7,8 ],[ 3,0,10,3 ],[ 3,2,8,3 ],[ 3,1,6,3 ],[ 3,3,6,2 ] ])
 				}
 				until terreno_caminable[terreno[# nucleo.a, nucleo.b]]
+			}
+			ypos += text_y + 10
+			//Modos de Juego
+			xpos = 200
+			if draw_boton(xpos, ypos, L.menu_modo_infinito, flow = 0 ? ui_boton_azul : ui_boton_gris,,,, 1){
+				mision_objetivo = []
+				flow = 0
+			}
+			xpos += text_x + 20
+			if draw_boton(xpos, ypos, L.menu_modo_oleadas, flow = 1 ? ui_boton_azul : ui_boton_gris,,,, 1){
+				mision_objetivo = [4]
+				mision_nombre = [""]
+				mision_target_num = [20]
+				mision_tiempo = [0]
+				mision_switch_oleadas = [false]
+				mision_camara_move = [false]
+				mision_texto = [[]]
+				flow = 1
+			}
+			xpos += text_x + 20
+			if draw_boton(xpos, ypos, L.menu_modo_misiones, flow = 2 ? ui_boton_azul : ui_boton_gris,,,, 1){
+				modo_misiones = true
+				add_mision()
+				flow = 2
+			}
+			if flow = 1{
+				ypos += text_y + 10
+				xpos = draw_text_xpos(160, ypos, L.menu_numero_oleadas)
+				mision_target_num[0] = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, mision_target_num[0], 10, 50, des_count++, 1))
+				ypos = 10 + draw_text_ypos(xpos + 145, ypos, mision_target_num[0])
 			}
 			draw_set_halign(fa_center)
 			if draw_boton(room_width / 2, room_height - 200, L.menu_cargar_escenario, ui_boton_azul,,,, 1){
@@ -1295,6 +1326,7 @@ if menu = 2{
 							}
 						edificio_tecnologia_desbloqueable[ei] = false
 						edificio_tecnologia[ei] = true
+						tecnologias_estudiadas++
 						for(var a = 0; a < array_length(edificio_tecnologia_next[ei]); a++){
 							var b = edificio_tecnologia_next[ei, a]
 							if not edificio_tecnologia[b]{
@@ -2755,7 +2787,7 @@ if build_index > 0 and win = 0{
 		//Detectar que las bombas tengan líquidos
 		if build_index = id_bomba_hidraulica{
 			flag = false
-			var liquido = -1
+			var liquido = -1, count = 0
 			for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
 				var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
 				if terreno_liquido[terreno[# aa, bb]]{
@@ -2766,25 +2798,37 @@ if build_index > 0 and win = 0{
 							temp_text += $"{L.construir_combinar_liquidos}\n"
 							break
 						}
+						count++
+						if terreno_nombre[terreno[# aa, bb]] = "Agua Profunda"
+							count += 0.2
 						liquido = 0
 					}
-					else{
-						if not in(liquido, -1, 1){
+					else if terreno_nombre[terreno[# aa, bb]] = "Petróleo"{
+						if not in(liquido, -1, 2){
 							flag = false
 							temp_text += $"{L.construir_combinar_liquidos}\n"
 							break
 						}
-						liquido = 1
+						count++
+						liquido = 2
 					}
-				}
-				else{
-					flag = false
-					break
+					else if terreno_nombre[terreno[# aa, bb]] = "Lava"{
+						if not in(liquido, -1, 3){
+							flag = false
+							temp_text += $"{L.construir_combinar_liquidos}\n"
+							break
+						}
+						count++
+						liquido = 3
+					}
 				}
 			}
 			if not flag{
 				comprable = false
 				temp_text += $"{L.construir_sobre_agua_lava}\n"
+			}
+			else{
+				temp_text += $"Producirá {round(abs(edificio_flujo_consumo[build_index]) * count / 3)} {liquido_nombre[liquido]}/s"
 			}
 		}
 		else if build_index = id_generador_geotermico{
@@ -2919,7 +2963,7 @@ if build_index > 0 and win = 0{
 				var temp_complex_3 = abtoxy(temp_complex_2.a, temp_complex_2.b)
 				draw_sprite_off(spr_rojo, 0, temp_complex_3.a, temp_complex_3.b,,,,, 0.5)
 			}
-			draw_text_background(mouse_x + 20, mouse_y, temp_text)
+			draw_text_background(min(room_width - string_width(temp_text), mouse_x + 20), min(room_height - string_height(temp_text), mouse_y), temp_text)
 		}
 		//Sí se puede construir
 		else{
@@ -3202,7 +3246,7 @@ if build_index > 0 and win = 0{
 					}
 				}
 			}
-			draw_text_background(mouse_x + 20, mouse_y, temp_text)
+			draw_text_background(min(room_width - string_width(temp_text), mouse_x + 20), min(room_height - string_height(temp_text), mouse_y), temp_text)
 		}
 	}
 	last_mx = mx
@@ -4027,6 +4071,10 @@ if win > 0{
 			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_drones}: {drones_construidos}")
 		if enemigos_eliminados > 0
 			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_enemigos}: {enemigos_eliminados}")
+		if tecnologia
+			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_tecnologias}: {tecnologias_estudiadas}")
+		if modo_misiones
+			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_misiones}: {misiones_pasadas}")
 		//Victoria
 		if win = 1{
 			if in(tutorial, 1, 2, 3, 4) and draw_boton(room_width / 2, room_height - 250, L.win_siguiente_mision, ui_boton_verde){

@@ -282,15 +282,24 @@ function add_edificio(index, dir, a, b){
 		//Detectar cañerías cercanas
 		if edificio_flujo[index]{
 			if index = id_bomba_hidraulica{
+				edificio.select = 0
 				for(var c = ds_list_size(temp_list_size) - 1; c >= 0; c--){
 					temp_complex = temp_list_size[|c]
 					var aa = temp_complex.a, bb = temp_complex.b
-					if in(terreno_nombre[terreno[# aa, bb]], "Agua", "Agua Profunda")
-						edificio.select = 0
-					else if in(terreno_nombre[terreno[# aa, bb]], "Petróleo")
-						edificio.select = 2
-					else if in(terreno_nombre[terreno[# aa, bb]], "Lava")
-						edificio.select = 3
+					if in(terreno_nombre[terreno[# aa, bb]], "Agua", "Agua Profunda"){
+						edificio.select++
+						if terreno_nombre[terreno[# aa, bb]] = "Agua Profunda"
+							edificio.select += 0.2
+						edificio.fuel = 0
+					}
+					else if in(terreno_nombre[terreno[# aa, bb]], "Petróleo"){
+						edificio.select++
+						edificio.fuel = 2
+					}
+					else if in(terreno_nombre[terreno[# aa, bb]], "Lava"){
+						edificio.select++
+						edificio.fuel = 3
+					}
 					ds_list_add(edificio.coordenadas, temp_complex)
 				}
 			}
@@ -413,6 +422,8 @@ function add_edificio(index, dir, a, b){
 			edificio.select = -1
 		if in(index, id_planta_de_enriquecimiento, id_fabrica_de_drones, id_planta_de_reciclaje)
 			edificio.proceso = -1
+		if index = id_laser
+			edificio.fuel = 1
 		ds_list_destroy(temp_list_size)
 		ds_list_destroy(temp_list_arround)
 		return edificio

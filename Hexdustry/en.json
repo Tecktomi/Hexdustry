@@ -8,6 +8,10 @@
 "menu_claves": "Sandbox",
 "menu_sin_archivos": "No scenarios yet",
 "menu_html": "Reduced performance in HTML5",
+"menu_modo_infinito": "Infinite mode",
+"menu_modo_oleadas": "Wave mode",
+"menu_modo_misiones": "Mission mode",
+"menu_numero_oleadas": "Number of waves",
 
 "cancelar": "Cancel",
 "volver": "Back",
@@ -19,6 +23,7 @@
 "cuevas": "Caves",
 "desierto": "Desert",
 "nieve": "Snow",
+"islas": "Islands",
 "activado": "Enabled",
 "desactivado": "Disabled",
 
@@ -311,6 +316,8 @@
 "win_edificios": "Buildings constructed",
 "win_drones": "Drones built",
 "win_enemigos": "Enemies eliminated",
+"win_tecnologias": "Technologies researched",
+"win_misiones": "Objectives completed",
 "win_siguiente_mision": "Next mission",
 "win_seguir_jugando": "Continue playing?",
 "win_reintentar": "Retry",

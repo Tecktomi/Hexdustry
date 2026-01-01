@@ -57,9 +57,6 @@ function construir(index, dir, mx, my){
 			//Checkear minerales
 			if in(index, id_taladro_electrico) and terreno_recurso_bool[temp_terreno_terreno]
 				flag_2 = true
-			//Checkear agua
-			if in(index, id_bomba_hidraulica) and not terreno_liquido[temp_terreno_terreno]
-				flag = false
 			if in(index, id_bomba_de_evaporacion) and not in(terreno_nombre[temp_terreno_terreno], "Agua", "Agua Profunda")
 				flag = false
 		}

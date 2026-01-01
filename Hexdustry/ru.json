@@ -8,6 +8,10 @@
 "menu_claves": "Песочница",
 "menu_sin_archivos": "Сценариев пока нет",
 "menu_html": "Сниженная производительность в HTML5",
+"menu_modo_infinito": "Бесконечный режим",
+"menu_modo_oleadas": "Режим волн",
+"menu_modo_misiones": "Режим миссий",
+"menu_numero_oleadas": "Количество волн",
 
 "cancelar": "Отмена",
 "volver": "Назад",
@@ -19,6 +23,7 @@
 "cuevas": "Пещеры",
 "desierto": "Пустыня",
 "nieve": "Снег",
+"islas": "Острова",
 "activado": "Включено",
 "desactivado": "Выключено",
 
@@ -311,6 +316,8 @@
 "win_edificios": "Построенные здания",
 "win_drones": "Созданные дроны",
 "win_enemigos": "Уничтоженные враги",
+"win_tecnologias": "Изученные технологии",
+"win_misiones": "Выполненные цели",
 "win_siguiente_mision": "Следующая миссия",
 "win_seguir_jugando": "Продолжить игру?",
 "win_reintentar": "Повторить",

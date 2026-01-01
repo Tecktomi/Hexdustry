@@ -58,6 +58,7 @@
     {"id":{"name":"add_fuego","path":"scripts/add_fuego/add_fuego.yy",},},
     {"id":{"name":"add_humo","path":"scripts/add_humo/add_humo.yy",},},
     {"id":{"name":"add_luz","path":"scripts/add_luz/add_luz.yy",},},
+    {"id":{"name":"add_mision","path":"scripts/add_mision/add_mision.yy",},},
     {"id":{"name":"add_municion","path":"scripts/add_municion/add_municion.yy",},},
     {"id":{"name":"array_remove","path":"scripts/array_remove/array_remove.yy",},},
     {"id":{"name":"atacar_dron","path":"scripts/atacar_dron/atacar_dron.yy",},},

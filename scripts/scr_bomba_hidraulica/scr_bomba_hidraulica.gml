@@ -6,15 +6,15 @@ function scr_bomba_hidraulica(edificio = control.null_edificio){
 		if edificio_flujo[index]
 			var flujo = edificio.flujo
 		//Está encendido
-		if in(flujo.liquido, -1, edificio.select) and red_power > 0{
+		if in(flujo.liquido, -1, edificio.fuel) and red_power > 0{
 			change_energia(edificio_energia_consumo[index], edificio)
-			change_flujo(red_power * edificio_flujo_consumo[index], edificio)
+			change_flujo(red_power * edificio_flujo_consumo[index] * edificio.select / 3, edificio)
 			flujo.generacion -= edificio.proceso
 			if flujo.almacen >= flujo.almacen_max and flujo.generacion >= flujo.consumo{
 				change_energia(0, edificio)
 				change_flujo(0, edificio)
 			}
-			if grafic_luz and flujo.liquido != 3 and edificio.select = 3 and not edificio.luz
+			if grafic_luz and flujo.liquido != 3 and edificio.fuel = 3 and not edificio.luz
 				for(var b = ds_list_size(flujo.edificios) - 1; b >= 0; b--){
 					var temp_edificio = flujo.edificios[b]
 					if not temp_edificio.luz{
@@ -22,7 +22,7 @@ function scr_bomba_hidraulica(edificio = control.null_edificio){
 						add_luz(temp_edificio.a, temp_edificio.b, 1)
 					}
 				}
-			flujo.liquido = edificio.select
+			flujo.liquido = edificio.fuel
 		}
 		else{
 			change_energia(0, edificio)
