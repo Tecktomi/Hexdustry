@@ -13,12 +13,9 @@ function scr_planta_desalinizadora(edificio = control.null_edificio){
 			edificio.proceso += min(flujo_power, red_power)
 			//Producir / Apagar
 			if edificio.proceso >= edificio_proceso[index]{
-				if random(1) < 0.1{
-					edificio.carga[id_sal]++
-					edificio.carga_total++
-				}
+				edificio.carga[id_sal] += 0.1
 				edificio.carga[id_barril_agua]++
-				edificio.carga_total++
+				edificio.carga_total += 1.1
 				edificio.proceso = -1
 				edificio.waiting = not mover(edificio.a, edificio.b)
 				change_energia(0, edificio)

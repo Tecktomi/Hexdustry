@@ -16,9 +16,9 @@ function scr_refineria_petroleo(edificio = control.null_edificio){
 				change_flujo(edificio.flujo_consumo_max, edificio)
 				edificio.proceso++
 				if edificio.carga[id_sal] > 0{
-					edificio.carga[id_sal] -= 0.05
-					edificio.carga_total -= 0.05
-					edificio.proceso += floor(edificio_proceso[index])
+					edificio.carga[id_sal] -= 0.1
+					edificio.carga_total -= 0.1
+					edificio.proceso += floor(edificio_proceso[index] / 4)
 				}
 			}
 			edificio.proceso += flujo_power * red_power
