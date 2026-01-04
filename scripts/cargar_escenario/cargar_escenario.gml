@@ -78,11 +78,10 @@ function cargar_escenario(file = ""){
 			ds_grid_clear(edificio_cercano, null_edificio)
 			ds_grid_clear(edificio_cercano_dis, infinity)
 			ds_grid_clear(edificio_cercano_dir, -1)
+			var max_index = ini_read_real("Terreno", "Fondo", 1)
 			for(var a = 0; a < xsize; a++)
 				for(var b = 0; b < ysize; b++){
-					ds_grid_set(terreno, a, b, ini_read_real("Terreno", $"{a},{b}", 1))
-					if terreno_pared[terreno[# a, b]]
-						ds_grid_set(terreno_pared_index, a, b, ini_read_real("Terreno pared index", $"{a},{b}", 0))
+					set_terreno(a, b, ini_read_real("Terreno", $"{a},{b}", max_index))
 					ds_grid_set(ore, a, b, ini_read_real("Ore", $"{a},{b}", -1))
 					ds_grid_set(ore_amount, a, b, ini_read_real("Ore amount", $"{a},{b}", 0))
 				}

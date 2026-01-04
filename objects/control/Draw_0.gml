@@ -5,16 +5,30 @@ if menu = 0{
 	maxa = min(xsize - 1, ceil((camx + room_width) / zoom / 48))
 	maxb = min(ysize - 1, ceil((camy + room_height) / zoom / 14))
 	if keyboard_check_pressed(ord("G")){
-		ini_open("mision_5.txt")
-		for(var a = 0; ini_section_exists($"Objetivo {a}"); a++){
-			var text = ini_read_string($"Objetivo {a}", "nombre", "")
-			show_debug_message($"nombre=\"{text}\"")
-			for(var b = 0; b < ini_read_real($"Objetivo {a}", "textos", 0); b++){
-				text = ini_read_string($"Objetivo {a}", $"texto {b}", "")
-				show_debug_message($"texto {b}=\"{text}\"")
+		var surf = surface_create(32, 28)
+		surface_set_target(surf)
+		for(var a = 0; a < 64; a++){
+			var rand = [irandom(4), irandom(4), irandom(4), irandom(4), irandom(4), irandom(4)]
+			for(var b = 0; b < 5; b++){
+				draw_sprite(spr_agua_salada, 0, 16, 14)
+				if a & 1
+					draw_sprite(spr_olaje_1, b + rand[0], 16, 14)
+				if a & 2
+					draw_sprite(spr_olaje_2, b + rand[1], 16, 14)
+				if a & 4
+					draw_sprite_ext(spr_olaje_1, b + rand[2], 16, 14, -1, 1, 0, c_white, 1)
+				if a & 8
+					draw_sprite_ext(spr_olaje_1, b + rand[3], 16, 14, -1, -1, 0, c_white, 1)
+				if a & 16
+					draw_sprite_ext(spr_olaje_2, b + rand[4], 16, 14, 1, -1, 0, c_white, 1)
+				if a & 32
+					draw_sprite_ext(spr_olaje_1, b + rand[5], 16, 14, 1, -1, 0, c_white, 1)
+				var sprite = sprite_create_from_surface(surf, 0, 0, 32, 28, true, false, 0, 0)
+				sprite_save(sprite, 0, $"costa_{a}_{b}.png")
 			}
 		}
-		ini_close()
+		surface_reset_target()
+		surface_free(surf)
 	}
 	dibujar_fondo(1)
 	draw_set_alpha(0.5)
@@ -132,7 +146,7 @@ if menu = 0{
 			if draw_boton(xpos, ypos, L.islas,,,,, 1){
 				do{
 					randomize()
-					generar_mapa(, 4, [ [ 0,1,50,5 ],[ 1,1,4,3 ],[ 1,3,4,2 ],[ 0,0,4,8 ],[ 1,0,4,2 ],[ 2,0,6,8 ],[ 2,0,7,8 ],[ 3,0,10,3 ],[ 3,2,8,3 ],[ 3,1,6,3 ],[ 3,3,6,2 ] ])
+					generar_mapa(, 19, [ [ 0,1,50,5 ],[ 1,1,19,3 ],[ 1,3,19,18 ],[ 0,0,3,8 ],[ 1,0,19,2 ],[ 2,0,6,8 ],[ 2,0,7,8 ],[ 3,0,10,3 ],[ 3,2,8,3 ],[ 3,1,6,3 ],[ 3,3,6,2 ] ])
 				}
 				until terreno_caminable[terreno[# nucleo.a, nucleo.b]]
 			}
@@ -573,19 +587,19 @@ if menu = 2{
 			else if tipo = 1{
 				var temp_text
 				xpos = draw_text_xpos(xpos, ypos, $"{L.editor_al_rededor} ")
-				instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
+				instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre_display,, 10)
 				xpos += text_x
 				xpos = draw_text_xpos(xpos, ypos, $" {L.editor_reemplazar} ")
 				if dat1 = dat2{
 					temp_text = terreno_nombre[dat1]
 					terreno_nombre[dat1] = L.editor_cualquiera
 				}
-				instruccion[2] = draw_boton_text_list(xpos, ypos, dat2, terreno_nombre,, 10)
+				instruccion[2] = draw_boton_text_list(xpos, ypos, dat2, terreno_nombre_display,, 10)
 				if dat1 = dat2
 					terreno_nombre[dat1] = temp_text
 				xpos += text_x
 				xpos = draw_text_xpos(xpos, ypos, $" {L.editor_con} ")
-				instruccion[3] = draw_boton_text_list(xpos, ypos, dat3, terreno_nombre,, 10)
+				instruccion[3] = draw_boton_text_list(xpos, ypos, dat3, terreno_nombre_display,, 10)
 			}
 			//Ruido Aleatorio
 			else if tipo = 2{
@@ -924,13 +938,15 @@ if menu = 2{
 					save_file = save_files[a]
 					flag = true
 				}
-			save_file = string(draw_boton_text(140, 160 + 30 * (array_length(save_files) + 1), save_file, false,,, 1))
-			draw_text(140 + text_x, 160 + 30 * (array_length(save_files) + 1), ".txt")
-			input_layer = 1
-			if save_file != "" and (draw_boton(120, 160 + 30 * array_length(save_files), L.nuevo_archivo,,,,, 1) or keyboard_check_pressed(vk_enter)){
-				keyboard_clear(vk_enter)
-				save_file += ".txt"
-				flag = true
+			if not flag{
+				save_file = string(draw_boton_text(140, 160 + 30 * (array_length(save_files) + 1), save_file, false,,, 1))
+				draw_text(140 + text_x, 160 + 30 * (array_length(save_files) + 1), ".txt")
+				input_layer = 1
+				if save_file != "" and (draw_boton(120, 160 + 30 * array_length(save_files), L.nuevo_archivo,,,,, 1) or keyboard_check_pressed(vk_enter)){
+					keyboard_clear(vk_enter)
+					save_file += ".txt"
+					flag = true
+				}
 			}
 			if flag
 				save_escenario(save_file)
@@ -1105,7 +1121,7 @@ if menu = 2{
 		else if enciclopedia = 3{
 			var pos = 140
 			draw_set_font(ft_titulo)
-			pos = draw_text_ypos(120, pos, recurso_nombre[enciclopedia_item])
+			pos = draw_text_ypos(120, pos, recurso_nombre_display[enciclopedia_item])
 			draw_set_font(ft_letra)
 			pos = draw_text_ypos(120, pos, recurso_descripcion[enciclopedia_item])
 			if recurso_combustion[enciclopedia_item]
@@ -1246,10 +1262,14 @@ if menu = 2{
 			}
 			if edificio_flujo[ei]{
 				pos += 10
+				if edificio_flujo_liquido[ei] = -1
+					temp_text = L.flujo_liquido
+				else
+					temp_text = liquido_nombre_display[edificio_flujo_liquido[ei]]
 				if edificio_flujo_consumo[ei] > 0
-					pos = draw_text_ypos(120, pos, $"{L.enciclopedia_consume} {edificio_flujo_consumo[ei]} {L.flujo_liquido}/s")
+					pos = draw_text_ypos(120, pos, $"{L.enciclopedia_consume} {edificio_flujo_consumo[ei]} {temp_text}/s")
 				else if edificio_flujo_consumo[ei] < 0
-					pos = draw_text_ypos(120, pos, $"{L.enciclopedia_produce} {abs(edificio_flujo_consumo[ei])} {L.flujo_liquido}/s")
+					pos = draw_text_ypos(120, pos, $"{L.enciclopedia_produce} {abs(edificio_flujo_consumo[ei])} {temp_text}/s")
 			}
 			if (edificio_tecnologia[ei] or cheat) and draw_boton(120, pos + 40, L.enciclopedia_construir, ui_boton_verde){
 				enciclopedia = 0
@@ -1276,7 +1296,7 @@ if menu = 2{
 					draw_circle(xpos + 50 * a - 25 * (size - 1), ypos, 25, false)
 					draw_set_color(c_black)
 					draw_circle(xpos + 50 * a - 25 * (size - 1), ypos, 25, true)
-					if draw_sprite_boton(edificio_sprite[b], xpos - 20 + 50 * a - 25 * (size - 1), ypos - 20, 40, 40, edificio_nombre[b]){
+					if draw_sprite_boton(edificio_sprite[b], xpos - 20 + 50 * a - 25 * (size - 1), ypos - 20, 40, 40, edificio_nombre_display[b]){
 						enciclopedia_item = b
 						enciclopedia = 4
 						exit
@@ -1296,7 +1316,7 @@ if menu = 2{
 					draw_circle(xpos + 50 * a - 25 * (size - 1), ypos + 200, 25, false)
 					draw_set_color(c_black)
 					draw_circle(xpos + 50 * a - 25 * (size - 1), ypos + 200, 25, true)
-					if draw_sprite_boton(edificio_sprite[b], xpos - 20 + 50 * a - 25 * (size - 1), ypos + 180, 40, 40, edificio_nombre[b]){
+					if draw_sprite_boton(edificio_sprite[b], xpos - 20 + 50 * a - 25 * (size - 1), ypos + 180, 40, 40, edificio_nombre_display[b]){
 						enciclopedia_item = b
 						enciclopedia = 4
 						exit
@@ -1311,7 +1331,7 @@ if menu = 2{
 					if not cheat
 						for(var a = 0; a < array_length(edificio_tecnologia_precio[ei]); a++){
 							var temp_precio = edificio_tecnologia_precio[ei, a]
-							temp_text += $"\n{recurso_nombre[temp_precio.id]}: {temp_precio.num}"
+							temp_text += $"\n{recurso_nombre_display[temp_precio.id]}: {temp_precio.num}"
 							if nucleo.carga[temp_precio.id] < temp_precio.num{
 								flag = false
 								temp_text += " !!"
@@ -1418,7 +1438,7 @@ if menu = 2{
 					draw_circle(xpos + 60 * b - 30 * (width - 1), pos, 25, false)
 					draw_set_color(c_black)
 					draw_circle(xpos + 60 * b - 30 * (width - 1), pos, 25, true)
-					if draw_sprite_boton(edificio_sprite[c], xpos - 20 + 60 * b - 30 * (width - 1), pos - 20, 40, 40, edificio_nombre[c]){
+					if draw_sprite_boton(edificio_sprite[c], xpos - 20 + 60 * b - 30 * (width - 1), pos - 20, 40, 40, edificio_nombre_display[c]){
 						enciclopedia_item = c
 						enciclopedia = 4
 						exit
@@ -1438,7 +1458,7 @@ if menu = 2{
 	}
 	if sonido and random(1) < 0.1{
 		var a = irandom_range(mina, maxa), b = irandom_range(minb, maxb)
-		if terreno_nombre[terreno[# a, b]] = "Lava"{
+		if terreno[# a, b] = idt_lava{
 			var temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b
 			sound_play(snd_lava, aa, bb, 0.5)
 		}
@@ -1978,7 +1998,7 @@ if show_menu{
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * lq_max) * zoom, true)
 			draw_text(aa - 80 * zoom, bb + 20 * zoom, L.show_menu_ningun_liquido)
 			for(var a = 0; a < lq_max; a++)
-				draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, liquido_nombre[a])
+				draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, liquido_nombre_display[a])
 		}
 		if index = id_planta_quimica{
 			draw_rectangle(aa - 90 * zoom, bb + 40 * zoom, aa + 90 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, true)
@@ -1994,12 +2014,49 @@ if show_menu{
 			for(var a = 0; a < dron_max; a++)
 				draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, dron_nombre_display[a])
 		}
+		else if index = id_deposito
+			draw_text(aa - 80 * zoom, bb + 20 * zoom, "Vaciar")
+		else if index = id_embotelladora
+			draw_text(aa - 80 * zoom, bb + 20 * zoom, edificio.mode ? "Embotellar" : "Desembotellar")
 		if mouse_x > aa - 80 * zoom and mouse_y > bb + 20 * zoom and mouse_x < aa + 80 * zoom{
-			if in(index, id_selector, id_overflow) and mouse_y < bb + 40 * zoom{
+			if in(index, id_selector, id_overflow, id_embotelladora) and mouse_y < bb + 40 * zoom{
 				if mouse_check_button_pressed(mb_left){
 					mouse_clear(mb_left)
 					show_menu = false
 					edificio.mode = not edificio.mode
+					if index = id_embotelladora{
+						if edificio.mode{
+							edificio.carga_output[id_barril_agua] = false
+							edificio.carga_output[id_barril_acido] = false
+							edificio.carga_output[id_barril_petroleo] = false
+							edificio.carga_output[id_barril_lava] = false
+							edificio.carga_output[id_barril_agua_salada] = false
+							edificio.carga_max[id_barril_agua] = 10
+							edificio.carga_max[id_barril_acido] = 10
+							edificio.carga_max[id_barril_petroleo] = 10
+							edificio.carga_max[id_barril_lava] = 10
+							edificio.carga_max[id_barril_agua_salada] = 10
+							edificio.receptor = true
+							edificio.emisor = false
+						}
+						else{
+							edificio.carga_output[id_barril_agua] = true
+							edificio.carga_output[id_barril_acido] = true
+							edificio.carga_output[id_barril_petroleo] = true
+							edificio.carga_output[id_barril_lava] = true
+							edificio.carga_output[id_barril_agua_salada] = true
+							edificio.carga_max[id_barril_agua] = 0
+							edificio.carga_max[id_barril_acido] = 0
+							edificio.carga_max[id_barril_petroleo] = 0
+							edificio.carga_max[id_barril_lava] = 0
+							edificio.carga_max[id_barril_agua_salada] = 0
+							edificio.receptor = false
+							edificio.emisor = true
+						}
+						edificio.fuel = 0
+						edificio.proceso = -1
+						calculate_in_out_2(edificio, false)
+					}
 					mover(edificio.a, edificio.b)
 				}
 			}
@@ -2052,6 +2109,8 @@ if show_menu{
 						if edificio.flujo.almacen = 0 and edificio.flujo.generacion = 0
 							edificio.flujo.liquido = -1
 						for(var i = 0; i < rss_max; i++){
+							if i = id_sal
+								continue
 							edificio.carga[i] = 0
 							edificio.carga_max[i] = 0
 							edificio.carga_output[i] = false
@@ -2060,9 +2119,10 @@ if show_menu{
 						edificio.select = a
 						edificio.fuel = 0
 						edificio.proceso = -1
+						edificio.carga_max[id_sal] = 10
 						//Ácido
 						if a = 0{
-							edificio.carga_max[id_piedra_sulfatada] = 5
+							edificio.carga_max[id_piedra_sulfatada] = 10
 							edificio.receptor = true
 							edificio.emisor = false
 							edificio.flujo_consumo_max = -50
@@ -2070,7 +2130,7 @@ if show_menu{
 						}
 						//Explosivos
 						else if a = 1{
-							edificio.carga_max[id_combustible] = 5
+							edificio.carga_max[id_combustible] = 10
 							edificio.carga_output[id_explosivo] = true
 							edificio.receptor = true
 							edificio.emisor = true
@@ -2079,7 +2139,7 @@ if show_menu{
 						}
 						//Baterías
 						else if a = 2{
-							edificio.carga_max[id_cobre] = 5
+							edificio.carga_max[id_cobre] = 10
 							edificio.carga_output[id_baterias] = true
 							edificio.receptor = true
 							edificio.emisor = true
@@ -2112,6 +2172,14 @@ if show_menu{
 						edificio.carga_max[dron_precio_id[a, b]] = 2 * dron_precio_num[a, b]
 					calculate_in_out_2(edificio)
 					mover_in(edificio)
+				}
+			}
+			else if index = id_deposito{
+				if mouse_check_button_pressed(mb_left){
+					mouse_clear(mb_left)
+					show_menu = false
+					edificio.flujo.almacen = 0
+					edificio.flujo.liquido = -1
 				}
 			}
 		}
@@ -2182,7 +2250,7 @@ if pausa != 1 and temp_hexagono != noone and flag and not (show_menu and show_me
 				}
 				procesador_select = null_edificio
 			}
-			else if in(index, id_selector, id_overflow, id_liquido_infinito, id_recurso_infinito, id_planta_quimica, id_fabrica_de_drones, id_procesador, id_memoria){
+			else if in(index, id_selector, id_overflow, id_liquido_infinito, id_recurso_infinito, id_planta_quimica, id_fabrica_de_drones, id_procesador, id_memoria, id_deposito, id_embotelladora){
 				mouse_clear(mb_left)
 				show_menu = true
 				show_menu_build = edificio
@@ -2474,12 +2542,12 @@ if pausa != 1 and temp_hexagono != noone and flag and not (show_menu and show_me
 				temp_text += $"{L.flujo_sin_liquido}!\n"
 			else{
 				if edificio_flujo_consumo[index] > 0{
-					temp_text += $"{L.almacen_consumiendo} {round(edificio.flujo_consumo)} {liquido_nombre[flujo.liquido]}\n"
+					temp_text += $"{L.almacen_consumiendo} {round(edificio.flujo_consumo)} {liquido_nombre_display[flujo.liquido]}\n"
 					temp_text += $"{L.almacen_funcionando_al} {floor(100 * clamp((flujo.generacion + flujo.almacen) / max(flujo.consumo, 1), 0, 1))}% {L.almacen_de_su_capacidad}\n"
 				}
 				else
-					temp_text += $"{L.almacen_produciendo} {abs(round(edificio.flujo_consumo))} {liquido_nombre[flujo.liquido]}\n"
-				temp_text += $"  {flujo.generacion > flujo.consumo ? L.almacen_produciendo : L.almacen_consumiendo} {round(abs(flujo.generacion - flujo.consumo))} {liquido_nombre[flujo.liquido]}\n"
+					temp_text += $"{L.almacen_produciendo} {abs(round(edificio.flujo_consumo))} {liquido_nombre_display[flujo.liquido]}\n"
+				temp_text += $"  {flujo.generacion > flujo.consumo ? L.almacen_produciendo : L.almacen_consumiendo} {round(abs(flujo.generacion - flujo.consumo))} {liquido_nombre_display[flujo.liquido]}\n"
 				if flujo.almacen_max > 0
 					temp_text += $"  {L.flujo_almacenado}: {round(flujo.almacen)}/{round(flujo.almacen_max)}\n"
 			}
@@ -2759,7 +2827,7 @@ if build_index > 0 and win = 0{
 		}
 		for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
 			var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb =  temp_complex_2.b
-			if in(terreno_nombre[terreno[# aa, bb]], "Pared de Piedra", "Pared de Pasto", "Pared de Arena", "Pared de Nieve", "Hielo"){
+			if terreno_pared[terreno[# aa, bb]] or terreno[# aa, bb] = idt_hielo{
 				temp_text += $"{L.construir_terreno_invalido}\n"
 				comprable = false
 				break
@@ -2778,7 +2846,7 @@ if build_index > 0 and win = 0{
 		if build_index = id_bomba_de_evaporacion
 			for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
 				var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
-				if terreno_nombre[terreno[# aa, bb]] = "Agua Profunda"{
+				if in(terreno[# aa, bb], idt_agua_profunda, idt_agua_salada_profunda){
 					temp_text += $"{L.construir_terreno_invalido}\n"
 					comprable = false
 					break
@@ -2792,18 +2860,18 @@ if build_index > 0 and win = 0{
 				var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
 				if terreno_liquido[terreno[# aa, bb]]{
 					flag = true
-					if in(terreno_nombre[terreno[# aa, bb]], "Agua", "Agua Profunda"){
+					if in(terreno[# aa, bb], idt_agua, idt_agua_profunda){
 						if not in(liquido, -1, 0){
 							flag = false
 							temp_text += $"{L.construir_combinar_liquidos}\n"
 							break
 						}
 						count++
-						if terreno_nombre[terreno[# aa, bb]] = "Agua Profunda"
+						if terreno[# aa, bb] = idt_agua_profunda
 							count += 0.2
 						liquido = 0
 					}
-					else if terreno_nombre[terreno[# aa, bb]] = "Petróleo"{
+					else if terreno[# aa, bb] = idt_petroleo{
 						if not in(liquido, -1, 2){
 							flag = false
 							temp_text += $"{L.construir_combinar_liquidos}\n"
@@ -2812,7 +2880,7 @@ if build_index > 0 and win = 0{
 						count++
 						liquido = 2
 					}
-					else if terreno_nombre[terreno[# aa, bb]] = "Lava"{
+					else if terreno[# aa, bb] = idt_lava{
 						if not in(liquido, -1, 3){
 							flag = false
 							temp_text += $"{L.construir_combinar_liquidos}\n"
@@ -2821,6 +2889,17 @@ if build_index > 0 and win = 0{
 						count++
 						liquido = 3
 					}
+					else if in(terreno[# aa, bb], idt_agua_salada, idt_agua_salada_profunda){
+						if not in(liquido, -1, 4){
+							flag = false
+							temp_text += $"{L.construir_combinar_liquidos}\n"
+							break
+						}
+						count++
+						if terreno[# aa, bb] = idt_agua_salada_profunda
+							count += 0.2
+						liquido = 4
+					}
 				}
 			}
 			if not flag{
@@ -2828,14 +2907,14 @@ if build_index > 0 and win = 0{
 				temp_text += $"{L.construir_sobre_agua_lava}\n"
 			}
 			else{
-				temp_text += $"Producirá {round(abs(edificio_flujo_consumo[build_index]) * count / 3)} {liquido_nombre[liquido]}/s"
+				temp_text += $"{L.game_producira} {round(abs(edificio_flujo_consumo[build_index]) * count / 3)} {liquido_nombre_display[liquido]}/s"
 			}
 		}
 		else if build_index = id_generador_geotermico{
 			var i = 0
 			for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
 				var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
-				i += (terreno_nombre[terreno[# aa, bb]] = "Lava")
+				i += (terreno[# aa, bb] = idt_lava)
 			}
 			if i = 0{
 				comprable = false
@@ -2848,7 +2927,7 @@ if build_index > 0 and win = 0{
 			flag = false
 			for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
 				var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
-				if in(terreno_nombre[terreno[# aa, bb]], "Agua", "Agua Profunda"){
+				if in(terreno[# aa, bb], idt_agua, idt_agua_profunda, idt_agua_salada, idt_agua_salada_profunda){
 					flag = true
 					break
 				}
@@ -2876,7 +2955,7 @@ if build_index > 0 and win = 0{
 			if build_index = id_taladro_electrico{
 				for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
 					var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
-					if not in(ore[# aa, bb], 0, 1, 2) and in(terreno_nombre[terreno[# aa, bb]], "Piedra", "Arena", "Piedra Cúprica", "Piedra Férrica", "Basalto Sulfatado"){
+					if not in(ore[# aa, bb], 0, 1, 2) and in(terreno[# aa, bb], idt_piedra, idt_arena, idt_piedra_cuprica, idt_piedra_ferrica, idt_basalto_sulfatado){
 						temp_array[terreno_recurso_id[terreno[# aa, bb]]]++
 						temp_array_2[terreno_recurso_id[terreno[# aa, bb]]] = -1
 						b++
@@ -2913,7 +2992,7 @@ if build_index > 0 and win = 0{
 					temp_array_2[ore_recurso[ore[# aa, bb]]] += ore_amount[# aa, bb]
 					flag = true
 				}
-				else if in(terreno_nombre[terreno[# aa, bb]], "Piedra", "Arena", "Piedra Cúprica", "Piedra Férrica", "Basalto Sulfatado"){
+				else if in(terreno[# aa, bb], idt_piedra, idt_arena, idt_piedra_cuprica, idt_piedra_ferrica, idt_basalto_sulfatado){
 					temp_array[terreno_recurso_id[terreno[# aa, bb]]]++
 					temp_array_2[terreno_recurso_id[terreno[# aa, bb]]] = -1
 					flag = true
@@ -3492,7 +3571,7 @@ if pausa = 0{
 					ds_grid_set(chunk_enemigos, dron.chunk_x, dron.chunk_y, temp_array)
 				}
 			}
-			if terreno_nombre[terreno[# dron.posa, dron.posb]] = "Hielo"
+			if terreno[# dron.posa, dron.posb] = idt_hielo
 				dron.efecto[2] = 30
 		}
 		for(var a = array_length(enemigos) - 1; a >= 0; a--){
@@ -3836,7 +3915,10 @@ if pausa = 0{
 		for(var a = array_length(flujos) - 1; a >= 0; a--){
 			var flujo = flujos[a]
 			flujo.almacen = clamp(flujo.almacen + (flujo.generacion - flujo.consumo) / 30, 0, flujo.almacen_max)
-			flujo.eficiencia = clamp((flujo.generacion + flujo.almacen) / max(1, flujo.consumo), 0, 1)
+			if flujo.almacen = 0
+				flujo.eficiencia = clamp(flujo.generacion / max(1, flujo.eficiencia), 0, 1)
+			else
+				flujo.eficiencia = 1
 			if flujo.almacen < 1 and flujo.generacion = 0{
 				if grafic_luz and flujo.liquido = 3
 					for(var b = array_length(flujo.edificios) - 1; b >= 0; b--){
@@ -3946,7 +4028,7 @@ if keyboard_check_pressed(vk_anykey) and win = 0 and not show_menu{
 			if flujo.liquido = -1
 				temp_text += $"{L.flujo_sin_liquido}\n"
 			else
-				temp_text += $"{liquido_nombre[flujo.liquido]}\n"
+				temp_text += $"{liquido_nombre_display[flujo.liquido]}\n"
 			temp_text += $"  {L.flujo_generacion}: {flujo.generacion}\n"
 			temp_text += $"  {L.flujo_consumo}: {flujo.consumo}\n"
 			temp_text += $"  {L.flujo_almacenado}: {floor(flujo.almacen)}/{flujo.almacen_max}\n"

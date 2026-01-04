@@ -9,7 +9,7 @@ function construir(index, dir, mx, my){
 				break
 			}
 			var temp_terreno_terreno = terreno[# aa, bb]
-			if in(terreno_nombre[temp_terreno_terreno], "Pared de Piedra", "Pared de Arena", "Pared de Nieve", "Pared de Pasto"){
+			if terreno_pared[temp_terreno_terreno] or temp_terreno_terreno = idt_hielo{
 				flag = false
 				break
 			}
@@ -57,7 +57,8 @@ function construir(index, dir, mx, my){
 			//Checkear minerales
 			if in(index, id_taladro_electrico) and terreno_recurso_bool[temp_terreno_terreno]
 				flag_2 = true
-			if in(index, id_bomba_de_evaporacion) and not in(terreno_nombre[temp_terreno_terreno], "Agua", "Agua Profunda")
+			//Checkear bomba de evaporación
+			if in(index, id_bomba_de_evaporacion) and not in(temp_terreno_terreno, idt_agua,  idt_agua_salada)
 				flag = false
 		}
 		//Detectar enemigos cerca

@@ -1,10 +1,10 @@
 function scr_taladro_explosion(edificio = control.null_edificio){
 	with control{
 		var index = edificio.index
-		if edificio.carga[13] > 0{
+		if edificio.carga[id_explosivo] > 0{
 			if edificio.carga_total < edificio_carga_max[index] and ++edificio.proceso >= edificio_proceso[index]{
 				sound_play(snd_explosion, edificio.x, edificio.y)
-				edificio.carga[13]--
+				edificio.carga[id_explosivo]--
 				edificio.carga_total--
 				var temp_list = get_size(edificio.a, edificio.b, edificio.dir, edificio_size[index] + 2), flag = false
 				for(var b = ds_list_size(temp_list) - 1; b >= 0; b--){
@@ -16,7 +16,7 @@ function scr_taladro_explosion(edificio = control.null_edificio){
 						edificio.carga_total++
 						flag = true
 					}
-					else if in(terreno_nombre[terreno[# aa, bb]], "Piedra", "Arena", "Piedra Cúprica", "Piedra Férrica", "Basalto Sulfatado"){
+					else if in(terreno[# aa, bb], idt_piedra, idt_arena, idt_piedra_cuprica, idt_piedra_ferrica, idt_basalto_sulfatado){
 						edificio.carga[terreno_recurso_id[terreno[# aa, bb]]]++
 						edificio.carga_total++
 						flag = true
@@ -29,7 +29,7 @@ function scr_taladro_explosion(edificio = control.null_edificio){
 				edificio.proceso -= edificio_proceso[index]
 			}
 		}
-		if edificio.carga_total > edificio.carga[13]
+		if edificio.carga_total > edificio.carga[id_explosivo]
 			edificio.waiting = not mover(edificio.a, edificio.b)
 	}
 }

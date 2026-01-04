@@ -230,7 +230,7 @@ function scr_procesador(edificio = control.null_edificio){
 				}
 				else
 					temp_edificio = edificio.procesador_link[clamp(pc[5], 0, b - 1)]
-				if edificio_nombre[temp_edificio.index] != "Memoria"
+				if temp_edificio.index != id_memoria
 					continue
 				if pc[2] = 0
 					val = real(edificio.variables[pc[3]])

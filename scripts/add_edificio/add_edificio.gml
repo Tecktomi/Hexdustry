@@ -286,19 +286,25 @@ function add_edificio(index, dir, a, b){
 				for(var c = ds_list_size(temp_list_size) - 1; c >= 0; c--){
 					temp_complex = temp_list_size[|c]
 					var aa = temp_complex.a, bb = temp_complex.b
-					if in(terreno_nombre[terreno[# aa, bb]], "Agua", "Agua Profunda"){
+					if in(terreno[# aa, bb], idt_agua, idt_agua_profunda){
 						edificio.select++
-						if terreno_nombre[terreno[# aa, bb]] = "Agua Profunda"
+						if terreno[# aa, bb] = idt_agua_profunda
 							edificio.select += 0.2
 						edificio.fuel = 0
 					}
-					else if in(terreno_nombre[terreno[# aa, bb]], "Petróleo"){
+					else if terreno[# aa, bb] = idt_petroleo{
 						edificio.select++
 						edificio.fuel = 2
 					}
-					else if in(terreno_nombre[terreno[# aa, bb]], "Lava"){
+					else if terreno[# aa, bb] = idt_lava{
 						edificio.select++
 						edificio.fuel = 3
+					}
+					else if in(terreno[# aa, bb], idt_agua_salada, idt_agua_salada_profunda){
+						edificio.select++
+						if terreno[# aa, bb] = idt_agua_salada_profunda
+							edificio.select += 0.2
+						edificio.fuel = 4
 					}
 					ds_list_add(edificio.coordenadas, temp_complex)
 				}
@@ -401,7 +407,7 @@ function add_edificio(index, dir, a, b){
 					edificio.select = 0
 					for(var c = ds_list_size(temp_list_size) - 1; c >= 0; c--){
 						var temp_complex_2 = temp_list_size[|c], aa = temp_complex_2.a, bb = temp_complex_2.b
-						edificio.select += (terreno_nombre[terreno[# aa, bb]] = "Lava")
+						edificio.select += (terreno[# aa, bb] = idt_lava)
 					}
 				}
 			}
@@ -420,7 +426,7 @@ function add_edificio(index, dir, a, b){
 			edificio.select = 0
 		if in(index, id_planta_quimica, id_fabrica_de_drones, id_planta_de_reciclaje)
 			edificio.select = -1
-		if in(index, id_planta_de_enriquecimiento, id_fabrica_de_drones, id_planta_de_reciclaje)
+		if in(index, id_planta_de_enriquecimiento, id_fabrica_de_drones, id_planta_de_reciclaje, id_planta_desalinizadora)
 			edificio.proceso = -1
 		if index = id_laser
 			edificio.fuel = 1

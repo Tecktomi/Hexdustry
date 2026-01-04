@@ -34,7 +34,7 @@ function dibujar_edificios(){
 						else if index = id_bateria
 							draw_sprite_off(edificio_sprite[index], floor(10 * edificio.red.bateria / edificio.red.bateria_max), aa, bb,,, dir * 60)
 						//Dibujo bomba tamaño par
-						else if in(index, id_bomba_hidraulica, id_turbina, id_generador_geotermico){
+						else if in(index, id_bomba_hidraulica, id_turbina, id_generador_geotermico, id_planta_desalinizadora){
 							draw_sprite_off(edificio_sprite[index], 0, aa, bb, edificio.array_real[2] / 8)
 							if edificio.flujo.liquido = -1
 								draw_sprite_off(spr_bomba_color, 0, aa + edificio.array_real[2], bb + 14)
