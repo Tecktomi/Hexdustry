@@ -82,6 +82,8 @@
 "Pantalla": "Display",
 "Refinería de Petróleo": "Oil Refinery",
 "Planta de Reciclaje": "Recycling Plant",
+"Planta Desalinizadora": "Desalination Plant",
+"Embotelladora": "Bottling Plant",
 
 "descripcion_Núcleo": "It is the command center. All resources are stored here, and you must protect it at all costs.",
 "descripcion_Taladro": "Mines copper, iron, and coal at no cost. Can be boosted with Water.",
@@ -138,6 +140,8 @@
 "descripcion_Pantalla": "Allows drawing images sent from a processor",
 "descripcion_Refinería de Petróleo": "Uses fractional distillation to extract Plastic, Fuel, and Sulfur from Oil",
 "descripcion_Planta de Reciclaje": "Allows recycling part of the resources from nearby destroyed enemies",
+"descripcion_Planta Desalinizadora": "Purifies salt water to extract Salt and fresh Water",
+"descripcion_Embotelladora": "Fills and empties barrels with liquids",
 
 "Cobre": "Copper",
 "Carbón": "Coal",
@@ -159,6 +163,12 @@
 "Uranio Bruto": "Raw Uranium",
 "Uranio Enriquecido": "Enriched Uranium",
 "Uranio Empobrecido": "Depleted Uranium",
+"Sal": "Salt",
+"Barril con Agua": "Barrel with Water",
+"Barril con Ácido": "Barrel with Acid",
+"Barril con Petróleo": "Barrel with Oil",
+"Barril con Lava": "Barrel with Lava",
+"Barril con Agua salada": "Barrel with Salt Water",
 
 "descripcion_Cobre": "Basic resource, essential for early buildings. Can be refined to obtain Bronze",
 "descripcion_Carbón": "Basic fuel, useful for operating Furnaces and Generators",
@@ -180,6 +190,12 @@
 "descripcion_Uranio Bruto": "Unrefined uranium, useful as ammunition. Can be refined to separate Depleted Uranium from Enriched Uranium",
 "descripcion_Uranio Enriquecido": "Uranium-235, useful for power generation in Nuclear Plants",
 "descripcion_Uranio Empobrecido": "Uranium-238, required to support energy production in Nuclear Plants and useful as ammunition",
+"descripcion_Sal": "Useful resource for improving other industrial processes such as the chemical plant, oil refinery, and silicon production",
+"descripcion_Barril con Agua": "Barrel with Water, useful for storing and distributing water",
+"descripcion_Barril con Ácido": "Barrel with Acid, useful for storing and distributing it",
+"descripcion_Barril con Petróleo": "Barrel with Oil, useful for storing and distributing it",
+"descripcion_Barril con Lava": "Barrel with Lava, useful for storing and distributing it",
+"descripcion_Barril con Agua salada": "Barrel with Salt Water, useful for storing and distributing it",
 
 "Piedra": "Stone",
 "Pasto": "Grass",
@@ -199,6 +215,14 @@
 "Hielo": "Ice",
 "Basalto": "Basalt",
 "Ceniza": "Ash",
+"Agua Salada": "Salt Water",
+"Agua Salada Profunda": "Deep Salt Water",
+
+"liquido_Agua": "Water",
+"liquido_Ácido": "Acid",
+"liquido_Petróleo": "Oil",
+"liquido_Lava": "Lava",
+"liquido_Agua salada": "Salt Water",
 
 "Araña": "Spider",
 "Dron": "Dron",
@@ -277,6 +301,7 @@
 "game_vincular_procesador": "Links with any building",
 "game_creando_dron": "Creating",
 "game_limite_dron": "Drone limit reached",
+"game_producira": "Will produce",
 
 "mision_enemigos": "enemies",
 "mision_tiempo": "Time remaining",

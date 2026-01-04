@@ -24,6 +24,11 @@ function scr_planta_quimica(edificio = control.null_edificio){
 				if edificio.flujo_consumo_max > 0
 					change_flujo(edificio.flujo_consumo_max, edificio)
 				edificio.proceso++
+				if edificio.carga[id_sal] > 0{
+					edificio.carga[id_sal] -= 0.05
+					edificio.carga_total -= 0.05
+					edificio.proceso += floor(edificio_proceso[index] / 3)
+				}
 			}
 			var c = 1
 			if edificio.flujo_consumo_max > 0

@@ -6,22 +6,22 @@ function scr_planta_nuclear(edificio = control.null_edificio){
 		//Está encendido
 		if edificio.fuel > 0{
 			edificio.fuel--
-			if flujo.liquido != 0{
+			if not in(flujo.liquido, 0, 4){
 				if edificio_herir(edificio, 4)
-					break
+					exit
 			}
 			else{
 				if flujo_power < 1 and edificio_herir(edificio, 1 - flujo_power)
-					break
+					exit
 				change_energia(edificio_energia_consumo[index] * flujo_power, edificio)
 			}
 		}
-		if edificio.fuel = 0 and flujo.liquido = 0{
+		if edificio.fuel = 0 and in(flujo.liquido, 0, 4){
 			//Encender
-			if edificio.carga[18] > 0 and edificio.carga[19] > 0 and flujo_power > 0{
+			if edificio.carga[id_uranio_enriquecido] > 0 and edificio.carga[id_uranio_empobrecido] > 0 and flujo_power > 0{
 				edificio.fuel = 120
-				edificio.carga[18] -= 0.05
-				edificio.carga[19]--
+				edificio.carga[id_uranio_enriquecido] -= 0.05
+				edificio.carga[id_uranio_empobrecido]--
 				if grafic_luz and not edificio.luz{
 					edificio.luz = true
 					var temp_list = edificio.coordenadas

@@ -119,7 +119,7 @@ function delete_edificio(aa, bb, enemigo = false){
 		for(var a = array_length(edificio.outputs) - 1; a >= 0; a--){
 			temp_edificio = edificio.outputs[a]
 			array_remove(temp_edificio.inputs, edificio)
-			if edificio_nombre[temp_edificio.index] = "Cinta Transportadora"
+			if temp_edificio.index = id_cinta_transportadora
 				camino_calcular_in(temp_edificio)
 		}
 		delete(edificio.outputs)

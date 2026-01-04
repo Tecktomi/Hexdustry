@@ -40,6 +40,8 @@ function set_idioma(file, change = true){
 				planta_quimica_receta[a] = variable_struct_get(L, $"planta_quimica_receta {a}")
 				planta_quimica_descripcion[a] = text_wrap(variable_struct_get(L, $"planta_quimica_descripcion {a}"), 300)
 			}
+			for(var a = 0; a < lq_max; a++)
+				liquido_nombre_display[a] = variable_struct_get(L, $"liquido_{liquido_nombre[a]}")
 		}
 	}
 }

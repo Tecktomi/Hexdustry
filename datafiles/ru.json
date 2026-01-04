@@ -82,6 +82,8 @@
 "Pantalla": "Экран",
 "Refinería de Petróleo": "Нефтеперерабатывающий завод",
 "Planta de Reciclaje": "Перерабатывающий завод",
+"Planta Desalinizadora": "Опреснительная установка",
+"Embotelladora": "Линия розлива",
 
 "descripcion_Núcleo": "Командный центр. Все ресурсы хранятся здесь. Его необходимо защищать любой ценой.",
 "descripcion_Taladro": "Добывает медь, железо и уголь бесплатно. Может быть усилен водой.",
@@ -138,6 +140,8 @@
 "descripcion_Pantalla": "Позволяет отображать изображения, переданные процессором",
 "descripcion_Refinería de Petróleo": "С помощью фракционной перегонки извлекает пластик, топливо и серу из нефти",
 "descripcion_Planta de Reciclaje": "Позволяет перерабатывать часть ресурсов от уничтоженных поблизости врагов",
+"descripcion_Planta Desalinizadora": "Очищает солёную воду, извлекая соль и пресную воду",
+"descripcion_Embotelladora": "Наполняет и опустошает бочки с жидкостями",
 
 "Cobre": "Медь",
 "Carbón": "Уголь",
@@ -159,6 +163,12 @@
 "Uranio Bruto": "Необработанный уран",
 "Uranio Enriquecido": "Обогащённый уран",
 "Uranio Empobrecido": "Обеднённый уран",
+"Sal": "Соль",
+"Barril con Agua": "Бочка с водой",
+"Barril con Ácido": "Бочка с кислотой",
+"Barril con Petróleo": "Бочка с нефтью",
+"Barril con Lava": "Бочка с лавой",
+"Barril con Agua salada": "Бочка с солёной водой",
 
 "descripcion_Cobre": "Базовый ресурс, необходимый для первых зданий. Может быть переработан в бронзу.",
 "descripcion_Carbón": "Базовое топливо. Используется в печах и генераторах.",
@@ -180,6 +190,12 @@
 "descripcion_Uranio Bruto": "Необработанный уран. Можно переработать на обогащённый и обеднённый.",
 "descripcion_Uranio Enriquecido": "Уран-235. Используется для производства энергии на АЭС.",
 "descripcion_Uranio Empobrecido": "Уран-238. Используется на АЭС и как боеприпас.",
+"descripcion_Sal": "Полезный ресурс для улучшения других промышленных процессов, таких как химический завод, нефтепереработка и производство кремния",
+"descripcion_Barril con Agua": "Бочка с водой, полезна для хранения и распределения воды",
+"descripcion_Barril con Ácido": "Бочка с кислотой, полезна для хранения и распределения",
+"descripcion_Barril con Petróleo": "Бочка с нефтью, полезна для хранения и распределения",
+"descripcion_Barril con Lava": "Бочка с лавой, полезна для хранения и распределения",
+"descripcion_Barril con Agua salada": "Бочка с солёной водой, полезна для хранения y распределения",
 
 "Piedra": "Камень",
 "Pasto": "Трава",
@@ -199,6 +215,14 @@
 "Hielo": "Лёд",
 "Basalto": "Базальт",
 "Ceniza": "Пепел",
+"Agua Salada": "Солёная вода",
+"Agua Salada Profunda": "Глубокая солёная вода",
+
+"liquido_Agua": "Вода",
+"liquido_Ácido": "Кислота",
+"liquido_Petróleo": "Нефть",
+"liquido_Lava": "Лава",
+"liquido_Agua salada": "Солёная вода",
 
 "Araña": "Паук",
 "Dron": "Дрон",
@@ -277,6 +301,7 @@
 "game_vincular_procesador": "Связывается с любым зданием",
 "game_creando_dron": "Создание",
 "game_limite_dron": "Лимит дронов достигнут",
+"game_producira": "Будет производить",
 
 "mision_enemigos": "врагов",
 "mision_tiempo": "Осталось времени",

@@ -13,9 +13,12 @@ function dibujar_fondo(editor = 0){
 						draw_sprite_off(ore_sprite[e], round(ore_random[# a, b]) + 2 * (ore_amount[# a, b] < 50), aa, bb)
 					if d = 14
 						draw_sprite_off(spr_lava_animacion, step + 16 * ore_random[# a, b], aa, bb)
+					else if d = 18
+						draw_sprite_off(olas[terreno_pared_index[# a, b]], step + 16 * ore_random[# a, b], aa, bb)
 				}
 			break
 		}
+		//Fondos animados
 		if editor = 2{
 			var step = image_index / 10
 			for(var a = mina; a <= maxa; a++)
@@ -23,6 +26,10 @@ function dibujar_fondo(editor = 0){
 					if terreno[# a, b] = 14{
 						var temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b
 						draw_sprite_off(spr_lava_animacion, step + 16 * ore_random[# a, b], aa, bb)
+					}
+					else if terreno[# a, b] = 18{
+						var temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b
+						draw_sprite_off(olas[terreno_pared_index[# a, b]], step + 16 * ore_random[# a, b], aa, bb)
 					}
 			break
 		}
