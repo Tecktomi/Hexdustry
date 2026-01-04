@@ -784,7 +784,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 	id_selector = def_edificio("Selector", 1, spr_selector, spr_selector_color, 60, 10, scr_caminos, true, [id_cobre], [4], 1, true,,,, true); def_edificio_2()
 	id_overflow = def_edificio("Overflow", 1, spr_overflow,, 60, 10, scr_caminos, true, [id_cobre], [4], 1, true,,,, true); def_edificio_2()
 	id_tunel = def_edificio("Túnel", 1, spr_tunel,, 60, 10, scr_caminos,, [id_cobre, id_hierro], [4, 4], 1, true, true,,, true, true); def_edificio_2()
-	id_horno = def_edificio("Horno", 2, spr_horno, spr_horno_encendido, 250, 150, scr_horno,, [id_cobre, id_hierro], [10, 20], 90, true, false, [id_cobre, id_carbon, id_hierro, id_arena, id_combustible, id_sal], [10, 10, 10, 10, 10], true, false, [id_bronce, id_acero, id_silicio]); def_edificio_2()
+	id_horno = def_edificio("Horno", 2, spr_horno, spr_horno_encendido, 250, 150, scr_horno,, [id_cobre, id_hierro], [10, 20], 90, true, false, [id_cobre, id_carbon, id_hierro, id_arena, id_combustible, id_sal], [10, 10, 10, 10, 10, 10], true, false, [id_bronce, id_acero, id_silicio]); def_edificio_2()
 	id_taladro_electrico = def_edificio("Taladro Eléctrico", 3, spr_taladro_electrico,, 400, 45, scr_taladro,, [id_bronce, id_acero], [20, 10], 20,,,,, true, false, [id_cobre, id_carbon, id_hierro, id_arena, id_piedra, id_piedra_cuprica, id_piedra_ferrica, id_piedra_sulfatada]); def_edificio_2(50, 10, 10, 1)
 	id_triturador = def_edificio("Triturador", 2, spr_triturador,, 250, 20, scr_triturador,, [id_bronce, id_acero], [10, 25], 50, true, false, [id_piedra, id_piedra_cuprica, id_piedra_ferrica, id_piedra_sulfatada], [10, 10, 10, 10], true, false, [id_arena]); def_edificio_2(30)
 	//10
@@ -801,7 +801,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 	//20
 	id_rifle = def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, 400, 45, scr_torres_basicas,, [id_cobre, id_hierro, id_acero], [10, 10, 10], 30, true, false, [id_bronce, id_acero, id_uranio_bruto, id_uranio_enriquecido, id_uranio_empobrecido], [10, 10, 10, 10, 10]); def_edificio_2(, 10, 30, 0, 1, 300)
 	id_lanzallamas = def_edificio("Lanzallamas", 2, spr_lanzallamas, spr_lanzallamas_2, 400, 1, scr_torres_basicas,, [id_cobre, id_bronce, id_hierro], [15, 15, 10], 20, true, false, [id_carbon, id_combustible], [10, 10]); def_edificio_2(, 10, 30, 2, 3, 130)
-	id_planta_quimica = def_edificio("Planta Química", 3, spr_planta_quimica,, 200, 60, scr_planta_quimica,, [id_cobre, id_bronce, id_hierro, id_silicio], [20, 10, 20, 10], 20, true, false, [id_cobre, id_piedra_sulfatada, id_combustible], [0, 0, 0], true, false, [id_explosivo, id_baterias]); def_edificio_2(50, 10,, 1)
+	id_planta_quimica = def_edificio("Planta Química", 3, spr_planta_quimica,, 200, 60, scr_planta_quimica,, [id_cobre, id_bronce, id_hierro, id_silicio], [20, 10, 20, 10], 30, true, false, [id_cobre, id_piedra_sulfatada, id_combustible, id_sal], [0, 0, 0, 10], true, false, [id_explosivo, id_baterias]); def_edificio_2(50, 10,, 1)
 	id_laser = def_edificio("Láser", 2, spr_laser, spr_laser_2, 400, 1, scr_laser,, [id_cobre, id_acero, id_electronico], [10, 10, 5]); def_edificio_2(90,,,, 0, 220)
 	id_deposito = def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, 200,,,, [id_bronce, id_acero], [20, 10]); def_edificio_2(, 1000,,,,, true)
 	id_liquido_infinito = def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, 30); def_edificio_2(, 10, -999_999,,,, true)
@@ -1181,27 +1181,26 @@ null_flujo ={
 null_edificio.flujo = null_flujo
 flujos = array_create(0, null_flujo)
 //Agua, piedra, petróleo y lava
-var temp_peso = [0, 0, 0, 0, 0, 1, 1, 2, 3, 3, 3, 4]
-var temp_peso_data = [[0, 20], [2, 20], [5, 10], [9, 50], [14, 15]], size = array_length(temp_peso)
+var temp_peso = [0, 0, 0, 0, 0, 1, 1, 2, 3, 3, 3, 4, 5]
+var temp_peso_data = [[idt_piedra, 20], [idt_agua, 20], [idt_petroleo, 10], [idt_pared_piedra, 50], [idt_lava, 15], [idt_agua_salada, 20]], size = array_length(temp_peso)
 for(var e = 0; e < size; e++){
 	var a = irandom(xsize - 1), b = irandom(ysize - 1)
 	var c = temp_peso_data[temp_peso[e], 0]
 	var f = temp_peso_data[temp_peso[e], 1]
 	repeat(f){
-		if terreno[# a, b] != 2
+		if terreno[# a, b] != idt_agua
 			set_terreno(a, b, c)
-		var temp_list = get_arround(a, b, 0, 1)
-		for(var d = ds_list_size(temp_list) - 1; d >= 0; d--){
-			var temp_complex = temp_list[|d], aa = temp_complex.a, bb = temp_complex.b
+		for(var d = 0; d < 6; d++){
+			var temp_complex = next_to(a, b, d), aa = temp_complex.a, bb = temp_complex.b
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 				continue
-			if terreno[# aa, bb] != 2{
+			if terreno[# aa, bb] != idt_agua{
 				set_terreno(aa, bb, c)
-				if c = 0{
+				if c = idt_piedra{
 					if random(1) < 0.1
-						ds_grid_set(terreno, aa, bb, 6)
+						ds_grid_set(terreno, aa, bb, idt_piedra_cuprica)
 					else if random(1) < 0.1
-						ds_grid_set(terreno, aa, bb, 7)
+						ds_grid_set(terreno, aa, bb, idt_piedra_ferrica)
 				}
 			}
 		}
@@ -1217,43 +1216,43 @@ for(var e = 0; e < size; e++){
 for(var a = 0; a < xsize; a++)
 	for(var b = 0; b < ysize; b++){
 		//Añadir arena
-		if terreno[# a, b] = 2
+		if in(terreno[# a, b], idt_agua, idt_agua_salada)
 			for(var c = 0; c < 6; c++){
 				var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
-				if not in(terreno[# aa, bb], 2, 4)
-					ds_grid_set(terreno, aa, bb, 3)
+				if not in(terreno[# aa, bb], idt_agua, idt_agua_profunda, idt_agua_salada, idt_agua_salada_profunda)
+					ds_grid_set(terreno, aa, bb, idt_arena)
 				if brandom(){
-					temp_complex = next_to(aa, bb, 5)
+					temp_complex = next_to(aa, bb, c)
 					aa = temp_complex.a
 					bb = temp_complex.b
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 						continue
-					if not in(terreno[# aa, bb], 2, 4)
-						ds_grid_set(terreno, aa, bb, 3)
+					if not in(terreno[# aa, bb], idt_agua, idt_agua_profunda, idt_agua_salada, idt_agua_salada_profunda)
+						ds_grid_set(terreno, aa, bb, idt_arena)
 				}
 			}
 		//Piedra al rededor de Petróleo
-		else if terreno[# a, b] = 5
+		else if terreno[# a, b] = idt_petroleo
 			for(var c = 0; c < 6; c++){
 				var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
-				if terreno[# aa, bb] != 5
-					terreno[# aa, bb] = 0
+				if terreno[# aa, bb] != idt_petroleo
+					terreno[# aa, bb] = idt_piedra
 			}
 		//Basalto al rededor de la Lava
-		else if terreno[# a, b] = 14
+		else if terreno[# a, b] = idt_lava
 			for(var c = 0; c < 6; c++){
 				var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
-				if terreno[# aa, bb] != 14{
+				if terreno[# aa, bb] != idt_lava{
 					if random(1) < 0.9
-						ds_grid_set(terreno, aa, bb, 16)
+						ds_grid_set(terreno, aa, bb, idt_basalto)
 					else
-						ds_grid_set(terreno, aa, bb, 8)
+						ds_grid_set(terreno, aa, bb, idt_basalto_sulfatado)
 				}
 				if brandom(){
 					temp_complex = next_to(aa, bb, irandom(5))
@@ -1261,36 +1260,54 @@ for(var a = 0; a < xsize; a++)
 					bb = temp_complex.b
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 						continue
-					if terreno[# aa, bb] != 14{
+					if terreno[# aa, bb] != idt_lava{
 						if random(1) < 0.9
-							ds_grid_set(terreno, aa, bb, 16)
+							ds_grid_set(terreno, aa, bb, idt_basalto)
 						else
-							ds_grid_set(terreno, aa, bb, 8)
+							ds_grid_set(terreno, aa, bb, idt_basalto_sulfatado)
 					}
 				}
 			}
 		//Añadir agua profunda
-		if terreno[# a, b] = 2{
+		if in(terreno[# a, b], idt_agua, idt_agua_salada){
 			var flag = true
 			for(var c = 0; c < 6; c++){
 				var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
-				if not in(terreno[# aa, bb], 2, 4){
+				if not in(terreno[# aa, bb], idt_agua, idt_agua_profunda, idt_agua_salada, idt_agua_salada_profunda){
 					flag = false
 					break
 				}
 			}
 			if flag
-				ds_grid_set(terreno, a, b, 4)
+				if terreno[# a, b] = idt_agua
+					ds_grid_set(terreno, a, b, idt_agua_profunda)
+				else if terreno[# a, b] = idt_agua_salada
+					ds_grid_set(terreno, a, b, idt_agua_salada_profunda)
 		}
+		
 	}
 //Crear nucelo
 var temp_list = get_size(floor(xsize / 2), floor(ysize / 2), 0, 7)
 for(var a = ds_list_size(temp_list) - 1; a >= 0; a--){
 	var temp_complex = temp_list[|a], aa = temp_complex.a, bb = temp_complex.b
-	if not terreno_caminable[terreno[# aa, bb]]
-		set_terreno(aa, bb, 1)
+	if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+		continue
+	if not terreno_caminable[terreno[# aa, bb]]{
+		if in(terreno[# aa, bb], idt_pared_arena, idt_agua, idt_agua_salada)
+			set_terreno(aa, bb, idt_arena)
+		else if in(terreno[# aa, bb], idt_pared_piedra, idt_agua_profunda, idt_agua_salada_profunda, idt_petroleo)
+			set_terreno(aa, bb, idt_piedra)
+		else if in(terreno[# aa, bb], idt_pared_nieve, idt_hielo)
+			set_terreno(aa, bb, idt_nieve)
+		else if terreno[# aa, bb] = idt_pared_pasto
+			set_terreno(aa, bb, idt_pasto)
+		else if terreno[# aa, bb] = idt_lava
+			set_terreno(aa, bb, idt_basalto)
+		else
+			set_terreno(aa, bb, idt_pasto)
+	}
 	ds_grid_set(ore, aa, bb, -1)
 	ds_grid_set(ore_amount, aa, bb, 0)
 }
@@ -1308,11 +1325,11 @@ for(var e = 0; e < 10; e++){
 		if terreno_caminable[terreno[# a, b]]{
 			if ore[# a, b] != c{
 				ds_grid_set(ore_amount, a, b, 0)
-				if in(terreno[# a, b], 0, 6, 7){
-					if c = 0
-						ds_grid_set(terreno, a, b, 6)
-					else if c = 2
-						ds_grid_set(terreno, a, b, 7)
+				if in(terreno[# a, b], idt_piedra, idt_piedra_cuprica, idt_piedra_ferrica){
+					if c = id_cobre
+						ds_grid_set(terreno, a, b, idt_piedra_cuprica)
+					else if c = id_hierro
+						ds_grid_set(terreno, a, b, idt_piedra_ferrica)
 				}
 			}
 			ds_grid_set(ore, a, b, c)
@@ -1325,11 +1342,11 @@ for(var e = 0; e < 10; e++){
 			if terreno_caminable[terreno[# aa, bb]]{
 				if ore[# aa, bb] != c{
 					ds_grid_set(ore_amount, aa, bb, 0)
-					if in(terreno[# aa, bb], 0, 6, 7){
-						if c = 0
-							ds_grid_set(terreno, aa, bb, 6)
-						else if c = 2
-							ds_grid_set(terreno, aa, bb, 7)
+					if in(terreno[# aa, bb], idt_piedra, idt_piedra_cuprica, idt_piedra_ferrica){
+						if c = id_cobre
+							ds_grid_set(terreno, aa, bb, idt_piedra_cuprica)
+						else if c = id_hierro
+							ds_grid_set(terreno, aa, bb, idt_piedra_ferrica)
 					}
 				}
 				ds_grid_set(ore, aa, bb, c)
@@ -1350,7 +1367,7 @@ do{
 	}
 	else{
 		spawn_x = irandom(xsize - 1)
-		spawn_y = (ysize - 1) * irandom(1)
+		spawn_y = 1 + (ysize - 3) * irandom(1)
 	}
 }
 until terreno_caminable[terreno[# spawn_x, spawn_y]]

@@ -45,9 +45,9 @@ function scr_horno(edificio = control.null_edificio){
 					edificio.carga_total--
 					edificio.proceso = 0
 					if edificio.carga[id_sal] > 0{
-						edificio.carga[id_sal] -= 0.05
-						edificio.carga_total -= 0.05
-						edificio.proceso = edificio_proceso[index] / 2
+						edificio.carga[id_sal] -= 0.1
+						edificio.carga_total -= 0.1
+						edificio.proceso = floor(edificio_proceso[index] / 4)
 					}
 				}
 				else if edificio.carga[id_hierro] > 1{
