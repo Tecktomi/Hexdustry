@@ -8,24 +8,9 @@ if menu = 0{
 		var surf = surface_create(32, 28)
 		surface_set_target(surf)
 		for(var a = 0; a < 64; a++){
-			var rand = [irandom(4), irandom(4), irandom(4), irandom(4), irandom(4), irandom(4)]
-			for(var b = 0; b < 5; b++){
-				draw_sprite(spr_agua_salada, 0, 16, 14)
-				if a & 1
-					draw_sprite(spr_olaje_1, b + rand[0], 16, 14)
-				if a & 2
-					draw_sprite(spr_olaje_2, b + rand[1], 16, 14)
-				if a & 4
-					draw_sprite_ext(spr_olaje_1, b + rand[2], 16, 14, -1, 1, 0, c_white, 1)
-				if a & 8
-					draw_sprite_ext(spr_olaje_1, b + rand[3], 16, 14, -1, -1, 0, c_white, 1)
-				if a & 16
-					draw_sprite_ext(spr_olaje_2, b + rand[4], 16, 14, 1, -1, 0, c_white, 1)
-				if a & 32
-					draw_sprite_ext(spr_olaje_1, b + rand[5], 16, 14, 1, -1, 0, c_white, 1)
-				var sprite = sprite_create_from_surface(surf, 0, 0, 32, 28, true, false, 0, 0)
-				sprite_save(sprite, 0, $"costa_{a}_{b}.png")
-			}
+			draw_sprite(spr_tuberia_color, 0, 16, 14)
+			var sprite = sprite_create_from_surface(surf, 0, 0, 32, 28, true, false, 0, 0)
+			sprite_save(sprite, 0, $"tuberia_color{a}.png")
 		}
 		surface_reset_target()
 		surface_free(surf)
@@ -3067,7 +3052,7 @@ if build_index > 0 and win = 0{
 					array_push(pre_build_list, {a : mx_clic, b : my_clic})
 					if mx_clic != mx or my_clic != my{
 						var angle = radtodeg((arctan2(bb * zoom - camy - mouse_y, mouse_x - aa * zoom + camx) + 2 * pi) mod (2 * pi))
-						if last_mx != mx or last_my != my
+						if (last_mx != mx or last_my != my) and edificio_camino[build_index]
 							build_dir = floor(angle / 60)
 						build_dir_camino = floor(angle / 60)
 						var a = mx_clic, b = my_clic, temp_complex_3

@@ -54,12 +54,19 @@ function dibujar_edificios(){
 							draw_sprite_off(spr_bomba_cupula, 1, aa, bb)
 						}
 						//Dibujo líquido sin bomba
-						else if in(index, id_tuberia, id_deposito, id_liquido_infinito, id_bomba_de_evaporacion){
+						else if in(index, id_deposito, id_liquido_infinito, id_bomba_de_evaporacion){
 							draw_sprite_off(edificio_sprite[index], 0, aa, bb)
 							if edificio.flujo.liquido = -1
 								draw_sprite_off(edificio_sprite_2[index], 0, aa, bb)
 							else
 								draw_sprite_off(edificio_sprite_2[index], 0, aa, bb,,,, liquido_color[edificio.flujo.liquido], edificio.flujo.almacen / edificio.flujo.almacen_max)
+						}
+						else if index = id_tuberia{
+							draw_sprite_off(edificio_sprite[index], edificio.select, aa, bb)
+							if edificio.flujo.liquido = -1
+								draw_sprite_off(edificio_sprite_2[index], edificio.select, aa, bb)
+							else
+								draw_sprite_off(edificio_sprite_2[index], edificio.select, aa, bb,,,, liquido_color[edificio.flujo.liquido], edificio.flujo.almacen / edificio.flujo.almacen_max)
 						}
 						else if edificio_armas[index]{
 							//Torres tamaño impar

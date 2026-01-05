@@ -178,6 +178,7 @@
     {"id":{"name":"sound_play_edificio","path":"scripts/sound_play_edificio/sound_play_edificio.yy",},},
     {"id":{"name":"sound_play","path":"scripts/sound_play/sound_play.yy",},},
     {"id":{"name":"text_wrap","path":"scripts/text_wrap/text_wrap.yy",},},
+    {"id":{"name":"tuberia_arround","path":"scripts/tuberia_arround/tuberia_arround.yy",},},
     {"id":{"name":"turret_target","path":"scripts/turret_target/turret_target.yy",},},
     {"id":{"name":"update_background","path":"scripts/update_background/update_background.yy",},},
     {"id":{"name":"update_cursor","path":"scripts/update_cursor/update_cursor.yy",},},
