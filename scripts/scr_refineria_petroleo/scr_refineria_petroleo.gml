@@ -21,7 +21,7 @@ function scr_refineria_petroleo(edificio = control.null_edificio){
 					edificio.proceso += floor(edificio_proceso[index] / 4)
 				}
 			}
-			edificio.proceso += flujo_power * red_power
+			edificio.proceso += min(flujo_power, red_power)
 			//Producir / Apagar
 			if edificio.proceso >= edificio_proceso[index]{
 				var a = random(1)

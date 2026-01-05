@@ -986,7 +986,7 @@ if menu = 2{
 				if index = id_planta_quimica and edificio.select >= 0
 					draw_sprite_off(planta_quimica_sprite[edificio.select], 0, aa, bb)
 				//Humo
-				if grafic_humo and pausa = 0 and ((image_index mod 5) = 0) and ((in(index, id_generador, id_turbina, id_planta_nuclear) and edificio.fuel > 0) or (index = id_generador_geotermico and edificio.flujo.liquido = 0) or (index = id_refineria_de_petroleo and edificio.flujo.liquido = 2)){
+				if grafic_humo and pausa = 0 and enciclopedia = 0 and ((image_index mod 5) = 0) and ((in(index, id_generador, id_turbina, id_planta_nuclear) and edificio.fuel > 0) or (index = id_generador_geotermico and edificio.flujo.liquido = 0) or (index = id_refineria_de_petroleo and edificio.flujo.liquido = 2)){
 					var dir = direccion_viento + random_range(-pi / 4, pi / 4)
 					array_push(humos, add_humo(aa, bb, a, b, cos(dir), sin(dir), irandom_range(70, 100)))
 				}
@@ -2468,7 +2468,7 @@ if pausa != 1 and temp_hexagono != noone and flag and not (show_menu and show_me
 			draw_set_color(c_lime)
 			draw_circle_off(edificio.x, edificio.y, 250, true)
 			if edificio.select >= 0
-				temp_text += $"{L.almacen_consumiendo} {dron_nombre_display[edificio.select]}: {floor(100 * edificio.proceso / dron_time[edificio.select])}%"
+				temp_text += $"{L.almacen_consumiendo} {dron_nombre_display[edificio.select]}: {floor(100 * edificio.proceso / dron_time[edificio.select])}%\n"
 		}
 		//Mostrar inputs
 		if info and edificio.receptor{
@@ -2645,7 +2645,7 @@ if sonido
 			draw_set_alpha(1)
 			draw_sprite(spr_items, a, menu_x - 15 + 100 * cos((a + 0.5) * b), menu_y - 15 - 100 * sin((a + 0.5) * b))
 			temp_text = categoria_nombre_display[a]
-			draw_text_background(mouse_x + 20, mouse_y, temp_text)
+			draw_text_background(min(room_width - string_width(temp_text), mouse_x + 20), min(room_height - string_height(temp_text), mouse_y), temp_text)
 			if mouse_check_button_pressed(mb_left){
 				mouse_clear(mb_left)
 				build_menu = 2
@@ -2698,7 +2698,7 @@ if sonido
 					temp_text += $"  {recurso_nombre_display[edificio_precio_id[a, c]]}: {edificio_precio_num[a, c]}\n"
 			}
 			temp_text += $"{edificio_descripcion[a]}\n"
-			draw_text_background(mouse_x, mouse_y + 20, temp_text)
+			draw_text_background(min(room_width - string_width(temp_text), mouse_x + 20), min(room_height - string_height(temp_text), mouse_y), temp_text)
 			if mouse_check_button_pressed(mb_left){
 				mouse_clear(mb_left)
 				build_menu = 0
@@ -3813,9 +3813,9 @@ if pausa = 0{
 							enemigo = add_dron(aa, bb, 6)
 							i += 14
 						}
-						else if irandom(min(ds_list_size(temp_complex_list), d)) > i + 5{
+						else if irandom(min(ds_list_size(temp_complex_list), d)) > i + 6{
 							enemigo = add_dron(aa, bb, 4)
-							i += 4
+							i += 5
 						}
 						else
 							enemigo = add_dron(aa, bb, 0)
@@ -3975,8 +3975,6 @@ if keyboard_check_pressed(vk_anykey) and win = 0 and not show_menu{
 		else if pausa = 0
 			pausa = 2
 	}
-	if keyboard_check_pressed(ord("R"))
-		game_restart()
 	if keyboard_check_pressed(ord("U"))
 		info = not info
 	if keyboard_check_pressed(ord("L"))
