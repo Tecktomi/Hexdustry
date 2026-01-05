@@ -322,6 +322,8 @@ function add_edificio(index, dir, a, b){
 						array_push(temp_edificio.flujo_link, edificio)
 						if not ds_list_in(temp_list_flujos, temp_edificio.flujo)
 							ds_list_add(temp_list_flujos, temp_edificio.flujo)
+						if temp_edificio.index = id_tuberia
+							tuberia_arround(temp_edificio)
 					}
 				}
 			}
@@ -419,6 +421,8 @@ function add_edificio(index, dir, a, b){
 				edificio.luz = true
 				add_luz(a, b, 1)
 			}
+			if index = id_tuberia
+				tuberia_arround(edificio)
 		}
 		if index = id_laser
 			edificio.mode = true

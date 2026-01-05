@@ -295,6 +295,15 @@ function delete_edificio(aa, bb, enemigo = false){
 			delete(edificio.flujo_link)
 			if index = id_tuberia_subterranea
 				edificio.link.link = null_edificio
+			var temp_list = get_arround(aa, bb, edificio.dir, edificio_size[index])
+			for(var a = ds_list_size(temp_list) - 1; a >= 0; a--){
+				var temp_complex = temp_list[|a], aaa = temp_complex.a, bbb = temp_complex.b
+				if aaa < 0 or bbb < 0 or aaa >= xsize or bbb >= ysize or not edificio_bool[# aaa, bbb]
+					continue
+				temp_edificio = edificio_id[# aaa, bbb]
+				if temp_edificio.index = id_tuberia
+					tuberia_arround(temp_edificio)
+			}
 		}
 		//Retorno de recursos
 		if not cheat and not enemigo{

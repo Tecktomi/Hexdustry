@@ -42,7 +42,7 @@ function scr_embotelladora(edificio = control.null_edificio){
 					}
 					edificio.carga_total--
 					change_flujo(edificio.flujo_consumo_max, edificio)
-					edificio.fuel = 10
+					edificio.fuel = edificio_proceso[index]
 					mover_in(edificio)
 				}
 			}

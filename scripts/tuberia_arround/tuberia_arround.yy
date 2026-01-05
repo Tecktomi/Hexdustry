@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"tuberia_arround",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"tuberia_arround",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
