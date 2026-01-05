@@ -18,7 +18,7 @@ function scr_refineria_metales(edificio = control.null_edificio){
 				change_flujo(edificio_flujo_consumo[index], edificio)
 				edificio.proceso++
 			}
-			edificio.proceso += red_power * flujo_power
+			edificio.proceso += min(red_power, flujo_power)
 			sound_play_edificio(2, edificio.x, edificio.y)
 			//Producir / Apagar
 			if edificio.proceso >= edificio_proceso[index]{

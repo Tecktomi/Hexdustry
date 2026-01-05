@@ -30,12 +30,12 @@ function scr_planta_quimica(edificio = control.null_edificio){
 					edificio.proceso += floor(edificio_proceso[index] / 4)
 				}
 			}
-			var c = 1
-			if edificio.flujo_consumo_max > 0
-				c *= flujo_power
-			if edificio.energia_consumo_max > 0
-				c *= red_power
-			edificio.proceso += c
+			if edificio.flujo_consumo_max > 0 and edificio.energia_consumo_max > 0
+				edificio.proceso += min(flujo_power, red_power)
+			else if edificio.flujo_consumo_max > 0
+				edificio.proceso += flujo_power
+			else if edificio.energia_consumo_max > 0
+				edificio.proceso += red_power
 			//Producir / Apagar
 			if edificio.proceso >= edificio_proceso[index]{
 				//Ácido

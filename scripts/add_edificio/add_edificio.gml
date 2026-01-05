@@ -54,7 +54,7 @@ function add_edificio(index, dir, a, b){
 			chunk_x : clamp(round(a / chunk_width), 0, ds_grid_width(chunk_edificios) - 1),
 			chunk_y : clamp(round(b / chunk_height), 0, ds_grid_height(chunk_edificios) - 1),
 			chunk_pointer : 0,
-			target_chunks : array_create(0, {a : 0, b : 0}),
+			target_chunks : array_create(0, null_complex),
 			target_pointer : 0,
 			array_real : array_create(0, 0),
 			xscale : 1,
@@ -66,12 +66,12 @@ function add_edificio(index, dir, a, b){
 			imagen : spr_hexagono,
 		}
 		ds_grid_clear(edificio.coordenadas_dis, infinity)
-		ds_list_add(edificio.coordenadas_close, {a : 0, b : 0})
+		ds_list_add(edificio.coordenadas_close, null_complex)
 		ds_list_clear(edificio.coordenadas_close)
 		edificios_construidos++
 		if mision_actual >= 0 and mision_objetivo[mision_actual] = 2 and mision_target_id[mision_actual] = index and ++mision_counter >= mision_target_num[mision_actual]
 			pasar_mision()
-		temp_complex = {a : 0, b : 0}
+		temp_complex = null_complex
 		if in(index, id_planta_quimica, id_fabrica_de_drones){
 			edificio.carga_max = array_create(rss_max, 0)
 			edificio.carga_output = array_create(rss_max, 0)

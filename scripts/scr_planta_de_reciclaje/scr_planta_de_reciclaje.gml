@@ -16,7 +16,7 @@ function scr_planta_de_reciclaje(edificio = control.null_edificio){
 				change_flujo(edificio.flujo_consumo_max, edificio)
 				edificio.proceso++
 			}
-			edificio.proceso += flujo_power * red_power
+			edificio.proceso += min(flujo_power, red_power)
 			//Producir / Apagar
 			if edificio.proceso >= dron_time[edificio.select]{
 				for(var a = array_length(dron_precio_id[edificio.select]) - 1; a >= 0; a--){

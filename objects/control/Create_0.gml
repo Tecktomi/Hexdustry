@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
-ini_write_string("Global", "version", "04_01_2026")
+ini_write_string("Global", "version", "05_01_2026")
 ini_close()
 save_files = (os_browser == browser_not_a_browser) ? scan_files("*.txt", fa_none) : []
 if os_browser == browser_not_a_browser{
@@ -25,6 +25,7 @@ for(var a = array_length(idiomas) - 1; a >= 0; a--)
 idioma = 1
 set_idioma(idiomas[idioma], false)
 #region Metadatos
+	null_complex = {a : 0, b : 0}
 	menu = 0
 	cursor = cr_arrow
 	deslizante_id = -1
@@ -74,7 +75,7 @@ set_idioma(idiomas[idioma], false)
 		cos_angle_dir[a] = cos(angle_dir[a])
 		sin_angle_dir[a] = sin(angle_dir[a])
 	}
-	pre_build_list = array_create(0, {a : 0, b : 0})
+	pre_build_list = array_create(0, null_complex)
 	background = ds_grid_create(chunk_xsize, chunk_ysize)
 	for(var a = 0; a < chunk_xsize; a++)
 		for(var b = 0; b < chunk_ysize; b++)
@@ -162,7 +163,7 @@ set_idioma(idiomas[idioma], false)
 	input_layer = 0
 	show_smoke = true
 	oleadas_timer = 0
-	multiplicador_vida_enemigos = 100
+	multiplicador_vida_enemigos = 75
 	save_file = ""
 	editor_seed = random_get_seed()
 	editor_fondo = 0
@@ -259,7 +260,7 @@ null_edificio = {
 	chunk_x : 0,
 	chunk_y : 0,
 	chunk_pointer : 0,
-	target_chunks : array_create(0, {a : 0, b : 0}),
+	target_chunks : array_create(0, null_complex),
 	target_pointer : 0,
 	array_real : array_create(0, 0),
 	xscale : 1,
@@ -271,14 +272,14 @@ null_edificio = {
 	imagen : spr_hexagono,
 }
 null_edificio.link = null_edificio
-ds_list_add(null_edificio.coordenadas, {a : 0, b : 0})
+ds_list_add(null_edificio.coordenadas, null_complex)
 ds_list_clear(null_edificio.coordenadas)
-ds_list_add(null_edificio.bordes, {a : 0, b : 0})
+ds_list_add(null_edificio.bordes, null_complex)
 ds_list_clear(null_edificio.bordes)
 null_edificio.energia_link = array_create(0, null_edificio)
 null_edificio.flujo_link = array_create(0, null_edificio)
 ds_grid_clear(null_edificio.coordenadas_dis, 0)
-ds_list_add(null_edificio.coordenadas_close, {a : 0, b : 0})
+ds_list_add(null_edificio.coordenadas_close, null_complex)
 ds_list_clear(null_edificio.coordenadas_close)
 null_edificio.edificios_cercanos = array_create(0, null_edificio)
 null_edificio.edificios_cercanos_heridos = array_create(0, null_edificio)
@@ -316,7 +317,7 @@ puerto_carga_atended = 0
 	ds_grid_clear(edificio_cercano_dir, -1)
 	edificio_cercano_priority = ds_grid_create(xsize, ysize)
 	pre_abtoxy = ds_grid_create(xsize + 2, ysize + 2)
-	ds_grid_clear(pre_abtoxy, {a : 0, b : 0})
+	ds_grid_clear(pre_abtoxy, null_complex)
 	for(var a = 0; a < xsize; a++){
 		ds_grid_set(pre_abtoxy, a, 0, {
 			a : real(a + 0.5) * 48 + 16,
@@ -777,7 +778,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 	array_push(edificio_inerte, inerte)
 }
 #region Definición
-	id_nucleo = def_edificio("Núcleo", 3, spr_base,, 1200,,,,,,, true); def_edificio_2(,,,,,, true)
+	id_nucleo = def_edificio("Núcleo", 3, spr_base,, 1500,,,,,,, true); def_edificio_2(,,,,,, true)
 	id_taladro = def_edificio("Taladro", 2, spr_taladro,, 200, 120, scr_taladro,, [id_cobre], [15], 10,,,,, true, false, [id_cobre, id_carbon, id_hierro]); def_edificio_2(, 10, 5, 0)
 	id_cinta_transportadora = def_edificio("Cinta Transportadora", 1, spr_camino, spr_camino_diagonal, 30, 20, scr_caminos, true, [id_cobre], [1], 1, true,,,, true); def_edificio_2()
 	id_enrutador = def_edificio("Enrutador", 1, spr_enrutador, spr_enrutador_2, 60, 10, scr_caminos, true, [id_cobre], [4], 1, true,,,, true); def_edificio_2()
@@ -1198,9 +1199,9 @@ for(var e = 0; e < size; e++){
 				set_terreno(aa, bb, c)
 				if c = idt_piedra{
 					if random(1) < 0.1
-						ds_grid_set(terreno, aa, bb, idt_piedra_cuprica)
+						set_terreno(aa, bb, idt_piedra_cuprica)
 					else if random(1) < 0.1
-						ds_grid_set(terreno, aa, bb, idt_piedra_ferrica)
+						set_terreno(aa, bb, idt_piedra_ferrica)
 				}
 			}
 		}
@@ -1222,7 +1223,7 @@ for(var a = 0; a < xsize; a++)
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if not in(terreno[# aa, bb], idt_agua, idt_agua_profunda, idt_agua_salada, idt_agua_salada_profunda)
-					ds_grid_set(terreno, aa, bb, idt_arena)
+					set_terreno(aa, bb, idt_arena)
 				if brandom(){
 					temp_complex = next_to(aa, bb, c)
 					aa = temp_complex.a
@@ -1230,7 +1231,7 @@ for(var a = 0; a < xsize; a++)
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 						continue
 					if not in(terreno[# aa, bb], idt_agua, idt_agua_profunda, idt_agua_salada, idt_agua_salada_profunda)
-						ds_grid_set(terreno, aa, bb, idt_arena)
+						set_terreno(aa, bb, idt_arena)
 				}
 			}
 		//Piedra al rededor de Petróleo
@@ -1240,7 +1241,7 @@ for(var a = 0; a < xsize; a++)
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if terreno[# aa, bb] != idt_petroleo
-					terreno[# aa, bb] = idt_piedra
+					set_terreno(aa, bb, idt_piedra)
 			}
 		//Basalto al rededor de la Lava
 		else if terreno[# a, b] = idt_lava
@@ -1250,9 +1251,9 @@ for(var a = 0; a < xsize; a++)
 					continue
 				if terreno[# aa, bb] != idt_lava{
 					if random(1) < 0.9
-						ds_grid_set(terreno, aa, bb, idt_basalto)
+						set_terreno(aa, bb, idt_basalto)
 					else
-						ds_grid_set(terreno, aa, bb, idt_basalto_sulfatado)
+						set_terreno(aa, bb, idt_basalto_sulfatado)
 				}
 				if brandom(){
 					temp_complex = next_to(aa, bb, irandom(5))
@@ -1262,9 +1263,9 @@ for(var a = 0; a < xsize; a++)
 						continue
 					if terreno[# aa, bb] != idt_lava{
 						if random(1) < 0.9
-							ds_grid_set(terreno, aa, bb, idt_basalto)
+							set_terreno(aa, bb, idt_basalto)
 						else
-							ds_grid_set(terreno, aa, bb, idt_basalto_sulfatado)
+							set_terreno(aa, bb, idt_basalto_sulfatado)
 					}
 				}
 			}
@@ -1282,11 +1283,10 @@ for(var a = 0; a < xsize; a++)
 			}
 			if flag
 				if terreno[# a, b] = idt_agua
-					ds_grid_set(terreno, a, b, idt_agua_profunda)
+					set_terreno(a, b, idt_agua_profunda)
 				else if terreno[# a, b] = idt_agua_salada
-					ds_grid_set(terreno, a, b, idt_agua_salada_profunda)
+					set_terreno(a, b, idt_agua_salada_profunda)
 		}
-		
 	}
 //Crear nucelo
 var temp_list = get_size(floor(xsize / 2), floor(ysize / 2), 0, 7)
@@ -1308,8 +1308,6 @@ for(var a = ds_list_size(temp_list) - 1; a >= 0; a--){
 		else
 			set_terreno(aa, bb, idt_pasto)
 	}
-	ds_grid_set(ore, aa, bb, -1)
-	ds_grid_set(ore_amount, aa, bb, 0)
 }
 nucleo = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
 nucleo.carga[id_cobre] = 100
@@ -1326,10 +1324,10 @@ for(var e = 0; e < 10; e++){
 			if ore[# a, b] != c{
 				ds_grid_set(ore_amount, a, b, 0)
 				if in(terreno[# a, b], idt_piedra, idt_piedra_cuprica, idt_piedra_ferrica){
-					if c = id_cobre
-						ds_grid_set(terreno, a, b, idt_piedra_cuprica)
-					else if c = id_hierro
-						ds_grid_set(terreno, a, b, idt_piedra_ferrica)
+					if c = 0
+						set_terreno(a, b, idt_piedra_cuprica)
+					else if c = 1
+						set_terreno(a, b, idt_piedra_ferrica)
 				}
 			}
 			ds_grid_set(ore, a, b, c)
@@ -1343,10 +1341,10 @@ for(var e = 0; e < 10; e++){
 				if ore[# aa, bb] != c{
 					ds_grid_set(ore_amount, aa, bb, 0)
 					if in(terreno[# aa, bb], idt_piedra, idt_piedra_cuprica, idt_piedra_ferrica){
-						if c = id_cobre
-							ds_grid_set(terreno, aa, bb, idt_piedra_cuprica)
-						else if c = id_hierro
-							ds_grid_set(terreno, aa, bb, idt_piedra_ferrica)
+						if c = 0
+							set_terreno(aa, bb, idt_piedra_cuprica)
+						else if c = 1
+							set_terreno(aa, bb, idt_piedra_ferrica)
 					}
 				}
 				ds_grid_set(ore, aa, bb, c)
@@ -1359,9 +1357,16 @@ for(var e = 0; e < 10; e++){
 		b = clamp(temp_complex.b, 0, ysize - 1)
 	}
 }
+for(var a = ds_list_size(temp_list) - 1; a >= 0; a--){
+	var temp_complex = temp_list[|a], aa = temp_complex.a, bb = temp_complex.b
+	if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+		continue
+	ds_grid_set(ore, aa, bb, -1)
+	ds_grid_set(ore_amount, aa, bb, 0)
+}
 //Spawn point
 do{
-	if irandom(1){
+	if irandom(1) = 0{
 		spawn_x = (xsize - 1) * irandom(1)
 		spawn_y = irandom(ysize - 1)
 	}
@@ -1371,3 +1376,4 @@ do{
 	}
 }
 until terreno_caminable[terreno[# spawn_x, spawn_y]]
+//More stuff
