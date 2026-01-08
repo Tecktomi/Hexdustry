@@ -37,9 +37,6 @@ function resize_grid(minx = 0, miny = 0){
 					b : real(b + 1) * 14
 				}
 				ds_grid_set(pre_abtoxy, a + 1, b + 1, temp_complex_2)
-				var temp_complex = abtoxy(a, b), temp_hexagono = instance_create_layer(temp_complex.a, temp_complex.b, "instances", obj_hexagono)
-				temp_hexagono.a = a
-				temp_hexagono.b = b
 				ds_grid_set(ore_random, a, b, random(1))
 				var temp_priority = ds_priority_create()
 				ds_priority_add(temp_priority, null_edificio, 0)

@@ -166,7 +166,7 @@ if menu = 0{
 				ypos = 10 + draw_text_ypos(xpos + 145, ypos, mision_target_num[0])
 			}
 			draw_set_halign(fa_center)
-			if draw_boton(room_width / 2, room_height - 200, L.menu_cargar_escenario, ui_boton_azul,,,, 1){
+			if browser and draw_boton(room_width / 2, room_height - 200, L.menu_cargar_escenario, ui_boton_azul,,,, 1){
 				if not nucleo.vivo
 					game_restart()
 				get_file = 1
@@ -210,7 +210,12 @@ if menu = 2{
 	dibujar_fondo(1)
 	dibujar_edificios()
 	var xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / zoom
-	var temp_hexagono = instance_position(xmouse, ymouse, obj_hexagono), mx = 0, my = 0
+	var temp_complex_mouse = xytoab(xmouse, ymouse), mx = temp_complex_mouse.a, my = temp_complex_mouse.b, outside = false
+	if mx < 0 or my < 0 or mx >= xsize or my >= ysize{
+		outside = true
+		mx = clamp(mx, 0, xsize - 1)
+		my = clamp(my, 0, ysize - 1)
+	}
 	//Editor de objetivos
 	if editor_menu = 1 and not mision_choosing_coord{
 		draw_boton_text_counter = 0
@@ -653,9 +658,7 @@ if menu = 2{
 		exit
 	}
 	//click en mapa
-	if mouse_x > 200 and temp_hexagono != noone{
-		mx = temp_hexagono.a
-		my = temp_hexagono.b
+	if mouse_x > 200 and not outside{
 		if mision_choosing_coord{
 			draw_set_halign(fa_center)
 			draw_text((room_width + 200) / 2, 100, $"{L.editor_clic} {mision_choosing_coord_tipo = 0 ? L.editor_add_text : L.editor_mover_camara}")
@@ -869,13 +872,13 @@ if menu = 2{
 		exit
 	}
 	build_size = round(draw_deslizante(50, 150, room_height - 200, build_size, 1, 5, 2))
-	if draw_boton(10, room_height - 100, L.editor_guardar, ui_boton_azul) or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("S"))){
+	if browser and draw_boton(10, room_height - 100, L.editor_guardar, ui_boton_azul) or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("S"))){
 		get_file = 2
 		input_layer = 1
 		scan_files_save()
 		keyboard_clear(ord("S"))
 	}
-	if draw_boton(10, room_height - 60, L.editor_cargar, ui_boton_azul) or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("A"))){
+	if browser and draw_boton(10, room_height - 60, L.editor_cargar, ui_boton_azul) or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("A"))){
 		get_file = 1
 		input_layer = 1
 		scan_files_save()
@@ -964,7 +967,7 @@ if menu = 2{
 			if edificio_draw[# a, b]{
 				var edificio = edificio_id[# a, b], index = edificio.index, aa = edificio.x, bb = edificio.y, aaa = aa * zoom - camx, bbb = bb * zoom - camy
 				//Recursos sobre caminos
-				if (edificio_camino[index] or in(index, 6, 16)) and edificio.carga_total > 0{
+				if (edificio_camino[index] or in(index, id_tunel, id_tunel_salida)) and edificio.carga_total > 0{
 					var proceso = edificio_proceso[index]
 					var c = 1.2 * (max(edificio.proceso, edificio.waiting * proceso) - proceso / 2) * 20 / proceso
 					draw_sprite_off(recurso_sprite[edificio.carga_id], 0, aa + c * edificio.array_real[0], bb + c * edificio.array_real[1])
@@ -1495,15 +1498,9 @@ if pausa = 1{
 			ini_write_real("", "grafic_humo", grafic_humo)
 		ini_close()
 	}
-	if draw_boton(a, 460, (grafic_pared ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_paredes}", grafic_pared ? ui_boton_verde : ui_boton_rojo){
-		grafic_pared = not grafic_pared
-		ini_open("settings.ini")
-			ini_write_real("", "grafic_pared", grafic_pared)
-		ini_close()
-	}
-	if draw_boton(a, 500, (grafic_hideui ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_UI}", grafic_hideui ? ui_boton_rojo : ui_boton_verde)
+	if draw_boton(a, 460, (grafic_hideui ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_UI}", grafic_hideui ? ui_boton_rojo : ui_boton_verde)
 		grafic_hideui = not grafic_hideui
-	if draw_boton(a, 540, (sonido ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_sonido}", sonido ? ui_boton_verde : ui_boton_rojo){
+	if draw_boton(a, 500, (sonido ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_sonido}", sonido ? ui_boton_verde : ui_boton_rojo){
 		sonido = not sonido
 		if not sonido for(var b = 0; b < sonidos_max; b++)
 			audio_pause_sound(sonido_id[b])
@@ -1513,7 +1510,7 @@ if pausa = 1{
 			ini_write_real("", "sonido", sonido)
 		ini_close()
 	}
-	if draw_boton(a, 620, L.salir, ui_boton_rojo)
+	if draw_boton(a, 580, L.salir, ui_boton_rojo)
 		game_restart()
 	draw_set_halign(fa_left)
 	draw_set_color(color)
@@ -1844,13 +1841,13 @@ if show_menu{
 			keyboard_clear(vk_space)
 			edificio.proceso = 1
 		}
-		if draw_boton(room_width - 120, 530, L.procesador_guardar, ui_boton_azul,,, false) or (keyboard_check(vk_control) and keyboard_check_pressed(ord("S"))){
+		if browser and draw_boton(room_width - 120, 530, L.procesador_guardar, ui_boton_azul,,, false) or (keyboard_check(vk_control) and keyboard_check_pressed(ord("S"))){
 			save_codes = scan_files("*.code", fa_none)
 			get_file = 1
 			input_layer = 1
 			keyboard_clear(ord("S"))
 		}
-		if draw_boton(room_width - 120, 560, L.procesador_cargar, ui_boton_azul,,, false) or (keyboard_check(vk_control) and keyboard_check_pressed(ord("A"))){
+		if browser and draw_boton(room_width - 120, 560, L.procesador_cargar, ui_boton_azul,,, false) or (keyboard_check(vk_control) and keyboard_check_pressed(ord("A"))){
 			save_codes = scan_files("*.code", fa_none)
 			get_file = 2
 			input_layer = 1
@@ -2180,20 +2177,21 @@ if show_menu{
 	}
 }
 //Terreno bajo el mouse
-var temp_hexagono = instance_position(xmouse, ymouse, obj_hexagono), mx = 0, my = 0
-if temp_hexagono != noone{
-	mx = temp_hexagono.a
-	my = temp_hexagono.b
-	prev_change = false
-	if mx != prev_x or my != prev_y{
-		prev_x = mx
-		prev_y = my
-		prev_change = true
-	}
+var temp_complex_mouse = xytoab(xmouse, ymouse), mx = temp_complex_mouse.a, my = temp_complex_mouse.b, outside = false
+if mx < 0 or my < 0 or mx >= xsize or my >= ysize{
+	outside = true
+	mx = clamp(mx, 0, xsize - 1)
+	my = clamp(my, 0, ysize - 1)
+}
+prev_change = false
+if mx != prev_x or my != prev_y{
+	prev_x = mx
+	prev_y = my
+	prev_change = true
 }
 var edificio = edificio_id[# mx, my], temp_coordenada = edificio.coordenadas
 //Mostrar detalles de edificios al pasar el mouse_por encima
-if pausa != 1 and temp_hexagono != noone and flag and not (show_menu and show_menu_build.index = id_procesador){
+if pausa != 1 and not outside and flag and not (show_menu and show_menu_build.index = id_procesador){
 	//Mostrar terreno
 	temp_text = $"{terreno_nombre_display[terreno[# mx, my]]}\n"
 	if mouse_check_button_pressed(mb_left){
@@ -2574,7 +2572,7 @@ if pausa != 1 and temp_hexagono != noone and flag and not (show_menu and show_me
 			if not comprable{
 				var temp_complex = abtoxy(mx, my)
 				draw_sprite_off(spr_rojo, 0, temp_complex.a, temp_complex.b,,,,, 0.5)
-				draw_text_background(temp_complex.a + 20, temp_complex.b, temp_text_2)
+				draw_text_background_off(temp_complex.a + 20, temp_complex.b, temp_text_2)
 			}
 			else if mouse_check_button(mb_left)
 				construir(b, repair_dir[# mx, my], mx, my)
@@ -2780,7 +2778,7 @@ if build_index > 0 and win = 0{
 			break
 		}
 	}
-	if comprable and temp_hexagono != noone{
+	if comprable and not outside{
 		//Detectar recursos y enemigos cerca
 		if not cheat{
 			for(var a = array_length(edificio_precio_id[build_index]) - 1; a >= 0; a--)
@@ -3319,7 +3317,7 @@ if build_index > 0 and win = 0{
 //Destruir edificio
 else{
 	clicked = false
-	if ((mouse_check_button(mb_right) and prev_change) or mouse_check_button_pressed(mb_right)) and temp_hexagono != noone and edificio_bool[# mx, my] and edificio.index != id_nucleo{
+	if ((mouse_check_button(mb_right) and prev_change) or mouse_check_button_pressed(mb_right)) and not outside and edificio_bool[# mx, my] and edificio.index != id_nucleo{
 		if edificio_bool[# mx, my]
 			prev_change = true
 		delete_edificio(mx, my)
@@ -3723,8 +3721,7 @@ if pausa = 0{
 						target.vida -= municion.dmg
 						if target.vida <= 0
 							destroy_dron(target)
-					}
-						
+					}	
 				}
 				//Daño edificio
 				if municion.target_build != null_edificio and municion.target_build.vida > 0
@@ -4047,15 +4044,7 @@ if keyboard_check_pressed(vk_anykey) and win = 0 and not show_menu{
 			keyboard_clear(vk_anykey)
 		}
 	}
-	if keyboard_check_pressed(ord("G"))
-		grafic_tile_animation = not grafic_tile_animation
-	if keyboard_check_pressed(ord("H"))
-		grafic_luz = not grafic_luz
-	if keyboard_check_pressed(ord("J"))
-		grafic_humo = not grafic_humo
-	if keyboard_check_pressed(ord("K"))
-		grafic_pared = not grafic_pared
-	if keyboard_check_pressed(ord("F"))
+	if keyboard_check_pressed(vk_f1)
 		grafic_hideui = not grafic_hideui
 	if keyboard_check_pressed(ord("N"))
 		oleadas = not oleadas

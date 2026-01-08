@@ -2,10 +2,11 @@ randomize()
 draw_set_font(ft_letra)
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
-ini_write_string("Global", "version", "05_01_2026")
+ini_write_string("Global", "version", "08_01_2026")
 ini_close()
-save_files = (os_browser == browser_not_a_browser) ? scan_files("*.txt", fa_none) : []
-if os_browser == browser_not_a_browser{
+browser = (os_browser = browser_not_a_browser)
+save_files = browser ? scan_files("*.txt", fa_none) : []
+if browser{
 	for(var a = array_length(save_files) - 1; a >= 0; a--){
 		save_file = save_files[a]
 		var temp_text = string_delete(save_file, string_pos(".", save_file), 4)
@@ -17,15 +18,14 @@ if os_browser == browser_not_a_browser{
 	}
 }
 else
-	game_set_speed(30, gamespeed_fps)
-save_codes = (os_browser == browser_not_a_browser) ? scan_files("*.code", fa_none) : []
-idiomas = (os_browser == browser_not_a_browser) ? scan_files("*.json", fa_none) : ["en.json", "es.json", "ru.json"]
+	game_set_speed(60, gamespeed_fps)
+save_codes = (browser) ? scan_files("*.code", fa_none) : []
+idiomas = (browser) ? scan_files("*.json", fa_none) : ["en.json", "es.json", "ru.json"]
 for(var a = array_length(idiomas) - 1; a >= 0; a--)
 	idioma_name[a] = string_delete(idiomas[a], string_pos(".", idiomas[a]), 5)
 idioma = 1
 set_idioma(idiomas[idioma], false)
 #region Metadatos
-	null_complex = {a : 0, b : 0}
 	menu = 0
 	cursor = cr_arrow
 	deslizante_id = -1
@@ -75,7 +75,7 @@ set_idioma(idiomas[idioma], false)
 		cos_angle_dir[a] = cos(angle_dir[a])
 		sin_angle_dir[a] = sin(angle_dir[a])
 	}
-	pre_build_list = array_create(0, null_complex)
+	pre_build_list = array_create(0, {a : 0, b : 0})
 	background = ds_grid_create(chunk_xsize, chunk_ysize)
 	for(var a = 0; a < chunk_xsize; a++)
 		for(var b = 0; b < chunk_ysize; b++)
@@ -117,10 +117,9 @@ set_idioma(idiomas[idioma], false)
 	oleadas_tiempo = 75
 	null_efecto = add_efecto()
 	efectos = array_create(0, null_efecto)
-	grafic_tile_animation = true
+	grafic_tile_animation = browser
 	grafic_luz = false
-	grafic_pared = true
-	grafic_humo = true
+	grafic_humo = browser
 	grafic_hideui = false
 	text_x = 0
 	text_y = 0
@@ -260,7 +259,7 @@ null_edificio = {
 	chunk_x : 0,
 	chunk_y : 0,
 	chunk_pointer : 0,
-	target_chunks : array_create(0, null_complex),
+	target_chunks : array_create(0, {a : 0, b : 0}),
 	target_pointer : 0,
 	array_real : array_create(0, 0),
 	xscale : 1,
@@ -272,14 +271,14 @@ null_edificio = {
 	imagen : spr_hexagono,
 }
 null_edificio.link = null_edificio
-ds_list_add(null_edificio.coordenadas, null_complex)
+ds_list_add(null_edificio.coordenadas, {a : 0, b : 0})
 ds_list_clear(null_edificio.coordenadas)
-ds_list_add(null_edificio.bordes, null_complex)
+ds_list_add(null_edificio.bordes, {a : 0, b : 0})
 ds_list_clear(null_edificio.bordes)
 null_edificio.energia_link = array_create(0, null_edificio)
 null_edificio.flujo_link = array_create(0, null_edificio)
 ds_grid_clear(null_edificio.coordenadas_dis, 0)
-ds_list_add(null_edificio.coordenadas_close, null_complex)
+ds_list_add(null_edificio.coordenadas_close, {a : 0, b : 0})
 ds_list_clear(null_edificio.coordenadas_close)
 null_edificio.edificios_cercanos = array_create(0, null_edificio)
 null_edificio.edificios_cercanos_heridos = array_create(0, null_edificio)
@@ -317,7 +316,7 @@ puerto_carga_atended = 0
 	ds_grid_clear(edificio_cercano_dir, -1)
 	edificio_cercano_priority = ds_grid_create(xsize, ysize)
 	pre_abtoxy = ds_grid_create(xsize + 2, ysize + 2)
-	ds_grid_clear(pre_abtoxy, null_complex)
+	ds_grid_clear(pre_abtoxy, {a : 0, b : 0})
 	for(var a = 0; a < xsize; a++){
 		ds_grid_set(pre_abtoxy, a, 0, {
 			a : real(a + 0.5) * 48 + 16,
@@ -336,11 +335,8 @@ puerto_carga_atended = 0
 				a : real(a + (b mod 2) / 2) * 48 + 16,
 				b : real(b + 1) * 14
 			}
-			var temp_hexagono = instance_create_layer(temp_complex.a, temp_complex.b, "instances", obj_hexagono)
 			ds_grid_set(pre_abtoxy, a + 1, b + 1, temp_complex)
 			ds_grid_set(ore_random, a, b, random(1))
-			temp_hexagono.a = a
-			temp_hexagono.b = b
 		}
 	}
 	for(var b = 0; b < ysize; b++){
@@ -542,8 +538,8 @@ function def_terreno(nombre, sprite = spr_piedra, recurso = 0, caminable = true,
 	idt_hielo = def_terreno("Hielo", spr_hielo,,,, true, #9DD2D5)
 	idt_basalto = def_terreno("Basalto", spr_basalto,,,,, #555555)
 	idt_ceniza = def_terreno("Ceniza", spr_ceniza,,,, true, #191919)
-	idt_agua_salada = def_terreno("Agua Salada", spr_agua_salada,,, true,, #3F6E85)
-	idt_agua_salada_profunda = def_terreno("Agua Salada Profunda", spr_agua_salada_profunda,,, true,, #274B5C)
+	idt_agua_salada = def_terreno("Agua Salada", spr_agua_salada,, false, true,, #3F6E85)
+	idt_agua_salada_profunda = def_terreno("Agua Salada Profunda", spr_agua_salada_profunda,, false, true,, #274B5C)
 #endregion
 terreno_max = array_length(terreno_nombre)
 //Ores
@@ -572,7 +568,8 @@ ore_max = array_length(ore_sprite)
 			"Repara los edificios dañados",
 			"Se acerca a su objetivo y explota infilgiendo daño",
 			"Unidad de asedio superior, dispara explosivos alargo alcance dañando todo a su alrededor",
-			"Unidad aerea superior, dispara a distancia"
+			"Unidad aerea superior, dispara a distancia",
+			""
 		]
 	for(var a = array_length(dron_descripcion) - 1; a >= 0; a--)
 		dron_descripcion[a] = text_wrap(dron_descripcion[a], 400)
