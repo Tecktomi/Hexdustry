@@ -41,28 +41,17 @@ function dibujar_fondo(editor = 0){
 						var temp_surf = surface_create((chunk_width + 1) * 48, (chunk_height + 1) * 14)
 						surface_set_target(temp_surf)
 						var minc = a * chunk_width, mind = b * chunk_height, maxc = min((a + 1) * chunk_width, xsize), maxd = min((b + 1) * chunk_height, ysize)
-						if grafic_pared{
-							for(var c = minc; c < maxc; c++)
-								for(var d = mind; d < maxd; d++){
-									var temp_complex = abtoxy(c, d), aa = temp_complex.a - a * chunk_width * 48, bb = temp_complex.b - b * chunk_height * 14, f = terreno[# c, d], e = ore[# c, d]
-									if terreno_pared[f]
-										draw_sprite(terreno_sprite[f], terreno_pared_index[# c, d], aa, bb)
-									else{
-										draw_sprite(terreno_sprite[f], 0, aa, bb)
-										if e >= 0
-											draw_sprite(ore_sprite[e], round(ore_random[# c, d]) + 2 * (ore_amount[# c, d] < 50), aa, bb)
-									}
-								}
-						}
-						else{
-							for(var c = minc; c < maxc; c++)
-								for(var d = mind; d < maxd; d++){
-									var temp_complex = abtoxy(c, d), aa = temp_complex.a - a * chunk_width * 48, bb = temp_complex.b - b * chunk_height * 14, e = ore[# c, d]
-									draw_sprite(terreno_sprite[terreno[# c, d]], 0, aa, bb)
+						for(var c = minc; c < maxc; c++)
+							for(var d = mind; d < maxd; d++){
+								var temp_complex = abtoxy(c, d), aa = temp_complex.a - a * chunk_width * 48, bb = temp_complex.b - b * chunk_height * 14, f = terreno[# c, d], e = ore[# c, d]
+								if terreno_pared[f]
+									draw_sprite(terreno_sprite[f], terreno_pared_index[# c, d], aa, bb)
+								else{
+									draw_sprite(terreno_sprite[f], 0, aa, bb)
 									if e >= 0
 										draw_sprite(ore_sprite[e], round(ore_random[# c, d]) + 2 * (ore_amount[# c, d] < 50), aa, bb)
 								}
-						}
+							}
 						ds_grid_set(background, a, b, sprite_create_from_surface(temp_surf, 0, 0, (chunk_width + 1) * 48, (chunk_height + 1) * 14, false, false, 0, 0))
 						ds_grid_set(background_bool, a, b, true)
 						chunk_update = false

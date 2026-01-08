@@ -331,12 +331,11 @@ function delete_edificio(aa, bb, enemigo = false){
 			for(var i = array_length(edificios) - 1; i >= 0; i--){
 				temp_edificio = edificios[i]
 				var dis = distance_sqr(xpos, ypos, temp_edificio.x, temp_edificio.y)
-				if dis > 160_000 //400^2
+				if dis > 160_000{ //400^2
+					temp_edificio.vida -=1
 					continue
-				if edificio_herir(temp_edificio, 9_000_000 / dis * random_range(0.7, 1.3)){
-					size--
-					i--
 				}
+				edificio_herir(temp_edificio, (9_000_000 / max(1, dis)) * random_range(0.7, 1.3))
 			}
 			//Daño enemigos
 			size = array_length(enemigos)

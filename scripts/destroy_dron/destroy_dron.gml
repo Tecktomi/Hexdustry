@@ -41,6 +41,7 @@ function destroy_dron(dron = control.null_enemigo, enemigo = true){
 			}
 		}
 		array_push(efectos, add_efecto(spr_arana_muerta, 0, dron.a, dron.b, 5, 1))
+		dron.vida = 0
 		delete dron
 	}
 }
