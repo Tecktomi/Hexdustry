@@ -434,6 +434,8 @@ function add_edificio(index, dir, a, b){
 			edificio.proceso = -1
 		if index = id_laser
 			edificio.fuel = 1
+		if index = id_refineria_de_petroleo
+			edificio.fuel = 60
 		ds_list_destroy(temp_list_size)
 		ds_list_destroy(temp_list_arround)
 		return edificio

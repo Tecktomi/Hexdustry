@@ -10,10 +10,10 @@ function draw_dron(dron = control.null_enemigo, enemigo = true){
 			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, image_index * 15, enemigo ? c_red : c_blue)
 		}
 		else if index = 6{
-			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir + 20 * sin(image_index / 20 + dron.random_int * 90))
-			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir + 90 - 20 * sin(image_index / 20 + dron.random_int * 90))
-			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir + 180 - 20 * sin(image_index / 20 + dron.random_int * 90))
-			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir + 270 + 20 * sin(image_index / 20 + dron.random_int * 90))
+			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir + 20 * sqr(sin(image_index / 20 + dron.random_int * 90)))
+			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir + 90 - 20 * sqr(sin(image_index / 20 + dron.random_int * 90)))
+			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir + 180 - 20 * sqr(sin(image_index / 20 + dron.random_int * 90)))
+			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir + 270 + 20 * sqr(sin(image_index / 20 + dron.random_int * 90)))
 			draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir_move)
 		}
 		else{
