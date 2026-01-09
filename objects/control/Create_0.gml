@@ -29,8 +29,8 @@ set_idioma(idiomas[idioma], false)
 	menu = 0
 	cursor = cr_arrow
 	deslizante_id = -1
-	xsize = 48
-	ysize = 96
+	xsize = 72
+	ysize = 144
 	chunk_width = 4
 	chunk_height = 12
 	chunk_xsize = ceil(xsize / chunk_width)
@@ -809,7 +809,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 	id_recurso_infinito = def_edificio("Recurso Infinito", 1, spr_recurso_infinito, spr_selector_color, 30,, scr_recurso_infinito,,,,,,,,, true, true); def_edificio_2()
 	//30
 	id_bomba_de_evaporacion = def_edificio("Bomba de Evaporación", 1, spr_bomba_evaporacion, spr_tuberia_color, 30,, scr_bomba_evaporacion,, [id_bronce, id_hierro], [10, 5]); def_edificio_2(, 10, -5, 0)
-	id_horno_de_lava = def_edificio("Horno de Lava", 2, spr_horno_lava, spr_horno_lava_encendido, 400, 90, scr_horno_lava,, [id_acero, id_concreto], [15, 10], 70, true, false, [id_cobre, id_hierro, id_arena, id_sal], [10, 10, 10], true, false, [id_bronce, id_acero, id_silicio]); def_edificio_2(, 10, 15, 3)
+	id_horno_de_lava = def_edificio("Horno de Lava", 2, spr_horno_lava, spr_horno_lava_encendido, 400, 90, scr_horno_lava,, [id_acero, id_concreto], [15, 10], 70, true, false, [id_cobre, id_hierro, id_arena, id_sal], [10, 10, 10, 10], true, false, [id_bronce, id_acero, id_silicio]); def_edificio_2(, 10, 15, 3)
 	id_generador_geotermico = def_edificio("Generador Geotérmico", 2, spr_generador_geotermico,, 200,, scr_generador_geotermico,, [id_cobre, id_acero, id_concreto], [10, 10, 10]); def_edificio_2(-90, 10, 30, 0)
 	id_taladro_de_explosion = def_edificio("Taladro de Explosión", 3, spr_taladro_explosivo,, 300, 300, scr_taladro_explosion,, [id_hierro, id_acero, id_concreto], [40, 40, 30], 40, true, false, [13], [10], true, false, [id_cobre, id_carbon, id_bronce, id_piedra, id_arena, id_piedra_cuprica, id_piedra_ferrica, id_piedra_sulfatada, id_uranio_bruto]); def_edificio_2()
 	id_muro = def_edificio("Muro", 1, spr_hexagono,, 500,,,, [8], [1]); def_edificio_2(,,,,,, true)
@@ -1179,8 +1179,8 @@ null_flujo ={
 null_edificio.flujo = null_flujo
 flujos = array_create(0, null_flujo)
 //Agua, piedra, petróleo y lava
-var temp_peso = [0, 0, 0, 0, 0, 1, 1, 2, 3, 3, 3, 4, 5]
-var temp_peso_data = [[idt_piedra, 20], [idt_agua, 20], [idt_petroleo, 10], [idt_pared_piedra, 50], [idt_lava, 15], [idt_agua_salada, 20]], size = array_length(temp_peso)
+var temp_peso = [0, 0, 0, 0, 0, 1, 1, 1, 2, 3, 3, 3, 3, 4, 4, 5, 6]
+var temp_peso_data = [[idt_piedra, 60], [idt_agua, 30], [idt_petroleo, 20], [idt_pared_piedra, 80], [idt_pared_pasto, 80], [idt_lava, 25], [idt_agua_salada, 30]], size = array_length(temp_peso)
 for(var e = 0; e < size; e++){
 	var a = irandom(xsize - 1), b = irandom(ysize - 1)
 	var c = temp_peso_data[temp_peso[e], 0]
@@ -1312,11 +1312,11 @@ nucleo.carga_total = 100
 carga_inicial = array_create(rss_max, 0)
 array_copy(carga_inicial, 0, nucleo.carga, 0, rss_max)
 //Natural Ores
-for(var e = 0; e < 10; e++){
-	var a = min(xsize - 1, irandom_range((e mod 3) * xsize / 3, ((e mod 3) + 1) * xsize / 3))
-	var b = irandom(ysize - 1)
-	var c = floor(e / 3)
-	repeat(15){
+for(var e = 0; e < 14; e++){
+	var a = clamp(irandom_range(xsize * (e & 1) / 2, xsize * ((e & 1) + 1) / 2 - 1), 0, xsize - 1)
+	var b = clamp(irandom_range(ysize * (e & 2 > 0) / 2, ysize * ((e & 2 > 0) + 1) / 2 - 1), 0, ysize - 1)
+	var c = floor(e / 4)
+	repeat(30){
 		if terreno_caminable[terreno[# a, b]]{
 			if ore[# a, b] != c{
 				ds_grid_set(ore_amount, a, b, 0)

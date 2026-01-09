@@ -639,14 +639,14 @@ if menu = 2{
 		xpos += 20
 		ypos += text_y
 		var prev_xsize = xsize
-		xsize = round(draw_deslizante(xpos, xpos + 100, ypos + 10, xsize, 28, 96, 0))
+		xsize = round(draw_deslizante(xpos, xpos + 100, ypos + 10, xsize, 28, 144, 0))
 		chunk_xsize = ceil(xsize / chunk_width)
 		draw_text(xpos + 100, ypos, $"{xsize}")
 		if xsize > prev_xsize
 			resize_grid(prev_xsize, 0)
 		ypos += text_y
 		var prev_ysize = ysize
-		ysize = round(draw_deslizante(xpos, xpos + 100, ypos + 10, ysize, 60, 192, 1))
+		ysize = round(draw_deslizante(xpos, xpos + 100, ypos + 10, ysize, 60, 288, 1))
 		chunk_ysize = ceil(ysize / chunk_height)
 		draw_text(xpos + 100, ypos, $"{ysize}")
 		if ysize > prev_ysize
@@ -1966,6 +1966,10 @@ if show_menu{
 			draw_rectangle(aa - 90 * zoom, bb + 40 * zoom, aa + 90 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, false)
 		else if index = id_fabrica_de_drones
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * dron_max) * zoom, false)
+		else if index = id_refineria_de_petroleo{
+			var c = max(max(string_width(recurso_nombre_display[id_combustible]), string_width(recurso_nombre_display[id_plastico]), string_width(recurso_nombre_display[id_piedra_sulfatada])) + string_width(": 100%"), 200)
+			draw_rectangle(aa - c * zoom / 2, bb + 40 * zoom, aa + c * zoom / 2, bb + 120 * zoom, false)
+		}
 		draw_set_color(c_dkgray)
 		draw_triangle(aa - 10 * zoom, bb + 20 * zoom, aa + 10 * zoom, bb + 20 * zoom, aa, bb + 10 * zoom, true)
 		draw_rectangle(aa - 80 * zoom, bb + 20 * zoom, aa + 80 * zoom, bb + 40 * zoom, true)
@@ -2000,6 +2004,17 @@ if show_menu{
 			draw_text(aa - 80 * zoom, bb + 20 * zoom, "Vaciar")
 		else if index = id_embotelladora
 			draw_text(aa - 80 * zoom, bb + 20 * zoom, edificio.mode ? "Embotellar" : "Desembotellar")
+		else if index = id_refineria_de_petroleo{
+			edificio.fuel = round(draw_deslizante(aa - 100 * zoom, aa + 100 * zoom, bb + 50 * zoom, edificio.fuel, 0, 100, 0))
+			draw_set_halign(fa_center)
+			if draw_boton(aa, bb + 60 * zoom, $"{recurso_nombre_display[id_combustible]}: {edificio.fuel}%",,,, false)
+				edificio.fuel = 100
+			if draw_boton(aa, bb + 80 * zoom, $"{recurso_nombre_display[id_plastico]}: {round(100 * (1 - edificio.fuel / 100) * (sqr(1 - abs(edificio.fuel - 50) / 100)))}%",,,, false)
+				edificio.fuel = 50
+			if draw_boton(aa, bb + 100 * zoom, $"{recurso_nombre_display[id_piedra_sulfatada]}: {100 - edificio.fuel - round(100 * (1 - edificio.fuel / 100) * (sqr(1 - abs(edificio.fuel - 50) / 100)))}%",,,, false)
+				edificio.fuel = 0
+			draw_set_halign(fa_left)
+		}
 		if mouse_x > aa - 80 * zoom and mouse_y > bb + 20 * zoom and mouse_x < aa + 80 * zoom{
 			if in(index, id_selector, id_overflow, id_embotelladora) and mouse_y < bb + 40 * zoom{
 				if mouse_check_button_pressed(mb_left){
@@ -2233,7 +2248,7 @@ if pausa != 1 and not outside and flag and not (show_menu and show_menu_build.in
 				}
 				procesador_select = null_edificio
 			}
-			else if in(index, id_selector, id_overflow, id_liquido_infinito, id_recurso_infinito, id_planta_quimica, id_fabrica_de_drones, id_procesador, id_memoria, id_deposito, id_embotelladora){
+			else if in(index, id_selector, id_overflow, id_liquido_infinito, id_recurso_infinito, id_planta_quimica, id_fabrica_de_drones, id_procesador, id_memoria, id_deposito, id_embotelladora, id_refineria_de_petroleo){
 				mouse_clear(mb_left)
 				show_menu = true
 				show_menu_build = edificio

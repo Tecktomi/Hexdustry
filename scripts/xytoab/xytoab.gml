@@ -30,6 +30,8 @@ function xytoab(x, y){
 			a = n.a
 			b = n.b
 		}
+		if a < 0 or b < 0 or a >= xsize or b >= ysize
+			continue
 		var temp_complex = abtoxy(a, b), hx = temp_complex.a, hy = temp_complex.b;
 		var dxx = x - hx, dyy = y - hy, d = dxx * dxx + dyy * dyy;
 		if d < best_d{
