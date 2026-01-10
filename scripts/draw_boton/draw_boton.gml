@@ -30,7 +30,7 @@ function draw_boton(x, y, texto, back_color = control.ui_boton_gris, text_color 
 			text_y = height
 		}
 		draw_set_color(color)
-		if input_layer = input_layer and mouse_x > x - xx and mouse_y > y - yy and ((box and mouse_x < x + width + 8 - xx and mouse_y < y + height + 8 - yy) or (not box and mouse_x < x + width - xx and mouse_y < y + height - yy)){
+		if input_layer = control.input_layer and mouse_x > x - xx and mouse_y > y - yy and ((box and mouse_x < x + width + 8 - xx and mouse_y < y + height + 8 - yy) or (not box and mouse_x < x + width - xx and mouse_y < y + height - yy)){
 			cursor = cr_handpoint
 			if not box
 				draw_line(x - xx, y + height - 4, x - xx + width, y + height - 4)

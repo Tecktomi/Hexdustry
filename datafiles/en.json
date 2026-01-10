@@ -26,6 +26,12 @@
 "islas": "Islands",
 "activado": "Enabled",
 "desactivado": "Disabled",
+"dificultad": "Difficulty",
+"facil": "Easy",
+"medio": "Medium",
+"dificil": "Hard",
+"personalizado": "Custom",
+"tiempo": "Time",
 
 "Núcleo": "Nucleus",
 "Taladro": "Drill",
@@ -225,11 +231,20 @@
 "liquido_Agua salada": "Salt Water",
 
 "Araña": "Spider",
-"Dron": "Dron",
-"Reparador": "Reparator",
+"Dron": "Drone",
+"Reparador": "Repair Unit",
 "Explosivo": "Explosive",
 "Tanque": "Tank",
-"Helicoptero": "Helicopter",
+"Helicóptero": "Helicopter",
+"Titán": "Titan",
+
+"descripcion_Araña": "Fires a laser at nearby enemies",
+"descripcion_Dron": "Transports resources between Cargo Ports",
+"descripcion_Reparador": "Repairs damaged buildings",
+"descripcion_Explosivo": "Approaches its target and explodes, dealing damage",
+"descripcion_Tanque": "Heavy siege unit that fires explosives, damaging everything around it",
+"descripcion_Helicóptero": "Advanced air unit that attacks from long range",
+"descripcion_Titán": "Ultimate ground unit that fires a long-range explosive barrage",
 
 "Transporte": "Transport",
 "Extracción": "Extraction",
@@ -451,6 +466,6 @@
 "planta_quimica_receta 2": "Batteries",
 
 "planta_quimica_descripcion 0": "Consumes Sulfated Stone and energy to produce Acid",
-"planta_quimica_descripcion 1": "Uses Coal and Sulfated Stone to produce Explosives",
-"planta_quimica_descripcion 2": "Uses Acid, Iron, and energy to produce Batteries"
+"planta_quimica_descripcion 1": "Uses Incendiary Compound and Acid to produce Explosives",
+"planta_quimica_descripcion 2": "Uses Acid, Copper, and energy to produce Batteries"
 }

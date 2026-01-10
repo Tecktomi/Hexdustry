@@ -30,6 +30,7 @@ if menu = 0{
 	if draw_boton(room_width / 2, 200, L.menu_juego_rapido, ui_boton_verde){
 		input_layer = 1
 		get_file = 2
+		flow = 3
 	}
 	if draw_boton(room_width / 2, 250, L.menu_tutorial, ui_boton_verde){
 		var file = cargar_escenario("mision_1.txt")
@@ -54,7 +55,7 @@ if menu = 0{
 		if get_file = 1{
 			draw_set_valign(fa_bottom)
 			for(var a = 0; a < array_length(save_files); a++){
-				var xpos = 120 + 120 * (a mod 10), ypos = 200 + 120 * floor(a / 10)
+				var xpos = 120 + 120 * (a mod 9), ypos = 200 + 120 * floor(a / 9)
 				var temp_text = string_delete(save_files[a], string_pos(".", save_files[a]), 4)
 				if draw_sprite_boton(save_files_png[a], xpos, ypos, 96, 96,, 1){
 					tecnologia = true
@@ -85,86 +86,190 @@ if menu = 0{
 		else if get_file = 2{
 			var xpos = 140, ypos = 160, des_count = 0
 			draw_boton_text_counter = 0
-			//Tecnología
-			draw_text_xpos(xpos, ypos, $"{L.enciclopedia_tecnologia}: {tecnologia ? L.activado : L.desactivado}")
-			xpos += max(string_width($"{L.enciclopedia_tecnologia}: {L.activado}"), string_width($"{L.enciclopedia_tecnologia}: {L.desactivado}"))
-			tecnologia = draw_toggle(xpos + 10, ypos - 5, tecnologia, 1)
-			ypos += text_y + 10
-			if tecnologia{
-				xpos = draw_text_xpos(160, ypos, $"{L.menu_precio_tecnologia}")
-				tecnologia_precio_multiplicador = draw_deslizante(xpos + 10, xpos + 135, ypos + 10, tecnologia_precio_multiplicador, 0.5, 3, des_count++, 1)
-				ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{floor(100 * tecnologia_precio_multiplicador)}%")
-			}
-			//Primera oleada
-			xpos = draw_text_xpos(140, ypos, $"{L.editor_primera_ronda}")
-			oleadas_tiempo_primera = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, oleadas_tiempo_primera, 60, 300, des_count++, 1))
-			ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{oleadas_tiempo_primera >= 60 ? string(floor(oleadas_tiempo_primera / 60)) + "m " : ""}{oleadas_tiempo_primera mod 60}s")
-			//Siguientes oleadas
-			xpos = draw_text_xpos(140, ypos, $"{L.editor_siguiente_ronda}")
-			oleadas_tiempo = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, oleadas_tiempo, 30, 120, des_count++, 1))
-			ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{oleadas_tiempo >= 60 ? string(floor(oleadas_tiempo / 60)) + "m " : ""}{oleadas_tiempo mod 60}s")
-			//Multiplicador de vida
-			xpos = draw_text_xpos(140, ypos, $"{L.editor_multiplicador_vida}")
-			multiplicador_vida_enemigos = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, multiplicador_vida_enemigos, 20, 200, des_count++, 1))
-			ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{multiplicador_vida_enemigos}%")
-			//Modo creativo
-			xpos = 140
-			draw_text_xpos(xpos, ypos, $"{L.menu_claves}: {cheat ? L.activado : L.desactivado}")
-			xpos += max(string_width($"{L.menu_claves}: {L.activado}"), string_width($"{L.menu_claves}: {L.desactivado}"))
-			cheat = draw_toggle(xpos + 10, ypos - 5, cheat, 1)
-			oleadas = not cheat
-			ypos += text_y + 10
-			//Biomas
-			xpos = 200
-			if draw_boton(xpos, ypos, L.praderas,,,,, 1)
-				generar_mapa(, 1, [[ 0,0,50,5 ],[ 0,4,5,2 ],[ 1,4,1,2 ],[ 1,4,0,2 ],[ 1,2,0,3 ],[ 1,2,1,3 ],[ 0,5,6,1 ],[ 1,5,0,16 ],[ 1,5,1,16 ],[ 0,14,6,1 ],[ 1,14,1,0 ],[ 2,0,6,3 ],[ 2,0,7,3 ],[ 2,16,8,15 ],[ 0,9,50,3 ],[ 1,9,1,0 ],[ 3,0,12,3 ],[ 3,2,10,3 ],[ 3,1,6,3 ],[ 3,3,4,2 ]])
-			xpos += text_x + 20
-			if draw_boton(xpos, ypos, L.cuevas,,,,, 1)
-				generar_mapa(, 0, [ [ 0,17,50,5 ],[ 0,4,5,3 ],[ 1,4,0,2 ],[ 1,2,0,16 ],[ 0,5,5,2 ],[ 1,5,0,16 ],[ 0,14,5,2 ],[ 1,14,0,16 ],[ 2,16,8,15 ],[ 0,9,80,5 ],[ 2,17,16,100 ],[ 2,0,6,3 ],[ 2,0,7,3 ],[ 3,0,12,3 ],[ 3,2,10,3 ],[ 3,1,8,2 ],[ 3,3,5,2 ] ])
-			xpos += text_x + 20
-			if draw_boton(xpos, ypos, L.desierto,,,,, 1)
-				generar_mapa(, 3, [ [ 0,0,50,5 ],[ 0,4,15,2 ],[ 1,4,0,2 ],[ 1,4,3,2 ],[ 1,2,3,1 ],[ 0,11,50,5 ],[ 0,5,10,2 ],[ 1,5,5,16 ],[ 0,14,15,1 ],[ 1,14,14,16 ],[ 2,0,7,3 ],[ 2,0,6,3 ],[ 2,16,8,15 ],[ 3,0,10,3 ],[ 3,2,8,3 ],[ 3,1,8,3 ],[ 3,3,6,2 ] ])
-			xpos += text_x + 20
-			if draw_boton(xpos, ypos, L.nieve,,,,, 1)
-				generar_mapa(, 12, [ [ 0,13,50,5 ],[ 0,0,50,5 ],[ 0,15,10,4 ],[ 1,15,12,0 ],[ 0,9,50,2 ],[ 1,9,9,0 ],[ 0,5,6,1 ],[ 1,5,5,0 ],[ 0,14,6,1 ],[ 1,14,14,16 ],[ 2,0,6,3 ],[ 2,0,7,3 ],[ 2,16,8,15 ],[ 3,0,12,3 ],[ 3,2,10,3 ],[ 3,1,8,3 ],[ 3,3,6,2 ] ])
-			xpos += text_x + 20
-			if draw_boton(xpos, ypos, L.islas,,,,, 1){
-				do{
-					randomize()
-					generar_mapa(, 19, [ [ 0,1,50,5 ],[ 1,1,19,3 ],[ 1,3,19,18 ],[ 0,0,3,8 ],[ 1,0,19,2 ],[ 2,0,6,8 ],[ 2,0,7,8 ],[ 3,0,10,3 ],[ 3,2,8,3 ],[ 3,1,6,3 ],[ 3,3,6,2 ] ])
-				}
-				until terreno_caminable[terreno[# nucleo.a, nucleo.b]]
-			}
-			ypos += text_y + 10
-			//Modos de Juego
-			xpos = 200
-			if draw_boton(xpos, ypos, L.menu_modo_infinito, flow = 0 ? ui_boton_azul : ui_boton_gris,,,, 1){
-				mision_objetivo = []
-				flow = 0
-			}
-			xpos += text_x + 20
-			if draw_boton(xpos, ypos, L.menu_modo_oleadas, flow = 1 ? ui_boton_azul : ui_boton_gris,,,, 1){
+			ypos = draw_text_ypos(xpos, ypos, L.dificultad)
+			if draw_boton(xpos, ypos, L.facil, flow = 0 ? ui_boton_azul : ui_boton_gris,,,, 1){
+				tecnologia = false
+				oleadas_tiempo_primera = 240
+				oleadas_tiempo = 90
+				multiplicador_vida_enemigos = 50
+				cheat = false
 				mision_objetivo = [4]
 				mision_nombre = [""]
-				mision_target_num = [20]
+				mision_target_num = [15]
+				mision_tiempo = [0]
+				mision_switch_oleadas = [false]
+				mision_camara_move = [false]
+				mision_texto = [[]]
+				flow = 0
+				dificultad = 0
+			}
+			xpos += text_x + 20
+			if draw_boton(xpos, ypos, L.medio, flow = 1 ? ui_boton_azul : ui_boton_gris,,,, 1){
+				tecnologia = true
+				tecnologia_precio_multiplicador = 1 
+				oleadas_tiempo_primera = 180
+				oleadas_tiempo = 75
+				multiplicador_vida_enemigos = 100
+				cheat = false
+				mision_objetivo = [4]
+				mision_nombre = [""]
+				mision_target_num = [25]
 				mision_tiempo = [0]
 				mision_switch_oleadas = [false]
 				mision_camara_move = [false]
 				mision_texto = [[]]
 				flow = 1
+				dificultad = 1
 			}
 			xpos += text_x + 20
-			if draw_boton(xpos, ypos, L.menu_modo_misiones, flow = 2 ? ui_boton_azul : ui_boton_gris,,,, 1){
-				modo_misiones = true
-				add_mision()
-				flow = 2
+			if draw_boton(xpos, ypos, L.dificil, flow = 2 ? ui_boton_azul : ui_boton_gris,,,, 1){
+				tecnologia = true
+				tecnologia_precio_multiplicador = 2 
+				oleadas_tiempo_primera = 150
+				oleadas_tiempo = 60
+				multiplicador_vida_enemigos = 200
+				cheat = false
+				mision_objetivo = [4]
+				mision_nombre = [""]
+				mision_target_num = [35]
+				mision_tiempo = [0]
+				mision_switch_oleadas = [false]
+				mision_camara_move = [false]
+				mision_texto = [[]]
+				flow = 
+				dificultad = 2
 			}
-			if flow = 1{
+			xpos += text_x + 20
+			if draw_boton(xpos, ypos, L.personalizado, flow > 2 ? ui_boton_azul : ui_boton_gris,,,, 1){
+				flow = 3
+				dificultad = -1
+			}
+			if flow > 2{
+				xpos = 140
+				ypos += text_y + 20
+				//Tecnología
+				draw_text_xpos(xpos, ypos, $"{L.enciclopedia_tecnologia}: {tecnologia ? L.activado : L.desactivado}")
+				xpos += max(string_width($"{L.enciclopedia_tecnologia}: {L.activado}"), string_width($"{L.enciclopedia_tecnologia}: {L.desactivado}"))
+				tecnologia = draw_toggle(xpos + 10, ypos - 5, tecnologia, 1)
 				ypos += text_y + 10
-				xpos = draw_text_xpos(160, ypos, L.menu_numero_oleadas)
-				mision_target_num[0] = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, mision_target_num[0], 10, 50, des_count++, 1))
-				ypos = 10 + draw_text_ypos(xpos + 145, ypos, mision_target_num[0])
+				if tecnologia{
+					xpos = draw_text_xpos(160, ypos, $"{L.menu_precio_tecnologia}")
+					tecnologia_precio_multiplicador = draw_deslizante(xpos + 10, xpos + 135, ypos + 10, tecnologia_precio_multiplicador, 0.5, 3, des_count++, 1)
+					ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{floor(100 * tecnologia_precio_multiplicador)}%")
+				}
+				//Primera oleada
+				ypos = draw_text_ypos(140, ypos, L.tiempo)
+				xpos = draw_text_xpos(160, ypos, $"{L.editor_primera_ronda}")
+				oleadas_tiempo_primera = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, oleadas_tiempo_primera, 60, 300, des_count++, 1))
+				ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{oleadas_tiempo_primera >= 60 ? string(floor(oleadas_tiempo_primera / 60)) + "m " : ""}{oleadas_tiempo_primera mod 60}s")
+				//Siguientes oleadas
+				xpos = draw_text_xpos(160, ypos, $"{L.editor_siguiente_ronda}")
+				oleadas_tiempo = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, oleadas_tiempo, 30, 120, des_count++, 1))
+				ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{oleadas_tiempo >= 60 ? string(floor(oleadas_tiempo / 60)) + "m " : ""}{oleadas_tiempo mod 60}s")
+				//Multiplicador de vida
+				xpos = draw_text_xpos(140, ypos, $"{L.editor_multiplicador_vida}")
+				multiplicador_vida_enemigos = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, multiplicador_vida_enemigos, 20, 200, des_count++, 1))
+				ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{multiplicador_vida_enemigos}%")
+				//Modo creativo
+				xpos = 140
+				draw_text_xpos(xpos, ypos, $"{L.menu_claves}: {cheat ? L.activado : L.desactivado}")
+				xpos += max(string_width($"{L.menu_claves}: {L.activado}"), string_width($"{L.menu_claves}: {L.desactivado}"))
+				cheat = draw_toggle(xpos + 10, ypos - 5, cheat, 1)
+				oleadas = not cheat
+				ypos += text_y + 20
+				//Modos de Juego
+				xpos = 200
+				if draw_boton(xpos, ypos, L.menu_modo_infinito, flow = 3 ? ui_boton_azul : ui_boton_gris,,,, 1){
+					mision_objetivo = []
+					flow = 3
+				}
+				xpos += text_x + 20
+				if draw_boton(xpos, ypos, L.menu_modo_oleadas, flow = 4 ? ui_boton_azul : ui_boton_gris,,,, 1){
+					mision_objetivo = [4]
+					mision_nombre = [""]
+					mision_target_num = [20]
+					mision_tiempo = [0]
+					mision_switch_oleadas = [false]
+					mision_camara_move = [false]
+					mision_texto = [[]]
+					flow = 4
+				}
+				xpos += text_x + 20
+				if draw_boton(xpos, ypos, L.menu_modo_misiones, flow = 5 ? ui_boton_azul : ui_boton_gris,,,, 1){
+					modo_misiones = true
+					add_mision()
+					flow = 5
+				}
+				if flow = 4{
+					ypos += text_y + 10
+					xpos = draw_text_xpos(160, ypos, L.menu_numero_oleadas)
+					mision_target_num[0] = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, mision_target_num[0], 10, 50, des_count++, 1))
+					draw_text_ypos(xpos + 145, ypos, mision_target_num[0])
+				}
 			}
+			ypos += text_y + 10
+			//Biomas
+			xpos = 200
+			if draw_boton(xpos, ypos, L.praderas,,,,, 1){
+				var file = cargar_escenario("Pradera.txt", false)
+				if file != ""{
+					mapa = 0
+					game_start()
+				}
+			}
+			xpos += 20
+			for(var a = 0; a < 3; a++)
+				if medallas[0, a]
+					draw_sprite(spr_medallas, a, xpos + 30 * a, ypos + text_y + 10)
+			xpos += text_x
+			if draw_boton(xpos, ypos, L.cuevas,,,,, 1){
+				var file = cargar_escenario("Cuevas.txt", false)
+				if file != ""{
+					mapa = 1
+					game_start()
+				}
+			}
+			xpos += 20
+			for(var a = 0; a < 3; a++)
+				if medallas[1, a]
+					draw_sprite(spr_medallas, a, xpos + 30 * a, ypos + text_y + 10)
+			xpos += text_x
+			if draw_boton(xpos, ypos, L.desierto,,,,, 1){
+				var file = cargar_escenario("Desierto.txt", false)
+				if file != ""{
+					mapa = 2
+					game_start()
+				}
+			}
+			xpos += 20
+			for(var a = 0; a < 3; a++)
+				if medallas[2, a]
+					draw_sprite(spr_medallas, a, xpos + 30 * a, ypos + text_y + 10)
+			xpos += text_x
+			if draw_boton(xpos, ypos, L.nieve,,,,, 1){
+				var file = cargar_escenario("Nieve.txt", false)
+				if file != ""{
+					mapa = 3
+					game_start()
+				}
+			}
+			xpos += 20
+			for(var a = 0; a < 3; a++)
+				if medallas[3, a]
+					draw_sprite(spr_medallas, a, xpos + 30 * a, ypos + text_y + 10)
+			xpos += text_x
+			if draw_boton(xpos, ypos, L.islas,,,,, 1){
+				var file = cargar_escenario("Islas.txt", false)
+				if file != ""{
+					mapa = 4
+					game_start()
+				}
+			}
+			xpos += 20
+			for(var a = 0; a < 3; a++)
+				if medallas[4, a]
+					draw_sprite(spr_medallas, a, xpos + 30 * a, ypos + text_y + 10)
+			ypos += text_y + 10
 			draw_set_halign(fa_center)
 			if browser and draw_boton(room_width / 2, room_height - 200, L.menu_cargar_escenario, ui_boton_azul,,,, 1){
 				if not nucleo.vivo
@@ -892,7 +997,7 @@ if menu = 2{
 		if get_file = 1{
 			draw_set_valign(fa_bottom)
 			for(var a = 0; a < array_length(save_files); a++){
-				var xpos = 120 + 120 * (a mod 10), ypos = 200 + 120 * floor(a / 10)
+				var xpos = 120 + 120 * (a mod 9), ypos = 200 + 120 * floor(a / 9)
 				var temp_text = string_delete(save_files[a], string_pos(".", save_files[a]), 4)
 				if draw_sprite_boton(save_files_png[a], xpos, ypos, 96, 96,, 1){
 					input_layer = 0
@@ -945,10 +1050,8 @@ if menu = 2{
 			get_file = 0
 		}
 	}
-	if draw_boton(10, room_height - 140, L.volver, ui_boton_rojo) or keyboard_check_pressed(vk_escape){
+	if draw_boton(10, room_height - 140, L.volver, ui_boton_rojo) or keyboard_check_pressed(vk_escape)
 		menu = 0
-		redo_pathfind()
-	}
 	control_camara(-200)
 	update_cursor()
 	exit
@@ -1036,6 +1139,11 @@ if menu = 2{
 		}
 	}
 	draw_set_halign(fa_center)
+	if mision_actual >= 0 and win = 0
+		for(var b = 0; b < array_length(mision_texto[mision_actual]); b++){
+			var texto = mision_texto[mision_actual, b]
+			draw_text_background(texto.x * zoom - camx, texto.y * zoom - camy, text_wrap(texto.texto, 250))
+		}
 	var temp_text = ""
 	for(var a = 0; a < rss_max; a++)
 		if nucleo.carga[rss_sort[a]] > 0
@@ -2953,7 +3061,7 @@ if build_index > 0 and win = 0{
 			if build_index = id_taladro_electrico{
 				for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
 					var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
-					if not in(ore[# aa, bb], 0, 1, 2) and in(terreno[# aa, bb], idt_piedra, idt_arena, idt_piedra_cuprica, idt_piedra_ferrica, idt_basalto_sulfatado){
+					if not in(ore[# aa, bb], 0, 1, 2) and terreno_recurso_bool[terreno[# aa, bb]]{
 						temp_array[terreno_recurso_id[terreno[# aa, bb]]]++
 						temp_array_2[terreno_recurso_id[terreno[# aa, bb]]] = -1
 						b++
@@ -2990,7 +3098,7 @@ if build_index > 0 and win = 0{
 					temp_array_2[ore_recurso[ore[# aa, bb]]] += ore_amount[# aa, bb]
 					flag = true
 				}
-				else if in(terreno[# aa, bb], idt_piedra, idt_arena, idt_piedra_cuprica, idt_piedra_ferrica, idt_basalto_sulfatado){
+				else if terreno_recurso_bool[terreno[# aa, bb]]{
 					temp_array[terreno_recurso_id[terreno[# aa, bb]]]++
 					temp_array_2[terreno_recurso_id[terreno[# aa, bb]]] = -1
 					flag = true
@@ -3850,12 +3958,6 @@ if pausa = 0{
 				keyboard_clear(vk_enter)
 				pasar_mision()
 			}
-			draw_set_halign(fa_center)
-			for(var b = 0; b < array_length(mision_texto[a]); b++){
-				var texto = mision_texto[a, b]
-				draw_text_background(texto.x * zoom - camx, texto.y * zoom - camy, text_wrap(texto.texto, 250))
-			}
-			draw_set_halign(fa_left)
 			if mision_tiempo[a] > 0{
 				if mision_camara_step <= 0 and --mision_current_tiempo <= 0{
 					if mision_tiempo_victoria[a]

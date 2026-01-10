@@ -10,6 +10,7 @@ function scr_refineria_metales(edificio = control.null_edificio){
 			if red_power = 0{
 				change_flujo(0, edificio)
 				change_energia(0, edificio)
+				encender_luz(-1, edificio)
 				continue
 			}
 			//Encender
@@ -17,6 +18,7 @@ function scr_refineria_metales(edificio = control.null_edificio){
 				change_energia(edificio_energia_consumo[index], edificio)
 				change_flujo(edificio_flujo_consumo[index], edificio)
 				edificio.proceso++
+				encender_luz(1, edificio)
 			}
 			edificio.proceso += min(red_power, flujo_power)
 			sound_play_edificio(2, edificio.x, edificio.y)
@@ -44,11 +46,13 @@ function scr_refineria_metales(edificio = control.null_edificio){
 				edificio.waiting = not mover(edificio.a, edificio.b)
 				change_energia(0, edificio)
 				change_flujo(0, edificio)
+				encender_luz(-1, edificio)
 			}
 		}
 		else{
 			change_flujo(0, edificio)
 			change_energia(0, edificio)
+			encender_luz(-1, edificio)
 		}
 		//Vaciar interior
 		if edificio.waiting and edificio.carga[id_uranio_enriquecido] > 0 or edificio.carga[id_uranio_empobrecido] > 0

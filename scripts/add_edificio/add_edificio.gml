@@ -157,7 +157,7 @@ function add_edificio(index, dir, a, b){
 			}
 		#endregion
 		//Edificios targeteables
-		if index = 0{
+		if index = id_nucleo and menu = 1{
 			edificio_pathfind(edificio)
 			array_push(edificios_targeteables, edificio)
 			size = array_length(enemigos)

@@ -13,6 +13,7 @@ function scr_fabrica_drones(edificio = control.null_edificio){
 				//Encender
 				if edificio.proceso < 0{
 					change_energia(edificio_energia_consumo[index], edificio)
+					encender_luz(1, edificio)
 					edificio.proceso++
 				}
 				edificio.proceso += red_power
@@ -30,10 +31,13 @@ function scr_fabrica_drones(edificio = control.null_edificio){
 					dron.b += random(5)
 					edificio.waiting = not mover_in(edificio)
 					change_energia(0, edificio)
+					encender_luz(-1, edificio)
 				}
 			}
 		}
-		else
+		else{
 			change_energia(0, edificio)
+			encender_luz(-1, edificio)
+		}
 	}
 }

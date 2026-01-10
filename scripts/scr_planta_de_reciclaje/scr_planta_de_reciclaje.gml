@@ -8,6 +8,7 @@ function scr_planta_de_reciclaje(edificio = control.null_edificio){
 			if red_power = 0{
 				change_flujo(0, edificio)
 				change_energia(0, edificio)
+				encender_luz(-1, edificio)
 				break
 			}
 			//Encender
@@ -15,6 +16,7 @@ function scr_planta_de_reciclaje(edificio = control.null_edificio){
 				change_energia(edificio.energia_consumo_max, edificio)
 				change_flujo(edificio.flujo_consumo_max, edificio)
 				edificio.proceso++
+				encender_luz(1, edificio)
 			}
 			edificio.proceso += min(flujo_power, red_power)
 			//Producir / Apagar
@@ -29,6 +31,7 @@ function scr_planta_de_reciclaje(edificio = control.null_edificio){
 				change_energia(0, edificio)
 				edificio.proceso = -1
 				edificio.waiting = not mover(edificio.a, edificio.b)
+				encender_luz(-1, edificio)
 			}
 		}
 		else{

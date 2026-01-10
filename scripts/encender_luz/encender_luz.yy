@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"encender_luz",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"encender_luz",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

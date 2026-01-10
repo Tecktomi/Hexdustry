@@ -28,8 +28,11 @@ function set_idioma(file, change = true){
 			sort_recursos()
 			for(var a = 0; a < terreno_max; a++)
 				terreno_nombre_display[a] = variable_struct_get(L, terreno_nombre[a])
-			for(var a = 0; a < dron_max; a++)
+			for(var a = 0; a < dron_max; a++){
 				dron_nombre_display[a] = variable_struct_get(L, dron_nombre[a])
+				dron_descripcion[a] = variable_struct_get(L, "descripcion_" + dron_nombre[a])
+				dron_descripcion[a] = text_wrap(dron_descripcion[a], 400)
+			}
 			for(var a = 0; a < array_length(categoria_nombre); a++)
 				categoria_nombre_display[a] = variable_struct_get(L, categoria_nombre[a])
 			for(var a = 0; a < array_length(objetivos_nombre); a++)

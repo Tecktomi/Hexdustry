@@ -8,11 +8,13 @@ function scr_perforadora_petroleo(edificio = control.null_edificio){
 			change_energia(edificio_energia_consumo[index], edificio)
 			change_flujo(red_power * edificio_flujo_consumo[index], edificio)
 			flujo.liquido = 2
+			encender_luz(1, edificio)
 		}
 		//Está apagado
 		else{
 			change_energia(0, edificio)
 			change_flujo(0, edificio)
+			encender_luz(-1, edificio)
 		}
 	}
 }

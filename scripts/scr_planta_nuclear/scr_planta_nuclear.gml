@@ -19,32 +19,18 @@ function scr_planta_nuclear(edificio = control.null_edificio){
 		if edificio.fuel = 0 and in(flujo.liquido, 0, 4){
 			//Encender
 			if edificio.carga[id_uranio_enriquecido] > 0 and edificio.carga[id_uranio_empobrecido] > 0 and flujo_power > 0{
-				edificio.fuel = 120
-				edificio.carga[id_uranio_enriquecido] -= 0.05
+				edificio.fuel = 300
+				edificio.carga[id_uranio_enriquecido] -= 0.1
 				edificio.carga[id_uranio_empobrecido]--
-				if grafic_luz and not edificio.luz{
-					edificio.luz = true
-					var temp_list = edificio.coordenadas
-					for(var b = ds_list_size(temp_list) - 1; b >= 0; b--){
-						var temp_complex = temp_list[|b]
-						add_luz(temp_complex.a, temp_complex.b, 1)
-					}
-				}
+				encender_luz(2, edificio)
 				change_energia(edificio_energia_consumo[index] * flujo_power, edificio)
 				change_flujo(edificio_flujo_consumo[index], edificio)
-				edificio.carga_total -= 1.05
+				edificio.carga_total -= 1.1
 				mover_in(edificio)
 			}
 			//Apagar
 			else{
-				if grafic_luz and edificio.luz{
-					edificio.luz = false
-					var temp_list = edificio.coordenadas
-					for(var b = ds_list_size(temp_list) - 1; b >= 0; b--){
-						var temp_complex = temp_list[|b]
-						add_luz(temp_complex.a, temp_complex.b, -1)
-					}
-				}
+				encender_luz(-2, edificio)
 				change_energia(0, edificio)
 				change_flujo(0, edificio)
 			}

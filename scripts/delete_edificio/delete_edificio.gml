@@ -5,18 +5,19 @@ function delete_edificio(aa, bb, enemigo = false){
 		var edificio = edificio_id[# aa, bb], index = edificio.index
 		var pre_vida = edificio.vida
 		edificio.vida = 0
-		if index = 0{
+		if index = id_nucleo{
 			array_remove(nucleos, edificio)
-			if menu = 1 and array_length(nucleos) = 0{
-				win = 2
-				selected_dron = null_enemigo
+			if menu = 1{
+				array_remove(edificios_targeteables, edificio)
+				if array_length(nucleos) = 0{
+					win = 2
+					selected_dron = null_enemigo
+				}
 			}
 		}
 		array_remove(edificios, edificio)
 		edificios_counter[index]--
 		ds_grid_destroy(edificio.coordenadas_dis)
-		if index = 0
-			array_remove(edificios_targeteables, edificio)
 		if index = id_puerto_de_carga and edificio.link != null_edificio{
 			if edificio.receptor
 				array_remove(puerto_carga_array, edificio)
@@ -79,7 +80,7 @@ function delete_edificio(aa, bb, enemigo = false){
 			ds_grid_set(repair_dir, aa, bb, edificio.dir)
 		}
 		ds_list_destroy(edificio.coordenadas)
-		if index = 0 and array_length(edificios_targeteables) > 0
+		if menu = 1 and index = id_nucleo and array_length(edificios_targeteables) > 0
 			for(var a = 0; a < xsize; a++)
 				for(var b = 0; b < ysize; b++)
 					if terreno_caminable[terreno[# a, b]]{
