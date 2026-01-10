@@ -96,11 +96,13 @@ function mover(aa, bb){
 			edificio.carga[out]--
 			edificio.carga_total--
 			if mision_actual >= 0{
-				if mision_objetivo[mision_actual] = 0 and mision_target_id[mision_actual] = out and temp_edificio.index = 0 and ++mision_counter >= mision_target_num[mision_actual]
+				if mision_objetivo[mision_actual] = 0 and mision_target_id[mision_actual] = out and temp_edificio.index = id_nucleo and ++mision_counter >= mision_target_num[mision_actual]
 					pasar_mision()
 				else if mision_objetivo[mision_actual] = 7 and mision_target_id[mision_actual] = temp_edificio.index
 					pasar_mision()
 			}
+			if temp_edificio.index = id_nucleo
+				recursos_obtenidos_time_temp[out]++
 			if in(out, id_piedra_cuprica, id_piedra_ferrica, id_piedra_sulfatada) and in(temp_edificio.index, id_nucleo, id_triturador, id_fabrica_de_concreto)
 				out = id_piedra
 			else if in(out, id_uranio_enriquecido, id_uranio_empobrecido) and in(temp_edificio.index, id_nucleo, id_rifle, id_mortero)

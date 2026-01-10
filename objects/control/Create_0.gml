@@ -2,16 +2,17 @@ randomize()
 draw_set_font(ft_letra)
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
-ini_write_string("Global", "version", "09_01_2026")
+ini_write_string("Global", "version", "10_01_2026")
 medallas = array_create(5)
 for(var a = 0; a < 5; a++){
 	medallas[a] = array_create(3, false)
-	for(var b = 0; b < 3; b++)
-		if (ini_read_real("Medallas", $"{a},{b}", 0) mod (12092000 + (a + 1) * (b + 10))) = 1
+	for(var b = 0; b < 3; b++){
+		var c = ini_read_real("Medallas", $"{a},{b}", 0)
+		if c > 12092000 and (c mod (12092000 + (a + 1) * (b + 10))) = 1
 			array_set(medallas[a], b, true)
+	}
 }
 ini_close()
-show_debug_message(medallas)
 browser = (os_browser = browser_not_a_browser)
 save_files = browser ? scan_files("*.txt", fa_none) : []
 if browser{
@@ -193,6 +194,9 @@ set_idioma(idiomas[idioma], false)
 	enemigos_eliminados = 0
 	tecnologias_estudiadas = 0
 	misiones_pasadas = 0
+	recursos_obtenidos = array_create(0, 0)
+	recursos_obtenidos_time = array_create(0, array_create(0, 0))
+	recursos_obtenidos_time_temp = array_create(0, 0)
 	tutorial = 0
 	get_file = 0
 	tecnologia = true
@@ -823,7 +827,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 	id_bomba_de_evaporacion = def_edificio("Bomba de Evaporación", 1, spr_bomba_evaporacion, spr_tuberia_color, 30,, scr_bomba_evaporacion,, [id_bronce, id_hierro], [10, 5]); def_edificio_2(, 10, -5, 0)
 	id_horno_de_lava = def_edificio("Horno de Lava", 2, spr_horno_lava, spr_horno_lava_encendido, 400, 90, scr_horno_lava,, [id_acero, id_concreto], [15, 10], 70, true, false, [id_cobre, id_hierro, id_arena, id_sal], [10, 10, 10, 10], true, false, [id_bronce, id_acero, id_silicio]); def_edificio_2(, 10, 15, 3)
 	id_generador_geotermico = def_edificio("Generador Geotérmico", 2, spr_generador_geotermico,, 200,, scr_generador_geotermico,, [id_cobre, id_acero, id_concreto], [10, 10, 10]); def_edificio_2(-90, 10, 30, 0)
-	id_taladro_de_explosion = def_edificio("Taladro de Explosión", 3, spr_taladro_explosivo,, 300, 300, scr_taladro_explosion,, [id_hierro, id_acero, id_concreto], [40, 40, 30], 40, true, false, [13], [10], true, false, [id_cobre, id_carbon, id_bronce, id_piedra, id_arena, id_piedra_cuprica, id_piedra_ferrica, id_piedra_sulfatada, id_uranio_bruto, id_sal]); def_edificio_2()
+	id_taladro_de_explosion = def_edificio("Taladro de Explosión", 3, spr_taladro_explosivo,, 300, 300, scr_taladro_explosion,, [id_hierro, id_acero, id_concreto], [40, 40, 30], 40, true, false, [13], [10], true, false, [id_cobre, id_carbon, id_hierro, id_piedra, id_arena, id_piedra_cuprica, id_piedra_ferrica, id_piedra_sulfatada, id_uranio_bruto, id_sal]); def_edificio_2()
 	id_muro = def_edificio("Muro", 1, spr_hexagono,, 500,,,, [8], [1]); def_edificio_2(,,,,,, true)
 	id_puerto_de_carga = def_edificio("Puerto de Carga", 2, spr_punto_carga,, 150,, scr_puerto_carga,, [id_cobre, id_bronce, id_electronico], [10, 10, 1], 25,, true,,,, true); def_edificio_2()
 	id_ensambladora = def_edificio("Ensambladora", 3, spr_ensambladora,, 400, 150, scr_ensambladora,, [id_hierro, id_bronce, id_acero, id_silicio], [10, 20, 10, 10], 20, true, false, [id_cobre, id_silicio], [5, 5], true, false, [id_electronico]); def_edificio_2(100)
