@@ -16,7 +16,7 @@ function scr_taladro_explosion(edificio = control.null_edificio){
 						edificio.carga_total++
 						flag = true
 					}
-					else if in(terreno[# aa, bb], idt_piedra, idt_arena, idt_piedra_cuprica, idt_piedra_ferrica, idt_basalto_sulfatado){
+					else if terreno_recurso_bool[terreno[# aa, bb]]{
 						edificio.carga[terreno_recurso_id[terreno[# aa, bb]]]++
 						edificio.carga_total++
 						flag = true

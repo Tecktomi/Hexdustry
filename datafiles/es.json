@@ -26,6 +26,12 @@
 "islas": "Islas",
 "activado": "Activado",
 "desactivado": "Desactivado",
+"dificultad": "Dificultad",
+"facil": "Fácil",
+"medio": "Medio",
+"dificil": "Difícil",
+"personalizado": "Personalizado",
+"tiempo": "Tiempo",
 
 "Núcleo": "Núcleo",
 "Taladro": "Taladro",
@@ -229,7 +235,16 @@
 "Reparador": "Reparador",
 "Explosivo": "Explosivo",
 "Tanque": "Tanque",
-"Helicoptero": "Helicoptero",
+"Helicóptero": "Helicoptero",
+"Titán": "Titán",
+
+"descripcion_Araña": "Dispara un láser a los enemigos cercanos",
+"descripcion_Dron": "Transporta recursos entre Puertos de Carga",
+"descripcion_Reparador": "Repara los edificios dañados",
+"descripcion_Explosivo": "Se acerca a su objetivo y explota infilgiendo daño",
+"descripcion_Tanque": "Unidad de asedio superior, dispara explosivos dañando todo a su alrededor",
+"descripcion_Helicóptero": "Unidad aerea superior, dispara a distancia",
+"descripcion_Titán": "Unidad terrestre máxima, dispara una ráfaga de explosivos de largo alcance",
 
 "Transporte": "Transporte",
 "Extracción": "Extracción",
@@ -451,6 +466,6 @@
 "planta_quimica_receta 2": "Baterías",
 
 "planta_quimica_descripcion 0": "Consume Piedra Sulfatada y energía para producir Ácido",
-"planta_quimica_descripcion 1": "Utiliza Carbón y Piedra Sulfatada para producir Explosivos",
-"planta_quimica_descripcion 2": "Utiliza Ácido, Hierro y energía para producir Baterías"
+"planta_quimica_descripcion 1": "Utiliza Compuesto Incendiario y Ácido para producir Explosivos",
+"planta_quimica_descripcion 2": "Utiliza Ácido, Cobre y energía para producir Baterías"
 }

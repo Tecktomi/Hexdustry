@@ -8,6 +8,7 @@ function scr_horno_lava(edificio = control.null_edificio){
 			if edificio.proceso < 0{
 				change_flujo(edificio_flujo_consumo[index], edificio)
 				edificio.proceso++
+				encender_luz(1, edificio)
 			}
 			edificio.proceso += flujo_power
 			//Producir / Apagar
@@ -37,6 +38,7 @@ function scr_horno_lava(edificio = control.null_edificio){
 				}
 				edificio.waiting = not mover(edificio.a, edificio.b)
 				change_flujo(0, edificio)
+				encender_luz(-1, edificio)
 			}
 		}
 	}

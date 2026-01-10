@@ -8,6 +8,12 @@ function pasar_mision(){
 		if ++mision_actual >= array_length(mision_nombre){
 			mision_actual = -1
 			win = 1
+			if mapa >= 0 and dificultad >= 0{
+				ini_open("settings.ini")
+				ini_write_real("Medallas", $"{mapa},{dificultad}", irandom_range(99, 999) * (12092000 + (mapa + 1) * (dificultad + 10)) + 1)
+				array_set(medallas[mapa], dificultad, true)
+				ini_close()
+			}
 		}
 		else{
 			mision_counter = 0

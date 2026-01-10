@@ -2,6 +2,7 @@ function game_start(){
 	with control{
 		if not nucleo.vivo
 			game_restart()
+		redo_pathfind()
 		if array_length(mision_nombre) > 0{
 			mision_actual = -1
 			pasar_mision()

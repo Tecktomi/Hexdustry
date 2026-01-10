@@ -35,6 +35,8 @@ function scr_embotelladora(edificio = control.null_edificio){
 					else if edificio.carga[id_barril_lava] > 0{
 						edificio.carga[id_barril_lava]--
 						flujo.liquido = 3
+						if not edificio.luz
+							encender_luz(1, edificio)
 					}
 					else if edificio.carga[id_barril_agua_salada] > 0{
 						edificio.carga[id_barril_agua_salada]--

@@ -6,10 +6,12 @@ function scr_generador_geotermico(edificio = control.null_edificio){
 		if in(edificio.flujo.liquido, -1, 0){
 			change_energia(flujo_power * edificio_energia_consumo[index] * edificio.select / 3, edificio)
 			change_flujo(edificio_flujo_consumo[index], edificio)
+			encender_luz(1, edificio)
 		}
 		else{
 			change_energia(0, edificio)
 			change_flujo(0, edificio)
+			encender_luz(-1, edificio)
 		}
 	}
 }

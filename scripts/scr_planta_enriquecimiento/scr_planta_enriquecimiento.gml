@@ -10,6 +10,7 @@ function scr_planta_enriquecimiento(edificio = control.null_edificio){
 					change_energia(edificio_energia_consumo[index], edificio)
 					change_flujo(edificio_flujo_consumo[index], edificio)
 					edificio.proceso++
+					encender_luz(1, edificio)
 				}
 				edificio.proceso = max(0, edificio.proceso + 4 * (red_power - 0.5) * (flujo_power - 0.5))
 				sound_play_edificio(0, edificio.x, edificio.y)
@@ -21,6 +22,7 @@ function scr_planta_enriquecimiento(edificio = control.null_edificio){
 					edificio.waiting = not mover(edificio.a, edificio.b)
 					change_energia(0, edificio)
 					change_flujo(0, edificio)
+					encender_luz(-1, edificio)
 				}
 			}
 			else
