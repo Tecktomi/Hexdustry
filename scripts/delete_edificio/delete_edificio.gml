@@ -317,14 +317,15 @@ function delete_edificio(aa, bb, enemigo = false){
 		}
 		//Camiar target de enemigos
 		size = array_length(enemigos)
-		for(var a = 0; a < size; a++){
-			var temp_enemigo = enemigos[a]
-			if temp_enemigo.target = edificio{
-				var temp_complex = xytoab(temp_enemigo.a, temp_enemigo.b)
-				if temp_complex.a >= 0
-					enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
+		if index != id_nucleo
+			for(var a = 0; a < size; a++){
+				var temp_enemigo = enemigos[a]
+				if temp_enemigo.target = edificio{
+					var temp_complex = xytoab(temp_enemigo.a, temp_enemigo.b)
+					if temp_complex.a >= 0
+						enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
+				}
 			}
-		}
 		//Explosión Nuclear
 		if enemigo and index = id_planta_nuclear and edificio.fuel > 0{
 			var xpos = edificio.x, ypos = edificio.y

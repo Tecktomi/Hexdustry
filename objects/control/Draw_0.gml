@@ -3454,6 +3454,14 @@ if pausa = 0{
 	for(ticks = 0; (acumulator >= LOGIC_DT and ticks < 5) or ticks = 0; ticks++){
 		acumulator -= LOGIC_DT
 		timer++
+		if (timer mod 3600) = 0{
+			var temp_array_real = array_create(rss_max, 0)
+			array_copy(temp_array_real, 0, recursos_obtenidos_time_temp, 0, rss_max)
+			for(var a = 0; a < rss_max; a++)
+				recursos_obtenidos[a] += recursos_obtenidos_time_temp[a]
+			array_push(recursos_obtenidos_time, temp_array_real)
+			recursos_obtenidos_time_temp = array_create(rss_max, 0)
+		}
 		//Ciclo edificios
 		for(var a = array_length(edificios_activos) - 1; a >= 0; a--){
 			edificio = edificios_activos[a]
@@ -4235,19 +4243,57 @@ if win > 0{
 		draw_text(room_width / 2, 100, win = 1 ? L.win_victoria : L.win_derrota)
 		draw_set_font(ft_letra)
 		var ypos = 200, sec = floor(--timer / 60)
-		ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_tiempo}: {sec >= 60 ? string(floor(sec / 60)) + "m " : ""}{sec mod 60}s")
-		if edificios_construidos > 0
-			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_edificios}: {edificios_construidos}")
-		if drones_construidos > 0
-			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_drones}: {drones_construidos}")
-		if enemigos_eliminados > 0
-			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_enemigos}: {enemigos_eliminados}")
-		if tecnologia
-			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_tecnologias}: {tecnologias_estudiadas}")
-		if modo_misiones
-			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_misiones}: {misiones_pasadas}")
+		if win < 10{
+			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_tiempo}: {sec >= 60 ? string(floor(sec / 60)) + "m " : ""}{sec mod 60}s")
+			if edificios_construidos > 0
+				ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_edificios}: {edificios_construidos}")
+			if drones_construidos > 0
+				ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_drones}: {drones_construidos}")
+			if enemigos_eliminados > 0
+				ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_enemigos}: {enemigos_eliminados}")
+			if tecnologia
+				ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_tecnologias}: {tecnologias_estudiadas}")
+			if modo_misiones
+				ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_misiones}: {misiones_pasadas}")
+			var b = 0
+			for(var a = 0; a < rss_max; a++)
+				b += recursos_obtenidos[a]
+			if b > 0 and draw_boton(room_width / 2, ypos + 10, $"{L.recursos_obtenidos}: {b}")
+				win += 10
+		}
+		else{
+			if draw_boton(room_width / 2, ypos + 10, L.volver)
+				win -= 10
+			ypos += text_y + 20
+			var b = array_length(recursos_obtenidos_time), d = 0, e = 400 / b
+			for(var a = 0; a < rss_max; a++)
+				if recursos_obtenidos[a] > 0{
+					draw_set_color(recurso_color[a])
+					ypos = draw_text_ypos(room_width / 2, ypos, $"{recurso_nombre_display[a]}: {recursos_obtenidos[a]}")
+					for(var c = 0; c < b; c++)
+						d = max(d, recursos_obtenidos_time[c, a])
+				}
+			draw_set_color(c_white)
+			d = 100 / d
+			var xpos = room_width / 2 - 200
+			draw_line(xpos, ypos + 100, xpos + 400, ypos + 100)
+			draw_line(xpos, ypos + 100, xpos, ypos)
+			for(var a = 0; a < rss_max; a++){
+				if recursos_obtenidos[a] > 0{
+					draw_set_color(recurso_color[a])
+					if recursos_obtenidos_time[0, a] != 0
+						draw_line(xpos, ypos + 100, xpos + e, ypos + 100 - d * recursos_obtenidos_time[0, a])
+					for(var c = 0; c < b - 1; c++)
+						if recursos_obtenidos_time[c, a] != 0 or recursos_obtenidos_time[c + 1, a] != 0
+							draw_line(xpos + e * (c + 1), ypos + 100 - d * recursos_obtenidos_time[c, a], xpos + e * (c + 2), ypos + 100 - d * recursos_obtenidos_time[c + 1, a])
+				}
+			}
+			draw_set_color(c_white)
+			for(var c = 0; c <= b / 5; c++)
+				draw_text(xpos + 5 * e * c, ypos + 100, 5 * c)
+		}
 		//Victoria
-		if win = 1{
+		if (win mod 10) = 1{
 			if in(tutorial, 1, 2, 3, 4) and draw_boton(room_width / 2, room_height - 250, L.win_siguiente_mision, ui_boton_verde){
 				if tutorial = 1
 					var file = cargar_escenario("mision_2.txt")
@@ -4267,7 +4313,7 @@ if win > 0{
 			}
 		}
 		//Derrota
-		if win = 2 and tutorial > 0 and draw_boton(room_width / 2, room_height - 250, L.win_reintentar, ui_boton_azul){
+		if (win mod 10) = 2 and tutorial > 0 and draw_boton(room_width / 2, room_height - 250, L.win_reintentar, ui_boton_azul){
 			if tutorial = 1
 				cargar_escenario("mision_1.txt")
 			if tutorial = 2

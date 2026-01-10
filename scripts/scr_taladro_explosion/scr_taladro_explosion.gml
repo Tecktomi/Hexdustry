@@ -26,7 +26,7 @@ function scr_taladro_explosion(edificio = control.null_edificio){
 					edificio.waiting = not mover(edificio.a, edificio.b)
 				else
 					edificio.idle = true
-				edificio.proceso -= edificio_proceso[index]
+				edificio.proceso = 0
 			}
 		}
 		if edificio.carga_total > edificio.carga[id_explosivo]

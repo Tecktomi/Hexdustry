@@ -29,10 +29,13 @@ function game_start(){
 		enemigos_eliminados = 0
 		tecnologias_estudiadas = 0
 		flow = 0
+		recursos_obtenidos = array_create(rss_max, 0)
+		recursos_obtenidos_time_temp = array_create(rss_max, 0)
+		recursos_obtenidos_time = array_create(0, array_create(rss_max, 0))
 		ds_grid_clear(luz, 0)
 		for(var a = 0; a < xsize; a++)
 			for(var b = 0; b < ysize; b++){
-				if terreno[# a, b] = 14
+				if terreno[# a, b] = idt_lava
 					add_luz(a, b, 1)
 				if edificio_bool[# a, b]{
 					var edificio = edificio_id[# a, b]
