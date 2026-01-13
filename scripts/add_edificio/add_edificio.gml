@@ -402,7 +402,7 @@ function add_edificio(index, dir, a, b){
 			}
 			ds_list_destroy(temp_list_flujos)
 			edificio.flujo.almacen_max += edificio_flujo_almacen[index]
-			if in(index, id_bomba_de_evaporacion, id_generador_geotermico){
+			if in(index, id_bomba_de_evaporacion, id_generador_geotermico, id_extractor_atmosferico){
 				edificio.flujo.liquido = 0
 				change_flujo(edificio_flujo_consumo[index], edificio)
 				if index = id_generador_geotermico{
@@ -410,6 +410,18 @@ function add_edificio(index, dir, a, b){
 					for(var c = ds_list_size(temp_list_size) - 1; c >= 0; c--){
 						var temp_complex_2 = temp_list_size[|c], aa = temp_complex_2.a, bb = temp_complex_2.b
 						edificio.select += (terreno[# aa, bb] = idt_lava)
+					}
+				}
+				else if index = id_extractor_atmosferico{
+					edificio.select = 0
+					for(var c = ds_list_size(temp_list_size) - 1; c >= 0; c--){
+						var temp_complex_2 = temp_list_size[|c], aa = temp_complex_2.a, bb = temp_complex_2.b, d = terreno[# aa, bb]
+						if d = idt_hielo
+							edificio.select += 1.5
+						else if d = idt_nieve
+							edificio.select += 1.3
+						else if d != idt_salar
+							edificio.select++
 					}
 				}
 			}

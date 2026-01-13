@@ -4,6 +4,9 @@ function get_size(a, b, dir, size){
 	if size = 2
 		for(var c = 4; c < 6; c++)
 			ds_list_add(output, next_to(a, b, (dir + c) mod 6))
+	if size = 2.5
+		for(var c = 4; c <= 6; c++)
+			ds_list_add(output, next_to(a, b, (dir + c) mod 6))
 	if size = 3
 		for(var c = 0; c < 6; c++)
 			ds_list_add(output, next_to(a, b, (dir + c) mod 6))

@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
-ini_write_string("Global", "version", "10_01_2026")
+ini_write_string("Global", "version", "12_01_2026")
 medallas = array_create(5)
 for(var a = 0; a < 5; a++){
 	medallas[a] = array_create(3, false)
@@ -549,7 +549,7 @@ function def_terreno(nombre, sprite = spr_piedra, recurso = -1, caminable = true
 	idt_nieve = def_terreno("Nieve", spr_nieve,,,,, #E5FFFF)
 	idt_pared_nieve = def_terreno("Pared de Nieve", spr_pared_nieve,, false,, true, #CEE5E5)
 	idt_lava = def_terreno("Lava", spr_lava,, false, true,, #FBAF5D)
-	idt_hielo = def_terreno("Hielo", spr_hielo,,,, true, #9DD2D5)
+	idt_hielo = def_terreno("Hielo", spr_hielo,,,,, #9DD2D5)
 	idt_basalto = def_terreno("Basalto", spr_basalto,,,,, #555555)
 	idt_ceniza = def_terreno("Ceniza", spr_ceniza,,,, true, #191919)
 	idt_agua_salada = def_terreno("Agua Salada", spr_agua_salada,, false, true,, #3F6E85)
@@ -701,7 +701,8 @@ for(var a = 0; a < lq_max; a++)
 		"Mediante la destilación fraccionada permite extraer Plástico, Combustible y Azufre del Petróleo",
 		"Permite reciclar parte de los recursos de los enemigos destruidos cercanos",
 		"Purifica el Agua Salada para extraer la Sal y el Agua dulce",
-		"Llena y vacía barriles con líquidos"
+		"Llena y vacía barriles con líquidos",
+		"Extrae agua de la atmósfera, ideal para terrenos donde no es fácil obtenerla"
 	]
 	for(var a = array_length(edificio_descripcion) - 1; a >= 0; a--)
 		edificio_descripcion[a] = text_wrap(edificio_descripcion[a], 400)
@@ -816,7 +817,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 	id_rifle = def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, 400, 45, scr_torres_basicas,, [id_cobre, id_hierro, id_acero], [10, 10, 10], 30, true, false, [id_bronce, id_acero, id_uranio_bruto, id_uranio_enriquecido, id_uranio_empobrecido], [10, 10, 10, 10, 10]); def_edificio_2(, 10, 30, 0, 1, 300)
 	id_lanzallamas = def_edificio("Lanzallamas", 2, spr_lanzallamas, spr_lanzallamas_2, 400, 1, scr_torres_basicas,, [id_cobre, id_bronce, id_hierro], [15, 15, 10], 20, true, false, [id_carbon, id_combustible], [10, 10]); def_edificio_2(, 10, 30, 2, 3, 130)
 	id_planta_quimica = def_edificio("Planta Química", 3, spr_planta_quimica,, 200, 60, scr_planta_quimica,, [id_cobre, id_bronce, id_hierro, id_silicio], [20, 10, 20, 10], 30, true, false, [id_cobre, id_piedra_sulfatada, id_combustible, id_sal], [0, 0, 0, 10], true, false, [id_explosivo, id_baterias]); def_edificio_2(50, 10,, 1)
-	id_laser = def_edificio("Láser", 2, spr_laser, spr_laser_2, 400, 1, scr_laser,, [id_cobre, id_acero, id_electronico], [10, 10, 5]); def_edificio_2(90,,,, 0, 220)
+	id_laser = def_edificio("Láser", 2, spr_laser, spr_laser_2, 400, 1, scr_laser,, [id_cobre, id_acero, id_silicio, id_electronico], [10, 5, 5, 5]); def_edificio_2(90,,,, 0, 220)
 	id_deposito = def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, 200,,,, [id_bronce, id_acero], [20, 10]); def_edificio_2(, 1000,,,,, true)
 	id_liquido_infinito = def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, 30); def_edificio_2(, 10, -999_999,,,, true)
 	id_turbina = def_edificio("Turbina", 2, spr_turbina,, 160,, scr_turbina,, [id_cobre, id_bronce, id_acero], [10, 10, 10], 20, true, false, [id_carbon, id_combustible], [10, 10]); def_edificio_2(-120, 10, 50, 0)
@@ -853,13 +854,14 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 	id_planta_de_reciclaje = def_edificio("Planta de Reciclaje", 3, spr_planta_de_reciclaje,, 300,, scr_planta_de_reciclaje,, [id_bronce, id_silicio, id_concreto], [20, 15, 15],,,,,, true, false); def_edificio_2(60, 10, 20, 1)
 	id_planta_desalinizadora = def_edificio("Planta Desalinizadora", 2, spr_planta_desalinizadora,, 200, 60, scr_planta_desalinizadora,, [id_cobre, id_bronce, id_silicio], [20, 15, 15], 20,,,,, true, false, [id_sal, id_barril_agua]); def_edificio_2(40, 10, 20, 4)
 	id_embotelladora = def_edificio("Embotelladora", 2, spr_embotelladora,, 120, 20, scr_embotelladora,, [id_bronce, id_silicio], [15, 15], 50, false, false, [id_barril_agua, id_barril_acido, id_barril_petroleo, id_barril_lava, id_barril_agua_salada], [10, 10, 10, 10, 10], true, false, [id_barril_agua, id_barril_acido, id_barril_petroleo, id_barril_lava, id_barril_agua_salada]); def_edificio_2(, 10, -250)
+	id_extractor_atmosferico = def_edificio("Extractor Atmosférico", 2.5, spr_extractor_agua,, 200,, scr_extractor_agua, false, [id_cobre, id_bronce, id_silicio], [10, 20, 10]); def_edificio_2(60, 10, -6, 0)
 #endregion
 categoria_edificios = [
 	[id_cinta_transportadora, id_cinta_magnetica, id_enrutador, id_selector, id_overflow, id_tunel, id_almacen, id_fabrica_de_drones, id_puerto_de_carga],
 	[id_taladro, id_taladro_electrico, id_taladro_de_explosion, id_perforadora_de_petroleo],
 	[id_horno, id_triturador, id_fabrica_de_concreto, id_ensambladora, id_planta_quimica, id_refineria_de_petroleo, id_refineria_de_metales, id_horno_de_lava, id_planta_de_reciclaje, id_planta_de_enriquecimiento],
 	[id_cable, id_torre_de_alta_tension, id_bateria, id_generador, id_turbina, id_panel_solar, id_generador_geotermico, id_planta_nuclear],
-	[id_tuberia, id_tuberia_subterranea, id_bomba_de_evaporacion, id_bomba_hidraulica, id_deposito, id_planta_desalinizadora, id_embotelladora],
+	[id_tuberia, id_tuberia_subterranea, id_bomba_de_evaporacion, id_bomba_hidraulica, id_deposito, id_planta_desalinizadora, id_embotelladora, id_extractor_atmosferico],
 	[id_torre_basica, id_rifle, id_lanzallamas, id_laser, id_mortero, id_onda_de_choque, id_torre_reparadora, id_muro, id_muro_reforzado, id_silo_de_misiles],
 	[id_procesador, id_mensaje, id_memoria, id_pantalla]]
 for(var a = 0; a < array_length(categoria_edificios); a++)
@@ -898,6 +900,7 @@ edificio_construible[id_recurso_infinito] = false
 edificio_key[id_energia_infinita] = "4 "
 edificio_key[id_liquido_infinito] = "5 "
 edificio_key[id_recurso_infinito] = "1 "
+edificio_rotable[id_extractor_atmosferico] = true
 var flag_rss = array_create(rss_max, false)
 for(var a = 0; a < dron_max; a++){
 	var c = 0
@@ -1123,6 +1126,7 @@ olas = [spr_agua_salada, spr_olas_1, spr_olas_2, spr_olas_3, spr_olas_4, spr_ola
 	def_tecnologia("planta de reciclaje", "refinería de metales", "horno de lava")
 	def_tecnologia("planta desalinizadora", "bomba de evaporación", "generador")
 	def_tecnologia("embotelladora", "tubería")
+	def_tecnologia("extractor atmosférico", "bomba hidráulica", "turbina")
 	edificio_tecnologia_nivel = array_create(edificio_max, -1)
 	tecnologia_nivel_edificios = [array_create(0, 0)]
 	var edi_count = 0
@@ -1301,7 +1305,7 @@ for(var a = 0; a < xsize; a++)
 					set_terreno(a, b, idt_agua_salada_profunda)
 		}
 	}
-//Crear nucelo
+//Crear nucleo
 var temp_list = get_size(floor(xsize / 2), floor(ysize / 2), 0, 7)
 for(var a = ds_list_size(temp_list) - 1; a >= 0; a--){
 	var temp_complex = temp_list[|a], aa = temp_complex.a, bb = temp_complex.b
