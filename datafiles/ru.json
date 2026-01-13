@@ -91,6 +91,7 @@
 "Planta de Reciclaje": "Перерабатывающий завод",
 "Planta Desalinizadora": "Опреснительная установка",
 "Embotelladora": "Линия розлива",
+"Extractor Atmosférico": "Атмосферный экстрактор",
 
 "descripcion_Núcleo": "Командный центр. Все ресурсы хранятся здесь. Его необходимо защищать любой ценой.",
 "descripcion_Taladro": "Добывает медь, железо и уголь бесплатно. Может быть усилен водой.",
@@ -149,6 +150,7 @@
 "descripcion_Planta de Reciclaje": "Позволяет перерабатывать часть ресурсов от уничтоженных поблизости врагов",
 "descripcion_Planta Desalinizadora": "Очищает солёную воду, извлекая соль и пресную воду",
 "descripcion_Embotelladora": "Наполняет и опустошает бочки с жидкостями",
+"descripcion_Extractor Atmosférico": "Извлекает воду из атмосферы, идеально подходит для мест, где её сложно получить",
 
 "Cobre": "Медь",
 "Carbón": "Уголь",
@@ -374,6 +376,7 @@
 "construir_sobre_agua": "Должно быть построено на воде",
 "construir_sobre_minerales": "Должно быть построено на минералах",
 "construir_sobre_minerales_piedra": "Должно быть построено на минералах, камне или песке",
+"construir_sobre_salar": "Нельзя построить на солончаке",
 "construir_ocupado": "Участок занят",
 
 "procesador_cargar": "Загрузить код",

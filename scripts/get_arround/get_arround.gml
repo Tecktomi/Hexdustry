@@ -17,6 +17,15 @@ function get_arround(a, b, dir, size){
 			else
 				ds_list_add(output, temp_complex)
 		}
+	else if size = 2.5{
+		var temp_complex = next_to(a, b, (dir + 2) mod 6)
+		ds_list_add(output, temp_complex)
+		var temp_array = [4, 4, 5, 0, 0, 1, 1, 2, 3]
+		for(var c = 0; c < array_length(temp_array); c++){
+			temp_complex = next_to(temp_complex.a, temp_complex.b, (dir + temp_array[c]) mod 6)
+			ds_list_add(output, temp_complex)
+		}
+	}
 	else if size = 3
 		for(var c = 0; c < 6; c++){
 			var temp_complex = next_to(a, b, (dir + c) mod 6)

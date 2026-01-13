@@ -113,7 +113,7 @@ if menu = 0{
 				cheat = false
 				mision_objetivo = [4]
 				mision_nombre = [""]
-				mision_target_num = [25]
+				mision_target_num = [22]
 				mision_tiempo = [0]
 				mision_switch_oleadas = [false]
 				mision_camara_move = [false]
@@ -1370,6 +1370,7 @@ if menu = 2{
 			if (edificio_tecnologia[ei] or cheat) and draw_boton(120, pos + 40, L.enciclopedia_construir, ui_boton_verde){
 				enciclopedia = 0
 				build_index = ei
+				build_dir = 0
 			}
 			draw_sprite_ext(edificio_sprite[ei], 0, room_width - 200, 200, 2, 2, 0, c_white, 1)
 			if edificio_armas[ei] and ei != id_onda_de_choque
@@ -2933,7 +2934,7 @@ if build_index > 0 and win = 0{
 		}
 		for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
 			var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb =  temp_complex_2.b
-			if terreno_pared[terreno[# aa, bb]] or terreno[# aa, bb] = idt_hielo{
+			if terreno_pared[terreno[# aa, bb]] or (terreno[# aa, bb] = idt_hielo and build_index != id_extractor_atmosferico){
 				temp_text += $"{L.construir_terreno_invalido}\n"
 				comprable = false
 				break
@@ -3027,7 +3028,7 @@ if build_index > 0 and win = 0{
 				temp_text += $"{L.construir_sobre_lava}\n"
 			}
 			else
-				temp_text += $"Producirá {30 * i} energía/s"
+				temp_text += $"{L.game_producira} {abs(edificio_energia_consumo[build_index]) * i} {L.energia}/s"
 		}
 		else if build_index = id_bomba_de_evaporacion{
 			flag = false
@@ -3042,6 +3043,24 @@ if build_index > 0 and win = 0{
 				comprable = false
 				temp_text += $"{L.construir_sobre_agua}\n"
 			}
+		}
+		else if build_index = id_extractor_atmosferico{
+			var i = 0
+			for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
+				var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b, b = terreno[# aa, bb]
+				if b = idt_hielo
+					i += 1.5
+				else if b = idt_nieve
+					i += 1.3
+				else if b != idt_salar
+					i++
+			}
+			if i = 0{
+				comprable = false
+				temp_text += $"{L.construir_sobre_salar}\n"
+			}
+			else
+				temp_text += $"{L.game_producira} {abs(edificio_flujo_consumo[build_index]) * i} {liquido_nombre_display[0]}/s"
 		}
 		//Detectar que los taladros tengan recursos
 		if in(build_index, id_taladro, id_taladro_electrico){
@@ -3454,7 +3473,7 @@ if pausa = 0{
 	for(ticks = 0; (acumulator >= LOGIC_DT and ticks < 5) or ticks = 0; ticks++){
 		acumulator -= LOGIC_DT
 		timer++
-		if (timer mod 3600) = 0{
+		if win = 0 and (timer mod 3600) = 0{
 			var temp_array_real = array_create(rss_max, 0)
 			array_copy(temp_array_real, 0, recursos_obtenidos_time_temp, 0, rss_max)
 			for(var a = 0; a < rss_max; a++)
@@ -4240,7 +4259,7 @@ if win > 0{
 		draw_set_alpha(min((win_step - 25) / 100, 1))
 		draw_set_font(ft_titulo)
 		draw_set_halign(fa_center)
-		draw_text(room_width / 2, 100, win = 1 ? L.win_victoria : L.win_derrota)
+		draw_text(room_width / 2, 100, (win mod 10) = 1 ? L.win_victoria : L.win_derrota)
 		draw_set_font(ft_letra)
 		var ypos = 200, sec = floor(--timer / 60)
 		if win < 10{
@@ -4258,11 +4277,11 @@ if win > 0{
 			var b = 0
 			for(var a = 0; a < rss_max; a++)
 				b += recursos_obtenidos[a]
-			if b > 0 and draw_boton(room_width / 2, ypos + 10, $"{L.recursos_obtenidos}: {b}")
+			if b > 0 and draw_boton(room_width / 2, ypos + 10, $"{L.recursos_obtenidos}: {b}", ui_boton_azul)
 				win += 10
 		}
 		else{
-			if draw_boton(room_width / 2, ypos + 10, L.volver)
+			if draw_boton(room_width / 2, ypos + 10, L.volver, ui_boton_azul)
 				win -= 10
 			ypos += text_y + 20
 			var b = array_length(recursos_obtenidos_time), d = 0, e = 400 / b

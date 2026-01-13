@@ -9,7 +9,7 @@ function construir(index, dir, mx, my){
 				break
 			}
 			var temp_terreno_terreno = terreno[# aa, bb]
-			if terreno_pared[temp_terreno_terreno] or temp_terreno_terreno = idt_hielo{
+			if terreno_pared[temp_terreno_terreno] or (temp_terreno_terreno = idt_hielo and index != id_extractor_atmosferico){
 				flag = false
 				break
 			}
