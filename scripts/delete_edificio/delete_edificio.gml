@@ -359,7 +359,7 @@ function delete_edificio(aa, bb, enemigo = false){
 				var dron = drones_aliados[i], dis = distance_sqr(xpos, ypos, dron.a, dron.b)
 				if dis > 160_000//400^2
 					continue
-				dron.vida -= 9_000_000 / dis * random_range(0.7, 1.3)
+				dron.vida -= 1_000_000 / dis * random_range(0.7, 1.3)
 				if dron.vida > 0
 					continue
 				var temp_dron = drones_aliados[array_length(drones_aliados) - 1]

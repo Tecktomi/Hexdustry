@@ -373,6 +373,8 @@ puerto_carga_atended = 0
 	ds_grid_clear(repair_dir, 0)
 	background_bool = ds_grid_create(chunk_xsize, chunk_ysize)
 	ds_grid_clear(background_bool, false)
+	usable_grid_bool = ds_grid_create(xsize, ysize)
+	ds_grid_clear(usable_grid_bool, false)
 #endregion
 //Enemigos
 efectos_nombre = ["Shock", "Fuego", "Deslizando"]
@@ -751,7 +753,7 @@ function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, vida =
 	array_push(edificio_sprite, sprite)
 	array_push(edificio_sprite_2, (sprite_2 = spr_base) ? sprite : sprite_2)
 	array_push(edificio_key, "")
-	array_push(edificio_rotable, (((size mod 2) = 0) or camino))
+	array_push(edificio_rotable, (in((size mod 2), 0, 0.5) or camino))
 	array_push(edificio_vida, vida)
 	array_push(edificio_proceso, proceso)
 	array_push(edificio_script, accion)
@@ -826,7 +828,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 	id_recurso_infinito = def_edificio("Recurso Infinito", 1, spr_recurso_infinito, spr_selector_color, 30,, scr_recurso_infinito,,,,,,,,, true, true); def_edificio_2()
 	//30
 	id_bomba_de_evaporacion = def_edificio("Bomba de Evaporación", 1, spr_bomba_evaporacion, spr_tuberia_color, 30,, scr_bomba_evaporacion,, [id_bronce, id_hierro], [10, 5]); def_edificio_2(, 10, -5, 0)
-	id_horno_de_lava = def_edificio("Horno de Lava", 2, spr_horno_lava, spr_horno_lava_encendido, 400, 90, scr_horno_lava,, [id_acero, id_concreto], [15, 10], 70, true, false, [id_cobre, id_hierro, id_arena, id_sal], [10, 10, 10, 10], true, false, [id_bronce, id_acero, id_silicio]); def_edificio_2(, 10, 15, 3)
+	id_horno_de_lava = def_edificio("Horno de Lava", 2.5, spr_horno_lava, spr_horno_lava_encendido, 400, 70, scr_horno_lava,, [id_acero, id_concreto], [15, 10], 70, true, false, [id_cobre, id_hierro, id_arena, id_sal], [10, 10, 10, 10], true, false, [id_bronce, id_acero, id_silicio]); def_edificio_2(, 10, 15, 3)
 	id_generador_geotermico = def_edificio("Generador Geotérmico", 2, spr_generador_geotermico,, 200,, scr_generador_geotermico,, [id_cobre, id_acero, id_concreto], [10, 10, 10]); def_edificio_2(-90, 10, 30, 0)
 	id_taladro_de_explosion = def_edificio("Taladro de Explosión", 3, spr_taladro_explosivo,, 300, 300, scr_taladro_explosion,, [id_hierro, id_acero, id_concreto], [40, 40, 30], 40, true, false, [13], [10], true, false, [id_cobre, id_carbon, id_hierro, id_piedra, id_arena, id_piedra_cuprica, id_piedra_ferrica, id_piedra_sulfatada, id_uranio_bruto, id_sal]); def_edificio_2()
 	id_muro = def_edificio("Muro", 1, spr_hexagono,, 500,,,, [8], [1]); def_edificio_2(,,,,,, true)
@@ -900,7 +902,6 @@ edificio_construible[id_recurso_infinito] = false
 edificio_key[id_energia_infinita] = "4 "
 edificio_key[id_liquido_infinito] = "5 "
 edificio_key[id_recurso_infinito] = "1 "
-edificio_rotable[id_extractor_atmosferico] = true
 var flag_rss = array_create(rss_max, false)
 for(var a = 0; a < dron_max; a++){
 	var c = 0

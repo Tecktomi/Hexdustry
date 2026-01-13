@@ -32,6 +32,8 @@ function game_start(){
 		recursos_obtenidos = array_create(rss_max, 0)
 		recursos_obtenidos_time_temp = array_create(rss_max, 0)
 		recursos_obtenidos_time = array_create(0, array_create(rss_max, 0))
+		camx = clamp(nucleo.a * 48 - room_width / 2, 0, xsize * 48 * zoom - room_width)
+		camy = clamp(nucleo.b * 14 - room_height / 2, 0, ysize * 14 * zoom - room_height)
 		ds_grid_clear(luz, 0)
 		for(var a = 0; a < xsize; a++)
 			for(var b = 0; b < ysize; b++){
