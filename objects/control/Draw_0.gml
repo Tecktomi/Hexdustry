@@ -124,10 +124,10 @@ if menu = 0{
 			xpos += text_x + 20
 			if draw_boton(xpos, ypos, L.dificil, flow = 2 ? ui_boton_azul : ui_boton_gris,,,, 1){
 				tecnologia = true
-				tecnologia_precio_multiplicador = 2 
+				tecnologia_precio_multiplicador = 1.5 
 				oleadas_tiempo_primera = 150
 				oleadas_tiempo = 60
-				multiplicador_vida_enemigos = 200
+				multiplicador_vida_enemigos = 160
 				cheat = false
 				mision_objetivo = [4]
 				mision_nombre = [""]
@@ -799,7 +799,7 @@ if menu = 2{
 					last_mx = mx
 					last_my = my
 					mouse_clear(mb_left)
-					var temp_queue = ds_queue_create(), visitado = ds_grid_create(xsize, ysize)
+					var temp_queue = ds_queue_create(), visitado = usable_grid_bool
 					ds_grid_clear(visitado, false)
 					ds_grid_set(visitado, mx, my, true)
 					ds_queue_enqueue(temp_queue, {a : mx, b : my, dir : -1})
@@ -3908,6 +3908,8 @@ if pausa = 0{
 				humo.x += humo.hmove
 				humo.y += humo.vmove
 			}
+			humo.hmove *= 0.99
+			humo.vmove *= 0.99
 			if --humo.time <= 0{
 				humos[a--] = humos[array_length(humos) - 1]
 				array_pop(humos)
@@ -4062,13 +4064,14 @@ if pausa = 0{
 				flujo.liquido = -1
 			}
 		}
-		if --nuclear_step > 0{
-			if nuclear_step > 150{
+		if nuclear_step > 0{
+			if --nuclear_step > 150{
 				draw_set_color(c_white)
 				draw_set_alpha((nuclear_step - 150) / 150)
 				draw_rectangle(0, 0, room_width, room_height, false)
 			}
-			draw_sprite_off(spr_blur, 0, nuclear_x, nuclear_y,,,,, nuclear_step / 300)
+			if nuclear_x >= 0
+				draw_sprite_off(spr_blur, 0, nuclear_x, nuclear_y,,,,, nuclear_step / 300)
 			draw_set_color(c_black)
 			draw_set_alpha(1)
 		}
@@ -4332,6 +4335,7 @@ if win > 0{
 				tutorial++
 			}
 			if draw_boton(room_width / 2, room_height - 200, L.win_seguir_jugando){
+				mision_actual = -1
 				win_step = 0
 				win = 0
 			}
