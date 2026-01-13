@@ -2,7 +2,7 @@ randomize()
 draw_set_font(ft_letra)
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
-ini_write_string("Global", "version", "12_01_2026")
+ini_write_string("Global", "version", "13_01_2026")
 medallas = array_create(5)
 for(var a = 0; a < 5; a++){
 	medallas[a] = array_create(3, false)

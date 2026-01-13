@@ -3518,8 +3518,13 @@ if pausa = 0{
 					dron.efecto[b]--
 					if b = 0
 						dron_vel /= 2
-					else if b = 1
+					else if b = 1{
 						dron.vida -= 0.25
+						if grafic_humo and (image_index mod 10) = (a mod 10){
+							var dir = direccion_viento + random_range(-pi / 4, pi / 4)
+							array_push(humos, add_humo(aa, bb, dron.posa, dron.posb, cos(dir) / 2, sin(dir) / 2, irandom_range(40, 70)))
+						}
+					}
 					else if b = 2
 						dron_vel *= 1.2
 				}

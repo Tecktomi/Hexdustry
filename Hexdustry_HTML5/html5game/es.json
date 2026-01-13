@@ -26,6 +26,13 @@
 "islas": "Islas",
 "activado": "Activado",
 "desactivado": "Desactivado",
+"dificultad": "Dificultad",
+"facil": "Fácil",
+"medio": "Medio",
+"dificil": "Difícil",
+"personalizado": "Personalizado",
+"tiempo": "Tiempo",
+"recursos_obtenidos": "Recursos obtenidos",
 
 "Núcleo": "Núcleo",
 "Taladro": "Taladro",
@@ -84,6 +91,7 @@
 "Planta de Reciclaje": "Planta de Reciclaje",
 "Planta Desalinizadora": "Planta Desalinizadora",
 "Embotelladora": "Embotelladora",
+"Extractor Atmosférico": "Extractor Atmosférico",
 
 "descripcion_Núcleo": "Es el centro de mando, aquí se almacenan todos los recursos y debes protegerlo a toda costa",
 "descripcion_Taladro": "Permite minar cobre, hierro y carbón sin coste alguno.    Puede potenciarse con Agua",
@@ -142,6 +150,7 @@
 "descripcion_Planta de Reciclaje": "Permite reciclar parte de los recursos de los enemigos destruidos cercanos",
 "descripcion_Planta Desalinizadora": "Purifica el Agua Salada para extraer la Sal y el Agua dulce",
 "descripcion_Embotelladora": "Llena y vacía barriles con líquidos",
+"descripcion_Extractor Atmosférico": "Extrae agua de la atmósfera, ideal para terrenos donde no es fácil obtenerla",
 
 "Cobre": "Cobre",
 "Carbón": "Carbón",
@@ -229,7 +238,16 @@
 "Reparador": "Reparador",
 "Explosivo": "Explosivo",
 "Tanque": "Tanque",
-"Helicoptero": "Helicoptero",
+"Helicóptero": "Helicoptero",
+"Titán": "Titán",
+
+"descripcion_Araña": "Dispara un láser a los enemigos cercanos",
+"descripcion_Dron": "Transporta recursos entre Puertos de Carga",
+"descripcion_Reparador": "Repara los edificios dañados",
+"descripcion_Explosivo": "Se acerca a su objetivo y explota infilgiendo daño",
+"descripcion_Tanque": "Unidad de asedio superior, dispara explosivos dañando todo a su alrededor",
+"descripcion_Helicóptero": "Unidad aerea superior, dispara a distancia",
+"descripcion_Titán": "Unidad terrestre máxima, dispara una ráfaga de explosivos de largo alcance",
 
 "Transporte": "Transporte",
 "Extracción": "Extracción",
@@ -358,6 +376,7 @@
 "construir_sobre_agua": "Necesita ser construido sobre agua",
 "construir_sobre_minerales": "Necesita ser construido sobre minerales",
 "construir_sobre_minerales_piedra": "Necesita ser construido sobre minerales, piedra o arena",
+"construir_sobre_salar": "No puede ser construido sobre un salar",
 "construir_ocupado": "Terreno ocupado",
 
 "procesador_cargar": "Cargar código",
@@ -451,6 +470,6 @@
 "planta_quimica_receta 2": "Baterías",
 
 "planta_quimica_descripcion 0": "Consume Piedra Sulfatada y energía para producir Ácido",
-"planta_quimica_descripcion 1": "Utiliza Carbón y Piedra Sulfatada para producir Explosivos",
-"planta_quimica_descripcion 2": "Utiliza Ácido, Hierro y energía para producir Baterías"
+"planta_quimica_descripcion 1": "Utiliza Compuesto Incendiario y Ácido para producir Explosivos",
+"planta_quimica_descripcion 2": "Utiliza Ácido, Cobre y energía para producir Baterías"
 }

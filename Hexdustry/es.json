@@ -32,6 +32,7 @@
 "dificil": "Difícil",
 "personalizado": "Personalizado",
 "tiempo": "Tiempo",
+"recursos_obtenidos": "Recursos obtenidos",
 
 "Núcleo": "Núcleo",
 "Taladro": "Taladro",
@@ -90,6 +91,7 @@
 "Planta de Reciclaje": "Planta de Reciclaje",
 "Planta Desalinizadora": "Planta Desalinizadora",
 "Embotelladora": "Embotelladora",
+"Extractor Atmosférico": "Extractor Atmosférico",
 
 "descripcion_Núcleo": "Es el centro de mando, aquí se almacenan todos los recursos y debes protegerlo a toda costa",
 "descripcion_Taladro": "Permite minar cobre, hierro y carbón sin coste alguno.    Puede potenciarse con Agua",
@@ -148,6 +150,7 @@
 "descripcion_Planta de Reciclaje": "Permite reciclar parte de los recursos de los enemigos destruidos cercanos",
 "descripcion_Planta Desalinizadora": "Purifica el Agua Salada para extraer la Sal y el Agua dulce",
 "descripcion_Embotelladora": "Llena y vacía barriles con líquidos",
+"descripcion_Extractor Atmosférico": "Extrae agua de la atmósfera, ideal para terrenos donde no es fácil obtenerla",
 
 "Cobre": "Cobre",
 "Carbón": "Carbón",
@@ -373,6 +376,7 @@
 "construir_sobre_agua": "Necesita ser construido sobre agua",
 "construir_sobre_minerales": "Necesita ser construido sobre minerales",
 "construir_sobre_minerales_piedra": "Necesita ser construido sobre minerales, piedra o arena",
+"construir_sobre_salar": "No puede ser construido sobre un salar",
 "construir_ocupado": "Terreno ocupado",
 
 "procesador_cargar": "Cargar código",
