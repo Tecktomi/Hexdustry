@@ -1,19 +1,19 @@
 function scr_triturador(edificio = control.null_edificio){
 	with control{
 		var index = edificio.index
-		if edificio_energia[index]
-			var red = edificio.red, red_power = red.eficiencia
+		var red = edificio.red, red_power = red.eficiencia
 		if edificio.carga[id_piedra] > 0 and edificio.carga[id_arena] < 10{
 			//Encender
-			if edificio.proceso < 0{
+			if not edificio.start{
 				change_energia(edificio_energia_consumo[index], edificio)
-				edificio.proceso++
+				edificio.start = true
 			}
 			edificio.proceso += red_power
 			sound_play_edificio(1, edificio.x, edificio.y)
 			//Producir / apagar
 			if edificio.proceso >= edificio_proceso[index]{
-				edificio.proceso = -1
+				edificio.proceso -= edificio_proceso[index]
+				edificio.start = false
 				if edificio.carga[id_piedra] > 0
 					edificio.carga[id_piedra]--
 				edificio.carga[id_arena]++

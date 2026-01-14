@@ -9,12 +9,12 @@ function construir(index, dir, mx, my){
 				break
 			}
 			var temp_terreno_terreno = terreno[# aa, bb]
-			if terreno_pared[temp_terreno_terreno] or (temp_terreno_terreno = idt_hielo and index != id_extractor_atmosferico){
+			if terreno_pared[temp_terreno_terreno] or (temp_terreno_terreno = idt_hielo and edificio_size[index] > 1 and index != id_extractor_atmosferico){
 				flag = false
 				break
 			}
 			//Checkear coliciones
-			if edificio_bool[# aa, bb] and not ((edificio_camino[index] or in(index, id_tunel, id_tunel_salida)) and edificio_camino[edificio_id[# aa, bb].index]){
+			if edificio_bool[# aa, bb] and not ((edificio_camino[index] or in(index, id_tunel, id_tunel_salida, id_cruce)) and (edificio_camino[edificio_id[# aa, bb].index] or edificio_id[# aa, bb].index = id_cruce)){
 				flag = false
 				break
 			}
@@ -26,7 +26,7 @@ function construir(index, dir, mx, my){
 			//Reemplazar caminos
 			if edificio_bool[# aa, bb]{
 				var temp_edificio = edificio_id[# aa, bb]
-				if (edificio_camino[index] or (in(index, id_tunel, id_tunel_salida))) and edificio_camino[temp_edificio.index]{
+				if (edificio_camino[index] or in(index, id_tunel, id_tunel_salida, id_cruce)) and (edificio_camino[temp_edificio.index] or temp_edificio.index = id_cruce){
 					if index = temp_edificio.index{
 						temp_edificio.dir = dir
 						calculate_in_out_2(temp_edificio)
@@ -75,7 +75,7 @@ function construir(index, dir, mx, my){
 		if flag and in(index, id_taladro, id_taladro_electrico) and not flag_2
 			flag = false
 		if not flag
-			return
+			exit
 		if in(index, id_tunel, id_tunel_salida) and build_able and build_target.index = 6
 			index = 16
 		edificio = add_edificio(index, dir, mx, my)

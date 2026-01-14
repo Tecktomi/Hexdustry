@@ -66,7 +66,7 @@ function dibujar_edificios(){
 							else
 								draw_sprite_off(edificio_sprite_2[index], edificio.select, aa, bb,,,, liquido_color[edificio.flujo.liquido], edificio.flujo.almacen / edificio.flujo.almacen_max)
 						}
-						else if edificio_armas[index]{
+						else if edificio_armas[index] and index != id_laser{
 							//Torres tamaño impar
 							if edificio_size[index] mod 2 = 1{
 								draw_sprite_off(edificio_sprite[index], 0, aa, bb)
@@ -134,6 +134,20 @@ function dibujar_edificios(){
 								draw_sprite_off(sprite, 0, aa, bb, -1)
 							else if dir = 5
 								draw_sprite_off(sprite, 1, aa, bb,, -1)
+							if index = id_laser{
+								if dir = 0
+									draw_sprite_off(edificio_sprite_2[index], 0, aa + 12, bb + 7,,, edificio.select)
+								else if dir = 1
+									draw_sprite_off(edificio_sprite_2[index], 0, aa + 12, bb - 7,,, edificio.select)
+								else if dir = 2
+									draw_sprite_off(edificio_sprite_2[index], 0, aa, bb - 14,,, edificio.select)
+								else if dir = 3
+									draw_sprite_off(edificio_sprite_2[index], 0, aa - 12, bb - 7,,, edificio.select)
+								else if dir = 4
+									draw_sprite_off(edificio_sprite_2[index], 0, aa - 12, bb + 7,,, edificio.select)
+								else if dir = 5
+									draw_sprite_off(edificio_sprite_2[index], 0, aa, bb + 14,,, edificio.select)
+							}
 						}
 						//Dibujo predeterminado tamaño impar
 						else

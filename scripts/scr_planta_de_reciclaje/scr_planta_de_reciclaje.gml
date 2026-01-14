@@ -12,10 +12,10 @@ function scr_planta_de_reciclaje(edificio = control.null_edificio){
 				break
 			}
 			//Encender
-			if edificio.proceso < 0{
+			if not edificio.start{
 				change_energia(edificio.energia_consumo_max, edificio)
 				change_flujo(edificio.flujo_consumo_max, edificio)
-				edificio.proceso++
+				edificio.start = true
 				encender_luz(1, edificio)
 			}
 			edificio.proceso += min(flujo_power, red_power)
@@ -29,7 +29,8 @@ function scr_planta_de_reciclaje(edificio = control.null_edificio){
 				edificio.select = -1
 				change_flujo(0, edificio)
 				change_energia(0, edificio)
-				edificio.proceso = -1
+				edificio.proceso -= dron_time[edificio.select]
+				edificio.start = false
 				edificio.waiting = not mover(edificio.a, edificio.b)
 				encender_luz(-1, edificio)
 			}

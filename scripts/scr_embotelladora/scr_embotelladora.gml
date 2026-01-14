@@ -55,8 +55,10 @@ function scr_embotelladora(edificio = control.null_edificio){
 					(flujo.liquido = 2 and edificio.carga[id_barril_petroleo] < 10) or
 					(flujo.liquido = 3 and edificio.carga[id_barril_lava] < 10) or
 					(flujo.liquido = 4 and edificio.carga[id_barril_agua_salada] < 10){
-					if edificio.proceso = -1
+					if not edificio.start{
 						change_flujo(-edificio.flujo_consumo_max, edificio)
+						edificio.start = true
+					}
 					edificio.proceso += flujo_power
 					if edificio.proceso >= edificio_proceso[index]{
 						if flujo.liquido = 0
@@ -70,7 +72,8 @@ function scr_embotelladora(edificio = control.null_edificio){
 						else if flujo.liquido = 4
 							edificio.carga[id_barril_agua_salada]++
 						edificio.carga_total++
-						edificio.proceso = -1
+						edificio.proceso -= edificio_proceso[index]
+						edificio.start = false
 						change_flujo(0, edificio)
 						edificio.waiting = not mover(edificio.a, edificio.b)
 					}

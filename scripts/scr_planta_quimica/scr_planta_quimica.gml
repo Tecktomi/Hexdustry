@@ -20,11 +20,11 @@ function scr_planta_quimica(edificio = control.null_edificio){
 				continue
 			}
 			//Encender
-			if edificio.proceso < 0{
+			if not edificio.start{
 				change_energia(edificio.energia_consumo_max, edificio)
 				if edificio.flujo_consumo_max > 0
 					change_flujo(edificio.flujo_consumo_max, edificio)
-				edificio.proceso++
+				edificio.start = true
 				if edificio.carga[id_sal] > 0{
 					edificio.carga[id_sal] -= 0.1
 					edificio.carga_total -= 0.1
@@ -63,7 +63,8 @@ function scr_planta_quimica(edificio = control.null_edificio){
 					change_flujo(0, edificio)
 				else
 					change_flujo(edificio.flujo_consumo_max, edificio)
-				edificio.proceso = -1
+				edificio.proceso -= edificio_proceso[index]
+				edificio.start = false
 				change_energia(0, edificio)
 				edificio.waiting = not mover(edificio.a, edificio.b)
 				encender_luz(-1, edificio)

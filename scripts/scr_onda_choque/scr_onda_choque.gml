@@ -40,7 +40,8 @@ function scr_onda_choque(edificio = control.null_edificio){
 					}
 				}
 				array_push(efectos, add_efecto(spr_shokwave, 0, edificio.x, edificio.y, 5, 1))
-				edificio.proceso = 0
+				edificio.proceso -= edificio_proceso[index]
+				edificio.start = false
 			}
 		}
 	}

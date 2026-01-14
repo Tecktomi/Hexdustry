@@ -33,6 +33,9 @@
 "personalizado": "Пользовательская",
 "tiempo": "Время",
 "recursos_obtenidos": "Полученные ресурсы",
+"energia_producida": "Произведённая энергия",
+"energia_consumida": "Потреблённая энергия",
+"energia_perdida": "Потерянная энергия",
 
 "Нúcleo": "Ядро",
 "Taladro": "Бур",
@@ -92,6 +95,7 @@
 "Planta Desalinizadora": "Опреснительная установка",
 "Embotelladora": "Линия розлива",
 "Extractor Atmosférico": "Атмосферный экстрактор",
+"Cruce": "Перекрёсток",
 
 "descripcion_Núcleo": "Командный центр. Все ресурсы хранятся здесь. Его необходимо защищать любой ценой.",
 "descripcion_Taladro": "Добывает медь, железо и уголь бесплатно. Может быть усилен водой.",
@@ -151,6 +155,7 @@
 "descripcion_Planta Desalinizadora": "Очищает солёную воду, извлекая соль и пресную воду",
 "descripcion_Embotelladora": "Наполняет и опустошает бочки с жидкостями",
 "descripcion_Extractor Atmosférico": "Извлекает воду из атмосферы, идеально подходит для мест, где её сложно получить",
+"descripcion_Cruce": "Позволяет конвейерным лентам пересекаться",
 
 "Cobre": "Медь",
 "Carbón": "Уголь",
@@ -378,6 +383,7 @@
 "construir_sobre_minerales_piedra": "Должно быть построено на минералах, камне или песке",
 "construir_sobre_salar": "Нельзя построить на солончаке",
 "construir_ocupado": "Участок занят",
+"construir_terreno_hielo": "Слишком нестабильная поверхность",
 
 "procesador_cargar": "Загрузить код",
 "procesador_guardar": "Сохранить код",

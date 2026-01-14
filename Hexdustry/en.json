@@ -33,6 +33,9 @@
 "personalizado": "Custom",
 "tiempo": "Time",
 "recursos_obtenidos": "Resources obtained",
+"energia_producida": "Energy produced",
+"energia_consumida": "Energy consumed",
+"energia_perdida": "Energy lost",
 
 "Núcleo": "Nucleus",
 "Taladro": "Drill",
@@ -92,6 +95,7 @@
 "Planta Desalinizadora": "Desalination Plant",
 "Embotelladora": "Bottling Plant",
 "Extractor Atmosférico": "Atmospheric Extractor",
+"Cruce": "Crossing",
 
 "descripcion_Núcleo": "It is the command center. All resources are stored here, and you must protect it at all costs.",
 "descripcion_Taladro": "Mines copper, iron, and coal at no cost. Can be boosted with Water.",
@@ -151,6 +155,7 @@
 "descripcion_Planta Desalinizadora": "Purifies salt water to extract Salt and fresh Water",
 "descripcion_Embotelladora": "Fills and empties barrels with liquids",
 "descripcion_Extractor Atmosférico": "Extracts water from the atmosphere, ideal for terrains where it is difficult to obtain",
+"descripcion_Cruce": "Allows conveyor belt connections to cross",
 
 "Cobre": "Copper",
 "Carbón": "Coal",
@@ -378,6 +383,7 @@
 "construir_sobre_minerales_piedra": "Must be built over minerals, stone, or sand",
 "construir_sobre_salar": "Cannot be built on a salt flat",
 "construir_ocupado": "Occupied terrain",
+"construir_terreno_hielo": "Terrain is too unstable",
 
 "procesador_cargar": "Load code",
 "procesador_guardar": "Save code",
