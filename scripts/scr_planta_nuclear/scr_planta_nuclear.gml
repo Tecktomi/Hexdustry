@@ -22,7 +22,7 @@ function scr_planta_nuclear(edificio = control.null_edificio){
 				edificio.fuel = 300
 				edificio.carga[id_uranio_enriquecido] -= 0.1
 				edificio.carga[id_uranio_empobrecido]--
-				encender_luz(2, edificio)
+				encender_luz(1, edificio)
 				change_energia(edificio_energia_consumo[index] * flujo_power, edificio)
 				change_flujo(edificio_flujo_consumo[index], edificio)
 				edificio.carga_total -= 1.1
@@ -30,7 +30,7 @@ function scr_planta_nuclear(edificio = control.null_edificio){
 			}
 			//Apagar
 			else{
-				encender_luz(-2, edificio)
+				encender_luz(-1, edificio)
 				change_energia(0, edificio)
 				change_flujo(0, edificio)
 			}

@@ -7,13 +7,13 @@ function scr_taladro(edificio = control.null_edificio){
 		if edificio.carga_total < edificio_carga_max[index]{
 			if index = id_taladro_electrico{
 				change_energia(edificio_energia_consumo[index], edificio)
-				if red.eficiencia > 0 and edificio.flujo_consumo = 0 and flujo.liquido = 1
+				if red.eficiencia > 0 and flujo.liquido = 1
 					change_flujo(edificio_flujo_consumo[index], edificio)
-				edificio.proceso += red.eficiencia * (1 + 0.6 * (flujo.liquido = 1 ? flujo.eficiencia : 0))
+				edificio.proceso += red.eficiencia * (1 + 0.6 * (flujo.liquido = 1 ? flujo.eficiencia : 0)) * edificio.select
 			}
 			else if index = id_taladro{
 				change_flujo(edificio_flujo_consumo[index], edificio)
-				edificio.proceso += 1 + 0.6 * (flujo.liquido = 0 ? flujo.eficiencia : 0)
+				edificio.proceso += (1 + 0.6 * (flujo.liquido = 0 ? flujo.eficiencia : 0)) * edificio.select
 			}
 			sound_play_edificio(0, edificio.x, edificio.y, 2)
 			if edificio.proceso >= edificio_proceso[index]{
@@ -33,9 +33,11 @@ function scr_taladro(edificio = control.null_edificio){
 						ds_grid_add(ore_amount, aa, bb, -1)
 						if ore_amount[# aa, bb] = 50
 							update_background(aa, bb)
-						else if ore_amount[# aa, bb] = 0
+						else if ore_amount[# aa, bb] = 0{
 							ds_grid_set(ore, aa, bb, -1)
 							update_background(aa, bb)
+							edificio.select -= 0.05
+						}
 						flag = true
 						break
 					}

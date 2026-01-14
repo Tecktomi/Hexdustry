@@ -14,17 +14,18 @@ function scr_refineria_metales(edificio = control.null_edificio){
 				continue
 			}
 			//Encender
-			if edificio.proceso < 0{
+			if not edificio.start{
 				change_energia(edificio_energia_consumo[index], edificio)
 				change_flujo(edificio_flujo_consumo[index], edificio)
-				edificio.proceso++
+				edificio.start = true
 				encender_luz(1, edificio)
 			}
 			edificio.proceso += min(red_power, flujo_power)
 			sound_play_edificio(2, edificio.x, edificio.y)
 			//Producir / Apagar
 			if edificio.proceso >= edificio_proceso[index]{
-				edificio.proceso = -1
+				edificio.proceso -= edificio_proceso[index]
+				edificio.start = false
 				if edificio.carga[id_uranio_bruto] > 0{
 					repeat(edificio.carga[id_uranio_bruto]){
 						if random(1) < 0.99

@@ -21,14 +21,7 @@ function scr_turbina(edificio = control.null_edificio){
 					edificio.fuel = recurso_combustion_time[1]
 					edificio.carga[id_carbon]--
 				}
-				if grafic_luz and not edificio.luz{
-					edificio.luz = true
-					var temp_list = edificio.coordenadas
-					for(var b = ds_list_size(temp_list) - 1; b >= 0; b--){
-						var temp_complex = temp_list[|b]
-						add_luz(temp_complex.a, temp_complex.b, 1)
-					}
-				}
+				encender_luz(1, edificio)
 				change_energia(edificio_energia_consumo[index] * flujo_power, edificio)
 				change_flujo(edificio_flujo_consumo[index], edificio)
 				edificio.carga_total--
@@ -36,14 +29,7 @@ function scr_turbina(edificio = control.null_edificio){
 			}
 			//Apagar
 			else{
-				if grafic_luz and edificio.luz{
-					edificio.luz = false
-					var temp_list = edificio.coordenadas
-					for(var b = ds_list_size(temp_list) - 1; b >= 0; b--){
-						var temp_complex = temp_list[|b]
-						add_luz(temp_complex.a, temp_complex.b, -1)
-					}
-				}
+				encender_luz(-1, edificio)
 				change_energia(0, edificio)
 				change_flujo(0, edificio)
 			}

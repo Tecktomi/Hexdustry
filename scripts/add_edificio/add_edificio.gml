@@ -17,6 +17,7 @@ function add_edificio(index, dir, a, b){
 			outputs : array_create(0, null_edificio),
 			output_index : 0,
 			proceso : 0,
+			start : false,
 			carga : array_create(rss_max, 0),
 			carga_max : array_create(rss_max, 0),
 			carga_output : array_create(rss_max, true),
@@ -97,12 +98,23 @@ function add_edificio(index, dir, a, b){
 		array_push(efectos, add_efecto(size_fx[edificio_size[index] - 1], 0, x, y, 3))
 		edificio.chunk_pointer = array_length(chunk_edificios[# edificio.chunk_x, edificio.chunk_y])
 		array_push(chunk_edificios[# edificio.chunk_x, edificio.chunk_y], edificio)
-		if index = 0
+		if index = id_nucleo
 			array_push(nucleos, edificio)
 		set_camino_dir(edificio)
 		edificio.array_real[2] = power(-1, dir) * 8
 		//Añadir coordenadas
 		var temp_list_size = get_size(a, b, dir, edificio_size[index])
+		if in(index, id_taladro, id_taladro_electrico){
+			edificio.select = 0.8
+			for(var c = ds_list_size(temp_list_size) - 1; c >= 0; c--){
+				temp_complex = temp_list_size[|c]
+				var aa = temp_complex.a, bb = temp_complex.b
+				if ore[# aa, bb] >= 0
+					edificio.select += 0.05
+				if index = id_taladro_electrico and terreno_recurso_bool[terreno[# aa, bb]]
+					edificio.select += 0.05
+			}
+		}
 		var temp_list_arround = get_arround(a, b, dir, edificio_size[index])
 		ds_grid_set(edificio_draw, a, b, true)
 		array_push(edificios, edificio)
@@ -135,7 +147,7 @@ function add_edificio(index, dir, a, b){
 				edificio.draw_rot = (dir - 1) * 60
 		}
 		#region Torres reparadoras
-			var alc = edificio_alcance_sqr[44]
+			var alc = edificio_alcance_sqr[id_torre_reparadora]
 			if index = id_torre_reparadora{
 				array_push(torres_reparadoras, edificio)
 				for(var c = array_length(edificios) - 2; c >= 0; c--){
@@ -175,7 +187,7 @@ function add_edificio(index, dir, a, b){
 			ds_grid_set(edificio_id, aa, bb, edificio)
 			ds_grid_set(repair_id, aa, bb, -1)
 			ds_list_add(edificio.coordenadas, temp_complex)
-			if index = 0{
+			if index = id_nucleo{
 				ds_grid_set(edificio.coordenadas_dis, aa, bb, 0)
 				ds_grid_set(edificio_cercano_dis, aa, bb, 0)
 				ds_grid_set(edificio_cercano, aa, bb, edificio)

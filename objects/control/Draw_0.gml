@@ -1392,7 +1392,9 @@ if menu = 2{
 			draw_sprite_ext(edificio_sprite[ei], 0, room_width - 200, 200, 2, 2, 0, c_white, 1)
 			if edificio_armas[ei] and ei != id_onda_de_choque
 				if edificio_size[ei] mod 2 = 0
-					draw_sprite_ext(edificio_sprite_2[ei], 0, room_width - 184, 224, 2, 2, 0, c_white, 1)
+					draw_sprite_ext(edificio_sprite_2[ei], 0, room_width - 200 - 16, 20 + 24, 2, 2, 0, c_white, 1)
+				else if edificio_size[ei] = 2.5
+					draw_sprite_ext(edificio_sprite_2[ei], 0, room_width - 200 + 24, 200 + 14, 2, 2, 0, c_white, 1)
 				else
 					draw_sprite_ext(edificio_sprite_2[ei], 0, room_width - 200, 200, 2, 2, 0, c_white, 1)
 			if tecnologia{
@@ -2951,7 +2953,12 @@ if build_index > 0 and win = 0{
 		}
 		for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
 			var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb =  temp_complex_2.b
-			if terreno_pared[terreno[# aa, bb]] or (terreno[# aa, bb] = idt_hielo and build_index != id_extractor_atmosferico){
+			if terreno[# aa, bb] = idt_hielo and edificio_size[build_index] > 1 and build_index != id_extractor_atmosferico{
+				temp_text += $"{L.construir_terreno_hielo}\n"
+				comprable = false
+				break
+			}
+			if terreno_pared[terreno[# aa, bb]]{
 				temp_text += $"{L.construir_terreno_invalido}\n"
 				comprable = false
 				break
@@ -3045,7 +3052,7 @@ if build_index > 0 and win = 0{
 				temp_text += $"{L.construir_sobre_lava}\n"
 			}
 			else
-				temp_text += $"{L.game_producira} {abs(edificio_energia_consumo[build_index]) * i} {L.energia}/s"
+				temp_text += $"{L.game_producira} {abs(edificio_energia_consumo[build_index]) * i / 3} {L.red_energia}/s"
 		}
 		else if build_index = id_bomba_de_evaporacion{
 			flag = false
@@ -3081,7 +3088,7 @@ if build_index > 0 and win = 0{
 		}
 		//Detectar que los taladros tengan recursos
 		if in(build_index, id_taladro, id_taladro_electrico){
-			var temp_array = array_create(rss_max, 0), temp_array_2 = array_create(rss_max, 0), b = 0
+			var temp_array = array_create(rss_max, 0), temp_array_2 = array_create(rss_max, 0), b = 0, u = 0.85
 			flag = false
 			//Buscar minerales superficiales
 			for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
@@ -3091,17 +3098,21 @@ if build_index > 0 and win = 0{
 					temp_array_2[ore_recurso[ore[# aa, bb]]] += ore_amount[# aa, bb]
 					b++
 					flag = true
+					u += 0.05
 				}
 			}
 			//Buscar piedra o arena
 			if build_index = id_taladro_electrico{
 				for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
 					var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
-					if not in(ore[# aa, bb], 0, 1, 2) and terreno_recurso_bool[terreno[# aa, bb]]{
-						temp_array[terreno_recurso_id[terreno[# aa, bb]]]++
-						temp_array_2[terreno_recurso_id[terreno[# aa, bb]]] = -1
-						b++
-						flag = true
+					if terreno_recurso_bool[terreno[# aa, bb]]{
+						u += 0.05
+						if not in(ore[# aa, bb], 0, 1, 2){
+							temp_array[terreno_recurso_id[terreno[# aa, bb]]]++
+							temp_array_2[terreno_recurso_id[terreno[# aa, bb]]] = -1
+							b++
+							flag = true
+						}
 					}
 				}
 			}
@@ -3113,11 +3124,14 @@ if build_index > 0 and win = 0{
 					temp_text += L.construir_sobre_minerales_piedra
 			}
 			//Escribir porcentajes de recursos
-			else for(var a = 0; a < rss_max; a++){
-				if temp_array_2[a] > 0
-					temp_text += $"{recurso_nombre_display[a]}: {temp_array_2[a]}({round(temp_array[a] * 100 / b)}%)\n"
-				else if temp_array_2[a] = -1
-					temp_text += $"{recurso_nombre_display[a]}({round(temp_array[a] * 100 / b)}%)\n"
+			else{
+				temp_text += $"{u * 60 / edificio_proceso[build_index]}/s\n"
+				for(var a = 0; a < rss_max; a++){
+					if temp_array_2[a] > 0
+						temp_text += $"{recurso_nombre_display[a]}: {temp_array_2[a]}({round(temp_array[a] * 100 / b)}%)\n"
+					else if temp_array_2[a] = -1
+						temp_text += $"{recurso_nombre_display[a]}({round(temp_array[a] * 100 / b)}%)\n"
+				}
 			}
 		}
 		//Taladros de Explosión
@@ -3152,14 +3166,14 @@ if build_index > 0 and win = 0{
 			}
 		}
 		//Detectar que no haya otros edificios debajo
-		if edificio_camino[build_index] or in(build_index, id_tunel, id_tunel_salida){
+		if edificio_camino[build_index] or in(build_index, id_tunel, id_tunel_salida, id_cruce){
 			for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
 				var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if edificio_bool[# aa, bb]{
 					var temp_edificio = edificio_id[# aa, bb]
-					if not edificio_camino[temp_edificio.index]{
+					if not (edificio_camino[temp_edificio.index] or temp_edificio.index = id_cruce){
 						temp_text += $"{L.construir_ocupado}\n"
 						comprable = false
 						break
@@ -3203,10 +3217,10 @@ if build_index > 0 and win = 0{
 				}
 				//Arrastre
 				if mouse_check_button(mb_left){
-					pre_build_list = []
+					pre_build_list = [{a : mx_clic, b : my_clic}]
+					pre_build_list_cruce = [false]
 					var temp_complex_2 = abtoxy(mx_clic, my_clic), aa = temp_complex_2.a, bb = temp_complex_2.b
 					draw_edificio(aa, bb, build_index, build_dir, 0.5)
-					array_push(pre_build_list, {a : mx_clic, b : my_clic})
 					if mx_clic != mx or my_clic != my{
 						var angle = radtodeg((arctan2(bb * zoom - camy - mouse_y, mouse_x - aa * zoom + camx) + 2 * pi) mod (2 * pi))
 						if (last_mx != mx or last_my != my) and edificio_camino[build_index]
@@ -3221,7 +3235,14 @@ if build_index > 0 and win = 0{
 							temp_complex_3 = abtoxy(a, b)
 							aaa = temp_complex_3.a
 							bbb = temp_complex_3.b
-							draw_edificio(aaa, bbb, build_index, build_dir, 0.5)
+							if in(build_index, id_cinta_transportadora, id_cinta_magnetica) and (a != mx or b != my) and (a != mx_clic or b != my_clic) and edificio_bool[# a, b] and not in(edificio_id[# a, b].dir, build_dir, (build_dir + 3) mod 6) and in(edificio_id[# a, b].index, id_cinta_transportadora, id_cinta_magnetica){
+								draw_edificio(aaa, bbb, id_cruce, 0, 0.5)
+								array_push(pre_build_list_cruce, true)
+							}
+							else{
+								draw_edificio(aaa, bbb, build_index, build_dir, 0.5)
+								array_push(pre_build_list_cruce, false)
+							}
 						}
 						until(temp_complex_3.a < min(xmouse, aa) or temp_complex_3.a > max(xmouse, aa) or temp_complex_3.b < min(ymouse, bb) or temp_complex_3.b > max(ymouse, bb))
 					}
@@ -3235,7 +3256,7 @@ if build_index > 0 and win = 0{
 						draw_set_color(c_black)
 						draw_arrow_off(aa, bb, temp_complex_3.a, temp_complex_3.b, 8)
 					}
-					if not in(build_index, id_cinta_transportadora, id_cinta_magnetica, id_tuberia, id_muro){
+					if in(build_index, id_enrutador, id_selector, id_overflow){
 						temp_complex = next_to(mx, my, (build_dir + 1) mod 6)
 						temp_complex_3 = abtoxy(temp_complex.a, temp_complex.b)
 						draw_arrow_off(aa, bb, temp_complex_3.a, temp_complex_3.b, 8)
@@ -3260,7 +3281,10 @@ if build_index > 0 and win = 0{
 							build_dir = 0
 						if comprable{
 							var temp_complex_2 = pre_build_list[a]
-							construir(build_index, build_dir, temp_complex_2.a, temp_complex_2.b)
+							if pre_build_list_cruce[a]
+								construir(id_cruce, 0, temp_complex_2.a, temp_complex_2.b)
+							else
+								construir(build_index, build_dir, temp_complex_2.a, temp_complex_2.b)
 						}
 					}
 				}
@@ -3289,13 +3313,12 @@ if build_index > 0 and win = 0{
 				}
 				//Extender
 				if mouse_check_button(mb_left){
-					pre_build_list = []
+					pre_build_list = [{a : mx_clic, b : my_clic}]
 					temp_complex_2 = abtoxy(mx_clic, my_clic)
 					aa = temp_complex_2.a
 					bb = temp_complex_2.b
 					var mxc = mx_clic, myc = my_clic
 					draw_edificio(aa, bb, build_index, build_dir, 0.5)
-					array_push(pre_build_list, {a : mx_clic, b : my_clic})
 					if mx_clic != mx or my_clic != my{
 						var temp_complex_3 = abtoxy(mx, my), aaaa = temp_complex_3.a, bbbb = temp_complex_3.b
 						var dir = (360 + point_direction(aa, bb, aaaa, bbbb)) mod 360, dis = point_distance(aa, bb, aaaa, bbbb), flag_2 = false
@@ -3497,6 +3520,12 @@ if pausa = 0{
 				recursos_obtenidos[a] += recursos_obtenidos_time_temp[a]
 			array_push(recursos_obtenidos_time, temp_array_real)
 			recursos_obtenidos_time_temp = array_create(rss_max, 0)
+			array_push(energia_producida, energia_producida_time)
+			energia_producida_time = 0
+			array_push(energia_consumida, energia_consumida_time)
+			energia_consumida_time = 0
+			array_push(energia_perdida, energia_perdida_time)
+			energia_perdida_time = 0
 		}
 		//Ciclo edificios
 		for(var a = array_length(edificios_activos) - 1; a >= 0; a--){
@@ -4060,6 +4089,10 @@ if pausa = 0{
 			var red = redes[a]
 			red.bateria = clamp(red.bateria + (red.generacion - red.consumo) / 30, 0, red.bateria_max)
 			red.eficiencia = clamp((red.generacion + red.bateria) / max(1, red.consumo), 0, 1)
+			energia_producida_time += red.generacion / 60
+			energia_consumida_time += red.consumo / 60
+			if red.eficiencia = 1 and red.bateria = red.bateria_max
+				energia_perdida_time += (abs(red.generacion) - abs(red.consumo)) / 60
 		}
 		//Ciclo flujos
 		for(var a = array_length(flujos) - 1; a >= 0; a--){
@@ -4287,6 +4320,7 @@ if win > 0{
 		draw_text(room_width / 2, 100, (win mod 10) = 1 ? L.win_victoria : L.win_derrota)
 		draw_set_font(ft_letra)
 		var ypos = 200, sec = floor(--timer / 60)
+		//Info general
 		if win < 10{
 			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.win_tiempo}: {sec >= 60 ? string(floor(sec / 60)) + "m " : ""}{sec mod 60}s")
 			if edificios_construidos > 0
@@ -4302,39 +4336,45 @@ if win > 0{
 			var b = 0
 			for(var a = 0; a < rss_max; a++)
 				b += recursos_obtenidos[a]
-			if b > 0 and draw_boton(room_width / 2, ypos + 10, $"{L.recursos_obtenidos}: {b}", ui_boton_azul)
+			if b > 0 and draw_boton(room_width / 2, ypos + 10, $"{L.recursos_obtenidos}: {num_format(b)}", ui_boton_azul)
 				win += 10
+			ypos += text_y + 10
+			b = 0
+			for(var a = array_length(energia_producida) - 1; a >= 0; a--)
+				b += energia_producida[a]
+			if b > 0 and draw_boton(room_width / 2, ypos + 10, $"{L.energia_producida}: {num_format(b)}", ui_boton_azul)
+				win += 20
+			ypos += text_y + 10
 		}
-		else{
+		//Info recursos
+		else if win < 20{
+			ypos = draw_text_ypos(room_width / 2, ypos + 10, L.recursos_obtenidos)
 			if draw_boton(room_width / 2, ypos + 10, L.volver, ui_boton_azul)
 				win -= 10
 			ypos += text_y + 20
-			var b = array_length(recursos_obtenidos_time), d = 0, e = 400 / b
 			for(var a = 0; a < rss_max; a++)
 				if recursos_obtenidos[a] > 0{
 					draw_set_color(recurso_color[a])
-					ypos = draw_text_ypos(room_width / 2, ypos, $"{recurso_nombre_display[a]}: {recursos_obtenidos[a]}")
-					for(var c = 0; c < b; c++)
-						d = max(d, recursos_obtenidos_time[c, a])
+					ypos = draw_text_ypos(room_width / 2, ypos, $"{recurso_nombre_display[a]}: {num_format(recursos_obtenidos[a])}")
 				}
-			draw_set_color(c_white)
-			d = 100 / d
-			var xpos = room_width / 2 - 200
-			draw_line(xpos, ypos + 100, xpos + 400, ypos + 100)
-			draw_line(xpos, ypos + 100, xpos, ypos)
-			for(var a = 0; a < rss_max; a++){
-				if recursos_obtenidos[a] > 0{
-					draw_set_color(recurso_color[a])
-					if recursos_obtenidos_time[0, a] != 0
-						draw_line(xpos, ypos + 100, xpos + e, ypos + 100 - d * recursos_obtenidos_time[0, a])
-					for(var c = 0; c < b - 1; c++)
-						if recursos_obtenidos_time[c, a] != 0 or recursos_obtenidos_time[c + 1, a] != 0
-							draw_line(xpos + e * (c + 1), ypos + 100 - d * recursos_obtenidos_time[c, a], xpos + e * (c + 2), ypos + 100 - d * recursos_obtenidos_time[c + 1, a])
-				}
+			draw_graph(room_width / 2 - 200, ypos, 400, 100, recursos_obtenidos_time, recurso_color)
+		}
+		//Info energía
+		else if win < 30{
+			ypos = draw_text_ypos(room_width / 2, ypos + 10, L.red_energia)
+			if draw_boton(room_width / 2, ypos + 10, L.volver, ui_boton_azul)
+				win -= 20
+			ypos += text_y + 20
+			var temp_prod = 0, temp_cons = 0, temp_perd = 0
+			for(var a = array_length(energia_producida) - 1; a >= 0; a--){
+				temp_prod += energia_producida[a]
+				temp_cons += energia_consumida[a]
+				temp_perd += energia_perdida[a]
 			}
-			draw_set_color(c_white)
-			for(var c = 0; c <= b / 5; c++)
-				draw_text(xpos + 5 * e * c, ypos + 100, 5 * c)
+			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.energia_producida}: {num_format(temp_prod)}")
+			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.energia_consumida}: {num_format(temp_cons)}")
+			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.energia_perdida}: {num_format(temp_perd)} ({floor(100 * temp_prod / (temp_prod + temp_perd))}%)")
+			draw_graph(room_width / 2 - 200, ypos, 400, 100, [energia_producida, energia_consumida, energia_perdida], [ #FFF899, c_black, c_red], true)
 		}
 		//Victoria
 		if (win mod 10) = 1{

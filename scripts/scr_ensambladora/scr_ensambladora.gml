@@ -5,9 +5,9 @@ function scr_ensambladora(edificio = control.null_edificio){
 			var red = edificio.red, red_power = red.eficiencia
 		if edificio.carga[id_cobre] > 0 and edificio.carga[id_silicio] > 0 and edificio.carga[id_electronico] < 10{
 			//Encender
-			if edificio.proceso < 0{
+			if not edificio.start{
 				change_energia(edificio_energia_consumo[index], edificio)
-				edificio.proceso++
+				edificio.start = true
 			}
 			edificio.proceso += red_power
 			//Producir / Apagar
@@ -16,7 +16,8 @@ function scr_ensambladora(edificio = control.null_edificio){
 				edificio.carga[id_silicio]--
 				edificio.carga[id_electronico]++
 				edificio.carga_total--
-				edificio.proceso = -1
+				edificio.proceso -= edificio_proceso[index]
+				edificio.start = false
 				change_energia(0, edificio)
 				edificio.waiting = not mover(edificio.a, edificio.b)
 			}

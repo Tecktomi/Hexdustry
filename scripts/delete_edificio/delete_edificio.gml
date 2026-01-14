@@ -373,6 +373,17 @@ function delete_edificio(aa, bb, enemigo = false){
 			nuclear_y = ypos
 			nuclear_step = 300
 		}
+		//Cruce de caminos
+		if index = id_cruce
+			for(var a = 0; a < 3; a++){
+				var temp_complex = next_to(aa, bb, a), aaa = temp_complex.a, bbb = temp_complex.b
+				if aaa < 0 or bbb < 0 or aaa >= xsize or bbb >= ysize
+					continue
+				if edificio_bool[# aaa, bbb]{
+					temp_edificio = edificio_id[# aaa, bbb]
+					calculate_in_out_2(temp_edificio)
+				}
+			}
 		delete(edificio)
 	}
 }
