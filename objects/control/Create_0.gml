@@ -828,7 +828,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 	id_recurso_infinito = def_edificio("Recurso Infinito", 1, spr_recurso_infinito, spr_selector_color, 30,, scr_recurso_infinito,,,,,,,,, true, true); def_edificio_2()
 	//30
 	id_bomba_de_evaporacion = def_edificio("Bomba de Evaporación", 1, spr_bomba_evaporacion, spr_tuberia_color, 30,, scr_bomba_evaporacion,, [id_bronce, id_hierro], [10, 5]); def_edificio_2(, 10, -5, 0)
-	id_horno_de_lava = def_edificio("Horno de Lava", 2.5, spr_horno_lava, spr_horno_lava_encendido, 400, 70, scr_horno_lava,, [id_acero, id_concreto], [15, 10], 70, true, false, [id_cobre, id_hierro, id_arena, id_sal], [10, 10, 10, 10], true, false, [id_bronce, id_acero, id_silicio]); def_edificio_2(, 10, 15, 3)
+	id_horno_de_lava = def_edificio("Horno de Lava", 2.5, spr_horno_lava, spr_horno_lava_encendido, 400, 70, scr_horno_lava,, [id_acero, id_concreto], [15, 10], 70, true, false, [id_cobre, id_hierro, id_arena, id_sal], [10, 10, 10, 10], true, false, [id_bronce, id_acero, id_silicio]); def_edificio_2(, 10, 45, 3)
 	id_generador_geotermico = def_edificio("Generador Geotérmico", 2, spr_generador_geotermico,, 200,, scr_generador_geotermico,, [id_cobre, id_acero, id_concreto], [10, 10, 10]); def_edificio_2(-90, 10, 30, 0)
 	id_taladro_de_explosion = def_edificio("Taladro de Explosión", 3, spr_taladro_explosivo,, 300, 300, scr_taladro_explosion,, [id_hierro, id_acero, id_concreto], [40, 40, 30], 40, true, false, [13], [10], true, false, [id_cobre, id_carbon, id_hierro, id_piedra, id_arena, id_piedra_cuprica, id_piedra_ferrica, id_piedra_sulfatada, id_uranio_bruto, id_sal]); def_edificio_2()
 	id_muro = def_edificio("Muro", 1, spr_hexagono,, 500,,,, [8], [1]); def_edificio_2(,,,,,, true)
@@ -856,7 +856,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 	id_planta_de_reciclaje = def_edificio("Planta de Reciclaje", 3, spr_planta_de_reciclaje,, 300,, scr_planta_de_reciclaje,, [id_bronce, id_silicio, id_concreto], [20, 15, 15],,,,,, true, false); def_edificio_2(60, 10, 20, 1)
 	id_planta_desalinizadora = def_edificio("Planta Desalinizadora", 2, spr_planta_desalinizadora,, 200, 60, scr_planta_desalinizadora,, [id_cobre, id_bronce, id_silicio], [20, 15, 15], 20,,,,, true, false, [id_sal, id_barril_agua]); def_edificio_2(40, 10, 20, 4)
 	id_embotelladora = def_edificio("Embotelladora", 2, spr_embotelladora,, 120, 20, scr_embotelladora,, [id_bronce, id_silicio], [15, 15], 50, false, false, [id_barril_agua, id_barril_acido, id_barril_petroleo, id_barril_lava, id_barril_agua_salada], [10, 10, 10, 10, 10], true, false, [id_barril_agua, id_barril_acido, id_barril_petroleo, id_barril_lava, id_barril_agua_salada]); def_edificio_2(, 10, -250)
-	id_extractor_atmosferico = def_edificio("Extractor Atmosférico", 2.5, spr_extractor_agua,, 200,, scr_extractor_agua, false, [id_cobre, id_bronce, id_silicio], [10, 20, 10]); def_edificio_2(60, 10, -6, 0)
+	id_extractor_atmosferico = def_edificio("Extractor Atmosférico", 2.5, spr_extractor_atmosferico,, 200,, scr_extractor_agua, false, [id_cobre, id_bronce, id_silicio, id_electronico], [10, 15, 10, 5]); def_edificio_2(60, 10, -6, 0)
 #endregion
 categoria_edificios = [
 	[id_cinta_transportadora, id_cinta_magnetica, id_enrutador, id_selector, id_overflow, id_tunel, id_almacen, id_fabrica_de_drones, id_puerto_de_carga],
@@ -872,6 +872,13 @@ for(var a = 0; a < array_length(categoria_edificios); a++)
 categoria_nombre = ["Transporte", "Extracción", "Producción", "Electricidad", "Líquidos", "Defensa", "Lógica"]
 categoria_nombre_display = []
 array_copy(categoria_nombre_display, 0, categoria_nombre, 0, array_length(categoria_nombre))
+categoria_nombre_disponible = array_create(0, "")
+array_copy(categoria_nombre_disponible, 0, categoria_nombre, 0, array_length(categoria_nombre))
+categoria_edificios_disponible = array_create(0, array_create(0, 0))
+array_copy(categoria_edificios_disponible, 0, categoria_edificios, 0, array_length(categoria_edificios))
+categoria_index_disponible = array_create(0, 0)
+for(var a = 0; a < array_length(categoria_nombre); a++)
+	categoria_index_disponible[a] = a
 #region planta quimica
 	planta_quimica_receta = ["Ácido", "Explosivos", "Baterías"]
 	planta_quimica_sprite = [spr_item_acido, spr_item_explosivos, spr_item_bateria]
@@ -1127,7 +1134,7 @@ olas = [spr_agua_salada, spr_olas_1, spr_olas_2, spr_olas_3, spr_olas_4, spr_ola
 	def_tecnologia("planta de reciclaje", "refinería de metales", "horno de lava")
 	def_tecnologia("planta desalinizadora", "bomba de evaporación", "generador")
 	def_tecnologia("embotelladora", "tubería")
-	def_tecnologia("extractor atmosférico", "bomba hidráulica", "turbina")
+	def_tecnologia("extractor atmosférico", "bomba hidráulica", "turbina", "ensambladora")
 	edificio_tecnologia_nivel = array_create(edificio_max, -1)
 	tecnologia_nivel_edificios = [array_create(0, 0)]
 	var edi_count = 0
