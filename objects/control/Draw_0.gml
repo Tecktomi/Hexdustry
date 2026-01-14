@@ -590,15 +590,32 @@ if menu = 2{
 			var b = 0
 			for(var a = 0; a < edificio_max; a++)
 				if edificio_construible[a]{
-					if mision_edificios[a]
+					if edificio_tecnologia[a]
 						draw_set_color(c_green)
+					else if edificio_tecnologia_desbloqueable[a]
+						draw_set_color(c_yellow)
 					else
 						draw_set_color(c_red)
 					draw_circle(xpos, ypos, 18, false)
 					draw_set_color(c_black)
 					draw_circle(xpos, ypos, 18, true)
-					if draw_sprite_boton(edificio_sprite[a], xpos - 15, ypos - 15)
-						mision_edificios[a] = not mision_edificios[a]
+					if draw_sprite_boton(edificio_sprite[a], xpos - 15, ypos - 15){
+						if edificio_tecnologia[a]{
+							mision_edificios[a] = true
+							edificio_tecnologia[a] = false
+							edificio_tecnologia_desbloqueable[a] = true
+						}
+						else if edificio_tecnologia_desbloqueable[a]{
+							mision_edificios[a] = false
+							edificio_tecnologia[a] = false
+							edificio_tecnologia_desbloqueable[a] = false
+						}
+						else{
+							mision_edificios[a] = true
+							edificio_tecnologia[a] = true
+							edificio_tecnologia_desbloqueable[a] = false
+						}
+					}
 					ypos += 40
 					if (++b mod 12) = 0{
 						ypos = 140
@@ -2750,28 +2767,28 @@ if sonido
 			build_menu = 1
 	}
 	if build_menu = 1{
-		var b = 2 * pi / array_length(categoria_nombre)
+		var b = 2 * pi / array_length(categoria_nombre_disponible)
 		draw_set_color(c_white)
 		draw_circle(menu_x, menu_y, 100, true)
 		draw_circle(menu_x, menu_y, 10, false)
-		for(var a = 0; a < array_length(categoria_nombre); a++){
+		for(var a = 0; a < array_length(categoria_nombre_disponible); a++){
 			var angle = a * b
-			draw_sprite(spr_items, a, menu_x - 15 + 100 * cos(angle + b / 2), menu_y - 15 - 100 * sin(angle + b / 2))
+			draw_sprite(spr_items, categoria_index_disponible[a], menu_x - 15 + 100 * cos(angle + b / 2), menu_y - 15 - 100 * sin(angle + b / 2))
 			draw_line(menu_x, menu_y, menu_x + 100 * cos(angle), menu_y - 100 * sin(angle))
 		}
 		if distance_sqr(mouse_x, mouse_y, menu_x, menu_y) < 10000{//100^2
 			temp_text = ""
-			var a = floor((array_length(categoria_nombre) - arctan2(mouse_y - menu_y, mouse_x - menu_x) / b) mod array_length(categoria_nombre))
+			var a = floor((array_length(categoria_nombre_disponible) - arctan2(mouse_y - menu_y, mouse_x - menu_x) / b) mod array_length(categoria_nombre_disponible))
 			draw_set_alpha(0.5)
 			draw_arco(menu_x, menu_y, 100, a * b, (a + 1) * b)
 			draw_set_alpha(1)
-			draw_sprite(spr_items, a, menu_x - 15 + 100 * cos((a + 0.5) * b), menu_y - 15 - 100 * sin((a + 0.5) * b))
-			temp_text = categoria_nombre_display[a]
+			draw_sprite(spr_items, categoria_index_disponible[a], menu_x - 15 + 100 * cos((a + 0.5) * b), menu_y - 15 - 100 * sin((a + 0.5) * b))
+			temp_text = categoria_nombre_display[categoria_index_disponible[a]]
 			draw_text_background(min(room_width - string_width(temp_text), mouse_x + 20), min(room_height - string_height(temp_text), mouse_y), temp_text)
 			if mouse_check_button_pressed(mb_left){
 				mouse_clear(mb_left)
 				build_menu = 2
-				menu_array = categoria_edificios[a]
+				menu_array = categoria_edificios_disponible[a]
 			}
 		}
 		else if mouse_check_button_pressed(mb_left){

@@ -15,8 +15,20 @@ function draw_edificio(x, y, index, dir, alpha = 1){
 		}
 		else if edificio_size[index] mod 2 = 0
 			draw_sprite_off(edificio_sprite[index], 0, x, y, power(-1, dir),,,, alpha)
-		else if index = id_turbina
-			draw_sprite_off(edificio_sprite[index], 0, x, y,,,,, alpha)
+		else if edificio_size[index] = 2.5{
+			if dir = 0
+				draw_sprite_off(edificio_sprite[index], 0, x, y)
+			else if dir = 1
+				draw_sprite_off(edificio_sprite[index], 0, x, y,, -1)
+			else if dir = 2
+				draw_sprite_off(edificio_sprite[index], 1, x, y)
+			else if dir = 3
+				draw_sprite_off(edificio_sprite[index], 0, x, y, -1, -1)
+			else if dir = 4
+				draw_sprite_off(edificio_sprite[index], 0, x, y, -1)
+			else if dir = 5
+				draw_sprite_off(edificio_sprite[index], 1, x, y,, -1)
+		}
 		else
 			draw_sprite_off(edificio_sprite[index], 0, x, y,,, dir * 60,, alpha)
 	}

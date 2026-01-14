@@ -6,11 +6,11 @@ function cargar_escenario(file = "", config = true){
 			ini_open(file)
 			var prev_xsize = xsize
 			xsize = ini_read_real("Global", "xsize", xsize)
-			if xsize > prev_xsize
+			if xsize != prev_xsize
 				resize_grid(prev_xsize, 0)
 			var prev_ysize = ysize
 			ysize = ini_read_real("Global", "ysize", ysize)
-			if ysize > prev_ysize
+			if ysize != prev_ysize
 				resize_grid(0, prev_ysize)
 			spawn_x = ini_read_real("Global", "spawn_x", 0)
 			spawn_y = ini_read_real("Global", "spawn_y", 0)
@@ -68,9 +68,37 @@ function cargar_escenario(file = "", config = true){
 					mision_switch_oleadas[a] = bool(ini_read_real($"Objetivo {a}", "switch oleadas", 0))
 				}
 				for(var a = 0; a < edificio_max; a++){
-					mision_edificios[a] = bool(ini_read_real("Edificios", a, 1))
-					edificio_tecnologia[a] = mision_edificios[a]
-					edificio_tecnologia_desbloqueable[a] = false
+					var b = ini_read_real("Edificios", a, 2)
+					mision_edificios[a] = (b > 0)
+					edificio_tecnologia[a] = (b = 2)
+					edificio_tecnologia_desbloqueable[a] = (b = 1)
+				}
+				for(var a = 0; a < edificio_max; a++)
+					if not edificio_tecnologia[a] and edificio_tecnologia_desbloqueable[a]{
+						var flag = true
+						for(var b = array_length(edificio_tecnologia_prev[a]) - 1; b >= 0; b--)
+							if not edificio_tecnologia[edificio_tecnologia_prev[a, b]]{
+								flag = false
+								break
+							}
+						if not flag
+							edificio_tecnologia_desbloqueable[a] = false
+					}
+				categoria_edificios_disponible = array_create(0, array_create(0, 0))
+				categoria_nombre_disponible = array_create(0, "")
+				categoria_index_disponible = array_create(0, 0)
+				for(var a = 0; a < array_length(categoria_nombre); a++){
+					var temp_array = array_create(0, 0)
+					for(var b = 0; b < array_length(categoria_edificios[a]); b++){
+						var c = categoria_edificios[a, b]
+						if mision_edificios[c]
+							array_push(temp_array, c)
+					}
+					if array_length(temp_array) > 0{
+						array_push(categoria_edificios_disponible, temp_array)
+						array_push(categoria_nombre_disponible, categoria_nombre_display[a])
+						array_push(categoria_index_disponible, a)
+					}
 				}
 				multiplicador_vida_enemigos = ini_read_real("Global", "Multiplicador vida enemigos", 100)
 			}

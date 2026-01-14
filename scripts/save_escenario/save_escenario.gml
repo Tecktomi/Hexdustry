@@ -45,8 +45,14 @@ function save_escenario(save_file = ""){
 				}
 				ini_write_real($"Objetivo {a}", "switch oleadas", real(mision_switch_oleadas[a]))
 			}
-			for(var a = 0; a < edificio_max; a++)
-				ini_write_real("Edificios", a, mision_edificios[a])
+			for(var a = 0; a < edificio_max; a++){
+				if edificio_tecnologia[a]
+					ini_write_real("Edificios", a, 2)
+				else if edificio_tecnologia_desbloqueable[a]
+					ini_write_real("Edificios", a, 1)
+				else
+					ini_write_real("Edificios", a, 0)
+			}
 			ini_write_real("Global", "Multiplicador vida enemigos", multiplicador_vida_enemigos)
 			var temp_array = array_create(terreno_max, 0), max_index = 0
 			for(var a = 0; a < xsize; a++)
