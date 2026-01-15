@@ -245,6 +245,7 @@
 "Tanque": "Tank",
 "Helicóptero": "Helicopter",
 "Titán": "Titan",
+"Bombardero": "Bomber",
 
 "descripcion_Araña": "Fires a laser at nearby enemies",
 "descripcion_Dron": "Transports resources between Cargo Ports",
@@ -253,6 +254,7 @@
 "descripcion_Tanque": "Heavy siege unit that fires explosives, damaging everything around it",
 "descripcion_Helicóptero": "Advanced air unit that attacks from long range",
 "descripcion_Titán": "Ultimate ground unit that fires a long-range explosive barrage",
+"descripcion_Bombardero": "Flies over its enemies, dropping devastating explosives in a straight line",
 
 "Transporte": "Transport",
 "Extracción": "Extraction",

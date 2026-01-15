@@ -1,19 +1,24 @@
 randomize()
 draw_set_font(ft_letra)
+browser = (os_browser = browser_not_a_browser)
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
-ini_write_string("Global", "version", "14_01_2026")
+ini_write_string("Global", "version", "15_01_2026")
 medallas = array_create(5)
-for(var a = 0; a < 5; a++){
+default_maps = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas"]
+for(var a = 0; a < array_length(default_maps); a++){
 	medallas[a] = array_create(3, false)
 	for(var b = 0; b < 3; b++){
 		var c = ini_read_real("Medallas", $"{a},{b}", 0)
 		if c > 12092000 and (c mod (12092000 + (a + 1) * (b + 10))) = 1
 			array_set(medallas[a], b, true)
 	}
+	if browser
+		default_maps_image[a] = sprite_add($"{default_maps[a]}.png", 1, false, false, 0, 0)
+	else
+		default_maps_image[a] = spr_null_image
 }
 ini_close()
-browser = (os_browser = browser_not_a_browser)
 save_files = browser ? scan_files("*.txt", fa_none) : []
 if browser{
 	for(var a = array_length(save_files) - 1; a >= 0; a--){
@@ -244,9 +249,10 @@ null_edificio = {
 	output_index : 0,
 	proceso : 0,
 	start : false,
-	carga : [0],
-	carga_max : [0],
-	carga_output : [false],
+	carga : array_create(0, 0),
+	carga_max : array_create(0, 0),
+	carga_input : array_create(0, false),
+	carga_output : array_create(0, false),
 	carga_id : 0,
 	carga_total : 0,
 	fuel : 0,
@@ -398,7 +404,7 @@ null_enemigo = {
 	chunk_x : 0,
 	chunk_y : 0,
 	chunk_pointer : 0,
-	carga : [0],
+	carga : array_create(0, 0),
 	carga_total : 0,
 	modo : 0,
 	pointer : 0,
@@ -409,7 +415,8 @@ null_enemigo = {
 	efecto : array_create(efectos_max, 0),
 	array_real : array_create(0, 0),
 	oleada : 0,
-	random_int : random(1)
+	random_int : random(1),
+	enemigo : true,
 }
 enemigos = array_create(0, null_enemigo)
 drones_aliados = array_create(0, null_enemigo)
@@ -595,7 +602,8 @@ ore_max = array_length(ore_sprite)
 			"Se acerca a su objetivo y explota infilgiendo daño",
 			"Unidad de asedio superior, dispara explosivos dañando todo a su alrededor",
 			"Unidad aerea superior, dispara a distancia",
-			"Unidad terrestre máxima, dispara una ráfaga de explosivos de largo alcance"
+			"Unidad terrestre máxima, dispara una ráfaga de explosivos de largo alcance",
+			"Vuela sobre sus enemigos soltando devastadores explosivos en línea recta"
 		]
 	for(var a = array_length(dron_descripcion) - 1; a >= 0; a--)
 		dron_descripcion[a] = text_wrap(dron_descripcion[a], 400)
@@ -633,12 +641,13 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 }
 #region definicion
 	def_dron("Araña", spr_arana,, 100, 400, 6400, [id_bronce, id_baterias, id_electronico], [6, 1, 3], 600)
-	def_dron("Dron", spr_dron,, 40, 400, 100, [id_cobre, id_bronce, id_electronico], [10, 5, 3], 900, true)
+	def_dron("Dron", spr_dron,, 40, 400, 100, [id_bronce, id_hierro, id_electronico], [10, 5, 3], 900, true)
 	def_dron("Reparador", spr_reparador,, 60, 400, 2500, [id_silicio, id_baterias, id_electronico], [10, 3, 5], 1200, true)
 	def_dron("Explosivo", spr_dron_explosivo,, 50, 400, 400, [id_hierro, id_explosivo, id_electronico], [6, 2, 2], 450, true)
 	def_dron("Tanque", spr_tanque, spr_tanque_2, 750, 1600, 90_000, [id_bronce, id_acero, id_electronico], [15, 25, 10], 1800)
 	def_dron("Helicóptero", spr_helicoptero, spr_helicoptero_2, 400, 1600, 40_000, [id_bronce, id_acero, id_electronico], [10, 15, 15], 1800, true)
 	def_dron("Titán", spr_titan, spr_titan_leg, 1500, 2500, 160_000, [id_bronce, id_acero, id_electronico, id_uranio_bruto], [30, 40, 40, 75], 3000)
+	def_dron("Bombardero", spr_bombardero,, 800, 2500, 1_600, [id_bronce, id_acero, id_electronico, id_uranio_bruto], [30, 40, 60, 50], 3000, true)
 #endregion
 dron_max = array_length(dron_nombre)
 //Liquidos
@@ -828,7 +837,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 	id_rifle = def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, 400, 45, scr_torres_basicas,, [id_cobre, id_hierro, id_acero], [10, 10, 10], 30, true, false, [id_bronce, id_acero, id_uranio_bruto, id_uranio_enriquecido, id_uranio_empobrecido], [10, 10, 10, 10, 10]); def_edificio_2(, 10, 30, 0, 1, 300)
 	id_lanzallamas = def_edificio("Lanzallamas", 2, spr_lanzallamas, spr_lanzallamas_2, 400, 1, scr_torres_basicas,, [id_cobre, id_bronce, id_hierro], [15, 15, 10], 20, true, false, [id_carbon, id_combustible], [10, 10]); def_edificio_2(, 10, 30, 2, 3, 130)
 	id_planta_quimica = def_edificio("Planta Química", 3, spr_planta_quimica,, 200, 60, scr_planta_quimica,, [id_cobre, id_bronce, id_hierro, id_silicio], [20, 10, 20, 10], 30, true, false, [id_cobre, id_piedra_sulfatada, id_combustible, id_sal], [0, 0, 0, 10], true, false, [id_explosivo, id_baterias]); def_edificio_2(50, 10,, 1)
-	id_laser = def_edificio("Láser", 2.5, spr_laser, spr_laser_2, 400, 1, scr_laser,, [id_cobre, id_acero, id_silicio, id_electronico], [10, 15, 15, 5]); def_edificio_2(150,,,, 0, 300)
+	id_laser = def_edificio("Láser", 2.5, spr_laser, spr_laser_2, 400, 1, scr_laser,, [id_cobre, id_acero, id_silicio, id_electronico], [10, 15, 15, 5]); def_edificio_2(200,,,, 0, 320)
 	id_deposito = def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, 200,,,, [id_bronce, id_acero], [20, 10]); def_edificio_2(, 1000,,,,, true)
 	id_liquido_infinito = def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, 30); def_edificio_2(, 10, -999_999,,,, true)
 	id_turbina = def_edificio("Turbina", 2, spr_turbina,, 160,, scr_turbina,, [id_cobre, id_bronce, id_acero], [10, 10, 10], 20, true, false, [id_carbon, id_combustible], [10, 10]); def_edificio_2(-120, 10, 50, 0)
@@ -920,6 +929,7 @@ edificio_key[id_energia_infinita] = "4 "
 edificio_key[id_liquido_infinito] = "5 "
 edificio_key[id_recurso_infinito] = "1 "
 var flag_rss = array_create(rss_max, false)
+//Inputs y outputs de fábrica de drones y planta de reciclaje
 for(var a = 0; a < dron_max; a++){
 	var c = 0
 	for(var b = array_length(dron_precio_id[a]) - 1; b >= 0; b--){
@@ -933,6 +943,7 @@ for(var a = 0; a < rss_max; a++){
 		array_push(edificio_output_id[id_planta_de_reciclaje], a)
 	edificio_carga_max[id_planta_de_reciclaje] += 10
 }
+//Valor absoluto edificios
 for(var a = 0; a < edificio_max; a++){
 	edificio_precio[a] = 0
 	if edificio_construible[a]

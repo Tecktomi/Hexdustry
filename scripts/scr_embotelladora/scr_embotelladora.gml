@@ -75,11 +75,11 @@ function scr_embotelladora(edificio = control.null_edificio){
 						edificio.proceso -= edificio_proceso[index]
 						edificio.start = false
 						change_flujo(0, edificio)
-						edificio.waiting = not mover(edificio.a, edificio.b)
+						edificio.waiting = not mover(edificio)
 					}
 				}
 				if edificio.carga_total > 0
-					edificio.waiting = not mover(edificio.a, edificio.b)
+					edificio.waiting = not mover(edificio)
 			}
 		}
 	}

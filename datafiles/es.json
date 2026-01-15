@@ -245,6 +245,7 @@
 "Tanque": "Tanque",
 "Helicóptero": "Helicoptero",
 "Titán": "Titán",
+"Bombardero": "Bombardero",
 
 "descripcion_Araña": "Dispara un láser a los enemigos cercanos",
 "descripcion_Dron": "Transporta recursos entre Puertos de Carga",
@@ -253,6 +254,7 @@
 "descripcion_Tanque": "Unidad de asedio superior, dispara explosivos dañando todo a su alrededor",
 "descripcion_Helicóptero": "Unidad aerea superior, dispara a distancia",
 "descripcion_Titán": "Unidad terrestre máxima, dispara una ráfaga de explosivos de largo alcance",
+"descripcion_Bombardero": "Vuela sobre sus enemigos soltando devastadores explosivos en línea recta",
 
 "Transporte": "Transporte",
 "Extracción": "Extracción",

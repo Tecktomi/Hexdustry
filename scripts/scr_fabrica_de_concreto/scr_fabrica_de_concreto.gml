@@ -17,9 +17,13 @@ function scr_fabrica_de_concreto(edificio = control.null_edificio){
 				edificio.carga_total -= 2
 				edificio.proceso -= edificio_proceso[index]
 				edificio.start = false
-				edificio.waiting = not mover(edificio.a, edificio.b)
+				edificio.waiting = not mover(edificio)
 				change_flujo(0, edificio)
 			}
 		}
+		else
+			change_flujo(0, edificio)
+		if edificio.carga_total > 0
+			edificio.waiting = not mover(edificio)
 	}
 }

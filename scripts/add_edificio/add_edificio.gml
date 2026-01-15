@@ -20,6 +20,7 @@ function add_edificio(index, dir, a, b){
 			start : false,
 			carga : array_create(rss_max, 0),
 			carga_max : array_create(rss_max, 0),
+			carga_input : array_create(rss_max, true),
 			carga_output : array_create(rss_max, true),
 			carga_id : 0,
 			carga_total : 0,
@@ -343,6 +344,9 @@ function add_edificio(index, dir, a, b){
 				var temp_list = get_size(a, b, 0, 7), flag = false, temp_edificio = null_edificio
 				for(var c = ds_list_size(temp_list) - 1; c >= 0; c--){
 					temp_complex = temp_list[|c]
+					var aa = temp_complex.a, bb = temp_complex.b
+					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+						continue
 					if edificio_bool[# temp_complex.a, temp_complex.b] and not (temp_complex.a = a and temp_complex.b = b){
 						temp_edificio = edificio_id[# temp_complex.a, temp_complex.b]
 						if temp_edificio.index = index and temp_edificio.link = null_edificio{

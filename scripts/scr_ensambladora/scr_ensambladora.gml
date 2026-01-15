@@ -19,10 +19,12 @@ function scr_ensambladora(edificio = control.null_edificio){
 				edificio.proceso -= edificio_proceso[index]
 				edificio.start = false
 				change_energia(0, edificio)
-				edificio.waiting = not mover(edificio.a, edificio.b)
+				edificio.waiting = not mover(edificio)
 			}
 		}
 		else
 			change_energia(0, edificio)
+		if edificio.carga_total > 0
+			edificio.waiting = not mover(edificio)
 	}
 }

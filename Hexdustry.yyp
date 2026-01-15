@@ -237,6 +237,7 @@
     {"id":{"name":"spr_bomba_evaporacion","path":"sprites/spr_bomba_evaporacion/spr_bomba_evaporacion.yy",},},
     {"id":{"name":"spr_bomba_rotor","path":"sprites/spr_bomba_rotor/spr_bomba_rotor.yy",},},
     {"id":{"name":"spr_bomba","path":"sprites/spr_bomba/spr_bomba.yy",},},
+    {"id":{"name":"spr_bombardero","path":"sprites/spr_bombardero/spr_bombardero.yy",},},
     {"id":{"name":"spr_cable_tension","path":"sprites/spr_cable_tension/spr_cable_tension.yy",},},
     {"id":{"name":"spr_cable","path":"sprites/spr_cable/spr_cable.yy",},},
     {"id":{"name":"spr_camino_0_in_16","path":"sprites/spr_camino_0_in_16/spr_camino_0_in_16.yy",},},

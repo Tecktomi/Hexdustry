@@ -52,7 +52,7 @@ function scr_taladro(edificio = control.null_edificio){
 				}
 				ds_list_destroy(temp_list)
 				if flag
-					edificio.waiting = not mover(edificio.a, edificio.b)
+					edificio.waiting = not mover(edificio)
 				else{
 					edificio.idle = true
 					change_energia(0, edificio)
@@ -63,5 +63,7 @@ function scr_taladro(edificio = control.null_edificio){
 					change_flujo(0, edificio)
 			}
 		}
+		if edificio.carga_total > 0
+			edificio.waiting = not mover(edificio)
 	}
 }

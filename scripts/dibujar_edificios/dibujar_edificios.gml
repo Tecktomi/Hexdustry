@@ -1,7 +1,7 @@
 function dibujar_edificios(){
 	with control{
-		for(var a = mina; a <= maxa; a++)
-			for(var b = minb; b <= maxb; b++)
+		for(var a = mina; a < maxa; a++)
+			for(var b = minb; b < maxb; b++)
 				if edificio_draw[# a, b]{
 					var edificio = edificio_id[# a, b], index = edificio.index, dir = edificio.dir, aa = edificio.x, bb = edificio.y
 					//Dibujo caminos
