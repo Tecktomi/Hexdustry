@@ -2,8 +2,8 @@ function dibujar_fondo(editor = 0){
 	with control{
 		if editor = 1{
 			var step = image_index / 10
-			for(var a = mina; a <= maxa; a++)
-				for(var b = minb; b <= maxb; b++){
+			for(var a = mina; a < maxa; a++)
+				for(var b = minb; b < maxb; b++){
 					var temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b, d = terreno[# a, b], e = ore[# a, b]
 					if terreno_pared[d]
 						draw_sprite_off(terreno_sprite[d], terreno_pared_index[# a, b], aa, bb)
@@ -21,8 +21,8 @@ function dibujar_fondo(editor = 0){
 		//Fondos animados
 		if editor = 2{
 			var step = image_index / 10
-			for(var a = mina; a <= maxa; a++)
-				for(var b = minb; b <= maxb; b++)
+			for(var a = mina; a < maxa; a++)
+				for(var b = minb; b < maxb; b++)
 					if terreno[# a, b] = 14{
 						var temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b
 						draw_sprite_off(spr_lava_animacion, step + 16 * ore_random[# a, b], aa, bb)

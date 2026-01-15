@@ -17,14 +17,14 @@ function atacar_dron(dron = control.null_enemigo, edificio = control.null_edific
 			if target != null_enemigo{
 				draw_line_off(aa, bb, target.a, target.b)
 				if --target.vida <= 0
-					destroy_dron(target, not enemigo)
+					destroy_dron(target)
 			}
 			return false
 		}
 		//Ataque explosivo
 		else if dron.index = 3{
 			explosion(aa, bb, edificio, enemigo, 25_000, 3000)
-			destroy_dron(dron, enemigo)
+			destroy_dron(dron)
 			return true
 		}
 		//Ataque tanque
@@ -48,18 +48,19 @@ function atacar_dron(dron = control.null_enemigo, edificio = control.null_edific
 		}
 		//Ataque Helicoptero
 		else if dron.index = 5{
-			if ++dron.step = 15{
-				dron.step = 0
+			if in(++dron.step, 110, 120){
+				if dron.step = 120
+					dron.step = 0
 				var municion
 				if edificio != null_edificio{
 					var dis = distance(dron.a, dron.b, edificio.x, edificio.y)
-					municion = add_municion(dron.a, dron.b, 25 * (edificio.x - dron.a) / dis, 25 * (edificio.y - dron.b) / dis, 0, dis / 25, 10,, edificio)
+					municion = add_municion(dron.a, dron.b, 25 * (edificio.x - dron.a) / dis, 25 * (edificio.y - dron.b) / dis, 3, dis / 25, 25,, edificio)
 				}
 				if target_enemigo != null_enemigo
 					target = target_enemigo
 				if target != null_enemigo{
 					var dis = distance(dron.a, dron.b, target.a, target.b)
-					municion = add_municion(dron.a, dron.b, 25 * (target.a - dron.a) / dis, 25 * (target.b - dron.b) / dis, 0, dis / 25, 10, target)
+					municion = add_municion(dron.a, dron.b, 25 * (target.a - dron.a) / dis, 25 * (target.b - dron.b) / dis, 3, dis / 25, 25, target)
 				}
 				array_push(municiones, municion)
 			}
@@ -83,6 +84,11 @@ function atacar_dron(dron = control.null_enemigo, edificio = control.null_edific
 				}
 				array_push(municiones, municion)
 			}
+		}
+		//Ataque bombardero
+		else if dron.index = 7 and in(dron.step, 0, 80){
+			explosion(aa + random_range(-5, 5), bb + random_range(-5, 5), edificio, enemigo, 25_000, 500)
+			dron.step = 90
 		}
 		return false
 	}

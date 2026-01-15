@@ -1,5 +1,6 @@
-function destroy_dron(dron = control.null_enemigo, enemigo = true){
+function destroy_dron(dron = control.null_enemigo){
 	with control{
+		var enemigo = dron.enemigo
 		if enemigo{
 			remove_dron_chunk(dron)
 			if array_length(enemigos) > 1 and dron.pointer != array_length(enemigos) - 1{

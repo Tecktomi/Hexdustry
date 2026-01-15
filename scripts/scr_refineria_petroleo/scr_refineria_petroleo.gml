@@ -41,7 +41,7 @@ function scr_refineria_petroleo(edificio = control.null_edificio){
 				change_energia(0, edificio)
 				edificio.proceso -= edificio_proceso[index]
 				edificio.start = false
-				edificio.waiting = not mover(edificio.a, edificio.b)
+				edificio.waiting = not mover(edificio)
 				encender_luz(-1, edificio)
 			}
 		}
@@ -50,5 +50,7 @@ function scr_refineria_petroleo(edificio = control.null_edificio){
 			change_energia(0, edificio)
 			encender_luz(-1, edificio)
 		}
+		if edificio.carga_total > 0
+			edificio.waiting = not mover(edificio)
 	}
 }

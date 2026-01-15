@@ -44,7 +44,7 @@ function scr_refineria_metales(edificio = control.null_edificio){
 					edificio.carga[id_cobre]++
 				}
 				edificio.carga_total -= 2
-				edificio.waiting = not mover(edificio.a, edificio.b)
+				edificio.waiting = not mover(edificio)
 				change_energia(0, edificio)
 				change_flujo(0, edificio)
 				encender_luz(-1, edificio)
@@ -56,7 +56,7 @@ function scr_refineria_metales(edificio = control.null_edificio){
 			encender_luz(-1, edificio)
 		}
 		//Vaciar interior
-		if edificio.waiting and edificio.carga[id_uranio_enriquecido] > 0 or edificio.carga[id_uranio_empobrecido] > 0
-			edificio.waiting = not mover(edificio.a, edificio.b)
+		if edificio.carga_total > 0
+			edificio.waiting = not mover(edificio)
 	}
 }

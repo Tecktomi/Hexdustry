@@ -21,7 +21,7 @@ function explosion(aa = 0, bb = 0, edificio = control.null_edificio, enemigo = t
 					if dis < radio{//120^2
 						temp_dron.vida -= dmg / (10 + sqrt(dis))
 						if temp_dron.vida <= 0
-							destroy_dron(temp_dron, false)
+							destroy_dron(temp_dron)
 					}
 				}
 			}

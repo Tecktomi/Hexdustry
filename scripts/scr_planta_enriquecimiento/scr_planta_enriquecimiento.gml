@@ -20,7 +20,7 @@ function scr_planta_enriquecimiento(edificio = control.null_edificio){
 					edificio.start = false
 					edificio.carga[id_uranio_enriquecido]++
 					edificio.carga[id_uranio_empobrecido]--
-					edificio.waiting = not mover(edificio.a, edificio.b)
+					edificio.waiting = not mover(edificio)
 					change_energia(0, edificio)
 					change_flujo(0, edificio)
 					encender_luz(-1, edificio)
@@ -30,6 +30,6 @@ function scr_planta_enriquecimiento(edificio = control.null_edificio){
 				edificio.proceso = max(0, edificio.proceso - 1)
 		}
 		else if edificio.carga[id_uranio_enriquecido] > 20
-			edificio.waiting = not mover(edificio.a, edificio.b)
+			edificio.waiting = not mover(edificio)
 	}
 }

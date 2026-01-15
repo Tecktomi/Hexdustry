@@ -49,8 +49,10 @@ function scr_horno(edificio = control.null_edificio){
 					edificio.carga_total--
 					edificio.proceso -= edificio_proceso[index]
 				}
-				edificio.waiting = not mover(edificio.a, edificio.b)
+				edificio.waiting = not mover(edificio)
 			}
 		}
+		if edificio.carga_total > 0
+			edificio.waiting = not mover(edificio)
 	}
 }

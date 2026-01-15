@@ -17,9 +17,11 @@ function scr_triturador(edificio = control.null_edificio){
 				if edificio.carga[id_piedra] > 0
 					edificio.carga[id_piedra]--
 				edificio.carga[id_arena]++
-				edificio.waiting = not mover(edificio.a, edificio.b)
+				edificio.waiting = not mover(edificio)
 				change_energia(0, edificio)
 			}
 		}
+		if edificio.carga_total > 0
+			edificio.waiting = not mover(edificio)
 	}
 }

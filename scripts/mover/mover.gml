@@ -1,11 +1,11 @@
-function mover(aa, bb){
+function mover(edificio = control.null_edificio){
 	with control{
-		if not edificio_bool[# aa, bb]
+		if not edificio.emisor
 			exit
-		var edificio = edificio_id[# aa, bb], flag = false, out = 0, temp_edificio = null_edificio, b = 0, index = edificio.index
+		var index = edificio.index, flag = false, out = 0, temp_edificio = null_edificio, b = 0
 		//Selección de recursos
 		for(out = 0; out < rss_max; out++)
-			if edificio.carga[out] > 0 and edificio.carga_output[out]{
+			if edificio.carga_output[out] and edificio.carga[out] > 0{
 				//Output selector
 				if index = id_selector{
 					//Output selector frontal
@@ -105,7 +105,7 @@ function mover(aa, bb){
 				recursos_obtenidos_time_temp[out]++
 			if in(out, id_piedra_cuprica, id_piedra_ferrica, id_piedra_sulfatada) and in(temp_edificio.index, id_nucleo, id_triturador, id_fabrica_de_concreto)
 				out = id_piedra
-			else if in(out, id_uranio_enriquecido, id_uranio_empobrecido) and in(temp_edificio.index, id_nucleo, id_rifle, id_mortero)
+			else if in(out, id_uranio_enriquecido, id_uranio_empobrecido) and in(temp_edificio.index, id_nucleo, id_rifle, id_mortero, id_fabrica_de_drones)
 				out = id_uranio_bruto
 			temp_edificio.carga[out]++
 			temp_edificio.carga_total++

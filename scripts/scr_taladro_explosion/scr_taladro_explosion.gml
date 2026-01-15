@@ -23,13 +23,13 @@ function scr_taladro_explosion(edificio = control.null_edificio){
 					}
 				}
 				if flag
-					edificio.waiting = not mover(edificio.a, edificio.b)
+					edificio.waiting = not mover(edificio)
 				else
 					edificio.idle = true
 				edificio.proceso = 0
 			}
 		}
-		if edificio.carga_total > edificio.carga[id_explosivo]
-			edificio.waiting = not mover(edificio.a, edificio.b)
+		if not edificio.waiting and edificio.carga_total > edificio.carga[id_explosivo]
+			edificio.waiting = not mover(edificio)
 	}
 }

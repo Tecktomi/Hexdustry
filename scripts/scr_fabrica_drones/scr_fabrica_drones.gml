@@ -19,7 +19,7 @@ function scr_fabrica_drones(edificio = control.null_edificio){
 				edificio.proceso += red_power
 				//Producir / Apagar
 				if edificio.proceso >= dron_time[edificio.select]{
-					edificio.proceso -= edificio_proceso[index]
+					edificio.proceso -= dron_time[edificio.select]
 					edificio.start = false
 					for(var b = array_length(dron_precio_id[edificio.select]) - 1; b >= 0; b--){
 						edificio.carga_total -= dron_precio_num[edificio.select, b]

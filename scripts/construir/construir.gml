@@ -30,7 +30,7 @@ function construir(index, dir, mx, my){
 					if index = temp_edificio.index{
 						temp_edificio.dir = dir
 						calculate_in_out_2(temp_edificio)
-						mover(aa, bb)
+						mover(temp_edificio)
 						var d = temp_edificio.dir * pi / 3 + pi / 6
 						temp_edificio.array_real[0] = cos(d)
 						temp_edificio.array_real[1] = -sin(d)
@@ -124,7 +124,7 @@ function construir(index, dir, mx, my){
 				edificio.link = build_target
 				build_target.link = edificio
 				if build_target.waiting
-					mover(build_target.a, build_target.b)
+					mover(build_target)
 			}
 		}
 		//Actualizar recursos
