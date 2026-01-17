@@ -7,12 +7,26 @@ function scr_planta_nuclear(edificio = control.null_edificio){
 		if edificio.fuel > 0{
 			edificio.fuel--
 			if not in(flujo.liquido, 0, 4){
-				if edificio_herir(edificio, 4)
+				draw_set_color(c_yellow)
+				var cam_center_x = (camx + room_width * zoom / 2), cam_center_y = (camy + room_height * zoom / 2)
+				var angle = arctan2(cam_center_y - edificio.x, cam_center_x - edificio.y), cosa = cos(angle), sina = sin(angle)
+				draw_line(room_width / 2 - 60 * cosa, room_height / 2 - 60 * sina, room_width / 2 - 90 * cosa, room_height / 2 - 90 * sina)
+				if (image_index mod 145) = 0
+						audio_play_sound(snd_nuclear, 0, false, 0.5)
+				if edificio_herir(edificio, 1)
 					exit
 			}
 			else{
-				if flujo_power < 1 and edificio_herir(edificio, 1 - flujo_power)
-					exit
+				if flujo_power < 1{
+					draw_set_color(c_yellow)
+					var cam_center_x = (camx + room_width * zoom / 2), cam_center_y = (camy + room_height * zoom / 2)
+					var angle = arctan2(cam_center_y - edificio.x, cam_center_x - edificio.y), cosa = cos(angle), sina = sin(angle)
+					draw_line(room_width / 2 - 60 * cosa, room_height / 2 - 60 * sina, room_width / 2 - 90 * cosa, room_height / 2 - 90 * sina)
+					if (image_index mod 145) = 0
+						audio_play_sound(snd_nuclear, 0, false, 0.5)
+					if edificio_herir(edificio, 1 - flujo_power)
+						exit
+				}
 				change_energia(edificio_energia_consumo[index] * flujo_power, edificio)
 			}
 		}

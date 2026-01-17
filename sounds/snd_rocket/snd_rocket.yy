@@ -1,18 +1,18 @@
 {
   "$GMSound":"v2",
-  "%Name":"snd_theme_2",
+  "%Name":"snd_rocket",
   "audioGroupId":{
     "name":"audiogroup_default",
     "path":"audiogroups/audiogroup_default",
   },
   "bitDepth":1,
-  "channelFormat":1,
+  "channelFormat":0,
   "compression":0,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":0.9976871,
+  "duration":9.336009,
   "exportDir":"",
-  "name":"snd_theme_2",
+  "name":"snd_rocket",
   "parent":{
     "name":"SOUNDS",
     "path":"folders/SOUNDS.yy",
@@ -20,7 +20,7 @@
   "preload":false,
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
-  "sampleRate":48000,
-  "soundFile":"snd_theme_2.mp3",
+  "sampleRate":44100,
+  "soundFile":"snd_rocket.mp3",
   "volume":1.0,
 }

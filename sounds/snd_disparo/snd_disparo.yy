@@ -10,7 +10,7 @@
   "compression":0,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":0.9404082,
+  "duration":0.38580498,
   "exportDir":"",
   "name":"snd_disparo",
   "parent":{
@@ -21,6 +21,6 @@
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
   "sampleRate":44100,
-  "soundFile":"snd_disparo.mp3",
+  "soundFile":"snd_disparo.wav",
   "volume":1.0,
 }

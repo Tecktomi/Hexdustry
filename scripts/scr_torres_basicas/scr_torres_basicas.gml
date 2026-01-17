@@ -1,6 +1,8 @@
 function scr_torres_basicas(edificio = control.null_edificio){
 	with control{
 		var index = edificio.index
+		if index = id_lanzallamas
+			edificio.array_real[5] = 0
 		if edificio_flujo[index]
 			var flujo = edificio.flujo, flujo_power = flujo.eficiencia
 		//Buscar enemigos
@@ -48,7 +50,18 @@ function scr_torres_basicas(edificio = control.null_edificio){
 							aa = aa + edificio.array_real[2]
 						}
 						if index = id_lanzallamas{
-							sound_play(snd_disparo, aa, bb, 0.01)
+							edificio.array_real[4]++
+							edificio.array_real[5] = 1
+							if edificio.array_real[4] = 1{
+								if edificio.sound != undefined
+									audio_pause_sound(edificio.sound)
+								edificio.sound = sound_play(snd_flame_init, aa, bb, 0.1)
+							}
+							else if (edificio.array_real[4] - 60) mod 119 = 0{
+								if edificio.sound != undefined
+									audio_pause_sound(edificio.sound)
+								edificio.sound = sound_play(snd_flame_cont, aa, bb, 0.1)
+							}
 							var temp_array = chunk_enemigos[# enemigo.chunk_x, enemigo.chunk_y], disi = edificio_alcance[index], x1 = aa + disi * cos(angle + pi / 6), y1 = bb - disi * sin(angle + pi / 6), x2 = aa + disi * cos(angle - pi / 6), y2 = bb - disi * sin(angle - pi / 6)
 							for(var c = array_length(temp_array) - 1; c >= 0; c--){
 								var temp_enemigo = temp_array[c]
@@ -95,5 +108,10 @@ function scr_torres_basicas(edificio = control.null_edificio){
 		}
 		else
 			change_flujo(0, edificio)
+		if index = id_lanzallamas and edificio.array_real[5] = 0 and edificio.array_real[4] > 0{
+			edificio.array_real[4] = 0
+			audio_pause_sound(edificio.sound)
+			edificio.sound = sound_play(snd_flame_end, edificio.x, edificio.y, 0.1)
+		}
 	}
 }

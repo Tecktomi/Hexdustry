@@ -66,6 +66,7 @@ function add_edificio(index, dir, a, b){
 			edificios_cercanos_heridos : array_create(0, null_edificio),
 			reparadores_cercanos : array_create(0, null_edificio),
 			imagen : spr_hexagono,
+			sound : undefined
 		}
 		ds_grid_clear(edificio.coordenadas_dis, infinity)
 		ds_list_add(edificio.coordenadas_close, {a : 0, b : 0})
@@ -101,6 +102,8 @@ function add_edificio(index, dir, a, b){
 		array_push(chunk_edificios[# edificio.chunk_x, edificio.chunk_y], edificio)
 		if index = id_nucleo
 			array_push(nucleos, edificio)
+		else
+			clic_sound = true
 		set_camino_dir(edificio)
 		edificio.array_real[2] = power(-1, dir) * 8
 		//Añadir coordenadas
@@ -134,6 +137,10 @@ function add_edificio(index, dir, a, b){
 						distance_sqr(x, y, temp_complex_4.a, temp_complex_4.b) < dis
 						array_push(edificio.target_chunks, {a : i, b : j})
 				}
+			if index = id_lanzallamas{
+				edificio.array_real[4] = 0
+				edificio.array_real[5] = 0
+			}
 		}
 		if edificio_camino[index] or in(index, id_tunel, id_tunel_salida){
 			if in(index, id_cinta_transportadora, id_enrutador, id_cinta_magnetica){

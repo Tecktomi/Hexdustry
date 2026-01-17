@@ -1,6 +1,6 @@
 {
   "$GMSound":"v2",
-  "%Name":"snd_theme_2",
+  "%Name":"snd_theme_1",
   "audioGroupId":{
     "name":"audiogroup_default",
     "path":"audiogroups/audiogroup_default",
@@ -10,9 +10,9 @@
   "compression":0,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":0.9976871,
+  "duration":87.048,
   "exportDir":"",
-  "name":"snd_theme_2",
+  "name":"snd_theme_1",
   "parent":{
     "name":"SOUNDS",
     "path":"folders/SOUNDS.yy",
@@ -21,6 +21,6 @@
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
   "sampleRate":48000,
-  "soundFile":"snd_theme_2.mp3",
+  "soundFile":"snd_theme_1.mp3",
   "volume":1.0,
 }

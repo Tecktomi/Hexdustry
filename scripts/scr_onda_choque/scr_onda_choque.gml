@@ -26,7 +26,7 @@ function scr_onda_choque(edificio = control.null_edificio){
 			}
 			else if --edificio.select <= 0{
 				edificio.select = 0
-				var dis = edificio_alcance_sqr[index]
+				var dis = edificio_alcance_sqr[index] + 10
 				for(var b = array_length(edificio.target_chunks) - 1; b >= 0; b--){
 					var temp_complex = edificio.target_chunks[b], temp_array = chunk_enemigos[# temp_complex.a, temp_complex.b]
 					for(var c = array_length(temp_array) - 1; c >= 0; c--){
@@ -39,6 +39,8 @@ function scr_onda_choque(edificio = control.null_edificio){
 						}
 					}
 				}
+				if sonido
+					sound_play(snd_pulso, edificio.x, edificio.y, 1)
 				array_push(efectos, add_efecto(spr_shokwave, 0, edificio.x, edificio.y, 5, 1))
 				edificio.proceso -= edificio_proceso[index]
 				edificio.start = false

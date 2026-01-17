@@ -26,8 +26,13 @@ function scr_silo_misiles(edificio = control.null_edificio){
 			if edificio.flujo.liquido = 2
 				edificio.select += 4 * flujo_power
 		}
-		if (edificio.proceso >= edificio_proceso[index] and edificio.select >= 4000) or (cheat and string_ends_with(keyboard_string, "misil")){
+		if edificio.fuel = 0 and ((edificio.proceso >= edificio_proceso[index] and edificio.select >= 4000) or (cheat and string_ends_with(keyboard_string, "misil"))){
+			audio_play_sound(snd_rocket, 0, false)
 			edificio.fuel = 450
+			edificio.select = 0
+			for(var b = 0; b < array_length(edificio_input_id[index]); b++)
+				edificio.carga[edificio_input_id[index, b]] = 0
+			edificio.proceso = 0
 			win = 1
 			mision_camara_step = 60
 			mision_actual = 0
@@ -48,6 +53,7 @@ function scr_silo_misiles(edificio = control.null_edificio){
 				nuclear_x = -1
 				nuclear_y = -1
 				nuclear_step = 300
+				audio_play_sound(snd_nuclear_explosion, 0, false)
 			}
 		}
 	}
