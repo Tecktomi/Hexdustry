@@ -2,8 +2,8 @@
 if menu = 0{
 	mina = max(0, floor(camx / zoom / 48))
 	minb = max(0, floor(camy / zoom / 14) - 1)
-	maxa = min(xsize - 1, ceil((camx + room_width) / zoom / 48))
-	maxb = min(ysize - 1, ceil((camy + room_height) / zoom / 14))
+	maxa = min(xsize, ceil((camx + room_width) / zoom / 48))
+	maxb = min(ysize, ceil((camy + room_height) / zoom / 14))
 	if keyboard_check_pressed(ord("G")){
 		var surf = surface_create(32, 28)
 		surface_set_target(surf)
@@ -230,7 +230,7 @@ if menu = 0{
 			//Mapas
 			xpos = 200
 			for(var a = 0; a < array_length(default_maps); a++){
-				if draw_sprite_boton(default_maps_image[a], xpos, ypos, 96, 96,, 1) and mapa != a{
+				if draw_sprite_boton(default_maps_image[a], xpos, ypos, 96, 96,, 1, a) and mapa != a{
 					var file = cargar_escenario($"{default_maps[a]}.txt", false)
 					if file != ""
 						mapa = a
@@ -285,8 +285,8 @@ if menu = 0{
 if menu = 2{
 	mina = max(0, floor(camx / zoom / 48))
 	minb = max(0, floor(camy / zoom / 14) - 1)
-	maxa = min(xsize - 1, ceil(1 + (camx + room_width) / zoom / 48))
-	maxb = min(ysize - 1, ceil(1 + (camy + room_height) / zoom / 14))
+	maxa = min(xsize, ceil(1 + (camx + room_width) / zoom / 48))
+	maxb = min(ysize, ceil(1 + (camy + room_height) / zoom / 14))
 	dibujar_fondo(1)
 	dibujar_edificios()
 	var xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / zoom
@@ -1118,8 +1118,8 @@ if menu = 2{
 	if energia_solar < 1{
 		var luz_alpha = (1 - energia_solar) / 3
 		if grafic_luz{
-			for(var a = mina; a <= maxa; a++)
-				for(var b = minb; b <= maxb; b++){
+			for(var a = mina; a < maxa; a++)
+				for(var b = minb; b < maxb; b++){
 					var temp_complex = abtoxy(a, b)
 					draw_sprite_off(spr_negro, 0, temp_complex.a, temp_complex.b,,,,, max(0, luz_alpha - luz[# a, b] / 18))
 				}
@@ -1556,6 +1556,7 @@ if menu = 2{
 		}
 	}
 	sprite_boton_text = ""
+	clic_sound = false
 #endregion
 //Pausa - Menú
 if pausa = 1{
@@ -3973,7 +3974,7 @@ if pausa = 0{
 		//Humo
 		for(var a = 0; a < array_length(humos); a++){
 			var humo = humos[a]
-			if show_smoke and humo.a >= mina and humo.b >= minb and humo.a <= maxa and humo.b <= maxb{
+			if show_smoke and humo.a >= mina and humo.b >= minb and humo.a < maxa and humo.b < maxb{
 				draw_sprite_off(spr_blur_32, 0, humo.x, humo.y)
 				humo.x += humo.hmove
 				humo.y += humo.vmove
@@ -3989,7 +3990,7 @@ if pausa = 0{
 		draw_set_alpha(0.4)
 		for(var a = 0; a < array_length(fuegos); a++){
 			var fuego = fuegos[a]
-			if show_smoke and fuego.a >= mina and fuego.b >= minb and fuego.a <= maxa and fuego.b <= maxb{
+			if show_smoke and fuego.a >= mina and fuego.b >= minb and fuego.a < maxa and fuego.b < maxb{
 				draw_set_color(make_color_hsv(fuego.intensidad, 127, 255))
 				draw_circle_off(fuego.x, fuego.y, 10, false)
 				fuego.x += fuego.hmove
@@ -4002,7 +4003,7 @@ if pausa = 0{
 			if --fuego.intensidad <= 0{
 				fuegos[a--] = fuegos[array_length(fuegos) - 1]
 				array_pop(fuegos)
-				if grafic_humo and fuego.a >= mina and fuego.b >= minb and fuego.a <= maxa and fuego.b <= maxb
+				if grafic_humo and fuego.a >= mina and fuego.b >= minb and fuego.a < maxa and fuego.b < maxb
 					array_push(humos, add_humo(fuego.x, fuego.y, fuego.a, fuego.b, random_range(-1, 1), random_range(-1, 1), 15))
 			}
 		}
@@ -4325,7 +4326,7 @@ if sonido{
 			audio_resume_sound(sonido_id[a])
 		audio_sound_gain(sonido_id[a], volumen[a], 0)
 	}
-	if random(1) < 0.001{
+	if random(4800) < 1{
 		flag = true
 		for(var a = array_length(musica) - 1; a >= 0; a--)
 			if audio_is_playing(musica[a]){
@@ -4335,6 +4336,8 @@ if sonido{
 		if flag
 			audio_play_sound(musica[irandom(array_length(musica) - 1)], 1, false)
 	}
+	if clic_sound
+		audio_play_sound(snd_click, 1, false, 0.3)
 }
 if win > 0{
 	draw_set_color(c_black)
@@ -4399,9 +4402,13 @@ if win > 0{
 				temp_cons += energia_consumida[a]
 				temp_perd += energia_perdida[a]
 			}
+			draw_set_color(#FFF899)
 			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.energia_producida}: {num_format(temp_prod)}")
+			draw_set_color(c_black)
 			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.energia_consumida}: {num_format(temp_cons)}")
+			draw_set_color(c_red)
 			ypos = draw_text_ypos(room_width / 2, ypos, $"{L.energia_perdida}: {num_format(temp_perd)} ({floor(100 * temp_prod / (temp_prod + temp_perd))}%)")
+			draw_set_color(c_white)
 			draw_graph(room_width / 2 - 200, ypos, 400, 100, [energia_producida, energia_consumida, energia_perdida], [ #FFF899, c_black, c_red], true)
 		}
 		//Victoria

@@ -10,7 +10,7 @@
   "compression":0,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":93.816,
+  "duration":0.9976871,
   "exportDir":"",
   "name":"snd_theme_2",
   "parent":{
@@ -22,5 +22,5 @@
   "resourceVersion":"2.0",
   "sampleRate":48000,
   "soundFile":"snd_theme_2.mp3",
-  "volume":0.3,
+  "volume":1.0,
 }

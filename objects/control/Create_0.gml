@@ -3,7 +3,7 @@ draw_set_font(ft_letra)
 browser = (os_browser = browser_not_a_browser)
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
-ini_write_string("Global", "version", "15_01_2026")
+ini_write_string("Global", "version", "16_01_2026")
 medallas = array_create(5)
 default_maps = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas"]
 for(var a = 0; a < array_length(default_maps); a++){
@@ -16,7 +16,7 @@ for(var a = 0; a < array_length(default_maps); a++){
 	if browser
 		default_maps_image[a] = sprite_add($"{default_maps[a]}.png", 1, false, false, 0, 0)
 	else
-		default_maps_image[a] = spr_null_image
+		default_maps_image[a] = spr_preset_maps
 }
 ini_close()
 save_files = browser ? scan_files("*.txt", fa_none) : []
@@ -151,7 +151,7 @@ set_idioma(idiomas[idioma], false)
 	maxb = 0
 	sonidos = [snd_motor, snd_maquina, snd_horno]
 	sonidos_max = array_length(sonidos)
-	musica = [snd_musica, snd_theme_2]
+	musica = [snd_theme_1, snd_theme_2, snd_theme_3]
 	volumen = array_create(sonidos_max, 0)
 	sonido_id = array_create(sonidos_max)
 	for(var a = 0; a < sonidos_max; a++){
@@ -220,6 +220,7 @@ set_idioma(idiomas[idioma], false)
 	modo_misiones = false
 	mapa = -1
 	dificultad = 0
+	clic_sound = false
 #endregion
 #region UI
 	ui_fondo = #282828
@@ -297,6 +298,7 @@ null_edificio = {
 	edificios_cercanos_heridos : [],
 	reparadores_cercanos : [],
 	imagen : spr_hexagono,
+	sound : undefined
 }
 null_edificio.link = null_edificio
 ds_list_add(null_edificio.coordenadas, {a : 0, b : 0})

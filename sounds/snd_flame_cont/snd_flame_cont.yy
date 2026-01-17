@@ -1,18 +1,18 @@
 {
   "$GMSound":"v2",
-  "%Name":"snd_musica",
+  "%Name":"snd_flame_cont",
   "audioGroupId":{
     "name":"audiogroup_default",
     "path":"audiogroups/audiogroup_default",
   },
   "bitDepth":1,
-  "channelFormat":1,
+  "channelFormat":0,
   "compression":0,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":112.16,
+  "duration":1.9828571,
   "exportDir":"",
-  "name":"snd_musica",
+  "name":"snd_flame_cont",
   "parent":{
     "name":"SOUNDS",
     "path":"folders/SOUNDS.yy",
@@ -20,7 +20,7 @@
   "preload":false,
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
-  "sampleRate":48000,
-  "soundFile":"snd_musica.mp3",
-  "volume":0.5,
+  "sampleRate":44100,
+  "soundFile":"snd_flame_cont.wav",
+  "volume":1.0,
 }
