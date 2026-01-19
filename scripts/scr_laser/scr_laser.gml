@@ -14,7 +14,8 @@ function scr_laser(edificio = control.null_edificio){
 			change_energia(edificio_energia_consumo[index], edificio)
 			edificio.mode = true
 			enemigo.vida -= red_power * edificio.fuel
-			edificio.fuel = (74 * edificio.fuel + 8) / 75
+			var temp_vel = 75 - 25 * edificio.modulo
+			edificio.fuel = ((temp_vel - 1) * edificio.fuel + 8) / temp_vel
 			draw_set_alpha(red_power * edificio.fuel / 8)
 			draw_set_color(c_red)
 			draw_line_off(edificio.x + edificio.array_real[2], edificio.y + 14, enemigo.a, enemigo.b)

@@ -9,11 +9,11 @@ function scr_taladro(edificio = control.null_edificio){
 				change_energia(edificio_energia_consumo[index], edificio)
 				if red.eficiencia > 0 and flujo.liquido = 1
 					change_flujo(edificio_flujo_consumo[index], edificio)
-				edificio.proceso += red.eficiencia * (1 + 0.6 * (flujo.liquido = 1 ? flujo.eficiencia : 0)) * edificio.select
+				edificio.proceso += red.eficiencia * (1 + 0.6 * (flujo.liquido = 1 ? flujo.eficiencia : 0)) * edificio.select * (1 + 0.4 * edificio.modulo)
 			}
 			else if index = id_taladro{
 				change_flujo(edificio_flujo_consumo[index], edificio)
-				edificio.proceso += (1 + 0.6 * (flujo.liquido = 0 ? flujo.eficiencia : 0)) * edificio.select
+				edificio.proceso += (1 + 0.6 * (flujo.liquido = 0 ? flujo.eficiencia : 0)) * edificio.select * (1 + 0.4 * edificio.modulo)
 			}
 			sound_play_edificio(0, edificio.x, edificio.y, 2)
 			if edificio.proceso >= edificio_proceso[index]{

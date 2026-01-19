@@ -96,6 +96,7 @@
 "Embotelladora": "Линия розлива",
 "Extractor Atmosférico": "Атмосферный экстрактор",
 "Cruce": "Перекрёсток",
+"Módulo": "Модуль",
 
 "descripcion_Núcleo": "Командный центр. Все ресурсы хранятся здесь. Его необходимо защищать любой ценой.",
 "descripcion_Taladro": "Добывает медь, железо и уголь бесплатно. Может быть усилен водой.",
@@ -156,6 +157,7 @@
 "descripcion_Embotelladora": "Наполняет и опустошает бочки с жидкостями",
 "descripcion_Extractor Atmosférico": "Извлекает воду из атмосферы, идеально подходит для мест, где её сложно получить",
 "descripcion_Cruce": "Позволяет конвейерным лентам пересекаться",
+"descripcion_Módulo": "Улучшает характеристики здания",
 
 "Cobre": "Медь",
 "Carbón": "Уголь",
@@ -183,6 +185,7 @@
 "Barril con Petróleo": "Бочка с нефтью",
 "Barril con Lava": "Бочка с лавой",
 "Barril con Agua salada": "Бочка с солёной водой",
+"Módulos": "Модули",
 
 "descripcion_Cobre": "Базовый ресурс, необходимый для первых зданий. Может быть переработан в бронзу.",
 "descripcion_Carbón": "Базовое топливо. Используется в печах и генераторах.",
@@ -210,6 +213,7 @@
 "descripcion_Barril con Petróleo": "Бочка с нефтью, полезна для хранения и распределения",
 "descripcion_Barril con Lava": "Бочка с лавой, полезна для хранения и распределения",
 "descripcion_Barril con Agua salada": "Бочка с солёной водой, полезна для хранения y распределения",
+"descripcion_Módulos": "Исследуйте модули и постройте два сборщика рядом, чтобы начать их производство",
 
 "Piedra": "Камень",
 "Pasto": "Трава",
@@ -372,6 +376,12 @@
 "win_seguir_jugando": "Продолжить игру?",
 "win_reintentar": "Повторить",
 "win_salir": "В меню",
+"win_militar": "Военные",
+"win_edificios_perdidos": "Потерянные здания",
+"win_drones_perdidos": "Потерянные дроны",
+"win_dmg_causado": "Нанесённый урон",
+"win_dmg_recibido": "Полученный урон",
+"win_dmg_curado": "Восстановленный урон",
 
 "construir_recursos_insuficientes": "Недостаточно ресурсов",
 "construir_enemigos_cerca": "Слишком близко враги!",
@@ -479,5 +489,22 @@
 
 "planta_quimica_descripcion 0": "Потребляет сульфатированный камень и энергию для производства кислоты",
 "planta_quimica_descripcion 1": "Использует зажигательный состав и кислоту для производства взрывчатки",
-"planta_quimica_descripcion 2": "Использует кислоту, медь и энергию для производства батарей"
+"planta_quimica_descripcion 2": "Использует кислоту, медь и энергию для производства батарей",
+
+"modulo_sin_edificio": "Требуется здание",
+"modulo_edificio_sin_modulo": "Это здание не поддерживает модули\n",
+"modulo_edificio_con_modulo": "В этом здании уже установлен модуль\n",
+"modulo_extraccion": "Скорость добычи увеличена на 40%\n",
+"modulo_canalizar": "Каналы работают на 50% быстрее\n",
+"modulo_cadencia": "Скорострельность увеличена на 30%\n",
+"modulo_dmg": "Урон увеличен на 30%\n",
+"modulo_aturdir": "Длительность оглушения увеличена на 33%\n",
+"modulo_mas_liquido": "Производит на 20% больше",
+"modulo_menos_electricidad": "Потребление энергии снижено на 25%\n",
+"modulo_menos_liquido": "Потребление снижено на 25%",
+"modulo_produccion": "Производит на 30% быстрее\n",
+"modulo_sal": "Добывает на 50% больше",
+"modulo_nuclear": "Автоматически отключает установку при отсутствии воды\n",
+"modulo_reparadora": "Ремонтирует на 20% быстрее\n",
+"modulo_nucleo": "Увеличивает максимальное количество союзных дронов на 2\n"
 }

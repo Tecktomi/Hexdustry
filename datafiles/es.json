@@ -96,6 +96,7 @@
 "Embotelladora": "Embotelladora",
 "Extractor Atmosférico": "Extractor Atmosférico",
 "Cruce": "Cruce",
+"Módulo": "Módulo",
 
 "descripcion_Núcleo": "Es el centro de mando, aquí se almacenan todos los recursos y debes protegerlo a toda costa",
 "descripcion_Taladro": "Permite minar cobre, hierro y carbón sin coste alguno.    Puede potenciarse con Agua",
@@ -156,6 +157,7 @@
 "descripcion_Embotelladora": "Llena y vacía barriles con líquidos",
 "descripcion_Extractor Atmosférico": "Extrae agua de la atmósfera, ideal para terrenos donde no es fácil obtenerla",
 "descripcion_Cruce": "Permite realizar conexiones de cintas transportadoras que se curcen",
+"descripcion_Módulo": "Mejora las características de algún edificio",
 
 "Cobre": "Cobre",
 "Carbón": "Carbón",
@@ -183,6 +185,7 @@
 "Barril con Petróleo": "Barril con Petróleo",
 "Barril con Lava": "Barril con Lava",
 "Barril con Agua salada": "Barril con Agua salada",
+"Módulos": "Módulos",
 
 "descripcion_Cobre": "Recurso básico, escencial para los primeros edificios. Puede ser refinado para obtener Bronce",
 "descripcion_Carbón": "Combustible básico, útil para el funcionamiento de Hornos y Generadores",
@@ -210,6 +213,7 @@
 "descripcion_Barril con Petróleo": "Barril con Petróleo, útil para almacenarlo y distribuirlo",
 "descripcion_Barril con Lava": "Barril con Lava, útil para almacenarla y distribuirla",
 "descripcion_Barril con Agua salada": "Barril con Agua salada, útil para almacenarla y distribuirla",
+"descripcion_Módulos": "Investiga los Módulos y construye dos Ensambladores juntos para empezar a producirlos",
 
 "Piedra": "Piedra",
 "Pasto": "Pasto",
@@ -372,6 +376,12 @@
 "win_seguir_jugando": "¿Seguir jugando?",
 "win_reintentar": "Intentar de nuevo",
 "win_salir": "Salir al menú",
+"win_militar": "Militar",
+"win_edificios_perdidos": "Edificios perdidos",
+"win_drones_perdidos": "Drones perdidos",
+"win_dmg_causado": "Daño causado",
+"win_dmg_recibido": "Daño recibido",
+"win_dmg_curado": "Daño curado",
 
 "construir_recursos_insuficientes": "Recursos insuficientes",
 "construir_enemigos_cerca": "¡Hay enemigos demasiado cerca!",
@@ -479,5 +489,22 @@
 
 "planta_quimica_descripcion 0": "Consume Piedra Sulfatada y energía para producir Ácido",
 "planta_quimica_descripcion 1": "Utiliza Compuesto Incendiario y Ácido para producir Explosivos",
-"planta_quimica_descripcion 2": "Utiliza Ácido, Cobre y energía para producir Baterías"
+"planta_quimica_descripcion 2": "Utiliza Ácido, Cobre y energía para producir Baterías",
+
+"modulo_sin_edificio": "Necesita un edificio",
+"modulo_edificio_sin_modulo": "Este edificio no acepta módulos\n",
+"modulo_edificio_con_modulo": "Este edificio ya tiene un módulo\n",
+"modulo_extraccion": "40% más velocidad de extracción\n",
+"modulo_canalizar": "Canaliza 50% más rápido\n",
+"modulo_cadencia": "30% más cadencia de fuego\n",
+"modulo_dmg": "30% más daño\n",
+"modulo_aturdir": "33% más duración de aturdimiento\n",
+"modulo_mas_liquido": "Produce 20% más",
+"modulo_menos_electricidad": "25% menos consumo eléctrico\n",
+"modulo_menos_liquido": "25% menos consumo de",
+"modulo_produccion": "Produce 30% más rápido\n",
+"modulo_sal": "Extrae 50% más",
+"modulo_nuclear": "Corta automáticamente la planta si se queda sin agua\n",
+"modulo_reparadora": "Repara 20% más rápido\n",
+"modulo_nucleo": "Aumenta en 2 el máximo de drones aliados\n"
 }

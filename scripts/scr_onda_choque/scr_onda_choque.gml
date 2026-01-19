@@ -26,14 +26,14 @@ function scr_onda_choque(edificio = control.null_edificio){
 			}
 			else if --edificio.select <= 0{
 				edificio.select = 0
-				var dis = edificio_alcance_sqr[index] + 10
+				var dis = edificio_alcance_sqr[index] + 10, stun = 30 + 10 * edificio.modulo
 				for(var b = array_length(edificio.target_chunks) - 1; b >= 0; b--){
 					var temp_complex = edificio.target_chunks[b], temp_array = chunk_enemigos[# temp_complex.a, temp_complex.b]
 					for(var c = array_length(temp_array) - 1; c >= 0; c--){
 						var enemigo = temp_array[c], temp_dis = distance_sqr(edificio.x, edificio.y, enemigo.a, enemigo.b)
 						if temp_dis < dis{
 							enemigo.vida -= 130
-							enemigo.efecto[0] = 30
+							enemigo.efecto[0] = stun
 							if enemigo.vida <= 0
 								destroy_dron(enemigo)
 						}

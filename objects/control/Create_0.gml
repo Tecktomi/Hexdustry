@@ -3,7 +3,7 @@ draw_set_font(ft_letra)
 browser = (os_browser = browser_not_a_browser)
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
-ini_write_string("Global", "version", "16_01_2026")
+ini_write_string("Global", "version", "18_01_2026")
 medallas = array_create(5)
 default_maps = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas"]
 for(var a = 0; a < array_length(default_maps); a++){
@@ -151,7 +151,8 @@ set_idioma(idiomas[idioma], false)
 	maxb = 0
 	sonidos = [snd_motor, snd_maquina, snd_horno]
 	sonidos_max = array_length(sonidos)
-	musica = [snd_theme_1, snd_theme_2, snd_theme_3]
+	musica = [snd_theme_1, snd_theme_2, snd_theme_3, snd_theme_4]
+	musica_max = array_length(musica)
 	volumen = array_create(sonidos_max, 0)
 	sonido_id = array_create(sonidos_max)
 	for(var a = 0; a < sonidos_max; a++){
@@ -195,9 +196,6 @@ set_idioma(idiomas[idioma], false)
 	win = 0
 	win_step = 0
 	timer = 0
-	edificios_construidos = 0
-	drones_construidos = 0
-	enemigos_eliminados = 0
 	tecnologias_estudiadas = 0
 	misiones_pasadas = 0
 	recursos_obtenidos = array_create(0, 0)
@@ -209,6 +207,14 @@ set_idioma(idiomas[idioma], false)
 	energia_consumida_time = 0
 	energia_perdida = array_create(0, 0)
 	energia_perdida_time = 0
+	edificios_construidos = 0
+	edificios_perdidos = 0
+	drones_construidos = 0
+	drones_perdidos = 0
+	enemigos_eliminados = 0
+	dmg_curado = 0
+	dmg_causado = 0
+	dmg_recibido = 0
 	tutorial = 0
 	get_file = 0
 	tecnologia = true
@@ -279,6 +285,7 @@ null_edificio = {
 	emisor : false,
 	receptor : false,
 	luz : false,
+	luz_pointer : -1,
 	instruccion : array_create(0, array_create(1, 0)),
 	variables : [],
 	pointer : -1,
@@ -298,7 +305,8 @@ null_edificio = {
 	edificios_cercanos_heridos : [],
 	reparadores_cercanos : [],
 	imagen : spr_hexagono,
-	sound : undefined
+	sound : undefined,
+	modulo : false
 }
 null_edificio.link = null_edificio
 ds_list_add(null_edificio.coordenadas, {a : 0, b : 0})
@@ -318,6 +326,7 @@ edificios_activos = array_create(0, null_edificio)
 procesador_select = null_edificio
 null_edificio.procesador_link = array_create(0, null_edificio)
 edificios_pendientes = array_create(0, null_edificio)
+luces = array_create(0, {a : 0, b : 0, x : 0, y : 0, r : 0, source : null_edificio})
 //Puertos de Carga
 puerto_carga_bool = false
 puerto_carga_link = null_edificio
@@ -379,8 +388,6 @@ puerto_carga_atended = 0
 			b : real(b + 1) * 14
 		})
 	}
-	luz = ds_grid_create(xsize, ysize)
-	ds_grid_clear(luz, 0)
 	terreno_pared_index = ds_grid_create(xsize, ysize)
 	ds_grid_clear(terreno_pared_index, 0)
 	repair_id = ds_grid_create(xsize, ysize)
@@ -461,7 +468,8 @@ selected_dron = null_enemigo
 		"Barril con Ácido, útil para almacenarlo y distribuirlo",
 		"Barril con Petróleo, útil para almacenarlo y distribuirlo",
 		"Barril con Lava, útil para almacenarla y distribuirla",
-		"Barril con Agua salada, útil para almacenarla y distribuirla"
+		"Barril con Agua salada, útil para almacenarla y distribuirla",
+		"Investiga los Módulos y construye dos Ensambladores juntos para empezar a producirlos"
 	]
 	for(var a = array_length(recurso_descripcion) - 1; a >= 0; a--)
 		recurso_descripcion[a] = text_wrap(recurso_descripcion[a], 400)
@@ -514,9 +522,11 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 	id_barril_petroleo = def_recurso("Barril con Petróleo", spr_item_barril_petroleo, #000707,, 3)
 	id_barril_lava = def_recurso("Barril con Lava", spr_item_barril_lava, #FBAF5D,, 3)
 	id_barril_agua_salada = def_recurso("Barril con Agua salada", spr_item_barril_agua_salada, #3F6E85,, 2)
+	id_modulos = def_recurso("Módulos", spr_item_modulo, c_red,, 4)
 #endregion
 rss_max = array_length(recurso_nombre)
 sort_recursos()
+usable_rss_bool = array_create(rss_max, false)
 //Disparos
 null_municion = add_municion()
 municiones = array_create(0, null_municion)
@@ -648,8 +658,8 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 	def_dron("Explosivo", spr_dron_explosivo,, 50, 400, 400, [id_hierro, id_explosivo, id_electronico], [6, 2, 2], 450, true)
 	def_dron("Tanque", spr_tanque, spr_tanque_2, 750, 1600, 90_000, [id_bronce, id_acero, id_electronico], [15, 25, 10], 1800)
 	def_dron("Helicóptero", spr_helicoptero, spr_helicoptero_2, 400, 1600, 40_000, [id_bronce, id_acero, id_electronico], [10, 15, 15], 1800, true)
-	def_dron("Titán", spr_titan, spr_titan_leg, 1500, 2500, 160_000, [id_bronce, id_acero, id_electronico, id_uranio_bruto], [30, 40, 40, 75], 3000)
-	def_dron("Bombardero", spr_bombardero,, 800, 2500, 1_600, [id_bronce, id_acero, id_electronico, id_uranio_bruto], [30, 40, 60, 50], 3000, true)
+	def_dron("Titán", spr_titan, spr_titan_leg, 1500, 2500, 160_000, [id_bronce, id_acero, id_electronico, id_uranio_bruto, id_modulos], [30, 40, 10, 75, 5], 3000)
+	def_dron("Bombardero", spr_bombardero,, 800, 2500, 1_600, [id_bronce, id_acero, id_electronico, id_uranio_bruto, id_modulos], [30, 40, 20, 50, 5], 3000, true)
 #endregion
 dron_max = array_length(dron_nombre)
 //Liquidos
@@ -724,7 +734,8 @@ for(var a = 0; a < lq_max; a++)
 		"Purifica el Agua Salada para extraer la Sal y el Agua dulce",
 		"Llena y vacía barriles con líquidos",
 		"Extrae agua de la atmósfera, ideal para terrenos donde no es fácil obtenerla",
-		"Permite realizar conexiones de cintas transportadoras que se curcen"
+		"Permite realizar conexiones de cintas transportadoras que se curcen",
+		"Mejora las características de algún edificio"
 	]
 	for(var a = array_length(edificio_descripcion) - 1; a >= 0; a--)
 		edificio_descripcion[a] = text_wrap(edificio_descripcion[a], 400)
@@ -878,6 +889,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 	id_embotelladora = def_edificio("Embotelladora", 2, spr_embotelladora,, 120, 20, scr_embotelladora,, [id_bronce, id_silicio], [15, 15], 50, false, false, [id_barril_agua, id_barril_acido, id_barril_petroleo, id_barril_lava, id_barril_agua_salada], [10, 10, 10, 10, 10], true, false, [id_barril_agua, id_barril_acido, id_barril_petroleo, id_barril_lava, id_barril_agua_salada]); def_edificio_2(, 10, -250)
 	id_extractor_atmosferico = def_edificio("Extractor Atmosférico", 2.5, spr_extractor_atmosferico,, 200,, scr_extractor_agua, false, [id_cobre, id_bronce, id_silicio, id_electronico], [10, 15, 10, 5]); def_edificio_2(40, 10, -6, 0)
 	id_cruce = def_edificio("Cruce", 1, spr_cruce,,,,,, [id_cobre, id_hierro], [2, 2]); def_edificio_2(,,,,,, true)
+	id_modulo = def_edificio("Módulo", 1, spr_item_modulo,,,,,, [id_modulos], [1]); def_edificio_2(,,,,,, true)
 #endregion
 categoria_edificios = [
 	[id_cinta_transportadora, id_cinta_magnetica, id_cruce, id_enrutador, id_selector, id_overflow, id_tunel, id_almacen, id_fabrica_de_drones, id_puerto_de_carga],
@@ -886,7 +898,7 @@ categoria_edificios = [
 	[id_cable, id_torre_de_alta_tension, id_bateria, id_generador, id_turbina, id_panel_solar, id_generador_geotermico, id_planta_nuclear],
 	[id_tuberia, id_tuberia_subterranea, id_bomba_de_evaporacion, id_bomba_hidraulica, id_deposito, id_planta_desalinizadora, id_embotelladora, id_extractor_atmosferico],
 	[id_torre_basica, id_rifle, id_lanzallamas, id_laser, id_mortero, id_onda_de_choque, id_torre_reparadora, id_muro, id_muro_reforzado, id_silo_de_misiles],
-	[id_procesador, id_mensaje, id_memoria, id_pantalla]]
+	[id_procesador, id_mensaje, id_memoria, id_pantalla, id_modulo]]
 for(var a = 0; a < array_length(categoria_edificios); a++)
 	for(var b = 0; b < array_length(categoria_edificios[a]); b++)
 		edificio_key[categoria_edificios[a, b]] = $"{a + 1}{(b + 1) mod 10}"
@@ -1146,7 +1158,7 @@ olas = [spr_agua_salada, spr_olas_1, spr_olas_2, spr_olas_3, spr_olas_4, spr_ola
 	def_tecnologia("memoria", "procesador")
 	def_tecnologia("torre reparadora", "torre básica", "generador")
 	def_tecnologia("tubería subterránea", "tubería")
-	def_tecnologia("onda de choque", "láser", "batería", "ensambladora")
+	def_tecnologia("onda de choque", "láser", "batería")
 	def_tecnologia("muro reforzado", "muro")
 	def_tecnologia("silo de misiles", "planta nuclear", "procesador", "mortero", "fábrica de drones")
 	def_tecnologia("planta de enriquecimiento", "planta nuclear", "procesador")
@@ -1158,6 +1170,8 @@ olas = [spr_agua_salada, spr_olas_1, spr_olas_2, spr_olas_3, spr_olas_4, spr_ola
 	def_tecnologia("planta desalinizadora", "bomba de evaporación", "generador")
 	def_tecnologia("embotelladora", "tubería")
 	def_tecnologia("extractor atmosférico", "bomba hidráulica", "turbina", "ensambladora")
+	def_tecnologia("módulo", "procesador", "planta química", "refinería de petróleo")
+	array_set(edificio_tecnologia_precio, id_modulo, [{id : id_electronico, num : 20}, {id : id_plastico, num : 20}, {id : id_baterias, num : 20}])
 	edificio_tecnologia_nivel = array_create(edificio_max, -1)
 	tecnologia_nivel_edificios = [array_create(0, 0)]
 	var edi_count = 0

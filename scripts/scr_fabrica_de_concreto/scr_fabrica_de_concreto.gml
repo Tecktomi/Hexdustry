@@ -5,7 +5,7 @@ function scr_fabrica_de_concreto(edificio = control.null_edificio){
 		if flujo.liquido = 0 and edificio.carga[id_arena] > 1 and edificio.carga[id_piedra] > 0 and edificio.carga[id_concreto] < 10{
 			//Encender
 			if not edificio.start{
-				change_flujo(edificio_flujo_consumo[index], edificio)
+				change_flujo(edificio_flujo_consumo[index] * (1 - 0.25 * edificio.modulo), edificio)
 				edificio.start = true
 			}
 			edificio.proceso += flujo_power

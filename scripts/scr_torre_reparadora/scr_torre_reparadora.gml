@@ -23,7 +23,7 @@ function scr_torre_reparadora(edificio = control.null_edificio){
 				draw_set_color(c_green)
 				draw_set_alpha(red_power)
 				draw_line_off(edificio.x + edificio.array_real[2], edificio.y + 14, target.x, target.y)
-				edificio_curar(target, red_power)
+				edificio_curar(target, red_power * (1 + 0.2 * edificio.modulo))
 				edificio.select = radtodeg(-arctan2(edificio.x + 12 - target.x, target.y - edificio.y - 14)) - 90
 				draw_set_alpha(1)
 				draw_set_color(c_black)

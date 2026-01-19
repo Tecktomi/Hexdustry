@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"add_luz",
+  "%Name":"sound_change",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"add_luz",
+  "name":"sound_change",
   "parent":{
     "name":"SCRIPTS",
     "path":"folders/SCRIPTS.yy",

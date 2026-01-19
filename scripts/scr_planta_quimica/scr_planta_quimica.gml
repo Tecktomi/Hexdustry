@@ -16,7 +16,7 @@ function scr_planta_quimica(edificio = control.null_edificio){
 			if edificio.energia_consumo_max > 0 and red_power = 0{
 				change_flujo(0, edificio)
 				change_energia(0, edificio)
-				encender_luz(-1, edificio)
+				encender_luz(false, edificio)
 				continue
 			}
 			//Encender
@@ -30,14 +30,14 @@ function scr_planta_quimica(edificio = control.null_edificio){
 					edificio.carga_total -= 0.1
 					edificio.proceso += floor(edificio_proceso[index] / 4)
 				}
-				encender_luz(1, edificio)
+				encender_luz(, edificio)
 			}
 			if edificio.flujo_consumo_max > 0 and edificio.energia_consumo_max > 0
-				edificio.proceso += min(flujo_power, red_power)
+				edificio.proceso += min(flujo_power, red_power) * (1 + 0.3 * edificio.modulo)
 			else if edificio.flujo_consumo_max > 0
-				edificio.proceso += flujo_power
+				edificio.proceso += flujo_power * (1 + 0.3 * edificio.modulo)
 			else if edificio.energia_consumo_max > 0
-				edificio.proceso += red_power
+				edificio.proceso += red_power * (1 + 0.3 * edificio.modulo)
 			//Producir / Apagar
 			if edificio.proceso >= edificio_proceso[index]{
 				//Ácido
@@ -67,13 +67,13 @@ function scr_planta_quimica(edificio = control.null_edificio){
 				edificio.start = false
 				change_energia(0, edificio)
 				edificio.waiting = not mover(edificio)
-				encender_luz(-1, edificio)
+				encender_luz(false, edificio)
 			}
 		}
 		else if edificio.fuel = 0{
 			change_flujo(0, edificio)
 			change_energia(0, edificio)
-			encender_luz(-1, edificio)
+			encender_luz(false, edificio)
 		}
 		if edificio.emisor and edificio.carga_total > 0
 			edificio.waiting = not mover(edificio)
