@@ -13,6 +13,7 @@ function scr_laser(edificio = control.null_edificio){
 			edificio.select = radtodeg(-arctan2(edificio.x - enemigo.a, enemigo.b - edificio.y)) - 90
 			change_energia(edificio_energia_consumo[index], edificio)
 			edificio.mode = true
+			dmg_causado += min(red_power * edificio.fuel, enemigo.vida)
 			enemigo.vida -= red_power * edificio.fuel
 			var temp_vel = 75 - 25 * edificio.modulo
 			edificio.fuel = ((temp_vel - 1) * edificio.fuel + 8) / temp_vel

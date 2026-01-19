@@ -3,7 +3,7 @@ draw_set_font(ft_letra)
 browser = (os_browser = browser_not_a_browser)
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
-ini_write_string("Global", "version", "18_01_2026")
+ini_write_string("Global", "version", "19_01_2026")
 medallas = array_create(5)
 default_maps = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas"]
 for(var a = 0; a < array_length(default_maps); a++){
@@ -864,7 +864,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 	id_taladro_de_explosion = def_edificio("Taladro de Explosión", 3, spr_taladro_explosivo,, 300, 300, scr_taladro_explosion,, [id_hierro, id_acero, id_concreto], [40, 40, 30], 40, true, false, [13], [10], true, false, [id_cobre, id_carbon, id_hierro, id_piedra, id_arena, id_piedra_cuprica, id_piedra_ferrica, id_piedra_sulfatada, id_uranio_bruto, id_sal]); def_edificio_2()
 	id_muro = def_edificio("Muro", 1, spr_hexagono,, 500,,,, [id_concreto], [1]); def_edificio_2(,,,,,, true)
 	id_puerto_de_carga = def_edificio("Puerto de Carga", 2, spr_punto_carga,, 150,, scr_puerto_carga,, [id_cobre, id_bronce, id_electronico], [10, 10, 1], 25,, true,,,, true); def_edificio_2()
-	id_ensambladora = def_edificio("Ensambladora", 2.5, spr_ensambladora,, 250, 240, scr_ensambladora,, [id_hierro, id_bronce, id_acero, id_silicio], [10, 15, 5, 10], 30, true, false, [id_cobre, id_silicio], [10, 10], true, false, [id_electronico]); def_edificio_2(70)
+	id_ensambladora = def_edificio("Ensambladora", 2.5, spr_ensambladora,, 250, 240, scr_ensambladora,, [id_hierro, id_bronce, id_acero, id_silicio], [10, 15, 5, 10], 40, true, false, [id_cobre, id_silicio], [10, 10], true, false, [id_electronico]); def_edificio_2(70)
 	id_planta_nuclear = def_edificio("Planta Nuclear", 4, spr_planta_nuclear,, 500,, scr_planta_nuclear,, [id_cobre, id_acero, id_concreto, id_electronico], [100, 80, 50, 20], 21, true, false, [id_uranio_enriquecido, id_uranio_empobrecido], [1, 20]); def_edificio_2(-500, 150, 200, 0)
 	id_torre_de_alta_tension = def_edificio("Torre de Alta Tensión", 2, spr_cable_tension,, 100,,,, [id_cobre, id_acero, id_electronico], [10, 5, 1]); def_edificio_2(5,,,,,, true)
 	id_perforadora_de_petroleo = def_edificio("Perforadora de Petróleo", 3, spr_perforadora,, 200,, scr_perforadora_petroleo,, [id_hierro, id_acero, id_concreto], [10, 15, 10]); def_edificio_2(80, 10, -40, 2)
