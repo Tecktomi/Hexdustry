@@ -1227,19 +1227,21 @@ null_red = {
 	consumo : 0,
 	bateria : 0,
 	bateria_max : 0,
-	eficiencia : 0
+	eficiencia : 0,
+	punteros : array_create(0, 0)
 }
 null_edificio.red = null_red
 redes = array_create(0, null_red)
 //Flujos de líquidos
-null_flujo ={
+null_flujo = {
 	edificios : array_create(0, null_edificio),
 	liquido : 0,
 	generacion: 0,
 	consumo: 0,
 	almacen : 0,
 	almacen_max : 0,
-	eficiencia : 0
+	eficiencia : 0,
+	punteros : array_create(0, 0)
 }
 null_edificio.flujo = null_flujo
 flujos = array_create(0, null_flujo)

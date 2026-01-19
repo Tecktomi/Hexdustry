@@ -157,7 +157,7 @@ function delete_edificio(aa, bb, enemigo = false){
 			//Eliminar la red si no hay más edificios
 			if array_length(temp_red.edificios) = 0{
 				delete(temp_red.edificios)
-				array_remove(redes, temp_red)
+				array_disorder_remove(redes, temp_red, 0)
 			}
 			else{
 				change_energia(0, edificio)
@@ -204,7 +204,8 @@ function delete_edificio(aa, bb, enemigo = false){
 							consumo: 0,
 							bateria: 0,
 							bateria_max : 0,
-							eficiencia : 0
+							eficiencia : 0,
+							punteros : array_create(0, 0)
 						}
 						if red_bateria > 0
 							temp_red_2.bateria = floor(temp_red.bateria * isla_bateria / red_bateria)
@@ -218,11 +219,11 @@ function delete_edificio(aa, bb, enemigo = false){
 							if temp_edificio.index = id_bateria
 								temp_red_2.bateria_max += 2500
 						}
-						array_push(redes, temp_red_2)
+						array_disorder_push(redes, temp_red_2, 0)
 					}
 				}
 				delete(temp_red.edificios)
-				array_remove(redes, temp_red)
+				array_disorder_remove(redes, temp_red, 0)
 			}
 			delete(edificio.energia_link)
 		}
@@ -232,7 +233,7 @@ function delete_edificio(aa, bb, enemigo = false){
 			change_flujo(0, edificio)
 			array_remove(temp_flujo.edificios, edificio)
 			if array_length(temp_flujo.edificios) = 0{
-				array_remove(flujos, temp_flujo)
+				array_disorder_remove(flujos, temp_flujo, 0)
 				delete(temp_flujo.edificios)
 			}
 			else{
@@ -281,7 +282,8 @@ function delete_edificio(aa, bb, enemigo = false){
 								consumo: 0,
 								almacen: 0,
 								almacen_max : 0,
-								eficiencia : 0
+								eficiencia : 0,
+								punteros : array_create(0, 0)
 							}
 							if flujo_almacen > 0
 								temp_flujo_2.almacen = floor(temp_flujo.almacen * isla_almacen / flujo_almacen)
@@ -294,11 +296,11 @@ function delete_edificio(aa, bb, enemigo = false){
 								else
 									temp_flujo_2.generacion -= temp_edificio.flujo_consumo
 							}
-							array_push(flujos, temp_flujo_2)
+							array_disorder_push(flujos, temp_flujo_2, 0)
 						}
 					}
 				delete(temp_flujo.edificios)
-				array_remove(flujos, temp_flujo)
+				array_disorder_remove(flujos, temp_flujo, 0)
 				}
 			}
 			//Eliminar links

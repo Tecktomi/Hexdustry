@@ -68,6 +68,7 @@ function add_edificio(index, dir, a, b){
 			sound : undefined,
 			modulo : false,
 			// 0 = edificios, 1 = chunk_edificios, 2 = [torres_tension, plantas_reciclaje, torres_reparadoras, puertos_carga, target.torres], 3 = luz, 4 = edificios_activos
+			// 5 = red, 6 = flujo
 			punteros : array_create(5, 0)
 		}
 		if edificio_size[index] = 2.5{
@@ -329,9 +330,10 @@ function add_edificio(index, dir, a, b){
 				consumo: 0,
 				bateria: 0,
 				bateria_max : 0,
-				eficiencia : 0
+				eficiencia : 0,
+				punteros : array_create(0, 0)
 			}
-			array_push(redes, temp_red)
+			array_disorder_push(redes, temp_red, 0)
 			//Combinar otras redes si las hay cerca
 			if not ds_list_empty(temp_list_redes){
 				for(var c = ds_list_size(temp_list_redes) - 1; c >= 0; c--){
@@ -339,14 +341,14 @@ function add_edificio(index, dir, a, b){
 					for(var d = array_length(temp_red_2.edificios) - 1; d >= 0; d--){
 						var temp_edificio = temp_red_2.edificios[d]
 						temp_edificio.red = temp_red
-						array_push(temp_red.edificios, temp_edificio)
+						array_disorder_push(temp_red.edificios, temp_edificio, 5)
 					}
 					temp_red.consumo += temp_red_2.consumo
 					temp_red.generacion += temp_red_2.generacion
 					temp_red.bateria += temp_red_2.bateria
 					temp_red.bateria_max += temp_red_2.bateria_max
 					delete(temp_red_2.edificios)
-					array_remove(redes, temp_red_2)
+					array_disorder_remove(redes, temp_red_2, 0)
 					delete(temp_red_2)
 				}
 			}
@@ -363,7 +365,7 @@ function add_edificio(index, dir, a, b){
 				temp_red.bateria_max += 2500
 			else if in(index, id_panel_solar, id_procesador, id_planta_de_reciclaje)
 				change_energia(edificio_energia_consumo[index], edificio)
-			array_push(temp_red.edificios, edificio)
+			array_disorder_push(temp_red.edificios, edificio, 5)
 		}
 		//Detectar cañerías cercanas
 		if edificio_flujo[index]{
@@ -439,28 +441,30 @@ function add_edificio(index, dir, a, b){
 				
 			}
 			if ds_list_empty(temp_list_flujos){
-				var new_flujo ={
+				var new_flujo = {
 					edificios : array_create(0, null_edificio),
 					liquido : -1,
 					generacion: 0,
 					consumo: 0,
 					almacen : 0,
 					almacen_max : 0,
-					eficiencia : 0
+					eficiencia : 0,
+					punteros : array_create(0, 0)
 				}
-				array_push(flujos, new_flujo)
+				array_disorder_push(flujos, new_flujo, 0)
 				edificio.flujo = new_flujo
-				array_push(new_flujo.edificios, edificio)
+				array_disorder_push(new_flujo.edificios, edificio, 6)
 			}
 			else if in(index, id_tuberia, id_deposito, id_liquido_infinito, id_tuberia_subterranea){
-				var new_flujo ={
+				var new_flujo = {
 					edificios : array_create(0, null_edificio),
 					liquido : -1,
 					generacion: 0,
 					consumo: 0,
 					almacen : 0,
 					almacen_max : 0,
-					eficiencia : 0
+					eficiencia : 0,
+					punteros : array_create(0, 0)
 				}
 				for(var c = ds_list_size(temp_list_flujos) - 1; c >= 0; c--){
 					var temp_flujo = temp_list_flujos[|c]
@@ -468,7 +472,7 @@ function add_edificio(index, dir, a, b){
 						for(var d = array_length(temp_flujo.edificios) - 1; d >= 0; d--){
 							var temp_edificio = temp_flujo.edificios[d]
 							temp_edificio.flujo = new_flujo
-							array_push(new_flujo.edificios, temp_edificio)
+							array_disorder_push(new_flujo.edificios, temp_edificio, 6)
 						}
 						if new_flujo.liquido = -1
 							new_flujo.liquido = temp_flujo.liquido
@@ -477,17 +481,17 @@ function add_edificio(index, dir, a, b){
 						new_flujo.almacen += temp_flujo.almacen
 						new_flujo.almacen_max += temp_flujo.almacen_max
 						delete(temp_flujo.edificios)
-						array_push(flujos, temp_flujo)
+						array_disorder_remove(flujos, temp_flujo, 0)
 					}
 				}
-				array_push(flujos, new_flujo)
+				array_disorder_push(flujos, new_flujo, 0)
 				edificio.flujo = new_flujo
-				array_push(new_flujo.edificios, edificio)
+				array_disorder_push(new_flujo.edificios, edificio, 6)
 			}
 			else{
 				var temp_flujo = temp_list_flujos[|0]
 				edificio.flujo = temp_flujo
-				array_push(temp_flujo.edificios, edificio)
+				array_disorder_push(temp_flujo.edificios, edificio, 6)
 			}
 			ds_list_destroy(temp_list_flujos)
 			edificio.flujo.almacen_max += edificio_flujo_almacen[index]
