@@ -30,16 +30,19 @@ function dibujar_edificios(){
 							draw_sprite_off(edificio_sprite_2[index], image_index << 2, aa, bb, edificio.array_real[2] / 8)
 						//Dibujo de bateria
 						else if index = id_bateria
-							draw_sprite_off(edificio_sprite[index], floor(10 * edificio.red.bateria / edificio.red.bateria_max), aa, bb,,, dir * 60)
+							draw_sprite_off(edificio_sprite[index], floor(10 * edificio.red.bateria / edificio.red.bateria_max), aa, bb)
 						//Dibujo bomba tamaño par
 						else if in(index, id_bomba_hidraulica, id_turbina, id_generador_geotermico, id_planta_desalinizadora){
-							draw_sprite_off(edificio_sprite[index], 0, aa, bb, edificio.array_real[2] / 8)
-							if edificio.flujo.liquido = -1
-								draw_sprite_off(spr_bomba_color, 0, aa + edificio.array_real[2], bb + 14)
+							if dir = 0
+								draw_sprite_off(edificio_sprite[index], 0, aa, bb)
 							else
-								draw_sprite_off(spr_bomba_color, 0, aa + edificio.array_real[2], bb + 14,,,, liquido_color[edificio.flujo.liquido], edificio.flujo.almacen / edificio.flujo.almacen_max)
-							draw_sprite_off(spr_bomba_rotor, 1, aa + edificio.array_real[2], bb + 14,,, image_index)
-							draw_sprite_off(spr_bomba_cupula, 1, aa + edificio.array_real[2], bb + 14)
+								draw_sprite_off(edificio_sprite[index], 0, aa, bb, -1)
+							if edificio.flujo.liquido = -1
+								draw_sprite_off(spr_bomba_color, 0, edificio.center_x, edificio.center_y)
+							else
+								draw_sprite_off(spr_bomba_color, 0, edificio.center_x, edificio.center_y,,,, liquido_color[edificio.flujo.liquido], edificio.flujo.almacen / edificio.flujo.almacen_max)
+							draw_sprite_off(spr_bomba_rotor, 1, edificio.center_x, edificio.center_y,,, image_index)
+							draw_sprite_off(spr_bomba_cupula, 1, edificio.center_x, edificio.center_y)
 						}
 						//Dibujo bomba tamaño impar
 						else if in(index, id_perforadora_de_petroleo, id_fabrica_de_concreto){
@@ -74,9 +77,12 @@ function dibujar_edificios(){
 							}
 							//Torres tamaño par
 							else{
-								draw_sprite_off(edificio_sprite[index], 0, aa, bb, edificio.array_real[2] / 8)
+								if edificio.dir = 0
+									draw_sprite_off(edificio_sprite[index], 0, aa, bb)
+								else
+									draw_sprite_off(edificio_sprite[index], 0, aa, bb, -1)
 								if index != id_onda_de_choque
-									draw_sprite_off(edificio_sprite_2[index], 0, aa + 9 * edificio.array_real[2] / 8, bb + 14,,, edificio.select)
+									draw_sprite_off(edificio_sprite_2[index], 0, edificio.center_x, edificio.center_y,,, edificio.select)
 							}
 						}
 						else if index = id_pantalla{
@@ -134,26 +140,14 @@ function dibujar_edificios(){
 								draw_sprite_off(sprite, 0, aa, bb, -1)
 							else if dir = 5
 								draw_sprite_off(sprite, 1, aa, bb,, -1)
-							if index = id_laser{
-								if dir = 0
-									draw_sprite_off(edificio_sprite_2[index], 0, aa + 12, bb + 7,,, edificio.select)
-								else if dir = 1
-									draw_sprite_off(edificio_sprite_2[index], 0, aa + 12, bb - 7,,, edificio.select)
-								else if dir = 2
-									draw_sprite_off(edificio_sprite_2[index], 0, aa, bb - 14,,, edificio.select)
-								else if dir = 3
-									draw_sprite_off(edificio_sprite_2[index], 0, aa - 12, bb - 7,,, edificio.select)
-								else if dir = 4
-									draw_sprite_off(edificio_sprite_2[index], 0, aa - 12, bb + 7,,, edificio.select)
-								else if dir = 5
-									draw_sprite_off(edificio_sprite_2[index], 0, aa, bb + 14,,, edificio.select)
-							}
+							if index = id_laser
+								draw_sprite_off(edificio_sprite_2[index], 0, edificio.center_x, edificio.center_y,,, edificio.select)
 						}
 						//Dibujo predeterminado tamaño impar
 						else
 							draw_sprite_off(edificio_sprite[index], image_index << 2, aa, bb,,, dir * 60)
 						if index = id_recurso_infinito and edificio.select >= 0
-							draw_sprite_off(edificio_sprite_2[index], image_index << 2, aa, bb,,,, recurso_color[edificio.select])
+							draw_sprite_off(edificio_sprite_2[index], 0, aa, bb,,,, recurso_color[edificio.select])
 					}
 					//Dibujo estados
 					if info and edificio.waiting{

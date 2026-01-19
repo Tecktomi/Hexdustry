@@ -25,9 +25,7 @@ function scr_fabrica_drones(edificio = control.null_edificio){
 						edificio.carga_total -= dron_precio_num[edificio.select, b]
 						edificio.carga[dron_precio_id[edificio.select, b]] -= dron_precio_num[edificio.select, b]
 					}
-					var dron = add_dron(edificio.a + random(0.1), edificio.b + random(0.1), edificio.select, true)
-					dron.pointer = array_length(drones_aliados)
-					array_push(drones_aliados, dron)
+					var dron = add_dron(edificio.a + random(0.1), edificio.b + random(0.1), edificio.select, false)
 					dron.a += random(5)
 					dron.b += random(5)
 					edificio.waiting = not mover_in(edificio)

@@ -37,6 +37,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 				edificio.proceso = 0
 				var dis = distance_sqr(edificio.x, edificio.y, enemigo.a, enemigo.b)
 				if dis > edificio_alcance_sqr[index]{
+					array_disorder_remove(edificio.target.torres, edificio, 2)
 					edificio.target = null_edificio
 					continue
 				}
