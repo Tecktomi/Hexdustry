@@ -11,7 +11,7 @@ function game_start(){
 			for(var a = 0; a < edificio_max; a++){
 				var temp_array = edificio_tecnologia_precio[a]
 				for(var b = 0; b < array_length(temp_array); b++)
-					temp_array[b].num = round(tecnologia_precio_multiplicador * (5 + edificio_precio_num[a, b]))
+					temp_array[b].num = round(tecnologia_precio_multiplicador * temp_array[b].num)
 			}
 		input_layer = 0
 		get_file = 0
@@ -34,11 +34,13 @@ function game_start(){
 		recursos_obtenidos_time = array_create(0, array_create(rss_max, 0))
 		camx = clamp(nucleo.a * 48 - room_width / 2, 0, xsize * 48 * zoom - room_width)
 		camy = clamp(nucleo.b * 14 - room_height / 2, 0, ysize * 14 * zoom - room_height)
-		ds_grid_clear(luz, 0)
+		luces = array_create(0, {a : 0, b : 0, x : 0, y : 0, r : 0})
 		for(var a = 0; a < xsize; a++)
 			for(var b = 0; b < ysize; b++){
-				if terreno[# a, b] = idt_lava
-					add_luz(a, b, 1)
+				if terreno[# a, b] = idt_lava{
+					var temp_complex = abtoxy(a, b)
+					array_push(luces, {a : a, b : b, x : temp_complex.a, y : temp_complex.b, r : 10, source : null_edificio})
+				}
 				if edificio_bool[# a, b]{
 					var edificio = edificio_id[# a, b]
 					if edificio != nucleo

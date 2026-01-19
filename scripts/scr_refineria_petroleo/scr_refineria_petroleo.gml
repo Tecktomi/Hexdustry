@@ -8,12 +8,12 @@ function scr_refineria_petroleo(edificio = control.null_edificio){
 			if edificio.energia_consumo_max > 0 and red_power = 0{
 				change_flujo(0, edificio)
 				change_energia(0, edificio)
-				encender_luz(-1, edificio)
+				encender_luz(false, edificio)
 				break
 			}
 			//Encender
 			if not edificio.start{
-				change_energia(edificio.energia_consumo_max, edificio)
+				change_energia(edificio.energia_consumo_max * (1 - 0.25 * edificio.modulo), edificio)
 				change_flujo(edificio.flujo_consumo_max, edificio)
 				edificio.start = true
 				if edificio.carga[id_sal] > 0{
@@ -21,7 +21,7 @@ function scr_refineria_petroleo(edificio = control.null_edificio){
 					edificio.carga_total -= 0.1
 					edificio.proceso += floor(edificio_proceso[index] / 4)
 				}
-				encender_luz(1, edificio)
+				encender_luz(, edificio)
 			}
 			edificio.proceso += min(flujo_power, red_power)
 			//Producir / Apagar
@@ -42,13 +42,13 @@ function scr_refineria_petroleo(edificio = control.null_edificio){
 				edificio.proceso -= edificio_proceso[index]
 				edificio.start = false
 				edificio.waiting = not mover(edificio)
-				encender_luz(-1, edificio)
+				encender_luz(false, edificio)
 			}
 		}
 		else{
 			change_flujo(0, edificio)
 			change_energia(0, edificio)
-			encender_luz(-1, edificio)
+			encender_luz(false, edificio)
 		}
 		if edificio.carga_total > 0
 			edificio.waiting = not mover(edificio)

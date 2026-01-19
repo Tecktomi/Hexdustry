@@ -20,7 +20,6 @@ function resize_grid(minx = 0, miny = 0){
 		ds_grid_resize(edificio_cercano_dir, xsize, ysize)
 		ds_grid_resize(edificio_cercano_priority, xsize, ysize)
 		ds_grid_resize(pre_abtoxy, xsize + 1, ysize + 1)
-		ds_grid_resize(luz, xsize, ysize)
 		ds_grid_resize(terreno_pared_index, xsize, ysize)
 		ds_grid_resize(repair_id, xsize, ysize)
 		ds_grid_resize(repair_dir, xsize, ysize)

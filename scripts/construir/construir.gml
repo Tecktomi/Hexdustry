@@ -76,7 +76,7 @@ function construir(index, dir, mx, my){
 			flag = false
 		if not flag
 			exit
-		if in(index, id_tunel, id_tunel_salida) and build_able and build_target.index = 6
+		if in(index, id_tunel, id_tunel_salida) and build_able and build_target.index = id_tunel
 			index = 16
 		edificio = add_edificio(index, dir, mx, my)
 		//Algoritmo link de tuneles

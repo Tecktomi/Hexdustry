@@ -8,7 +8,7 @@ function scr_triturador(edificio = control.null_edificio){
 				change_energia(edificio_energia_consumo[index], edificio)
 				edificio.start = true
 			}
-			edificio.proceso += red_power
+			edificio.proceso += red_power * (1 + 0.3 * edificio.modulo)
 			sound_play_edificio(1, edificio.x, edificio.y)
 			//Producir / apagar
 			if edificio.proceso >= edificio_proceso[index]{

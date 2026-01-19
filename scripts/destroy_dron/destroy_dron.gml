@@ -26,6 +26,7 @@ function destroy_dron(dron = control.null_enemigo){
 			}
 		}
 		else{
+			drones_perdidos++
 			if selected_dron = dron
 				selected_dron = null_enemigo
 			var temp_dron = drones_aliados[array_length(drones_aliados) - 1]

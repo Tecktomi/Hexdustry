@@ -18,12 +18,12 @@ function scr_horno(edificio = control.null_edificio){
 						edificio.fuel = recurso_combustion_time[id_carbon]
 						edificio.carga[id_carbon]--
 					}
-					encender_luz(1, edificio)
+					encender_luz(, edificio)
 					edificio.carga_total--
 					mover_in(edificio)
 				}
 				else
-					encender_luz(-1, edificio)
+					encender_luz(false, edificio)
 			edificio.proceso++
 			if edificio.proceso >= edificio_proceso[index]{
 				if edificio.carga[id_arena] > 1{

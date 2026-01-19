@@ -26,6 +26,12 @@ function scr_torres_basicas(edificio = control.null_edificio){
 				else if index = id_lanzallamas
 					dmg_factor = 2
 			}
+			if edificio.modulo{
+				if index = id_lanzallamas
+					dmg_factor *= 1.3
+				else
+					edificio.proceso += 0.3
+			}
 			//Disparo
 			if ++edificio.proceso >= edificio_proceso[index]{
 				edificio.proceso = 0

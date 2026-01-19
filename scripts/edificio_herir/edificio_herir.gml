@@ -4,6 +4,7 @@ function edificio_herir(edificio = control.null_edificio, dmg){
 			var temp_edificio = edificio.reparadores_cercanos[a]
 			array_push(temp_edificio.edificios_cercanos_heridos, edificio)
 		}
+	dmg_recibido += min(edificio.vida, dmg)
 	edificio.vida -= dmg
 	if edificio.vida <= 0{
 		delete_edificio(edificio.a, edificio.b, true)

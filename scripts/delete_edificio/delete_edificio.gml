@@ -18,6 +18,8 @@ function delete_edificio(aa, bb, enemigo = false){
 		array_remove(edificios, edificio)
 		edificios_counter[index]--
 		ds_grid_destroy(edificio.coordenadas_dis)
+		if enemigo
+			edificios_perdidos++
 		if index = id_puerto_de_carga and edificio.link != null_edificio{
 			if edificio.receptor
 				array_remove(puerto_carga_array, edificio)
@@ -57,6 +59,28 @@ function delete_edificio(aa, bb, enemigo = false){
 		#endregion
 		if index = id_planta_de_reciclaje
 			array_remove(plantas_de_reciclaje, edificio)
+		else if index = id_ensambladora and edificio.mode{
+			temp_edificio = edificio.link
+			for(var a = 0; a < rss_max; a++)
+				if a != id_electronico
+					temp_edificio.carga[a] = 0
+			temp_edificio.carga_total = 0
+			temp_edificio.mode = false
+			temp_edificio.carga_max[id_cobre] = 10
+			temp_edificio.carga_input[id_cobre] = true
+			temp_edificio.carga_max[id_silicio] = 10
+			temp_edificio.carga_input[id_silicio] = true
+			temp_edificio.carga_max[id_electronico] = 0
+			temp_edificio.carga_input[id_electronico] = false
+			temp_edificio.carga_max[id_plastico] = 0
+			temp_edificio.carga_input[id_plastico] = false
+			temp_edificio.carga_max[id_baterias] = 0
+			temp_edificio.carga_input[id_baterias] = false
+			temp_edificio.carga_output[id_modulos] = false
+			temp_edificio.carga_output[id_electronico] = true
+			calculate_in_out_2(temp_edificio)
+			temp_edificio.link = null_edificio
+		}
 		//Cancelar coordenadas
 		for(var i = ds_list_size(edificio.coordenadas) - 1; i >= 0; i--){
 			var temp_coordenada_2 = edificio.coordenadas[|i], a = temp_coordenada_2.a, b = temp_coordenada_2.b
@@ -68,13 +92,8 @@ function delete_edificio(aa, bb, enemigo = false){
 			ds_grid_set(edificio_id, a, b, null_edificio)
 			ds_grid_set(edificio_draw, a, b, false)
 		}
-		if grafic_luz and edificio.luz{
-			var temp_list = edificio.coordenadas
-			for(var b = ds_list_size(temp_list) - 1; b >= 0; b--){
-				var temp_complex = temp_list[|b]
-				add_luz(temp_complex.a, temp_complex.b, -1)
-			}
-		}
+		if grafic_luz
+			encender_luz(false, edificio)
 		if enemigo{
 			ds_grid_set(repair_id, aa, bb, index)
 			ds_grid_set(repair_dir, aa, bb, edificio.dir)

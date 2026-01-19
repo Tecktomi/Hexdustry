@@ -8,7 +8,7 @@ function scr_planta_de_reciclaje(edificio = control.null_edificio){
 			if red_power = 0{
 				change_flujo(0, edificio)
 				change_energia(0, edificio)
-				encender_luz(-1, edificio)
+				encender_luz(false, edificio)
 				break
 			}
 			//Encender
@@ -16,9 +16,9 @@ function scr_planta_de_reciclaje(edificio = control.null_edificio){
 				change_energia(edificio.energia_consumo_max, edificio)
 				change_flujo(edificio.flujo_consumo_max, edificio)
 				edificio.start = true
-				encender_luz(1, edificio)
+				encender_luz(, edificio)
 			}
-			edificio.proceso += min(flujo_power, red_power)
+			edificio.proceso += min(flujo_power, red_power) * (1 + 0.3 * edificio.modulo)
 			//Producir / Apagar
 			if edificio.proceso >= dron_time[edificio.select]{
 				for(var a = array_length(dron_precio_id[edificio.select]) - 1; a >= 0; a--){
@@ -32,7 +32,7 @@ function scr_planta_de_reciclaje(edificio = control.null_edificio){
 				edificio.proceso -= dron_time[edificio.select]
 				edificio.start = false
 				edificio.waiting = not mover(edificio)
-				encender_luz(-1, edificio)
+				encender_luz(false, edificio)
 			}
 		}
 		else{

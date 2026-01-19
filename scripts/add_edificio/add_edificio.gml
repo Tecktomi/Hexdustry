@@ -47,6 +47,7 @@ function add_edificio(index, dir, a, b){
 			emisor : edificio_emisor[index],
 			receptor : edificio_receptor[index],
 			luz : false,
+			luz_pointer : -1,
 			instruccion : array_create(0, array_create(1, 0)),
 			variables : [],
 			pointer : -1,
@@ -66,7 +67,8 @@ function add_edificio(index, dir, a, b){
 			edificios_cercanos_heridos : array_create(0, null_edificio),
 			reparadores_cercanos : array_create(0, null_edificio),
 			imagen : spr_hexagono,
-			sound : undefined
+			sound : undefined,
+			modulo : false
 		}
 		ds_grid_clear(edificio.coordenadas_dis, infinity)
 		ds_list_add(edificio.coordenadas_close, {a : 0, b : 0})
@@ -176,7 +178,6 @@ function add_edificio(index, dir, a, b){
 				}
 			}
 		#endregion
-		//Edificios targeteables
 		if index = id_nucleo and menu = 1{
 			edificio_pathfind(edificio)
 			array_push(edificios_targeteables, edificio)
@@ -186,6 +187,54 @@ function add_edificio(index, dir, a, b){
 				temp_complex = xytoab(enemigo.a, enemigo.b)
 				if temp_complex.a >= 0
 					enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
+			}
+		}
+		else if index = id_ensambladora and (edificio_tecnologia[id_modulo] or not tecnologia){
+			for(var c = ds_list_size(temp_list_arround) - 1; c >= 0; c--){
+				temp_complex = temp_list_arround[|c]
+				var aa = temp_complex.a, bb = temp_complex.b
+				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+					continue
+				if edificio_bool[# aa, bb]{
+					var temp_edificio = edificio_id[# aa, bb]
+					if temp_edificio.index = id_ensambladora and not temp_edificio.mode{
+						for(c = 0; c < rss_max; c++)
+							if c != id_electronico
+								temp_edificio.carga[c] = 0
+						edificio.mode = true
+						temp_edificio.mode = true
+						edificio.link = temp_edificio
+						temp_edificio.link = edificio
+						edificio.carga_max[id_cobre] = 0
+						edificio.carga_input[id_cobre] = false
+						edificio.carga_max[id_silicio] = 0
+						edificio.carga_input[id_silicio] = false
+						edificio.carga_max[id_electronico] = 10
+						edificio.carga_input[id_electronico] = true
+						edificio.carga_max[id_plastico] = 10
+						edificio.carga_input[id_plastico] = true
+						edificio.carga_max[id_baterias] = 10
+						edificio.carga_input[id_baterias] = true
+						edificio.carga_output[id_modulos] = true
+						edificio.carga_output[id_electronico] = false
+						temp_edificio.carga_max[id_cobre] = 0
+						temp_edificio.carga_input[id_cobre] = false
+						temp_edificio.carga_max[id_silicio] = 0
+						temp_edificio.carga_input[id_silicio] = false
+						temp_edificio.carga_max[id_electronico] = 10
+						temp_edificio.carga_input[id_electronico] = true
+						temp_edificio.carga_max[id_plastico] = 10
+						temp_edificio.carga_input[id_plastico] = true
+						temp_edificio.carga_max[id_baterias] = 10
+						temp_edificio.carga_input[id_baterias] = true
+						temp_edificio.carga_output[id_modulos] = true
+						temp_edificio.carga_output[id_electronico] = false
+						temp_edificio.proceso = 0
+						temp_edificio.start = false
+						calculate_in_out_2(temp_edificio)
+						break
+					}
+				}
 			}
 		}
 		for(var c = ds_list_size(temp_list_size) - 1; c >= 0; c--){
@@ -452,10 +501,8 @@ function add_edificio(index, dir, a, b){
 				edificio.flujo.liquido = 1
 				change_flujo(edificio_flujo_consumo[index], edificio)
 			}
-			if grafic_luz and edificio.flujo.liquido = 3{
-				edificio.luz = true
-				add_luz(a, b, 1)
-			}
+			if grafic_luz and edificio.flujo.liquido = 3
+				encender_luz(, edificio)
 			if index = id_tuberia
 				tuberia_arround(edificio)
 		}

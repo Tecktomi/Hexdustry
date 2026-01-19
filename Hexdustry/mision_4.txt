@@ -38,6 +38,7 @@ texto victoria="Mision cumplida, hemos aprendido a utilizar el  Agua y a produci
 23="0.000000"
 24="0.000000"
 25="0.000000"
+26="0.000000"
 [Terreno]
 0,0="12.000000"
 0,1="12.000000"
@@ -3796,6 +3797,8 @@ Fondo="0.000000"
 55="0.000000"
 56="0.000000"
 57="0.000000"
+58="2.000000"
+59="0.000000"
 [Objetivo 0]
 nombre="Encender las luces"
 objetivo="2.000000"

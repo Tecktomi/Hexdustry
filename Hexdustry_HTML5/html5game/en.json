@@ -96,6 +96,7 @@
 "Embotelladora": "Bottling Plant",
 "Extractor Atmosférico": "Atmospheric Extractor",
 "Cruce": "Crossing",
+"Módulo": "Module",
 
 "descripcion_Núcleo": "It is the command center. All resources are stored here, and you must protect it at all costs.",
 "descripcion_Taladro": "Mines copper, iron, and coal at no cost. Can be boosted with Water.",
@@ -156,6 +157,7 @@
 "descripcion_Embotelladora": "Fills and empties barrels with liquids",
 "descripcion_Extractor Atmosférico": "Extracts water from the atmosphere, ideal for terrains where it is difficult to obtain",
 "descripcion_Cruce": "Allows conveyor belt connections to cross",
+"descripcion_Módulo": "Improves the characteristics of a building",
 
 "Cobre": "Copper",
 "Carbón": "Coal",
@@ -183,6 +185,7 @@
 "Barril con Petróleo": "Barrel with Oil",
 "Barril con Lava": "Barrel with Lava",
 "Barril con Agua salada": "Barrel with Salt Water",
+"Módulos": "Modules",
 
 "descripcion_Cobre": "Basic resource, essential for early buildings. Can be refined to obtain Bronze",
 "descripcion_Carbón": "Basic fuel, useful for operating Furnaces and Generators",
@@ -210,6 +213,7 @@
 "descripcion_Barril con Petróleo": "Barrel with Oil, useful for storing and distributing it",
 "descripcion_Barril con Lava": "Barrel with Lava, useful for storing and distributing it",
 "descripcion_Barril con Agua salada": "Barrel with Salt Water, useful for storing and distributing it",
+"descripcion_Módulos": "Research Modules and build two Assemblers next to each other to start producing them",
 
 "Piedra": "Stone",
 "Pasto": "Grass",
@@ -372,6 +376,12 @@
 "win_seguir_jugando": "Continue playing?",
 "win_reintentar": "Retry",
 "win_salir": "Return to menu",
+"win_militar": "Military",
+"win_edificios_perdidos": "Buildings lost",
+"win_drones_perdidos": "Drones lost",
+"win_dmg_causado": "Damage dealt",
+"win_dmg_recibido": "Damage taken",
+"win_dmg_curado": "Damage healed",
 
 "construir_recursos_insuficientes": "Insufficient resources",
 "construir_enemigos_cerca": "Enemies too close!",
@@ -479,5 +489,22 @@
 
 "planta_quimica_descripcion 0": "Consumes Sulfated Stone and energy to produce Acid",
 "planta_quimica_descripcion 1": "Uses Incendiary Compound and Acid to produce Explosives",
-"planta_quimica_descripcion 2": "Uses Acid, Copper, and energy to produce Batteries"
+"planta_quimica_descripcion 2": "Uses Acid, Copper, and energy to produce Batteries",
+
+"modulo_sin_edificio": "Requires a building",
+"modulo_edificio_sin_modulo": "This building does not accept modules\n",
+"modulo_edificio_con_modulo": "This building already has a module\n",
+"modulo_extraccion": "40% faster extraction speed\n",
+"modulo_canalizar": "Channels 50% faster\n",
+"modulo_cadencia": "30% higher fire rate\n",
+"modulo_dmg": "30% more damage\n",
+"modulo_aturdir": "33% longer stun duration\n",
+"modulo_mas_liquido": "Produces 20% more",
+"modulo_menos_electricidad": "25% less power consumption\n",
+"modulo_menos_liquido": "25% less consumption of",
+"modulo_produccion": "Produces 30% faster\n",
+"modulo_sal": "Extracts 50% more",
+"modulo_nuclear": "Automatically shuts down the plant if it runs out of water\n",
+"modulo_reparadora": "Repairs 20% faster\n",
+"modulo_nucleo": "Increases the maximum number of allied drones by 2\n"
 }
