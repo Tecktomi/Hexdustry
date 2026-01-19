@@ -1084,7 +1084,7 @@ if menu = 2{
 				if index = id_planta_quimica and edificio.select >= 0
 					draw_sprite_off(planta_quimica_sprite[edificio.select], 0, aa, bb)
 				//Humo
-				if show_humo and ((in(index, id_generador, id_turbina, id_planta_nuclear, id_horno) and edificio.fuel > 0) or (index = id_generador_geotermico and in(edificio.flujo.liquido, 0, 4)) or (index = id_refineria_de_petroleo and edificio.flujo.liquido = 2)){
+				if show_humo and ((in(index, id_generador, id_turbina, id_planta_nuclear, id_horno) and edificio.fuel > 0) or (index = id_generador_geotermico and in(edificio.flujo.liquido, 0, 4)) or (index = id_refineria_de_petroleo and edificio.flujo.liquido = 2 and edificio.red.eficiencia > 0)){
 					var dir = direccion_viento + random_range(-pi / 4, pi / 4)
 					array_push(humos, add_humo(aa, bb, a, b, cos(dir), sin(dir), irandom_range(70, 100)))
 				}
@@ -4317,7 +4317,6 @@ if win = 0 and not show_menu{
 			info = not info
 		if keyboard_check_pressed(ord("L"))
 			flow = (flow + 1) mod 6
-		//Comandos
 		if string_ends_with(keyboard_string, "cheat"){
 			keyboard_string = ""
 			cheat = not cheat
