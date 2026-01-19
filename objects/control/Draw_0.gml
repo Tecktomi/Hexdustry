@@ -1107,13 +1107,13 @@ if menu = 2{
 					var temp_complex = abtoxy(a, b)
 					draw_edificio(temp_complex.a, temp_complex.b, repair_id[# a, b], repair_dir[# a, b], 0.5)
 				}
-	//Luz
 	if flow = 5
-		for(var a = 0; a < ds_grid_width(chunk_enemigos); a++)
-			for(var b = 0; b < ds_grid_height(chunk_enemigos); b++){
+		for(var a = 0; a < chunk_xsize; a++)
+			for(var b = 0; b < chunk_ysize; b++){
 				var temp_complex = abtoxy(a * chunk_width, b * chunk_height)
 				draw_text_off(temp_complex.a, temp_complex.b, array_length(chunk_enemigos[# a, b]))
 			}
+	//Luz
 	if energia_solar < 1{
 		var luz_alpha = 0.6 * (1 - energia_solar)
 		if grafic_luz{
@@ -2357,7 +2357,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		temp_text += $"{recurso_nombre_display[ore_recurso[ore[# mx, my]]]}: {ore_amount[# mx, my]}\n"
 	if edificio_bool[# mx, my]{
 		var index = edificio.index
-		if not edificio_inerte[index] and edificio.pointer = -1{
+		if not edificio_inerte[index] and edificio.punteros[4] = -1{
 			draw_sprite_off(spr_diseneabled, 0, edificio.x, edificio.y)
 			if draw_boton(edificio.x * zoom - camx, edificio.y * zoom - camy, L.game_activar)
 				activar_edificio(edificio)
@@ -2400,9 +2400,9 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 				if puerto_carga_bool and edificio != puerto_carga_link{
 					if puerto_carga_link.link != null_edificio{
 						if puerto_carga_link.receptor
-							array_remove(puerto_carga_array, puerto_carga_link)
+							array_disorder_remove(puerto_carga_array, puerto_carga_link, 2)
 						else
-							array_remove(puerto_carga_array, puerto_carga_link.link)
+							array_disorder_remove(puerto_carga_array, puerto_carga_link.link, 2)
 						if puerto_carga_atended >= array_length(puerto_carga_array)
 							puerto_carga_atended = 0
 						puerto_carga_link.link.receptor = false
@@ -2417,9 +2417,9 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 					calculate_in_out_2(puerto_carga_link, false)
 					if edificio.link != null_edificio{
 						if edificio.receptor
-							array_remove(puerto_carga_array, edificio)
+							array_disorder_remove(puerto_carga_array, edificio, 2)
 						else
-							array_remove(puerto_carga_array, edificio.link)
+							array_disorder_remove(puerto_carga_array, edificio.link, 2)
 						if puerto_carga_atended >= array_length(puerto_carga_array)
 							puerto_carga_atended = 0
 						edificio.link.receptor = false
@@ -2432,7 +2432,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 					edificio.link = puerto_carga_link
 					calculate_in_out(edificio)
 					calculate_in_out_2(edificio, false)
-					array_push(puerto_carga_array, puerto_carga_link)
+					array_disorder_push(puerto_carga_array, puerto_carga_link, 2)
 					puerto_carga_link = null_edificio
 					puerto_carga_bool = false
 				}
@@ -3667,17 +3667,14 @@ if pausa = 0{
 		}
 		for(var a = array_length(edificios_pendientes) - 1; a >= 0; a--){
 			edificio = array_pop(edificios_pendientes)
-			if edificio.eliminar and edificio.pointer >= 0{
+			if edificio.eliminar and edificio.punteros[4] >= 0{
 				edificio.eliminar = false
-				edificios_activos[edificio.pointer] = edificios_activos[array_length(edificios_activos) - 1]
-				edificios_activos[edificio.pointer].pointer = edificio.pointer
-				array_pop(edificios_activos)
-				edificio.pointer = -1
+				array_disorder_remove(edificios_activos, edificio, 4)
+				edificio.punteros[4] = -1
 			}
-			if edificio.agregar and edificio.pointer = -1{
+			if edificio.agregar and edificio.punteros[4] = -1{
 				edificio.agregar = false
-				edificio.pointer = array_length(edificios_activos)
-				array_push(edificios_activos, edificio)
+				array_disorder_push(edificios_activos, edificio, 4)
 			}
 		}
 		//Ciclo de los enemigos
@@ -3872,13 +3869,7 @@ if pausa = 0{
 			//Alejarse de los enemigos cercanos
 			var temp_dron_size = dron_size[index], temp_array = chunk_enemigos[# dron.chunk_x, dron.chunk_y]
 			for(var b = array_length(temp_array) - 1; b >= 0; b--){
-				var temp_enemigo = temp_array[b]
-				if temp_enemigo = null_enemigo or temp_enemigo = dron or not is_struct(temp_enemigo) or temp_enemigo.vida <= 0{
-					if not is_struct(temp_enemigo)
-						show_debug_message($"Error en el enemigo {b}/{array_length(temp_array)} de chunk_enemigos[# {dron.chunk_x}, {dron.chunk_y}] (step{image_index})")
-					continue
-				}
-				var dis = max(0.01, distance_sqr(aa, bb, temp_enemigo.a, temp_enemigo.b))
+				var temp_enemigo = temp_array[b], dis = max(0.01, distance_sqr(aa, bb, temp_enemigo.a, temp_enemigo.b))
 				if dis < temp_dron_size{
 					var aaa = sign(aa - temp_enemigo.a), bbb = sign(bb - temp_enemigo.b)
 					dron.a += aaa
@@ -3896,15 +3887,12 @@ if pausa = 0{
 				dron.posb = bb
 				if not dron_aereo[index] and array_length(edificios) > 0 and terreno_caminable[terreno[# aa, bb]]
 					dron.target = edificio_cercano[# aa, bb]
-				var chunk_x = clamp(round(aa / chunk_width), 0, ds_grid_width(chunk_enemigos) - 1), chunk_y = clamp(round(bb / chunk_height), 0, ds_grid_height(chunk_enemigos) - 1)
+				var chunk_x = clamp(round(aa / chunk_width), 0, chunk_xsize - 1), chunk_y = clamp(round(bb / chunk_height), 0, chunk_ysize - 1)
 				if chunk_x != dron.chunk_x or chunk_y != dron.chunk_y{
-					remove_dron_chunk(dron)
+					dron_chunk_remove(dron)
 					dron.chunk_x = chunk_x
 					dron.chunk_y = chunk_y
-					temp_array = chunk_enemigos[# chunk_x, chunk_y]
-					dron.chunk_pointer = array_length(temp_array)
-					array_push(temp_array, dron)
-					ds_grid_set(chunk_enemigos, dron.chunk_x, dron.chunk_y, temp_array)
+					dron_chunk_push(dron)
 				}
 			}
 			if terreno[# dron.posa, dron.posb] = idt_hielo
@@ -3919,10 +3907,7 @@ if pausa = 0{
 			var dron = drones_aliados[a], aa = dron.a, bb = dron.b, index = dron.index
 			draw_dron(dron, false)
 			if dron.vida <= 0{
-				var temp_dron = drones_aliados[array_length(drones_aliados) - 1]
-				drones_aliados[dron.pointer] = temp_dron
-				temp_dron.pointer = dron.pointer
-				array_pop(drones_aliados)
+				array_disorder_remove(drones_aliados, dron, 0)
 				continue
 			}
 			//Dron de Transporte
@@ -4184,13 +4169,7 @@ if pausa = 0{
 					}
 					enemigo.vida_max = enemigo.vida * power(d / 3, 1.1) * multiplicador_vida_enemigos / 100
 					enemigo.vida = enemigo.vida_max
-					var temp_array = ds_grid_get(chunk_enemigos, enemigo.chunk_x, enemigo.chunk_y)
-					enemigo.chunk_pointer = array_length(temp_array)
-					array_push(temp_array, enemigo)
-					ds_grid_set(chunk_enemigos, enemigo.chunk_x, enemigo.chunk_y, temp_array)
 					enemigo.target = edificio_cercano[# aa, bb]
-					enemigo.pointer = array_length(enemigos)
-					array_push(enemigos, enemigo)
 				}
 			}
 		}
@@ -4326,19 +4305,53 @@ if temp_text_right != ""{
 if draw_sprite_boton(spr_manual, room_width - 64, string_height(temp_text_right), 64, 64, $"{L.game_enciclopedia} (Y)")
 	enciclopedia = true
 //Input
-if keyboard_check_pressed(vk_anykey) and win = 0 and not show_menu{
-	if keyboard_check_pressed(ord("P")){
-		if pausa = 2
-			pausa = 0
-		else if pausa = 0
-			pausa = 2
+if win = 0 and not show_menu{
+	if keyboard_check_pressed(vk_anykey){
+		if keyboard_check_pressed(ord("P")){
+			if pausa = 2
+				pausa = 0
+			else if pausa = 0
+				pausa = 2
+		}
+		if keyboard_check_pressed(ord("U"))
+			info = not info
+		if keyboard_check_pressed(ord("L"))
+			flow = (flow + 1) mod 6
+		//Comandos
+		if string_ends_with(keyboard_string, "cheat"){
+			keyboard_string = ""
+			cheat = not cheat
+			build_index = 0
+		}
+		if keyboard_check_pressed(vk_escape){
+			if pausa > 0
+				pausa = 0
+			else{
+				selected_dron = null_enemigo
+				pausa = 1
+				build_index = 0
+				show_menu = false
+				puerto_carga_bool = false
+				build_menu = 0
+				mouse_clear(mb_any)
+				keyboard_clear(vk_anykey)
+			}
+		}
+		if keyboard_check_pressed(vk_f1)
+			grafic_hideui = not grafic_hideui
+		if keyboard_check_pressed(ord("N"))
+			oleadas = not oleadas
+		if keyboard_check_pressed(ord("M"))
+			sound_change()
+		if keyboard_check_pressed(ord("Y")){
+			if enciclopedia = 0
+				enciclopedia = 1
+			else
+				enciclopedia = 0
+		}
+		if cheat and mision_actual >= 0 and string_ends_with(keyboard_string, "uwu")
+			pasar_mision()
 	}
-	if keyboard_check_pressed(ord("U"))
-		info = not info
-	if keyboard_check_pressed(ord("L"))
-		flow = (flow + 1) mod 6
-	if cheat and keyboard_check(ord("T"))
-		image_index += 20
 	//Mostrar redes electricas
 	if keyboard_check(ord("O")){
 		temp_text = ""
@@ -4385,40 +4398,6 @@ if keyboard_check_pressed(vk_anykey) and win = 0 and not show_menu{
 		}
 		draw_text_background(0, 0, temp_text)
 	}
-	//Comandos
-	if string_ends_with(keyboard_string, "cheat"){
-		keyboard_string = ""
-		cheat = not cheat
-		build_index = 0
-	}
-	if keyboard_check_pressed(vk_escape){
-		if pausa > 0
-			pausa = 0
-		else{
-			selected_dron = null_enemigo
-			pausa = 1
-			build_index = 0
-			show_menu = false
-			puerto_carga_bool = false
-			build_menu = 0
-			mouse_clear(mb_any)
-			keyboard_clear(vk_anykey)
-		}
-	}
-	if keyboard_check_pressed(vk_f1)
-		grafic_hideui = not grafic_hideui
-	if keyboard_check_pressed(ord("N"))
-		oleadas = not oleadas
-	if keyboard_check_pressed(ord("M"))
-		sound_change()
-	if keyboard_check_pressed(ord("Y")){
-		if enciclopedia = 0
-			enciclopedia = 1
-		else
-			enciclopedia = 0
-	}
-	if cheat and mision_actual >= 0 and string_ends_with(keyboard_string, "uwu")
-		pasar_mision()
 }
 if mision_actual >= 0 and --mision_camara_step > 0{
 	zoom = 1

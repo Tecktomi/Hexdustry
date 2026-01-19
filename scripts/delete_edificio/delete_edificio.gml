@@ -15,16 +15,16 @@ function delete_edificio(aa, bb, enemigo = false){
 				}
 			}
 		}
-		array_remove(edificios, edificio)
+		array_disorder_remove(edificios, edificio, 0)
 		edificios_counter[index]--
 		ds_grid_destroy(edificio.coordenadas_dis)
 		if enemigo
 			edificios_perdidos++
 		if index = id_puerto_de_carga and edificio.link != null_edificio{
 			if edificio.receptor
-				array_remove(puerto_carga_array, edificio)
+				array_disorder_remove(puerto_carga_array, edificio, 2)
 			else
-				array_remove(puerto_carga_array, edificio.link)
+				array_disorder_remove(puerto_carga_array, edificio.link, 2)
 			if puerto_carga_atended >= array_length(puerto_carga_array)
 				puerto_carga_atended = 0
 			edificio.link.receptor = false
@@ -35,13 +35,10 @@ function delete_edificio(aa, bb, enemigo = false){
 		desactivar_edificio(edificio)
 		for(var i = real(index = id_procesador); i < array_length(edificio.procesador_link); i++)
 			array_remove(edificio.procesador_link[i].procesador_link, edificio)
-		var temp_array = chunk_edificios[# edificio.chunk_x, edificio.chunk_y], temp_edificio = temp_array[array_length(temp_array) - 1]
-		temp_array[edificio.chunk_pointer] = temp_edificio
-		temp_edificio.chunk_pointer = edificio.chunk_pointer
-		array_pop(temp_array)
+		array_disorder_remove(chunk_edificios[# edificio.chunk_x, edificio.chunk_y], edificio, 1)
 		#region Torres reparadoras
 			if index = id_torre_reparadora{
-				array_remove(torres_reparadoras, edificio)
+				array_disorder_remove(torres_reparadoras, edificio, 2)
 				for(var c = array_length(edificio.edificios_cercanos) - 1; c >= 0; c--){
 					temp_edificio = edificio.edificios_cercanos[c]
 					array_remove(temp_edificio.reparadores_cercanos, edificio)
@@ -58,7 +55,7 @@ function delete_edificio(aa, bb, enemigo = false){
 			}
 		#endregion
 		if index = id_planta_de_reciclaje
-			array_remove(plantas_de_reciclaje, edificio)
+			array_disorder_remove(plantas_de_reciclaje, edificio, 2)
 		else if index = id_ensambladora and edificio.mode{
 			temp_edificio = edificio.link
 			for(var a = 0; a < rss_max; a++)
@@ -130,7 +127,7 @@ function delete_edificio(aa, bb, enemigo = false){
 		ds_grid_clear(edificio_cercano_dir, -1)
 		if edificio_armas[index]{
 			if edificio.target != null_enemigo and edificio.target.vida > 0
-				array_remove(edificio.target.torres, edificio)
+				array_disorder_remove(edificio.target.torres, edificio, 2)
 		}
 		//Eliminar tuneles
 		if in(index, id_tunel, id_tunel_salida) and not edificio.idle
@@ -155,11 +152,8 @@ function delete_edificio(aa, bb, enemigo = false){
 		if edificio_energia[index]{
 			var temp_red = edificio.red
 			array_remove(temp_red.edificios, edificio)
-			if index = id_torre_de_alta_tension{
-				var a = array_get_index(torres_de_tension, edificio)
-				torres_de_tension[a] = torres_de_tension[array_length(torres_de_tension) - 1]
-				array_pop(torres_de_tension)
-			}
+			if index = id_torre_de_alta_tension
+				array_disorder_remove(torres_de_tension, edificio, 2)
 			//Eliminar la red si no hay más edificios
 			if array_length(temp_red.edificios) = 0{
 				delete(temp_red.edificios)
@@ -359,34 +353,25 @@ function delete_edificio(aa, bb, enemigo = false){
 				edificio_herir(temp_edificio, (9_000_000 / max(1, dis)) * random_range(0.7, 1.3))
 			}
 			//Daño enemigos
-			size = array_length(enemigos)
-			for(var i = 0; i < size; i++){
+			for(var i = array_length(enemigos) - 1; i >= 0; i--){
 				enemigo = enemigos[i]
 				var dis = distance_sqr(xpos, ypos, enemigo.a, enemigo.b)
 				if dis > 160_000//400^2
 					continue
-				enemigo.vida -= 9_000_000 / dis * random_range(0.7, 1.3)
+				enemigo.vida -= 1_000_000 / dis * random_range(0.7, 1.3)
 				if enemigo.vida > 0
 					continue
 				destroy_dron(enemigo)
-				size--
-				i--
 			}
 			//Daño drones aliados
-			size = array_length(drones_aliados)
-			for(var i = 0; i < size; i++){
+			for(var i = array_length(drones_aliados) - 1; i >= 0; i--){
 				var dron = drones_aliados[i], dis = distance_sqr(xpos, ypos, dron.a, dron.b)
 				if dis > 160_000//400^2
 					continue
 				dron.vida -= 1_000_000 / dis * random_range(0.7, 1.3)
 				if dron.vida > 0
 					continue
-				var temp_dron = drones_aliados[array_length(drones_aliados) - 1]
-				drones_aliados[dron.pointer] = temp_dron
-				temp_dron.pointer = dron.pointer
-				array_pop(drones_aliados)
-				size--
-				i--
+				destroy_dron(dron)
 			}
 			nuclear_x = xpos
 			nuclear_y = ypos

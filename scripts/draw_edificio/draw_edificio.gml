@@ -13,8 +13,12 @@ function draw_edificio(x, y, index, dir, alpha = 1){
 			else
 				draw_sprite_off(edificio_sprite[index], 0, x, y,,, (dir - 1) * 60,, alpha)
 		}
-		else if edificio_size[index] mod 2 = 0
-			draw_sprite_off(edificio_sprite[index], 0, x, y, power(-1, dir),,,, alpha)
+		else if edificio_size[index] mod 2 = 0{
+			if dir = 0
+				draw_sprite_off(edificio_sprite[index], 0, x, y,,,,, alpha)
+			else
+				draw_sprite_off(edificio_sprite[index], 0, x, y, -1,,,, alpha)
+		}
 		else if edificio_size[index] = 2.5{
 			if dir = 0
 				draw_sprite_off(edificio_sprite[index], 0, x, y)

@@ -10,6 +10,8 @@ function add_edificio(index, dir, a, b){
 			b : floor(b),
 			x : x,
 			y : y,
+			center_x : x,
+			center_y : y,
 			coordenadas : ds_list_create(),
 			bordes : ds_list_create(),
 			inputs : array_create(0, null_edificio),
@@ -47,18 +49,14 @@ function add_edificio(index, dir, a, b){
 			emisor : edificio_emisor[index],
 			receptor : edificio_receptor[index],
 			luz : false,
-			luz_pointer : -1,
 			instruccion : array_create(0, array_create(1, 0)),
 			variables : [],
-			pointer : -1,
 			procesador_link : array_create(0, null_edificio),
 			eliminar : false,
 			agregar : false,
 			chunk_x : clamp(round(a / chunk_width), 0, ds_grid_width(chunk_edificios) - 1),
 			chunk_y : clamp(round(b / chunk_height), 0, ds_grid_height(chunk_edificios) - 1),
-			chunk_pointer : 0,
 			target_chunks : array_create(0, {a : 0, b : 0}),
-			target_pointer : 0,
 			array_real : array_create(0, 0),
 			xscale : 1,
 			yscale : 1,
@@ -68,7 +66,30 @@ function add_edificio(index, dir, a, b){
 			reparadores_cercanos : array_create(0, null_edificio),
 			imagen : spr_hexagono,
 			sound : undefined,
-			modulo : false
+			modulo : false,
+			// 0 = edificios, 1 = chunk_edificios, 2 = [torres_tension, plantas_reciclaje, torres_reparadoras, puertos_carga, target.torres], 3 = luz, 4 = edificios_activos
+			punteros : array_create(5, 0)
+		}
+		if edificio_size[index] = 2.5{
+			if in(dir, 0, 1)
+				edificio.center_x += 12
+			else if in(dir, 3, 4)
+				edificio.center_x -= 12
+			if in(dir, 0, 4)
+				edificio.center_y += 7
+			else if in(dir, 1, 3)
+				edificio.center_y -= 7
+			else if dir = 2
+				edificio.center_y -= 14
+			else if dir = 5
+				edificio.center_y += 14
+		}
+		else if edificio_size[index] mod 2 = 0{
+			if edificio.dir = 0
+				edificio.center_x += 8
+			else
+				edificio.center_x -= 8
+			edificio.center_y += 14
 		}
 		ds_grid_clear(edificio.coordenadas_dis, infinity)
 		ds_list_add(edificio.coordenadas_close, {a : 0, b : 0})
@@ -84,10 +105,8 @@ function add_edificio(index, dir, a, b){
 				edificio.proceso = -1
 		}
 		calculate_in_out(edificio)
-		if not edificio_inerte[edificio.index]{
-			edificio.pointer = array_length(edificios_activos)
-			array_push(edificios_activos, edificio)
-		}
+		if not edificio_inerte[edificio.index]
+			array_disorder_push(edificios_activos, edificio, 4)
 		if index = id_procesador{
 			array_push(edificio.procesador_link, edificio)
 			edificio.variables = array_create(16)
@@ -98,10 +117,9 @@ function add_edificio(index, dir, a, b){
 		else if index = id_memoria
 			edificio.variables = array_create(128)
 		else if index = id_planta_de_reciclaje
-			array_push(plantas_de_reciclaje, edificio)
+			array_disorder_push(plantas_de_reciclaje, edificio, 2)
 		array_push(efectos, add_efecto(size_fx[edificio_size[index] - 1], 0, x, y, 3))
-		edificio.chunk_pointer = array_length(chunk_edificios[# edificio.chunk_x, edificio.chunk_y])
-		array_push(chunk_edificios[# edificio.chunk_x, edificio.chunk_y], edificio)
+		array_disorder_push(chunk_edificios[# edificio.chunk_x, edificio.chunk_y], edificio, 1)
 		if index = id_nucleo
 			array_push(nucleos, edificio)
 		else
@@ -123,7 +141,7 @@ function add_edificio(index, dir, a, b){
 		}
 		var temp_list_arround = get_arround(a, b, dir, edificio_size[index])
 		ds_grid_set(edificio_draw, a, b, true)
-		array_push(edificios, edificio)
+		array_disorder_push(edificios, edificio, 0)
 		edificios_counter[index]++
 		for(var c = ds_list_size(temp_list_arround) - 1; c >= 0; c--)
 			ds_list_add(edificio.bordes, temp_list_arround[|c])
@@ -159,7 +177,7 @@ function add_edificio(index, dir, a, b){
 		#region Torres reparadoras
 			var alc = edificio_alcance_sqr[id_torre_reparadora]
 			if index = id_torre_reparadora{
-				array_push(torres_reparadoras, edificio)
+				array_disorder_push(torres_reparadoras, edificio, 2)
 				for(var c = array_length(edificios) - 2; c >= 0; c--){
 					var temp_edificio = edificios[c]
 					if distance_sqr(temp_edificio.x, temp_edificio.y, x, y) < alc{
@@ -293,8 +311,7 @@ function add_edificio(index, dir, a, b){
 			ds_list_destroy(temp_list)
 			//Buscar otras torres de alta tensión
 			if index = id_torre_de_alta_tension{
-				size = array_length(torres_de_tension)
-				for(var c = 0; c < size; c++){
+				for(var c = array_length(torres_de_tension) - 1; c >= 0; c--){
 					var temp_edificio = torres_de_tension[c]
 					if sqr(temp_edificio.x - edificio.x) + sqr(temp_edificio.y - edificio.y) < 1_000_000{//1000^2
 						array_push(edificio.energia_link, temp_edificio)
@@ -303,7 +320,7 @@ function add_edificio(index, dir, a, b){
 							ds_list_add(temp_list_redes, temp_edificio.red)
 					}
 				}
-				array_push(torres_de_tension, edificio)
+				array_disorder_push(torres_de_tension, edificio, 2)
 			}
 			//Añadir red
 			var temp_red = {

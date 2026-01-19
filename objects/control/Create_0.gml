@@ -248,6 +248,8 @@ null_edificio = {
 	b : 0,
 	x : 0,
 	y : 0,
+	center_x : 0,
+	center_y : 0,
 	coordenadas : ds_list_create(),
 	bordes : ds_list_create(),
 	inputs : [],
@@ -285,18 +287,14 @@ null_edificio = {
 	emisor : false,
 	receptor : false,
 	luz : false,
-	luz_pointer : -1,
 	instruccion : array_create(0, array_create(1, 0)),
 	variables : [],
-	pointer : -1,
 	procesador_link : undefined,
 	eliminar : false,
 	agregar : false,
 	chunk_x : 0,
 	chunk_y : 0,
-	chunk_pointer : 0,
 	target_chunks : array_create(0, {a : 0, b : 0}),
-	target_pointer : 0,
 	array_real : array_create(0, 0),
 	xscale : 1,
 	yscale : 1,
@@ -306,7 +304,8 @@ null_edificio = {
 	reparadores_cercanos : [],
 	imagen : spr_hexagono,
 	sound : undefined,
-	modulo : false
+	modulo : false,
+	punteros : array_create(5, 0)
 }
 null_edificio.link = null_edificio
 ds_list_add(null_edificio.coordenadas, {a : 0, b : 0})
@@ -412,11 +411,9 @@ null_enemigo = {
 	temp_target : null_edificio,
 	chunk_x : 0,
 	chunk_y : 0,
-	chunk_pointer : 0,
 	carga : array_create(0, 0),
 	carga_total : 0,
 	modo : 0,
-	pointer : 0,
 	torres : array_create(0, null_edificio),
 	dir : 0,
 	dir_move : 0,
@@ -426,6 +423,7 @@ null_enemigo = {
 	oleada : 0,
 	random_int : random(1),
 	enemigo : true,
+	punteros : array_create(0, 0)
 }
 enemigos = array_create(0, null_enemigo)
 drones_aliados = array_create(0, null_enemigo)
@@ -1090,14 +1088,16 @@ sort_edificios()
 	#endregion
 	camino_general = [camino_0, camino_1, camino_2, camino_3, camino_4, camino_5]
 #endregion
-olas = [spr_agua_salada, spr_olas_1, spr_olas_2, spr_olas_3, spr_olas_4, spr_olas_5, spr_olas_6, spr_olas_7,
-		spr_olas_8, spr_olas_9, spr_olas_10, spr_olas_11, spr_olas_12, spr_olas_13, spr_olas_14, spr_olas_15,
-		spr_olas_16, spr_olas_17, spr_olas_18, spr_olas_19, spr_olas_20, spr_olas_21, spr_olas_22, spr_olas_23,
-		spr_olas_24, spr_olas_25, spr_olas_26, spr_olas_27, spr_olas_28, spr_olas_29, spr_olas_30, spr_olas_31,
-		spr_olas_32, spr_olas_33, spr_olas_34, spr_olas_35, spr_olas_36, spr_olas_37, spr_olas_38, spr_olas_39,
-		spr_olas_40, spr_olas_41, spr_olas_42, spr_olas_43, spr_olas_44, spr_olas_45, spr_olas_46, spr_olas_47,
-		spr_olas_48, spr_olas_49, spr_olas_50, spr_olas_51, spr_olas_52, spr_olas_53, spr_olas_54, spr_olas_55,
-		spr_olas_56, spr_olas_57, spr_olas_58, spr_olas_59, spr_olas_60, spr_olas_61, spr_olas_62, spr_olas_63]
+#region Olas
+	olas = [spr_agua_salada, spr_olas_1, spr_olas_2, spr_olas_3, spr_olas_4, spr_olas_5, spr_olas_6, spr_olas_7,
+			spr_olas_8, spr_olas_9, spr_olas_10, spr_olas_11, spr_olas_12, spr_olas_13, spr_olas_14, spr_olas_15,
+			spr_olas_16, spr_olas_17, spr_olas_18, spr_olas_19, spr_olas_20, spr_olas_21, spr_olas_22, spr_olas_23,
+			spr_olas_24, spr_olas_25, spr_olas_26, spr_olas_27, spr_olas_28, spr_olas_29, spr_olas_30, spr_olas_31,
+			spr_olas_32, spr_olas_33, spr_olas_34, spr_olas_35, spr_olas_36, spr_olas_37, spr_olas_38, spr_olas_39,
+			spr_olas_40, spr_olas_41, spr_olas_42, spr_olas_43, spr_olas_44, spr_olas_45, spr_olas_46, spr_olas_47,
+			spr_olas_48, spr_olas_49, spr_olas_50, spr_olas_51, spr_olas_52, spr_olas_53, spr_olas_54, spr_olas_55,
+			spr_olas_56, spr_olas_57, spr_olas_58, spr_olas_59, spr_olas_60, spr_olas_61, spr_olas_62, spr_olas_63]
+#endregion
 #region Tecnologia
 	edificio_tecnologia_prev = array_create(edificio_max)
 	edificio_tecnologia_next = array_create(edificio_max)

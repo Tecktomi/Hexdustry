@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"remove_dron_chunk",
+  "%Name":"array_disorder_remove",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"remove_dron_chunk",
+  "name":"array_disorder_remove",
   "parent":{
     "name":"SCRIPTS",
     "path":"folders/SCRIPTS.yy",

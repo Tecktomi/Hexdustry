@@ -33,17 +33,10 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 		}
 		var prev_enemigo = edificio.target
 		if enemigo_final != null_enemigo and prev_enemigo != enemigo_final{
-			if prev_enemigo != null_enemigo{
-				var temp_edificio = prev_enemigo.torres[array_length(prev_enemigo.torres) - 1]
-				if temp_edificio != edificio{
-					prev_enemigo.torres[edificio.target_pointer] = temp_edificio
-					temp_edificio.target_pointer = edificio.target_pointer
-				}
-				array_pop(prev_enemigo.torres)
-			}
+			if prev_enemigo != null_enemigo
+				array_disorder_remove(prev_enemigo.torres, edificio, 2)
+			array_disorder_push(enemigo_final.torres, edificio, 2)
 			edificio.target = enemigo_final
-			edificio.target_pointer = array_length(enemigo_final.torres)
-			array_push(enemigo_final.torres, edificio)
 		}
 		else
 			edificio.target = enemigo_final
