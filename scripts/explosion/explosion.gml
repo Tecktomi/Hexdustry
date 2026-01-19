@@ -13,13 +13,18 @@ function explosion(aa = 0, bb = 0, edificio = control.null_edificio, enemigo = t
 						for(var i = array_length(chunk_edificios[# a, b]) - 1; i >= 0; i--){
 							edificio = chunk_edificios[# a, b][i]
 							var dis = distance_sqr(aa, bb, edificio.x, edificio.y)
-							if dis < radio//120^2
-								edificio_herir(edificio, dmg / (10 + sqrt(dis)))
+							if dis < radio{//120^2
+								var temp_dmg = dmg / (10 + sqrt(dis))
+								dmg_recibido += min(temp_dmg, edificio.vida)
+								edificio_herir(edificio, temp_dmg)
+							}
 						}
 				for(var a = array_length(drones_aliados) - 1; a >= 0; a--){
 					var temp_dron = drones_aliados[a], dis = distance_sqr(aa, bb, temp_dron.a, temp_dron.b)
 					if dis < radio{//120^2
-						temp_dron.vida -= dmg / (10 + sqrt(dis))
+						var temp_dmg = dmg / (10 + sqrt(dis))
+						dmg_recibido += min(temp_dron.vida, temp_dmg)
+						temp_dron.vida -= temp_dmg
 						if temp_dron.vida <= 0
 							destroy_dron(temp_dron)
 					}
@@ -32,7 +37,7 @@ function explosion(aa = 0, bb = 0, edificio = control.null_edificio, enemigo = t
 							var temp_dron = chunk_enemigos[# a, b][i], dis = distance_sqr(aa, bb, temp_dron.a, temp_dron.b)
 							if dis < radio{//120^2
 								var temp_dmg = dmg / (10 + sqrt(dis))
-								dmg_causado += min(target.vida, temp_dmg)
+								dmg_causado += min(temp_dron.vida, temp_dmg)
 								temp_dron.vida -= temp_dmg
 								if temp_dron.vida <= 0
 									destroy_dron(temp_dron)

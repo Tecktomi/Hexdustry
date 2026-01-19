@@ -4074,9 +4074,9 @@ if pausa = 0{
 						herir_hexagono(target.posa, target.posb, municion.dmg)
 					if target.vida > 0{
 						if target.enemigo
-							dmg_causado += min(municion.dmg, dron_vida_max[target.index] - target.vida)
+							dmg_causado += min(municion.dmg, target.vida)
 						else
-							dmg_recibido += min(municion.dmg, dron_vida_max[target.index] - target.vida)
+							dmg_recibido += min(municion.dmg, target.vida)
 						target.vida -= municion.dmg
 						if target.vida <= 0
 							destroy_dron(target)
@@ -4507,10 +4507,12 @@ if win > 0{
 			if draw_boton(xpos, ypos + 10, L.volver, ui_boton_azul)
 				win -= 10
 			ypos += text_y + 20
-			var show_array = array_create(array_length(recursos_obtenidos_time), array_create(rss_max, 0))
-			for(var a = 0; a < array_length(recursos_obtenidos_time); a++)
+			var show_array = array_create(array_length(recursos_obtenidos_time))
+			for(var a = 0; a < array_length(recursos_obtenidos_time); a++){
+				show_array[a] = array_create(rss_max, 0)
 				for(var b = 0; b < rss_max; b++)
-					show_array[a, b] = recursos_obtenidos_time[a, b]
+					array_set(show_array[a], b, recursos_obtenidos_time[a, b])
+			}
 			for(var a = 0; a < rss_max; a++)
 				if recursos_obtenidos[a] > 0{
 					if usable_rss_bool[a]
@@ -4524,6 +4526,7 @@ if win > 0{
 						usable_rss_bool[a] = not usable_rss_bool[a]
 					ypos += text_y
 				}
+			show_debug_message(show_array)
 			draw_graph(xpos - 200, ypos, 400, 100, show_array, recurso_color)
 		}
 		//Info energía
@@ -4564,11 +4567,11 @@ if win > 0{
 			if enemigos_eliminados > 0
 				ypos = draw_text_ypos(xpos, ypos, $"{L.win_enemigos}: {enemigos_eliminados}")
 			if dmg_causado > 0
-				ypos = draw_text_ypos(xpos, ypos, $"{L.win_dmg_causado}: {dmg_causado}")
+				ypos = draw_text_ypos(xpos, ypos, $"{L.win_dmg_causado}: {num_format(dmg_causado)}")
 			if dmg_recibido > 0
-				ypos = draw_text_ypos(xpos, ypos, $"{L.win_dmg_recibido}: {dmg_recibido}")
+				ypos = draw_text_ypos(xpos, ypos, $"{L.win_dmg_recibido}: {num_format(dmg_recibido)}")
 			if dmg_curado > 0
-				ypos = draw_text_ypos(xpos, ypos, $"{L.win_dmg_curado}: {dmg_curado}")
+				ypos = draw_text_ypos(xpos, ypos, $"{L.win_dmg_curado}: {num_format(dmg_curado)}")
 		}
 		//Victoria
 		if (win mod 10) = 1{

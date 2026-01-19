@@ -1,6 +1,6 @@
 function num_format(numero){
 	if numero < 1000
-		return $"{numero}"
+		return $"{floor(numero)}"
 	else if numero < 1_000_000
 		return $"{floor(numero / 1000)}k"
 	else if numero < 1_000_000_000
