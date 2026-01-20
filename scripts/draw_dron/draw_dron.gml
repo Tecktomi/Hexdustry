@@ -1,6 +1,6 @@
-function draw_dron(dron = control.null_enemigo, enemigo = true){
+function draw_dron(dron = control.null_dron, enemigo = true){
 	with control{
-		var aa = dron.a, bb = dron.b, index = dron.index
+		var aa = dron.x, bb = dron.y, index = dron.index
 		if index = 4{
 			draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir_move)
 			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir)

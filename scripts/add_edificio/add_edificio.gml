@@ -37,7 +37,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			flujo : null_flujo,
 			flujo_link : array_create(0, null_edificio),
 			vida : edificio_vida[index],
-			target : null_enemigo,
+			target : null_dron,
 			flujo_consumo : 0,
 			flujo_consumo_max : edificio_flujo_consumo[index],
 			energia_consumo : 0,
@@ -209,7 +209,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			array_push(edificios_targeteables, edificio)
 			for(var c = array_length(enemigos) - 1; c >= 0; c--){
 				var temp_enemigo = enemigos[c]
-				temp_complex = xytoab(temp_enemigo.a, temp_enemigo.b)
+				temp_complex = xytoab(temp_enemigo.x, temp_enemigo.y)
 				if temp_complex.a >= 0
 					temp_enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
 			}

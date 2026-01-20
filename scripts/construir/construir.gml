@@ -48,7 +48,7 @@ function construir(index, dir, mx, my){
 						break
 					}
 					else
-						delete_edificio(aa, bb)
+						delete_edificio(temp_edificio)
 				}
 			}
 			//Checkear minerales
@@ -66,7 +66,7 @@ function construir(index, dir, mx, my){
 			var size_2 = array_length(enemigos)
 			for(var a = 0; a < size_2; a++){
 				var enemigo = enemigos[a]
-				if (sqr(enemigo.a - temp_complex.a) + sqr(enemigo.b - temp_complex.b)) < 10_000{//100^2
+				if (sqr(enemigo.x - temp_complex.a) + sqr(enemigo.y - temp_complex.b)) < 10_000{//100^2
 					flag = false
 					break
 				}

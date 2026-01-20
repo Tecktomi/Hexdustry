@@ -5,14 +5,6 @@ if menu = 0{
 	maxa = min(xsize, ceil((camx + room_width) / zoom / 48))
 	maxb = min(ysize, ceil((camy + room_height) / zoom / 14))
 	if keyboard_check_pressed(ord("G")){
-		var time = current_time
-		repeat(1_000_000)
-			draw_sprite_off(spr_negro, 0, 10, 10,,,,, 0.3)
-		show_debug_message($"alpha: {current_time - time}")
-		time = current_time
-		repeat(1_000_000)
-			draw_sprite_off(spr_sombra, 3, 10, 10)
-		show_debug_message($"sub: {current_time - time}")
 	}
 	dibujar_fondo(1)
 	draw_set_alpha(0.5)
@@ -843,7 +835,7 @@ if menu = 2{
 				if mouse_check_button_pressed(mb_left){
 					mouse_clear(mb_left)
 					var temp_nucleo = add_edificio(0, 0, mx, my)
-					delete_edificio(nucleo.a, nucleo.b, false)
+					delete_edificio(nucleo, false)
 					nucleo = temp_nucleo
 					editor_herramienta = 0
 				}
@@ -908,7 +900,7 @@ if menu = 2{
 		//Borrar edificio
 		if mouse_check_button_pressed(mb_right) and edificio_bool[# mx, my] and not edificio_id[# mx, my].index = id_nucleo{
 			mouse_clear(mb_right)
-			delete_edificio(mx, my)
+			delete_edificio(nucleo)
 		}
 	}
 	if mouse_check_button_pressed(mb_right){
@@ -2342,7 +2334,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 	if mouse_check_button_pressed(mb_left){
 		var flag_dron = true, min_dis = 900 * sqr(zoom) //(30 / zoom)^2
 		for(var a = array_length(drones_aliados) - 1; a >= 0; a--){
-			var temp_dron = drones_aliados[a], dis = distance_sqr(mouse_x, mouse_y, temp_dron.a * zoom - camx, temp_dron.b * zoom - camy)
+			var temp_dron = drones_aliados[a], dis = distance_sqr(mouse_x, mouse_y, temp_dron.x * zoom - camx, temp_dron.y * zoom - camy)
 			if dis < min_dis{
 				mouse_clear(mb_left)
 				min_dis = dis
@@ -2351,11 +2343,11 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			}
 		}
 		if flag_dron
-			selected_dron = null_enemigo
+			selected_dron = null_dron
 	}
 	if ore[# mx, my] >= 0
 		temp_text += $"{recurso_nombre_display[ore_recurso[ore[# mx, my]]]}: {ore_amount[# mx, my]}\n"
-	if edificio_bool[# mx, my]{
+	if edificio_bool[# mx, my] and not edificio.enemigo{
 		var index = edificio.index
 		if not edificio_inerte[index] and edificio.punteros[4] = -1{
 			draw_sprite_off(spr_diseneabled, 0, edificio.center_x, edificio.center_y)
@@ -2557,7 +2549,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			draw_circle_off(edificio.center_x, edificio.center_y, alc, true)
 			if index = id_mortero
 				draw_circle_off(edificio.center_x, edificio.center_y, 100, true)
-			if edificio.target != null_enemigo
+			if edificio.target != null_dron
 				draw_sprite_off(spr_target, 0, edificio.target.a, edificio.target.b)
 			if info{
 				draw_set_alpha(0.3)
@@ -2721,8 +2713,8 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 				var flag_3 = false, size_2 = array_length(enemigos)
 				for(var a = 0; a < size_2; a++){
 					var enemigo = enemigos[a]
-					draw_circle_off(enemigo.a, enemigo.b, 100, true)
-					if not flag_3 and (sqr(mouse_x - enemigo.a + camx) + sqr(mouse_y - enemigo.b + camy)) < 10000{//100^2
+					draw_circle_off(enemigo.x, enemigo.y, 100, true)
+					if not flag_3 and (sqr(mouse_x - enemigo.x + camx) + sqr(mouse_y - enemigo.y + camy)) < 10000{//100^2
 						temp_text_2 += $"{L.construir_enemigos_cerca}\n"
 						comprable = false
 						flag_3 = true
@@ -2743,16 +2735,16 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 	}
 	draw_text_background(0, 0, temp_text)
 }
-if selected_dron != null_enemigo{
+if selected_dron != null_dron{
 	draw_set_color(c_white)
-	draw_circle_off(selected_dron.a, selected_dron.b, 30, true)
+	draw_circle_off(selected_dron.x, selected_dron.y, 30, true)
 	if mouse_check_button_pressed(mb_right) and in(selected_dron.index, 3, 5, 7){
-		var dis = distance(selected_dron.a, selected_dron.b, xmouse, ymouse)
+		var dis = distance(selected_dron.x, selected_dron.y, xmouse, ymouse)
 		mouse_clear(mb_right)
 		selected_dron.modo = 1
-		selected_dron.array_real[2] = dis
-		selected_dron.array_real[0] = (xmouse - selected_dron.a) / dis
-		selected_dron.array_real[1] = (ymouse - selected_dron.b) / dis
+		selected_dron.xrray_real[2] = dis
+		selected_dron.xrray_real[0] = (xmouse - selected_dron.x) / dis
+		selected_dron.xrray_real[1] = (ymouse - selected_dron.y) / dis
 	}
 }
 if puerto_carga_bool or procesador_select != null_edificio{
@@ -2882,7 +2874,7 @@ if sonido
 if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastchar, "A", "D", "W", "S", " ") or cheat) and win = 0 and not show_menu{
 	for(var a = 1; a < edificio_max; a++)
 		if edificio_key[a] != "" and string_ends_with(keyboard_string, edificio_key[a]) and (cheat or edificio_tecnologia[a] or not tecnologia){
-			selected_dron = null_enemigo
+			selected_dron = null_dron
 			keyboard_string = ""
 			build_index = a
 			build_menu = 0
@@ -3022,7 +3014,6 @@ if build_index > 0 and win = 0{
 							nucleo.carga[temp_precio_id[a]] -= temp_precio_num[a]
 						temp_edificio.modulo = true
 						mouse_clear(mb_left)
-						build_index = 0
 					}
 				}
 			}
@@ -3045,8 +3036,8 @@ if build_index > 0 and win = 0{
 				var flag_3 = false
 				for(var a = array_length(enemigos) - 1; a >= 0; a--){
 					var enemigo = enemigos[a]
-					draw_circle_off(enemigo.a, enemigo.b, 100, true)
-					if not flag_3 and distance_sqr(mouse_x, mouse_y, enemigo.a * zoom - camx, enemigo.b * zoom - camy) < 10000 * sqr(zoom){//100^2
+					draw_circle_off(enemigo.x, enemigo.y, 100, true)
+					if not flag_3 and distance_sqr(mouse_x, mouse_y, enemigo.x * zoom - camx, enemigo.y * zoom - camy) < 10000 * sqr(zoom){//100^2
 						temp_text += $"{L.construir_enemigos_cerca}\n"
 						comprable = false
 						flag_3 = true
@@ -3630,10 +3621,9 @@ if build_index > 0 and win = 0{
 //Destruir edificio
 else{
 	clicked = false
-	if ((mouse_check_button(mb_right) and prev_change) or mouse_check_button_pressed(mb_right)) and not outside and edificio_bool[# mx, my] and edificio.index != id_nucleo{
-		if edificio_bool[# mx, my]
-			prev_change = true
-		delete_edificio(mx, my)
+	if ((mouse_check_button(mb_right) and prev_change) or mouse_check_button_pressed(mb_right)) and not outside and edificio_bool[# mx, my] and edificio.index != id_nucleo and not edificio.enemigo{
+		prev_change = true
+		delete_edificio(edificio)
 	}
 }
 var temp_text_right = ""
@@ -3680,7 +3670,7 @@ if pausa = 0{
 		//Ciclo de los enemigos
 		var cam_center_x = (camx + room_width * zoom / 2), cam_center_y = (camy + room_height * zoom / 2)
 		for(var a = array_length(enemigos) - 1; a >= 0; a--){
-			var dron = enemigos[a], aa = dron.a, bb = dron.b, index = dron.index, vel = dron_vel[index]
+			var dron = enemigos[a], aa = dron.x, bb = dron.y, index = dron.index, vel = dron_vel[index]
 			draw_dron(dron, true)
 			if distance_sqr(cam_center_x, cam_center_y, aa, bb) > 250_000{
 				draw_set_color(c_red)
@@ -3700,7 +3690,7 @@ if pausa = 0{
 						dron.vida -= dmg
 						if grafic_humo and (image_index mod 10) = (a mod 10){
 							var dir = direccion_viento + random_range(-pi / 4, pi / 4)
-							array_push(humos, add_humo(aa, bb, dron.posa, dron.posb, cos(dir) / 2, sin(dir) / 2, irandom_range(40, 70)))
+							array_push(humos, add_humo(aa, bb, dron.a, dron.b, cos(dir) / 2, sin(dir) / 2, irandom_range(40, 70)))
 						}
 					}
 				}
@@ -3709,13 +3699,13 @@ if pausa = 0{
 				continue
 			}
 			if aa < 0
-				dron.a++
+				dron.x++
 			else if aa > xsize * 48
-				dron.a--
+				dron.x--
 			if bb < 0
-				dron.b++
+				dron.y++
 			else if bb > ysize * 14
-				dron.b--
+				dron.y--
 			if dron.target != null_edificio and dron.target.vida <= 0
 				dron.target = null_edificio
 			if in(index, idd_arana, idd_tanque, idd_titan){
@@ -3735,10 +3725,12 @@ if pausa = 0{
 					}
 				}
 			}
-			if not dron_aereo[index] and terreno[# dron.posa, dron.posb] = idt_hielo
+			if not dron_aereo[index] and terreno[# dron.a, dron.b] = idt_hielo
 				vel *= 1.2
 			//Target edificios y drones
 			if dron.target != null_edificio{
+				var minu = max(0, dron.chunk_x - dron_alcance_chunk_x[index]), maxu = min(chunk_xsize - 1, dron.chunk_x + dron_alcance_chunk_x[index])
+				var minv = max(0, dron.chunk_y - dron_alcance_chunk_y[index]), maxv = min(chunk_ysize - 1, dron.chunk_y + dron_alcance_chunk_y[index])
 				edificio = dron.target
 				if index != idd_bombardero
 					dron.dir = (9 * dron.dir + radtodeg(arctan2(edificio.center_y - bb, aa - edificio.center_x))) / 10
@@ -3763,7 +3755,6 @@ if pausa = 0{
 									ds_grid_set(edificio_cercano_dir, aaa, bbb, i)
 									temp_complex = abtoxy(aaaa, bbbb)
 									min_dis_eu = distance_sqr(temp_complex.a, temp_complex.b, edificio.center_x, edificio.center_y)
-							
 								}
 								else if disi = min_dis{
 									temp_complex = abtoxy(aaaa, bbbb)
@@ -3781,8 +3772,8 @@ if pausa = 0{
 							dir = edificio_cercano_dir[# aaa, bbb]
 						if dir = -1
 							dir = 0
-						dron.a += vel * cos_angle_dir[dir]
-						dron.b -= vel * sin_angle_dir[dir]
+						dron.x += vel * cos_angle_dir[dir]
+						dron.y -= vel * sin_angle_dir[dir]
 						if index = idd_tanque
 							dron.dir_move += angle_difference(dron.dir_move, radtodeg(arctan2(sin_angle_dir[dir], cos_angle_dir[dir]))) / 100
 					}
@@ -3792,18 +3783,18 @@ if pausa = 0{
 						if dron.step > 0
 							dron.step--
 						else{
-							dir = point_direction(dron.a, dron.b, edificio.center_x, edificio.center_y)
+							dir = point_direction(dron.x, dron.y, edificio.center_x, edificio.center_y)
 							var diff = angle_difference(dir, dron.dir)
 							diff += random_range(-0.01, 0.01)
 							dron.dir += 0.03 * diff
 						}
-						dron.a += lengthdir_x(3, dron.dir)
-						dron.b += lengthdir_y(3, dron.dir)
+						dron.x += lengthdir_x(3, dron.dir)
+						dron.y += lengthdir_y(3, dron.dir)
 					}
 					else if index = 3 or dis > 10_000{//100^2
 						var dis_2 = sqrt(dis)
-						dron.a += vel * (edificio.center_x - dron.a) / dis_2
-						dron.b += vel * (edificio.center_y - dron.b) / dis_2
+						dron.x += vel * (edificio.center_x - dron.x) / dis_2
+						dron.y += vel * (edificio.center_y - dron.y) / dis_2
 					}
 				}
 				if dis < dron_alcance[index]{
@@ -3813,38 +3804,46 @@ if pausa = 0{
 				}
 				//Targetear unidades
 				else if array_length(drones_aliados) > 0{
-					var closest_dron = null_enemigo, closest_dis = dron_alcance[dron.index]
-					for(var b = array_length(drones_aliados) - 1; b >= 0; b--){
-						var temp_dron = drones_aliados[b], temp_dis = distance_sqr(aa, bb, temp_dron.a, temp_dron.b)
-						if temp_dis < closest_dis{
-							closest_dis = temp_dis
-							closest_dron = temp_dron
+					if dron.temp_target_dron = null_dron{
+						if (image_index mod 10) = (a mod 10){
+							var closest_dis = dron_alcance[dron.index]
+							for(var u = minu; u <= maxu; u++)
+								for(var v = minv; v <= maxv; v++){
+									var chunk = chunk_dron_aliado[# u, v]
+									for(var i = array_length(chunk) - 1; i >= 0; i--){
+										var temp_dron = chunk[i], temp_dis = distance_sqr(aa, bb, temp_dron.x, temp_dron.y)
+										if temp_dis < closest_dis{
+											closest_dis = temp_dis
+											dron.temp_target_dron = temp_dron
+										}
+									}
+								}
 						}
 					}
-					if closest_dron != null_enemigo{
+					else{
 						ataque = true
-						if atacar_dron(dron,, closest_dron)
+						if atacar_dron(dron,, dron.temp_target_dron)
 							continue
 					}
 				}
 				//Targetear edificios
 				if ataque = false{
 					if dron.temp_target = null_edificio{
-						var closest_dis = dron_alcance[index]
-						var minu = max(0, dron.chunk_x - dron_alcance_chunk_x[index]), maxu = min(chunk_xsize - 1, dron.chunk_x + dron_alcance_chunk_x[index])
-						var minv = max(0, dron.chunk_y - dron_alcance_chunk_y[index]), maxv = min(chunk_ysize - 1, dron.chunk_y + dron_alcance_chunk_y[index])
-						for(var u = minu; u <= maxu; u++)
-							for(var v = minv; v <= maxv; v++){
-								var chunk = chunk_edificios[# u, v]
-								for(var i = array_length(chunk) - 1; i >= 0; i--){
-									edificio = chunk[i]
-									dis = distance_sqr(aa, bb, edificio.center_x, edificio.center_y)
-									if dis < closest_dis{
-										dron.temp_target = edificio
-										closest_dis = dis
+						if (image_index mod 10) = (a + 5 mod 10){
+							var closest_dis = dron_alcance[index]
+							for(var u = minu; u <= maxu; u++)
+								for(var v = minv; v <= maxv; v++){
+									var chunk = chunk_edificios[# u, v]
+									for(var i = array_length(chunk) - 1; i >= 0; i--){
+										edificio = chunk[i]
+										dis = distance_sqr(aa, bb, edificio.center_x, edificio.center_y)
+										if dis < closest_dis{
+											dron.temp_target = edificio
+											closest_dis = dis
+										}
 									}
 								}
-							}
+						}
 					}
 					else{
 						edificio = dron.temp_target
@@ -3868,22 +3867,22 @@ if pausa = 0{
 			//Alejarse de los enemigos cercanos
 			var temp_dron_size = dron_size[index], temp_array = chunk_dron_enemigo[# dron.chunk_x, dron.chunk_y]
 			for(var b = array_length(temp_array) - 1; b >= 0; b--){
-				var temp_enemigo = temp_array[b], dis = max(0.01, distance_sqr(aa, bb, temp_enemigo.a, temp_enemigo.b))
+				var temp_enemigo = temp_array[b], dis = max(0.01, distance_sqr(aa, bb, temp_enemigo.x, temp_enemigo.y))
 				if dis < temp_dron_size{
-					var aaa = sign(aa - temp_enemigo.a), bbb = sign(bb - temp_enemigo.b)
-					dron.a += aaa
-					dron.b += bbb
-					temp_enemigo.a -= aaa
-					temp_enemigo.b -= bbb
+					var aaa = sign(aa - temp_enemigo.x), bbb = sign(bb - temp_enemigo.y)
+					dron.x += aaa
+					dron.y += bbb
+					temp_enemigo.x -= aaa
+					temp_enemigo.y -= bbb
 				}
 			}
 			//Cambiar de chunk
 			var temp_complex = xytoab(aa, bb)
 			aa = temp_complex.a
 			bb = temp_complex.b
-			if aa != dron.posa or bb != dron.posb{
-				dron.posa = aa
-				dron.posb = bb
+			if aa != dron.a or bb != dron.b{
+				dron.a = aa
+				dron.b = bb
 				if not dron_aereo[index] and array_length(edificios) > 0 and terreno_caminable[terreno[# aa, bb]]
 					dron.target = edificio_cercano[# aa, bb]
 				var chunk_x = clamp(round(aa / chunk_width), 0, chunk_xsize - 1), chunk_y = clamp(round(bb / chunk_height), 0, chunk_ysize - 1)
@@ -3897,11 +3896,11 @@ if pausa = 0{
 		}
 		for(var a = array_length(enemigos) - 1; a >= 0; a--){
 			var dron = enemigos[a]
-			draw_vida(dron.a * zoom - camx, dron.b * zoom - camy, dron.vida, dron.vida_max)
+			draw_vida(dron.x * zoom - camx, dron.y * zoom - camy, dron.vida, dron.vida_max)
 		}
 		//Ciclo drones aliados
 		for(var a = array_length(drones_aliados) - 1; a >= 0; a--){
-			var dron = drones_aliados[a], aa = dron.a, bb = dron.b, index = dron.index, vel = dron_vel[index]
+			var dron = drones_aliados[a], aa = dron.x, bb = dron.y, index = dron.index, vel = dron_vel[index]
 			draw_dron(dron, false)
 			//Efectos
 			for(var b = 0; b < efectos_max; b++)
@@ -3917,7 +3916,7 @@ if pausa = 0{
 						dron.vida -= dmg
 						if grafic_humo and (image_index mod 10) = (a mod 10){
 							var dir = direccion_viento + random_range(-pi / 4, pi / 4)
-							array_push(humos, add_humo(aa, bb, dron.posa, dron.posb, cos(dir) / 2, sin(dir) / 2, irandom_range(40, 70)))
+							array_push(humos, add_humo(aa, bb, dron.a, dron.b, cos(dir) / 2, sin(dir) / 2, irandom_range(40, 70)))
 						}
 					}
 				}
@@ -3925,7 +3924,7 @@ if pausa = 0{
 				array_disorder_remove(drones_aliados, dron, 0)
 				continue
 			}
-			if not dron_aereo[index] and terreno[# dron.posa, dron.posb] = idt_hielo
+			if not dron_aereo[index] and terreno[# dron.a, dron.b] = idt_hielo
 				vel *= 1.2
 			//Dron de Transporte
 			if index = idd_dron{
@@ -3941,8 +3940,8 @@ if pausa = 0{
 						if dis > dron_alcance[dron.index]{
 							dis = sqrt(dis)
 							dron.dir = (9 * dron.dir + radtodeg(arctan2(edificio.center_y - bb, aa - edificio.center_x))) / 10
-							dron.a += vel * (edificio.center_x - aa) / dis
-							dron.b += vel * (edificio.center_y - bb) / dis
+							dron.x += vel * (edificio.center_x - aa) / dis
+							dron.y += vel * (edificio.center_y - bb) / dis
 						}
 						else{
 							if dron.modo = 1{
@@ -3997,8 +3996,8 @@ if pausa = 0{
 					var dis = distance_sqr(aa, bb, edificio.center_x, edificio.center_y)
 					if dis > dron_alcance[dron.index]{
 						dron.dir = (9 * dron.dir + radtodeg(arctan2(edificio.center_y - bb, aa - edificio.center_x))) / 10
-						dron.a += vel * (edificio.center_x - aa) / dis
-						dron.b += vel * (edificio.center_y - bb) / dis
+						dron.x += vel * (edificio.center_x - aa) / dis
+						dron.y += vel * (edificio.center_y - bb) / dis
 					}
 					else{
 						draw_set_color(c_green)
@@ -4010,46 +4009,54 @@ if pausa = 0{
 			}
 			//Drones aereos
 			else if dron_aereo[index]{
+				var minu = max(0, dron.chunk_x - dron_alcance_chunk_x[index]), maxu = min(chunk_xsize - 1, dron.chunk_x + dron_alcance_chunk_x[index])
+				var minv = max(0, dron.chunk_y - dron_alcance_chunk_y[index]), maxv = min(chunk_ysize - 1, dron.chunk_y + dron_alcance_chunk_y[index])
 				var ataque = false
 				if index = idd_bombardero and dron.step > 0
 					dron.step--
 				//Seguir instrucciones
 				if dron.modo = 1{
-					dron.dir = (9 * dron.dir + radtodeg(arctan2(dron.array_real[1], -dron.array_real[0]))) / 10
-					dron.a += vel * dron.array_real[0]
-					dron.b += vel * dron.array_real[1]
-					dron.array_real[2] -= 2
-					if dron.array_real[2] <= 0
+					dron.dir = (9 * dron.dir + radtodeg(arctan2(dron.xrray_real[1], -dron.xrray_real[0]))) / 10
+					dron.x += vel * dron.xrray_real[0]
+					dron.y += vel * dron.xrray_real[1]
+					dron.xrray_real[2] -= 2
+					if dron.xrray_real[2] <= 0
 						dron.modo = 0
 				}
 				//Atacar unidades
 				if array_length(enemigos) > 0{
-					var closest_dron = null_enemigo, closest_dis = dron_alcance[dron.index]
-					for(var b = array_length(enemigos) - 1; b >= 0; b--){
-						var temp_dron = enemigos[b], temp_dis = distance_sqr(aa, bb, temp_dron.a, temp_dron.b)
-						if temp_dis < closest_dis{
-							closest_dis = temp_dis
-							closest_dron = temp_dron
+					if dron.temp_target_dron = null_dron{
+						if (image_index mod 10) = (a mod 10){
+							var closest_dis = dron_alcance[dron.index]
+							for(var u = minu; u <= maxu; u++)
+								for(var v = minv; v <= maxv; v++){
+									var chunk = chunk_dron_enemigo[# u, v]
+									for(var i = array_length(chunk) - 1; i >= 0; i--){
+										var temp_dron = chunk[i], temp_dis = distance_sqr(aa, bb, temp_dron.x, temp_dron.y)
+										if temp_dis < closest_dis{
+											closest_dis = temp_dis
+											dron.temp_target_dron = temp_dron
+										}
+									}
+								}
 						}
 					}
-					if closest_dron != null_enemigo{
-						if atacar_dron(dron,,, closest_dron)
-							continue
+					else{
 						ataque = true
+						if atacar_dron(dron,, dron.temp_target_dron)
+							continue
 					}
 				}
 				//Atacar edificios
-				if ataque = false and array_length(edificios_enemigos) > 0{
+				if ataque = false and array_length(edificios_enemigos) > 0 and (image_index mod 10) = ((a + 5) mod 10){
 					if dron.temp_target = null_edificio{
 						var closest_dis = dron_alcance[index]
-						var minu = max(0, dron.chunk_x - dron_alcance_chunk_x[index]), maxu = min(chunk_xsize - 1, dron.chunk_x + dron_alcance_chunk_x[index])
-						var minv = max(0, dron.chunk_y - dron_alcance_chunk_y[index]), maxv = min(chunk_ysize - 1, dron.chunk_y + dron_alcance_chunk_y[index])
 						for(var u = minu; u <= maxu; u++)
 							for(var v = minv; v <= maxv; v++){
 								var chunk = chunk_edificios_enemigo[# u, v]
 								for(var i = array_length(chunk) - 1; i >= 0; i--){
 									edificio = chunk[i]
-									dis = distance_sqr(aa, bb, edificio.center_x, edificio.center_y)
+									var dis = distance_sqr(aa, bb, edificio.center_x, edificio.center_y)
 									if dis < closest_dis{
 										dron.temp_target = edificio
 										closest_dis = dis
@@ -4062,7 +4069,7 @@ if pausa = 0{
 						if edificio.vida <= 0
 							dron.temp_target = null_edificio
 						else{
-							dis = distance_sqr(aa, bb, edificio.center_x, edificio.center_y)
+							var dis = distance_sqr(aa, bb, edificio.center_x, edificio.center_y)
 							if index != idd_bombardero
 								dron.dir = (9 * dron.dir + radtodeg(arctan2(edificio.center_y - bb, aa - edificio.center_x))) / 10
 							if dis > dron_alcance[index]
@@ -4079,22 +4086,22 @@ if pausa = 0{
 			//Evitar colisiones
 			var temp_dron_size = dron_size[index], temp_array = chunk_dron_aliado[# dron.chunk_x, dron.chunk_y]
 			for(var b = array_length(temp_array) - 1; b >= 0; b--){
-				var temp_dron = temp_array[b], dis = max(0.01, distance_sqr(aa, bb, temp_dron.a, temp_dron.b))
+				var temp_dron = temp_array[b], dis = max(0.01, distance_sqr(aa, bb, temp_dron.x, temp_dron.y))
 				if dis < temp_dron_size{
-					var aaa = (aa - temp_dron.a) / dis, bbb = (bb - temp_dron.b) / dis
-					dron.a += aaa
-					dron.b += bbb
-					temp_dron.a -= aaa
-					temp_dron.b -= bbb
+					var aaa = (aa - temp_dron.x) / dis, bbb = (bb - temp_dron.y) / dis
+					dron.x += aaa
+					dron.y += bbb
+					temp_dron.x -= aaa
+					temp_dron.y -= bbb
 				}
 			}
 			//Cambiar de chunk
 			var temp_complex = xytoab(aa, bb)
 			aa = temp_complex.a
 			bb = temp_complex.b
-			if aa != dron.posa or bb != dron.posb{
-				dron.posa = aa
-				dron.posb = bb
+			if aa != dron.a or bb != dron.b{
+				dron.a = aa
+				dron.b = bb
 				var chunk_x = clamp(round(aa / chunk_width), 0, chunk_xsize - 1), chunk_y = clamp(round(bb / chunk_height), 0, chunk_ysize - 1)
 				if chunk_x != dron.chunk_x or chunk_y != dron.chunk_y{
 					dron_chunk_remove(dron)
@@ -4106,7 +4113,7 @@ if pausa = 0{
 		}
 		for(var a = array_length(drones_aliados) - 1; a >= 0; a--){
 			var dron = drones_aliados[a]
-			draw_vida(dron.a * zoom - camx, dron.b * zoom - camy, dron.vida, dron.vida_max)
+			draw_vida(dron.x * zoom - camx, dron.y * zoom - camy, dron.vida, dron.vida_max)
 		}
 		//Ciclo de disparos
 		draw_set_color(c_black)
@@ -4125,13 +4132,13 @@ if pausa = 0{
 				municiones[a--] = municiones[array_length(municiones) - 1]
 				array_pop(municiones)
 				//Daño unidad
-				if target != null_enemigo and target.vida > 0{
+				if target != null_dron and target.vida > 0{
 					//Daño fuego
 					if municion.tipo = 2
 						target.efecto[1] = 60
 					//Daño área
 					else
-						herir_hexagono(target.posa, target.posb, municion.dmg)
+						herir_hexagono(target.a, target.b, municion.dmg)
 					if target.vida > 0{
 						if target.enemigo
 							dmg_causado += min(municion.dmg, target.vida)
@@ -4401,7 +4408,7 @@ if win = 0 and not show_menu{
 			if pausa > 0
 				pausa = 0
 			else{
-				selected_dron = null_enemigo
+				selected_dron = null_dron
 				pausa = 1
 				build_index = 0
 				show_menu = false

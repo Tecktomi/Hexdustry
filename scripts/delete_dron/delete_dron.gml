@@ -1,4 +1,4 @@
-function delete_dron(dron = control.null_enemigo){
+function delete_dron(dron = control.null_dron){
 	with control{
 		var enemigo = dron.enemigo
 		dron_chunk_remove(dron)
@@ -13,7 +13,7 @@ function delete_dron(dron = control.null_enemigo){
 				for(var i = array_length(dron.torres) - 1; i >= 0; i--){
 					var edificio = dron.torres[i]
 					if edificio.target = dron{
-						edificio.target = null_enemigo
+						edificio.target = null_dron
 						if edificio.index = id_mortero
 							turret_target(edificio, 10_000)//100^2
 						else
@@ -24,21 +24,21 @@ function delete_dron(dron = control.null_enemigo){
 			else for(var i = array_length(dron.torres) - 1; i >= 0; i--){
 				var edificio = dron.torres[i]
 				if edificio.target = dron
-					edificio.target = null_enemigo
+					edificio.target = null_dron
 			}
 		}
 		//Dron aliado
 		else{
 			drones_perdidos++
 			if selected_dron = dron
-				selected_dron = null_enemigo
+				selected_dron = null_dron
 			array_disorder_remove(drones_aliados, dron, 0)
 			//Cambiar target de torres
 			if array_length(drones_aliados) > 0{
 				for(var i = array_length(dron.torres) - 1; i >= 0; i--){
 					var edificio = dron.torres[i]
 					if edificio.target = dron{
-						edificio.target = null_enemigo
+						edificio.target = null_dron
 						if edificio.index = id_mortero
 							turret_target(edificio, 10_000)//100^2
 						else
@@ -49,18 +49,18 @@ function delete_dron(dron = control.null_enemigo){
 			else for(var i = array_length(dron.torres) - 1; i >= 0; i--){
 				var edificio = dron.torres[i]
 				if edificio.target = dron
-					edificio.target = null_enemigo
+					edificio.target = null_dron
 			}
 		}
 		//Ser reciclado
 		for(var a = array_length(plantas_de_reciclaje) - 1; a >= 0; a--){
 			var edificio = plantas_de_reciclaje[a]
-			if edificio.select = -1 and distance_sqr(dron.a, dron.b, edificio.center_x, edificio.center_y) < 62_500{ //250^2
+			if edificio.select = -1 and distance_sqr(dron.x, dron.y, edificio.center_x, edificio.center_y) < 62_500{ //250^2
 				edificio.select = dron.index
 				break
 			}
 		}
-		array_push(efectos, add_efecto(spr_arana_muerta, 0, dron.a, dron.b, 5, 1))
+		array_push(efectos, add_efecto(spr_arana_muerta, 0, dron.x, dron.y, 5, 1))
 		dron.vida = 0
 		delete dron
 	}

@@ -2,17 +2,18 @@ function add_dron(a, b, index, enemigo = true){
 	with control{
 		var temp_complex = abtoxy(a, b)
 		var dron = {
-			a : temp_complex.a + random_range(-4, 4),
-			b : temp_complex.b + random_range(-4, 4),
+			x : temp_complex.a + random_range(-4, 4),
+			y : temp_complex.b + random_range(-4, 4),
 			index : real(index),
 			vida : dron_vida_max[index],
 			vida_max : dron_vida_max[index],
 			target : null_edificio,
 			temp_target : null_edificio,
+			temp_target_dron : null_dron,
 			chunk_x : clamp(round(a / chunk_width), 0, chunk_xsize - 1),
 			chunk_y : clamp(round(b / chunk_height), 0, chunk_ysize - 1),
-			posa : a,
-			posb : b,
+			a : a,
+			b : b,
 			carga : array_create(rss_max, 0),
 			carga_total : 0,
 			modo : 0,

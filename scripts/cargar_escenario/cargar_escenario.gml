@@ -115,7 +115,7 @@ function cargar_escenario(file = "", config = true){
 					ds_grid_set(ore, a, b, ini_read_real("Ore", $"{a},{b}", -1))
 					ds_grid_set(ore_amount, a, b, ini_read_real("Ore amount", $"{a},{b}", 0))
 				}
-			delete_edificio(nucleo.a, nucleo.b, false)
+			delete_edificio(nucleo, false)
 			for(var a = 0; a < xsize; a++)
 				for(var b = 0; b < ysize; b++){
 					var temp_priority = ds_grid_get(edificio_cercano_priority, a, b)
