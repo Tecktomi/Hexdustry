@@ -12,7 +12,7 @@ function explosion(aa = 0, bb = 0, edificio = control.null_edificio, enemigo = t
 					for(var b = max(chunk_y - 1, 0); b <= maxb; b++)
 						for(var i = array_length(chunk_edificios[# a, b]) - 1; i >= 0; i--){
 							edificio = chunk_edificios[# a, b][i]
-							var dis = distance_sqr(aa, bb, edificio.x, edificio.y)
+							var dis = distance_sqr(aa, bb, edificio.center_x, edificio.center_y)
 							if dis < radio{//120^2
 								var temp_dmg = dmg / (10 + sqrt(dis))
 								dmg_recibido += min(temp_dmg, edificio.vida)
@@ -26,21 +26,32 @@ function explosion(aa = 0, bb = 0, edificio = control.null_edificio, enemigo = t
 						dmg_recibido += min(temp_dron.vida, temp_dmg)
 						temp_dron.vida -= temp_dmg
 						if temp_dron.vida <= 0
-							destroy_dron(temp_dron)
+							delete_dron(temp_dron)
 					}
 				}
 			}
 			else{
 				for(var a = max(chunk_x - 1, 0); a <= maxa; a++)
 					for(var b = max(chunk_y - 1, 0); b <= maxb; b++)
-						for(var i = array_length(chunk_enemigos[# a, b]) - 1; i >= 0; i--){
-							var temp_dron = chunk_enemigos[# a, b][i], dis = distance_sqr(aa, bb, temp_dron.a, temp_dron.b)
+						for(var i = array_length(chunk_edificios_enemigo[# a, b]) - 1; i >= 0; i--){
+							edificio = chunk_edificios_enemigo[# a, b][i]
+							var dis = distance_sqr(aa, bb, edificio.center_x, edificio.center_y)
+							if dis < radio{//120^2
+								var temp_dmg = dmg / (10 + sqrt(dis))
+								dmg_causado += min(temp_dmg, edificio.vida)
+								edificio_herir(edificio, temp_dmg)
+							}
+						}
+				for(var a = max(chunk_x - 1, 0); a <= maxa; a++)
+					for(var b = max(chunk_y - 1, 0); b <= maxb; b++)
+						for(var i = array_length(chunk_dron_enemigo[# a, b]) - 1; i >= 0; i--){
+							var temp_dron = chunk_dron_enemigo[# a, b][i], dis = distance_sqr(aa, bb, temp_dron.a, temp_dron.b)
 							if dis < radio{//120^2
 								var temp_dmg = dmg / (10 + sqrt(dis))
 								dmg_causado += min(temp_dron.vida, temp_dmg)
 								temp_dron.vida -= temp_dmg
 								if temp_dron.vida <= 0
-									destroy_dron(temp_dron)
+									delete_dron(temp_dron)
 							}
 						}
 			}

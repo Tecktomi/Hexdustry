@@ -23,7 +23,7 @@ function scr_silo_misiles(edificio = control.null_edificio){
 			change_flujo(0, edificio)
 		else{
 			change_flujo(edificio_flujo_consumo[index], edificio)
-			if edificio.flujo.liquido = 2
+			if edificio.flujo.liquido = idl_petroleo
 				edificio.select += 4 * flujo_power
 		}
 		if edificio.fuel = 0 and ((edificio.proceso >= edificio_proceso[index] and edificio.select >= 4000) or (cheat and string_ends_with(keyboard_string, "misil"))){
@@ -36,8 +36,8 @@ function scr_silo_misiles(edificio = control.null_edificio){
 			win = 1
 			mision_camara_step = 60
 			mision_actual = 0
-			mision_camara_x[0] = edificio.x
-			mision_camara_y[0] = edificio.y
+			mision_camara_x[0] = edificio.center_x
+			mision_camara_y[0] = edificio.center_y
 			mision_camara_x_start = camx
 			mision_camara_y_start = camy
 			change_energia(0, edificio)
@@ -47,7 +47,7 @@ function scr_silo_misiles(edificio = control.null_edificio){
 			if --edificio.fuel > 300
 				for(var a = 0; a < 2; a++){
 					var dir = random_range(a * pi, (a + 1) * pi)
-					array_push(humos, add_humo(edificio.x + 8, edificio.y + 14, edificio.a, edificio.b, cos(dir), sin(dir), irandom_range(120, 180)))
+					array_push(humos, add_humo(edificio.center_x, edificio.center_y, edificio.a, edificio.b, cos(dir), sin(dir), irandom_range(120, 180)))
 				}
 			if edificio.fuel = 0{
 				nuclear_x = -1

@@ -28,14 +28,13 @@ function add_dron(a, b, index, enemigo = true){
 			//0 = [enemigos, aliados], 1 = chunk_pointer
 			punteros : array_create(2, 0),
 		}
-		if enemigo{
+		if enemigo
 			array_disorder_push(enemigos, dron, 0)
-			dron_chunk_push(dron)
-		}
 		else{
 			array_disorder_push(drones_aliados, dron, 0)
 			drones_construidos++
 		}
+		dron_chunk_push(dron)
 		return dron
 	}
 }

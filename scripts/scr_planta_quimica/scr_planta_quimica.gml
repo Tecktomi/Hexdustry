@@ -9,9 +9,9 @@ function scr_planta_quimica(edificio = control.null_edificio){
 			if edificio.fuel = 0
 				change_flujo(0, edificio)
 		}
-		if (edificio.select = 0 and edificio.carga[id_piedra_sulfatada] > 0 and in(flujo.liquido, -1, 1) and flujo.almacen < flujo.almacen_max) or
-			(edificio.select = 1 and flujo.liquido = 1 and edificio.carga[id_combustible] > 0 and edificio.carga[id_explosivo] < 10) or
-			(edificio.select = 2 and flujo.liquido = 1 and edificio.carga[id_cobre] > 0 and edificio.carga[id_baterias] < 10){
+		if (edificio.select = 0 and edificio.carga[idr_piedra_sulfatada] > 0 and in(flujo.liquido, -1, idl_acido) and flujo.almacen < flujo.almacen_max) or
+			(edificio.select = 1 and flujo.liquido = idl_acido and edificio.carga[idr_combustible] > 0 and edificio.carga[idr_explosivo] < 10) or
+			(edificio.select = 2 and flujo.liquido = idl_acido and edificio.carga[idr_cobre] > 0 and edificio.carga[idr_bateria] < 10){
 			//Apagar
 			if edificio.energia_consumo_max > 0 and red_power = 0{
 				change_flujo(0, edificio)
@@ -25,8 +25,8 @@ function scr_planta_quimica(edificio = control.null_edificio){
 				if edificio.flujo_consumo_max > 0
 					change_flujo(edificio.flujo_consumo_max, edificio)
 				edificio.start = true
-				if edificio.carga[id_sal] > 0{
-					edificio.carga[id_sal] -= 0.1
+				if edificio.carga[idr_sal] > 0{
+					edificio.carga[idr_sal] -= 0.1
 					edificio.carga_total -= 0.1
 					edificio.proceso += floor(edificio_proceso[index] / 4)
 				}
@@ -42,21 +42,21 @@ function scr_planta_quimica(edificio = control.null_edificio){
 			if edificio.proceso >= edificio_proceso[index]{
 				//Ácido
 				if edificio.select = 0{
-					edificio.carga[id_piedra_sulfatada]--
+					edificio.carga[idr_piedra_sulfatada]--
 					edificio.carga_total--
-					flujo.liquido = 1
+					flujo.liquido = idl_acido
 					edificio.fuel = 60
 					mover_in(edificio)
 				}
 				//Explosivo
 				else if edificio.select = 1{
-					edificio.carga[id_combustible]--
-					edificio.carga[id_explosivo]++
+					edificio.carga[idr_combustible]--
+					edificio.carga[idr_explosivo]++
 				}
 				//Baterías
 				else if edificio.select = 2{
-					edificio.carga[id_cobre] -= 2
-					edificio.carga[id_baterias]++
+					edificio.carga[idr_cobre] -= 2
+					edificio.carga[idr_bateria]++
 					edificio.carga_total--
 				}
 				if edificio.flujo_consumo_max > 0

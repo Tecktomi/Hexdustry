@@ -4,10 +4,10 @@ function scr_perforadora_petroleo(edificio = control.null_edificio){
 		var red = edificio.red, red_power = red.eficiencia
 		var flujo = edificio.flujo
 		//Está encendido
-		if in(flujo.liquido, -1, 2) and red_power > 0 and flujo.almacen < flujo.almacen_max{
+		if in(flujo.liquido, -1, idl_petroleo) and red_power > 0 and flujo.almacen < flujo.almacen_max{
 			change_energia(edificio_energia_consumo[index] * (1 - 0.25 * edificio.modulo), edificio)
 			change_flujo(red_power * edificio_flujo_consumo[index], edificio)
-			flujo.liquido = 2
+			flujo.liquido = idl_petroleo
 			encender_luz(, edificio)
 		}
 		//Está apagado

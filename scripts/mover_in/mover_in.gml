@@ -3,7 +3,7 @@ function mover_in(edificio = control.null_edificio){
 		var size = array_length(edificio.inputs)
 		for(var a = 0; a < size; a++){
 			var temp_edificio = edificio.inputs[(edificio.input_index + a) mod size]
-			if temp_edificio.index = id_planta_de_enriquecimiento and edificio.carga[id_uranio_enriquecido] <= 20
+			if temp_edificio.index = id_planta_de_enriquecimiento and edificio.carga[idr_uranio_enriquecido] <= 20
 				continue
 			if temp_edificio.waiting and temp_edificio.carga_total > 0 and mover(temp_edificio){
 				edificio.input_index = (edificio.input_index + a + 1) mod size

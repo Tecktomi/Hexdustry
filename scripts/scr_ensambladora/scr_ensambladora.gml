@@ -3,7 +3,7 @@ function scr_ensambladora(edificio = control.null_edificio){
 		var index = edificio.index
 		var red = edificio.red, red_power = red.eficiencia
 		if not edificio.mode{
-			if edificio.carga[id_cobre] > 0 and edificio.carga[id_silicio] > 0 and edificio.carga[id_electronico] < 10{
+			if edificio.carga[idr_cobre] > 0 and edificio.carga[idr_silicio] > 0 and edificio.carga[idr_electronico] < 10{
 				//Encender
 				if not edificio.start{
 					change_energia(edificio_energia_consumo[index] * (1 - 0.25 * edificio.modulo), edificio)
@@ -13,9 +13,9 @@ function scr_ensambladora(edificio = control.null_edificio){
 				edificio.proceso += red_power
 				//Producir / Apagar
 				if edificio.proceso >= edificio_proceso[index]{
-					edificio.carga[id_cobre]--
-					edificio.carga[id_silicio]--
-					edificio.carga[id_electronico]++
+					edificio.carga[idr_cobre]--
+					edificio.carga[idr_silicio]--
+					edificio.carga[idr_electronico]++
 					edificio.carga_total--
 					edificio.proceso -= edificio_proceso[index]
 					edificio.start = false
@@ -29,10 +29,10 @@ function scr_ensambladora(edificio = control.null_edificio){
 		}
 		else{
 			var temp_edificio = edificio.link
-			if edificio.carga[id_electronico] + temp_edificio.carga[id_electronico] > 0 and
-				edificio.carga[id_plastico] + temp_edificio.carga[id_plastico] > 0 and
-				edificio.carga[id_baterias] + temp_edificio.carga[id_baterias] > 0 and
-				edificio.carga[id_modulos] + temp_edificio.carga[id_modulos] < 10{
+			if edificio.carga[idr_electronico] + temp_edificio.carga[idr_electronico] > 0 and
+				edificio.carga[idr_plastico] + temp_edificio.carga[idr_plastico] > 0 and
+				edificio.carga[idr_bateria] + temp_edificio.carga[idr_bateria] > 0 and
+				edificio.carga[idr_modulo] + temp_edificio.carga[idr_modulo] < 10{
 				//Encender
 				if not edificio.start{
 					change_energia(edificio_energia_consumo[index] * (1 - 0.25 * edificio.modulo), edificio)
@@ -45,37 +45,37 @@ function scr_ensambladora(edificio = control.null_edificio){
 				edificio.proceso += red_power / 2
 				//Producir / Apagar
 				if edificio.proceso >= edificio_proceso[index]{
-					if edificio.carga[id_electronico] > 0{
-						edificio.carga[id_electronico]--
+					if edificio.carga[idr_electronico] > 0{
+						edificio.carga[idr_electronico]--
 						edificio.carga_total--
 					}
 					else{
-						temp_edificio.carga[id_electronico]--
+						temp_edificio.carga[idr_electronico]--
 						temp_edificio.carga_total--
 					}
-					if edificio.carga[id_plastico] > 0{
-						edificio.carga[id_plastico]--
+					if edificio.carga[idr_plastico] > 0{
+						edificio.carga[idr_plastico]--
 						edificio.carga_total--
 					}
 					else{
-						temp_edificio.carga[id_plastico]--
+						temp_edificio.carga[idr_plastico]--
 						temp_edificio.carga_total--
 					}
-					if edificio.carga[id_baterias] > 0{
-						edificio.carga[id_baterias]--
+					if edificio.carga[idr_bateria] > 0{
+						edificio.carga[idr_bateria]--
 						edificio.carga_total--
 					}
 					else{
-						temp_edificio.carga[id_baterias]--
+						temp_edificio.carga[idr_bateria]--
 						temp_edificio.carga_total--
 					}
-					if edificio.carga[id_modulos] < temp_edificio.carga[id_modulos]{
-						edificio.carga[id_modulos]++
+					if edificio.carga[idr_modulo] < temp_edificio.carga[idr_modulo]{
+						edificio.carga[idr_modulo]++
 						edificio.carga_total++
 						edificio.waiting = not mover(edificio)
 					}
 					else{
-						temp_edificio.carga[id_modulos]++
+						temp_edificio.carga[idr_modulo]++
 						temp_edificio.carga_total++
 						temp_edificio.waiting = not mover(temp_edificio)
 					}

@@ -1,4 +1,4 @@
-function add_edificio(index, dir, a, b){
+function add_edificio(index, dir, a, b, enemigo = false){
 	with control{
 		var temp_complex = abtoxy(a, b)
 		x = temp_complex.a
@@ -54,8 +54,8 @@ function add_edificio(index, dir, a, b){
 			procesador_link : array_create(0, null_edificio),
 			eliminar : false,
 			agregar : false,
-			chunk_x : clamp(round(a / chunk_width), 0, ds_grid_width(chunk_edificios) - 1),
-			chunk_y : clamp(round(b / chunk_height), 0, ds_grid_height(chunk_edificios) - 1),
+			chunk_x : clamp(round(a / chunk_width), 0, chunk_xsize - 1),
+			chunk_y : clamp(round(b / chunk_height), 0, chunk_ysize - 1),
 			target_chunks : array_create(0, {a : 0, b : 0}),
 			array_real : array_create(0, 0),
 			xscale : 1,
@@ -69,7 +69,8 @@ function add_edificio(index, dir, a, b){
 			modulo : false,
 			// 0 = edificios, 1 = chunk_edificios, 2 = [torres_tension, plantas_reciclaje, torres_reparadoras, puertos_carga, target.torres], 3 = luz, 4 = edificios_activos
 			// 5 = red, 6 = flujo
-			punteros : array_create(5, 0)
+			punteros : array_create(5, 0),
+			enemigo : enemigo
 		}
 		if edificio_size[index] = 2.5{
 			if in(dir, 0, 1)
@@ -120,7 +121,6 @@ function add_edificio(index, dir, a, b){
 		else if index = id_planta_de_reciclaje
 			array_disorder_push(plantas_de_reciclaje, edificio, 2)
 		array_push(efectos, add_efecto(size_fx[edificio_size[index] - 1], 0, x, y, 3))
-		array_disorder_push(chunk_edificios[# edificio.chunk_x, edificio.chunk_y], edificio, 1)
 		if index = id_nucleo
 			array_push(nucleos, edificio)
 		else
@@ -142,7 +142,14 @@ function add_edificio(index, dir, a, b){
 		}
 		var temp_list_arround = get_arround(a, b, dir, edificio_size[index])
 		ds_grid_set(edificio_draw, a, b, true)
-		array_disorder_push(edificios, edificio, 0)
+		if enemigo{
+			array_disorder_push(edificios_enemigos, edificio, 0)
+			array_disorder_push(chunk_edificios_enemigo[# edificio.chunk_x, edificio.chunk_y], edificio, 1)
+		}
+		else{
+			array_disorder_push(edificios, edificio, 0)
+			array_disorder_push(chunk_edificios[# edificio.chunk_x, edificio.chunk_y], edificio, 1)
+		}
 		edificios_counter[index]++
 		for(var c = ds_list_size(temp_list_arround) - 1; c >= 0; c--)
 			ds_list_add(edificio.bordes, temp_list_arround[|c])
@@ -181,7 +188,7 @@ function add_edificio(index, dir, a, b){
 				array_disorder_push(torres_reparadoras, edificio, 2)
 				for(var c = array_length(edificios) - 2; c >= 0; c--){
 					var temp_edificio = edificios[c]
-					if distance_sqr(temp_edificio.x, temp_edificio.y, x, y) < alc{
+					if distance_sqr(temp_edificio.center_x, temp_edificio.center_y, x, y) < alc{
 						array_push(edificio.edificios_cercanos, temp_edificio)
 						array_push(temp_edificio.reparadores_cercanos, edificio)
 						if temp_edificio.vida < edificio_vida[temp_edificio.index]
@@ -191,7 +198,7 @@ function add_edificio(index, dir, a, b){
 			}
 			for(var c = array_length(torres_reparadoras) - 1; c >= 0; c--){
 				var temp_edificio = torres_reparadoras[c]
-				if distance_sqr(temp_edificio.x, temp_edificio.y, x, y) < alc{
+				if distance_sqr(temp_edificio.center_x, temp_edificio.center_y, x, y) < alc{
 					array_push(temp_edificio.edificios_cercanos, edificio)
 					array_push(edificio.reparadores_cercanos, temp_edificio)
 				}
@@ -200,12 +207,11 @@ function add_edificio(index, dir, a, b){
 		if index = id_nucleo and menu = 1{
 			edificio_pathfind(edificio)
 			array_push(edificios_targeteables, edificio)
-			size = array_length(enemigos)
-			for(var c = 0; c < size; c++){
-				var enemigo = enemigos[c]
-				temp_complex = xytoab(enemigo.a, enemigo.b)
+			for(var c = array_length(enemigos) - 1; c >= 0; c--){
+				var temp_enemigo = enemigos[c]
+				temp_complex = xytoab(temp_enemigo.a, temp_enemigo.b)
 				if temp_complex.a >= 0
-					enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
+					temp_enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
 			}
 		}
 		else if index = id_ensambladora and (edificio_tecnologia[id_modulo] or not tecnologia){
@@ -218,36 +224,36 @@ function add_edificio(index, dir, a, b){
 					var temp_edificio = edificio_id[# aa, bb]
 					if temp_edificio.index = id_ensambladora and not temp_edificio.mode{
 						for(c = 0; c < rss_max; c++)
-							if c != id_electronico
+							if c != idr_electronico
 								temp_edificio.carga[c] = 0
 						edificio.mode = true
 						temp_edificio.mode = true
 						edificio.link = temp_edificio
 						temp_edificio.link = edificio
-						edificio.carga_max[id_cobre] = 0
-						edificio.carga_input[id_cobre] = false
-						edificio.carga_max[id_silicio] = 0
-						edificio.carga_input[id_silicio] = false
-						edificio.carga_max[id_electronico] = 10
-						edificio.carga_input[id_electronico] = true
-						edificio.carga_max[id_plastico] = 10
-						edificio.carga_input[id_plastico] = true
-						edificio.carga_max[id_baterias] = 10
-						edificio.carga_input[id_baterias] = true
-						edificio.carga_output[id_modulos] = true
-						edificio.carga_output[id_electronico] = false
-						temp_edificio.carga_max[id_cobre] = 0
-						temp_edificio.carga_input[id_cobre] = false
-						temp_edificio.carga_max[id_silicio] = 0
-						temp_edificio.carga_input[id_silicio] = false
-						temp_edificio.carga_max[id_electronico] = 10
-						temp_edificio.carga_input[id_electronico] = true
-						temp_edificio.carga_max[id_plastico] = 10
-						temp_edificio.carga_input[id_plastico] = true
-						temp_edificio.carga_max[id_baterias] = 10
-						temp_edificio.carga_input[id_baterias] = true
-						temp_edificio.carga_output[id_modulos] = true
-						temp_edificio.carga_output[id_electronico] = false
+						edificio.carga_max[idr_cobre] = 0
+						edificio.carga_input[idr_cobre] = false
+						edificio.carga_max[idr_silicio] = 0
+						edificio.carga_input[idr_silicio] = false
+						edificio.carga_max[idr_electronico] = 10
+						edificio.carga_input[idr_electronico] = true
+						edificio.carga_max[idr_plastico] = 10
+						edificio.carga_input[idr_plastico] = true
+						edificio.carga_max[idr_bateria] = 10
+						edificio.carga_input[idr_bateria] = true
+						edificio.carga_output[idr_modulo] = true
+						edificio.carga_output[idr_electronico] = false
+						temp_edificio.carga_max[idr_cobre] = 0
+						temp_edificio.carga_input[idr_cobre] = false
+						temp_edificio.carga_max[idr_silicio] = 0
+						temp_edificio.carga_input[idr_silicio] = false
+						temp_edificio.carga_max[idr_electronico] = 10
+						temp_edificio.carga_input[idr_electronico] = true
+						temp_edificio.carga_max[idr_plastico] = 10
+						temp_edificio.carga_input[idr_plastico] = true
+						temp_edificio.carga_max[idr_bateria] = 10
+						temp_edificio.carga_input[idr_bateria] = true
+						temp_edificio.carga_output[idr_modulo] = true
+						temp_edificio.carga_output[idr_electronico] = false
 						temp_edificio.proceso = 0
 						temp_edificio.start = false
 						calculate_in_out_2(temp_edificio)
@@ -299,9 +305,9 @@ function add_edificio(index, dir, a, b){
 				var aa = temp_complex.a, bb = temp_complex.b
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
-				if (aa != a or bb != b) and edificio_draw[# aa, bb]{
+				if (aa != a or bb != b) and edificio_bool[# aa, bb]{
 					var temp_edificio = edificio_id[# aa, bb]
-					if (index = id_cable and edificio_energia[temp_edificio.index]) or temp_edificio.index = id_cable{
+					if (index = id_cable and edificio_energia[temp_edificio.index]) or temp_edificio.index = id_cable and distance_sqr(edificio.center_x, edificio.center_y, temp_edificio.center_x, temp_edificio.center_y) <= 8100 and not array_contains(edificio.energia_link, temp_edificio){//90^2
 						array_push(edificio.energia_link, temp_edificio)
 						array_push(temp_edificio.energia_link, edificio)
 						if not ds_list_in(temp_list_redes, temp_edificio.red)
@@ -314,7 +320,7 @@ function add_edificio(index, dir, a, b){
 			if index = id_torre_de_alta_tension{
 				for(var c = array_length(torres_de_tension) - 1; c >= 0; c--){
 					var temp_edificio = torres_de_tension[c]
-					if sqr(temp_edificio.x - edificio.x) + sqr(temp_edificio.y - edificio.y) < 1_000_000{//1000^2
+					if sqr(temp_edificio.center_x - edificio.center_x) + sqr(temp_edificio.center_y - edificio.center_y) < 1_000_000{//1000^2
 						array_push(edificio.energia_link, temp_edificio)
 						array_push(temp_edificio.energia_link, edificio)
 						if not ds_list_in(temp_list_redes, temp_edificio.red)

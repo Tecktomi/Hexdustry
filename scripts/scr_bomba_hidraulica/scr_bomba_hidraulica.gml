@@ -14,7 +14,7 @@ function scr_bomba_hidraulica(edificio = control.null_edificio){
 				change_energia(0, edificio)
 				change_flujo(0, edificio)
 			}
-			if flujo.liquido != 3 and edificio.fuel = 3
+			if flujo.liquido != idl_lava and edificio.fuel = idl_lava
 				encender_luz(, edificio)
 			flujo.liquido = edificio.fuel
 		}

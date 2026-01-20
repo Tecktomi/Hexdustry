@@ -3,19 +3,19 @@ function scr_generador(edificio = control.null_edificio){
 		var index = edificio.index
 		if edificio.fuel > 0{
 			edificio.fuel--
-			sound_play_edificio(2, edificio.x, edificio.y)
+			sound_play_edificio(2, edificio.center_x, edificio.center_y)
 		}
 		if edificio.fuel <= 0{
 			//Encender
-			if edificio.carga[id_carbon] > 0 or edificio.carga[id_combustible] > 0{
-				if edificio.carga[id_combustible] > 0{
-					edificio.fuel = recurso_combustion_time[id_combustible]
-					edificio.carga[id_combustible]--
+			if edificio.carga[idr_carbon] > 0 or edificio.carga[idr_combustible] > 0{
+				if edificio.carga[idr_combustible] > 0{
+					edificio.fuel = recurso_combustion_time[idr_combustible]
+					edificio.carga[idr_combustible]--
 					change_energia(floor(edificio_energia_consumo[index] * 1.2), edificio)
 				}
-				if edificio.carga[id_carbon] > 0{
-					edificio.fuel = recurso_combustion_time[id_carbon]
-					edificio.carga[id_carbon]--
+				if edificio.carga[idr_carbon] > 0{
+					edificio.fuel = recurso_combustion_time[idr_carbon]
+					edificio.carga[idr_carbon]--
 					change_energia(edificio_energia_consumo[index], edificio)
 				}
 				encender_luz(, edificio)

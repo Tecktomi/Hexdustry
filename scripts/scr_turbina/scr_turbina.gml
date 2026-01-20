@@ -6,20 +6,20 @@ function scr_turbina(edificio = control.null_edificio){
 		//Ya está encendido
 		if edificio.fuel > 0{
 			edificio.fuel--
-			if in(flujo.liquido, -1, 0)
+			if in(flujo.liquido, -1, idl_agua)
 				change_energia(edificio_energia_consumo[index] * flujo_power, edificio)
-			sound_play_edificio(2, edificio.x, edificio.y)
+			sound_play_edificio(2, edificio.center_x, edificio.center_y)
 		}
 		if edificio.fuel = 0 and flujo.liquido = 0{
 			//Encender
-			if (edificio.carga[id_carbon] > 0 or edificio.carga[id_combustible] > 0) and flujo_power > 0{
-				if edificio.carga[id_combustible] > 0{
+			if (edificio.carga[idr_carbon] > 0 or edificio.carga[idr_combustible] > 0) and flujo_power > 0{
+				if edificio.carga[idr_combustible] > 0{
 					edificio.fuel = recurso_combustion_time[12]
-					edificio.carga[id_combustible]--
+					edificio.carga[idr_combustible]--
 				}
-				else if edificio.carga[id_carbon] > 0{
+				else if edificio.carga[idr_carbon] > 0{
 					edificio.fuel = recurso_combustion_time[1]
-					edificio.carga[id_carbon]--
+					edificio.carga[idr_carbon]--
 				}
 				encender_luz(, edificio)
 				change_energia(edificio_energia_consumo[index] * flujo_power, edificio)
