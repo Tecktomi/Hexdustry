@@ -1,9 +1,10 @@
-function delete_edificio(aa, bb, destruccion = false){
+function delete_edificio(edificio = control.null_edificio, destruccion = false){
 	with control{
-		if not edificio_bool[# aa, bb]
+		if not edificio_bool[# edificio.a, edificio.b]{
+			show_debug_message($"###ADVERTENCIA###\n\nIntentando eliminar {edificio_nombre[edificio.index]} en {edificio.a}, {edificio.b}")
 			exit
-		var edificio = edificio_id[# aa, bb], index = edificio.index
-		var pre_vida = edificio.vida
+		}
+		var index = edificio.index, pre_vida = edificio.vida, aa = edificio.a, bb = edificio.b
 		edificio.vida = 0
 		if index = id_nucleo{
 			array_remove(nucleos, edificio)
@@ -11,7 +12,7 @@ function delete_edificio(aa, bb, destruccion = false){
 				array_remove(edificios_targeteables, edificio)
 				if array_length(nucleos) = 0{
 					win = 2
-					selected_dron = null_enemigo
+					selected_dron = null_dron
 				}
 			}
 		}
@@ -132,7 +133,7 @@ function delete_edificio(aa, bb, destruccion = false){
 		edificio.vivo = false
 		ds_grid_clear(edificio_cercano_dir, -1)
 		if edificio_armas[index]{
-			if edificio.target != null_enemigo and edificio.target.vida > 0
+			if edificio.target != null_dron and edificio.target.vida > 0
 				array_disorder_remove(edificio.target.torres, edificio, 2)
 		}
 		//Eliminar tuneles
@@ -342,7 +343,7 @@ function delete_edificio(aa, bb, destruccion = false){
 			for(var a = 0; a < size; a++){
 				var temp_enemigo = enemigos[a]
 				if temp_enemigo.target = edificio{
-					var temp_complex = xytoab(temp_enemigo.a, temp_enemigo.b)
+					var temp_complex = xytoab(temp_enemigo.x, temp_enemigo.y)
 					if temp_complex.a >= 0
 						destruccion.target = edificio_cercano[# temp_complex.a, temp_complex.b]
 				}
@@ -361,17 +362,17 @@ function delete_edificio(aa, bb, destruccion = false){
 			}
 			//Daño enemigos
 			for(var i = array_length(enemigos) - 1; i >= 0; i--){
-				var temp_enemigo = enemigos[i], dis = distance_sqr(xpos, ypos, temp_enemigo.a, temp_enemigo.b)
+				var dron = enemigos[i], dis = distance_sqr(xpos, ypos, dron.x, dron.y)
 				if dis > 160_000//400^2
 					continue
-				temp_enemigo.vida -= 1_000_000 / dis * random_range(0.7, 1.3)
-				if temp_enemigo.vida > 0
+				dron.vida -= 1_000_000 / dis * random_range(0.7, 1.3)
+				if dron.vida > 0
 					continue
-				delete_dron(temp_enemigo)
+				delete_dron(dron)
 			}
 			//Daño drones aliados
 			for(var i = array_length(drones_aliados) - 1; i >= 0; i--){
-				var dron = drones_aliados[i], dis = distance_sqr(xpos, ypos, dron.a, dron.b)
+				var dron = drones_aliados[i], dis = distance_sqr(xpos, ypos, dron.x, dron.y)
 				if dis > 160_000//400^2
 					continue
 				dron.vida -= 1_000_000 / dis * random_range(0.7, 1.3)

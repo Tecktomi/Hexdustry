@@ -7,7 +7,7 @@ function edificio_herir(edificio = control.null_edificio, dmg){
 	dmg_recibido += min(edificio.vida, dmg)
 	edificio.vida -= dmg
 	if edificio.vida <= 0{
-		delete_edificio(edificio.a, edificio.b, true)
+		delete_edificio(edificio, true)
 		return true
 	}
 	return false

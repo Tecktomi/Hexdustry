@@ -3,7 +3,7 @@ draw_set_font(ft_letra)
 browser = (os_browser = browser_not_a_browser)
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
-ini_write_string("Global", "version", "19_01_2026")
+ini_write_string("Global", "version", "20_01_2026")
 medallas = array_create(5)
 default_maps = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas"]
 for(var a = 0; a < array_length(default_maps); a++){
@@ -402,16 +402,19 @@ puerto_carga_atended = 0
 //Enemigos
 efectos_nombre = ["Shock", "Fuego"]
 efectos_max = array_length(efectos_nombre)
-null_enemigo = {
-	a : 0,
-	b : 0,
+null_dron = {
+	x : 0,
+	y : 0,
 	index : 0,
 	vida : 5,
 	vida_max : 5,
 	target : null_edificio,
 	temp_target : null_edificio,
+	temp_target_dron : undefined,
 	chunk_x : 0,
 	chunk_y : 0,
+	a : 0,
+	b : 0,
 	carga : array_create(0, 0),
 	carga_total : 0,
 	modo : 0,
@@ -426,21 +429,22 @@ null_enemigo = {
 	enemigo : true,
 	punteros : array_create(0, 0)
 }
-enemigos = array_create(0, null_enemigo)
-drones_aliados = array_create(0, null_enemigo)
-null_edificio.target = null_enemigo
+enemigos = array_create(0, null_dron)
+drones_aliados = array_create(0, null_dron)
+null_edificio.target = null_dron
+null_dron.temp_target_dron = null_dron
 chunk_dron_enemigo = ds_grid_create(chunk_xsize, chunk_ysize)
 chunk_dron_aliado = ds_grid_create(chunk_xsize, chunk_ysize)
 chunk_edificios = ds_grid_create(chunk_xsize, chunk_ysize)
 chunk_edificios_enemigo = ds_grid_create(chunk_xsize, chunk_ysize)
 for(var a = chunk_xsize - 1; a >= 0; a--)
 	for(var b = chunk_ysize - 1; b >= 0; b--){
-		ds_grid_set(chunk_dron_enemigo, a, b, array_create(0, null_enemigo))
-		ds_grid_set(chunk_dron_aliado, a, b, array_create(0, null_enemigo))
+		ds_grid_set(chunk_dron_enemigo, a, b, array_create(0, null_dron))
+		ds_grid_set(chunk_dron_aliado, a, b, array_create(0, null_dron))
 		ds_grid_set(chunk_edificios, a, b, array_create(0, null_edificio))
 		ds_grid_set(chunk_edificios_enemigo, a, b, array_create(0, null_edificio))
 	}
-selected_dron = null_enemigo
+selected_dron = null_dron
 //Recursos
 #region Definición
 	recurso_descripcion = [
@@ -659,13 +663,13 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 	return array_length(dron_nombre) - 1
 }
 #region definicion
-	idd_arana = def_dron("Araña", spr_arana,, 100, 400, 6400, [idt_bronce, idr_bateria, idr_electronico], [6, 1, 3], 600,, 1.5)
+	idd_arana = def_dron("Araña", spr_arana,, 100, 400, 6400, [idt_bronce, idr_bateria, idr_electronico], [6, 1, 3], 600,, 1)
 	idd_dron = def_dron("Dron", spr_dron,, 40, 400, 100, [idt_bronce, idr_hierro, idr_electronico], [10, 5, 3], 900, true, 2)
 	idd_reparador = def_dron("Reparador", spr_reparador,, 60, 400, 2500, [idr_silicio, idr_bateria, idr_electronico], [10, 3, 5], 1200, true, 2)
 	idd_explosivo = def_dron("Explosivo", spr_dron_explosivo,, 50, 400, 400, [idr_hierro, idr_explosivo, idr_electronico], [6, 2, 2], 450, true, 2.5)
-	idd_tanque = def_dron("Tanque", spr_tanque, spr_tanque_2, 750, 1600, 90_000, [idt_bronce, idr_acero, idr_electronico], [15, 25, 10], 1800,, 1)
+	idd_tanque = def_dron("Tanque", spr_tanque, spr_tanque_2, 750, 1600, 90_000, [idt_bronce, idr_acero, idr_electronico], [15, 25, 10], 1800,, 0.9)
 	idd_helicoptero = def_dron("Helicóptero", spr_helicoptero, spr_helicoptero_2, 400, 1600, 40_000, [idt_bronce, idr_acero, idr_electronico], [10, 15, 15], 1800, true, 2)
-	idd_titan = def_dron("Titán", spr_titan, spr_titan_leg, 1500, 2500, 160_000, [idt_bronce, idr_acero, idr_electronico, idr_uranio_bruto, idr_modulo], [30, 40, 10, 75, 5], 3000,, 1.5)
+	idd_titan = def_dron("Titán", spr_titan, spr_titan_leg, 1500, 2500, 160_000, [idt_bronce, idr_acero, idr_electronico, idr_uranio_bruto, idr_modulo], [30, 40, 10, 75, 5], 3000,, 1.1)
 	idd_bombardero = def_dron("Bombardero", spr_bombardero,, 800, 2500, 1_600, [idt_bronce, idr_acero, idr_electronico, idr_uranio_bruto, idr_modulo], [30, 40, 20, 50, 5], 3000, true, 3)
 #endregion
 dron_max = array_length(dron_nombre)

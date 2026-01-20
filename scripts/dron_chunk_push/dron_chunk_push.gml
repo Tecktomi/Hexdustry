@@ -1,4 +1,4 @@
-function dron_chunk_push(dron = control.null_enemigo){
+function dron_chunk_push(dron = control.null_dron){
 	with control{
 		var a = dron.chunk_x, b = dron.chunk_y
 		if dron.enemigo
