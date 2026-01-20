@@ -7,7 +7,7 @@ function scr_torre_reparadora(edificio = control.null_edificio){
 			continue
 		if edificio.link = null_edificio{
 			edificio.link = edificio.edificios_cercanos_heridos[0]
-			if edificio != edificio.link and edificio.link.vida >= edificio_vida[edificio.link.index] or distance_sqr(edificio.x, edificio.y, edificio.link.x, edificio.link.y) > edificio_alcance_sqr[index]{
+			if edificio != edificio.link and edificio.link.vida >= edificio_vida[edificio.link.index] or distance_sqr(edificio.center_x, edificio.center_y, edificio.link.x, edificio.link.y) > edificio_alcance_sqr[index]{
 				edificio.link = null_edificio
 				change_energia(0, edificio)
 			}
@@ -22,9 +22,9 @@ function scr_torre_reparadora(edificio = control.null_edificio){
 				change_energia(edificio_energia_consumo[index], edificio)
 				draw_set_color(c_green)
 				draw_set_alpha(red_power)
-				draw_line_off(edificio.x + edificio.array_real[2], edificio.y + 14, target.x, target.y)
+				draw_line_off(edificio.center_x, edificio.center_y, target.x, target.y)
 				edificio_curar(target, red_power * (1 + 0.2 * edificio.modulo))
-				edificio.select = radtodeg(-arctan2(edificio.x + 12 - target.x, target.y - edificio.y - 14)) - 90
+				edificio.select = radtodeg(-arctan2(edificio.center_x - target.x, target.y - edificio.center_y)) - 90
 				draw_set_alpha(1)
 				draw_set_color(c_black)
 			}

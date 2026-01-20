@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"ds_list_in",
   "parent":{
-    "name":"SCRIPTS",
-    "path":"folders/SCRIPTS.yy",
+    "name":"Function",
+    "path":"folders/SCRIPTS/Function.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

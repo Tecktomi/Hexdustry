@@ -1060,7 +1060,7 @@ if menu = 2{
 	for(var a = mina; a < maxa; a++)
 		for(var b = minb; b < maxb; b++)
 			if edificio_draw[# a, b]{
-				var edificio = edificio_id[# a, b], index = edificio.index, aa = edificio.x, bb = edificio.y, aaa = aa * zoom - camx, bbb = bb * zoom - camy
+				var edificio = edificio_id[# a, b], index = edificio.index, aa = edificio.x, bb = edificio.y, aaa = aa * zoom - camx, bbb = bb * zoom - camy, center_x = edificio.center_x, center_y = edificio.center_y
 				//Recursos sobre caminos
 				if (edificio_camino[index] or in(index, id_tunel, id_tunel_salida)) and edificio.carga_total > 0{
 					var proceso = edificio_proceso[index]
@@ -1075,7 +1075,7 @@ if menu = 2{
 					draw_set_color(c_yellow)
 					for(var c = array_length(edificio.energia_link) - 1; c >= 0; c--){
 						var edificio_2 = edificio.energia_link[c]
-						draw_line_off(aa, bb, edificio_2.x, edificio_2.y)
+						draw_line_off(center_x, center_y, edificio_2.center_x, edificio_2.center_y)
 					}
 					if edificio.red.generacion = 0 and edificio.red.bateria = 0 and edificio.energia_consumo_max > 0
 						draw_sprite_off(spr_no_ammo, 1, aa, bb - 28)
@@ -1111,7 +1111,7 @@ if menu = 2{
 		for(var a = 0; a < chunk_xsize; a++)
 			for(var b = 0; b < chunk_ysize; b++){
 				var temp_complex = abtoxy(a * chunk_width, b * chunk_height)
-				draw_text_off(temp_complex.a, temp_complex.b, array_length(chunk_enemigos[# a, b]))
+				draw_text_off(temp_complex.a, temp_complex.b, $"{array_length(chunk_dron_enemigo[# a, b])}\n{array_length(chunk_dron_aliado[# a, b])}")
 			}
 	//Luz
 	if energia_solar < 1{
@@ -2073,7 +2073,7 @@ if show_menu{
 		else if index = id_fabrica_de_drones
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * dron_max) * zoom, false)
 		else if index = id_refineria_de_petroleo{
-			var c = max(max(string_width(recurso_nombre_display[id_combustible]), string_width(recurso_nombre_display[id_plastico]), string_width(recurso_nombre_display[id_piedra_sulfatada])) + string_width(": 100%"), 200)
+			var c = max(max(string_width(recurso_nombre_display[idr_combustible]), string_width(recurso_nombre_display[idr_plastico]), string_width(recurso_nombre_display[idr_piedra_sulfatada])) + string_width(": 100%"), 200)
 			draw_rectangle(aa - c * zoom / 2, bb + 40 * zoom, aa + c * zoom / 2, bb + 120 * zoom, false)
 		}
 		draw_set_color(c_dkgray)
@@ -2113,11 +2113,11 @@ if show_menu{
 		else if index = id_refineria_de_petroleo{
 			edificio.fuel = round(draw_deslizante(aa - 100 * zoom, aa + 100 * zoom, bb + 50 * zoom, edificio.fuel, 0, 100, 0))
 			draw_set_halign(fa_center)
-			if draw_boton(aa, bb + 60 * zoom, $"{recurso_nombre_display[id_combustible]}: {edificio.fuel}%",,,, false)
+			if draw_boton(aa, bb + 60 * zoom, $"{recurso_nombre_display[idr_combustible]}: {edificio.fuel}%",,,, false)
 				edificio.fuel = 100
-			if draw_boton(aa, bb + 80 * zoom, $"{recurso_nombre_display[id_plastico]}: {round(100 * (1 - edificio.fuel / 100) * (sqr(1 - abs(edificio.fuel - 50) / 100)))}%",,,, false)
+			if draw_boton(aa, bb + 80 * zoom, $"{recurso_nombre_display[idr_plastico]}: {round(100 * (1 - edificio.fuel / 100) * (sqr(1 - abs(edificio.fuel - 50) / 100)))}%",,,, false)
 				edificio.fuel = 50
-			if draw_boton(aa, bb + 100 * zoom, $"{recurso_nombre_display[id_piedra_sulfatada]}: {100 - edificio.fuel - round(100 * (1 - edificio.fuel / 100) * (sqr(1 - abs(edificio.fuel - 50) / 100)))}%",,,, false)
+			if draw_boton(aa, bb + 100 * zoom, $"{recurso_nombre_display[idr_piedra_sulfatada]}: {100 - edificio.fuel - round(100 * (1 - edificio.fuel / 100) * (sqr(1 - abs(edificio.fuel - 50) / 100)))}%",,,, false)
 				edificio.fuel = 0
 			draw_set_halign(fa_left)
 		}
@@ -2129,40 +2129,40 @@ if show_menu{
 					edificio.mode = not edificio.mode
 					if index = id_embotelladora{
 						if edificio.mode{
-							edificio.carga_output[id_barril_agua] = false
-							edificio.carga_output[id_barril_acido] = false
-							edificio.carga_output[id_barril_petroleo] = false
-							edificio.carga_output[id_barril_lava] = false
-							edificio.carga_output[id_barril_agua_salada] = false
-							edificio.carga_input[id_barril_agua] = true
-							edificio.carga_input[id_barril_acido] = true
-							edificio.carga_input[id_barril_petroleo] = true
-							edificio.carga_input[id_barril_lava] = true
-							edificio.carga_input[id_barril_agua_salada] = true
-							edificio.carga_max[id_barril_agua] = 10
-							edificio.carga_max[id_barril_acido] = 10
-							edificio.carga_max[id_barril_petroleo] = 10
-							edificio.carga_max[id_barril_lava] = 10
-							edificio.carga_max[id_barril_agua_salada] = 10
+							edificio.carga_output[idr_barril_agua] = false
+							edificio.carga_output[idr_barril_acido] = false
+							edificio.carga_output[idr_barril_petroleo] = false
+							edificio.carga_output[idr_barril_lava] = false
+							edificio.carga_output[idr_barril_agua_salada] = false
+							edificio.carga_input[idr_barril_agua] = true
+							edificio.carga_input[idr_barril_acido] = true
+							edificio.carga_input[idr_barril_petroleo] = true
+							edificio.carga_input[idr_barril_lava] = true
+							edificio.carga_input[idr_barril_agua_salada] = true
+							edificio.carga_max[idr_barril_agua] = 10
+							edificio.carga_max[idr_barril_acido] = 10
+							edificio.carga_max[idr_barril_petroleo] = 10
+							edificio.carga_max[idr_barril_lava] = 10
+							edificio.carga_max[idr_barril_agua_salada] = 10
 							edificio.receptor = true
 							edificio.emisor = false
 						}
 						else{
-							edificio.carga_output[id_barril_agua] = true
-							edificio.carga_output[id_barril_acido] = true
-							edificio.carga_output[id_barril_petroleo] = true
-							edificio.carga_output[id_barril_lava] = true
-							edificio.carga_output[id_barril_agua_salada] = true
-							edificio.carga_input[id_barril_agua] = false
-							edificio.carga_input[id_barril_acido] = false
-							edificio.carga_input[id_barril_petroleo] = false
-							edificio.carga_input[id_barril_lava] = false
-							edificio.carga_input[id_barril_agua_salada] = false
-							edificio.carga_max[id_barril_agua] = 0
-							edificio.carga_max[id_barril_acido] = 0
-							edificio.carga_max[id_barril_petroleo] = 0
-							edificio.carga_max[id_barril_lava] = 0
-							edificio.carga_max[id_barril_agua_salada] = 0
+							edificio.carga_output[idr_barril_agua] = true
+							edificio.carga_output[idr_barril_acido] = true
+							edificio.carga_output[idr_barril_petroleo] = true
+							edificio.carga_output[idr_barril_lava] = true
+							edificio.carga_output[idr_barril_agua_salada] = true
+							edificio.carga_input[idr_barril_agua] = false
+							edificio.carga_input[idr_barril_acido] = false
+							edificio.carga_input[idr_barril_petroleo] = false
+							edificio.carga_input[idr_barril_lava] = false
+							edificio.carga_input[idr_barril_agua_salada] = false
+							edificio.carga_max[idr_barril_agua] = 0
+							edificio.carga_max[idr_barril_acido] = 0
+							edificio.carga_max[idr_barril_petroleo] = 0
+							edificio.carga_max[idr_barril_lava] = 0
+							edificio.carga_max[idr_barril_agua_salada] = 0
 							edificio.receptor = false
 							edificio.emisor = true
 						}
@@ -2223,7 +2223,7 @@ if show_menu{
 						if edificio.flujo.almacen = 0 and edificio.flujo.generacion = 0
 							edificio.flujo.liquido = -1
 						for(var i = 0; i < rss_max; i++){
-							if i = id_sal
+							if i = idr_sal
 								continue
 							edificio.carga[i] = 0
 							edificio.carga_max[i] = 0
@@ -2234,11 +2234,11 @@ if show_menu{
 						edificio.select = a
 						edificio.fuel = 0
 						edificio.proceso = -1
-						edificio.carga_max[id_sal] = 10
+						edificio.carga_max[idr_sal] = 10
 						//Ácido
 						if a = 0{
-							edificio.carga_max[id_piedra_sulfatada] = 10
-							edificio.carga_input[id_piedra_sulfatada] = true
+							edificio.carga_max[idr_piedra_sulfatada] = 10
+							edificio.carga_input[idr_piedra_sulfatada] = true
 							edificio.receptor = true
 							edificio.emisor = false
 							edificio.flujo_consumo_max = -50
@@ -2246,9 +2246,9 @@ if show_menu{
 						}
 						//Explosivos
 						else if a = 1{
-							edificio.carga_max[id_combustible] = 10
-							edificio.carga_input[id_combustible] = true
-							edificio.carga_output[id_explosivo] = true
+							edificio.carga_max[idr_combustible] = 10
+							edificio.carga_input[idr_combustible] = true
+							edificio.carga_output[idr_explosivo] = true
 							edificio.receptor = true
 							edificio.emisor = true
 							edificio.flujo_consumo_max = 30
@@ -2256,9 +2256,9 @@ if show_menu{
 						}
 						//Baterías
 						else if a = 2{
-							edificio.carga_max[id_cobre] = 10
-							edificio.carga_input[id_cobre] = true
-							edificio.carga_output[id_baterias] = true
+							edificio.carga_max[idr_cobre] = 10
+							edificio.carga_input[idr_cobre] = true
+							edificio.carga_output[idr_bateria] = true
 							edificio.receptor = true
 							edificio.emisor = true
 							edificio.flujo_consumo_max = 40
@@ -2290,11 +2290,11 @@ if show_menu{
 					for(var b = array_length(dron_precio_id[a]) - 1; b >= 0; b--){
 						edificio.carga_max[dron_precio_id[a, b]] = 2 * dron_precio_num[a, b]
 						edificio.carga_input[dron_precio_id[a, b]] = true
-						if dron_precio_id[a, b] = id_uranio_bruto{
-							edificio.carga_max[id_uranio_enriquecido] = 2 * dron_precio_num[a, b]
-							edificio.carga_input[id_uranio_enriquecido] = true
-							edificio.carga_max[id_uranio_empobrecido] = 2 * dron_precio_num[a, b]
-							edificio.carga_input[id_uranio_empobrecido] = true
+						if dron_precio_id[a, b] = idr_uranio_bruto{
+							edificio.carga_max[idr_uranio_enriquecido] = 2 * dron_precio_num[a, b]
+							edificio.carga_input[idr_uranio_enriquecido] = true
+							edificio.carga_max[idr_uranio_empobrecido] = 2 * dron_precio_num[a, b]
+							edificio.carga_input[idr_uranio_empobrecido] = true
 						}
 					}
 					calculate_in_out_2(edificio)
@@ -2358,8 +2358,8 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 	if edificio_bool[# mx, my]{
 		var index = edificio.index
 		if not edificio_inerte[index] and edificio.punteros[4] = -1{
-			draw_sprite_off(spr_diseneabled, 0, edificio.x, edificio.y)
-			if draw_boton(edificio.x * zoom - camx, edificio.y * zoom - camy, L.game_activar)
+			draw_sprite_off(spr_diseneabled, 0, edificio.center_x, edificio.center_y)
+			if draw_boton(edificio.center_x * zoom - camx, edificio.center_y * zoom - camy, L.game_activar)
 				activar_edificio(edificio)
 		}
 		//Seleccionar edificios
@@ -2382,8 +2382,8 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 				mouse_clear(mb_left)
 				show_menu = true
 				show_menu_build = edificio
-				show_menu_x = edificio.x * zoom
-				show_menu_y = edificio.y * zoom
+				show_menu_x = edificio.center_x * zoom
+				show_menu_y = edificio.center_y * zoom
 			}
 		}
 		//Modificar puertos de carga
@@ -2391,9 +2391,9 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			if edificio.link != null_edificio{
 				draw_set_color(c_green)
 				if edificio.receptor
-					draw_arrow_off(edificio.x, edificio.y, edificio.link.x, edificio.link.y, 8)
+					draw_arrow_off(edificio.center_x, edificio.center_y, edificio.link.center_x, edificio.link.center_y, 8)
 				else
-					draw_arrow_off(edificio.link.x, edificio.link.y, edificio.x, edificio.y, 8)
+					draw_arrow_off(edificio.link.center_x, edificio.link.center_y, edificio.center_x, edificio.center_y, 8)
 			}
 			if mouse_check_button_pressed(mb_left){
 				mouse_clear(mb_left)
@@ -2446,30 +2446,31 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			for(var a = 1; a < array_length(edificio.procesador_link); a++){
 				var temp_edificio = edificio.procesador_link[a]
 				draw_set_color(c_green)
-				draw_arrow_off(edificio.x, edificio.y, temp_edificio.x, temp_edificio.y, 8)
+				draw_arrow_off(edificio.center_x, edificio.center_y, temp_edificio.center_x, temp_edificio.center_y, 8)
 				draw_set_color(c_black)
-				draw_text_off((edificio.x + temp_edificio.x) / 2, (edificio.y + temp_edificio.y) / 2, a)
+				draw_text_off((edificio.center_x + temp_edificio.center_x) / 2, (edificio.center_y + temp_edificio.center_y) / 2, a)
 			}
 		}
 		temp_text += $"{edificio_nombre_display[index]}\n"
 		if info{
+			var center_x = edificio.center_x, center_y = edificio.center_y
 			//Mostrar inputs
 			draw_set_color(c_blue)
 			for(var a = array_length(edificio.inputs) - 1; a >= 0; a--){
 				var edificio_2 = edificio.inputs[a]
-				draw_arrow_off(edificio_2.x, edificio_2.y, edificio.x, edificio.y, 12)
+				draw_arrow_off(edificio_2.center_x, edificio_2.center_y, center_x, center_y, 12)
 			}
 			//Mostrar outputs
 			draw_set_color(c_red)
 			for(var a = array_length(edificio.outputs) - 1; a >= 0; a--){
 				var edificio_2 = edificio.outputs[a]
-				draw_arrow_off(edificio.x, edificio.y, edificio_2.x, edificio_2.y, 12)
+				draw_arrow_off(center_x, center_y, edificio_2.center_x, edificio_2.center_y, 12)
 			}
 		}
 		//Mostrar carga
 		if edificio.index = id_ensambladora and edificio.mode{
 			var temp_edificio = edificio.link, flag = false
-			draw_arrow_off(edificio.x, edificio.y, temp_edificio.x, temp_edificio.y, 4)
+			draw_arrow_off(edificio.center_x, edificio.center_y, temp_edificio.center_x, temp_edificio.center_y, 4)
 			for(var a = 0; a < rss_max; a++)
 				if (edificio.carga[a] + temp_edificio.carga[a]) > 0{
 					if not flag{
@@ -2547,15 +2548,15 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		//Mostrar rango de cables
 		if index = id_cable{
 			draw_set_color(c_white)
-			draw_circle_off(edificio.x, edificio.y, 90, true)
+			draw_circle_off(edificio.center_x, edificio.center_y, 90, true)
 		}
 		//Mostrar rango de torres
 		if edificio_armas[index]{
 			var alc = edificio_alcance[index]
 			draw_set_color(c_white)
-			draw_circle_off(edificio.x, edificio.y, alc, true)
+			draw_circle_off(edificio.center_x, edificio.center_y, alc, true)
 			if index = id_mortero
-				draw_circle_off(edificio.x, edificio.y, 100, true)
+				draw_circle_off(edificio.center_x, edificio.center_y, 100, true)
 			if edificio.target != null_enemigo
 				draw_sprite_off(spr_target, 0, edificio.target.a, edificio.target.b)
 			if info{
@@ -2607,7 +2608,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			temp_text += $"{edificio.variables[0]}\n"
 		else if index = id_tuberia_subterranea and edificio.link != null_edificio{
 			draw_set_color(c_blue)
-			draw_line_off(edificio.x, edificio.y, edificio.link.x, edificio.link.y)
+			draw_line_off(edificio.center_x, edificio.center_y, edificio.link.center_x, edificio.link.center_y)
 		}
 		else if index = id_planta_quimica{
 			if edificio.select = -1
@@ -2626,7 +2627,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			temp_text += $"{edificio.array_real[4]}\n"
 		else if index = id_planta_de_reciclaje{
 			draw_set_color(c_lime)
-			draw_circle_off(edificio.x, edificio.y, 250, true)
+			draw_circle_off(edificio.center_x, edificio.center_y, 250, true)
 			if edificio.select >= 0
 				temp_text += $"{L.almacen_consumiendo} {dron_nombre_display[edificio.select]}: {floor(100 * edificio.proceso / dron_time[edificio.select])}%\n"
 		}
@@ -2658,7 +2659,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		}
 		//Mostrar red electrica
 		if edificio_energia[index]{
-			var red = edificio.red
+			var red = edificio.red, center_x = edificio.center_x, center_y = edificio.center_y
 			if edificio_energia_consumo[index] != 0{
 				if edificio_energia_consumo[index] > 0{
 					temp_text += $"{L.almacen_consumiendo} {edificio.energia_consumo} {L.red_energia}\n"
@@ -2672,12 +2673,10 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 				temp_text += $"  {L.red_bateria}: {round(red.bateria)}/{round(red.bateria_max)}\n"
 			if info
 				temp_text += red_text(red)
+			draw_set_color(c_red)
 			for(var a = array_length(edificio.energia_link) - 1; a >= 0; a--){
 				var edificio_2 = edificio.energia_link[a]
-				draw_set_color(c_red)
-				var temp_complex_2 = abtoxy(edificio.a, edificio.b)
-				var temp_complex_3 = abtoxy(edificio_2.a, edificio_2.b)
-				draw_line_off(temp_complex_2.a, temp_complex_2.b, temp_complex_3.a, temp_complex_3.b)
+				draw_line_off(center_x, center_y, edificio_2.center_x, edificio_2.center_y)
 			}
 		}
 		//Mostrar red de líquido
@@ -2930,6 +2929,8 @@ if build_index > 0 and win = 0{
 			build_list_arround = get_size(mx, my, build_dir, edificio_size[build_index] + 2)
 		else if build_index = id_ensambladora
 			build_list_arround = get_arround(mx, my, build_dir, edificio_size[build_index])
+		else if build_index = id_cable
+			build_list_arround = get_size(mx, my, 0, 7)
 		show_menu = false
 	}
 	var comprable = true
@@ -2951,23 +2952,23 @@ if build_index > 0 and win = 0{
 				var temp_edificio = edificio_id[# mx, my], index = edificio.index, temp_precio_id = array_create(0, 0), temp_precio_num = array_create(0, 0), flag_2 = true
 				#region Precios
 					if in(index, id_taladro, id_torre_basica, id_bomba_hidraulica){
-						temp_precio_id = [id_modulos]
+						temp_precio_id = [idr_modulo]
 						temp_precio_num = [1]
 					}
 					else if in(index, id_rifle, id_lanzallamas, id_ensambladora, id_generador_geotermico, id_planta_desalinizadora, id_torre_reparadora, id_triturador, id_turbina){
-						temp_precio_id = [id_modulos, id_silicio]
+						temp_precio_id = [idr_modulo, idr_silicio]
 						temp_precio_num = [2, 2]
 					}
 					else if in(index, id_taladro_electrico, id_laser, id_mortero, id_fabrica_de_concreto, id_perforadora_de_petroleo, id_planta_de_reciclaje, , id_planta_quimica, id_refineria_de_metales){
-						temp_precio_id = [id_modulos, id_electronico]
+						temp_precio_id = [idr_modulo, idr_electronico]
 						temp_precio_num = [3, 5]
 					}
 					else if in(index, id_onda_de_choque, id_fabrica_de_drones, id_planta_de_enriquecimiento, id_planta_nuclear, id_refineria_de_petroleo, id_taladro_de_explosion){
-						temp_precio_id = [id_modulos, id_electronico, id_uranio_bruto]
+						temp_precio_id = [idr_modulo, idr_electronico, idr_uranio_bruto]
 						temp_precio_num = [5, 5, 10]
 					}
 					else if index = id_nucleo{
-						temp_precio_id = [id_modulos, id_electronico, id_plastico, id_uranio_bruto]
+						temp_precio_id = [idr_modulo, idr_electronico, idr_plastico, idr_uranio_bruto]
 						temp_precio_num = [20, 25, 40, 100]
 					}
 				#endregion
@@ -2991,7 +2992,7 @@ if build_index > 0 and win = 0{
 					else if in(index, id_fabrica_de_drones, id_planta_de_reciclaje, id_planta_de_enriquecimiento, id_planta_quimica, id_refineria_de_metales, id_triturador)
 						temp_text = L.modulo_produccion
 					else if index = id_planta_desalinizadora
-						temp_text = $"{L.modulo_sal} {recurso_nombre_display[id_sal]}\n"
+						temp_text = $"{L.modulo_sal} {recurso_nombre_display[idr_sal]}\n"
 					else if index = id_planta_nuclear
 						temp_text = L.modulo_nuclear
 					else if index = id_torre_reparadora
@@ -3409,15 +3410,14 @@ if build_index > 0 and win = 0{
 					//Dibujar nodos cercanos
 					var temp_complex_2 = abtoxy(mx, my), aa = temp_complex_2.a, bb = temp_complex_2.b
 					draw_circle_off(aa, bb, 90, true)
-					var temp_list_complex = get_size(mx, my, build_dir, 7)
-					for(var a = ds_list_size(temp_list_complex) - 1; a >= 0; a--){
-						var temp_complex_3 = temp_list_complex[|a], aaaa = temp_complex_3.a, bbbb = temp_complex_3.b
+					for(var a = ds_list_size(build_list_arround) - 1; a >= 0; a--){
+						var temp_complex_3 = build_list_arround[|a], aaaa = temp_complex_3.a, bbbb = temp_complex_3.b
 						if aaaa < 0 or bbbb < 0 or aaaa >= xsize or bbbb >= ysize
 							continue
-						if (aaaa != mx or bbbb != my) and edificio_draw[# aaaa, bbbb]{
+						if (aaaa != mx or bbbb != my) and edificio_bool[# aaaa, bbbb]{
 							var temp_edificio = edificio_id[# aaaa, bbbb]
-							if edificio_energia[temp_edificio.index]
-								draw_line_off(aa, bb, temp_edificio.x, temp_edificio.y)
+							if edificio_energia[temp_edificio.index] and distance_sqr(aa, bb, temp_edificio.center_x, temp_edificio.center_y) <= 8100//90^2
+								draw_line_off(aa, bb, temp_edificio.center_x, temp_edificio.center_y)
 						}
 					}
 					//Extender
@@ -3541,7 +3541,7 @@ if build_index > 0 and win = 0{
 								if (aa != mx or bb != my) and edificio_draw[# aa, bb]{
 									var temp_edificio = edificio_id[# aa, bb]
 									if edificio_energia[temp_edificio.index]
-										draw_line_off(temp_complex_2.a, temp_complex_2.b, temp_edificio.x, temp_edificio.y)
+										draw_line_off(temp_complex_2.a, temp_complex_2.b, temp_edificio.center_x, temp_edificio.center_y)
 								}
 							}
 						}
@@ -3549,8 +3549,8 @@ if build_index > 0 and win = 0{
 							draw_circle_off(temp_complex_2.a, temp_complex_2.b, 1_000, true)
 							for(var c = array_length(torres_de_tension) - 1; c >= 0; c--){
 								var temp_edificio = torres_de_tension[c]
-								if sqr(temp_edificio.x - temp_complex_2.a) + sqr(temp_edificio.y - temp_complex_2.b) < 1_000_000//1000^2
-									draw_line_off(temp_edificio.x, temp_edificio.y, temp_complex_2.a,temp_complex_2.b)
+								if distance_sqr(temp_edificio.center_x, temp_edificio.center_y, temp_complex_2.a, temp_complex_2.b) < 1_000_000//1000^2
+									draw_line_off(temp_edificio.center_x, temp_edificio.center_y, temp_complex_2.a,temp_complex_2.b)
 							}
 						}
 						//Vista previa Alcance de torres
@@ -3577,7 +3577,7 @@ if build_index > 0 and win = 0{
 							}
 							if flag_2{
 								draw_set_color(c_blue)
-								draw_line_off(temp_complex_2.a, temp_complex_2.b, temp_edificio.x, temp_edificio.y)
+								draw_line_off(temp_complex_2.a, temp_complex_2.b, temp_edificio.center_x, temp_edificio.center_y)
 							}
 						}
 						//Planta de Reciclaje
@@ -3596,7 +3596,7 @@ if build_index > 0 and win = 0{
 									var temp_edificio = edificio_id[# aa, bb]
 									if temp_edificio.index = id_ensambladora and not temp_edificio.mode{
 										draw_set_color(c_blue)
-										draw_line_off(temp_complex_2.a, temp_complex_2.b, temp_edificio.x, temp_edificio.y)
+										draw_line_off(temp_complex_2.a, temp_complex_2.b, temp_edificio.center_x, temp_edificio.center_y)
 										temp_text += "Conectando\n"
 										break
 									}
@@ -3616,7 +3616,7 @@ if build_index > 0 and win = 0{
 						if (aa != mx or bb != my) and edificio_draw[# aa, bb]{
 							var temp_edificio = edificio_id[# aa, bb]
 							if temp_edificio.index = id_cable
-								draw_line_off(temp_complex_2.a, temp_complex_2.b, temp_edificio.x, temp_edificio.y)
+								draw_line_off(temp_complex_2.a, temp_complex_2.b, temp_edificio.center_x, temp_edificio.center_y)
 						}
 					}
 				}
@@ -3680,7 +3680,7 @@ if pausa = 0{
 		//Ciclo de los enemigos
 		var cam_center_x = (camx + room_width * zoom / 2), cam_center_y = (camy + room_height * zoom / 2)
 		for(var a = array_length(enemigos) - 1; a >= 0; a--){
-			var dron = enemigos[a], aa = dron.a, bb = dron.b, index = dron.index, dron_vel = 1
+			var dron = enemigos[a], aa = dron.a, bb = dron.b, index = dron.index, vel = dron_vel[index]
 			draw_dron(dron, true)
 			if distance_sqr(cam_center_x, cam_center_y, aa, bb) > 250_000{
 				draw_set_color(c_red)
@@ -3692,7 +3692,7 @@ if pausa = 0{
 					dron.efecto[b]--
 					//Shock
 					if b = 0
-						dron_vel /= 2
+						vel /= 2
 					//Fuego
 					else if b = 1{
 						var dmg = dron_vida_max[index] / 3000
@@ -3703,12 +3703,9 @@ if pausa = 0{
 							array_push(humos, add_humo(aa, bb, dron.posa, dron.posb, cos(dir) / 2, sin(dir) / 2, irandom_range(40, 70)))
 						}
 					}
-					//Hielo
-					else if b = 2
-						dron_vel *= 1.2
 				}
 			if dron.vida <= 0{
-				destroy_dron(dron)
+				delete_dron(dron)
 				continue
 			}
 			if aa < 0
@@ -3721,7 +3718,7 @@ if pausa = 0{
 				dron.b--
 			if dron.target != null_edificio and dron.target.vida <= 0
 				dron.target = null_edificio
-			if in(index, 0, 4, 6){
+			if in(index, idd_arana, idd_tanque, idd_titan){
 				if array_length(edificios) > 0 and dron.target = null_edificio{
 					var temp_complex = xytoab(aa, bb)
 					dron.target = edificio_cercano[# temp_complex.a, temp_complex.b]
@@ -3731,22 +3728,24 @@ if pausa = 0{
 				var min_dis = infinity
 				for(var i = array_length(nucleos) - 1; i >= 0; i--){
 					edificio = nucleos[i]
-					var dis = distance_sqr(aa, bb, edificio.x, edificio.y)
+					var dis = distance_sqr(aa, bb, edificio.center_x, edificio.center_y)
 					if dis < min_dis{
 						min_dis = dis
 						dron.target = edificio
 					}
 				}
 			}
+			if not dron_aereo[index] and terreno[# dron.posa, dron.posb] = idt_hielo
+				vel *= 1.2
 			//Target edificios y drones
 			if dron.target != null_edificio{
 				edificio = dron.target
-				if index != 7
-					dron.dir = (9 * dron.dir + radtodeg(arctan2(edificio.y - bb, aa - edificio.x))) / 10
+				if index != idd_bombardero
+					dron.dir = (9 * dron.dir + radtodeg(arctan2(edificio.center_y - bb, aa - edificio.center_x))) / 10
 				var temp_complex = xytoab(aa, bb), aaa = temp_complex.a, bbb = temp_complex.b, dir = -1, ataque = false
-				var dis = distance_sqr(aa, bb, edificio.x, edificio.y)
+				var dis = distance_sqr(aa, bb, edificio.center_x, edificio.center_y)
 				//Moverse
-				if in(index, 0, 4, 6){
+				if in(index, idd_arana, idd_tanque, idd_titan){
 					if edificio_cercano_dis[# aaa, bbb] > 1 and dis > 2500{//50^2
 						if edificio_cercano_dir[# aaa, bbb] = -1{
 							var min_dis = edificio_cercano_dis[# aaa, bbb], min_dis_eu =  infinity
@@ -3763,12 +3762,12 @@ if pausa = 0{
 									dir = i
 									ds_grid_set(edificio_cercano_dir, aaa, bbb, i)
 									temp_complex = abtoxy(aaaa, bbbb)
-									min_dis_eu = distance_sqr(temp_complex.a, temp_complex.b, edificio.x, edificio.y)
+									min_dis_eu = distance_sqr(temp_complex.a, temp_complex.b, edificio.center_x, edificio.center_y)
 							
 								}
 								else if disi = min_dis{
 									temp_complex = abtoxy(aaaa, bbbb)
-									var c = distance_sqr(temp_complex.a, temp_complex.b, edificio.x, edificio.y)
+									var c = distance_sqr(temp_complex.a, temp_complex.b, edificio.center_x, edificio.center_y)
 									if c < min_dis_eu{
 										min_dis = disi
 										dir = i
@@ -3782,18 +3781,18 @@ if pausa = 0{
 							dir = edificio_cercano_dir[# aaa, bbb]
 						if dir = -1
 							dir = 0
-						dron.a += dron_vel * cos_angle_dir[dir]
-						dron.b -= dron_vel * sin_angle_dir[dir]
-						if index = 4
+						dron.a += vel * cos_angle_dir[dir]
+						dron.b -= vel * sin_angle_dir[dir]
+						if index = idd_tanque
 							dron.dir_move += angle_difference(dron.dir_move, radtodeg(arctan2(sin_angle_dir[dir], cos_angle_dir[dir]))) / 100
 					}
 				}
 				else if dron_aereo[index]{
-					if index = 7{
+					if index = idd_bombardero{
 						if dron.step > 0
 							dron.step--
 						else{
-							dir = point_direction(dron.a, dron.b, edificio.x, edificio.y)
+							dir = point_direction(dron.a, dron.b, edificio.center_x, edificio.center_y)
 							var diff = angle_difference(dir, dron.dir)
 							diff += random_range(-0.01, 0.01)
 							dron.dir += 0.03 * diff
@@ -3803,8 +3802,8 @@ if pausa = 0{
 					}
 					else if index = 3 or dis > 10_000{//100^2
 						var dis_2 = sqrt(dis)
-						dron.a += 2 * dron_vel * (edificio.x - dron.a) / dis_2
-						dron.b += 2 * dron_vel * (edificio.y - dron.b) / dis_2
+						dron.a += vel * (edificio.center_x - dron.a) / dis_2
+						dron.b += vel * (edificio.center_y - dron.b) / dis_2
 					}
 				}
 				if dis < dron_alcance[index]{
@@ -3831,16 +3830,16 @@ if pausa = 0{
 				//Targetear edificios
 				if ataque = false{
 					if dron.temp_target = null_edificio{
-						var dis_max = dron_alcance[index], closest_dis = infinity
-						var maxu = min(ds_grid_width(chunk_edificios) - 1, dron.chunk_x + dron_alcance_chunk_x[index])
-						var maxv = min(ds_grid_height(chunk_edificios) - 1, dron.chunk_y + dron_alcance_chunk_y[index])
-						for(var u = max(0, dron.chunk_x - dron_alcance_chunk_x[index]); u <= maxu; u++)
-							for(var v = max(0, dron.chunk_y - dron_alcance_chunk_y[index]); v <= maxv; v++){
+						var closest_dis = dron_alcance[index]
+						var minu = max(0, dron.chunk_x - dron_alcance_chunk_x[index]), maxu = min(chunk_xsize - 1, dron.chunk_x + dron_alcance_chunk_x[index])
+						var minv = max(0, dron.chunk_y - dron_alcance_chunk_y[index]), maxv = min(chunk_ysize - 1, dron.chunk_y + dron_alcance_chunk_y[index])
+						for(var u = minu; u <= maxu; u++)
+							for(var v = minv; v <= maxv; v++){
 								var chunk = chunk_edificios[# u, v]
 								for(var i = array_length(chunk) - 1; i >= 0; i--){
 									edificio = chunk[i]
-									dis = distance_sqr(aa, bb, edificio.x, edificio.y)
-									if dis < dis_max and dis < closest_dis{
+									dis = distance_sqr(aa, bb, edificio.center_x, edificio.center_y)
+									if dis < closest_dis{
 										dron.temp_target = edificio
 										closest_dis = dis
 									}
@@ -3852,9 +3851,9 @@ if pausa = 0{
 						if edificio.vida <= 0
 							dron.temp_target = null_edificio
 						else{
-							dis = distance_sqr(aa, bb, edificio.x, edificio.y)
-							if index != 7
-								dron.dir = (9 * dron.dir + radtodeg(arctan2(edificio.y - bb, aa - edificio.x))) / 10
+							dis = distance_sqr(aa, bb, edificio.center_x, edificio.center_y)
+							if index != idd_bombardero
+								dron.dir = (9 * dron.dir + radtodeg(arctan2(edificio.center_y - bb, aa - edificio.center_x))) / 10
 							if dis > dron_alcance[index]
 								dron.temp_target = null_edificio
 							else{
@@ -3867,7 +3866,7 @@ if pausa = 0{
 				}
 			}
 			//Alejarse de los enemigos cercanos
-			var temp_dron_size = dron_size[index], temp_array = chunk_enemigos[# dron.chunk_x, dron.chunk_y]
+			var temp_dron_size = dron_size[index], temp_array = chunk_dron_enemigo[# dron.chunk_x, dron.chunk_y]
 			for(var b = array_length(temp_array) - 1; b >= 0; b--){
 				var temp_enemigo = temp_array[b], dis = max(0.01, distance_sqr(aa, bb, temp_enemigo.a, temp_enemigo.b))
 				if dis < temp_dron_size{
@@ -3895,8 +3894,6 @@ if pausa = 0{
 					dron_chunk_push(dron)
 				}
 			}
-			if terreno[# dron.posa, dron.posb] = idt_hielo
-				dron.efecto[2] = 30
 		}
 		for(var a = array_length(enemigos) - 1; a >= 0; a--){
 			var dron = enemigos[a]
@@ -3904,14 +3901,34 @@ if pausa = 0{
 		}
 		//Ciclo drones aliados
 		for(var a = array_length(drones_aliados) - 1; a >= 0; a--){
-			var dron = drones_aliados[a], aa = dron.a, bb = dron.b, index = dron.index
+			var dron = drones_aliados[a], aa = dron.a, bb = dron.b, index = dron.index, vel = dron_vel[index]
 			draw_dron(dron, false)
+			//Efectos
+			for(var b = 0; b < efectos_max; b++)
+				if dron.efecto[b] > 0{
+					dron.efecto[b]--
+					//Shock
+					if b = 0
+						vel /= 2
+					//Fuego
+					else if b = 1{
+						var dmg = dron_vida_max[index] / 3000
+						dmg_causado += min(dron.vida, dmg)
+						dron.vida -= dmg
+						if grafic_humo and (image_index mod 10) = (a mod 10){
+							var dir = direccion_viento + random_range(-pi / 4, pi / 4)
+							array_push(humos, add_humo(aa, bb, dron.posa, dron.posb, cos(dir) / 2, sin(dir) / 2, irandom_range(40, 70)))
+						}
+					}
+				}
 			if dron.vida <= 0{
 				array_disorder_remove(drones_aliados, dron, 0)
 				continue
 			}
+			if not dron_aereo[index] and terreno[# dron.posa, dron.posb] = idt_hielo
+				vel *= 1.2
 			//Dron de Transporte
-			if index = 1{
+			if index = idd_dron{
 				if array_length(puerto_carga_array) > 0{
 					if dron.modo = 0{
 						puerto_carga_atended = (++puerto_carga_atended) mod array_length(puerto_carga_array)
@@ -3920,12 +3937,12 @@ if pausa = 0{
 					}
 					else{
 						edificio = dron.target
-						var dis = distance_sqr(aa, bb, edificio.x, edificio.y)
+						var dis = distance_sqr(aa, bb, edificio.center_x, edificio.center_y)
 						if dis > dron_alcance[dron.index]{
 							dis = sqrt(dis)
-							dron.dir = (9 * dron.dir + radtodeg(arctan2(edificio.y - bb, aa - edificio.x))) / 10
-							dron.a += 2 * (edificio.x - aa) / dis
-							dron.b += 2 * (edificio.y - bb) / dis
+							dron.dir = (9 * dron.dir + radtodeg(arctan2(edificio.center_y - bb, aa - edificio.center_x))) / 10
+							dron.a += vel * (edificio.center_x - aa) / dis
+							dron.b += vel * (edificio.center_y - bb) / dis
 						}
 						else{
 							if dron.modo = 1{
@@ -3963,7 +3980,7 @@ if pausa = 0{
 				}
 			}
 			//Dron Reparador
-			else if index = 2{
+			else if index = idd_reparador{
 				if dron.modo = 0{
 					edificio = edificios[irandom(array_length(edificios) - 1)]
 					if edificio.vida < edificio_vida[edificio.index]{
@@ -3977,32 +3994,35 @@ if pausa = 0{
 						dron.modo = 0
 						continue
 					}
-					var dis = distance_sqr(aa, bb, edificio.x, edificio.y)
+					var dis = distance_sqr(aa, bb, edificio.center_x, edificio.center_y)
 					if dis > dron_alcance[dron.index]{
-						dron.dir = (9 * dron.dir + radtodeg(arctan2(edificio.y - bb, aa - edificio.x))) / 10
-						dron.a += (edificio.x - aa) / dis
-						dron.b += (edificio.y - bb) / dis
+						dron.dir = (9 * dron.dir + radtodeg(arctan2(edificio.center_y - bb, aa - edificio.center_x))) / 10
+						dron.a += vel * (edificio.center_x - aa) / dis
+						dron.b += vel * (edificio.center_y - bb) / dis
 					}
 					else{
 						draw_set_color(c_green)
-						draw_line_off(aa, bb, edificio.x, edificio.y)
+						draw_line_off(aa, bb, edificio.center_x, edificio.center_y)
 						if edificio_curar(edificio, 1)
 							dron.modo = 0
 					}
 				}
 			}
 			//Drones aereos
-			else if in(index, 3, 5, 7){
-				if index = 7 and dron.step > 0
+			else if dron_aereo[index]{
+				var ataque = false
+				if index = idd_bombardero and dron.step > 0
 					dron.step--
+				//Seguir instrucciones
 				if dron.modo = 1{
 					dron.dir = (9 * dron.dir + radtodeg(arctan2(dron.array_real[1], -dron.array_real[0]))) / 10
-					dron.a += 2 * dron.array_real[0]
-					dron.b += 2 * dron.array_real[1]
+					dron.a += vel * dron.array_real[0]
+					dron.b += vel * dron.array_real[1]
 					dron.array_real[2] -= 2
 					if dron.array_real[2] <= 0
 						dron.modo = 0
 				}
+				//Atacar unidades
 				if array_length(enemigos) > 0{
 					var closest_dron = null_enemigo, closest_dis = dron_alcance[dron.index]
 					for(var b = array_length(enemigos) - 1; b >= 0; b--){
@@ -4012,20 +4032,75 @@ if pausa = 0{
 							closest_dron = temp_dron
 						}
 					}
-					if closest_dron != null_enemigo and atacar_dron(dron,,, closest_dron, false)
-						continue
+					if closest_dron != null_enemigo{
+						if atacar_dron(dron,,, closest_dron)
+							continue
+						ataque = true
+					}
+				}
+				//Atacar edificios
+				if ataque = false and array_length(edificios_enemigos) > 0{
+					if dron.temp_target = null_edificio{
+						var closest_dis = dron_alcance[index]
+						var minu = max(0, dron.chunk_x - dron_alcance_chunk_x[index]), maxu = min(chunk_xsize - 1, dron.chunk_x + dron_alcance_chunk_x[index])
+						var minv = max(0, dron.chunk_y - dron_alcance_chunk_y[index]), maxv = min(chunk_ysize - 1, dron.chunk_y + dron_alcance_chunk_y[index])
+						for(var u = minu; u <= maxu; u++)
+							for(var v = minv; v <= maxv; v++){
+								var chunk = chunk_edificios_enemigo[# u, v]
+								for(var i = array_length(chunk) - 1; i >= 0; i--){
+									edificio = chunk[i]
+									dis = distance_sqr(aa, bb, edificio.center_x, edificio.center_y)
+									if dis < closest_dis{
+										dron.temp_target = edificio
+										closest_dis = dis
+									}
+								}
+							}
+					}
+					else{
+						edificio = dron.temp_target
+						if edificio.vida <= 0
+							dron.temp_target = null_edificio
+						else{
+							dis = distance_sqr(aa, bb, edificio.center_x, edificio.center_y)
+							if index != idd_bombardero
+								dron.dir = (9 * dron.dir + radtodeg(arctan2(edificio.center_y - bb, aa - edificio.center_x))) / 10
+							if dis > dron_alcance[index]
+								dron.temp_target = null_edificio
+							else{
+								ataque = true
+								if atacar_dron(dron, edificio)
+									continue
+							}
+						}
+					}
 				}
 			}
 			//Evitar colisiones
-			var size_2 = array_length(drones_aliados)
-			for(var b = a + 1; b < size_2; b++){
-				var temp_dron = drones_aliados[b], dis = max(0.01, distance_sqr(aa, bb, temp_dron.a, temp_dron.b))
-				if dis < 400{//20^2
+			var temp_dron_size = dron_size[index], temp_array = chunk_dron_aliado[# dron.chunk_x, dron.chunk_y]
+			for(var b = array_length(temp_array) - 1; b >= 0; b--){
+				var temp_dron = temp_array[b], dis = max(0.01, distance_sqr(aa, bb, temp_dron.a, temp_dron.b))
+				if dis < temp_dron_size{
 					var aaa = (aa - temp_dron.a) / dis, bbb = (bb - temp_dron.b) / dis
 					dron.a += aaa
 					dron.b += bbb
 					temp_dron.a -= aaa
 					temp_dron.b -= bbb
+				}
+			}
+			//Cambiar de chunk
+			var temp_complex = xytoab(aa, bb)
+			aa = temp_complex.a
+			bb = temp_complex.b
+			if aa != dron.posa or bb != dron.posb{
+				dron.posa = aa
+				dron.posb = bb
+				var chunk_x = clamp(round(aa / chunk_width), 0, chunk_xsize - 1), chunk_y = clamp(round(bb / chunk_height), 0, chunk_ysize - 1)
+				if chunk_x != dron.chunk_x or chunk_y != dron.chunk_y{
+					dron_chunk_remove(dron)
+					dron.chunk_x = chunk_x
+					dron.chunk_y = chunk_y
+					dron_chunk_push(dron)
 				}
 			}
 		}
@@ -4064,7 +4139,7 @@ if pausa = 0{
 							dmg_recibido += min(municion.dmg, target.vida)
 						target.vida -= municion.dmg
 						if target.vida <= 0
-							destroy_dron(target)
+							delete_dron(target)
 					}	
 				}
 				//Daño edificio
@@ -4364,9 +4439,10 @@ if win = 0 and not show_menu{
 			draw_set_color(make_color_hsv(255 * a / array_length(redes), 255, 255))
 			for(var b = array_length(red.edificios) - 1; b >= 0; b--){
 				edificio = red.edificios[b]
+				var center_x = edificio.center_x, center_y = edificio.center_y
 				for(var c = array_length(edificio.energia_link) - 1; c >= 0; c--){
 					var edificio_2 = edificio.energia_link[c]
-					draw_arrow_off(edificio.x, edificio.y, edificio_2.x, edificio_2.y, 8)
+					draw_arrow_off(center_x, center_y, edificio_2.center_x, edificio_2.center_y, 8)
 				}
 			}
 		}
@@ -4389,9 +4465,10 @@ if win = 0 and not show_menu{
 			draw_set_color(make_color_hsv(255 * a / array_length(flujos), 255, 255))
 			for(var b = array_length(flujo.edificios) - 1; b >= 0; b--){
 				edificio = flujo.edificios[b]
+				var center_x = edificio.center_x, center_y = edificio.center_y
 				for(var c = array_length(edificio.flujo_link) - 1; c >= 0; c--){
 					var edificio_2 = edificio.flujo_link[c]
-					draw_arrow_off(edificio.x, edificio.y, edificio_2.x, edificio_2.y, 8)
+					draw_arrow_off(center_x, center_y, edificio_2.center_x, edificio_2.center_y, 8)
 				}
 			}
 		}

@@ -1,4 +1,4 @@
-function delete_edificio(aa, bb, enemigo = false){
+function delete_edificio(aa, bb, destruccion = false){
 	with control{
 		if not edificio_bool[# aa, bb]
 			exit
@@ -15,10 +15,17 @@ function delete_edificio(aa, bb, enemigo = false){
 				}
 			}
 		}
-		array_disorder_remove(edificios, edificio, 0)
+		if edificio.enemigo{
+			array_disorder_remove(edificios_enemigos, edificio, 0)
+			array_disorder_remove(chunk_edificios_enemigo[# edificio.chunk_x, edificio.chunk_y], edificio, 1)
+		}
+		else{
+			array_disorder_remove(edificios, edificio, 0)
+			array_disorder_remove(chunk_edificios[# edificio.chunk_x, edificio.chunk_y], edificio, 1)
+		}
 		edificios_counter[index]--
 		ds_grid_destroy(edificio.coordenadas_dis)
-		if enemigo
+		if destruccion
 			edificios_perdidos++
 		if index = id_puerto_de_carga and edificio.link != null_edificio{
 			if edificio.receptor
@@ -35,18 +42,17 @@ function delete_edificio(aa, bb, enemigo = false){
 		desactivar_edificio(edificio)
 		for(var i = real(index = id_procesador); i < array_length(edificio.procesador_link); i++)
 			array_remove(edificio.procesador_link[i].procesador_link, edificio)
-		array_disorder_remove(chunk_edificios[# edificio.chunk_x, edificio.chunk_y], edificio, 1)
 		#region Torres reparadoras
 			if index = id_torre_reparadora{
 				array_disorder_remove(torres_reparadoras, edificio, 2)
 				for(var c = array_length(edificio.edificios_cercanos) - 1; c >= 0; c--){
-					temp_edificio = edificio.edificios_cercanos[c]
+					var temp_edificio = edificio.edificios_cercanos[c]
 					array_remove(temp_edificio.reparadores_cercanos, edificio)
 				}
 			}
 			var flag = pre_vida < edificio_vida[index]
 			for(var c = array_length(edificio.reparadores_cercanos) - 1; c >= 0; c--){
-				temp_edificio = edificio.reparadores_cercanos[c]
+				var temp_edificio = edificio.reparadores_cercanos[c]
 				array_remove(temp_edificio.edificios_cercanos, edificio)
 				if flag
 					array_remove(temp_edificio.edificios_cercanos_heridos, edificio)
@@ -57,24 +63,24 @@ function delete_edificio(aa, bb, enemigo = false){
 		if index = id_planta_de_reciclaje
 			array_disorder_remove(plantas_de_reciclaje, edificio, 2)
 		else if index = id_ensambladora and edificio.mode{
-			temp_edificio = edificio.link
+			var temp_edificio = edificio.link
 			for(var a = 0; a < rss_max; a++)
-				if a != id_electronico
+				if a != idr_electronico
 					temp_edificio.carga[a] = 0
 			temp_edificio.carga_total = 0
 			temp_edificio.mode = false
-			temp_edificio.carga_max[id_cobre] = 10
-			temp_edificio.carga_input[id_cobre] = true
-			temp_edificio.carga_max[id_silicio] = 10
-			temp_edificio.carga_input[id_silicio] = true
-			temp_edificio.carga_max[id_electronico] = 0
-			temp_edificio.carga_input[id_electronico] = false
-			temp_edificio.carga_max[id_plastico] = 0
-			temp_edificio.carga_input[id_plastico] = false
-			temp_edificio.carga_max[id_baterias] = 0
-			temp_edificio.carga_input[id_baterias] = false
-			temp_edificio.carga_output[id_modulos] = false
-			temp_edificio.carga_output[id_electronico] = true
+			temp_edificio.carga_max[idr_cobre] = 10
+			temp_edificio.carga_input[idr_cobre] = true
+			temp_edificio.carga_max[idr_silicio] = 10
+			temp_edificio.carga_input[idr_silicio] = true
+			temp_edificio.carga_max[idr_electronico] = 0
+			temp_edificio.carga_input[idr_electronico] = false
+			temp_edificio.carga_max[idr_plastico] = 0
+			temp_edificio.carga_input[idr_plastico] = false
+			temp_edificio.carga_max[idr_bateria] = 0
+			temp_edificio.carga_input[idr_bateria] = false
+			temp_edificio.carga_output[idr_modulo] = false
+			temp_edificio.carga_output[idr_electronico] = true
 			calculate_in_out_2(temp_edificio)
 			temp_edificio.link = null_edificio
 		}
@@ -91,7 +97,7 @@ function delete_edificio(aa, bb, enemigo = false){
 		}
 		if grafic_luz
 			encender_luz(false, edificio)
-		if enemigo{
+		if destruccion{
 			ds_grid_set(repair_id, aa, bb, index)
 			ds_grid_set(repair_dir, aa, bb, edificio.dir)
 		}
@@ -102,7 +108,7 @@ function delete_edificio(aa, bb, enemigo = false){
 					if terreno_caminable[terreno[# a, b]]{
 						var temp_priority = ds_grid_get(edificio_cercano_priority, a, b)
 						if not ds_priority_empty(temp_priority){
-							temp_edificio = ds_priority_find_min(temp_priority)
+							var temp_edificio = ds_priority_find_min(temp_priority)
 							while not temp_edificio.vivo{
 								ds_priority_delete_min(temp_priority)
 								temp_edificio = ds_priority_find_min(temp_priority)
@@ -134,7 +140,7 @@ function delete_edificio(aa, bb, enemigo = false){
 			edificio.link.idle = true
 		//Cancelar outputs
 		for(var a = array_length(edificio.outputs) - 1; a >= 0; a--){
-			temp_edificio = edificio.outputs[a]
+			var temp_edificio = edificio.outputs[a]
 			array_remove(temp_edificio.inputs, edificio)
 			if temp_edificio.index = id_cinta_transportadora
 				camino_calcular_in(temp_edificio)
@@ -142,7 +148,7 @@ function delete_edificio(aa, bb, enemigo = false){
 		delete(edificio.outputs)
 		//Cancelar inputs
 		for(var a = array_length(edificio.inputs) - 1; a >= 0; a--){
-			temp_edificio = edificio.inputs[a]
+			var temp_edificio = edificio.inputs[a]
 			array_remove(temp_edificio.outputs, edificio)
 			if temp_edificio.output_index >= array_length(temp_edificio.outputs)
 				temp_edificio.output_index = 0
@@ -163,13 +169,13 @@ function delete_edificio(aa, bb, enemigo = false){
 				change_energia(0, edificio)
 				//Eliminar conecciones directas
 				for(var a = array_length(edificio.energia_link) - 1; a >= 0; a--){
-					temp_edificio = edificio.energia_link[a]
+					var temp_edificio = edificio.energia_link[a]
 					array_remove(temp_edificio.energia_link, edificio)
 				}
 				//Revisar nuevo estado de red
 				var red_bateria = 0
 				for(var a = array_length(temp_red.edificios) - 1; a >= 0; a--){
-					temp_edificio = temp_red.edificios[a]
+					var temp_edificio = temp_red.edificios[a]
 					if temp_edificio.index = id_bateria
 						red_bateria++
 				}
@@ -189,7 +195,7 @@ function delete_edificio(aa, bb, enemigo = false){
 							if not visited[nodo.edificio_index]{
 								visited[nodo.edificio_index] = true
 								for(var a = array_length(nodo.energia_link) - 1; a >= 0; a--){
-									temp_edificio = nodo.energia_link[a]
+									var temp_edificio = nodo.energia_link[a]
 									if not visited[temp_edificio.edificio_index] and not ds_list_in(agregado, temp_edificio){
 										ds_stack_push(pila, temp_edificio)
 										ds_list_add(agregado, temp_edificio)
@@ -210,7 +216,7 @@ function delete_edificio(aa, bb, enemigo = false){
 						if red_bateria > 0
 							temp_red_2.bateria = floor(temp_red.bateria * isla_bateria / red_bateria)
 						for(var a = array_length(isla) - 1; a >= 0; a--){
-							temp_edificio = isla[a]
+							var temp_edificio = isla[a]
 							temp_edificio.red = temp_red_2
 							if edificio_energia_consumo[temp_edificio.index] > 0
 								temp_red_2.consumo += abs(temp_edificio.energia_consumo)
@@ -243,7 +249,7 @@ function delete_edificio(aa, bb, enemigo = false){
 				if array_length(edificio.flujo_link) > 1{
 					//Eliminar conecciones directas
 					for(var a = array_length(edificio.flujo_link) - 1; a >= 0; a--){
-						temp_edificio = edificio.flujo_link[a]
+						var temp_edificio = edificio.flujo_link[a]
 						array_remove(temp_edificio.flujo_link, edificio)
 					}
 					edificio.flujo_link = []
@@ -266,7 +272,7 @@ function delete_edificio(aa, bb, enemigo = false){
 								if not visited[nodo.edificio_index]{
 									visited[nodo.edificio_index] = true
 									for(var a = array_length(nodo.flujo_link) - 1; a >= 0; a--){
-										temp_edificio = nodo.flujo_link[a]
+										var temp_edificio = nodo.flujo_link[a]
 										if not visited[temp_edificio.edificio_index] and not ds_list_in(agregado, temp_edificio){
 											ds_stack_push(pila, temp_edificio)
 											ds_list_add(agregado, temp_edificio)
@@ -288,7 +294,7 @@ function delete_edificio(aa, bb, enemigo = false){
 							if flujo_almacen > 0
 								temp_flujo_2.almacen = floor(temp_flujo.almacen * isla_almacen / flujo_almacen)
 							for(var a = array_length(isla) - 1; a >= 0; a--){
-								temp_edificio = isla[a]
+								var temp_edificio = isla[a]
 								temp_edificio.flujo = temp_flujo_2
 								temp_flujo_2.almacen_max += edificio_flujo_almacen[temp_edificio.index]
 								if edificio_flujo_consumo[temp_edificio.index] > 0
@@ -305,7 +311,7 @@ function delete_edificio(aa, bb, enemigo = false){
 			}
 			//Eliminar links
 			for(var a = array_length(edificio.flujo_link) - 1; a >= 0; a--){
-				temp_edificio = edificio.flujo_link[a]
+				var temp_edificio = edificio.flujo_link[a]
 				array_remove(temp_edificio.flujo_link, edificio)
 			}
 			delete(edificio.flujo_link)
@@ -316,13 +322,13 @@ function delete_edificio(aa, bb, enemigo = false){
 				var temp_complex = temp_list[|a], aaa = temp_complex.a, bbb = temp_complex.b
 				if aaa < 0 or bbb < 0 or aaa >= xsize or bbb >= ysize or not edificio_bool[# aaa, bbb]
 					continue
-				temp_edificio = edificio_id[# aaa, bbb]
+				var temp_edificio = edificio_id[# aaa, bbb]
 				if temp_edificio.index = id_tuberia
 					tuberia_arround(temp_edificio)
 			}
 		}
 		//Retorno de recursos
-		if not cheat and not enemigo{
+		if not cheat and not destruccion{
 			var b = pre_vida / edificio_vida[index]
 			for(var a = array_length(edificio_precio_id[index]) - 1; a >= 0; a--){
 				var c = floor(b * edificio_precio_num[index, a] / 2)
@@ -338,16 +344,15 @@ function delete_edificio(aa, bb, enemigo = false){
 				if temp_enemigo.target = edificio{
 					var temp_complex = xytoab(temp_enemigo.a, temp_enemigo.b)
 					if temp_complex.a >= 0
-						enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
+						destruccion.target = edificio_cercano[# temp_complex.a, temp_complex.b]
 				}
 			}
 		//Explosión Nuclear
-		if enemigo and index = id_planta_nuclear and edificio.fuel > 0{
-			var xpos = edificio.x, ypos = edificio.y
+		if destruccion and index = id_planta_nuclear and edificio.fuel > 0{
+			var xpos = edificio.center_x, ypos = edificio.center_y
 			//Daño edificios
 			for(var i = array_length(edificios) - 1; i >= 0; i--){
-				temp_edificio = edificios[i]
-				var dis = distance_sqr(xpos, ypos, temp_edificio.x, temp_edificio.y)
+				var temp_edificio = edificios[i], dis = distance_sqr(xpos, ypos, temp_edificio.center_x, temp_edificio.center_y)
 				if dis > 160_000{ //400^2
 					temp_edificio.vida -=1
 					continue
@@ -356,14 +361,13 @@ function delete_edificio(aa, bb, enemigo = false){
 			}
 			//Daño enemigos
 			for(var i = array_length(enemigos) - 1; i >= 0; i--){
-				enemigo = enemigos[i]
-				var dis = distance_sqr(xpos, ypos, enemigo.a, enemigo.b)
+				var temp_enemigo = enemigos[i], dis = distance_sqr(xpos, ypos, temp_enemigo.a, temp_enemigo.b)
 				if dis > 160_000//400^2
 					continue
-				enemigo.vida -= 1_000_000 / dis * random_range(0.7, 1.3)
-				if enemigo.vida > 0
+				temp_enemigo.vida -= 1_000_000 / dis * random_range(0.7, 1.3)
+				if temp_enemigo.vida > 0
 					continue
-				destroy_dron(enemigo)
+				delete_dron(temp_enemigo)
 			}
 			//Daño drones aliados
 			for(var i = array_length(drones_aliados) - 1; i >= 0; i--){
@@ -373,7 +377,7 @@ function delete_edificio(aa, bb, enemigo = false){
 				dron.vida -= 1_000_000 / dis * random_range(0.7, 1.3)
 				if dron.vida > 0
 					continue
-				destroy_dron(dron)
+				delete_dron(dron)
 			}
 			nuclear_x = xpos
 			nuclear_y = ypos
@@ -386,7 +390,7 @@ function delete_edificio(aa, bb, enemigo = false){
 				if aaa < 0 or bbb < 0 or aaa >= xsize or bbb >= ysize
 					continue
 				if edificio_bool[# aaa, bbb]{
-					temp_edificio = edificio_id[# aaa, bbb]
+					var temp_edificio = edificio_id[# aaa, bbb]
 					calculate_in_out_2(temp_edificio)
 				}
 			}

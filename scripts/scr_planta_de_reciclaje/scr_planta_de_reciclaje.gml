@@ -3,7 +3,7 @@ function scr_planta_de_reciclaje(edificio = control.null_edificio){
 		var index = edificio.index
 		var red = edificio.red, red_power = red.eficiencia
 		var flujo = edificio.flujo, flujo_power = flujo.eficiencia
-		if edificio.select >= 0 and flujo.liquido = 1 and edificio.carga_total < edificio_carga_max[index]{
+		if edificio.select >= 0 and flujo.liquido = idl_acido and edificio.carga_total < edificio_carga_max[index]{
 			//Apagar
 			if red_power = 0{
 				change_flujo(0, edificio)

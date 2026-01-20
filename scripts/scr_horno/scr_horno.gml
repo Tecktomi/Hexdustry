@@ -3,20 +3,20 @@ function scr_horno(edificio = control.null_edificio){
 		var index = edificio.index
 		if edificio.fuel > 0{
 			edificio.fuel--
-			sound_play_edificio(2, edificio.x, edificio.y)
+			sound_play_edificio(2, edificio.center_x, edificio.center_y)
 		}
-		if (edificio.carga[id_cobre] > 1 or edificio.carga[id_hierro] > 1 or edificio.carga[id_arena] > 1) and
-			(edificio.carga[id_carbon] > 0 or edificio.carga[id_combustible] > 0 or edificio.fuel > 0) and
-			(edificio.carga[id_bronce] < 10 and edificio.carga[id_acero] < 10 and edificio.carga[id_silicio] < 10){
+		if (edificio.carga[idr_cobre] > 1 or edificio.carga[idr_hierro] > 1 or edificio.carga[idr_arena] > 1) and
+			(edificio.carga[idr_carbon] > 0 or edificio.carga[idr_combustible] > 0 or edificio.fuel > 0) and
+			(edificio.carga[idt_bronce] < 10 and edificio.carga[idr_acero] < 10 and edificio.carga[idr_silicio] < 10){
 			if edificio.fuel = 0
-				if (edificio.carga[id_carbon] > 0 or edificio.carga[id_combustible] > 0){
-					if edificio.carga[id_combustible] > 0{
-						edificio.fuel = recurso_combustion_time[id_combustible]
-						edificio.carga[id_combustible]--
+				if (edificio.carga[idr_carbon] > 0 or edificio.carga[idr_combustible] > 0){
+					if edificio.carga[idr_combustible] > 0{
+						edificio.fuel = recurso_combustion_time[idr_combustible]
+						edificio.carga[idr_combustible]--
 					}
-					else if edificio.carga[id_carbon] > 0{
-						edificio.fuel = recurso_combustion_time[id_carbon]
-						edificio.carga[id_carbon]--
+					else if edificio.carga[idr_carbon] > 0{
+						edificio.fuel = recurso_combustion_time[idr_carbon]
+						edificio.carga[idr_carbon]--
 					}
 					encender_luz(, edificio)
 					edificio.carga_total--
@@ -26,26 +26,26 @@ function scr_horno(edificio = control.null_edificio){
 					encender_luz(false, edificio)
 			edificio.proceso++
 			if edificio.proceso >= edificio_proceso[index]{
-				if edificio.carga[id_arena] > 1{
-					edificio.carga[id_arena] -= 2
-					edificio.carga[id_silicio]++
+				if edificio.carga[idr_arena] > 1{
+					edificio.carga[idr_arena] -= 2
+					edificio.carga[idr_silicio]++
 					edificio.carga_total--
 					edificio.proceso -= edificio_proceso[index]
-					if edificio.carga[id_sal] > 0{
-						edificio.carga[id_sal] -= 0.1
+					if edificio.carga[idr_sal] > 0{
+						edificio.carga[idr_sal] -= 0.1
 						edificio.carga_total -= 0.1
 						edificio.proceso += floor(edificio_proceso[index] / 4)
 					}
 				}
-				else if edificio.carga[id_hierro] > 1{
-					edificio.carga[id_hierro] -= 2
-					edificio.carga[id_acero]++
+				else if edificio.carga[idr_hierro] > 1{
+					edificio.carga[idr_hierro] -= 2
+					edificio.carga[idr_acero]++
 					edificio.carga_total--
 					edificio.proceso  -= 1.5 * edificio_proceso[index]
 				}
-				else if edificio.carga[id_cobre] > 1{
-					edificio.carga[id_cobre] -= 2
-					edificio.carga[id_bronce]++
+				else if edificio.carga[idr_cobre] > 1{
+					edificio.carga[idr_cobre] -= 2
+					edificio.carga[idt_bronce]++
 					edificio.carga_total--
 					edificio.proceso -= edificio_proceso[index]
 				}

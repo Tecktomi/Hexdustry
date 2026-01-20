@@ -103,10 +103,10 @@ function mover(edificio = control.null_edificio){
 			}
 			if temp_edificio.index = id_nucleo
 				recursos_obtenidos_time_temp[out]++
-			if in(out, id_piedra_cuprica, id_piedra_ferrica, id_piedra_sulfatada) and in(temp_edificio.index, id_nucleo, id_triturador, id_fabrica_de_concreto)
-				out = id_piedra
-			else if in(out, id_uranio_enriquecido, id_uranio_empobrecido) and in(temp_edificio.index, id_nucleo, id_rifle, id_mortero, id_fabrica_de_drones)
-				out = id_uranio_bruto
+			if in(out, idr_piedra_cuprica, idr_piedra_ferrica, idr_piedra_sulfatada) and in(temp_edificio.index, id_nucleo, id_triturador, id_fabrica_de_concreto)
+				out = idr_piedra
+			else if in(out, idr_uranio_enriquecido, idr_uranio_empobrecido) and in(temp_edificio.index, id_nucleo, id_rifle, id_mortero, id_fabrica_de_drones)
+				out = idr_uranio_bruto
 			temp_edificio.carga[out]++
 			temp_edificio.carga_total++
 			temp_edificio.carga_id = out

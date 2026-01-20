@@ -6,12 +6,12 @@ function scr_planta_nuclear(edificio = control.null_edificio){
 		//Está encendido
 		if edificio.fuel > 0{
 			edificio.fuel--
-			if not in(flujo.liquido, 0, 4){
+			if not in(flujo.liquido, idl_agua, idl_agua_salada){
 				if edificio.modulo
 					fuel = 0
 				draw_set_color(c_yellow)
 				var cam_center_x = (camx + room_width * zoom / 2), cam_center_y = (camy + room_height * zoom / 2)
-				var angle = arctan2(cam_center_y - edificio.x, cam_center_x - edificio.y), cosa = cos(angle), sina = sin(angle)
+				var angle = arctan2(cam_center_y - edificio.center_x, cam_center_x - edificio.center_y), cosa = cos(angle), sina = sin(angle)
 				draw_line(room_width / 2 - 60 * cosa, room_height / 2 - 60 * sina, room_width / 2 - 90 * cosa, room_height / 2 - 90 * sina)
 				if (image_index mod 145) = 0
 						audio_play_sound(snd_nuclear, 0, false, 0.5)
@@ -24,7 +24,7 @@ function scr_planta_nuclear(edificio = control.null_edificio){
 						fuel = 0
 					draw_set_color(c_yellow)
 					var cam_center_x = (camx + room_width * zoom / 2), cam_center_y = (camy + room_height * zoom / 2)
-					var angle = arctan2(cam_center_y - edificio.x, cam_center_x - edificio.y), cosa = cos(angle), sina = sin(angle)
+					var angle = arctan2(cam_center_y - edificio.center_x, cam_center_x - edificio.center_y), cosa = cos(angle), sina = sin(angle)
 					draw_line(room_width / 2 - 60 * cosa, room_height / 2 - 60 * sina, room_width / 2 - 90 * cosa, room_height / 2 - 90 * sina)
 					if (image_index mod 145) = 0
 						audio_play_sound(snd_nuclear, 0, false, 0.5)
@@ -36,10 +36,10 @@ function scr_planta_nuclear(edificio = control.null_edificio){
 		}
 		else if in(flujo.liquido, 0, 4){
 			//Encender
-			if edificio.carga[id_uranio_enriquecido] > 0 and edificio.carga[id_uranio_empobrecido] > 0 and flujo_power > 0{
+			if edificio.carga[idr_uranio_enriquecido] > 0 and edificio.carga[idr_uranio_empobrecido] > 0 and flujo_power > 0{
 				edificio.fuel = 300
-				edificio.carga[id_uranio_enriquecido] -= 0.1
-				edificio.carga[id_uranio_empobrecido]--
+				edificio.carga[idr_uranio_enriquecido] -= 0.1
+				edificio.carga[idr_uranio_empobrecido]--
 				encender_luz(, edificio)
 				change_energia(edificio_energia_consumo[index] * flujo_power, edificio)
 				change_flujo(edificio_flujo_consumo[index], edificio)

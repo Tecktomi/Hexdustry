@@ -47,10 +47,12 @@ function game_start(){
 						delete_edificio(a, b)
 				}
 			}
+		add_edificio(id_laser, 0, spawn_x, spawn_y, true)
+		add_edificio(id_energia_infinita, 0, spawn_x, spawn_y + 1, true)
 		for(var a = array_length(enemigos) - 1; a >= 0; a--)
-			destroy_dron(enemigos[a])
+			delete_dron(enemigos[a])
 		for(var a = array_length(drones_aliados) - 1; a >= 0; a--)
-			destroy_dron(drones_aliados[a])
+			delete_dron(drones_aliados[a])
 		for(var a = 0; a < rss_max; a++)
 			nucleo.carga[a] = carga_inicial[a]
 		for(var a = 0; a < chunk_xsize; a++)

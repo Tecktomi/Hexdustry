@@ -1,13 +1,13 @@
 function herir_hexagono(a, b, dmg, efecto = true){
 	with control{
-		var temp_array = chunk_enemigos[# a / chunk_width, b / chunk_height]
+		var temp_array = chunk_dron_enemigo[# a / chunk_width, b / chunk_height]
 		for(var c = array_length(temp_array) - 1; c >= 0; c--){
 			var target = temp_array[c]
 			if target.posa = a and target.posb = b{
 				dmg_causado += min(target.vida, dmg)
 				target.vida -= dmg
 				if target.vida <= 0
-					destroy_dron(target)
+					delete_dron(target)
 			}
 		}
 		if efecto{

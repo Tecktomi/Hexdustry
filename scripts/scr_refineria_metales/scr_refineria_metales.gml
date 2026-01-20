@@ -5,7 +5,7 @@ function scr_refineria_metales(edificio = control.null_edificio){
 			var red = edificio.red, red_power = red.eficiencia
 		if edificio_flujo[index]
 			var flujo = edificio.flujo, flujo_power = flujo.eficiencia
-		if flujo.liquido = 1 and (edificio.carga[id_piedra_cuprica] > 2 or edificio.carga[id_piedra_ferrica] > 2 or edificio.carga[id_uranio_bruto] > 0){
+		if flujo.liquido = idl_acido and (edificio.carga[idr_piedra_cuprica] > 2 or edificio.carga[idr_piedra_ferrica] > 2 or edificio.carga[idr_uranio_bruto] > 0){
 			//Apagar
 			if red_power = 0{
 				change_flujo(0, edificio)
@@ -21,27 +21,27 @@ function scr_refineria_metales(edificio = control.null_edificio){
 				encender_luz(, edificio)
 			}
 			edificio.proceso += min(red_power, flujo_power) * (1 + 0.3 * edificio.modulo)
-			sound_play_edificio(2, edificio.x, edificio.y)
+			sound_play_edificio(2, edificio.center_x, edificio.center_y)
 			//Producir / Apagar
 			if edificio.proceso >= edificio_proceso[index]{
 				edificio.proceso -= edificio_proceso[index]
 				edificio.start = false
-				if edificio.carga[id_uranio_bruto] > 0{
-					repeat(edificio.carga[id_uranio_bruto]){
+				if edificio.carga[idr_uranio_bruto] > 0{
+					repeat(edificio.carga[idr_uranio_bruto]){
 						if random(1) < 0.99
-							edificio.carga[id_uranio_empobrecido]++
+							edificio.carga[idr_uranio_empobrecido]++
 						else
-							edificio.carga[id_uranio_enriquecido]++
+							edificio.carga[idr_uranio_enriquecido]++
 					}
-					edificio.carga[id_uranio_bruto] = 0
+					edificio.carga[idr_uranio_bruto] = 0
 				}
-				else if edificio.carga[id_piedra_ferrica] > 2{
-					edificio.carga[id_piedra_ferrica] -= 3
-					edificio.carga[id_hierro]++
+				else if edificio.carga[idr_piedra_ferrica] > 2{
+					edificio.carga[idr_piedra_ferrica] -= 3
+					edificio.carga[idr_hierro]++
 				}
-				else if edificio.carga[id_piedra_cuprica] > 2{
-					edificio.carga[id_piedra_cuprica] -= 3
-					edificio.carga[id_cobre]++
+				else if edificio.carga[idr_piedra_cuprica] > 2{
+					edificio.carga[idr_piedra_cuprica] -= 3
+					edificio.carga[idr_cobre]++
 				}
 				edificio.carga_total -= 2
 				edificio.waiting = not mover(edificio)

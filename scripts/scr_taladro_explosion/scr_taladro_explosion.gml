@@ -1,12 +1,12 @@
 function scr_taladro_explosion(edificio = control.null_edificio){
 	with control{
 		var index = edificio.index
-		if edificio.carga[id_explosivo] > 0{
+		if edificio.carga[idr_explosivo] > 0{
 			if edificio.carga_total < edificio_carga_max[index]{
 				edificio.proceso += 1 + 0.4 * edificio.modulo
 				if edificio.proceso >= edificio_proceso[index]{
-					sound_play(snd_explosion, edificio.x, edificio.y)
-					edificio.carga[id_explosivo]--
+					sound_play(snd_explosion, edificio.center_x, edificio.center_y)
+					edificio.carga[idr_explosivo]--
 					edificio.carga_total--
 					var temp_list = get_size(edificio.a, edificio.b, edificio.dir, edificio_size[index] + 2), flag = false
 					for(var b = ds_list_size(temp_list) - 1; b >= 0; b--){
@@ -32,7 +32,7 @@ function scr_taladro_explosion(edificio = control.null_edificio){
 				}
 			}
 		}
-		if not edificio.waiting and edificio.carga_total > edificio.carga[id_explosivo]
+		if not edificio.waiting and edificio.carga_total > edificio.carga[idr_explosivo]
 			edificio.waiting = not mover(edificio)
 	}
 }
