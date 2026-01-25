@@ -67,6 +67,7 @@ function cargar_escenario(file = "", config = true){
 					}
 					mision_switch_oleadas[a] = bool(ini_read_real($"Objetivo {a}", "switch oleadas", 0))
 				}
+				//0 = no disponible, 1 = investigable, 2 = investigado
 				for(var a = 0; a < edificio_max; a++){
 					var b = ini_read_real("Edificios", a, 2)
 					mision_edificios[a] = (b > 0)
@@ -87,6 +88,7 @@ function cargar_escenario(file = "", config = true){
 				categoria_edificios_disponible = array_create(0, array_create(0, 0))
 				categoria_nombre_disponible = array_create(0, "")
 				categoria_index_disponible = array_create(0, 0)
+				//Crear rueda de edificios
 				for(var a = 0; a < array_length(categoria_nombre); a++){
 					var temp_array = array_create(0, 0)
 					for(var b = 0; b < array_length(categoria_edificios[a]); b++){
@@ -101,6 +103,14 @@ function cargar_escenario(file = "", config = true){
 					}
 				}
 				multiplicador_vida_enemigos = ini_read_real("Global", "Multiplicador vida enemigos", 100)
+			}
+			var edificios_enemigos_total = ini_read_real("Edificios enemigos", "total", 0)
+			for(var i = 0; i < edificios_enemigos_total; i++){
+				var a = ini_read_real("Edificios enemigos", $"{i}.a", 0)
+				var b = ini_read_real("Edificios enemigos", $"{i}.b", 0)
+				var index = ini_read_real("Edificios enemigos", $"{i}.index", 0)
+				var dir = ini_read_real("Edificios enemigos", $"{i}.dir", 0)
+				add_edificio(index, dir, a, b, true)
 			}
 			ds_grid_clear(terreno, 0)
 			ds_grid_clear(ore, -1)

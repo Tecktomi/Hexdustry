@@ -36,6 +36,7 @@ function game_start(){
 		camy = clamp(nucleo.b * 14 - room_height / 2, 0, ysize * 14 * zoom - room_height)
 		luces = array_create(0, {a : 0, b : 0, x : 0, y : 0, r : 0})
 		clic_sound = false
+		editor_enemigo = false
 		for(var a = 0; a < xsize; a++)
 			for(var b = 0; b < ysize; b++){
 				if terreno[# a, b] = idt_lava{
@@ -44,12 +45,10 @@ function game_start(){
 				}
 				if edificio_bool[# a, b]{
 					var edificio = edificio_id[# a, b]
-					if edificio != nucleo
+					if edificio != nucleo and not edificio.enemigo
 						delete_edificio(edificio)
 				}
 			}
-		add_edificio(id_laser, 0, spawn_x, spawn_y, true)
-		add_edificio(id_energia_infinita, 0, spawn_x, spawn_y + 1, true)
 		for(var a = array_length(enemigos) - 1; a >= 0; a--)
 			delete_dron(enemigos[a])
 		for(var a = array_length(drones_aliados) - 1; a >= 0; a--)

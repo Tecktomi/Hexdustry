@@ -378,6 +378,7 @@
 "win_salir": "Salir al menú",
 "win_militar": "Militar",
 "win_edificios_perdidos": "Edificios perdidos",
+"win_edificios_destruidos": "Edificios destruidos",
 "win_drones_perdidos": "Drones perdidos",
 "win_dmg_causado": "Daño causado",
 "win_dmg_recibido": "Daño recibido",
@@ -482,6 +483,7 @@
 "objetivo_sin objetivo": "sin objetivo",
 "objetivo_apretar ADWS": "apretar ADWS",
 "objetivo_cargar edificio": "cargar edificio",
+"objetivo_destruir edificio": "destruir edificio",
 
 "planta_quimica_receta 0": "Ácido",
 "planta_quimica_receta 1": "Explosivos",

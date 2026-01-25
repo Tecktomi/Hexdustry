@@ -379,6 +379,7 @@
 "win_militar": "Военные",
 "win_edificios_perdidos": "Потерянные здания",
 "win_drones_perdidos": "Потерянные дроны",
+"win_edificios_destruidos": "Уничтоженные здания",
 "win_dmg_causado": "Нанесённый урон",
 "win_dmg_recibido": "Полученный урон",
 "win_dmg_curado": "Восстановленный урон",
@@ -482,6 +483,7 @@
 "objetivo_sin objetivo": "без цели",
 "objetivo_apretar ADWS": "нажать ADWS",
 "objetivo_cargar edificio": "загрузить здание",
+"objetivo_destruir edificio": "уничтожить здание",
 
 "planta_quimica_receta 0": "Кислота",
 "planta_quimica_receta 1": "Взрывчатка",

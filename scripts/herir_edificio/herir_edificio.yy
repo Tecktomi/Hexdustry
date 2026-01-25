@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"edificio_herir",
+  "%Name":"herir_edificio",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"edificio_herir",
+  "name":"herir_edificio",
   "parent":{
     "name":"SCRIPTS",
     "path":"folders/SCRIPTS.yy",

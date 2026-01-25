@@ -45,13 +45,21 @@ function save_escenario(save_file = ""){
 				}
 				ini_write_real($"Objetivo {a}", "switch oleadas", real(mision_switch_oleadas[a]))
 			}
+			ini_write_real("Edificios enemigos", "total", array_length(edificios_enemigos))
+			for(var a = array_length(edificios_enemigos) - 1; a >= 0; a--){
+				var edificio = edificios_enemigos[a]
+				ini_write_real("Edificios enemigos", $"{a}.a", edificio.a)
+				ini_write_real("Edificios enemigos", $"{a}.b", edificio.b)
+				ini_write_real("Edificios enemigos", $"{a}.index", edificio.index)
+				ini_write_real("Edificios enemigos", $"{a}.dir", edificio.dir)
+			}
 			for(var a = 0; a < edificio_max; a++){
-				if edificio_tecnologia[a]
-					ini_write_real("Edificios", a, 2)
-				else if edificio_tecnologia_desbloqueable[a]
-					ini_write_real("Edificios", a, 1)
-				else
+				if not mision_edificios[a]
 					ini_write_real("Edificios", a, 0)
+				else if edificio_tecnologia[a]
+					ini_write_real("Edificios", a, 2)
+				else
+					ini_write_real("Edificios", a, 1)
 			}
 			ini_write_real("Global", "Multiplicador vida enemigos", multiplicador_vida_enemigos)
 			var temp_array = array_create(terreno_max, 0), max_index = 0

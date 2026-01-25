@@ -1,6 +1,7 @@
 function edificio_curar(edificio = control.null_edificio, vida){
 	with control{
-		dmg_curado += min(vida, edificio_vida[edificio.index] - edificio.vida)
+		if not edificio.enemigo
+			dmg_curado += min(vida, edificio_vida[edificio.index] - edificio.vida)
 		edificio.vida += vida
 		if edificio.vida >= edificio_vida[edificio.index]{
 			edificio.vida = edificio_vida[edificio.index]
