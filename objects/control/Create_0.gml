@@ -3,7 +3,7 @@ draw_set_font(ft_letra)
 browser = (os_browser = browser_not_a_browser)
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
-ini_write_string("Global", "version", "20_01_2026")
+ini_write_string("Global", "version", "24_01_2026")
 medallas = array_create(5)
 default_maps = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas"]
 for(var a = 0; a < array_length(default_maps); a++){
@@ -124,7 +124,7 @@ set_idioma(idiomas[idioma], false)
 	get_keyboard_cursor = 0
 	get_keyboard_text = ""
 	get_keyboard_string_text = ""
-	objetivos_nombre = ["conseguir", "tener almacenado", "construir", "tener construido", "sobrevivir oleadas", "sin objetivo", "apretar ADWS", "cargar edificio"]
+	objetivos_nombre = ["conseguir", "tener almacenado", "construir", "tener construido", "sobrevivir oleadas", "sin objetivo", "apretar ADWS", "cargar edificio", "destruir edificio"]
 	objetivos_nombre_display = []
 	array_copy(objetivos_nombre_display, 0, objetivos_nombre, 0, array_length(objetivos_nombre))
 	oleadas = true
@@ -208,6 +208,7 @@ set_idioma(idiomas[idioma], false)
 	energia_perdida = array_create(0, 0)
 	energia_perdida_time = 0
 	edificios_construidos = 0
+	edificios_destruidos = 0
 	edificios_perdidos = 0
 	drones_construidos = 0
 	drones_perdidos = 0
@@ -276,6 +277,8 @@ null_edificio = {
 	flujo_link: [],
 	vida : 0,
 	target : undefined,
+	target_edificio : undefined,
+	torres : [],
 	flujo_consumo : 0,
 	flujo_consumo_max : 0,
 	energia_consumo : 0,
@@ -321,6 +324,8 @@ ds_list_clear(null_edificio.coordenadas_close)
 null_edificio.edificios_cercanos = array_create(0, null_edificio)
 null_edificio.edificios_cercanos_heridos = array_create(0, null_edificio)
 null_edificio.reparadores_cercanos = array_create(0, null_edificio)
+null_edificio.target_edificio = null_edificio
+null_edificio.torres = array_create(0, null_edificio)
 build_target = null_edificio
 edificios_activos = array_create(0, null_edificio)
 procesador_select = null_edificio
@@ -410,7 +415,7 @@ null_dron = {
 	vida_max : 5,
 	target : null_edificio,
 	temp_target : null_edificio,
-	temp_target_dron : undefined,
+	target_dron : undefined,
 	chunk_x : 0,
 	chunk_y : 0,
 	a : 0,
@@ -432,7 +437,7 @@ null_dron = {
 enemigos = array_create(0, null_dron)
 drones_aliados = array_create(0, null_dron)
 null_edificio.target = null_dron
-null_dron.temp_target_dron = null_dron
+null_dron = null_dron
 chunk_dron_enemigo = ds_grid_create(chunk_xsize, chunk_ysize)
 chunk_dron_aliado = ds_grid_create(chunk_xsize, chunk_ysize)
 chunk_edificios = ds_grid_create(chunk_xsize, chunk_ysize)
@@ -887,7 +892,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 	id_torre_de_alta_tension = def_edificio("Torre de Alta Tensión", 2, spr_cable_tension,, 100,,,, [idr_cobre, idr_acero, idr_electronico], [10, 5, 1]); def_edificio_2(5,,,,,, true)
 	id_perforadora_de_petroleo = def_edificio("Perforadora de Petróleo", 3, spr_perforadora,, 200,, scr_perforadora_petroleo,, [idr_hierro, idr_acero, idr_concreto], [10, 15, 10]); def_edificio_2(80, 10, -40, 2)
 	//40
-	id_mortero = def_edificio("Mortero", 3, spr_mortero, spr_mortero_2, 600, 180, scr_torres_basicas,, [idr_acero, idr_concreto], [50, 30], 20, true, false, [idr_explosivo, idr_uranio_bruto, idr_uranio_enriquecido, idr_uranio_empobrecido], [10, 10, 10, 10]); def_edificio_2(,,,, 2, 600)
+	id_mortero = def_edificio("Mortero", 3, spr_mortero, spr_mortero_2, 600, 180, scr_torres_basicas,, [idr_acero, idr_concreto], [50, 30], 30, true, false, [idr_combustible, idr_explosivo, idr_uranio_bruto, idr_uranio_enriquecido, idr_uranio_empobrecido], [10, 10, 10, 10, 10]); def_edificio_2(,,,, 2, 600)
 	id_procesador = def_edificio("Procesador", 2, spr_procesador,, 80,, scr_procesador,, [idr_cobre, idr_plastico, idr_electronico], [20, 40, 20]); def_edificio_2(10)
 	id_mensaje = def_edificio("Mensaje", 1, spr_mensaje,, 50,,,, [idr_cobre, idr_electronico], [10, 3]); def_edificio_2(,,,,,, true)
 	id_memoria = def_edificio("Memoria", 1, spr_memoria,, 50,,,, [idr_cobre, idr_electronico], [10, 3]); def_edificio_2(,,,,,, true)
@@ -1164,7 +1169,7 @@ sort_edificios()
 	def_tecnologia("depósito", "tubería")
 	def_tecnologia("turbina", "generador", "bomba hidráulica")
 	def_tecnologia("refinería de metales", "planta química")
-	def_tecnologia("fábrica de drones", "planta química", "ensambladora")
+	def_tecnologia("fábrica de drones", "ensambladora")
 	def_tecnologia("bomba de evaporación", "horno")
 	def_tecnologia("horno de lava", "horno", "bomba hidráulica", "fábrica de concreto")
 	def_tecnologia("generador geotérmico", "horno de lava", "turbina")
@@ -1197,6 +1202,7 @@ sort_edificios()
 	array_set(edificio_tecnologia_precio, id_modulo, [{id : idr_electronico, num : 20}, {id : idr_plastico, num : 20}, {id : idr_bateria, num : 20}])
 	edificio_tecnologia_nivel = array_create(edificio_max, -1)
 	tecnologia_nivel_edificios = [array_create(0, 0)]
+	//Crear nivel mínimo tecnológico
 	var edi_count = 0
 	for(var a = 0; a < edificio_max; a++)
 		if edificio_construible[a]{
@@ -1209,6 +1215,7 @@ sort_edificios()
 		}
 		else
 			edi_count++
+	//Verificar los requisitos tecnológicos
 	while edi_count < edificio_max{
 		var stable = true
 		array_push(tecnologia_nivel_edificios, array_create(0, 0))
@@ -1232,6 +1239,7 @@ sort_edificios()
 			break
 		}
 	}
+	//Desbloquear_los edificios básicos
 	for(var a = 0; a < array_length(tecnologia_nivel_edificios[1]); a++){
 		var b = tecnologia_nivel_edificios[1, a], flag = true
 		for(var c = 0; c < array_length(edificio_tecnologia_prev[b]); c++)

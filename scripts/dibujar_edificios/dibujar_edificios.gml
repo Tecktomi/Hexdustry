@@ -150,6 +150,10 @@ function dibujar_edificios(){
 							draw_sprite_off(edificio_sprite_2[index], 0, aa, bb,,,, recurso_color[edificio.select])
 					}
 					//Dibujo estados
+					if edificio.enemigo{
+						draw_set_color(c_red)
+						draw_circle_off(aa + 8, bb, 4, false)
+					}
 					if info and edificio.waiting{
 						draw_set_color(c_yellow)
 						draw_circle_off(aa, bb + 16, 4, false)

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"aplicar_efecto",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"aplicar_efecto",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

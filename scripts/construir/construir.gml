@@ -1,4 +1,4 @@
-function construir(index, dir, mx, my){
+function construir(index, dir, mx, my, enemigo = false){
 	with control{
 		var flag = true, flag_2 = false, build_list = get_size(mx, my, dir, edificio_size[index]), edificio, temp_complex = abtoxy(mx, my)
 		for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
@@ -62,11 +62,10 @@ function construir(index, dir, mx, my){
 				flag = false
 		}
 		//Detectar enemigos cerca
-		if flag and not cheat{
-			var size_2 = array_length(enemigos)
-			for(var a = 0; a < size_2; a++){
-				var enemigo = enemigos[a]
-				if (sqr(enemigo.x - temp_complex.a) + sqr(enemigo.y - temp_complex.b)) < 10_000{//100^2
+		if flag and not cheat and not enemigo{
+			for(var a = array_length(enemigos) - 1; a >= 0; a--){
+				var dron = enemigos[a]
+				if distance_sqr(dron.x, dron.y, temp_complex.a, temp_complex.b) < 10_000{//100^2
 					flag = false
 					break
 				}
@@ -77,8 +76,8 @@ function construir(index, dir, mx, my){
 		if not flag
 			exit
 		if in(index, id_tunel, id_tunel_salida) and build_able and build_target.index = id_tunel
-			index = 16
-		edificio = add_edificio(index, dir, mx, my)
+			index = id_tunel_salida
+		edificio = add_edificio(index, dir, mx, my, enemigo)
 		//Algoritmo link de tuneles
 		if in(index, id_tunel, id_tunel_salida){
 			build_able = false
@@ -113,7 +112,7 @@ function construir(index, dir, mx, my){
 					}
 				}
 				build_target.idle = false
-				if index = 16{
+				if index = id_tunel_salida{
 					array_push(edificio.inputs, build_target)
 					array_push(build_target.outputs, edificio)
 				}
@@ -128,15 +127,17 @@ function construir(index, dir, mx, my){
 			}
 		}
 		//Actualizar recursos
-		if not cheat
-			for(var a = 0; a < array_length(edificio_precio_id[index]); a++){
-				nucleo.carga[edificio_precio_id[index, a]] -= edificio_precio_num[index, a]
-				nucleo.carga_total -= edificio_precio_num[index, a]
+		if not enemigo{
+			if not cheat
+				for(var a = 0; a < array_length(edificio_precio_id[index]); a++){
+					nucleo.carga[edificio_precio_id[index, a]] -= edificio_precio_num[index, a]
+					nucleo.carga_total -= edificio_precio_num[index, a]
+				}
+			if in(index, id_planta_quimica, id_fabrica_de_drones){
+				show_menu = true
+				show_menu_build = edificio
+				build_index = 0
 			}
-		if in(index, id_planta_quimica, id_fabrica_de_drones){
-			show_menu = true
-			show_menu_build = edificio
-			build_index = 0
 		}
 	}
 }

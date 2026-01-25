@@ -9,7 +9,7 @@ function add_dron(a, b, index, enemigo = true){
 			vida_max : dron_vida_max[index],
 			target : null_edificio,
 			temp_target : null_edificio,
-			temp_target_dron : null_dron,
+			target_dron : null_dron,
 			chunk_x : clamp(round(a / chunk_width), 0, chunk_xsize - 1),
 			chunk_y : clamp(round(b / chunk_height), 0, chunk_ysize - 1),
 			a : a,
