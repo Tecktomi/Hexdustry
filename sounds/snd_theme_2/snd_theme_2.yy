@@ -10,7 +10,7 @@
   "compression":0,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":0.9976871,
+  "duration":99.048,
   "exportDir":"",
   "name":"snd_theme_2",
   "parent":{

@@ -29,8 +29,40 @@ function add_dron(a, b, index, enemigo = true){
 			//0 = [enemigos, aliados], 1 = chunk_pointer
 			punteros : array_create(2, 0),
 		}
-		if enemigo
+		if enemigo{
 			array_disorder_push(enemigos, dron, 0)
+			dron.vida_max = dron.vida * power(d / 3, 1.1) * multiplicador_vida_enemigos / 100
+			dron.vida = dron.vida_max
+			dron.target = edificio_cercano[# a, b]
+			if dron_aereo[dron.index]{
+				var min_dis = infinity, temp_edificio = dron.target, aaa = temp_complex.a, bbb = temp_complex.b
+				if brandom(){
+					for(var j = array_length(nucleos) - 1; j >= 0; j--){
+						temp_edificio = nucleos[j]
+						var dis = distance_sqr(aaa, bbb, temp_edificio.center_x, temp_edificio.center_y)
+						if dis < min_dis{
+							min_dis = dis
+							dron.target = temp_edificio
+						}
+					}
+				}
+				else{
+					if array_length(edificios_index[id_silo_de_misiles]) > 0
+						temp_edificio = edificios_index[id_silo_de_misiles, 0]
+					else if array_length(edificios_index[id_planta_nuclear]) > 0
+						temp_edificio = edificios_index[id_planta_nuclear, 0]
+					else if array_length(edificios_index[id_generador_geotermico]) > 0
+						temp_edificio = edificios_index[id_generador_geotermico, 0]
+					else if array_length(edificios_index[id_turbina]) > 0
+						temp_edificio = edificios_index[id_turbina, 0]
+					else if array_length(edificios_index[id_generador]) > 0
+						temp_edificio = edificios_index[id_generador, 0]
+					else if array_length(edificios_index[id_panel_solar]) > 0
+						temp_edificio = edificios_index[id_panel_solar, 0]
+					dron.target = temp_edificio
+				}
+			}
+		}
 		else{
 			array_disorder_push(drones_aliados, dron, 0)
 			drones_construidos++

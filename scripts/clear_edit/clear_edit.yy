@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"clear_edit",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"clear_edit",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

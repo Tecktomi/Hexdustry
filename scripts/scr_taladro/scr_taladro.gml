@@ -15,7 +15,7 @@ function scr_taladro(edificio = control.null_edificio){
 				change_flujo(edificio_flujo_consumo[index], edificio)
 				edificio.proceso += (1 + 0.6 * (flujo.liquido = idl_agua ? flujo.eficiencia : 0)) * edificio.select * (1 + 0.4 * edificio.modulo)
 			}
-			sound_play_edificio(0, edificio.center_x, edificio.center_y, 2)
+			sound_play_edificio(0, edificio.center_x, edificio.center_y, 3)
 			if edificio.proceso >= edificio_proceso[index]{
 				edificio.proceso = 0
 				var temp_list = ds_list_create(), temp_complex_2 = {a : 0, b : 0}, flag = false

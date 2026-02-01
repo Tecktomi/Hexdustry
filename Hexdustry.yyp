@@ -30,6 +30,8 @@
   ],
   "ForcedPrefabProjectReferences":[],
   "IncludedFiles":[
+    {"$GMIncludedFile":"","%Name":"Asalto.png","CopyToMask":-1,"filePath":"datafiles","name":"Asalto.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"Asalto.txt","CopyToMask":-1,"filePath":"datafiles","name":"Asalto.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Cuevas.png","CopyToMask":-1,"filePath":"datafiles","name":"Cuevas.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Cuevas.txt","CopyToMask":-1,"filePath":"datafiles","name":"Cuevas.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Desierto.png","CopyToMask":-1,"filePath":"datafiles","name":"Desierto.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -57,7 +59,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.14.2.213",
+    "IDEVersion":"2024.14.3.217",
   },
   "name":"Hexdustry",
   "resources":[
@@ -87,6 +89,7 @@
     {"id":{"name":"cargar_escenario","path":"scripts/cargar_escenario/cargar_escenario.yy",},},
     {"id":{"name":"change_energia","path":"scripts/change_energia/change_energia.yy",},},
     {"id":{"name":"change_flujo","path":"scripts/change_flujo/change_flujo.yy",},},
+    {"id":{"name":"clear_edit","path":"scripts/clear_edit/clear_edit.yy",},},
     {"id":{"name":"complex_equal","path":"scripts/complex_equal/complex_equal.yy",},},
     {"id":{"name":"construir","path":"scripts/construir/construir.yy",},},
     {"id":{"name":"control_camara","path":"scripts/control_camara/control_camara.yy",},},
@@ -129,6 +132,7 @@
     {"id":{"name":"ds_list_remove","path":"scripts/ds_list_remove/ds_list_remove.yy",},},
     {"id":{"name":"edificio_curar","path":"scripts/edificio_curar/edificio_curar.yy",},},
     {"id":{"name":"edificio_pathfind","path":"scripts/edificio_pathfind/edificio_pathfind.yy",},},
+    {"id":{"name":"editor_escenarios","path":"scripts/editor_escenarios/editor_escenarios.yy",},},
     {"id":{"name":"encender_luz","path":"scripts/encender_luz/encender_luz.yy",},},
     {"id":{"name":"exit_keyboard_input","path":"scripts/exit_keyboard_input/exit_keyboard_input.yy",},},
     {"id":{"name":"explosion","path":"scripts/explosion/explosion.yy",},},
