@@ -128,5 +128,8 @@ function set_mode(mode, select, edificio = control.null_edificio){
 			calculate_in_out_2(edificio)
 			mover_in(edificio)
 		}
+		//Refinería de Petróleo
+		else if index = id_refineria_de_petroleo
+			edificio.select = select
 	}
 }

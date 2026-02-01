@@ -56,8 +56,8 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			procesador_link : array_create(0, null_edificio),
 			eliminar : false,
 			agregar : false,
-			chunk_x : clamp(round(a / chunk_width), 0, chunk_xsize - 1),
-			chunk_y : clamp(round(b / chunk_height), 0, chunk_ysize - 1),
+			chunk_x : clamp(floor(a / chunk_width), 0, chunk_xsize - 1),
+			chunk_y : clamp(floor(b / chunk_height), 0, chunk_ysize - 1),
 			target_chunks : array_create(0, {a : 0, b : 0}),
 			array_real : array_create(0, 0),
 			xscale : 1,
@@ -70,9 +70,10 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			sound : undefined,
 			modulo : false,
 			// 0 = edificios, 1 = chunk_edificios, 2 = [torres_tension, plantas_reciclaje, torres_reparadoras, puertos_carga, target.torres], 3 = luz, 4 = edificios_activos
-			// 5 = red, 6 = flujo, 7 = torres
+			// 5 = red, 6 = flujo, 7 = torres, 8 = edificios_index
 			punteros : array_create(5, 0),
-			enemigo : enemigo
+			enemigo : enemigo,
+			prioridad : 0
 		}
 		if edificio_size[index] = 2.5{
 			if in(dir, 0, 1)
@@ -99,8 +100,10 @@ function add_edificio(index, dir, a, b, enemigo = false){
 		ds_grid_clear(edificio.coordenadas_dis, infinity)
 		ds_list_add(edificio.coordenadas_close, {a : 0, b : 0})
 		ds_list_clear(edificio.coordenadas_close)
-		if not enemigo
+		if not enemigo{
 			edificios_construidos++
+			array_disorder_push(edificios_index[index], edificio, 8)
+		}
 		if mision_actual >= 0 and mision_objetivo[mision_actual] = 2 and mision_target_id[mision_actual] = index and ++mision_counter >= mision_target_num[mision_actual]
 			pasar_mision()
 		temp_complex = {a : 0, b : 0}
@@ -158,15 +161,16 @@ function add_edificio(index, dir, a, b, enemigo = false){
 		for(var c = ds_list_size(temp_list_arround) - 1; c >= 0; c--)
 			ds_list_add(edificio.bordes, temp_list_arround[|c])
 		if edificio_armas[index]{
-			var dis = edificio_alcance_sqr[index]
-			for(var i = chunk_xsize; i >= 0; i--)
-				for(var j = chunk_ysize; j >= 0; j--){
-					temp_complex = abtoxy(chunk_width * i, chunk_height * j)
-					var temp_complex_2 = abtoxy(chunk_width * i, chunk_height * (j + 1) - 1), temp_complex_3 = abtoxy(chunk_width * (i + 1) - 1, chunk_height * j), temp_complex_4 = abtoxy(chunk_width * (i + 1) - 1, chunk_height * (j + 1) - 1)
-					if distance_sqr(x, y, temp_complex.a, temp_complex.b) < dis or
-						distance_sqr(x, y, temp_complex_2.a, temp_complex_2.b) < dis or
-						distance_sqr(x, y, temp_complex_3.a, temp_complex_3.b) < dis or
-						distance_sqr(x, y, temp_complex_4.a, temp_complex_4.b) < dis
+			var dis = edificio_alcance_sqr[index], chunk_size_x = chunk_width * 48, chunk_size_y = chunk_height * 14
+			var mini = max(edificio.chunk_x - edificio_alcance_chunk_x[index], 0), minj = max(edificio.chunk_y - edificio_alcance_chunk_y[index], 0)
+			var maxi = min(edificio.chunk_x + edificio_alcance_chunk_x[index], chunk_xsize - 1), maxj = min(edificio.chunk_y + edificio_alcance_chunk_y[index], chunk_ysize - 1)
+			for(var i = mini; i <= maxi; i++)
+				for(var j = minj; j <= maxj; j++){
+					var chunk_x = i * chunk_size_x, chunk_y = j * chunk_size_y
+					if distance_sqr(center_x, center_y, chunk_x, chunk_y) < dis or
+						distance_sqr(center_x, center_y, chunk_x + chunk_size_x, chunk_y) < dis or
+						distance_sqr(center_x, center_y, chunk_x, chunk_y + chunk_size_y) < dis or
+						distance_sqr(center_x, center_y, chunk_x + chunk_size_x, chunk_y + chunk_size_y) < dis
 						array_push(edificio.target_chunks, {a : i, b : j})
 				}
 			if index = id_lanzallamas{
@@ -514,8 +518,12 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			}
 			ds_list_destroy(temp_list_flujos)
 			edificio.flujo.almacen_max += edificio_flujo_almacen[index]
-			if in(index, id_bomba_de_evaporacion, id_generador_geotermico, id_extractor_atmosferico){
-				edificio.flujo.liquido = 0
+			if index = id_bomba_hidraulica and in(edificio.flujo.liquido, -1, edificio.fuel){
+				edificio.flujo.liquido = edificio.fuel
+				change_flujo(edificio_flujo_consumo[index], edificio)
+			}
+			else if in(index, id_bomba_de_evaporacion, id_generador_geotermico, id_extractor_atmosferico) and in(edificio.flujo.liquido, -1, idl_agua){
+				edificio.flujo.liquido = idl_agua
 				change_flujo(edificio_flujo_consumo[index], edificio)
 				if index = id_generador_geotermico{
 					edificio.select = 0
@@ -541,7 +549,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 				edificio.flujo.liquido = 1
 				change_flujo(edificio_flujo_consumo[index], edificio)
 			}
-			if grafic_luz and edificio.flujo.liquido = 3
+			if grafic_luz and edificio.flujo.liquido = idl_lava
 				encender_luz(, edificio)
 			if index = id_tuberia
 				tuberia_arround(edificio)
@@ -557,7 +565,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 		if index = id_laser
 			edificio.fuel = 1
 		if index = id_refineria_de_petroleo
-			edificio.fuel = 60
+			edificio.select = 60
 		ds_list_destroy(temp_list_size)
 		ds_list_destroy(temp_list_arround)
 		return edificio

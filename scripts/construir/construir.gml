@@ -1,6 +1,6 @@
 function construir(index, dir, mx, my, enemigo = false){
 	with control{
-		var flag = true, flag_2 = false, build_list = get_size(mx, my, dir, edificio_size[index]), edificio, temp_complex = abtoxy(mx, my)
+		var flag = true, flag_2 = false, build_list = get_size(mx, my, dir, edificio_size[index]), edificio = control.null_edificio, temp_complex = abtoxy(mx, my)
 		for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
 			var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
 			//Asegurarse de que esté dentro del mundo
@@ -74,7 +74,7 @@ function construir(index, dir, mx, my, enemigo = false){
 		if flag and in(index, id_taladro, id_taladro_electrico) and not flag_2
 			flag = false
 		if not flag
-			exit
+			return null_edificio
 		if in(index, id_tunel, id_tunel_salida) and build_able and build_target.index = id_tunel
 			index = id_tunel_salida
 		edificio = add_edificio(index, dir, mx, my, enemigo)
@@ -134,10 +134,11 @@ function construir(index, dir, mx, my, enemigo = false){
 					nucleo.carga_total -= edificio_precio_num[index, a]
 				}
 			if in(index, id_planta_quimica, id_fabrica_de_drones){
+				clear_edit()
 				show_menu = true
 				show_menu_build = edificio
-				build_index = 0
 			}
 		}
+		return edificio
 	}
 }

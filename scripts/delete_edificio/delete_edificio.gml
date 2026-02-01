@@ -1,7 +1,7 @@
 function delete_edificio(edificio = control.null_edificio, destruccion = false){
 	with control{
 		if not edificio_bool[# edificio.a, edificio.b]{
-			show_debug_message($"###ADVERTENCIA###\n\nIntentando eliminar {edificio_nombre[edificio.index]} en {edificio.a}, {edificio.b}")
+			show_debug_message($"###ADVERTENCIA###\n  Intentando eliminar {edificio_nombre[edificio.index]} en {edificio.a}, {edificio.b}")
 			exit
 		}
 		var index = edificio.index, pre_vida = edificio.vida, aa = edificio.a, bb = edificio.b, enemigo = edificio.enemigo
@@ -25,6 +25,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false){
 		else{
 			array_disorder_remove(edificios, edificio, 0)
 			array_disorder_remove(chunk_edificios[# edificio.chunk_x, edificio.chunk_y], edificio, 1)
+			array_disorder_remove(edificios_index[index], edificio, 8)
 		}
 		edificios_counter[index]--
 		ds_grid_destroy(edificio.coordenadas_dis)
@@ -106,6 +107,10 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false){
 		if destruccion and not enemigo{
 			ds_grid_set(repair_id, aa, bb, index)
 			ds_grid_set(repair_dir, aa, bb, edificio.dir)
+			if edificio_seteable[index]{
+				ds_grid_set(repair_mode, aa, bb, edificio.mode)
+				ds_grid_set(repair_select, aa, bb, edificio.select)
+			}
 		}
 		ds_list_destroy(edificio.coordenadas)
 		if menu = 1 and index = id_nucleo and array_length(edificios_targeteables) > 0
@@ -343,14 +348,18 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false){
 			}
 		}
 		//Camiar target de enemigos
-		size = array_length(enemigos)
 		if index != id_nucleo
-			for(var a = 0; a < size; a++){
+			for(var a = array_length(enemigos) - 1; a >= 0; a--){
 				var temp_enemigo = enemigos[a]
 				if temp_enemigo.target = edificio{
 					var temp_complex = xytoab(temp_enemigo.x, temp_enemigo.y)
-					if temp_complex.a >= 0
-						destruccion.target = edificio_cercano[# temp_complex.a, temp_complex.b]
+					if temp_complex.a >= 0{
+						var temp_edificio = edificio_cercano[# temp_complex.a, temp_complex.b]
+						if temp_edificio = null_edificio
+							temp_enemigo.target = nucleos[0]
+						else
+							temp_enemigo.target = temp_edificio
+					}
 				}
 			}
 		//Explosión Nuclear
@@ -407,6 +416,10 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false){
 			var temp_edificio = edificio.torres[i]
 			if temp_edificio.target = edificio
 				temp_edificio.target_edificio = null_edificio
+		}
+		if show_menu and edificio = show_menu_build{
+			show_menu = false
+			show_menu_build = null_edificio
 		}
 		delete(edificio)
 	}
