@@ -97,6 +97,8 @@
 "Extractor Atmosférico": "Extractor Atmosférico",
 "Cruce": "Cruce",
 "Módulo": "Módulo",
+"Fábrica de Drones Grande": "Fábrica de Drones Grande",
+"Cinta Grande": "Cinta Grande",
 
 "descripcion_Núcleo": "Es el centro de mando, aquí se almacenan todos los recursos y debes protegerlo a toda costa",
 "descripcion_Taladro": "Permite minar cobre, hierro y carbón sin coste alguno.    Puede potenciarse con Agua",
@@ -158,6 +160,8 @@
 "descripcion_Extractor Atmosférico": "Extrae agua de la atmósfera, ideal para terrenos donde no es fácil obtenerla",
 "descripcion_Cruce": "Permite realizar conexiones de cintas transportadoras que se curcen",
 "descripcion_Módulo": "Mejora las características de algún edificio",
+"descripcion_Fábrica de Drones Grande": "Permite fabricar drones más grandes usando Ácido",
+"descripcion_Cinta Grande": "Transporta drones entre fábricas",
 
 "Cobre": "Cobre",
 "Carbón": "Carbón",
@@ -267,6 +271,7 @@
 "Líquidos": "Líquidos",
 "Defensa": "Defensa",
 "Lógica": "Lógica",
+"Drones": "Drones",
 
 "editor_nuevo_objetivo": "Nombre objetivo",
 "editor_configuracion": "Configuración",

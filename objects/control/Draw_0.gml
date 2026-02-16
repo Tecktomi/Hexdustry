@@ -344,8 +344,8 @@ if in(menu, 1, 3){
 					draw_set_halign(fa_left)
 				}
 				//Planta de Reciclaje
-				else if index = id_planta_de_reciclaje and edificio.select >= 0
-					draw_sprite_off(dron_sprite[edificio.select], 0, aa, bb,,,,, 0.5)
+				else if in(index, id_fabrica_de_drones, id_planta_de_reciclaje, id_fabrica_de_drones_grande, id_cinta_grande) and edificio.select >= 0
+					draw_sprite_off(dron_sprite[edificio.select], 0, center_x, center_y,,,,, 0.5)
 				draw_vida(aaa, bbb, edificio.vida, edificio_vida[index])
 			}
 	//Reconstruir
@@ -1331,8 +1331,10 @@ if show_menu{
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * lq_max) * zoom, false)
 		else if index = id_planta_quimica
 			draw_rectangle(aa - 90 * zoom, bb + 40 * zoom, aa + 90 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, false)
-		else if index = id_fabrica_de_drones
-			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * dron_max) * zoom, false)
+		else if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
+			var temp_array = index = id_fabrica_de_drones ? [idd_dron, idd_reparador, idd_explosivo] : [idd_helicoptero, idd_bombardero], len = array_length(temp_array)
+			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * len) * zoom, false)
+		}
 		else if index = id_refineria_de_petroleo{
 			var c = max(max(string_width(recurso_nombre_display[idr_combustible]), string_width(recurso_nombre_display[idr_plastico]), string_width(recurso_nombre_display[idr_piedra_sulfatada])) + string_width(": 100%"), 200)
 			draw_rectangle(aa - c * zoom / 2, bb + 40 * zoom, aa + c * zoom / 2, bb + 120 * zoom, false)
@@ -1361,11 +1363,12 @@ if show_menu{
 				draw_text(aa - 70 * zoom, bb + (40 + 20 * a) * zoom, planta_quimica_receta[a])
 			}
 		}
-		if index = id_fabrica_de_drones{
-			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * dron_max) * zoom, true)
+		if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
+			var temp_array = index = id_fabrica_de_drones ? [idd_dron, idd_reparador, idd_explosivo] : [idd_helicoptero, idd_bombardero], len = array_length(temp_array)
+			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * len) * zoom, true)
 			draw_text(aa - 80 * zoom, bb + 20 * zoom, L.show_menu_unidad)
-			for(var a = 0; a < dron_max; a++)
-				draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, dron_nombre_display[a])
+			for(var a = 0; a < len; a++)
+				draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, dron_nombre_display[temp_array[a]])
 		}
 		else if index = id_deposito
 			draw_text(aa - 80 * zoom, bb + 20 * zoom, "Vaciar")
@@ -1383,17 +1386,39 @@ if show_menu{
 			draw_set_halign(fa_left)
 		}
 		if mouse_x > aa - 80 * zoom and mouse_y > bb + 20 * zoom and mouse_x < aa + 80 * zoom{
-			if in(index, id_selector, id_overflow, id_embotelladora) and mouse_y < bb + 40 * zoom{
-				if mouse_check_button_pressed(mb_left){
+			if in(index, id_selector, id_overflow, id_embotelladora){
+				if mouse_check_button_pressed(mb_left) and mouse_y < bb + 40 * zoom{
 					mouse_clear(mb_left)
 					show_menu = false
 					set_mode(not edificio.mode, edificio.select, edificio)
 				}
 			}
-			else if in(index, id_selector, id_recurso_infinito) and mouse_y < bb + (40 + 28 * ceil(rss_max / 5)) * zoom{
-				var a = floor((mouse_x - (aa - 80 * zoom)) / (32 * zoom)) + 5 * floor((mouse_y - (bb + 40 * zoom)) / (28 * zoom))
-				if a >= 0 and a < rss_max{
-					draw_text_background(mouse_x + 20, mouse_y, recurso_nombre_display[a])
+			else if in(index, id_selector, id_recurso_infinito){
+				if mouse_y < bb + (40 + 28 * ceil(rss_max / 5)) * zoom{
+					var a = floor((mouse_x - (aa - 80 * zoom)) / (32 * zoom)) + 5 * floor((mouse_y - (bb + 40 * zoom)) / (28 * zoom))
+					if a >= 0 and a < rss_max{
+						draw_text_background(mouse_x + 20, mouse_y, recurso_nombre_display[a])
+						cursor = cr_handpoint
+						if mouse_check_button_pressed(mb_left){
+							mouse_clear(mb_left)
+							show_menu = false
+							set_mode(edificio.mode, a, edificio)
+						}
+					}
+				}
+			}
+			else if index = id_liquido_infinito{
+				if mouse_check_button_pressed(mb_left) and mouse_y < bb + (40 + 20 * lq_max) * zoom{
+					mouse_clear(mb_left)
+					show_menu = false
+					var a = floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))
+					set_mode(edificio.mode, a, edificio)
+				}
+			}
+			else if index = id_planta_quimica{
+				if mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom{
+					var a = clamp(floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom)), 0, array_length(planta_quimica_receta) - 1)
+					draw_text_background(mouse_x + 20, mouse_y, planta_quimica_descripcion[a])
 					cursor = cr_handpoint
 					if mouse_check_button_pressed(mb_left){
 						mouse_clear(mb_left)
@@ -1402,36 +1427,19 @@ if show_menu{
 					}
 				}
 			}
-			else if index = id_liquido_infinito and mouse_y < bb + (40 + 20 * lq_max) * zoom{
-				if mouse_check_button_pressed(mb_left){
-					mouse_clear(mb_left)
-					show_menu = false
-					var a = floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))
-					set_mode(edificio.mode, a, edificio)
-				}
-			}
-			else if index = id_planta_quimica and mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom{
-				var a = clamp(floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom)), 0, array_length(planta_quimica_receta) - 1)
-				draw_text_background(mouse_x + 20, mouse_y, planta_quimica_descripcion[a])
-				cursor = cr_handpoint
-				if mouse_check_button_pressed(mb_left){
-					mouse_clear(mb_left)
-					show_menu = false
-					set_mode(edificio.mode, a, edificio)
-				}
-			}
-			else if index = id_fabrica_de_drones and mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * dron_max) * zoom{
-				var a = floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom)), temp_text = $"{dron_descripcion[a]}\n"
-				if in(a, 0, 4, 6)
-					temp_text += $"  {L.show_menu_no_disponible}\n"
-				else for(var b = array_length(dron_precio_id[a]) - 1; b >= 0; b--)
-					temp_text += $"  {recurso_nombre_display[dron_precio_id[a, b]]}: {dron_precio_num[a, b]}\n"
-				draw_text_background(mouse_x + 20, mouse_y, temp_text)
-				cursor = cr_handpoint
-				if mouse_check_button_pressed(mb_left) and not in(a, 0, 4, 6){
-					mouse_clear(mb_left)
-					show_menu = false
-					set_mode(edificio.mode, a, edificio)
+			else if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
+				var temp_array = index = id_fabrica_de_drones ? [idd_dron, idd_reparador, idd_explosivo] : [idd_helicoptero, idd_bombardero], len = array_length(temp_array)
+				if mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * len) * zoom{
+					var a = temp_array[floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))], temp_text = $"{dron_descripcion[a]}\n"
+					for(var b = array_length(dron_precio_id[a]) - 1; b >= 0; b--)
+						temp_text += $"  {recurso_nombre_display[dron_precio_id[a, b]]}: {dron_precio_num[a, b]}\n"
+					draw_text_background(mouse_x + 20, mouse_y, temp_text)
+					cursor = cr_handpoint
+					if mouse_check_button_pressed(mb_left){
+						mouse_clear(mb_left)
+						show_menu = false
+						set_mode(edificio.mode, a, edificio)
+					}
 				}
 			}
 			else if index = id_deposito{
@@ -1472,6 +1480,7 @@ var edificio = edificio_id[# mx, my], temp_coordenada = edificio.coordenadas
 if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_procesador){
 	//Mostrar terreno
 	var temp_text = $"{terreno_nombre_display[terreno[# mx, my]]}\n"
+	//Seleccionar Dron
 	if mouse_check_button_pressed(mb_left){
 		var flag_dron = true, min_dis = 900 * sqr(zoom) //(30 / zoom)^2
 		for(var a = array_length(drones_aliados) - 1; a >= 0; a--){
@@ -1738,8 +1747,8 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 					set_camino_dir(edificio.link)
 				}
 			}
-			else if index = id_fabrica_de_drones{
-				if edificio.select >= 0{
+			else if in(index, id_fabrica_de_drones, id_planta_de_reciclaje, id_fabrica_de_drones_grande, id_cinta_grande){
+				if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande) and edificio.select >= 0{
 					temp_text += $"{L.game_creando_dron} {dron_nombre_display[edificio.select]} ({array_length(drones_aliados)}/{8 + 2 * nucleo.modulo})\n"
 					for(var a = 0; a < array_length(dron_precio_id[edificio.select]); a++)
 						temp_text += $"  {recurso_nombre_display[dron_precio_id[edificio.select, a]]} {edificio.carga[dron_precio_id[edificio.select, a]]}/{dron_precio_num[edificio.select, a]}\n"
@@ -1747,6 +1756,22 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 						temp_text += $"  {L.game_creando_dron} {floor(100 * edificio.proceso / dron_time[edificio.select])}%\n"
 					else if array_length(drones_aliados) = 8 + 2 * nucleo.modulo
 						temp_text += $"  {L.game_limite_dron} ({array_length(drones_aliados)}/{8 + 2 * nucleo.modulo})\n"
+				}
+				else if index = id_planta_de_reciclaje{
+					draw_set_color(c_lime)
+					draw_circle_off(edificio.center_x, edificio.center_y, 250, true)
+					if edificio.select >= 0
+						temp_text += $"{L.almacen_consumiendo} {dron_nombre_display[edificio.select]}: {floor(100 * edificio.proceso / dron_time[edificio.select])}%\n"
+				}
+				draw_set_color(c_blue)
+				for(var a = array_length(edificio.inputs_carga) - 1; a >= 0; a--){
+					var temp_edificio = edificio.inputs_carga[a]
+					draw_arrow_off(temp_edificio.center_x, temp_edificio.center_y, edificio.center_x, edificio.center_y, 10)
+				}
+				draw_set_color(c_red)
+				for(var a = array_length(edificio.outputs_carga) - 1; a >= 0; a--){
+					var temp_edificio = edificio.outputs_carga[a]
+					draw_arrow_off(edificio.center_x, edificio.center_y, temp_edificio.center_x, temp_edificio.center_y, 10)
 				}
 			}
 			else if index = id_mensaje
@@ -1770,12 +1795,6 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			}
 			else if index = id_cinta_transportadora
 				temp_text += $"{edificio.array_real[4]}\n"
-			else if index = id_planta_de_reciclaje{
-				draw_set_color(c_lime)
-				draw_circle_off(edificio.center_x, edificio.center_y, 250, true)
-				if edificio.select >= 0
-					temp_text += $"{L.almacen_consumiendo} {dron_nombre_display[edificio.select]}: {floor(100 * edificio.proceso / dron_time[edificio.select])}%\n"
-			}
 			//Mostrar inputs
 			if info and edificio.receptor{
 				if edificio_input_all[index]
@@ -1923,7 +1942,7 @@ if puerto_carga_bool or procesador_select != null_edificio{
 		procesador_select = null_edificio
 	}
 }
-var flag = false
+var flag_just_pressed = false
 if sonido
 	for(var a = 0; a < sonidos_max; a++)
 		volumen[a] = 0
@@ -2022,7 +2041,7 @@ if sonido
 				}
 				else{
 					build_index = a
-					flag = true
+					flag_just_pressed = true
 					just_pressed = true
 				}
 			}
@@ -2041,7 +2060,7 @@ if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastchar, "A", "D", "W
 			keyboard_string = ""
 			build_index = a
 			build_menu = 0
-			flag = true
+			flag_just_pressed = true
 		}
 	keyboard_step = 30
 }
@@ -2055,37 +2074,40 @@ if (mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape)) a
 }
 //CONSTRUCCIÓN
 if build_index > 0 and win = 0{
-	if flag and not edificio_rotable[build_index]
+	if flag_just_pressed and not edificio_rotable[build_index]
 		build_dir = 0
-	if flag and edificio_size[build_index] mod 2 = 0
+	if flag_just_pressed and edificio_size[build_index] mod 2 = 0
 		build_dir = 5 * (build_dir mod 2)
+	var flag_change = false
 	//Rotar
 	if edificio_rotable[build_index] and not keyboard_check(vk_lcontrol){
 		if mouse_wheel_up() or keyboard_check_pressed(ord("R")){
 			keyboard_clear(ord("R"))
-			if edificio_size[build_index] mod 2 = 0
+			if edificio_size[build_index] mod 2 = 0 and not edificio_rotable[build_index]
 				build_dir = 5 - build_dir
 			else
 				build_dir = (build_dir + 1) mod 6
-			flag = true
+			flag_change = true
 		}
 		if mouse_wheel_down(){
-			if edificio_size[build_index] mod 2 = 0
+			if edificio_size[build_index] mod 2 = 0 and not edificio_rotable[build_index]
 				build_dir = 5 - build_dir
 			else
 				build_dir = build_dir - 1 + 6 * (build_dir = 0)
-			flag = true
+			flag_change = true
 		}
 	}
-	if last_mx != mx or last_my != my or flag{
+	if last_mx != mx or last_my != my or flag_change{
 		build_list = get_size(mx, my, build_dir, edificio_size[build_index])
 		if build_index = id_taladro_de_explosion
 			build_list_arround = get_size(mx, my, build_dir, edificio_size[build_index] + 2)
-		else if build_index = id_ensambladora
+		else if in(build_index, id_fabrica_de_drones, id_ensambladora, id_planta_de_reciclaje, id_fabrica_de_drones_grande, id_cinta_grande)
 			build_list_arround = get_arround(mx, my, build_dir, edificio_size[build_index])
 		else if build_index = id_cable
 			build_list_arround = get_size(mx, my, 0, 7)
 		show_menu = false
+		build_array_edificios_input = array_create(0, null_edificio)
+		build_array_edificios_output = array_create(0, null_edificio)
 	}
 	var comprable = true, temp_text = ""
 	//Detectar si el terreno existe
@@ -2118,7 +2140,7 @@ if build_index > 0 and win = 0{
 							temp_precio_id = [idr_modulo, idr_electronico]
 							temp_precio_num = [3, 5]
 						}
-						else if in(index, id_onda_de_choque, id_fabrica_de_drones, id_planta_de_enriquecimiento, id_planta_nuclear, id_refineria_de_petroleo, id_taladro_de_explosion){
+						else if in(index, id_onda_de_choque, id_fabrica_de_drones, id_fabrica_de_drones_grande, id_planta_de_enriquecimiento, id_planta_nuclear, id_refineria_de_petroleo, id_taladro_de_explosion){
 							temp_precio_id = [idr_modulo, idr_electronico, idr_uranio_bruto]
 							temp_precio_num = [5, 5, 10]
 						}
@@ -2128,30 +2150,43 @@ if build_index > 0 and win = 0{
 						}
 					#endregion
 					#region Efectos
+						//Más extracción
 						if in(index, id_taladro, id_taladro_electrico, id_taladro_de_explosion)
 							temp_text = L.modulo_extraccion
+						//Mejor canalización
 						else if index = id_laser
 							temp_text = L.modulo_canalizar
+						//Más cadencia de fuego
 						else if in(index, id_torre_basica, id_rifle, id_mortero)
 							temp_text = L.modulo_cadencia
+						//Más daño
 						else if index = id_lanzallamas
 							temp_text = L.modulo_dmg
+						//Aturdir
 						else if index = id_onda_de_choque
 							temp_text = L.modulo_aturdir
+						//Más producción líquido
 						else if index = id_bomba_hidraulica
 							temp_text = $"{L.modulo_mas_liquido} {liquido_nombre_display[temp_edificio.fuel]}\n"
+						//Menos consumo electricidad
 						else if in(index, id_ensambladora, id_perforadora_de_petroleo, id_refineria_de_petroleo)
 							temp_text = L.modulo_menos_electricidad
+						//Menos consumo líquido
 						else if in(index, id_fabrica_de_concreto, id_generador_geotermico, id_turbina)
 							temp_text = $"{L.modulo_menos_liquido} {liquido_nombre_display[0]}\n"
-						else if in(index, id_fabrica_de_drones, id_planta_de_reciclaje, id_planta_de_enriquecimiento, id_planta_quimica, id_refineria_de_metales, id_triturador)
+						//Velocidad
+						else if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande, id_planta_de_reciclaje, id_planta_de_enriquecimiento, id_planta_quimica, id_refineria_de_metales, id_triturador)
 							temp_text = L.modulo_produccion
+						//Más producción de sal
 						else if index = id_planta_desalinizadora
 							temp_text = $"{L.modulo_sal} {recurso_nombre_display[idr_sal]}\n"
+						//Evitar desastres nucleares
 						else if index = id_planta_nuclear
 							temp_text = L.modulo_nuclear
+						//Más reparación
 						else if index = id_torre_reparadora
 							temp_text = L.modulo_reparadora
+						//Más drones máximos
 						else if index = id_nucleo
 							temp_text = L.modulo_nucleo
 					#endregion
@@ -2173,8 +2208,9 @@ if build_index > 0 and win = 0{
 						if not flag_2
 							temp_text += $"{L.construir_recursos_insuficientes}\n"
 						else if mouse_check_button_pressed(mb_left){
-							for(var a = array_length(temp_precio_id) - 1; a >= 0; a--)
-								nucleo.carga[temp_precio_id[a]] -= temp_precio_num[a]
+							if not cheat and not build_enemigo
+								for(var a = array_length(temp_precio_id) - 1; a >= 0; a--)
+									nucleo.carga[temp_precio_id[a]] -= temp_precio_num[a]
 							temp_edificio.modulo = true
 							mouse_clear(mb_left)
 						}
@@ -2250,7 +2286,7 @@ if build_index > 0 and win = 0{
 				}
 			//Detectar que las bombas tengan líquidos
 			if build_index = id_bomba_hidraulica{
-				flag = false
+				var flag = false
 				var liquido = -1, count = 0
 				for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
 					var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
@@ -2320,7 +2356,7 @@ if build_index > 0 and win = 0{
 					temp_text += $"{L.game_producira} {abs(edificio_energia_consumo[build_index]) * i / 3} {L.red_energia}/s"
 			}
 			else if build_index = id_bomba_de_evaporacion{
-				flag = false
+				var flag = false
 				for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
 					var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
 					if in(terreno[# aa, bb], idt_agua, idt_agua_profunda, idt_agua_salada, idt_agua_salada_profunda){
@@ -2353,8 +2389,7 @@ if build_index > 0 and win = 0{
 			}
 			//Detectar que los taladros tengan recursos
 			if in(build_index, id_taladro, id_taladro_electrico){
-				var temp_array = array_create(rss_max, 0), temp_array_2 = array_create(rss_max, 0), b = 0, u = 0.85
-				flag = false
+				var temp_array = array_create(rss_max, 0), temp_array_2 = array_create(rss_max, 0), b = 0, u = 0.85, flag = false
 				//Buscar minerales superficiales
 				for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
 					var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
@@ -2401,7 +2436,7 @@ if build_index > 0 and win = 0{
 			}
 			//Taladros de Explosión
 			if build_index = id_taladro_de_explosion{
-				var temp_array = array_create(rss_max, 0), temp_array_2 = array_create(rss_max, 0)
+				var temp_array = array_create(rss_max, 0), temp_array_2 = array_create(rss_max, 0), flag = false
 				for(var a = ds_list_size(build_list_arround) - 1; a >= 0; a--){
 					var temp_complex_2 = build_list_arround[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
@@ -2457,7 +2492,7 @@ if build_index > 0 and win = 0{
 			//No se puede construir
 			if not comprable{
 				var temp_complex_2 = abtoxy(mx, my)
-				draw_edificio(temp_complex_2.a, temp_complex_2.b, build_index, build_dir, build_enemigo)
+				draw_edificio(temp_complex_2.a, temp_complex_2.b, build_index, build_dir, 0.5, build_enemigo)
 				for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
 					temp_complex_2 = build_list[|a]
 					var temp_complex_3 = abtoxy(temp_complex_2.a, temp_complex_2.b)
@@ -2470,8 +2505,7 @@ if build_index > 0 and win = 0{
 				temp_complex = abtoxy(mx, my)
 				if not (mouse_check_button(mb_left) and (edificio_camino[build_index] or build_index = id_tuberia))
 					draw_edificio(temp_complex.a, temp_complex.b, build_index, build_dir, 0.5, build_enemigo)
-				var temp_array, temp_array_2
-				flag = true
+				var temp_array, temp_array_2, flag_camino = true
 				//Vista previa caminos
 				if edificio_camino[build_index] or in(build_index, id_tuberia, id_muro){
 					//Iniciar arrastre
@@ -2532,7 +2566,7 @@ if build_index > 0 and win = 0{
 					}
 					//Construir en cadena
 					if mouse_check_button_released(mb_left) and clicked{
-						flag = false
+						flag_camino = false
 						clicked = false
 						for(var a = 0; a < array_length(pre_build_list); a++){
 							comprable = true
@@ -2626,7 +2660,7 @@ if build_index > 0 and win = 0{
 					}
 					//Construir
 					if mouse_check_button_released(mb_left) and clicked{
-						flag = false
+						flag_camino = false
 						clicked = false
 						for(var a = 0; a < array_length(pre_build_list); a++){
 							comprable = true
@@ -2681,26 +2715,9 @@ if build_index > 0 and win = 0{
 					}
 					else{
 						var temp_complex_2 = abtoxy(mx, my)
-						if edificio_size[build_index] mod 2 = 0
-							draw_sprite_off(edificio_sprite[build_index], 0, temp_complex_2.a, temp_complex_2.b, power(-1, build_dir),,,, 0.5)
-						else
-							draw_sprite_off(edificio_sprite[build_index], 0, temp_complex_2.a, temp_complex_2.b,,, build_dir * 60,, 0.5)
-						//Vista previa Cables
-						if build_index = id_cable{
-							draw_circle_off(temp_complex_2.a, temp_complex_2.b, 90, true)
-							var temp_list_complex = get_size(mx, my, build_dir, 7)
-							for(var a = ds_list_size(temp_list_complex) - 1; a >= 0; a--){
-								var temp_complex_3 = temp_list_complex[|a], aa = temp_complex_3.a, bb = temp_complex_3.b
-								if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
-									continue
-								if (aa != mx or bb != my) and edificio_draw[# aa, bb]{
-									var temp_edificio = edificio_id[# aa, bb]
-									if edificio_energia[temp_edificio.index] and temp_edificio.enemigo = build_enemigo 
-										draw_line_off(temp_complex_2.a, temp_complex_2.b, temp_edificio.center_x, temp_edificio.center_y)
-								}
-							}
-						}
-						else if build_index = id_torre_de_alta_tension{
+						draw_edificio(temp_complex_2.a, temp_complex_2.b, build_index, build_dir, 0.5, build_enemigo)
+						//Torres de alta tensión
+						if build_index = id_torre_de_alta_tension{
 							draw_circle_off(temp_complex_2.a, temp_complex_2.b, 1_000, true)
 							for(var c = array_length(torres_de_tension) - 1; c >= 0; c--){
 								var temp_edificio = torres_de_tension[c]
@@ -2709,7 +2726,7 @@ if build_index > 0 and win = 0{
 							}
 						}
 						//Vista previa Alcance de torres
-						if edificio_armas[build_index]{
+						else if edificio_armas[build_index]{
 							draw_circle_off(temp_complex_2.a, temp_complex_2.b, edificio_alcance[build_index], true)
 							if build_index = id_mortero
 								draw_circle_off(temp_complex_2.a, temp_complex_2.b, 100, true)
@@ -2735,32 +2752,64 @@ if build_index > 0 and win = 0{
 								draw_line_off(temp_complex_2.a, temp_complex_2.b, temp_edificio.center_x, temp_edificio.center_y)
 							}
 						}
-						//Planta de Reciclaje
-						else if build_index = id_planta_de_reciclaje{
-							draw_set_color(c_lime)
-							draw_circle_off(temp_complex_2.a, temp_complex_2.b, 250, true)
-						}
 						//Ensambladora
-						else if build_index = id_ensambladora and (edificio_tecnologia[id_modulo] or not tecnologia){
-							for(var a = ds_list_size(build_list_arround) - 1; a >= 0; a--){
-								temp_complex = build_list_arround[|a]
-								var aa = temp_complex.a, bb = temp_complex.b
-								if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
-									continue
-								if edificio_bool[# aa, bb]{
-									var temp_edificio = edificio_id[# aa, bb]
-									if temp_edificio.index = id_ensambladora and not temp_edificio.mode and temp_edificio.enemigo = build_enemigo {
-										draw_set_color(c_blue)
-										draw_line_off(temp_complex_2.a, temp_complex_2.b, temp_edificio.center_x, temp_edificio.center_y)
-										temp_text += "Conectando\n"
-										break
+						else if build_index = id_ensambladora{
+							if edificio_tecnologia[id_modulo] or not tecnologia{
+								for(var a = ds_list_size(build_list_arround) - 1; a >= 0; a--){
+									temp_complex = build_list_arround[|a]
+									var aa = temp_complex.a, bb = temp_complex.b
+									if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+										continue
+									if edificio_bool[# aa, bb]{
+										var temp_edificio = edificio_id[# aa, bb]
+										if temp_edificio.index = id_ensambladora and not temp_edificio.mode and temp_edificio.enemigo = build_enemigo{
+											draw_set_color(c_blue)
+											draw_line_off(temp_complex_2.a, temp_complex_2.b, temp_edificio.center_x, temp_edificio.center_y)
+											temp_text += "Conectando\n"
+											break
+										}
 									}
 								}
 							}
 						}
+						//Cinta grande
+						else if in(build_index, id_fabrica_de_drones, id_planta_de_reciclaje, id_fabrica_de_drones_grande, id_cinta_grande){
+							if last_mx != mx or last_my != my or flag_change{
+								var temp_complex_array = cinta_grande_check(mx, my, build_dir, build_index)
+								build_array_edificios_input = temp_complex_array.inputs
+								build_array_edificios_output = temp_complex_array.outputs
+							}
+							draw_set_color(c_red)
+							for(var a = array_length(build_array_edificios_input) - 1; a >= 0; a--){
+								var temp_edificio = build_array_edificios_input[a]
+								draw_arrow_off(temp_edificio.center_x, temp_edificio.center_y, temp_complex_2.a, temp_complex_2.b, 10)
+							}
+							draw_set_color(c_blue)
+							for(var a = array_length(build_array_edificios_output) - 1; a >= 0; a--){
+								var temp_edificio = build_array_edificios_output[a]
+								draw_arrow_off(temp_complex_2.a, temp_complex_2.b, temp_edificio.center_x, temp_edificio.center_y, 10)
+							}
+							if build_index = id_planta_de_reciclaje{
+								draw_set_color(c_lime)
+								draw_circle_off(temp_complex_2.a, temp_complex_2.b, 250, true)
+							}
+						}
 					}
-					if mouse_check_button_pressed(mb_left) and flag and comprable and (not edificio_bool[# mx, my] or (build_index = id_cruce and edificio_camino[edificio_id[# mx, my].index]))
-						construir(build_index, build_dir, mx, my, build_enemigo)
+					if mouse_check_button_pressed(mb_left) and flag_camino and comprable and (not edificio_bool[# mx, my] or (build_index = id_cruce and edificio_camino[edificio_id[# mx, my].index])){
+						var temp_edificio = construir(build_index, build_dir, mx, my, build_enemigo)
+						if in(temp_edificio.index, id_fabrica_de_drones, id_planta_de_reciclaje, id_fabrica_de_drones_grande, id_cinta_grande){
+							array_copy(temp_edificio.inputs_carga, 0, build_array_edificios_input, 0, array_length(build_array_edificios_input))
+							for(var a = array_length(temp_edificio.inputs_carga) - 1; a >= 0; a--){
+								var temp_edificio_2 = temp_edificio.inputs_carga[a]
+								array_push(temp_edificio_2.outputs_carga, temp_edificio)
+							}
+							array_copy(temp_edificio.outputs_carga, 0, build_array_edificios_output, 0, array_length(build_array_edificios_output))
+							for(var a = array_length(temp_edificio.outputs_carga) - 1; a >= 0; a--){
+								var temp_edificio_2 = temp_edificio.outputs_carga[a]
+								array_push(temp_edificio_2.inputs_carga, temp_edificio)
+							}
+						}
+					}
 				}
 				if edificio_energia[build_index] and build_index != id_cable{
 					var temp_complex_2 = abtoxy(mx, my), temp_list_complex = get_size(mx, my, build_dir, 7)
@@ -3841,7 +3890,7 @@ if sonido{
 		audio_sound_gain(sonido_id[a], volumen[a], 0)
 	}
 	if random(3600) < 1{
-		flag = true
+		var flag = true
 		for(var a = array_length(musica) - 1; a >= 0; a--)
 			if audio_is_playing(musica[a]){
 				flag = false

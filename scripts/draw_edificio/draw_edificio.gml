@@ -14,10 +14,22 @@ function draw_edificio(x, y, index, dir, alpha = 1, enemigo = false){
 				draw_sprite_off(edificio_sprite[index], 0, x, y,,, (dir - 1) * 60,, alpha)
 		}
 		else if edificio_size[index] mod 2 = 0{
-			if dir = 0
-				draw_sprite_off(edificio_sprite[index], 0, x, y,,,,, alpha)
+			if edificio_rotable[index]{
+				if dir = 0
+					draw_sprite_off(edificio_sprite[index], 0, x, y,,,,, alpha)
+				else if dir = 1
+					draw_sprite_off(edificio_sprite_2[index], 0, x, y, -1,,,, alpha)
+				else if dir = 2
+					draw_sprite_off(edificio_sprite_2[index], 0, x, y,,,,, alpha)
+				else if dir = 3
+					draw_sprite_off(edificio_sprite[index], 0, x, y, -1,,,, alpha)
+				else if dir = 4
+					draw_sprite_off(edificio_sprite_2[index], 0, x, y + 28,, -1,,, alpha)
+				else if dir = 5
+					draw_sprite_off(edificio_sprite_2[index], 0, x, y + 28, -1, -1,,, alpha)
+			}
 			else
-				draw_sprite_off(edificio_sprite[index], 0, x, y, -1,,,, alpha)
+				draw_sprite_off(edificio_sprite[index], 0, x, y, -1 + 2 * (dir = 0),,,, alpha)
 		}
 		else if edificio_size[index] = 2.5{
 			if dir = 0

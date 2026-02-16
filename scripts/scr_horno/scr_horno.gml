@@ -7,7 +7,7 @@ function scr_horno(edificio = control.null_edificio){
 		}
 		if (edificio.carga[idr_cobre] > 1 or edificio.carga[idr_hierro] > 1 or edificio.carga[idr_arena] > 1) and
 			(edificio.carga[idr_carbon] > 0 or edificio.carga[idr_combustible] > 0 or edificio.fuel > 0) and
-			(edificio.carga[idt_bronce] < 10 and edificio.carga[idr_acero] < 10 and edificio.carga[idr_silicio] < 10){
+			(edificio.carga[idr_bronce] < 10 and edificio.carga[idr_acero] < 10 and edificio.carga[idr_silicio] < 10){
 			if edificio.fuel = 0
 				if (edificio.carga[idr_carbon] > 0 or edificio.carga[idr_combustible] > 0){
 					if edificio.carga[idr_combustible] > 0{
@@ -45,7 +45,7 @@ function scr_horno(edificio = control.null_edificio){
 				}
 				else if edificio.carga[idr_cobre] > 1{
 					edificio.carga[idr_cobre] -= 2
-					edificio.carga[idt_bronce]++
+					edificio.carga[idr_bronce]++
 					edificio.carga_total--
 					edificio.proceso -= edificio_proceso[index]
 				}

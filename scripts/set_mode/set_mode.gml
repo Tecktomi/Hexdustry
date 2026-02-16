@@ -107,7 +107,7 @@ function set_mode(mode, select, edificio = control.null_edificio){
 			mover_in(edificio)
 		}
 		//Fábrica de drones
-		else if index = id_fabrica_de_drones and edificio.select != select and not in(select, 0, 4, 6){
+		else if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande) and edificio.select != select and not in(select, idd_arana, idd_tanque, idd_titan){
 			edificio.carga = array_create(rss_max, 0)
 			edificio.carga_max = array_create(rss_max, 0)
 			edificio.carga_input = array_create(rss_max, false)
@@ -116,12 +116,13 @@ function set_mode(mode, select, edificio = control.null_edificio){
 			edificio.proceso = 0
 			edificio.start = false
 			for(var b = array_length(dron_precio_id[select]) - 1; b >= 0; b--){
-				edificio.carga_max[dron_precio_id[select, b]] = 2 * dron_precio_num[select, b]
+				var c = 2 * dron_precio_num[select, b]
+				edificio.carga_max[dron_precio_id[select, b]] = c
 				edificio.carga_input[dron_precio_id[select, b]] = true
 				if dron_precio_id[select, b] = idr_uranio_bruto{
-					edificio.carga_max[idr_uranio_enriquecido] = 2 * dron_precio_num[select, b]
+					edificio.carga_max[idr_uranio_enriquecido] = c
 					edificio.carga_input[idr_uranio_enriquecido] = true
-					edificio.carga_max[idr_uranio_empobrecido] = 2 * dron_precio_num[select, b]
+					edificio.carga_max[idr_uranio_empobrecido] = c
 					edificio.carga_input[idr_uranio_empobrecido] = true
 				}
 			}

@@ -73,7 +73,10 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			// 5 = red, 6 = flujo, 7 = torres, 8 = edificios_index
 			punteros : array_create(5, 0),
 			enemigo : enemigo,
-			prioridad : 0
+			prioridad : 0,
+			inputs_carga : array_create(0, null_edificio),
+			outputs_carga : array_create(0, null_edificio),
+			outputs_carga_index : 0
 		}
 		if edificio_size[index] = 2.5{
 			if in(dir, 0, 1)
@@ -90,11 +93,20 @@ function add_edificio(index, dir, a, b, enemigo = false){
 				edificio.center_y += 14
 		}
 		else if edificio_size[index] mod 2 = 0{
-			if edificio.dir = 0
-				edificio.center_x += 8
-			else
-				edificio.center_x -= 8
-			edificio.center_y += 14
+			if edificio_rotable[index]{
+				if dir mod 2 = 0
+					edificio.center_x += 8
+				else
+					edificio.center_x -= 8
+				edificio.center_y += 14
+			}
+			else{
+				if edificio.dir = 0
+					edificio.center_x += 8
+				else
+					edificio.center_x -= 8
+				edificio.center_y += 14
+			}
 		}
 		var center_x = edificio.center_x, center_y = edificio.center_y
 		ds_grid_clear(edificio.coordenadas_dis, infinity)
@@ -558,7 +570,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			edificio.mode = true
 		if in(index, id_rifle, id_mortero, id_onda_de_choque, id_silo_de_misiles)
 			edificio.select = 0
-		if in(index, id_planta_quimica, id_fabrica_de_drones, id_planta_de_reciclaje)
+		if in(index, id_planta_quimica, id_fabrica_de_drones, id_fabrica_de_drones_grande, id_cinta_grande, id_planta_de_reciclaje)
 			edificio.select = -1
 		if in(index, id_planta_de_enriquecimiento, id_fabrica_de_drones, id_planta_de_reciclaje, id_planta_desalinizadora)
 			edificio.proceso = -1

@@ -1,7 +1,7 @@
 function draw_boton(x, y, texto, back_color = control.ui_boton_gris, text_color = control.ui_texto, boton = mb_left, box = true, input_layer = 0, round_box = true){
 	with control{
 		if texto = ""
-			return
+			return false
 		var color = draw_get_color(), width = string_width(texto), height = string_height(texto)
 		var xx = draw_get_halign() = fa_left ? 0 : (draw_get_halign() = fa_center ? width / 2 : width)
 		var yy = draw_get_valign() = fa_top ? 0 : (draw_get_valign() = fa_middle ? height / 2 : height)

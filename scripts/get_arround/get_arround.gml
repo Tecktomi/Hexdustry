@@ -5,6 +5,7 @@ function get_arround(a, b, dir, size){
 			ds_list_add(output, next_to(a, b, c))
 	}
 	else if size = 2{
+		dir = 6 - (dir mod 2)
 		for(var c = 0; c < 6; c++){
 			var temp_complex = next_to(a, b, (dir + c) mod 6)
 			if c = 4{
