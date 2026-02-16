@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"next_to_cinta_grande",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"next_to_cinta_grande",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

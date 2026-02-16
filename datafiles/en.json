@@ -97,6 +97,8 @@
 "Extractor Atmosférico": "Atmospheric Extractor",
 "Cruce": "Crossing",
 "Módulo": "Module",
+"Fábrica de Drones Grande": "Large Drone Factory",
+"Cinta Grande": "Large Conveyor",
 
 "descripcion_Núcleo": "It is the command center. All resources are stored here, and you must protect it at all costs.",
 "descripcion_Taladro": "Mines copper, iron, and coal at no cost. Can be boosted with Water.",
@@ -158,6 +160,8 @@
 "descripcion_Extractor Atmosférico": "Extracts water from the atmosphere, ideal for terrains where it is difficult to obtain",
 "descripcion_Cruce": "Allows conveyor belt connections to cross",
 "descripcion_Módulo": "Improves the characteristics of a building",
+"descripcion_Fábrica de Drones Grande": "Allows the production of larger drones using Acid",
+"descripcion_Cinta Grande": "Transports drones between factories",
 
 "Cobre": "Copper",
 "Carbón": "Coal",
@@ -267,6 +271,7 @@
 "Líquidos": "Liquids",
 "Defensa": "Defense",
 "Lógica": "Logic",
+"Drones": "Drons",
 
 "editor_nuevo_objetivo": "Objective name",
 "editor_configuracion": "Configuration",

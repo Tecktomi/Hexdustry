@@ -417,6 +417,11 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false){
 			if temp_edificio.target = edificio
 				temp_edificio.target_edificio = null_edificio
 		}
+		//Carga de drones
+		for(var a = array_length(edificio.inputs_carga) - 1; a >= 0; a--)
+			array_remove(edificio.inputs_carga[a].outputs_carga, edificio)
+		for(var a = array_length(edificio.outputs_carga) - 1; a >= 0; a--)
+			array_remove(edificio.outputs_carga[a].inputs_carga, edificio)
 		if show_menu and edificio = show_menu_build{
 			show_menu = false
 			show_menu_build = null_edificio

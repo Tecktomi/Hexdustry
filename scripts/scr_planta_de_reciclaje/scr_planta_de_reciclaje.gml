@@ -26,10 +26,10 @@ function scr_planta_de_reciclaje(edificio = control.null_edificio){
 					edificio.carga[dron_precio_id[edificio.select, a]] += b
 					edificio.carga_total += b
 				}
-				edificio.select = -1
 				change_flujo(0, edificio)
 				change_energia(0, edificio)
 				edificio.proceso -= dron_time[edificio.select]
+				edificio.select = -1
 				edificio.start = false
 				edificio.waiting = not mover(edificio)
 				encender_luz(false, edificio)

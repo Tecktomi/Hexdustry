@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"cinta_grande_check_output",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"cinta_grande_check_output",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,9 +1,11 @@
 function get_size(a, b, dir, size){
 	var output = ds_list_create()
 	ds_list_add(output, {a : real(a), b : real(b)})
-	if size = 2
+	if size = 2{
+		dir = 6 - (dir mod 2)
 		for(var c = 4; c < 6; c++)
 			ds_list_add(output, next_to(a, b, (dir + c) mod 6))
+	}
 	if size = 2.5
 		for(var c = 4; c <= 6; c++)
 			ds_list_add(output, next_to(a, b, (dir + c) mod 6))

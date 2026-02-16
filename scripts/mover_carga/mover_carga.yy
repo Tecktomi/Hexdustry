@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"mover_carga",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"mover_carga",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

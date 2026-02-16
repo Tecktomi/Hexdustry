@@ -121,8 +121,12 @@ function dibujar_edificios(){
 								draw_sprite_off(edificio.imagen, 0, aa - 30, bb - 25)
 						}
 						//Dibujo predeterminado tamaño par
-						else if edificio_size[index] mod 2 = 0
-							draw_sprite_off(edificio_sprite[index], image_index << 2, aa, bb, edificio.array_real[2] / 8)
+						else if edificio_size[index] mod 2 = 0{
+							draw_edificio(aa, bb, index, dir,, edificio.enemigo)
+							if index = id_cinta_grande and edificio.select != -1{
+								draw_sprite_off(dron_sprite[edificio.select], 0, aa, bb)
+							}
+						}
 						//Dibujo predeterminado tamaño 2.5
 						else if edificio_size[index] = 2.5{
 							var sprite = edificio_sprite[index]
