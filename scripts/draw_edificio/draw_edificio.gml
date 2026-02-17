@@ -1,6 +1,6 @@
 function draw_edificio(x, y, index, dir, alpha = 1, enemigo = false){
 	with control{
-		if edificio_camino[index] or in(index, id_tunel, id_tunel_salida){
+		if grafic_array_camino_o_tunel[index]{
 			if in(index, id_cinta_transportadora, id_enrutador, id_cinta_magnetica){
 				var c = image_index >> 1
 				if index = id_cinta_magnetica

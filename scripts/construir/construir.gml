@@ -14,7 +14,7 @@ function construir(index, dir, mx, my, enemigo = false){
 				break
 			}
 			//Checkear coliciones
-			if edificio_bool[# aa, bb] and not ((edificio_camino[index] or in(index, id_tunel, id_tunel_salida, id_cruce)) and (edificio_camino[edificio_id[# aa, bb].index] or edificio_id[# aa, bb].index = id_cruce)){
+			if edificio_bool[# aa, bb] and not ((grafic_array_camino_o_tunel[index] or index = id_cruce) and (edificio_camino[edificio_id[# aa, bb].index] or edificio_id[# aa, bb].index = id_cruce)){
 				flag = false
 				break
 			}
@@ -26,7 +26,7 @@ function construir(index, dir, mx, my, enemigo = false){
 			//Reemplazar caminos
 			if edificio_bool[# aa, bb]{
 				var temp_edificio = edificio_id[# aa, bb]
-				if (edificio_camino[index] or in(index, id_tunel, id_tunel_salida, id_cruce)) and (edificio_camino[temp_edificio.index] or temp_edificio.index = id_cruce){
+				if (grafic_array_camino_o_tunel[index] or index = id_cruce) and (edificio_camino[temp_edificio.index] or temp_edificio.index = id_cruce){
 					if index = temp_edificio.index{
 						temp_edificio.dir = dir
 						calculate_in_out_2(temp_edificio)

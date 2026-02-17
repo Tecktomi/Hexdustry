@@ -39,7 +39,7 @@ function cinta_grande_check(a, b, dir, index){
 					continue
 				if edificio_bool[# aa, bb]{
 					var edificio = edificio_id[# aa, bb]
-					if in(edificio.index, id_fabrica_de_drones, id_planta_de_reciclaje, id_fabrica_de_drones_grande, id_cinta_grande) and not array_contains(inputs, edificio){
+					if grafic_array_dron_encima[edificio.index] and not array_contains(inputs, edificio){
 						if edificio = prev_build
 							array_push(outputs, edificio)
 						else

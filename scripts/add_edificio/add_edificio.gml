@@ -190,7 +190,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 				edificio.array_real[5] = 0
 			}
 		}
-		if edificio_camino[index] or in(index, id_tunel, id_tunel_salida){
+		if grafic_array_camino_o_tunel[index]{
 			if in(index, id_cinta_transportadora, id_enrutador, id_cinta_magnetica){
 				if (dir mod 3) = 1
 					edificio.yscale = power(-1, dir > 1)
@@ -422,7 +422,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 						edificio.select++
 						edificio.fuel = 3
 					}
-					else if in(terreno[# aa, bb], idt_agua_salada, idt_agua_salada_profunda){
+					else if grafic_array_agua_salada[terreno[# aa, bb]]{
 						edificio.select++
 						if terreno[# aa, bb] = idt_agua_salada_profunda
 							edificio.select += 0.2
@@ -578,6 +578,10 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			edificio.fuel = 1
 		if index = id_refineria_de_petroleo
 			edificio.select = 60
+		if in(index, id_fabrica_de_drones, id_cinta_grande, id_fabrica_de_drones_grande){
+			edificio.array_real[10] = -1
+			edificio.array_real[11] = -1
+		}
 		ds_list_destroy(temp_list_size)
 		ds_list_destroy(temp_list_arround)
 		return edificio

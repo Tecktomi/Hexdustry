@@ -22,15 +22,17 @@ function dibujar_fondo(editor = 0){
 		if editor = 2{
 			var step = image_index / 10
 			for(var a = mina; a < maxa; a++)
-				for(var b = minb; b < maxb; b++)
-					if terreno[# a, b] = 14{
+				for(var b = minb; b < maxb; b++){
+					var c = terreno[# a, b]
+					if c = 14{
 						var temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b
 						draw_sprite_off(spr_lava_animacion, step + 16 * ore_random[# a, b], aa, bb)
 					}
-					else if terreno[# a, b] = 18{
+					else if c = 18{
 						var temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b
 						draw_sprite_off(olas[terreno_pared_index[# a, b]], step + 16 * ore_random[# a, b], aa, bb)
 					}
+				}
 			break
 		}
 		var xsize2 = (chunk_width + 1) * 48 * zoom, ysize2 = (chunk_height + 1) * 14 * zoom, xpos = chunk_width * 48 * zoom, ypos = chunk_height * 14 * zoom
@@ -61,11 +63,9 @@ function dibujar_fondo(editor = 0){
 					draw_sprite_stretched(background[# a, b], 0, -camx + a * xpos, -camy + b * ypos, xsize2, ysize2)
 				}
 		}
-		else{
-			var mina2 = max(0, floor(mina / chunk_width)), minb2 = max(0, floor(minb / chunk_height)), maxa2 = min(ceil(maxa / chunk_width), chunk_xsize), maxb2 = min(ceil(maxb / chunk_height), chunk_ysize)
-			for(var a = mina2; a < maxa2; a++)
-				for(var b = minb2; b < maxb2; b++)
+		else
+			for(var a = min_chunka; a < max_chunka; a++)
+				for(var b = min_chunkb; b < max_chunkb; b++)
 					draw_sprite_stretched(background[# a, b], 0, -camx + a * xpos, -camy + b * ypos, xsize2, ysize2)
-		}
 	}
 }

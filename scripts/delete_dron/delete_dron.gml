@@ -12,9 +12,15 @@ function delete_dron(dron = control.null_dron){
 		//Dron aliado
 		else{
 			drones_perdidos++
-			if selected_dron = dron
-				selected_dron = null_dron
+			if dron.selected
+				array_remove(selected_drones, dron)
 			array_drones = drones_aliados
+			if array_length(drones_aliados) = 8 + 2 * nucleo.modulo
+				for(var a = array_length(edificios_salida_drones) - 1; a >= 0; a--){
+					var edificio = edificios_salida_drones[a]
+					if edificio.select != -1 and edificio.waiting
+						edificio.waiting = mover_carga(edificio)
+				}
 		}
 		array_disorder_remove(array_drones, dron, 0)
 		//Cambiar target de torres
