@@ -27,6 +27,16 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false){
 			array_disorder_remove(chunk_edificios[# edificio.chunk_x, edificio.chunk_y], edificio, 1)
 			array_disorder_remove(edificios_index[index], edificio, 8)
 		}
+		for(var c = edificio.chunk_mina; c <= edificio.chunk_maxa; c++)
+			for(var d = edificio.chunk_minb; d <= edificio.chunk_maxb; d++){
+				if edificio_draw_estatico[index]{
+					array_remove(chunk_edificios_estatico[# c, d], edificio)
+					chunk_edificios_dirty[# c, d] = true
+				}
+				else
+					array_remove(chunk_edificios_dinamico[# c, d], edificio)
+				array_remove(chunk_edificios_draw[# c, d], edificio)
+			}
 		edificios_counter[index]--
 		ds_grid_destroy(edificio.coordenadas_dis)
 		if destruccion

@@ -132,5 +132,9 @@ function set_mode(mode, select, edificio = control.null_edificio){
 		//Refinería de Petróleo
 		else if index = id_refineria_de_petroleo
 			edificio.select = select
+		if edificio_draw_estatico[index]
+			for(var c = edificio.chunk_mina; c <= edificio.chunk_maxa; c++)
+				for(var d = edificio.chunk_minb; d <= edificio.chunk_maxb; d++)
+					chunk_edificios_dirty[# c, d] = true
 	}
 }

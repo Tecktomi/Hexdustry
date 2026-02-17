@@ -1,6 +1,6 @@
-function scr_draw_pantalla(edificio = control.null_edificio){
+function scr_draw_pantalla(edificio = control.null_edificio, offset_x = 0, offset_y = 0){
 	with control{
-		var index = edificio.index, dir = edificio.dir, aa = edificio.x, bb = edificio.y
+		var index = edificio.index, dir = edificio.dir, aa = edificio.x + offset_x, bb = edificio.y + offset_y
 		draw_sprite_off(edificio_sprite[index], 0, aa, bb)
 		if edificio.mode{
 			var d = array_create(0, array_create(1, 0)), color = draw_get_color()
