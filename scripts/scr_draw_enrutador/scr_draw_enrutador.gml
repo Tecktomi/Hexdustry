@@ -1,6 +1,6 @@
-function scr_draw_enrutador(edificio = control.null_edificio){
+function scr_draw_enrutador(edificio = control.null_edificio, offset_x = 0, offset_y = 0){
 	with control{
-		var index = edificio.index, dir = edificio.dir, aa = edificio.x, bb = edificio.y
+		var index = edificio.index, dir = edificio.dir, aa = edificio.x + offset_x, bb = edificio.y + offset_y
 		var d = image_index >> 1
 		if index = id_cinta_magnetica
 			d = image_index

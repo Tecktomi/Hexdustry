@@ -12,9 +12,9 @@
   "Folders":[
     {"$GMFolder":"","%Name":"SCRIPTS","folderPath":"folders/SCRIPTS.yy","name":"SCRIPTS","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Acciones","folderPath":"folders/SCRIPTS/Acciones.yy","name":"Acciones","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"draw_edificios","folderPath":"folders/SCRIPTS/draw_edificios.yy","name":"draw_edificios","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"DRAW","folderPath":"folders/SCRIPTS/DRAW.yy","name":"DRAW","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Function","folderPath":"folders/SCRIPTS/Function.yy","name":"Function","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"draw_edificios","folderPath":"folders/SCRIPTS/draw_edificios.yy","name":"draw_edificios","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"SOUNDS","folderPath":"folders/SOUNDS.yy","name":"SOUNDS","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"SPRITES","folderPath":"folders/SPRITES.yy","name":"SPRITES","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Drones","folderPath":"folders/SPRITES/Drones.yy","name":"Drones","resourceType":"GMFolder","resourceVersion":"2.0",},

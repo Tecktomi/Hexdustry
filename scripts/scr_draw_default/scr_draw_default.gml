@@ -1,6 +1,6 @@
-function scr_draw_default(edificio = control.null_edificio){
+function scr_draw_default(edificio = control.null_edificio, offset_x = 0, offset_y = 0){
 	with control{
-		var index = edificio.index, dir = edificio.dir, aa = edificio.x, bb = edificio.y
+		var index = edificio.index, dir = edificio.dir, aa = edificio.x + offset_x, bb = edificio.y + offset_y
 		//Dibujo predeterminado tamaño par
 		if edificio_size[index] mod 2 = 0
 			draw_edificio(aa, bb, index, dir,, edificio.enemigo)

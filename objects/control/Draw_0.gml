@@ -310,15 +310,16 @@ if in(menu, 1, 3){
 		dibujar_fondo(2)
 	dibujar_edificios()
 	var show_humo = (grafic_humo and pausa = 0 and enciclopedia = 0 and ((image_index mod 5) = 0))
-	for(var a = mina; a < maxa; a++)
-		for(var b = minb; b < maxb; b++)
-			if edificio_draw[# a, b]{
-				var edificio = edificio_id[# a, b], index = edificio.index, aa = edificio.x, bb = edificio.y, aaa = aa * zoom - camx, bbb = bb * zoom - camy, center_x = edificio.center_x, center_y = edificio.center_y
+	for(var a = min_chunka; a < max_chunka; a++)
+		for(var b = min_chunkb; b < max_chunkb; b++){
+			var chunk = chunk_edificios_draw[# a, b], len = array_length(chunk)
+			for(var c = 0; c < len; c++){
+				var edificio = chunk[c], index = edificio.index, aa = edificio.x, bb = edificio.y, aaa = aa * zoom - camx, bbb = bb * zoom - camy, center_x = edificio.center_x, center_y = edificio.center_y
 				//Recursos sobre caminos
 				if grafic_array_camino_o_tunel[index] and edificio.carga_total > 0{
 					var proceso = edificio_proceso[index]
-					var c = 1.2 * (max(edificio.proceso, edificio.waiting * proceso) - proceso / 2) * 20 / proceso
-					draw_sprite_off(recurso_sprite[edificio.carga_id], 0, aa + c * edificio.array_real[0], bb + c * edificio.array_real[1])
+					var d = 1.2 * (max(edificio.proceso, edificio.waiting * proceso) - proceso / 2) * 20 / proceso
+					draw_sprite_off(recurso_sprite[edificio.carga_id], 0, aa + d * edificio.array_real[0], bb + d * edificio.array_real[1])
 				}
 				//Munición armas
 				else if grafic_array_municion_armas[index] and edificio.carga_total = 0
@@ -327,8 +328,8 @@ if in(menu, 1, 3){
 				else if edificio_energia[index]{
 					if grafic_energia{
 						draw_set_color(c_yellow)
-						for(var c = array_length(edificio.energia_link) - 1; c >= 0; c--){
-							var edificio_2 = edificio.energia_link[c]
+						for(var d = array_length(edificio.energia_link) - 1; d >= 0; d--){
+							var edificio_2 = edificio.energia_link[d]
 							draw_line_off(center_x, center_y, edificio_2.center_x, edificio_2.center_y)
 						}
 					}
@@ -342,7 +343,7 @@ if in(menu, 1, 3){
 				if show_humo and grafic_array_generadores_de_humo[index]{
 					if ((in(index, id_generador, id_turbina, id_planta_nuclear, id_horno) and edificio.fuel > 0) or (index = id_generador_geotermico and in(edificio.flujo.liquido, 0, 4)) or (index = id_refineria_de_petroleo and edificio.flujo.liquido = 2 and edificio.red.eficiencia > 0)){
 						var dir = direccion_viento + random_range(-pi / 4, pi / 4)
-						array_push(humos, add_humo(aa, bb, a, b, cos(dir), sin(dir), irandom_range(70, 100)))
+						array_push(humos, add_humo(aa, bb, edificio.a, edificio.b, cos(dir), sin(dir), irandom_range(70, 100)))
 					}
 				}
 				//Mensajes
@@ -355,7 +356,21 @@ if in(menu, 1, 3){
 				else if grafic_array_dron_encima[index] and edificio.select >= 0
 					draw_sprite_off(dron_sprite[edificio.select], 0, center_x, center_y,,,,, 0.5)
 				draw_vida(aaa, bbb, edificio.vida, edificio_vida[index])
+				//Dibujo estados
+				if edificio.enemigo{
+					draw_set_color(c_red)
+					draw_circle_off(aa + 8, bb, 4, false)
+				}
+				if info and edificio.waiting{
+					draw_set_color(c_yellow)
+					draw_circle_off(aa, bb + 16, 4, false)
+				}
+				if edificio.idle{
+					draw_set_color(c_red)
+					draw_circle_off(aa, bb + 8, 4, false)
+				}
 			}
+		}
 	//Reconstruir
 	if keyboard_check(ord("Q"))
 		for(var a = mina; a < maxa; a++)
