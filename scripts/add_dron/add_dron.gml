@@ -26,12 +26,13 @@ function add_dron(a, b, index, enemigo = true){
 			oleada : 0,
 			random_int : random(1),
 			enemigo : enemigo,
+			selected : false,
 			//0 = [enemigos, aliados], 1 = chunk_pointer
 			punteros : array_create(2, 0),
 		}
 		if enemigo{
 			array_disorder_push(enemigos, dron, 0)
-			dron.vida_max = dron.vida * power(d / 3, 1.1) * multiplicador_vida_enemigos / 100
+			dron.vida_max = dron.vida * power((oleada_count + 3) / 3, 1.1) * multiplicador_vida_enemigos / 100
 			dron.vida = dron.vida_max
 			dron.target = edificio_cercano[# a, b]
 			if dron_aereo[dron.index]{

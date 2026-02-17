@@ -10,6 +10,8 @@ function mover_carga(edificio = control.null_edificio){
 				dron.x = edificio.center_x + random(0.1)
 				dron.y = edificio.center_y + random(0.1)
 				flag = true
+				if edificio.array_real[10] != -1
+					mover_dron(dron, edificio.array_real[10], edificio.array_real[11])
 			}
 		}
 		//Entregar a outputs
@@ -28,6 +30,7 @@ function mover_carga(edificio = control.null_edificio){
 			for(var a = 0; a < array_length(edificio.inputs_carga); a++){
 				var temp_edificio = edificio.inputs_carga[a]
 				if temp_edificio.waiting{
+					temp_edificio.waiting = false
 					mover_carga(temp_edificio)
 					break
 				}

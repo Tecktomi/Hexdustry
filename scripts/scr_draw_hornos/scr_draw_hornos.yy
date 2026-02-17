@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_draw_hornos",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_draw_hornos",
+  "parent":{
+    "name":"draw_edificios",
+    "path":"folders/SCRIPTS/draw_edificios.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
