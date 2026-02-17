@@ -1032,6 +1032,7 @@ var flag_rss = array_create(rss_max, false)
 		grafic_array_camino_o_tunel[id_enrutador] = true
 		grafic_array_camino_o_tunel[id_selector] = true
 		grafic_array_camino_o_tunel[id_overflow] = true
+		grafic_array_camino_o_tunel[id_cinta_magnetica] = true
 		grafic_array_camino_o_tunel[id_tunel] = true
 		grafic_array_camino_o_tunel[id_tunel_salida] = true
 	#endregion
