@@ -1,17 +1,20 @@
 function mover_in(edificio = control.null_edificio){
 	with control{
-		var size = array_length(edificio.inputs)
+		var size = array_length(edificio.inputs), moved = false
 		for(var a = 0; a < size; a++){
 			var temp_edificio = edificio.inputs[(edificio.input_index + a) mod size]
-			if temp_edificio.index = id_planta_de_enriquecimiento and edificio.carga[idr_uranio_enriquecido] <= 20
+			if (temp_edificio.index = id_planta_de_enriquecimiento) and edificio.carga[idr_uranio_enriquecido] <= 20
 				continue
 			if temp_edificio.waiting and temp_edificio.carga_total > 0 and mover(temp_edificio){
-				edificio.input_index = (edificio.input_index + a + 1) mod size
+				moved = true
 				if temp_edificio.carga_total = 0
 					temp_edificio.waiting = false
-				if edificio.carga_total >= edificio_carga_max[edificio.index]
+				if edificio.carga_total >= edificio_carga_max[edificio.index]{
+					edificio.input_index = (edificio.input_index + a + 1) mod size
 					return true
+				}
 			}
 		}
+		return moved
 	}
 }

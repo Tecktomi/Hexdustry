@@ -1,9 +1,5 @@
 function editor_escenarios(){
 	with control{
-		mina = max(0, floor(camx / zoom / 48))
-		minb = max(0, floor(camy / zoom / 14) - 1)
-		maxa = min(xsize, ceil(1 + (camx + room_width) / zoom / 48))
-		maxb = min(ysize, ceil(1 + (camy + room_height) / zoom / 14))
 		dibujar_fondo(1)
 		dibujar_edificios()
 		var xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / zoom

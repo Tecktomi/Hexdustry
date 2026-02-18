@@ -36,6 +36,7 @@
 "energia_producida": "Energía producida",
 "energia_consumida": "Energía consumida",
 "energia_perdida": "Energía perdida",
+"marcar_objetivo": "Marcar Objetivo",
 
 "Núcleo": "Núcleo",
 "Taladro": "Taladro",
@@ -148,7 +149,7 @@
 "descripcion_Tubería Subterránea": "Conecta líneas de líquidos por debajo tierra",
 "descripcion_Onda de Choque": "Carga y libera una gran onda de choque que daña y ralentiza a todos los enemigos en su rango",
 "descripcion_Muro Reforzado": "Versión mejorada del muro, más duro y mejor",
-"descripcion_Silo de Misiles": "Aquí se puede construir un misíl nuclear usándo acero, explosivos, petróleo y uranio enriquecido al 90%",
+"descripcion_Silo de Misiles": "Aquí se puede construir un misíl nuclear usándo acero, explosivos, petróleo y uranio enriquecido",
 "descripcion_Planta de Enriquecimiento": "Permite reciclar el uranio consumiendo grandes cantidades de agua y energía de manera constante",
 "descripcion_Almacén": "Almacena recursos para usarlos más tarde",
 "descripcion_Fábrica de Concreto": "Fabrica concreto a partir de Arena, Piedra y Agua",

@@ -124,6 +124,26 @@ function cargar_escenario(file = "", config = true){
 				var temp_priority = ds_grid_get(edificio_cercano_priority, a, b)
 				ds_priority_clear(temp_priority)
 			}
+		ds_grid_clear(chunk_edificios_dirty, true)
+		for(var a = 0; a < chunk_xsize; a++)
+			for(var b = 0; b < chunk_ysize; b++){
+				ds_grid_set(background, a, b, spr_hexagono)
+				ds_grid_set(chunk_edificios_background, a, b, spr_hexagono)
+				ds_grid_set(chunk_dron_enemigo, a, b, array_create(0, null_dron))
+				ds_grid_set(chunk_dron_aliado, a, b, array_create(0, null_dron))
+				var chunk = chunk_edificios[# a, b], len = array_length(chunk)
+				for(var c = 0; c < len; c++)
+					delete_edificio(chunk[c])
+				ds_grid_set(chunk_edificios, a, b, array_create(0, null_edificio))
+				chunk = chunk_edificios_enemigo[# a, b]
+				len = array_length(chunk)
+				for(var c = 0; c < len; c++)
+					delete_edificio(chunk[c])
+				ds_grid_set(chunk_edificios_enemigo, a, b, array_create(0, null_edificio))
+				ds_grid_set(chunk_edificios_estatico, a, b, array_create(0, null_edificio))
+				ds_grid_set(chunk_edificios_dinamico, a, b, array_create(0, null_edificio))
+				ds_grid_set(chunk_edificios_draw, a, b, array_create(0, null_edificio))
+			}
 		nucleo = add_edificio(0, 0, ini_read_real("Global", "nucleo_x", floor(xsize / 2)), ini_read_real("Global", "nucleo_y", floor(ysize / 2)))
 		array_copy(nucleo.carga, 0, carga_inicial, 0, rss_max)
 		var edificios_enemigos_total = ini_read_real("Edificios enemigos", "total", 0)

@@ -9,6 +9,7 @@ function scr_fabrica_de_concreto(edificio = control.null_edificio){
 				edificio.start = true
 			}
 			edificio.proceso += flujo_power
+			edificio.draw_rot += flujo_power
 			//Producir / Apagar
 			if edificio.proceso >= edificio_proceso[index]{
 				edificio.carga[idr_arena] -= 2

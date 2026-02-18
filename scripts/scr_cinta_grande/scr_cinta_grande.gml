@@ -1,11 +1,10 @@
 function scr_cinta_grande(edificio = control.null_edificio){
 	with control{
-		if edificio.select >= 0{
+		if edificio.select >= 0 and not edificio.waiting_dron{
 			var index = edificio.index
 			if edificio.proceso++ >= edificio_proceso[index]{
 				edificio.proceso -= edificio_proceso[index]
-				edificio.waiting = not mover_carga(edificio)
-				if not edificio.waiting
+				if mover_carga(edificio)
 					edificio.select = -1
 			}
 		}

@@ -58,11 +58,11 @@ function game_start(){
 			for(var b = 0; b < chunk_ysize; b++)
 				update_background(a * chunk_width, b * chunk_height)
 		ini_open("settings.ini")
-			info = bool(ini_read_real("", "info", 0))
-			grafic_tile_animation = bool(ini_read_real("", "grafic_tile_animation", 1))
-			grafic_luz = bool(ini_read_real("", "grafic_luz", 0))
-			grafic_humo = bool(ini_read_real("", "grafic_humo", 1))
-			grafic_hideui = false
+		info = bool(ini_read_real("", "info", 0))
+		grafic_tile_animation = bool(ini_read_real("", "grafic_tile_animation", 1))
+		grafic_luz = bool(ini_read_real("", "grafic_luz", 0))
+		grafic_humo = bool(ini_read_real("", "grafic_humo", 1))
+		grafic_hideui = false
 		ini_close()
 	}
 }

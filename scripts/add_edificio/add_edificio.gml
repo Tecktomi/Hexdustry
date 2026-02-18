@@ -59,9 +59,11 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			chunk_x : clamp(floor(a / chunk_width), 0, chunk_xsize - 1),
 			chunk_y : clamp(floor(b / chunk_height), 0, chunk_ysize - 1),
 			target_chunks : array_create(0, {a : 0, b : 0}),
+			//caminos: 0 = [cos(), 1 = sin()], silo_de_misiles: [0 = petroleo, 1 = tiempo_max], farbicas_de_drones: [0 = salida_x, 1 = salida_y]
 			array_real : array_create(0, 0),
 			xscale : 1,
 			yscale : 1,
+			//caminos: rotación de carga, bombas: rotor
 			draw_rot : 0,
 			edificios_cercanos : array_create(0, null_edificio),
 			edificios_cercanos_heridos : array_create(0, null_edificio),
@@ -77,6 +79,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			inputs_carga : array_create(0, null_edificio),
 			outputs_carga : array_create(0, null_edificio),
 			outputs_carga_index : 0,
+			waiting_dron : false,
 			chunk_mina : 0,
 			chunk_minb : 0,
 			chunk_maxa : 0,
@@ -149,7 +152,6 @@ function add_edificio(index, dir, a, b, enemigo = false){
 		else
 			clic_sound = true
 		set_camino_dir(edificio)
-		edificio.array_real[2] = power(-1, dir) * 8
 		//Añadir coordenadas
 		var temp_list_size = get_size(a, b, dir, edificio_size[index]), chunk_mina = edificio.chunk_x, chunk_minb = edificio.chunk_y, chunk_maxa = edificio.chunk_x, chunk_maxb = edificio.chunk_y
 		for(var c = ds_list_size(temp_list_size) - 1; c >= 0; c--){
@@ -382,15 +384,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 				array_disorder_push(torres_de_tension, edificio, 2)
 			}
 			//Añadir red
-			var temp_red = {
-				edificios: array_create(0, null_edificio),
-				generacion: 0,
-				consumo: 0,
-				bateria: 0,
-				bateria_max : 0,
-				eficiencia : 0,
-				punteros : array_create(0, 0)
-			}
+			var temp_red = def_red()
 			array_disorder_push(redes, temp_red, 0)
 			//Combinar otras redes si las hay cerca
 			if not ds_list_empty(temp_list_redes){
@@ -503,31 +497,13 @@ function add_edificio(index, dir, a, b, enemigo = false){
 				
 			}
 			if ds_list_empty(temp_list_flujos){
-				var new_flujo = {
-					edificios : array_create(0, null_edificio),
-					liquido : -1,
-					generacion: 0,
-					consumo: 0,
-					almacen : 0,
-					almacen_max : 0,
-					eficiencia : 0,
-					punteros : array_create(0, 0)
-				}
+				var new_flujo = def_flujo()
 				array_disorder_push(flujos, new_flujo, 0)
 				edificio.flujo = new_flujo
 				array_disorder_push(new_flujo.edificios, edificio, 6)
 			}
 			else if in(index, id_tuberia, id_deposito, id_liquido_infinito, id_tuberia_subterranea){
-				var new_flujo = {
-					edificios : array_create(0, null_edificio),
-					liquido : -1,
-					generacion: 0,
-					consumo: 0,
-					almacen : 0,
-					almacen_max : 0,
-					eficiencia : 0,
-					punteros : array_create(0, 0)
-				}
+				var new_flujo = def_flujo()
 				for(var c = ds_list_size(temp_list_flujos) - 1; c >= 0; c--){
 					var temp_flujo = temp_list_flujos[|c]
 					if new_flujo.liquido = -1 or temp_flujo.liquido = -1 or new_flujo.liquido = temp_flujo.liquido{
@@ -595,8 +571,16 @@ function add_edificio(index, dir, a, b, enemigo = false){
 		}
 		if index = id_laser
 			edificio.mode = true
-		if in(index, id_rifle, id_mortero, id_onda_de_choque, id_silo_de_misiles)
+		if in(index, id_rifle, id_mortero, id_onda_de_choque)
 			edificio.select = 0
+		if index = id_silo_de_misiles{
+			edificio.select = -1
+			edificio.mode = false
+			edificio.array_real[0] = 1
+			edificio.array_real[1] = 1
+			edificio.array_real[2] = -1
+			edificio.array_real[3] = -1
+		}
 		if in(index, id_planta_quimica, id_fabrica_de_drones, id_fabrica_de_drones_grande, id_cinta_grande, id_planta_de_reciclaje)
 			edificio.select = -1
 		if in(index, id_planta_de_enriquecimiento, id_fabrica_de_drones, id_planta_de_reciclaje, id_planta_desalinizadora)
@@ -606,8 +590,8 @@ function add_edificio(index, dir, a, b, enemigo = false){
 		if index = id_refineria_de_petroleo
 			edificio.select = 60
 		if in(index, id_fabrica_de_drones, id_cinta_grande, id_fabrica_de_drones_grande){
-			edificio.array_real[10] = -1
-			edificio.array_real[11] = -1
+			edificio.array_real[0] = -1
+			edificio.array_real[1] = -1
 		}
 		ds_list_destroy(temp_list_size)
 		ds_list_destroy(temp_list_arround)
