@@ -9,7 +9,7 @@ function scr_draw_bomba_par(edificio = control.null_edificio, offset_x = 0, offs
 			draw_sprite_off(spr_bomba_color, 0, edificio.center_x, edificio.center_y)
 		else
 			draw_sprite_off(spr_bomba_color, 0, edificio.center_x, edificio.center_y,,,, liquido_color[edificio.flujo.liquido], edificio.flujo.almacen / edificio.flujo.almacen_max)
-		draw_sprite_off(spr_bomba_rotor, 1, edificio.center_x, edificio.center_y,,, image_index)
+		draw_sprite_off(spr_bomba_rotor, 1, edificio.center_x, edificio.center_y,,, edificio.draw_rot)
 		draw_sprite_off(spr_bomba_cupula, 1, edificio.center_x, edificio.center_y)
 	}
 }

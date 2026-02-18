@@ -10,8 +10,8 @@ function mover_carga(edificio = control.null_edificio){
 				dron.x = edificio.center_x + random(0.1)
 				dron.y = edificio.center_y + random(0.1)
 				flag = true
-				if edificio.array_real[10] != -1
-					mover_dron(dron, edificio.array_real[10], edificio.array_real[11])
+				if edificio.array_real[0] != -1
+					mover_dron(dron, edificio.array_real[0], edificio.array_real[1])
 			}
 		}
 		//Entregar a outputs
@@ -27,14 +27,14 @@ function mover_carga(edificio = control.null_edificio){
 		}
 		//Avisar a inputs
 		if flag{
+			edificio.waiting_dron = false
 			for(var a = 0; a < array_length(edificio.inputs_carga); a++){
 				var temp_edificio = edificio.inputs_carga[a]
-				if temp_edificio.waiting{
-					temp_edificio.waiting = false
-					mover_carga(temp_edificio)
+				if temp_edificio.waiting_dron and mover_carga(temp_edificio)
 					break
-				}
 			}
+			if in(edificio.index, id_fabrica_de_drones, id_fabrica_de_drones_grande)
+				edificio.waiting = not mover_in(edificio)
 		}
 		return flag
 	}

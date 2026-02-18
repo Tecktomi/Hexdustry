@@ -6,9 +6,11 @@ function scr_turbina(edificio = control.null_edificio){
 		//Ya está encendido
 		if edificio.fuel > 0{
 			edificio.fuel--
-			if in(flujo.liquido, -1, idl_agua)
+			if in(flujo.liquido, -1, idl_agua){
+				edificio.draw_rot += flujo_power
 				change_energia(edificio_energia_consumo[index] * flujo_power, edificio)
-			sound_play_edificio(2, edificio.center_x, edificio.center_y)
+				sound_play_edificio(2, edificio.center_x, edificio.center_y)
+			}
 		}
 		if edificio.fuel = 0 and flujo.liquido = 0{
 			//Encender

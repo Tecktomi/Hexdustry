@@ -12,6 +12,7 @@ function scr_planta_desalinizadora(edificio = control.null_edificio){
 				encender_luz(, edificio)
 			}
 			edificio.proceso += min(flujo_power, red_power)
+			edificio.draw_rot += min(flujo_power, red_power)
 			//Producir / Apagar
 			if edificio.proceso >= edificio_proceso[index]{
 				edificio.carga[idr_sal] += 0.1 + 0.05 * edificio.modulo

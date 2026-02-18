@@ -36,6 +36,7 @@
 "energia_producida": "Energy produced",
 "energia_consumida": "Energy consumed",
 "energia_perdida": "Energy lost",
+"marcar_objetivo": "Set objetive",
 
 "Núcleo": "Nucleus",
 "Taladro": "Drill",
@@ -148,7 +149,7 @@
 "descripcion_Tubería Subterránea": "Connects liquid pipelines underground.",
 "descripcion_Onda de Choque": "Charges and releases a powerful shockwave that damages and slows all enemies within its range.",
 "descripcion_Muro Reforzado": "An improved version of the wall, harder and better",
-"descripcion_Silo de Misiles": "Here you can build a nuclear missile using steel, explosives, oil, and 90% enriched uranium.",
+"descripcion_Silo de Misiles": "Here you can build a nuclear missile using steel, explosives, oil, and enriched uranium.",
 "descripcion_Planta de Enriquecimiento": "Allows recycling uranium by consuming large amounts of water and energy continuously",
 "descripcion_Almacén": "Stores resources for later use",
 "descripcion_Fábrica de Concreto": "Produces concrete from Sand, Stone, and Water",

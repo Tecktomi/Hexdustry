@@ -225,15 +225,8 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false){
 							}
 						}
 						ds_stack_destroy(pila)
-						var temp_red_2 = {
-							edificios : isla,
-							generacion: 0,
-							consumo: 0,
-							bateria: 0,
-							bateria_max : 0,
-							eficiencia : 0,
-							punteros : array_create(0, 0)
-						}
+						var temp_red_2 = def_red()
+						temp_red_2.edificios = isla
 						if red_bateria > 0
 							temp_red_2.bateria = floor(temp_red.bateria * isla_bateria / red_bateria)
 						for(var a = array_length(isla) - 1; a >= 0; a--){
@@ -302,16 +295,9 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false){
 								}
 							}
 							ds_stack_destroy(pila)
-							var temp_flujo_2 = {
-								edificios : isla,
-								liquido : temp_flujo.liquido,
-								generacion: 0,
-								consumo: 0,
-								almacen: 0,
-								almacen_max : 0,
-								eficiencia : 0,
-								punteros : array_create(0, 0)
-							}
+							var temp_flujo_2 = def_flujo()
+							temp_flujo_2.edificios = isla
+							temp_flujo_2.liquido = temp_flujo.liquido
 							if flujo_almacen > 0
 								temp_flujo_2.almacen = floor(temp_flujo.almacen * isla_almacen / flujo_almacen)
 							for(var a = array_length(isla) - 1; a >= 0; a--){

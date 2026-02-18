@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"def_flujo",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"def_flujo",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

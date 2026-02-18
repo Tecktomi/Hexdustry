@@ -5,7 +5,7 @@ function delete_dron(dron = control.null_dron){
 		//Dron enemigo
 		if enemigo{
 			enemigos_eliminados++
-			if mision_actual >= 0 and mision_objetivo[mision_actual] = 4 and array_length(enemigos) = 0 and mision_counter >= mision_target_num[mision_actual]
+			if mision_actual >= 0 and mision_objetivo[mision_actual] = 4 and array_length(enemigos) <= 1 and mision_counter >= mision_target_num[mision_actual]
 				pasar_mision()
 			array_drones = enemigos
 		}

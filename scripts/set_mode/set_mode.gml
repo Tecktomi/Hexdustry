@@ -132,6 +132,22 @@ function set_mode(mode, select, edificio = control.null_edificio){
 		//Refinería de Petróleo
 		else if index = id_refineria_de_petroleo
 			edificio.select = select
+		//Silo de Misiles
+		else if index = id_silo_de_misiles and edificio.select != select{
+			edificio.select = select
+			edificio.mode = false
+			for(var a = 0; a < rss_max; a++){
+				edificio.carga[a] = 0
+				edificio.carga_max[a] = 0
+				edificio.carga_input[a] = false
+			}
+			for(var a = array_length(misiles_precio_id[select]) - 1; a >= 0; a--){
+				edificio.carga_max[misiles_precio_id[select, a]] = misiles_precio_num[select, a]
+				edificio.carga_input[misiles_precio_id[select, a]] = true
+			}
+			edificio.array_real[0] = misiles_petroleo[select]
+			edificio.array_real[1] = misiles_tiempo[select]
+		}
 		if edificio_draw_estatico[index]
 			for(var c = edificio.chunk_mina; c <= edificio.chunk_maxa; c++)
 				for(var d = edificio.chunk_minb; d <= edificio.chunk_maxb; d++)
