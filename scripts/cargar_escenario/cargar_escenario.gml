@@ -156,7 +156,7 @@ function cargar_escenario(file = "", config = true){
 			if edificio_seteable[index]{
 				var mode = bool(ini_read_real("Edificios enemigos", $"{i}.mode", 0))
 				var select = ini_read_real("Edificios enemigos", $"{i}.select", 0)
-				set_mode(mode, select, edificio)
+				set_edificio(mode, select, edificio)
 			}
 		}
 		ini_close()

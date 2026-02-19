@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"descubrir_zona",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"descubrir_zona",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
