@@ -383,6 +383,15 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false){
 			nuclear_y = ypos
 			nuclear_step = 300
 		}
+		if destruccion and edificio.carga[idr_explosivo] > 0
+			array_push(explosion_queue, {
+				x : edificio.x,
+				y : edificio.y,
+				edificio : null_edificio,
+				enemigo : not enemigo,
+				radio : 4900,
+				dmg : 200 + 30 * edificio.carga[idr_explosivo],
+				incendiario : false})
 		//Cruce de caminos
 		if index = id_cruce
 			for(var a = 0; a < 3; a++){

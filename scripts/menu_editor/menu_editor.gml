@@ -1,4 +1,4 @@
-function editor_escenarios(){
+function menu_editor(){
 	with control{
 		dibujar_fondo(1)
 		dibujar_edificios()
@@ -17,7 +17,7 @@ function editor_escenarios(){
 			draw_set_color(c_black)
 			draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
 			var xpos = 110
-			if draw_boton(110, 110, L.volver, ui_boton_rojo) or keyboard_check_pressed(vk_escape){
+			if draw_boton(110, 110, L.volver, ui_rojo) or keyboard_check_pressed(vk_escape){
 				keyboard_clear(vk_escape)
 				mision_actual = -1
 				get_keyboard_string = -1
@@ -37,7 +37,7 @@ function editor_escenarios(){
 			if size > 15
 				deslizante[0] = floor(draw_deslizante_vertical(120, pos, pos + 15 * 30, deslizante[0], 0, size - 15, 0))
 			for(var i = deslizante[0]; i < min(deslizante[0] + 15, size); i++){
-				if i > 0 and draw_sprite_boton(spr_flecha, 140, pos){
+				if i > 0 and draw_sprite_boton(spr_flecha,, 140, pos){
 					var	temp_string = mision_nombre[i - 1]
 					mision_nombre[i - 1] = mision_nombre[i]
 					mision_nombre[i] = temp_string
@@ -86,7 +86,7 @@ function editor_escenarios(){
 				deslizante[0]++
 			if deslizante[0] > 0 and mouse_wheel_up()
 				deslizante[0]--
-			if draw_boton(140, 600, L.editor_nuevo_objetivo, ui_boton_verde){
+			if draw_boton(140, 600, L.editor_nuevo_objetivo, ui_verde){
 				array_push(mision_nombre, $"{L.editor_objetivo} {size}")
 				array_push(mision_objetivo, 0)
 				array_push(mision_target_id, 0)
@@ -192,7 +192,7 @@ function editor_escenarios(){
 					ypos += a
 				}
 				ypos += 10
-				if draw_boton(room_width / 2 + 40, ypos, L.editor_add_text, ui_boton_azul){
+				if draw_boton(room_width / 2 + 40, ypos, L.editor_add_text, ui_azul){
 					mision_choosing_coord = true
 					mision_choosing_coord_i = i
 					mision_choosing_coord_tipo = 0
@@ -217,7 +217,7 @@ function editor_escenarios(){
 					xpos = draw_text_xpos(xpos+ text_x, ypos, ", ")
 					mision_camara_y[i] = draw_boton_text(xpos, ypos, mision_camara_y[i])
 				}
-				if draw_boton(room_width / 2 + 10, room_height - 140, L.editor_eliminar_objetivo, ui_boton_rojo){
+				if draw_boton(room_width / 2 + 10, room_height - 140, L.editor_eliminar_objetivo, ui_rojo){
 					array_delete(mision_nombre, i, 1)
 					array_delete(mision_objetivo, i, 1)
 					array_delete(mision_target_id, i, 1)
@@ -287,7 +287,7 @@ function editor_escenarios(){
 						draw_circle(xpos, ypos, 18, false)
 						draw_set_color(c_black)
 						draw_circle(xpos, ypos, 18, true)
-						if draw_sprite_boton(edificio_sprite[a], xpos - 15, ypos - 15){
+						if draw_sprite_boton(edificio_sprite[a],, xpos - 15, ypos - 15){
 							if not mision_edificios[a]{
 								mision_edificios[a] = true
 								edificio_tecnologia[a] = true
@@ -322,13 +322,13 @@ function editor_escenarios(){
 			draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
 			draw_set_color(c_black)
 			draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
-			if draw_boton(110, 110, L.volver, ui_boton_rojo) or keyboard_check_pressed(vk_escape){
+			if draw_boton(110, 110, L.volver, ui_rojo) or keyboard_check_pressed(vk_escape){
 				keyboard_clear(vk_escape)
 				mision_actual = -1
 				get_keyboard_string = -1
 				editor_menu = 0
 			}
-			if draw_boton(110, 180, L.editor_generar_terreno, ui_boton_azul){
+			if draw_boton(110, 180, L.editor_generar_terreno, ui_azul){
 				//show_debug_message(editor_instrucciones)
 				generar_mapa(editor_seed, editor_fondo, editor_instrucciones)
 			}
@@ -350,14 +350,14 @@ function editor_escenarios(){
 			for(var i = deslizante[0]; i < min(deslizante[0] + 18, size); i++){
 				var instruccion = editor_instrucciones[i], tipo = instruccion[0], dat1 = instruccion[1], dat2 = instruccion[2], dat3 = instruccion[3]
 				xpos = 140
-				if draw_sprite_boton(spr_basura, xpos, ypos, 20, 20){
+				if draw_sprite_boton(spr_basura,, xpos, ypos, 20, 20){
 					array_delete(editor_instrucciones, i, 1)
 					size--
 					i--
 					continue
 				}
 				xpos += 20
-				if draw_sprite_boton(spr_flecha, xpos, ypos, 20, 20)
+				if draw_sprite_boton(spr_flecha,, xpos, ypos, 20, 20)
 					procesador_move = i
 				if procesador_move >= 0 and mouse_y > ypos and mouse_y < ypos + text_y{
 					draw_set_alpha(0.3)
@@ -644,19 +644,23 @@ function editor_escenarios(){
 			deslizante[0] = 5 * floor(draw_deslizante_vertical(5, 10, 290, deslizante[0], 0, size - 40, 0) / 5)
 		for(var a = deslizante[0]; a < min(deslizante[0] + 40, size); a++){
 			var b = 0
-			if a < terreno_max and draw_sprite_boton(terreno_sprite[a], 10 + (a mod 5) * 36, ypos,,, terreno_nombre_display[a]){
+			if a < terreno_max and draw_sprite_boton(terreno_sprite[a],, 10 + (a mod 5) * 36, ypos,,,, function(data){
+				sprite_boton_text = terreno_nombre_display[data.a]}, {a : a}){
 				build_index = a
 				editor_herramienta = 0
 			}
 			b += terreno_max
-			if a >= b and a - b < ore_max and draw_sprite_boton(ore_sprite[a - b], 10 + (a mod 5) * 36, ypos,,, recurso_nombre_display[ore_recurso[a - b]]){
+			if a >= b and a - b < ore_max and draw_sprite_boton(ore_sprite[a - b],, 10 + (a mod 5) * 36, ypos,,,, function(data){
+				sprite_boton_text = recurso_nombre_display[ore_recurso[data.a]]}, {a : a - b}){
 				build_index = a
 				editor_herramienta = 0
 			}
 			b += ore_max
-			if a = b++ and draw_sprite_boton(dron_sprite[idd_arana], 10 + (a mod 5) * 36, ypos,,, "Cambiar spawn enemigo")
+			if a = b++ and draw_sprite_boton(dron_sprite[idd_arana],, 10 + (a mod 5) * 36, ypos,,,, function(){
+				sprite_boton_text = "Cambiar spawn enemigo"})
 				editor_herramienta = 1
-			if a = b++ and draw_sprite_boton(edificio_sprite[id_nucleo], 10 + (a mod 5) * 36, ypos,,, "Cambiar posición del núcleo")
+			if a = b++ and draw_sprite_boton(edificio_sprite[id_nucleo],, 10 + (a mod 5) * 36, ypos,,,, function(){
+				sprite_boton_text = "Cambiar posición del núcleo"})
 				editor_herramienta = 2
 			if (a mod 5) = 4
 				ypos += 36
@@ -668,12 +672,12 @@ function editor_escenarios(){
 		if sprite_boton_text != ""
 			draw_text_background(mouse_x + 20, mouse_y, sprite_boton_text)
 		ypos = room_height - 400
-		if draw_boton(10, ypos, L.editor_objetivos, ui_boton_azul){
+		if draw_boton(10, ypos, L.editor_objetivos, ui_azul){
 			editor_menu = 1
 			exit
 		}
 		ypos += text_y + 10
-		if draw_boton(10, ypos, L.editor_editar_mapa, ui_boton_azul){
+		if draw_boton(10, ypos, L.editor_editar_mapa, ui_azul){
 			editor_menu = 2
 			exit
 		}
@@ -687,13 +691,13 @@ function editor_escenarios(){
 		}
 		ypos += text_y + 10
 		build_size = round(draw_deslizante(50, 150, ypos, build_size, 1, 5, 2))
-		if browser and draw_boton(10, room_height - 100, L.editor_guardar, ui_boton_azul) or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("S"))){
+		if browser and draw_boton(10, room_height - 100, L.editor_guardar, ui_azul) or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("S"))){
 			get_file = 2
 			input_layer = 1
 			scan_files_save()
 			keyboard_clear(ord("S"))
 		}
-		if browser and draw_boton(10, room_height - 60, L.editor_cargar, ui_boton_azul) or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("A"))){
+		if browser and draw_boton(10, room_height - 60, L.editor_cargar, ui_azul) or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("A"))){
 			get_file = 1
 			input_layer = 1
 			scan_files_save()
@@ -710,14 +714,14 @@ function editor_escenarios(){
 					var xpos = 120 + 120 * (a mod 9)
 					ypos = 200 + 120 * floor(a / 9)
 					var temp_text = string_delete(save_files[a], string_pos(".", save_files[a]), 4)
-					if draw_sprite_boton(save_files_png[a], xpos, ypos, 96, 96,, 1){
+					if draw_sprite_boton(save_files_png[a],, xpos, ypos, 96, 96, 1){
 						input_layer = 0
 						get_file = 0
 						save_file = cargar_escenario(save_files[a])
 						if string_pos(".", save_file) > 0
 							save_file = string_delete(save_file, string_pos(".", save_file), 4)
 					}
-					if draw_sprite_boton(spr_basura, xpos - 10, ypos - 30,,,, 1){
+					if draw_sprite_boton(spr_basura,, xpos - 10, ypos - 30,,, 1){
 						file_delete(temp_text + ".txt")
 						file_delete(temp_text + ".png")
 						array_delete(save_files, a, 1)
@@ -755,13 +759,13 @@ function editor_escenarios(){
 				if flag
 					save_escenario(save_file)
 			}
-			if draw_boton(120, 120, L.cancelar, ui_boton_rojo,,,, 1) or keyboard_check_pressed(vk_escape){
+			if draw_boton(120, 120, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape){
 				keyboard_clear(vk_escape)
 				input_layer = 0
 				get_file = 0
 			}
 		}
-		if draw_boton(10, room_height - 140, L.volver, ui_boton_rojo) or keyboard_check_pressed(vk_escape){
+		if draw_boton(10, room_height - 140, L.volver, ui_rojo) or keyboard_check_pressed(vk_escape){
 			menu = 0
 			camx = max(camx, 0)
 		}

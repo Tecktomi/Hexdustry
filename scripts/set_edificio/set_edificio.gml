@@ -1,4 +1,4 @@
-function set_mode(mode, select, edificio = control.null_edificio){
+function set_edificio(mode, select, edificio = control.null_edificio){
 	with control{
 		var index = edificio.index
 		//Cambiar modo

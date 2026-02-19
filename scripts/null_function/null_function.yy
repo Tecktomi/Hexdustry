@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"set_mode",
+  "%Name":"null_function",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"set_mode",
+  "name":"null_function",
   "parent":{
     "name":"SCRIPTS",
     "path":"folders/SCRIPTS.yy",

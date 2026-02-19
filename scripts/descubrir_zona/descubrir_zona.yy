@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"editor_escenarios",
+  "%Name":"descubrir_zona",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"editor_escenarios",
+  "name":"descubrir_zona",
   "parent":{
     "name":"SCRIPTS",
     "path":"folders/SCRIPTS.yy",

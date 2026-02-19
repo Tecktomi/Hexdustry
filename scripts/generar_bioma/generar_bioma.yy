@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"generar_bioma",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"generar_bioma",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

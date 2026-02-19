@@ -3,7 +3,7 @@ draw_set_font(ft_letra)
 browser = (os_browser = browser_not_a_browser)
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
-ini_write_string("Global", "version", "18_02_2026")
+ini_write_string("Global", "version", "19_02_2026")
 medallas = array_create(6)
 default_maps = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas", "Asalto"]
 for(var a = 0; a < array_length(default_maps); a++){
@@ -39,6 +39,37 @@ for(var a = array_length(idiomas) - 1; a >= 0; a--)
 	idioma_name[a] = string_delete(idiomas[a], string_pos(".", idiomas[a]), 5)
 idioma = 1
 set_idioma(idiomas[idioma], false)
+#region Campaña
+	world_width = 10
+	world_height = 12
+	world_visible = ds_grid_create(world_width, world_height)
+	ds_grid_clear(world_visible, 0)
+	world_escenario = ds_grid_create(world_width, world_height)
+	ds_grid_clear(world_escenario, "")
+	world_tutorial = ds_grid_create(world_width, world_height)
+	ds_grid_clear(world_tutorial, 0)
+	world_sprite = ds_grid_create(world_width, world_height)
+	ds_grid_clear(world_sprite, spr_hexagono)
+	world_bioma = ds_grid_create(world_width, world_height)
+	ds_grid_clear(world_bioma, 0)
+	function set_world(a, b, escenario = "", tutorial = 1, sprite = spr_hexagono, bioma = 0){
+		world_escenario[# a, b] = escenario
+		world_tutorial[# a, b] = tutorial
+		world_sprite[# a, b] = sprite
+		world_bioma[# a, b] = bioma
+	}
+	set_world(4, 7, "mision_1.txt", 1, spr_minimap_1)
+	set_world(4, 8, "mision_2.txt", 2, spr_minimap_2)
+	set_world(4, 3, "mision_3.txt", 3, spr_minimap_3)
+	set_world(3, 7, "mision_4.txt", 4, spr_minimap_4)
+	set_world(4, 2, "mision_5.txt", 5, spr_minimap_5)
+	ini_open("settings.ini")
+	for(var a = 0; a < world_width; a++)
+		for(var b = 0; b < world_height; b++)
+			world_visible[# a, b] = ini_read_real("World visible", $"{a},{b}", 0)
+	ini_close()	
+	descubrir_zona(4, 7)
+#endregion
 #region Metadatos
 	menu = 0
 	cursor = cr_arrow
@@ -238,9 +269,19 @@ set_idioma(idiomas[idioma], false)
 	ui_texto_secundario = #B3B3B3
 	ui_texto_inhabilitado = #7F7F7F
 	ui_boton_verde = #448A20
+	ui_boton_verde_hover = make_color_hsv(color_get_hue(ui_boton_verde), color_get_saturation(ui_boton_verde), 0.8 * color_get_value(ui_boton_verde))
 	ui_boton_azul = #4169E1
+	ui_boton_azul_hover = make_color_hsv(color_get_hue(ui_boton_azul), color_get_saturation(ui_boton_azul), 0.8 * color_get_value(ui_boton_azul))
 	ui_boton_gris = #606060
+	ui_boton_gris_hover = make_color_hsv(color_get_hue(ui_boton_gris), color_get_saturation(ui_boton_gris), 0.8 * color_get_value(ui_boton_gris))
 	ui_boton_rojo = #A00000
+	ui_boton_rojo_hover = make_color_hsv(color_get_hue(ui_boton_rojo), color_get_saturation(ui_boton_rojo), 0.8 * color_get_value(ui_boton_rojo))
+	ui_verde = 0
+	ui_azul = 1
+	ui_gris = 2
+	ui_rojo = 3
+	ui_boton_color = [ui_boton_verde, ui_boton_azul, ui_boton_gris, ui_boton_rojo]
+	ui_boton_color_hover = [ui_boton_verde_hover, ui_boton_azul_hover, ui_boton_gris_hover, ui_boton_rojo_hover]
 #endregion
 null_edificio = {
 	index : -1,
@@ -1013,9 +1054,9 @@ edificio_construible[id_tunel_salida] = false
 edificio_construible[id_energia_infinita] = false
 edificio_construible[id_liquido_infinito] = false
 edificio_construible[id_recurso_infinito] = false
-edificio_key[id_energia_infinita] = "4 "
-edificio_key[id_liquido_infinito] = "5 "
-edificio_key[id_recurso_infinito] = "1 "
+edificio_key[id_energia_infinita] = "4z"
+edificio_key[id_liquido_infinito] = "5z"
+edificio_key[id_recurso_infinito] = "1z"
 edificio_seteable = array_create(edificio_max, false)
 edificio_seteable[id_selector] = true
 edificio_seteable[id_overflow] = true
@@ -1101,6 +1142,22 @@ var flag_rss = array_create(rss_max, false)
 		grafic_array_liquido_obligatorio[id_planta_de_reciclaje] = true
 		grafic_array_liquido_obligatorio[id_planta_desalinizadora] = true
 		grafic_array_liquido_obligatorio[id_fabrica_de_drones_grande] = true
+	#endregion
+	#region terreno_piedras
+		grafic_array_terreno_piedras = array_create(terreno_max, false)
+		grafic_array_terreno_piedras[idt_piedra] = true
+		grafic_array_terreno_piedras[idt_piedra_cuprica] = true
+		grafic_array_terreno_piedras[idt_piedra_ferrica] = true
+	#endregion
+	#region ore_piedras
+		grafic_array_ore_piedras = array_create(ore_max, false)
+		grafic_array_ore_piedras[ido_cobre] = true
+		grafic_array_ore_piedras[ido_hierro] = true
+	#endregion
+	#region agua_baja
+		grafic_array_agua_baja = array_create(terreno_max, false)
+		grafic_array_agua_baja[idt_agua] = true
+		grafic_array_agua_baja[idt_agua_salada] = true
 	#endregion
 #endregion
 //Inputs y outputs de fábrica de drones y planta de reciclaje
@@ -1413,199 +1470,5 @@ redes = array_create(0, null_red)
 null_flujo = def_flujo()
 null_edificio.flujo = null_flujo
 flujos = array_create(0, null_flujo)
-//Agua, piedra, petróleo y lava
-var temp_peso = [0, 0, 0, 0, 0, 1, 1, 1, 2, 3, 3, 3, 3, 4, 4, 5, 6]
-var temp_peso_data = [[idt_piedra, 60], [idt_agua, 30], [idt_petroleo, 20], [idt_pared_piedra, 80], [idt_pared_pasto, 80], [idt_lava, 25], [idt_agua_salada, 30]], size = array_length(temp_peso)
-for(var e = 0; e < size; e++){
-	var a = irandom(xsize - 1), b = irandom(ysize - 1)
-	var c = temp_peso_data[temp_peso[e], 0]
-	var f = temp_peso_data[temp_peso[e], 1]
-	repeat(f){
-		if terreno[# a, b] != idt_agua
-			set_terreno(a, b, c)
-		for(var d = 0; d < 6; d++){
-			var temp_complex = next_to(a, b, d), aa = temp_complex.a, bb = temp_complex.b
-			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
-				continue
-			if terreno[# aa, bb] != idt_agua{
-				set_terreno(aa, bb, c)
-				if c = idt_piedra{
-					if random(1) < 0.1
-						set_terreno(aa, bb, idt_piedra_cuprica)
-					else if random(1) < 0.1
-						set_terreno(aa, bb, idt_piedra_ferrica)
-				}
-			}
-		}
-		repeat(2){
-			var d = irandom(5)
-			var temp_complex = next_to(a, b, d)
-			a = clamp(temp_complex.a, 0, xsize - 1)
-			b = clamp(temp_complex.b, 0, ysize - 1)
-		}
-	}
-}
-//Añadir arena / agua profunda
-for(var a = 0; a < xsize; a++)
-	for(var b = 0; b < ysize; b++){
-		//Añadir arena
-		if in(terreno[# a, b], idt_agua, idt_agua_salada)
-			for(var c = 0; c < 6; c++){
-				var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
-				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
-					continue
-				if not grafic_array_agua[terreno[# aa, bb]]
-					set_terreno(aa, bb, idt_arena)
-				if brandom(){
-					temp_complex = next_to(aa, bb, c)
-					aa = temp_complex.a
-					bb = temp_complex.b
-					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
-						continue
-					if not grafic_array_agua[terreno[# aa, bb]]
-						set_terreno(aa, bb, idt_arena)
-				}
-			}
-		//Piedra al rededor de Petróleo
-		else if terreno[# a, b] = idt_petroleo
-			for(var c = 0; c < 6; c++){
-				var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
-				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
-					continue
-				if terreno[# aa, bb] != idt_petroleo
-					set_terreno(aa, bb, idt_piedra)
-			}
-		//Basalto al rededor de la Lava
-		else if terreno[# a, b] = idt_lava
-			for(var c = 0; c < 6; c++){
-				var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
-				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
-					continue
-				if terreno[# aa, bb] != idt_lava{
-					if random(1) < 0.9
-						set_terreno(aa, bb, idt_basalto)
-					else
-						set_terreno(aa, bb, idt_basalto_sulfatado)
-				}
-				if brandom(){
-					temp_complex = next_to(aa, bb, irandom(5))
-					aa = temp_complex.a
-					bb = temp_complex.b
-					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
-						continue
-					if terreno[# aa, bb] != idt_lava{
-						if random(1) < 0.9
-							set_terreno(aa, bb, idt_basalto)
-						else
-							set_terreno(aa, bb, idt_basalto_sulfatado)
-					}
-				}
-			}
-		//Añadir agua profunda
-		if in(terreno[# a, b], idt_agua, idt_agua_salada){
-			var flag = true
-			for(var c = 0; c < 6; c++){
-				var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
-				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
-					continue
-				if not grafic_array_agua[terreno[# aa, bb]]{
-					flag = false
-					break
-				}
-			}
-			if flag
-				if terreno[# a, b] = idt_agua
-					set_terreno(a, b, idt_agua_profunda)
-				else if terreno[# a, b] = idt_agua_salada
-					set_terreno(a, b, idt_agua_salada_profunda)
-		}
-	}
-//Crear nucleo
-var temp_list = get_size(floor(xsize / 2), floor(ysize / 2), 0, 7)
-for(var a = ds_list_size(temp_list) - 1; a >= 0; a--){
-	var temp_complex = temp_list[|a], aa = temp_complex.a, bb = temp_complex.b
-	if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
-		continue
-	if not terreno_caminable[terreno[# aa, bb]]{
-		if in(terreno[# aa, bb], idt_pared_arena, idt_agua, idt_agua_salada)
-			set_terreno(aa, bb, idt_arena)
-		else if in(terreno[# aa, bb], idt_pared_piedra, idt_agua_profunda, idt_agua_salada_profunda, idt_petroleo)
-			set_terreno(aa, bb, idt_piedra)
-		else if in(terreno[# aa, bb], idt_pared_nieve, idt_hielo)
-			set_terreno(aa, bb, idt_nieve)
-		else if terreno[# aa, bb] = idt_pared_pasto
-			set_terreno(aa, bb, idt_pasto)
-		else if terreno[# aa, bb] = idt_lava
-			set_terreno(aa, bb, idt_basalto)
-		else
-			set_terreno(aa, bb, idt_pasto)
-	}
-}
-nucleo = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
-nucleo.carga[idr_cobre] = 100
-nucleo.carga_total = 100
-carga_inicial = array_create(rss_max, 0)
-array_copy(carga_inicial, 0, nucleo.carga, 0, rss_max)
-//Natural Ores
-for(var e = 0; e < 14; e++){
-	var a = clamp(irandom_range(xsize * (e & 1) / 2, xsize * ((e & 1) + 1) / 2 - 1), 0, xsize - 1)
-	var b = clamp(irandom_range(ysize * (e & 2 > 0) / 2, ysize * ((e & 2 > 0) + 1) / 2 - 1), 0, ysize - 1)
-	var c = floor(e / 4)
-	repeat(30){
-		if terreno_caminable[terreno[# a, b]]{
-			if ore[# a, b] != c{
-				ds_grid_set(ore_amount, a, b, 0)
-				if in(terreno[# a, b], idt_piedra, idt_piedra_cuprica, idt_piedra_ferrica){
-					if c = 0
-						set_terreno(a, b, idt_piedra_cuprica)
-					else if c = 1
-						set_terreno(a, b, idt_piedra_ferrica)
-				}
-			}
-			ds_grid_set(ore, a, b, c)
-			ds_grid_add(ore_amount, a, b, floor(random_range(0.3, 1) * ore_size[c]))
-		}
-		for(var d = 0; d < 6; d++){
-			var temp_complex = next_to(a, b, d), aa = temp_complex.a, bb = temp_complex.b
-			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
-				continue
-			if terreno_caminable[terreno[# aa, bb]]{
-				if ore[# aa, bb] != c{
-					ds_grid_set(ore_amount, aa, bb, 0)
-					if in(terreno[# aa, bb], idt_piedra, idt_piedra_cuprica, idt_piedra_ferrica){
-						if c = 0
-							set_terreno(aa, bb, idt_piedra_cuprica)
-						else if c = 1
-							set_terreno(aa, bb, idt_piedra_ferrica)
-					}
-				}
-				ds_grid_set(ore, aa, bb, c)
-				ds_grid_add(ore_amount, aa, bb, floor(random_range(0.3, 1) * ore_size[c]))
-			}
-		}
-		var d = irandom(5)
-		var temp_complex = next_to(a, b, d)
-		a = clamp(temp_complex.a, 0, xsize - 1)
-		b = clamp(temp_complex.b, 0, ysize - 1)
-	}
-}
-for(var a = ds_list_size(temp_list) - 1; a >= 0; a--){
-	var temp_complex = temp_list[|a], aa = temp_complex.a, bb = temp_complex.b
-	if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
-		continue
-	ds_grid_set(ore, aa, bb, -1)
-	ds_grid_set(ore_amount, aa, bb, 0)
-}
-//Spawn point
-do{
-	if irandom(1) = 0{
-		spawn_x = (xsize - 1) * irandom(1)
-		spawn_y = irandom(ysize - 1)
-	}
-	else{
-		spawn_x = irandom(xsize - 1)
-		spawn_y = 1 + (ysize - 3) * irandom(1)
-	}
-}
-until terreno_caminable[terreno[# spawn_x, spawn_y]]
-//More stuff
+explosion_queue = array_create(0, {x : 0, y : 0, edificio : null_edificio, enemigo : false, radio : 0, dmg : 0, incendiario : false})
+generar_bioma(0)
