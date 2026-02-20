@@ -101,8 +101,10 @@ function scr_torres_basicas(edificio = control.null_edificio){
 									dmg_causado += total_dmg
 							}
 						}
-						else
+						else if index = id_torre_basica
 							sound_play(snd_disparo, center_x, center_y, 0.1)
+						else
+							sound_play(snd_rifle, center_x, center_y, 0.2)
 						edificio.carga[tiro_struct.recurso] -= tiro_struct.cantidad
 						edificio.carga_total -= tiro_struct.cantidad
 						dis = sqrt(dis)

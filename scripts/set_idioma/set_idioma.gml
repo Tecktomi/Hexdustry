@@ -1444,7 +1444,6 @@ function set_idioma(){
 			variable_struct_set(L, "win_victoria", "Победа")
 			variable_struct_set(L, "Нúcleo", "Ядро")
 		}
-
 		if 3 = 3
 			exit
 		function format(a){

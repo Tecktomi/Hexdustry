@@ -1,10 +1,7 @@
 function scr_draw_bomba_par(edificio = control.null_edificio, offset_x = 0, offset_y = 0){
 	with control{
 		var index = edificio.index, dir = edificio.dir, aa = edificio.x + offset_x, bb = edificio.y + offset_y
-		if dir = 0
-			draw_sprite_off(edificio_sprite[index], 0, aa, bb)
-		else
-			draw_sprite_off(edificio_sprite[index], 0, aa, bb, -1)
+		draw_sprite_off(edificio_sprite[index], 0, aa, bb, edificio.xscale)
 		if edificio.flujo.liquido = -1
 			draw_sprite_off(spr_bomba_color, 0, edificio.center_x, edificio.center_y)
 		else

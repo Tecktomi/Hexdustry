@@ -29,7 +29,7 @@ function scr_draw_pantalla(edificio = control.null_edificio, offset_x = 0, offse
 			edificio.modo = false
 			surface_reset_target()
 			surface_free(temp_surf)
-			draw_set_font(ft_letra)
+			draw_set_font(font_normal)
 			draw_set_color(color)
 		}
 		if edificio.imagen != spr_hexagono

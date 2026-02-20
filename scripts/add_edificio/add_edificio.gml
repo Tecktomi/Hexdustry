@@ -113,6 +113,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 				else
 					edificio.center_x -= 8
 				edificio.center_y += 14
+				edificio.xscale = -1 + 2 * (dir = 0)
 			}
 		}
 		var center_x = edificio.center_x, center_y = edificio.center_y
