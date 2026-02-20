@@ -8,10 +8,7 @@ function scr_draw_armas_no_laser(edificio = control.null_edificio, offset_x = 0,
 		}
 		//Torres tamaño par
 		else{
-			if edificio.dir = 0
-				draw_sprite_off(edificio_sprite[index], 0, aa, bb)
-			else
-				draw_sprite_off(edificio_sprite[index], 0, aa, bb, -1)
+			draw_sprite_off(edificio_sprite[index], 0, aa, bb, edificio.xscale)
 			if index != id_onda_de_choque
 				draw_sprite_off(edificio_sprite_2[index], 0, edificio.center_x, edificio.center_y,,, edificio.select)
 		}

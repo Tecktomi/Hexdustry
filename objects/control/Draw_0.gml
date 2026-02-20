@@ -16,13 +16,19 @@ if menu = 0{
 	draw_rectangle(0, 0, room_width, room_height, false)
 	draw_set_alpha(1)
 	draw_set_halign(fa_center)
-	draw_set_font(ft_titulo)
+	draw_set_font(font_titulo)
 	draw_set_color(c_white)
-	draw_text(room_width / 2, 100, L.menu_hexdustry)
-	draw_set_font(ft_letra)
-	if os_browser != browser_not_a_browser
-		draw_text(room_width / 2, 140, L.menu_html)
-	if draw_boton(room_width / 2, 200, L.menu_juego_rapido, ui_verde){
+	var ypos = 100
+	draw_text_ypos(room_width / 2, ypos, L.menu_hexdustry)
+	draw_set_font(font_normal)
+	if os_browser != browser_not_a_browser{
+		ypos += text_y
+		draw_text_ypos(room_width / 2, ypos, L.menu_html)
+		ypos += 3 * text_y
+	}
+	else
+		ypos += 3 * text_y
+	if draw_boton(room_width / 2, ypos, L.menu_juego_rapido, ui_verde){
 		input_layer = 1
 		get_file = 2
 		if array_length(mision_nombre) = 0{
@@ -48,10 +54,13 @@ if menu = 0{
 			dificultad = -1
 		}
 	}
-	if draw_boton(room_width / 2, 250, L.menu_tutorial, ui_verde)
+	ypos += text_y * 2
+	if draw_boton(room_width / 2, ypos, L.menu_tutorial, ui_verde)
 		menu = 4
-	if draw_boton(room_width / 2, 370, L.menu_editor, ui_azul)
+	ypos += text_y * 2
+	if draw_boton(room_width / 2, ypos, L.menu_editor, ui_azul)
 		menu = 2
+	ypos += text_y * 2
 	draw_set_halign(fa_left)
 	if get_file > 0{
 		draw_set_color(c_dkgray)
@@ -65,7 +74,8 @@ if menu = 0{
 		if get_file = 1{
 			draw_set_valign(fa_bottom)
 			for(var a = 0; a < array_length(save_files); a++){
-				var xpos = 120 + 120 * (a mod 9), ypos = 200 + 120 * floor(a / 9)
+				var xpos = 120 + 120 * (a mod 9)
+				ypos = 200 + 120 * floor(a / 9)
 				var temp_text = string_delete(save_files[a], string_pos(".", save_files[a]), 4)
 				if draw_sprite_boton(save_files_png[a],, xpos, ypos, 96, 96, 1){
 					tecnologia = true
@@ -94,191 +104,198 @@ if menu = 0{
 		}
 		//Partida Nueva
 		else if get_file = 2{
-			var xpos = 140, ypos = 160, des_count = 0
-			draw_boton_text_counter = 0
-			ypos = draw_text_ypos(xpos, ypos, L.dificultad)
-			if draw_boton(xpos, ypos, L.facil, flow = 0 ? ui_azul : ui_gris,,,, 1){
-				tecnologia = false
-				oleadas_tiempo_primera = 240
-				oleadas_tiempo = 90
-				multiplicador_vida_enemigos = 50
-				cheat = false
-				mision_objetivo = [4]
-				mision_nombre = [""]
-				mision_target_num = [15]
-				mision_target_id = [0]
-				mision_tiempo = [0]
-				mision_switch_oleadas = [false]
-				mision_camara_move = [false]
-				mision_texto = [[]]
-				mision_tiempo_edit = [0]
-				flow = 0
-				dificultad = 0
+			ypos = 110
+			if draw_boton(120, ypos, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape){
+				keyboard_clear(vk_escape)
+				get_file = 0
+				input_layer = 0
 			}
-			xpos += text_x + 20
-			if draw_boton(xpos, ypos, L.medio, flow = 1 ? ui_azul : ui_gris,,,, 1){
-				tecnologia = true
-				tecnologia_precio_multiplicador = 1 
-				oleadas_tiempo_primera = 180
-				oleadas_tiempo = 75
-				multiplicador_vida_enemigos = 100
-				cheat = false
-				mision_objetivo = [4]
-				mision_nombre = [""]
-				mision_target_num = [22]
-				mision_target_id = [0]
-				mision_tiempo = [0]
-				mision_switch_oleadas = [false]
-				mision_camara_move = [false]
-				mision_texto = [[]]
-				mision_tiempo_edit = [0]
-				flow = 1
-				dificultad = 1
-			}
-			xpos += text_x + 20
-			if draw_boton(xpos, ypos, L.dificil, flow = 2 ? ui_azul : ui_gris,,,, 1){
-				tecnologia = true
-				tecnologia_precio_multiplicador = 1.5 
-				oleadas_tiempo_primera = 150
-				oleadas_tiempo = 60
-				multiplicador_vida_enemigos = 160
-				cheat = false
-				mision_objetivo = [4]
-				mision_nombre = [""]
-				mision_target_num = [35]
-				mision_target_id = [0]
-				mision_tiempo = [0]
-				mision_switch_oleadas = [false]
-				mision_camara_move = [false]
-				mision_texto = [[]]
-				mision_tiempo_edit = [0]
-				flow = 2
-				dificultad = 2
-			}
-			xpos += text_x + 20
-			if draw_boton(xpos, ypos, L.personalizado, flow > 2 ? ui_azul : ui_gris,,,, 1){
-				flow = 4
-				dificultad = -1
-			}
-			if flow > 2{
-				xpos = 140
-				ypos += text_y + 20
-				//Tecnología
-				draw_text_xpos(xpos, ypos, $"{L.enciclopedia_tecnologia}: {tecnologia ? L.activado : L.desactivado}")
-				xpos += max(string_width($"{L.enciclopedia_tecnologia}: {L.activado}"), string_width($"{L.enciclopedia_tecnologia}: {L.desactivado}"))
-				tecnologia = draw_toggle(xpos + 10, ypos - 5, tecnologia, 1)
-				ypos += text_y + 10
-				if tecnologia{
-					xpos = draw_text_xpos(160, ypos, $"{L.menu_precio_tecnologia}")
-					tecnologia_precio_multiplicador = draw_deslizante(xpos + 10, xpos + 135, ypos + 10, tecnologia_precio_multiplicador, 0.5, 3, des_count++, 1)
-					ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{floor(100 * tecnologia_precio_multiplicador)}%")
-				}
-				//Primera oleada
-				ypos = draw_text_ypos(140, ypos, L.tiempo)
-				xpos = draw_text_xpos(160, ypos, $"{L.editor_primera_ronda}")
-				oleadas_tiempo_primera = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, oleadas_tiempo_primera, 60, 300, des_count++, 1))
-				ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{oleadas_tiempo_primera >= 60 ? string(floor(oleadas_tiempo_primera / 60)) + "m " : ""}{oleadas_tiempo_primera mod 60}s")
-				//Siguientes oleadas
-				xpos = draw_text_xpos(160, ypos, $"{L.editor_siguiente_ronda}")
-				oleadas_tiempo = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, oleadas_tiempo, 30, 120, des_count++, 1))
-				ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{oleadas_tiempo >= 60 ? string(floor(oleadas_tiempo / 60)) + "m " : ""}{oleadas_tiempo mod 60}s")
-				//Multiplicador de vida
-				xpos = draw_text_xpos(140, ypos, $"{L.editor_multiplicador_vida}")
-				multiplicador_vida_enemigos = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, multiplicador_vida_enemigos, 20, 200, des_count++, 1))
-				ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{multiplicador_vida_enemigos}%")
-				//Modo creativo
-				xpos = 140
-				draw_text_xpos(xpos, ypos, $"{L.menu_claves}: {cheat ? L.activado : L.desactivado}")
-				xpos += max(string_width($"{L.menu_claves}: {L.activado}"), string_width($"{L.menu_claves}: {L.desactivado}"))
-				cheat = draw_toggle(xpos + 10, ypos - 5, cheat, 1)
-				oleadas = not cheat
-				ypos += text_y + 20
-				//Modos de Juego
-				xpos = 200
-				if draw_boton(xpos, ypos, L.menu_modo_infinito, flow = 3 ? ui_azul : ui_gris,,,, 1){
-					mision_objetivo = array_create(0, 0)
-					mision_nombre = array_create(0, "")
-					mision_target_num = array_create(0, 0)
-					mision_target_id = array_create(0, 0)
-					mision_tiempo = array_create(0, 0)
-					mision_switch_oleadas = array_create(0, false)
-					mision_camara_move = array_create(0, false)
-					mision_texto = [[]]
-					mision_tiempo_edit = array_create(0, 0)
-					flow = 3
-				}
-				xpos += text_x + 20
-				if draw_boton(xpos, ypos, L.menu_modo_oleadas, flow = 4 ? ui_azul : ui_gris,,,, 1){
+			ypos += text_y * 1.2
+			draw_panel(110, ypos, room_width - 220, room_height - 200 - ypos, 0, 1, 1, function(xpos, ypos){
+				var des_count = 0
+				draw_boton_text_counter = 0
+				ypos = draw_text_ypos(xpos, ypos, L.dificultad)
+				if draw_boton(xpos, ypos, L.facil, flow = 0 ? ui_azul : ui_gris,,,, 1){
+					tecnologia = false
+					oleadas_tiempo_primera = 240
+					oleadas_tiempo = 90
+					multiplicador_vida_enemigos = 50
+					cheat = false
 					mision_objetivo = [4]
 					mision_nombre = [""]
-					mision_target_num = [20]
+					mision_target_num = [15]
 					mision_target_id = [0]
 					mision_tiempo = [0]
 					mision_switch_oleadas = [false]
 					mision_camara_move = [false]
 					mision_texto = [[]]
 					mision_tiempo_edit = [0]
-					flow = 4
+					flow = 0
+					dificultad = 0
 				}
 				xpos += text_x + 20
-				if draw_boton(xpos, ypos, L.menu_modo_misiones, flow = 5 ? ui_azul : ui_gris,,,, 1){
-					modo_misiones = true
-					add_mision()
-					flow = 5
+				if draw_boton(xpos, ypos, L.medio, flow = 1 ? ui_azul : ui_gris,,,, 1){
+					tecnologia = true
+					tecnologia_precio_multiplicador = 1 
+					oleadas_tiempo_primera = 180
+					oleadas_tiempo = 75
+					multiplicador_vida_enemigos = 100
+					cheat = false
+					mision_objetivo = [4]
+					mision_nombre = [""]
+					mision_target_num = [22]
+					mision_target_id = [0]
+					mision_tiempo = [0]
+					mision_switch_oleadas = [false]
+					mision_camara_move = [false]
+					mision_texto = [[]]
+					mision_tiempo_edit = [0]
+					flow = 1
+					dificultad = 1
 				}
-				if flow = 4{
-					ypos += text_y + 10
-					xpos = draw_text_xpos(160, ypos, L.menu_numero_oleadas)
-					mision_target_num[0] = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, mision_target_num[0], 10, 50, des_count++, 1))
-					draw_text_ypos(xpos + 145, ypos, mision_target_num[0])
+				xpos += text_x + 20
+				if draw_boton(xpos, ypos, L.dificil, flow = 2 ? ui_azul : ui_gris,,,, 1){
+					tecnologia = true
+					tecnologia_precio_multiplicador = 1.5 
+					oleadas_tiempo_primera = 150
+					oleadas_tiempo = 60
+					multiplicador_vida_enemigos = 160
+					cheat = false
+					mision_objetivo = [4]
+					mision_nombre = [""]
+					mision_target_num = [35]
+					mision_target_id = [0]
+					mision_tiempo = [0]
+					mision_switch_oleadas = [false]
+					mision_camara_move = [false]
+					mision_texto = [[]]
+					mision_tiempo_edit = [0]
+					flow = 2
+					dificultad = 2
 				}
-			}
-			ypos += text_y + 10
-			//Mapas
-			xpos = 200
-			if draw_sprite_boton(spr_random_map,, xpos, ypos, 96, 96, 1){
-				generar_bioma(irandom(2))
-				mapa = -1
-			}
-			if mapa = -1{
-				draw_set_color(c_blue)
-				draw_rectangle(xpos, ypos, xpos + 95, ypos + 95, true)
-			}
-			xpos += 120
-			for(var a = 0; a < array_length(default_maps); a++){
-				if draw_sprite_boton(default_maps_image[a],, xpos, ypos, 96, 96, 1, function(data){
-					sprite_boton_text = data.a}, {a : a}) and mapa != a{
-					var file = cargar_escenario($"{default_maps[a]}.txt", false)
-					if file != ""
-						mapa = a
+				xpos += text_x + 20
+				if draw_boton(xpos, ypos, L.personalizado, flow > 2 ? ui_azul : ui_gris,,,, 1){
+					flow = 4
+					dificultad = -1
 				}
-				if mapa = a{
+				//Personalizado
+				if flow > 2{
+					xpos = 140
+					ypos += text_y * 1.25
+					//Tecnología
+					draw_text_xpos(xpos, ypos, $"{L.enciclopedia_tecnologia}: {tecnologia ? L.activado : L.desactivado}")
+					xpos += max(string_width($"{L.enciclopedia_tecnologia}: {L.activado}"), string_width($"{L.enciclopedia_tecnologia}: {L.desactivado}"))
+					tecnologia = draw_toggle(xpos + 10, ypos - 5, tecnologia, 1)
+					ypos += text_y * 1.2
+					if tecnologia{
+						xpos = draw_text_xpos(160, ypos, $"{L.menu_precio_tecnologia}")
+						tecnologia_precio_multiplicador = draw_deslizante(xpos + 10, xpos + 135, ypos + 10, tecnologia_precio_multiplicador, 0.5, 3, des_count++, 1)
+						ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{floor(100 * tecnologia_precio_multiplicador)}%")
+					}
+					//Primera oleada
+					ypos = draw_text_ypos(140, ypos, L.tiempo)
+					xpos = draw_text_xpos(160, ypos, $"{L.editor_primera_ronda}")
+					oleadas_tiempo_primera = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, oleadas_tiempo_primera, 60, 300, des_count++, 1))
+					ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{oleadas_tiempo_primera >= 60 ? string(floor(oleadas_tiempo_primera / 60)) + "m " : ""}{oleadas_tiempo_primera mod 60}s")
+					//Siguientes oleadas
+					xpos = draw_text_xpos(160, ypos, $"{L.editor_siguiente_ronda}")
+					oleadas_tiempo = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, oleadas_tiempo, 30, 120, des_count++, 1))
+					ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{oleadas_tiempo >= 60 ? string(floor(oleadas_tiempo / 60)) + "m " : ""}{oleadas_tiempo mod 60}s")
+					//Multiplicador de vida
+					xpos = draw_text_xpos(140, ypos, $"{L.editor_multiplicador_vida}")
+					multiplicador_vida_enemigos = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, multiplicador_vida_enemigos, 20, 200, des_count++, 1))
+					ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{multiplicador_vida_enemigos}%")
+					//Modo creativo
+					xpos = 140
+					draw_text_xpos(xpos, ypos, $"{L.menu_claves}: {cheat ? L.activado : L.desactivado}")
+					xpos += max(string_width($"{L.menu_claves}: {L.activado}"), string_width($"{L.menu_claves}: {L.desactivado}"))
+					cheat = draw_toggle(xpos + 10, ypos - 5, cheat, 1)
+					oleadas = not cheat
+					ypos += text_y + 20
+					//Modos de Juego
+					xpos = 200
+					if draw_boton(xpos, ypos, L.menu_modo_infinito, flow = 3 ? ui_azul : ui_gris,,,, 1){
+						mision_objetivo = array_create(0, 0)
+						mision_nombre = array_create(0, "")
+						mision_target_num = array_create(0, 0)
+						mision_target_id = array_create(0, 0)
+						mision_tiempo = array_create(0, 0)
+						mision_switch_oleadas = array_create(0, false)
+						mision_camara_move = array_create(0, false)
+						mision_texto = [[]]
+						mision_tiempo_edit = array_create(0, 0)
+						flow = 3
+					}
+					xpos += text_x + 20
+					if draw_boton(xpos, ypos, L.menu_modo_oleadas, flow = 4 ? ui_azul : ui_gris,,,, 1){
+						mision_objetivo = [4]
+						mision_nombre = [""]
+						mision_target_num = [20]
+						mision_target_id = [0]
+						mision_tiempo = [0]
+						mision_switch_oleadas = [false]
+						mision_camara_move = [false]
+						mision_texto = [[]]
+						mision_tiempo_edit = [0]
+						flow = 4
+					}
+					xpos += text_x + 20
+					if draw_boton(xpos, ypos, L.menu_modo_misiones, flow = 5 ? ui_azul : ui_gris,,,, 1){
+						modo_misiones = true
+						add_mision()
+						flow = 5
+					}
+					if flow = 4{
+						ypos += text_y + 10
+						xpos = draw_text_xpos(160, ypos, L.menu_numero_oleadas)
+						mision_target_num[0] = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, mision_target_num[0], 10, 50, des_count++, 1))
+						draw_text_ypos(xpos + 145, ypos, mision_target_num[0])
+					}
+				}
+				ypos += text_y * 1.25
+				//Mapas
+				xpos = 200
+				if mapa = -1{
 					draw_set_color(c_blue)
-					draw_rectangle(xpos, ypos, xpos + 95, ypos + 95, true)
+					draw_rectangle(xpos - 2, ypos - 2, xpos + 97, ypos + 97, false)
 				}
-				for(var b = 0; b < 3; b++)
-					if medallas[a, b]
-						draw_sprite(spr_medallas, b, xpos + 32 * b + 16, ypos + 110)
+				if draw_sprite_boton(spr_random_map,, xpos, ypos, 96, 96, 1){
+					generar_bioma(irandom(2))
+					mapa = -1
+				}
 				xpos += 120
-			}
-			draw_set_color(c_white)
-			ypos += 140
-			draw_set_halign(fa_center)
-			if browser and draw_boton(room_width / 2, room_height - 200, L.menu_cargar_escenario, ui_azul,,,, 1){
+				for(var a = 0; a < array_length(default_maps); a++){
+					if mapa = a{
+						draw_set_color(c_blue)
+						draw_rectangle(xpos - 2, ypos - 2, xpos + 97, ypos + 97, false)
+					}
+					if draw_sprite_boton(default_maps_image[a],, xpos, ypos, 96, 96, 1, function(data){
+						sprite_boton_text = data.a}, {a : a}) and mapa != a{
+						var file = cargar_escenario($"{default_maps[a]}.txt", false)
+						if file != ""
+							mapa = a
+					}
+					for(var b = 0; b < 3; b++)
+						if medallas[a, b]
+							draw_sprite(spr_medallas, b, xpos + 32 * b + 16, ypos + 110)
+					xpos += 120
+				}
+				draw_set_color(c_white)
+				ypos += 140
+				return {a : xpos, b : ypos}
+			})
+			ypos = room_height - 180
+			draw_set_halign(fa_right)
+			if browser and draw_boton(room_width / 2 - 200, ypos, L.menu_cargar_escenario, ui_azul,,,, 1){
 				if not nucleo.vivo
 					game_restart()
 				get_file = 1
 				input_layer = 1
 				scan_files_save()
 			}
-			if draw_boton(room_width / 2, room_height - 150, L.menu_juego_rapido, ui_verde,,,, 1)
-				game_start()
 			draw_set_halign(fa_left)
-			if draw_boton(120, 120, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape){
-				keyboard_clear(vk_escape)
-				get_file = 0
-				input_layer = 0
-			}
+			if draw_boton(room_width / 2 + 200, ypos, L.menu_juego_rapido, ui_verde,,,, 1)
+				game_start()
 		}
 	}
 	draw_set_valign(fa_bottom)
@@ -509,9 +526,9 @@ if in(menu, 1, 3){
 		//Detalles Recurso
 		else if enciclopedia = 3{
 			var pos = 140
-			draw_set_font(ft_titulo)
+			draw_set_font(devise ? font_titulo : ft_titulo_android)
 			pos = draw_text_ypos(120, pos, recurso_nombre[enciclopedia_item])
-			draw_set_font(ft_letra)
+			draw_set_font(font_normal)
 			pos = draw_text_ypos(120, pos, recurso_descripcion[enciclopedia_item])
 			if recurso_combustion[enciclopedia_item]
 				pos = draw_text_ypos(120, pos, $"{L.enciclopedia_combustible} {recurso_combustion_time[enciclopedia_item] / 60}[s]")
@@ -600,9 +617,9 @@ if in(menu, 1, 3){
 		//Detalles Edificio
 		else if enciclopedia = 4{
 			var pos = 140, ei = enciclopedia_item
-			draw_set_font(ft_titulo)
+			draw_set_font(font_titulo)
 			pos = draw_text_ypos(120, pos, edificio_nombre[ei])
-			draw_set_font(ft_letra)
+			draw_set_font(font_normal)
 			pos = draw_text_ypos(120, pos, edificio_descripcion[ei]) + 10
 			pos = draw_text_ypos(120, pos, $"{L.enciclopedia_vida}: {edificio_vida[ei]}")
 			pos = draw_text_ypos(120, pos, $"{L.enciclopedia_size}: {edificio_size[ei]}")
@@ -788,9 +805,9 @@ if in(menu, 1, 3){
 		//Detalles Dron
 		else if enciclopedia = 6{
 			var pos = 140
-			draw_set_font(ft_titulo)
+			draw_set_font(font_titulo)
 			pos = draw_text_ypos(120, pos, dron_nombre[enciclopedia_item])
-			draw_set_font(ft_letra)
+			draw_set_font(font_normal)
 			pos = draw_text_ypos(120, pos, dron_descripcion[enciclopedia_item])
 			pos = draw_text_ypos(120, pos, $"{L.enciclopedia_vida}: {dron_vida_max[enciclopedia_item]}")
 			if dron_aereo[enciclopedia_item]
@@ -814,9 +831,9 @@ if in(menu, 1, 3){
 		else if enciclopedia = 7{
 			sprite_boton_text = ""
 			var pos = 140, xpos = room_width / 2
-			draw_set_font(ft_titulo)
+			draw_set_font(font_titulo)
 			pos = draw_text_ypos(120, pos, L.enciclopedia_tecnologia)
-			draw_set_font(ft_letra)
+			draw_set_font(font_normal)
 			pos = 140
 			for(var a = 0; a < array_length(tecnologia_nivel_edificios); a++){
 				pos += 60
@@ -875,9 +892,9 @@ if pausa = 1{
 	draw_set_alpha(1)
 	draw_set_color(c_white)
 	draw_set_halign(fa_center)
-	draw_set_font(ft_titulo)
+	draw_set_font(font_titulo)
 	draw_text(room_width / 2, 100, L.pausa)
-	draw_set_font(ft_letra)
+	draw_set_font(font_normal)
 	draw_text(room_width / 2, 150,	$"{L.pausa_continuar}\n{L.pausa_red}\n{L.pausa_liquido}\n{L.pausa_enciclopedia}\n{L.pausa_reparar}")
 	draw_set_halign(fa_left)
 	var a = room_width / 2
@@ -927,6 +944,12 @@ if pausa = 1{
 			exit
 		}
 	draw_set_halign(fa_left)
+	if os_type == os_windows
+		for(a = 0; a < idiomas; a++)
+			if draw_sprite_boton(spr_bandera, a, 20 + 80 * a, 20, 64, 48,, function(data){draw_text_background(0, 80, idioma_name[data.a])}, {a : a}){
+				idioma = a
+				set_idioma()
+			}
 	draw_set_color(color)
 }
 //Solo pausa
@@ -938,10 +961,10 @@ if pausa = 2{
 	image_index--
 	draw_set_color(c_white)
 	draw_set_halign(fa_center)
-	draw_set_font(ft_titulo)
+	draw_set_font(font_titulo)
 	draw_text(room_width / 2, 100, L.pausa)
 	draw_set_halign(fa_left)
-	draw_set_font(ft_letra)
+	draw_set_font(font_normal)
 }
 var xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / zoom
 //Editar edificio
@@ -3497,11 +3520,17 @@ if menu = 1{
 				draw_vida(dron.x * zoom - camx, dron.y * zoom - camy, dron.vida, dron.vida_max)
 			}
 			//Ciclo de disparos
-			draw_set_color(c_black)
+			draw_set_alpha(0.5)
 			for(var a = array_length(municiones) - 1; a >= 0; a--){
 				var municion = municiones[a], target = municion.target, enemigo = municion.enemigo
-				if municion.tipo != 2
+				if municion.tipo != 2{
+					draw_set_color(c_black)
 					draw_circle_off(municion.x, municion.y, 2, false)
+					draw_set_color(c_yellow)
+					draw_line_off(municion.origen_x, municion.origen_y, municion.x, municion.y)
+					municion.origen_x = municion.x
+					municion.origen_y = municion.y
+				}
 				municion.x += municion.hmove
 				municion.y += municion.vmove
 				var temp_complex = xytoab(municion.x, municion.y), muna = temp_complex.a, munb = temp_complex.b
@@ -3541,6 +3570,7 @@ if menu = 1{
 						explosion(municion.x, municion.y, municion.target_build, enemigo, municion.radio,, true)
 				}
 			}
+			draw_set_alpha(1)
 			//Efectos estáticos
 			for(var a = 0; a < array_length(efectos); a++){
 				var efecto = efectos[a]
@@ -3889,10 +3919,10 @@ if menu = 1{
 		draw_set_color(c_white)
 		if win_step > 25{
 			draw_set_alpha(min((win_step - 25) / 100, 1))
-			draw_set_font(ft_titulo)
+			draw_set_font(font_titulo)
 			draw_set_halign(fa_center)
 			draw_text(room_width / 2, 100, (win mod 10) = 1 ? L.win_victoria : L.win_derrota)
-			draw_set_font(ft_letra)
+			draw_set_font(font_normal)
 			var xpos = room_width / 2, ypos = 200, sec = floor(--timer / 60)
 			//Info general
 			if win < 10{

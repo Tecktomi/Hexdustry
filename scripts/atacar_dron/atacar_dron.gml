@@ -3,17 +3,21 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 		var index = dron.index
 		//Ataque araña
 		if index = idd_arana{
-			var aa = dron.x, bb = dron.y
-			draw_set_color(c_red)
-			if edificio != null_edificio{
-				draw_line_off(aa, bb, edificio.center_x, edificio.center_y)
-				if herir_edificio(1, edificio) and dron.a >= 0
-					dron.target = edificio_cercano[# dron.a, dron.b]
-			}
-			else if target != null_dron{
-				draw_line_off(aa, bb, target.x, target.y)
-				if herir_dron(1, target)
-					dron = null_dron
+			if dron.step >= dron_step[index]{
+				dron.step = 0
+				if target != null_dron or edificio != null_edificio{
+					var aa = dron.x, bb = dron.y, vel = 25
+					if target != null_dron
+						var target_x = target.x, target_y = target.y
+					else{
+						target_x = edificio.center_x
+						target_y = edificio.center_y
+					}
+					var dis = distance(aa, bb, target_x, target_y)
+					var municion = add_municion(aa, bb, vel * (target_x - aa) / dis, vel * (target_y - bb) / dis, 0, dis / vel, 12,, target, edificio, dron.enemigo)
+					array_push(municiones, municion)
+					sound_play(snd_disparo, aa, bb, 0.1)
+				}
 			}
 			return false
 		}
@@ -88,9 +92,11 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 		}
 		//Ataque bombardero
 		else if index = idd_bombardero{
-			if in(dron.step - dron_step[index], 0, 15, 30, 45, 60, 75)
+			if in(dron.step - dron_step[index], 0, 15, 30, 45, 60, 75){
+				dron.step++
 				explosion(dron.x + random_range(-5, 5), dron.y + random_range(-5, 5), edificio, dron.enemigo, 10_000, 500, true)
-			if dron.step > dron_step[index] + 75
+			}
+			if dron.step >= dron_step[index] + 75
 				dron.step = 0
 			return false
 		}

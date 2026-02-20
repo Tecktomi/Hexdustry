@@ -1,6 +1,15 @@
 randomize()
-draw_set_font(ft_letra)
+devise = (os_type = os_windows)
 browser = (os_browser = browser_not_a_browser)
+if devise{
+	font_normal = ft_letra
+	font_titulo = ft_titulo
+}
+else{
+	font_normal = ft_letra_android
+	font_titulo = ft_titulo_android
+}
+draw_set_font(font_normal)
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
 ini_write_string("Global", "version", "20_02_2026")
@@ -31,8 +40,6 @@ if browser{
 		save_files_png[a] = temp_image
 	}
 }
-else
-	game_set_speed(60, gamespeed_fps)
 save_codes = (browser) ? scan_files("*.code", fa_none) : []
 idiomas = 3
 idioma_name = ["en", "es", "ru"]
@@ -176,7 +183,7 @@ L = {}
 	minb = 0
 	maxa = 0
 	maxb = 0
-	sonidos = [snd_motor, snd_maquina, snd_horno]
+	sonidos = [snd_motor, snd_maquina, snd_horno, snd_taladro]
 	sonidos_max = array_length(sonidos)
 	musica = [snd_theme_1, snd_theme_2, snd_theme_3, snd_theme_4, snd_theme_5]
 	musica_max = array_length(musica)
@@ -248,12 +255,14 @@ L = {}
 	chunk_update = true
 	LOGIC_DT = 1 / 60
 	acumulator = 0
-	deslizante = array_create(1, 0)
+	deslizante = array_create(2, 0)
 	modo_misiones = false
 	mapa = -1
 	dificultad = 0
 	clic_sound = false
 	build_enemigo = false
+	panel_xpos = 0
+	panel_ypos = 0
 #endregion
 #region UI
 	ui_fondo = #282828
@@ -605,8 +614,8 @@ null_municion = add_municion()
 municiones = array_create(0, null_municion)
 #region Tipos de Disparos
 	armas = [
-		[{recurso : idr_cobre, cantidad : 0.2, dmg : 20}, {recurso : idr_hierro, cantidad : 0.2, dmg : 30}, {recurso : idr_plastico, cantidad : 0.2, dmg : 40}],
-		[{recurso : idr_bronce, cantidad : 0.5, dmg : 60}, {recurso : idr_acero, cantidad : 0.5, dmg : 70}, {recurso : idr_uranio_bruto, cantidad : 1, dmg : 100}],
+		[{recurso : idr_cobre, cantidad : 0.15, dmg : 10}, {recurso : idr_hierro, cantidad : 0.15, dmg : 15}, {recurso : idr_plastico, cantidad : 0.15, dmg : 20}],
+		[{recurso : idr_bronce, cantidad : 0.5, dmg : 40}, {recurso : idr_acero, cantidad : 0.5, dmg : 50}, {recurso : idr_uranio_bruto, cantidad : 1, dmg : 70}],
 		[{recurso : idr_explosivo, cantidad : 1, dmg : 500}, {recurso : idr_uranio_bruto, cantidad : 1, dmg : 400}],
 		[{recurso : idr_carbon, cantidad : 0.03, dmg : 2}, {recurso : idr_compuesto_incendiario, cantidad : 0.03, dmg : 5}]]
 #endregion
@@ -727,7 +736,7 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 	return array_length(dron_nombre) - 1
 }
 #region Definicion
-	idd_arana = def_dron("Araña", spr_arana,, 100, 400, 6400, [idr_bronce, idr_bateria, idr_electronicos], [6, 1, 3], 600,, 1)
+	idd_arana = def_dron("Araña", spr_arana,, 100, 400, 10_000, [idr_bronce, idr_bateria, idr_electronicos], [6, 1, 3], 600,, 1, 12)
 	idd_dron = def_dron("Dron", spr_dron,, 40, 400, 100, [idr_bronce, idr_hierro, idr_electronicos], [10, 5, 3], 900, true, 2)
 	idd_reparador = def_dron("Reparador", spr_reparador,, 120, 900, 3600, [idr_silicio, idr_bateria, idr_electronicos], [10, 5, 5], 1200, true, 2)
 	idd_explosivo = def_dron("Explosivo", spr_dron_explosivo,, 50, 400, 400, [idr_hierro, idr_explosivo, idr_electronicos], [6, 2, 2], 450, true, 2.5)
@@ -937,9 +946,9 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 	id_tunel_salida = def_edificio("Túnel salida", 1, spr_tunel_salida,, 60, 10, scr_caminos, scr_draw_camino, false,, [idr_cobre, idr_hierro], [4, 4], 1,,,,, true, true); def_edificio_2()
 	id_energia_infinita = def_edificio("Energía Infinita", 1, spr_energia_infinita,, 100); def_edificio_2(-999_999,,,,,, true, 99)
 	id_cinta_magnetica = def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, 60, 10, scr_caminos, scr_draw_enrutador, false, true, [idr_bronce, idr_hierro], [1, 1], 1, true,,,, true); def_edificio_2()
-	id_torre_basica = def_edificio("Torre básica", 1, spr_torre, spr_torre_2, 300, 20, scr_torres_basicas, scr_draw_armas_no_laser, false,, [idr_cobre, idr_hierro], [10, 25], 30, true, false, [idr_cobre, idr_hierro, idr_plastico], [10, 10, 10]); def_edificio_2(, 10, 20, idl_agua, 0, 180,, 3)
+	id_torre_basica = def_edificio("Torre básica", 1, spr_torre, spr_torre_2, 300, 10, scr_torres_basicas, scr_draw_armas_no_laser, false,, [idr_cobre, idr_hierro], [10, 25], 30, true, false, [idr_cobre, idr_hierro, idr_plastico], [10, 10, 10]); def_edificio_2(, 10, 20, idl_agua, 0, 180,, 3)
 	//20
-	id_rifle = def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, 400, 45, scr_torres_basicas, scr_draw_armas_no_laser, false,, [idr_cobre, idr_hierro, idr_acero], [10, 10, 10], 30, true, false, [idr_bronce, idr_acero, idr_uranio_bruto, idr_uranio_enriquecido, idr_uranio_empobrecido], [10, 10, 10, 10, 10]); def_edificio_2(, 10, 30, idl_agua, 1, 300,, 3)
+	id_rifle = def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, 400, 30, scr_torres_basicas, scr_draw_armas_no_laser, false,, [idr_cobre, idr_hierro, idr_acero], [10, 10, 10], 30, true, false, [idr_bronce, idr_acero, idr_uranio_bruto, idr_uranio_enriquecido, idr_uranio_empobrecido], [10, 10, 10, 10, 10]); def_edificio_2(, 10, 30, idl_agua, 1, 300,, 3)
 	id_lanzallamas = def_edificio("Lanzallamas", 2, spr_lanzallamas, spr_lanzallamas_2, 400, 1, scr_torres_basicas, scr_draw_armas_no_laser, false,, [idr_cobre, idr_bronce, idr_hierro], [15, 15, 10], 20, true, false, [idr_carbon, idr_compuesto_incendiario], [10, 10]); def_edificio_2(, 10, 30, idl_petroleo, 3, 130,, 3)
 	id_planta_quimica = def_edificio("Planta Química", 3, spr_planta_quimica,, 200, 60, scr_planta_quimica,,,, [idr_cobre, idr_bronce, idr_hierro, idr_silicio], [20, 10, 20, 10], 30, true, false, [idr_cobre, idr_piedra_sulfatada, idr_compuesto_incendiario, idr_sal], [0, 0, 0, 10], true, false, [idr_explosivo, idr_bateria]); def_edificio_2(50, 10,, idl_acido,,,, 1)
 	id_laser = def_edificio("Láser", 2.5, spr_laser, spr_laser_2, 400, 1, scr_laser,, false,, [idr_cobre, idr_acero, idr_silicio, idr_electronicos], [10, 15, 15, 5]); def_edificio_2(200,,,, 0, 320,, 3)
@@ -961,7 +970,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 	id_torre_de_alta_tension = def_edificio("Torre de Alta Tensión", 2, spr_cable_tension,, 100,,,,,, [idr_cobre, idr_acero, idr_electronicos], [10, 5, 1]); def_edificio_2(5,,,,,, true, 1)
 	id_perforadora_de_petroleo = def_edificio("Perforadora de Petróleo", 3, spr_perforadora,, 200,, scr_perforadora_petroleo, scr_draw_bomba_impar, false,, [idr_hierro, idr_acero, idr_concreto], [10, 15, 10]); def_edificio_2(80, 10, -40, idl_petroleo,,,, 2)
 	//40
-	id_mortero = def_edificio("Mortero", 3, spr_mortero, spr_mortero_2, 600, 180, scr_torres_basicas, scr_draw_armas_no_laser, false,, [idr_acero, idr_concreto], [50, 30], 30, true, false, [idr_compuesto_incendiario, idr_explosivo, idr_uranio_bruto, idr_uranio_enriquecido, idr_uranio_empobrecido], [10, 10, 10, 10, 10]); def_edificio_2(,,,, 2, 600,, 3)
+	id_mortero = def_edificio("Mortero", 3, spr_mortero, spr_mortero_2, 600, 120, scr_torres_basicas, scr_draw_armas_no_laser, false,, [idr_acero, idr_concreto], [50, 30], 30, true, false, [idr_compuesto_incendiario, idr_explosivo, idr_uranio_bruto, idr_uranio_enriquecido, idr_uranio_empobrecido], [10, 10, 10, 10, 10]); def_edificio_2(,,,, 2, 600,, 3)
 	id_procesador = def_edificio("Procesador", 2, spr_procesador,, 80,, scr_procesador,,,, [idr_cobre, idr_plastico, idr_electronicos], [20, 40, 20]); def_edificio_2(10,,,,,,, 1)
 	id_mensaje = def_edificio("Mensaje", 1, spr_mensaje,, 50,,,,,, [idr_cobre, idr_electronicos], [10, 3]); def_edificio_2(,,,,,, true, 1)
 	id_memoria = def_edificio("Memoria", 1, spr_memoria,, 50,,,,,, [idr_cobre, idr_electronicos], [10, 3]); def_edificio_2(,,,,,, true, 1)
