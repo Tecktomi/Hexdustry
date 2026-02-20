@@ -14,10 +14,10 @@ function scr_turbina(edificio = control.null_edificio){
 		}
 		if edificio.fuel = 0 and flujo.liquido = 0{
 			//Encender
-			if (edificio.carga[idr_carbon] > 0 or edificio.carga[idr_combustible] > 0) and flujo_power > 0{
-				if edificio.carga[idr_combustible] > 0{
+			if (edificio.carga[idr_carbon] > 0 or edificio.carga[idr_compuesto_incendiario] > 0) and flujo_power > 0{
+				if edificio.carga[idr_compuesto_incendiario] > 0{
 					edificio.fuel = recurso_combustion_time[12]
-					edificio.carga[idr_combustible]--
+					edificio.carga[idr_compuesto_incendiario]--
 				}
 				else if edificio.carga[idr_carbon] > 0{
 					edificio.fuel = recurso_combustion_time[1]

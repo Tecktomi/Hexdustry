@@ -99,7 +99,7 @@ function cargar_escenario(file = "", config = true){
 				}
 				if array_length(temp_array) > 0{
 					array_push(categoria_edificios_disponible, temp_array)
-					array_push(categoria_nombre_disponible, categoria_nombre_display[a])
+					array_push(categoria_nombre_disponible, categoria_nombre[a])
 					array_push(categoria_index_disponible, a)
 				}
 			}

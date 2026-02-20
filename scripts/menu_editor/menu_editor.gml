@@ -261,8 +261,8 @@ function menu_editor(){
 				xpos = room_width / 2 + 40
 				var width = 0, ypos_2 = ypos
 				for(var a = 0; a < rss_max; a++){
-					ypos_2 = draw_text_ypos(xpos, ypos_2, recurso_nombre_display[rss_sort[a]])
-					width = max(width, string_width(recurso_nombre_display[rss_sort[a]]))
+					ypos_2 = draw_text_ypos(xpos, ypos_2, recurso_nombre[rss_sort[a]])
+					width = max(width, string_width(recurso_nombre[rss_sort[a]]))
 				}
 				xpos = room_width / 2 + 60 + width
 				ypos_2 = ypos
@@ -344,7 +344,7 @@ function menu_editor(){
 			ypos += text_y
 			var ore_names = [], size = array_length(editor_instrucciones)
 			for(var j = 0; j < ore_max; j++)
-				array_push(ore_names, recurso_nombre_display[ore_recurso[j]])
+				array_push(ore_names, recurso_nombre[ore_recurso[j]])
 			if size > 18
 				deslizante[0] = floor(draw_deslizante_vertical(110, ypos, ypos + 20 * 18, deslizante[0], 0, size - 18, 0))
 			for(var i = deslizante[0]; i < min(deslizante[0] + 18, size); i++){
@@ -388,19 +388,19 @@ function menu_editor(){
 				else if tipo = 1{
 					var temp_text
 					xpos = draw_text_xpos(xpos, ypos, $"{L.editor_al_rededor} ")
-					instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre_display,, 10)
+					instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
 					xpos += text_x
 					xpos = draw_text_xpos(xpos, ypos, $" {L.editor_reemplazar} ")
 					if dat1 = dat2{
 						temp_text = terreno_nombre[dat1]
 						terreno_nombre[dat1] = L.editor_cualquiera
 					}
-					instruccion[2] = draw_boton_text_list(xpos, ypos, dat2, terreno_nombre_display,, 10)
+					instruccion[2] = draw_boton_text_list(xpos, ypos, dat2, terreno_nombre,, 10)
 					if dat1 = dat2
 						terreno_nombre[dat1] = temp_text
 					xpos += text_x
 					xpos = draw_text_xpos(xpos, ypos, $" {L.editor_con} ")
-					instruccion[3] = draw_boton_text_list(xpos, ypos, dat3, terreno_nombre_display,, 10)
+					instruccion[3] = draw_boton_text_list(xpos, ypos, dat3, terreno_nombre,, 10)
 				}
 				//Ruido Aleatorio
 				else if tipo = 2{
@@ -610,11 +610,11 @@ function menu_editor(){
 						}
 					}
 				}
-				var temp_text = terreno_nombre_display[terreno[# mx, my]]
+				var temp_text = terreno_nombre[terreno[# mx, my]]
 				if ore[# mx, my] >= 0
-					temp_text += $"\n{recurso_nombre_display[ore_recurso[ore[# mx, my]]]}: {ore_amount[# mx, my]}"
+					temp_text += $"\n{recurso_nombre[ore_recurso[ore[# mx, my]]]}: {ore_amount[# mx, my]}"
 				if edificio_bool[# mx, my]
-					temp_text += $"\n{edificio_nombre_display[edificio_id[# mx, my].index]}"
+					temp_text += $"\n{edificio_nombre[edificio_id[# mx, my].index]}"
 				draw_text_background(200, 0, temp_text)
 			}
 			//Borrar edificio
@@ -645,13 +645,13 @@ function menu_editor(){
 		for(var a = deslizante[0]; a < min(deslizante[0] + 40, size); a++){
 			var b = 0
 			if a < terreno_max and draw_sprite_boton(terreno_sprite[a],, 10 + (a mod 5) * 36, ypos,,,, function(data){
-				sprite_boton_text = terreno_nombre_display[data.a]}, {a : a}){
+				sprite_boton_text = terreno_nombre[data.a]}, {a : a}){
 				build_index = a
 				editor_herramienta = 0
 			}
 			b += terreno_max
 			if a >= b and a - b < ore_max and draw_sprite_boton(ore_sprite[a - b],, 10 + (a mod 5) * 36, ypos,,,, function(data){
-				sprite_boton_text = recurso_nombre_display[ore_recurso[data.a]]}, {a : a - b}){
+				sprite_boton_text = recurso_nombre[ore_recurso[data.a]]}, {a : a - b}){
 				build_index = a
 				editor_herramienta = 0
 			}

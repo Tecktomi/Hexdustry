@@ -28,7 +28,7 @@ function scr_refineria_petroleo(edificio = control.null_edificio){
 			if edificio.proceso >= edificio_proceso[index]{
 				var a = random(1)
 				if a < edificio.select / 100
-					edificio.carga[idr_combustible]++
+					edificio.carga[idr_compuesto_incendiario]++
 				else{
 					a = random(1)
 					if a < sqr(1 - abs(edificio.select - 50) / 100)
