@@ -110,8 +110,8 @@ function scr_torres_basicas(edificio = control.null_edificio){
 						if index = id_lanzallamas
 							municion = add_municion(center_x, center_y, 20 * (target_x - center_x) / dis, 20 * (target_y - center_y) / dis, 2, dis / 20, tiro_struct.dmg * dmg_factor,, dron, target_edificio, enemigo)
 						else if index = id_mortero{
-							if edificio.carga[idr_combustible] > 0{
-								edificio.carga[idr_combustible]--
+							if edificio.carga[idr_compuesto_incendiario] > 0{
+								edificio.carga[idr_compuesto_incendiario]--
 								edificio.carga_total--
 								municion = add_municion(center_x, center_y, 20 * (target_x - center_x) / dis, 20 * (target_y - center_y) / dis, 3, dis / 20, tiro_struct.dmg * dmg_factor, 10_000, dron, target_edificio, enemigo)
 							}

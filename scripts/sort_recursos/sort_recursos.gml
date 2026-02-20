@@ -4,7 +4,7 @@ function sort_recursos(){
 		var temp_rss_sort = array_create(rss_max)
 		for(var a = 0; a < rss_max; a++)
 			temp_rss_sort[a] = {
-				name : recurso_nombre_display[a],
+				name : recurso_nombre[a],
 				index : a
 			}
 		array_sort(temp_rss_sort, function(elm1, elm2){return elm1.name < elm2.name ? -1 : 1})

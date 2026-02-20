@@ -82,7 +82,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false){
 		else if index = id_ensambladora and edificio.mode{
 			var temp_edificio = edificio.link
 			for(var a = 0; a < rss_max; a++)
-				if a != idr_electronico
+				if a != idr_electronicos
 					temp_edificio.carga[a] = 0
 			temp_edificio.carga_total = 0
 			temp_edificio.mode = false
@@ -90,14 +90,14 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false){
 			temp_edificio.carga_input[idr_cobre] = true
 			temp_edificio.carga_max[idr_silicio] = 10
 			temp_edificio.carga_input[idr_silicio] = true
-			temp_edificio.carga_max[idr_electronico] = 0
-			temp_edificio.carga_input[idr_electronico] = false
+			temp_edificio.carga_max[idr_electronicos] = 0
+			temp_edificio.carga_input[idr_electronicos] = false
 			temp_edificio.carga_max[idr_plastico] = 0
 			temp_edificio.carga_input[idr_plastico] = false
 			temp_edificio.carga_max[idr_bateria] = 0
 			temp_edificio.carga_input[idr_bateria] = false
-			temp_edificio.carga_output[idr_modulo] = false
-			temp_edificio.carga_output[idr_electronico] = true
+			temp_edificio.carga_output[idr_modulos] = false
+			temp_edificio.carga_output[idr_electronicos] = true
 			calculate_in_out_2(temp_edificio)
 			temp_edificio.link = null_edificio
 		}

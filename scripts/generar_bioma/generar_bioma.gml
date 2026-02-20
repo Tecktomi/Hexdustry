@@ -11,16 +11,16 @@ function generar_bioma(bioma){
 		//Generar terreno inicial
 		if bioma = 0{
 			ds_grid_clear(terreno, idt_pasto)
-			temp_peso_data = [[idt_piedra, 8, 60], [idt_agua, 3, 30], [idt_petroleo, 1, 20], [idt_pared_piedra, 4, 80], [idt_pared_pasto, 2, 80], [idt_lava, 1, 25], [idt_agua_salada, 1, 30]]
+			temp_peso_data = [[idt_piedra, 8, 60], [idt_agua, 3, 30], [idt_petroleo, 1, 20], [idt_pared_de_piedra, 4, 80], [idt_pared_de_pasto, 2, 80], [idt_lava, 1, 25], [idt_agua_salada, 1, 30]]
 		}
 		else if bioma = 1{
 			ds_grid_clear(terreno, idt_arena)
-			temp_peso_data = [[idt_piedra, 5, 60], [idt_agua, 2, 30], [idt_petroleo, 2, 15], [idt_pared_piedra, 4, 80], [idt_pared_arena, 3, 80], [idt_lava, 1, 25], [idt_salar, 1, 30]]
+			temp_peso_data = [[idt_piedra, 5, 60], [idt_agua, 2, 30], [idt_petroleo, 2, 15], [idt_pared_de_piedra, 4, 80], [idt_pared_de_arena, 3, 80], [idt_lava, 1, 25], [idt_salar, 1, 30]]
 			borde_agua = idt_pasto
 		}
 		else if bioma = 2{
 			ds_grid_clear(terreno, idt_piedra)
-			temp_peso_data = [[idt_piedra_cuprica, 3, 30], [idt_piedra_ferrica, 3, 30], [idt_agua, 2, 30], [idt_petroleo, 2, 20], [idt_pared_piedra, 6, 150], [idt_lava, 3, 25]]
+			temp_peso_data = [[idt_piedra_cuprica, 3, 30], [idt_piedra_ferrica, 3, 30], [idt_agua, 2, 30], [idt_petroleo, 2, 20], [idt_pared_de_piedra, 6, 150], [idt_lava, 3, 25]]
 			borde_agua = idt_piedra_cuprica
 		}
 		var size = array_length(temp_peso_data)
@@ -140,13 +140,13 @@ function generar_bioma(bioma){
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 				continue
 			if not terreno_caminable[terreno[# aa, bb]]{
-				if in(terreno[# aa, bb], idt_pared_arena, idt_agua, idt_agua_salada)
+				if in(terreno[# aa, bb], idt_pared_de_arena, idt_agua, idt_agua_salada)
 					set_terreno(aa, bb, idt_arena)
-				else if in(terreno[# aa, bb], idt_pared_piedra, idt_agua_profunda, idt_agua_salada_profunda, idt_petroleo)
+				else if in(terreno[# aa, bb], idt_pared_de_piedra, idt_agua_profunda, idt_agua_salada_profunda, idt_petroleo)
 					set_terreno(aa, bb, idt_piedra)
-				else if in(terreno[# aa, bb], idt_pared_nieve, idt_hielo)
+				else if in(terreno[# aa, bb], idt_pared_de_nieve, idt_hielo)
 					set_terreno(aa, bb, idt_nieve)
-				else if terreno[# aa, bb] = idt_pared_pasto
+				else if terreno[# aa, bb] = idt_pared_de_pasto
 					set_terreno(aa, bb, idt_pasto)
 				else if terreno[# aa, bb] = idt_lava
 					set_terreno(aa, bb, idt_basalto)

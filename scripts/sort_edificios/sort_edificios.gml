@@ -3,7 +3,7 @@ function sort_edificios(){
 		var temp_edi_sort = array_create(edificio_max)
 		for(var a = 0; a < edificio_max; a++){
 			temp_edi_sort[a] = {
-				name : edificio_nombre_display[a],
+				name : edificio_nombre[a],
 				index : a
 			}
 		}

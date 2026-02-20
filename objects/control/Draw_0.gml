@@ -288,10 +288,10 @@ if menu = 0{
 	if keyboard_check_pressed(vk_escape)
 		game_end()
 	if os_type == os_windows
-		for(var a = 0; a < array_length(idiomas); a++)
-			if draw_sprite_boton(spr_bandera, a, 20 + 80 * a, 20, 64, 48){
+		for(var a = 0; a < idiomas; a++)
+			if draw_sprite_boton(spr_bandera, a, 20 + 80 * a, 20, 64, 48,, function(data){draw_text_background(0, 80, idioma_name[data.a])}, {a : a}){
 				idioma = a
-				set_idioma(idiomas[a])
+				set_idioma()
 			}
 	if keyboard_check_pressed(vk_f4){
 		keyboard_clear(vk_f4)
@@ -440,7 +440,7 @@ if in(menu, 1, 3){
 	var temp_text = ""
 	for(var a = 0; a < rss_max; a++)
 		if nucleo.carga[rss_sort[a]] > 0
-			temp_text += $"{recurso_nombre_display[rss_sort[a]]} {nucleo.carga[rss_sort[a]]}\n"
+			temp_text += $"{recurso_nombre[rss_sort[a]]} {nucleo.carga[rss_sort[a]]}\n"
 	if temp_text != ""
 		draw_text_background(room_width / 2, 0, temp_text)
 	draw_set_halign(fa_left)
@@ -477,7 +477,7 @@ if in(menu, 1, 3){
 				deslizante[0] = floor(draw_deslizante_vertical(110, pos, pos + 25 * 20, deslizante[0], 0, rss_max - 25, 0))
 			for(var a = deslizante[0]; a < min(deslizante[0] + 25, rss_max); a++){
 				draw_sprite(recurso_sprite[rss_sort[a]], 0, 120, pos + 10)
-				if draw_boton(140, pos, recurso_nombre_display[rss_sort[a]],,,, false){
+				if draw_boton(140, pos, recurso_nombre[rss_sort[a]],,,, false){
 					enciclopedia_item = rss_sort[a]
 					enciclopedia = 3
 				}
@@ -495,7 +495,7 @@ if in(menu, 1, 3){
 				deslizante[0] = floor(draw_deslizante_vertical(110, pos, pos + 25 * 20, deslizante[0], 0, edificio_max - 25, 0))
 			for(var a = deslizante[0]; a < min(deslizante[0] + 25, edificio_max); a++){
 				draw_sprite_stretched(edificio_sprite[edi_sort[a]], 0, 120, pos, 18, 18)
-				if draw_boton(150, pos, edificio_nombre_display[edi_sort[a]],,,, false){
+				if draw_boton(150, pos, edificio_nombre[edi_sort[a]],,,, false){
 					enciclopedia_item = edi_sort[a]
 					enciclopedia = 4
 				}
@@ -510,7 +510,7 @@ if in(menu, 1, 3){
 		else if enciclopedia = 3{
 			var pos = 140
 			draw_set_font(ft_titulo)
-			pos = draw_text_ypos(120, pos, recurso_nombre_display[enciclopedia_item])
+			pos = draw_text_ypos(120, pos, recurso_nombre[enciclopedia_item])
 			draw_set_font(ft_letra)
 			pos = draw_text_ypos(120, pos, recurso_descripcion[enciclopedia_item])
 			if recurso_combustion[enciclopedia_item]
@@ -520,7 +520,7 @@ if in(menu, 1, 3){
 				var aa = edi_sort[a]
 				for(var b = 0; b < array_length(edificio_input_id[aa]); b++)
 					if edificio_input_id[aa, b] = enciclopedia_item{
-						if draw_boton(140, pos, edificio_nombre_display[aa],,,, false){
+						if draw_boton(140, pos, edificio_nombre[aa],,,, false){
 							enciclopedia_item = aa
 							enciclopedia = 4
 							exit
@@ -534,7 +534,7 @@ if in(menu, 1, 3){
 				var aa = edi_sort[a]
 				for(var b = 0; b < array_length(edificio_output_id[aa]); b++)
 					if edificio_output_id[aa, b] = enciclopedia_item{
-						if draw_boton(140, pos, edificio_nombre_display[aa],,,, false){
+						if draw_boton(140, pos, edificio_nombre[aa],,,, false){
 							enciclopedia_item = aa
 							enciclopedia = 4
 							exit
@@ -559,7 +559,7 @@ if in(menu, 1, 3){
 					var aa = edi_sort[a]
 					for(var b = 0; b < array_length(edificio_precio_id[aa]); b++)
 						if edificio_precio_id[aa, b] = enciclopedia_item{
-							if draw_boton(140, pos, edificio_nombre_display[aa],,,, false){
+							if draw_boton(140, pos, edificio_nombre[aa],,,, false){
 								enciclopedia_item = aa
 								enciclopedia = 4
 								exit
@@ -586,7 +586,7 @@ if in(menu, 1, 3){
 				for(var a = 0; a < dron_max; a++)
 					for(var b = 0; b < array_length(dron_precio_id[a]); b++)
 						if dron_precio_id[a, b] = enciclopedia_item{
-							if draw_boton(140, pos, dron_nombre_display[a],,,, false){
+							if draw_boton(140, pos, dron_nombre[a],,,, false){
 								enciclopedia_item = a
 								enciclopedia = 6
 								exit
@@ -601,7 +601,7 @@ if in(menu, 1, 3){
 		else if enciclopedia = 4{
 			var pos = 140, ei = enciclopedia_item
 			draw_set_font(ft_titulo)
-			pos = draw_text_ypos(120, pos, edificio_nombre_display[ei])
+			pos = draw_text_ypos(120, pos, edificio_nombre[ei])
 			draw_set_font(ft_letra)
 			pos = draw_text_ypos(120, pos, edificio_descripcion[ei]) + 10
 			pos = draw_text_ypos(120, pos, $"{L.enciclopedia_vida}: {edificio_vida[ei]}")
@@ -610,7 +610,7 @@ if in(menu, 1, 3){
 				pos += 10
 				pos = draw_text_ypos(120, pos, $"{L.enciclopedia_coste_construccion}:")
 				for(var a = 0; a < array_length(edificio_precio_id[ei]); a++){
-					if draw_boton(140, pos, $"{edificio_precio_num[ei, a]} {recurso_nombre_display[edificio_precio_id[ei, a]]}",,,, false){
+					if draw_boton(140, pos, $"{edificio_precio_num[ei, a]} {recurso_nombre[edificio_precio_id[ei, a]]}",,,, false){
 						enciclopedia_item = edificio_precio_id[ei, a]
 						enciclopedia = 3
 						exit
@@ -622,7 +622,7 @@ if in(menu, 1, 3){
 				pos += 10
 				pos = draw_text_ypos(120, pos, $"{L.enciclopedia_consume}:")
 				for(var a = 0; a < array_length(edificio_input_id[ei]); a++){
-					if draw_boton(140, pos, recurso_nombre_display[edificio_input_id[ei, a]],,,, false){
+					if draw_boton(140, pos, recurso_nombre[edificio_input_id[ei, a]],,,, false){
 						enciclopedia_item = edificio_input_id[ei, a]
 						enciclopedia = 3
 						exit
@@ -634,7 +634,7 @@ if in(menu, 1, 3){
 				pos += 10
 				pos = draw_text_ypos(120, pos, $"{L.enciclopedia_produce}:")
 				for(var a = 0; a < array_length(edificio_output_id[ei]); a++){
-					if draw_boton(140, pos, recurso_nombre_display[edificio_output_id[ei, a]],,,, false){
+					if draw_boton(140, pos, recurso_nombre[edificio_output_id[ei, a]],,,, false){
 						enciclopedia_item = edificio_output_id[ei, a]
 						enciclopedia = 3
 						exit
@@ -654,7 +654,7 @@ if in(menu, 1, 3){
 				if edificio_flujo_liquido[ei] = -1
 					temp_text = L.flujo_liquido
 				else
-					temp_text = liquido_nombre_display[edificio_flujo_liquido[ei]]
+					temp_text = liquido_nombre[edificio_flujo_liquido[ei]]
 				if edificio_flujo_consumo[ei] > 0
 					pos = draw_text_ypos(120, pos, $"{L.enciclopedia_consume} {edificio_flujo_consumo[ei]} {temp_text}/s")
 				else if edificio_flujo_consumo[ei] < 0
@@ -689,7 +689,7 @@ if in(menu, 1, 3){
 					draw_set_color(c_black)
 					draw_circle(xpos + 50 * a - 25 * (size - 1), ypos, 25, true)
 					if draw_sprite_boton(edificio_sprite[b],, xpos - 20 + 50 * a - 25 * (size - 1), ypos - 20, 40, 40,, function(data){
-						sprite_boton_text = edificio_nombre_display[data.b]}, {b : b}){
+						sprite_boton_text = edificio_nombre[data.b]}, {b : b}){
 						enciclopedia_item = b
 						enciclopedia = 4
 						exit
@@ -710,7 +710,7 @@ if in(menu, 1, 3){
 					draw_set_color(c_black)
 					draw_circle(xpos + 50 * a - 25 * (size - 1), ypos + 200, 25, true)
 					if draw_sprite_boton(edificio_sprite[b],, xpos - 20 + 50 * a - 25 * (size - 1), ypos + 180, 40, 40,, function(data){
-						sprite_boton_text = edificio_nombre_display[data.b]}, {b : b}){
+						sprite_boton_text = edificio_nombre[data.b]}, {b : b}){
 						enciclopedia_item = b
 						enciclopedia = 4
 						exit
@@ -725,7 +725,7 @@ if in(menu, 1, 3){
 					if not cheat
 						for(var a = 0; a < array_length(edificio_tecnologia_precio[ei]); a++){
 							var temp_precio = edificio_tecnologia_precio[ei, a]
-							temp_text += $"\n{recurso_nombre_display[temp_precio.id]}: {temp_precio.num}"
+							temp_text += $"\n{recurso_nombre[temp_precio.id]}: {temp_precio.num}"
 							if nucleo.carga[temp_precio.id] < temp_precio.num{
 								flag = false
 								temp_text += " !!"
@@ -774,7 +774,7 @@ if in(menu, 1, 3){
 			if dron_max > 25
 				deslizante[0] = floor(draw_deslizante_vertical(110, pos, pos + 25 * 20, deslizante[0], 0, dron_max - 25, 0))
 			for(var a = deslizante[0]; a < min(deslizante[0] + 25, dron_max); a++){
-				if draw_boton(120, pos, dron_nombre_display[a],,,, false){
+				if draw_boton(120, pos, dron_nombre[a],,,, false){
 					enciclopedia_item = a
 					enciclopedia = 6
 				}
@@ -789,7 +789,7 @@ if in(menu, 1, 3){
 		else if enciclopedia = 6{
 			var pos = 140
 			draw_set_font(ft_titulo)
-			pos = draw_text_ypos(120, pos, dron_nombre_display[enciclopedia_item])
+			pos = draw_text_ypos(120, pos, dron_nombre[enciclopedia_item])
 			draw_set_font(ft_letra)
 			pos = draw_text_ypos(120, pos, dron_descripcion[enciclopedia_item])
 			pos = draw_text_ypos(120, pos, $"{L.enciclopedia_vida}: {dron_vida_max[enciclopedia_item]}")
@@ -799,7 +799,7 @@ if in(menu, 1, 3){
 				pos += 10
 				pos = draw_text_ypos(120, pos, $"{L.enciclopedia_coste_construccion}:")
 				for(var a = 0; a < array_length(dron_precio_id[enciclopedia_item]); a++){
-					if draw_boton(140, pos, $"{dron_precio_num[enciclopedia_item, a]} {recurso_nombre_display[dron_precio_id[enciclopedia_item, a]]}",,,, false){
+					if draw_boton(140, pos, $"{dron_precio_num[enciclopedia_item, a]} {recurso_nombre[dron_precio_id[enciclopedia_item, a]]}",,,, false){
 						enciclopedia_item = dron_precio_id[enciclopedia_item, a]
 						enciclopedia = 3
 						exit
@@ -833,7 +833,7 @@ if in(menu, 1, 3){
 					draw_set_color(c_black)
 					draw_circle(xpos + 60 * b - 30 * (width - 1), pos, 25, true)
 					if draw_sprite_boton(edificio_sprite[c],, xpos - 20 + 60 * b - 30 * (width - 1), pos - 20, 40, 40,, function(data){
-						sprite_boton_text = edificio_nombre_display[data.c]}, {c : c}){
+						sprite_boton_text = edificio_nombre[data.c]}, {c : c}){
 						enciclopedia_item = c
 						enciclopedia = 4
 						exit
@@ -878,7 +878,7 @@ if pausa = 1{
 	draw_set_font(ft_titulo)
 	draw_text(room_width / 2, 100, L.pausa)
 	draw_set_font(ft_letra)
-	draw_text(room_width / 2, 150,	L.pausa_continuar + L.pausa_red + L.pausa_liquido + L.pausa_enciclopedia + L.pausa_reparar)
+	draw_text(room_width / 2, 150,	$"{L.pausa_continuar}\n{L.pausa_red}\n{L.pausa_liquido}\n{L.pausa_enciclopedia}\n{L.pausa_reparar}")
 	draw_set_halign(fa_left)
 	var a = room_width / 2
 	draw_set_halign(fa_center)
@@ -951,9 +951,9 @@ if show_menu{
 		draw_boton_text_counter = 0
 		show_smoke = false
 		draw_set_color(make_color_rgb(189, 140, 191))
-		draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
+		draw_roundrect(100, 100, room_width - 100, room_height - 100, false)
 		draw_set_color(c_white)
-		draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
+		draw_roundrect(100, 100, room_width - 100, room_height - 100, true)
 		var b = 0
 		draw_set_halign(fa_center)
 		if draw_boton(room_width / 2, 110, L.procesador_vincular,,,, false){
@@ -1221,14 +1221,14 @@ if show_menu{
 		if procesador_add{
 			var width = 0
 			for(var a = 0; a < array_length(procesador_instrucciones_length); a++)
-				width = max(width, string_width($"{procesador_instrucciones_nombre_display[a]} ({a})"))
+				width = max(width, string_width($"{procesador_instrucciones_nombre[a]} ({a})"))
 			draw_set_color(c_gray)
 			draw_rectangle((room_width - width) / 2, 200, (room_width + width) / 2, 200 + 20 * array_length(procesador_instrucciones_length), false)
 			draw_set_color(c_white)
 			draw_rectangle((room_width - width) / 2, 200, (room_width + width) / 2, 200 + 20 * array_length(procesador_instrucciones_length), true)
 			draw_set_halign(fa_center)
 			for(var a = 0; a < array_length(procesador_instrucciones_length); a++)
-				if draw_boton(room_width / 2, 200 + 20 * a, $"{procesador_instrucciones_nombre_display[a]} ({a})",,,, false, 1) or keyboard_check_pressed(ord(string(a))){
+				if draw_boton(room_width / 2, 200 + 20 * a, $"{procesador_instrucciones_nombre[a]} ({a})",,,, false, 1) or keyboard_check_pressed(ord(string(a))){
 					var new_instruccion = array_create(procesador_instrucciones_length[a], 0)
 					new_instruccion[0] = a
 					array_push(edificio.instruccion, new_instruccion)
@@ -1345,7 +1345,7 @@ if show_menu{
 		draw_set_color(c_white)
 		draw_rectangle((room_width - 840) / 2, 100, (room_width + 840) / 2, 480, true)
 		draw_set_halign(fa_center)
-		draw_text(room_width / 2, 110, edificio_nombre_display[edificio.index])
+		draw_text(room_width / 2, 110, edificio_nombre[edificio.index])
 		draw_set_halign(fa_left)
 		for(var a = 0; a < 128; a++){
 			var xpos = (a mod 8) * 100 + (room_width - 800) / 2, ypos = (a div 8) * 20 + 140
@@ -1385,7 +1385,7 @@ if show_menu{
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * len) * zoom, false)
 		}
 		else if index = id_refineria_de_petroleo{
-			var c = max(max(string_width(recurso_nombre_display[idr_combustible]), string_width(recurso_nombre_display[idr_plastico]), string_width(recurso_nombre_display[idr_piedra_sulfatada])) + string_width(": 100%"), 200)
+			var c = max(max(string_width(recurso_nombre[idr_compuesto_incendiario]), string_width(recurso_nombre[idr_plastico]), string_width(recurso_nombre[idr_piedra_sulfatada])) + string_width(": 100%"), 200)
 			draw_rectangle(aa - c * zoom / 2, bb + 40 * zoom, aa + c * zoom / 2, bb + 120 * zoom, false)
 		}
 		else if index = id_silo_de_misiles
@@ -1404,7 +1404,7 @@ if show_menu{
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * lq_max) * zoom, true)
 			draw_text(aa - 80 * zoom, bb + 20 * zoom, L.show_menu_ningun_liquido)
 			for(var a = 0; a < lq_max; a++)
-				draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, liquido_nombre_display[a])
+				draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, liquido_nombre[a])
 		}
 		if index = id_planta_quimica{
 			draw_rectangle(aa - 90 * zoom, bb + 40 * zoom, aa + 90 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, true)
@@ -1419,7 +1419,7 @@ if show_menu{
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * len) * zoom, true)
 			draw_text(aa - 80 * zoom, bb + 20 * zoom, L.show_menu_unidad)
 			for(var a = 0; a < len; a++)
-				draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, dron_nombre_display[temp_array[a]])
+				draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, dron_nombre[temp_array[a]])
 			if edificio.array_real[0] != -1
 				draw_sprite_off(spr_target, 0, edificio.array_real[0], edificio.array_real[1])
 			if mouse_check_button_pressed(mb_right)
@@ -1439,11 +1439,11 @@ if show_menu{
 		else if index = id_refineria_de_petroleo{
 			edificio.select = round(draw_deslizante(aa - 100 * zoom, aa + 100 * zoom, bb + 50 * zoom, edificio.select, 0, 100, 0))
 			draw_set_halign(fa_center)
-			if draw_boton(aa, bb + 60 * zoom, $"{recurso_nombre_display[idr_combustible]}: {edificio.select}%",,,, false)
+			if draw_boton(aa, bb + 60 * zoom, $"{recurso_nombre[idr_compuesto_incendiario]}: {edificio.select}%",,,, false)
 				edificio.select = 100
-			if draw_boton(aa, bb + 80 * zoom, $"{recurso_nombre_display[idr_plastico]}: {round(100 * (1 - edificio.select / 100) * (sqr(1 - abs(edificio.select - 50) / 100)))}%",,,, false)
+			if draw_boton(aa, bb + 80 * zoom, $"{recurso_nombre[idr_plastico]}: {round(100 * (1 - edificio.select / 100) * (sqr(1 - abs(edificio.select - 50) / 100)))}%",,,, false)
 				edificio.select = 50
-			if draw_boton(aa, bb + 100 * zoom, $"{recurso_nombre_display[idr_piedra_sulfatada]}: {100 - edificio.select - round(100 * (1 - edificio.select / 100) * (sqr(1 - abs(edificio.select - 50) / 100)))}%",,,, false)
+			if draw_boton(aa, bb + 100 * zoom, $"{recurso_nombre[idr_piedra_sulfatada]}: {100 - edificio.select - round(100 * (1 - edificio.select / 100) * (sqr(1 - abs(edificio.select - 50) / 100)))}%",,,, false)
 				edificio.select = 0
 			draw_set_halign(fa_left)
 		}
@@ -1465,7 +1465,7 @@ if show_menu{
 				if mouse_y < bb + (40 + 28 * ceil(rss_max / 5)) * zoom{
 					var a = floor((mouse_x - (aa - 80 * zoom)) / (32 * zoom)) + 5 * floor((mouse_y - (bb + 40 * zoom)) / (28 * zoom))
 					if a >= 0 and a < rss_max{
-						draw_text_background(mouse_x + 20, mouse_y, recurso_nombre_display[a])
+						draw_text_background(mouse_x + 20, mouse_y, recurso_nombre[a])
 						cursor = cr_handpoint
 						if mouse_check_button_pressed(mb_left){
 							mouse_clear(mb_left)
@@ -1500,7 +1500,7 @@ if show_menu{
 				if mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * len) * zoom{
 					var a = temp_array[floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))], temp_text = $"{dron_descripcion[a]}\n"
 					for(var b = array_length(dron_precio_id[a]) - 1; b >= 0; b--)
-						temp_text += $"  {recurso_nombre_display[dron_precio_id[a, b]]}: {dron_precio_num[a, b]}\n"
+						temp_text += $"  {recurso_nombre[dron_precio_id[a, b]]}: {dron_precio_num[a, b]}\n"
 					draw_text_background(mouse_x + 20, mouse_y, temp_text)
 					cursor = cr_handpoint
 					if mouse_check_button_pressed(mb_left){
@@ -1559,7 +1559,7 @@ var edificio = edificio_id[# mx, my], temp_coordenada = edificio.coordenadas
 //Mostrar detalles de edificios al pasar el mouse_por encima
 if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_procesador){
 	//Mostrar terreno
-	var temp_text = $"{terreno_nombre_display[terreno[# mx, my]]}\n"
+	var temp_text = $"{terreno_nombre[terreno[# mx, my]]}\n"
 	//Seleccionar Dron
 	if mouse_check_button_pressed(mb_left) and false{
 		var flag_dron = true, min_dis = 900 * sqr(zoom) //(30 / zoom)^2
@@ -1578,10 +1578,10 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		}
 	}
 	if ore[# mx, my] >= 0
-		temp_text += $"{recurso_nombre_display[ore_recurso[ore[# mx, my]]]}: {ore_amount[# mx, my]}\n"
+		temp_text += $"{recurso_nombre[ore_recurso[ore[# mx, my]]]}: {ore_amount[# mx, my]}\n"
 	if edificio_bool[# mx, my]{
 		var index = edificio.index
-		temp_text += $"{edificio_nombre_display[index]}\n"
+		temp_text += $"{edificio_nombre[index]}\n"
 		if edificio.enemigo and menu = 1 and not cheat
 			temp_text += "ENEMIGO\n"
 		else{
@@ -1711,7 +1711,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 							temp_text += $"{L.almacen_almacen}:\n"
 							flag = true
 						}
-						temp_text += $"  {recurso_nombre_display[a]}: {floor(edificio.carga[a] + temp_edificio.carga[a])}\n"
+						temp_text += $"  {recurso_nombre[a]}: {floor(edificio.carga[a] + temp_edificio.carga[a])}\n"
 					}
 			}
 			else if edificio.carga_total > 0 and index != id_silo_de_misiles{
@@ -1722,7 +1722,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 							temp_text += $"{L.almacen_almacen}:\n"
 							flag = true
 						}
-						temp_text += $"  {recurso_nombre_display[a]}: {floor(edificio.carga[a])}\n"
+						temp_text += $"  {recurso_nombre[a]}: {floor(edificio.carga[a])}\n"
 					}
 				if info and edificio.carga_total > 0
 					temp_text += $"    {L.almacen_total}: {floor(edificio.carga_total)}\n"
@@ -1744,9 +1744,9 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 					}
 					for(var a = 0; a < rss_max; a++)
 						if temp_array[a] > 0
-							temp_text_2 += $"  {recurso_nombre_display[a]}: {temp_array[a]}\n"
+							temp_text_2 += $"  {recurso_nombre[a]}: {temp_array[a]}\n"
 						else if temp_array[a] = -1
-							temp_text_2 += $"  {recurso_nombre_display[a]}\n"
+							temp_text_2 += $"  {recurso_nombre[a]}\n"
 					if temp_text_2 != ""
 						temp_text += $"{L.almacen_recursos_disponibles}:\n{temp_text_2}"
 				}
@@ -1769,9 +1769,9 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 					}
 					for(var a = 0; a < rss_max; a++)
 						if temp_array[a] > 0
-							temp_text_2 += $"  {recurso_nombre_display[a]}: {temp_array[a]}\n"
+							temp_text_2 += $"  {recurso_nombre[a]}: {temp_array[a]}\n"
 						else if temp_array[a] = -1
-							temp_text_2 += $"  {recurso_nombre_display[a]}\n"
+							temp_text_2 += $"  {recurso_nombre[a]}\n"
 					if temp_text_2 != ""
 						temp_text += $"{L.almacen_recursos_disponibles}:\n{temp_text_2}"
 				}
@@ -1837,9 +1837,9 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			}
 			else if grafic_array_dron_encima[index]{
 				if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande) and edificio.select >= 0{
-					temp_text += $"{L.game_creando_dron} {dron_nombre_display[edificio.select]} ({array_length(drones_aliados)}/{8 + 2 * nucleo.modulo})\n"
+					temp_text += $"{L.game_creando_dron} {dron_nombre[edificio.select]} ({array_length(drones_aliados)}/{8 + 2 * nucleo.modulo})\n"
 					for(var a = 0; a < array_length(dron_precio_id[edificio.select]); a++)
-						temp_text += $"  {recurso_nombre_display[dron_precio_id[edificio.select, a]]} {edificio.carga[dron_precio_id[edificio.select, a]]}/{dron_precio_num[edificio.select, a]}\n"
+						temp_text += $"  {recurso_nombre[dron_precio_id[edificio.select, a]]} {edificio.carga[dron_precio_id[edificio.select, a]]}/{dron_precio_num[edificio.select, a]}\n"
 					if edificio.proceso > 0
 						temp_text += $"  {L.game_creando_dron} {floor(100 * edificio.proceso / dron_time[edificio.select])}%\n"
 					else if array_length(drones_aliados) = 8 + 2 * nucleo.modulo
@@ -1849,7 +1849,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 					draw_set_color(c_lime)
 					draw_circle_off(edificio.center_x, edificio.center_y, 250, true)
 					if edificio.select >= 0
-						temp_text += $"{L.almacen_consumiendo} {dron_nombre_display[edificio.select]}: {floor(100 * edificio.proceso / dron_time[edificio.select])}%\n"
+						temp_text += $"{L.almacen_consumiendo} {dron_nombre[edificio.select]}: {floor(100 * edificio.proceso / dron_time[edificio.select])}%\n"
 				}
 				draw_set_color(c_blue)
 				for(var a = array_length(edificio.inputs_carga) - 1; a >= 0; a--){
@@ -1882,8 +1882,8 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 					else
 						temp_text += $"Fabricando {misiles_nombre[select]}\n"
 					for(var a = 0; a < array_length(misiles_precio_id[select]); a++)
-						temp_text += $"  {recurso_nombre_display[misiles_precio_id[select, a]]}: {edificio.carga[misiles_precio_id[select, a]]}/{misiles_precio_num[select, a]}\n"
-					temp_text += $"  {terreno_nombre_display[idt_petroleo]}: {misiles_petroleo[select] - edificio.array_real[0]}/{misiles_petroleo[select]}\n"
+						temp_text += $"  {recurso_nombre[misiles_precio_id[select, a]]}: {edificio.carga[misiles_precio_id[select, a]]}/{misiles_precio_num[select, a]}\n"
+					temp_text += $"  {terreno_nombre[idt_petroleo]}: {misiles_petroleo[select] - edificio.array_real[0]}/{misiles_petroleo[select]}\n"
 					if edificio.proceso > 0
 						temp_text += $"  {floor(100 * edificio.proceso / edificio.array_real[1])}%\n"
 				}
@@ -1898,7 +1898,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 					var temp_text_2 = ""
 					for(var a = 0; a < rss_max; a++)
 						if edificio.carga_input[a]
-							temp_text_2 += $"  {recurso_nombre_display[a]}: {edificio.carga_max[a]}\n"
+							temp_text_2 += $"  {recurso_nombre[a]}: {edificio.carga_max[a]}\n"
 					if temp_text_2 != ""
 						temp_text += $"{L.almacen_acepta}:\n{temp_text_2}"
 				}
@@ -1911,7 +1911,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 					var temp_text_2 = ""
 					for(var a = 0; a < rss_max; a++)
 						if edificio.carga_output[a]
-							temp_text_2 += $"  {recurso_nombre_display[a]}\n"
+							temp_text_2 += $"  {recurso_nombre[a]}\n"
 					if temp_text_2 != ""
 						temp_text += $"{L.almacen_entrega}:\n{temp_text_2}"
 				}
@@ -1954,10 +1954,10 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 						temp_text += $"{L.flujo_sin_liquido}!\n"
 					else{
 						if edificio_flujo_consumo[index] > 0
-							temp_text += $"  {L.almacen_consumiendo} {round(edificio.flujo_consumo)} {liquido_nombre_display[flujo.liquido]}\n"
+							temp_text += $"  {L.almacen_consumiendo} {round(edificio.flujo_consumo)} {liquido_nombre[flujo.liquido]}\n"
 						else
-							temp_text += $"  {L.almacen_produciendo} {abs(round(edificio.flujo_consumo))} {liquido_nombre_display[flujo.liquido]}\n"
-						temp_text += $"  {flujo.promedio > 0 ? L.almacen_produciendo : L.almacen_consumiendo} {round(abs(flujo.promedio))} {liquido_nombre_display[flujo.liquido]}\n"
+							temp_text += $"  {L.almacen_produciendo} {abs(round(edificio.flujo_consumo))} {liquido_nombre[flujo.liquido]}\n"
+						temp_text += $"  {flujo.promedio > 0 ? L.almacen_produciendo : L.almacen_consumiendo} {round(abs(flujo.promedio))} {liquido_nombre[flujo.liquido]}\n"
 						if flujo.almacen_max > 0
 							temp_text += $"  {L.flujo_almacenado}: {round(flujo.almacen)}/{round(flujo.almacen_max)}\n"
 					}
@@ -1981,7 +1981,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 				for(var a = 0; a < array_length(edificio_precio_id[b]); a++)
 					if nucleo.carga[edificio_precio_id[b, a]] < edificio_precio_num[b, a]{
 						comprable = false
-						temp_text_2 += $"  {recurso_nombre_display[edificio_precio_id[b, a]]} {nucleo.carga[edificio_precio_id[b, a]]}/{edificio_precio_num[b, a]}\n"
+						temp_text_2 += $"  {recurso_nombre[edificio_precio_id[b, a]]} {nucleo.carga[edificio_precio_id[b, a]]}/{edificio_precio_num[b, a]}\n"
 					}
 				if not comprable
 					temp_text_2 = $"{L.construir_recursos_insuficientes}\n" + temp_text_2
@@ -2129,7 +2129,7 @@ if sonido
 			draw_arco(menu_x, menu_y, 100, a * b, (a + 1) * b)
 			draw_set_alpha(1)
 			draw_sprite(spr_items, categoria_index_disponible[a], menu_x - 15 + 100 * cos((a + 0.5) * b), menu_y - 15 - 100 * sin((a + 0.5) * b))
-			temp_text = categoria_nombre_display[categoria_index_disponible[a]]
+			temp_text = categoria_nombre[categoria_index_disponible[a]]
 			draw_text_background(min(room_width - string_width(temp_text), mouse_x + 20), min(room_height - string_height(temp_text), mouse_y), temp_text)
 			if mouse_check_button_pressed(mb_left){
 				mouse_clear(mb_left)
@@ -2175,12 +2175,12 @@ if sonido
 			draw_set_alpha(1)
 			draw_sprite_stretched(edificio_sprite[menu_array[a]], 0, menu_x - 15 + 100 * cos((a + 0.5) * b), menu_y - 15 - 100 * sin((a + 0.5) * b), 30, 30)
 			a = menu_array[a]
-			var temp_text = $"{edificio_nombre_display[a]} (hotkey: {edificio_key[a]})\n"
+			var temp_text = $"{edificio_nombre[a]} (hotkey: {edificio_key[a]})\n"
 			if not cheat{
 				if tecnologia and not edificio_tecnologia[a]
 					temp_text += "  Falta Tecnología\n"
 				for(var c = 0; c < array_length(edificio_precio_id[a]); c++)
-					temp_text += $"  {recurso_nombre_display[edificio_precio_id[a, c]]}: {edificio_precio_num[a, c]}\n"
+					temp_text += $"  {recurso_nombre[edificio_precio_id[a, c]]}: {edificio_precio_num[a, c]}\n"
 			}
 			temp_text += $"{edificio_descripcion[a]}\n"
 			draw_text_background(min(room_width - string_width(temp_text), mouse_x + 20), min(room_height - string_height(temp_text), mouse_y), temp_text)
@@ -2283,23 +2283,23 @@ if build_index > 0 and win = 0{
 					var index = edificio.index, temp_precio_id = array_create(0, 0), temp_precio_num = array_create(0, 0), flag_2 = true
 					#region Precios
 						if in(index, id_taladro, id_torre_basica, id_bomba_hidraulica){
-							temp_precio_id = [idr_modulo]
+							temp_precio_id = [idr_modulos]
 							temp_precio_num = [1]
 						}
 						else if in(index, id_rifle, id_lanzallamas, id_ensambladora, id_generador_geotermico, id_planta_desalinizadora, id_torre_reparadora, id_triturador, id_turbina){
-							temp_precio_id = [idr_modulo, idr_silicio]
+							temp_precio_id = [idr_modulos, idr_silicio]
 							temp_precio_num = [2, 2]
 						}
 						else if in(index, id_taladro_electrico, id_laser, id_mortero, id_fabrica_de_concreto, id_perforadora_de_petroleo, id_planta_de_reciclaje, , id_planta_quimica, id_refineria_de_metales){
-							temp_precio_id = [idr_modulo, idr_electronico]
+							temp_precio_id = [idr_modulos, idr_electronicos]
 							temp_precio_num = [3, 5]
 						}
 						else if in(index, id_onda_de_choque, id_fabrica_de_drones, id_fabrica_de_drones_grande, id_planta_de_enriquecimiento, id_planta_nuclear, id_refineria_de_petroleo, id_taladro_de_explosion){
-							temp_precio_id = [idr_modulo, idr_electronico, idr_uranio_bruto]
+							temp_precio_id = [idr_modulos, idr_electronicos, idr_uranio_bruto]
 							temp_precio_num = [5, 5, 10]
 						}
 						else if index = id_nucleo{
-							temp_precio_id = [idr_modulo, idr_electronico, idr_plastico, idr_uranio_bruto]
+							temp_precio_id = [idr_modulos, idr_electronicos, idr_plastico, idr_uranio_bruto]
 							temp_precio_num = [20, 25, 40, 100]
 						}
 					#endregion
@@ -2321,19 +2321,19 @@ if build_index > 0 and win = 0{
 							temp_text = L.modulo_aturdir
 						//Más producción líquido
 						else if index = id_bomba_hidraulica
-							temp_text = $"{L.modulo_mas_liquido} {liquido_nombre_display[temp_edificio.fuel]}\n"
+							temp_text = $"{L.modulo_mas_liquido} {liquido_nombre[temp_edificio.fuel]}\n"
 						//Menos consumo electricidad
 						else if in(index, id_ensambladora, id_perforadora_de_petroleo, id_refineria_de_petroleo)
 							temp_text = L.modulo_menos_electricidad
 						//Menos consumo líquido
 						else if in(index, id_fabrica_de_concreto, id_generador_geotermico, id_turbina)
-							temp_text = $"{L.modulo_menos_liquido} {liquido_nombre_display[0]}\n"
+							temp_text = $"{L.modulo_menos_liquido} {liquido_nombre[0]}\n"
 						//Velocidad
 						else if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande, id_planta_de_reciclaje, id_planta_de_enriquecimiento, id_planta_quimica, id_refineria_de_metales, id_triturador)
 							temp_text = L.modulo_produccion
 						//Más producción de sal
 						else if index = id_planta_desalinizadora
-							temp_text = $"{L.modulo_sal} {recurso_nombre_display[idr_sal]}\n"
+							temp_text = $"{L.modulo_sal} {recurso_nombre[idr_sal]}\n"
 						//Evitar desastres nucleares
 						else if index = id_planta_nuclear
 							temp_text = L.modulo_nuclear
@@ -2355,7 +2355,7 @@ if build_index > 0 and win = 0{
 					if flag_2{
 						if not cheat 
 							for(var a = array_length(temp_precio_id) - 1; a >= 0; a--){
-								temp_text += $"  {recurso_nombre_display[temp_precio_id[a]]}: {temp_precio_num[a]}\n"
+								temp_text += $"  {recurso_nombre[temp_precio_id[a]]}: {temp_precio_num[a]}\n"
 								if flag_2 and nucleo.carga[temp_precio_id[a]] < temp_precio_num[a]
 									flag_2 = false
 							}
@@ -2382,7 +2382,7 @@ if build_index > 0 and win = 0{
 				for(var a = array_length(edificio_precio_id[build_index]) - 1; a >= 0; a--)
 					if nucleo.carga[edificio_precio_id[build_index, a]] < edificio_precio_num[build_index, a]{
 						comprable = false
-						temp_text += $"  {recurso_nombre_display[edificio_precio_id[build_index, a]]} {nucleo.carga[edificio_precio_id[build_index, a]]}/{edificio_precio_num[build_index, a]}\n"
+						temp_text += $"  {recurso_nombre[edificio_precio_id[build_index, a]]} {nucleo.carga[edificio_precio_id[build_index, a]]}/{edificio_precio_num[build_index, a]}\n"
 					}
 				if not comprable
 					temp_text = $"{L.construir_recursos_insuficientes}\n" + temp_text
@@ -2493,7 +2493,7 @@ if build_index > 0 and win = 0{
 					temp_text += $"{L.construir_sobre_agua_lava}\n"
 				}
 				else{
-					temp_text += $"{L.game_producira} {round(abs(edificio_flujo_consumo[build_index]) * count / 3)} {liquido_nombre_display[liquido]}/s\n"
+					temp_text += $"{L.game_producira} {round(abs(edificio_flujo_consumo[build_index]) * count / 3)} {liquido_nombre[liquido]}/s\n"
 				}
 			}
 			else if build_index = id_generador_geotermico{
@@ -2539,7 +2539,7 @@ if build_index > 0 and win = 0{
 					temp_text += $"{L.construir_sobre_salar}\n"
 				}
 				else
-					temp_text += $"{L.game_producira} {abs(edificio_flujo_consumo[build_index]) * i} {liquido_nombre_display[0]}/s"
+					temp_text += $"{L.game_producira} {abs(edificio_flujo_consumo[build_index]) * i} {liquido_nombre[0]}/s"
 			}
 			//Detectar que los taladros tengan recursos
 			if in(build_index, id_taladro, id_taladro_electrico){
@@ -2582,9 +2582,9 @@ if build_index > 0 and win = 0{
 					temp_text += $"{u * 60 / edificio_proceso[build_index]}/s\n"
 					for(var a = 0; a < rss_max; a++){
 						if temp_array_2[a] > 0
-							temp_text += $"{recurso_nombre_display[a]}: {temp_array_2[a]}({round(temp_array[a] * 100 / b)}%)\n"
+							temp_text += $"{recurso_nombre[a]}: {temp_array_2[a]}({round(temp_array[a] * 100 / b)}%)\n"
 						else if temp_array_2[a] = -1
-							temp_text += $"{recurso_nombre_display[a]}({round(temp_array[a] * 100 / b)}%)\n"
+							temp_text += $"{recurso_nombre[a]}({round(temp_array[a] * 100 / b)}%)\n"
 					}
 				}
 			}
@@ -2614,9 +2614,9 @@ if build_index > 0 and win = 0{
 				}
 				else for(var a = 0; a < rss_max; a++){
 					if temp_array_2[a] > 0
-						temp_text += $"{recurso_nombre_display[a]}: {temp_array_2[a]} ({temp_array[a] / 5}/s)\n"
+						temp_text += $"{recurso_nombre[a]}: {temp_array_2[a]} ({temp_array[a] / 5}/s)\n"
 					else if temp_array_2[a] = -1
-						temp_text += $"{recurso_nombre_display[a]} ({temp_array[a] / 5}/s)\n"
+						temp_text += $"{recurso_nombre[a]} ({temp_array[a] / 5}/s)\n"
 				}
 			}
 			//Detectar que no haya otros edificios debajo
@@ -3753,11 +3753,11 @@ if menu = 1{
 	if mision_actual >= 0 and win = 0{
 		var a = mision_actual
 		if not in(mision_objetivo[a], 5, 6)
-			temp_text_right += $"\n\n{mision_nombre[a]}\n{objetivos_nombre_display[mision_objetivo[a]]} {mision_target_num[a]} "
+			temp_text_right += $"\n\n{mision_nombre[a]}\n{objetivos_nombre[mision_objetivo[a]]} {mision_target_num[a]} "
 		if mision_objetivo[a] < 2
-			temp_text_right += recurso_nombre_display[mision_target_id[a]]
+			temp_text_right += recurso_nombre[mision_target_id[a]]
 		else if in(mision_objetivo[a], 2, 3, 7, 8)
-			temp_text_right += edificio_nombre_display[mision_target_id[a]]
+			temp_text_right += edificio_nombre[mision_target_id[a]]
 		else if mision_objetivo[a] = 4
 			temp_text_right += L.mision_enemigos
 		if not in(mision_objetivo[a], 5, 7)
@@ -3853,7 +3853,7 @@ if menu = 1{
 					if flujo.liquido = -1
 						temp_text += $"{L.flujo_sin_liquido}\n"
 					else
-						temp_text += $"{liquido_nombre_display[flujo.liquido]}\n"
+						temp_text += $"{liquido_nombre[flujo.liquido]}\n"
 					temp_text += $"  {L.flujo_generacion}: {flujo.generacion}\n"
 					temp_text += $"  {L.flujo_consumo}: {flujo.consumo}\n"
 					temp_text += $"  {L.flujo_almacenado}: {floor(flujo.almacen)}/{flujo.almacen_max}\n"
@@ -3944,7 +3944,7 @@ if menu = 1{
 							for(var b = 0; b < array_length(recursos_obtenidos_time); b++)
 								array_set(show_array[b], a, 0)
 						}
-						if draw_boton(xpos, ypos, $"{recurso_nombre_display[a]}: {num_format(recursos_obtenidos[a])}",, draw_get_color(),, false)
+						if draw_boton(xpos, ypos, $"{recurso_nombre[a]}: {num_format(recursos_obtenidos[a])}",, draw_get_color(),, false)
 							usable_rss_bool[a] = not usable_rss_bool[a]
 						ypos += text_y
 					}

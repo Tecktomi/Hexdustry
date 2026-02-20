@@ -5,7 +5,7 @@ function set_edificio(mode, select, edificio = control.null_edificio){
 		if in(index, id_selector, id_overflow, id_embotelladora) and edificio.mode != mode{
 			edificio.mode = bool(mode)
 			if index = id_embotelladora{
-				var temp_array = [idr_barril_agua, idr_barril_acido, idr_barril_petroleo, idr_barril_lava, idr_barril_agua_salada]
+				var temp_array = [idr_barril_con_agua, idr_barril_con_acido, idr_barril_con_petroleo, idr_barril_con_lava, idr_barril_con_agua_salada]
 				if edificio.mode{
 					for(var a = array_length(temp_array) - 1; a >= 0; a--){
 						edificio.carga_output[a] = false
@@ -85,8 +85,8 @@ function set_edificio(mode, select, edificio = control.null_edificio){
 			}
 			//Explosivos
 			else if select = 1{
-				edificio.carga_max[idr_combustible] = 10
-				edificio.carga_input[idr_combustible] = true
+				edificio.carga_max[idr_compuesto_incendiario] = 10
+				edificio.carga_input[idr_compuesto_incendiario] = true
 				edificio.carga_output[idr_explosivo] = true
 				edificio.receptor = true
 				edificio.emisor = true
