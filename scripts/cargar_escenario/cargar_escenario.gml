@@ -112,15 +112,12 @@ function cargar_escenario(file = "", config = true){
 		ds_grid_clear(edificio_cercano_dis, infinity)
 		ds_grid_clear(edificio_cercano_dir, -1)
 		var max_index = ini_read_real("Terreno", "Fondo", 1)
+		delete_edificio(nucleo, false)
 		for(var a = 0; a < xsize; a++)
 			for(var b = 0; b < ysize; b++){
 				set_terreno(a, b, ini_read_real("Terreno", $"{a},{b}", max_index))
 				ds_grid_set(ore, a, b, ini_read_real("Ore", $"{a},{b}", -1))
 				ds_grid_set(ore_amount, a, b, ini_read_real("Ore amount", $"{a},{b}", 0))
-			}
-		delete_edificio(nucleo, false)
-		for(var a = 0; a < xsize; a++)
-			for(var b = 0; b < ysize; b++){
 				var temp_priority = ds_grid_get(edificio_cercano_priority, a, b)
 				ds_priority_clear(temp_priority)
 			}
@@ -132,17 +129,18 @@ function cargar_escenario(file = "", config = true){
 				ds_grid_set(chunk_dron_enemigo, a, b, array_create(0, null_dron))
 				ds_grid_set(chunk_dron_aliado, a, b, array_create(0, null_dron))
 				var chunk = chunk_edificios[# a, b], len = array_length(chunk)
-				for(var c = 0; c < len; c++)
+				if len != 0
+					show_debug_message($"chunk: {len}")
+				for(var c = len - 1; c >= 0; c--)
 					delete_edificio(chunk[c])
 				ds_grid_set(chunk_edificios, a, b, array_create(0, null_edificio))
 				chunk = chunk_edificios_enemigo[# a, b]
 				len = array_length(chunk)
-				for(var c = 0; c < len; c++)
+				if len != 0
+					show_debug_message($"chunk_enemigos: {len}, {array_length(chunk_edificios_dinamico[# a, b])}, {array_length(chunk_edificios_estatico[# a, b])}")
+				for(var c = len - 1; c >= 0; c--)
 					delete_edificio(chunk[c])
 				ds_grid_set(chunk_edificios_enemigo, a, b, array_create(0, null_edificio))
-				ds_grid_set(chunk_edificios_estatico, a, b, array_create(0, null_edificio))
-				ds_grid_set(chunk_edificios_dinamico, a, b, array_create(0, null_edificio))
-				ds_grid_set(chunk_edificios_draw, a, b, array_create(0, null_edificio))
 			}
 		nucleo = add_edificio(0, 0, ini_read_real("Global", "nucleo_x", floor(xsize / 2)), ini_read_real("Global", "nucleo_y", floor(ysize / 2)))
 		array_copy(nucleo.carga, 0, carga_inicial, 0, rss_max)
