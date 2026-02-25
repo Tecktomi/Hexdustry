@@ -73,7 +73,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			modulo : false,
 			// 0 = edificios, 1 = chunk_edificios, 2 = [torres_tension, plantas_reciclaje, torres_reparadoras, puertos_carga, target.torres], 3 = luz, 4 = edificios_activos
 			// 5 = red, 6 = flujo, 7 = torres, 8 = edificios_index, 9 = edificio_dinamico/estatico, 10 = edificio_draw
-			punteros : array_create(5, 0),
+			punteros : array_create(10, 0),
 			enemigo : enemigo,
 			prioridad : 0,
 			inputs_carga : array_create(0, null_edificio),
@@ -155,19 +155,20 @@ function add_edificio(index, dir, a, b, enemigo = false){
 		set_camino_dir(edificio)
 		//Añadir coordenadas
 		var temp_list_size = get_size(a, b, dir, edificio_size[index]), chunk_mina = edificio.chunk_x, chunk_minb = edificio.chunk_y, chunk_maxa = edificio.chunk_x, chunk_maxb = edificio.chunk_y
-		for(var c = ds_list_size(temp_list_size) - 1; c >= 0; c--){
-			temp_complex = temp_list_size[|c]
-			var aa = clamp(floor(temp_complex.a / chunk_width), 0, chunk_xsize - 1)
-			var bb = clamp(floor(temp_complex.b / chunk_height), 0, chunk_ysize - 1)
-			chunk_mina = min(chunk_mina, aa)
-			chunk_minb = min(chunk_minb, bb)
-			chunk_maxa = max(chunk_maxa, aa)
-			chunk_maxb = max(chunk_maxb, bb)
-			edificio.chunk_mina = chunk_mina
-			edificio.chunk_minb = chunk_minb
-			edificio.chunk_maxa = chunk_maxa
-			edificio.chunk_maxb = chunk_maxb
-		}
+		if edificio_size[index] != 1
+			for(var c = ds_list_size(temp_list_size) - 1; c >= 0; c--){
+				temp_complex = temp_list_size[|c]
+				var aa = clamp(floor(temp_complex.a / chunk_width), 0, chunk_xsize - 1)
+				var bb = clamp(floor(temp_complex.b / chunk_height), 0, chunk_ysize - 1)
+				chunk_mina = min(chunk_mina, aa)
+				chunk_minb = min(chunk_minb, bb)
+				chunk_maxa = max(chunk_maxa, aa)
+				chunk_maxb = max(chunk_maxb, bb)
+			}
+		edificio.chunk_mina = chunk_mina
+		edificio.chunk_minb = chunk_minb
+		edificio.chunk_maxa = chunk_maxa
+		edificio.chunk_maxb = chunk_maxb
 		for(var c = chunk_mina; c <= chunk_maxa; c++)
 			for(var d = chunk_minb; d <= chunk_maxb; d++){
 				if edificio_draw_estatico[index]{

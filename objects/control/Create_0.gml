@@ -12,7 +12,7 @@ else{
 draw_set_font(font_normal)
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
-ini_write_string("Global", "version", "20_02_2026")
+ini_write_string("Global", "version", "25_02_2026")
 medallas = array_create(6)
 default_maps = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas", "Asalto"]
 for(var a = 0; a < array_length(default_maps); a++){
@@ -88,7 +88,6 @@ L = {}
 	chunk_ysize = ceil(ysize / chunk_height)
 	prev_x = 0
 	prev_y = 0
-	prev_change = true
 	mx_clic = 0
 	my_clic = 0
 	show_menu = false
@@ -1203,7 +1202,6 @@ torres_de_tension = array_create(0, null_edificio)
 plantas_de_reciclaje = array_create(0, null_edificio)
 edificios_salida_drones = array_create(0, null_edificio)
 edi_sort = array_create(edificio_max, 0)
-set_idioma()
 sort_edificios()
 #region Caminos
 	#region Camino 0
@@ -1464,4 +1462,6 @@ null_flujo = def_flujo()
 null_edificio.flujo = null_flujo
 flujos = array_create(0, null_flujo)
 explosion_queue = array_create(0, {x : 0, y : 0, edificio : null_edificio, enemigo : false, radio : 0, dmg : 0, incendiario : false})
+explosion_fx_queue = array_create(0, explosion_fx(0, 0, 0))
+set_idioma()
 generar_bioma(0)

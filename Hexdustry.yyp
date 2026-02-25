@@ -142,6 +142,7 @@
     {"id":{"name":"edificio_pathfind","path":"scripts/edificio_pathfind/edificio_pathfind.yy",},},
     {"id":{"name":"encender_luz","path":"scripts/encender_luz/encender_luz.yy",},},
     {"id":{"name":"exit_keyboard_input","path":"scripts/exit_keyboard_input/exit_keyboard_input.yy",},},
+    {"id":{"name":"explosion_fx","path":"scripts/explosion_fx/explosion_fx.yy",},},
     {"id":{"name":"explosion","path":"scripts/explosion/explosion.yy",},},
     {"id":{"name":"flujo_text","path":"scripts/flujo_text/flujo_text.yy",},},
     {"id":{"name":"game_start","path":"scripts/game_start/game_start.yy",},},

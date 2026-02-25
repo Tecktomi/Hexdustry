@@ -413,13 +413,6 @@ if in(menu, 1, 3){
 					var temp_complex = abtoxy(a, b)
 					draw_edificio(temp_complex.a, temp_complex.b, repair_id[# a, b], repair_dir[# a, b], 0.5)
 				}
-	if flow = 5
-		for(var a = 0; a < chunk_xsize; a++)
-			for(var b = 0; b < chunk_ysize; b++){
-				var temp_complex = abtoxy(a * chunk_width, b * chunk_height)
-				var temp_array_dron = chunk_dron_enemigo[# a, b], temp_array_dron_2 = chunk_dron_aliado[# a, b]
-				draw_text_off(temp_complex.a, temp_complex.b, $"{array_length(temp_array_dron)}\n{array_length(temp_array_dron_2)}")
-			}
 	//Luz
 	if energia_solar < 1{
 		var luz_alpha = 0.6 * (1 - energia_solar)
@@ -930,8 +923,13 @@ if pausa = 1{
 	if draw_boton(a, 540, (grafic_energia ? L.pausa_desactivar : L.pausa_activar) + $" {L.red_energia}", grafic_energia ? ui_verde : ui_rojo)
 		grafic_energia = not grafic_energia
 	if draw_boton(a, 620, L.salir, ui_rojo)
-		if menu = 1
-			game_restart()
+		if menu = 1{
+			clear_edit()
+			menu = 0
+			pausa = 0
+			cheat = false
+			exit
+		}
 		else if menu = 3{
 			clear_edit()
 			menu = 2
@@ -1572,7 +1570,7 @@ if mx < 0 or my < 0 or mx >= xsize or my >= ysize{
 	mx = clamp(mx, 0, xsize - 1)
 	my = clamp(my, 0, ysize - 1)
 }
-prev_change = false
+var prev_change = false
 if mx != prev_x or my != prev_y{
 	prev_x = mx
 	prev_y = my
@@ -2218,6 +2216,7 @@ if sonido
 					build_index = a
 					flag_just_pressed = true
 					just_pressed = true
+					prev_change = true
 				}
 			}
 		}
@@ -2238,6 +2237,7 @@ if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastchar, "A", "D", "W
 			flag_just_pressed = true
 			deselect_drones()
 			clicked = false
+			prev_change = true
 		}
 	keyboard_step = 30
 }
@@ -2255,7 +2255,6 @@ if build_index > 0 and win = 0{
 		build_dir = 0
 	if flag_just_pressed and edificio_size[build_index] mod 2 = 0
 		build_dir = 5 * (build_dir mod 2)
-	var flag_change = false
 	//Rotar
 	if (edificio_rotable[build_index] or edificio_size[build_index] mod 2 = 0) and not keyboard_check(vk_lcontrol){
 		if mouse_wheel_up() or keyboard_check_pressed(ord("R")){
@@ -2264,17 +2263,17 @@ if build_index > 0 and win = 0{
 				build_dir = 5 - build_dir
 			else
 				build_dir = (build_dir + 1) mod 6
-			flag_change = true
+			prev_change = true
 		}
 		if mouse_wheel_down(){
 			if not edificio_rotable[build_index] and edificio_size[build_index] mod 2 = 0
 				build_dir = 5 - build_dir
 			else
 				build_dir = (build_dir + 5) mod 6
-			flag_change = true
+			prev_change = true
 		}
 	}
-	if last_mx != mx or last_my != my or flag_change{
+	if last_mx != mx or last_my != my or prev_change{
 		build_list = get_size(mx, my, build_dir, edificio_size[build_index])
 		if build_index = id_taladro_de_explosion
 			build_list_arround = get_size(mx, my, build_dir, edificio_size[build_index] + 2)
@@ -2911,8 +2910,7 @@ if build_index > 0 and win = 0{
 						else if build_index = id_tuberia_subterranea{
 							var temp_list = get_size(mx, my, 0, 7), flag_2 = false, temp_edificio = null_edificio
 							for(var c = ds_list_size(temp_list) - 1; c >= 0; c--){
-								temp_complex = temp_list[|c]
-								var aa = temp_complex.a, bb = temp_complex.b
+								var temp_complex_2 = temp_list[|c], aa = temp_complex_2.a, bb = temp_complex_2.b
 								if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 									continue
 								if edificio_bool[# temp_complex.a, temp_complex.b] and not (temp_complex.a = mx and temp_complex.b = my){
@@ -2932,8 +2930,8 @@ if build_index > 0 and win = 0{
 						else if build_index = id_ensambladora{
 							if edificio_tecnologia[id_modulo] or not tecnologia{
 								for(var a = ds_list_size(build_list_arround) - 1; a >= 0; a--){
-									temp_complex = build_list_arround[|a]
-									var aa = temp_complex.a, bb = temp_complex.b
+									var temp_complex_2 = build_list_arround[|a]
+									var aa = temp_complex_2.a, bb = temp_complex_2.b
 									if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 										continue
 									if edificio_bool[# aa, bb]{
@@ -2950,7 +2948,7 @@ if build_index > 0 and win = 0{
 						}
 						//Drones encima
 						else if grafic_array_dron_encima[build_index]{
-							if last_mx != mx or last_my != my or flag_change{
+							if last_mx != mx or last_my != my or prev_change{
 								var temp_complex_array = cinta_grande_check(mx, my, build_dir, build_index)
 								build_array_edificios_input = temp_complex_array.inputs
 								build_array_edificios_output = temp_complex_array.outputs
@@ -3753,6 +3751,17 @@ if menu = 1{
 				}
 				explosion_queue = []
 			}
+			if array_length(explosion_fx_queue) > 0{
+				var len = array_length(explosion_fx_queue)
+				for(var a = len - 1; a >= 0; a--){
+					var current_explosion = explosion_fx_queue[a]
+					if --current_explosion.step = 0{
+						explosion_fx_queue[a] = explosion_fx_queue[array_length(explosion_fx_queue) - 1]
+						array_pop(explosion_fx_queue)
+					}
+					draw_circle(current_explosion.x, current_explosion.y, 32, false)
+				}
+			}
 			if nuclear_step > 0{
 				if --nuclear_step > 150{
 					draw_set_color(c_white)
@@ -3818,7 +3827,7 @@ if menu = 1{
 			if keyboard_check_pressed(ord("U"))
 				info = not info
 			if keyboard_check_pressed(ord("L"))
-				flow = (flow + 1) mod 6
+				flow = (flow + 1) mod 7
 			if string_ends_with(keyboard_string, "cheat"){
 				keyboard_string = ""
 				cheat = not cheat

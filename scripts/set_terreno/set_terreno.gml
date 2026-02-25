@@ -1,7 +1,8 @@
 function set_terreno(a, b, index){
 	with control{
-		if terreno[# a, b] != index{
-			if terreno_liquido[terreno[# a, b]] and not terreno_liquido[index]{
+		var terreno_prev = terreno[# a, b]
+		if terreno_prev != index{
+			if terreno_liquido[terreno_prev] and not terreno_liquido[index]{
 				for(var i = 0; i < 6; i++){
 					var temp_complex = next_to(a, b, i), aa = temp_complex.a, bb = temp_complex.b
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
@@ -12,7 +13,7 @@ function set_terreno(a, b, index){
 					}
 				}
 			}
-			else if terreno_liquido[index] and not terreno_liquido[terreno[# a, b]]{
+			else if terreno_liquido[index] and not terreno_liquido[terreno_prev]{
 				for(var i = 0; i < 6; i++){
 					var temp_complex = next_to(a, b, i), aa = temp_complex.a, bb = temp_complex.b
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
@@ -23,7 +24,7 @@ function set_terreno(a, b, index){
 					}
 				}
 			}
-			if terreno_pared[terreno[# a, b]] and not terreno_pared[index]{
+			if terreno_pared[terreno_prev] and not terreno_pared[index]{
 				for(var i = 0; i < 3; i++){
 					var temp_complex = next_to(a, b, i), aa = temp_complex.a, bb = temp_complex.b
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
@@ -32,7 +33,7 @@ function set_terreno(a, b, index){
 						ds_grid_add(terreno_pared_index, aa, bb, -(1 << (2 - i)))
 				}
 			}
-			else if terreno_pared[index] and not terreno_pared[terreno[# a, b]]{
+			else if terreno_pared[index] and not terreno_pared[terreno_prev]{
 				for(var i = 0; i < 3; i++){
 					var temp_complex = next_to(a, b, i), aa = temp_complex.a, bb = temp_complex.b
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
