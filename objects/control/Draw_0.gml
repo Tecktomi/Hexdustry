@@ -1482,7 +1482,7 @@ if show_menu{
 					set_edificio(not edificio.mode, edificio.select, edificio)
 				}
 			}
-			else if in(index, id_selector, id_recurso_infinito){
+			if in(index, id_selector, id_recurso_infinito){
 				if mouse_y < bb + (40 + 28 * ceil(rss_max / 5)) * zoom{
 					var a = floor((mouse_x - (aa - 80 * zoom)) / (32 * zoom)) + 5 * floor((mouse_y - (bb + 40 * zoom)) / (28 * zoom))
 					if a >= 0 and a < rss_max{
