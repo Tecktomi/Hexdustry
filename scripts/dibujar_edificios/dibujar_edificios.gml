@@ -11,6 +11,7 @@ function dibujar_edificios(){
 					chunk_edificios_dirty[# a, b] = false
 					var temp_surf = surface_create((chunk_width + 1) * 48, (chunk_height + 1) * 14)
 					surface_set_target(temp_surf)
+					draw_clear_alpha(c_black, 0)
 					var chunk = chunk_edificios_estatico[# a, b], len = array_length(chunk)
 					for(var c = 0; c < len; c++){
 						var edificio = chunk[c]
