@@ -2,8 +2,10 @@ function set_idioma(){
 	with control{
 		//English
 		if idioma = 0{
+			//Recursos
 			recurso_nombre[idr_acero] = "Steel"
 			recurso_nombre[idr_arena] = "Sand"
+			recurso_nombre[idr_bateria] = "Batery"
 			recurso_nombre[idr_barril_con_agua] = "Barrel with Water"
 			recurso_nombre[idr_barril_con_agua_salada] = "Barrel with Salt Water"
 			recurso_nombre[idr_barril_con_lava] = "Barrel with Lava"
@@ -14,6 +16,7 @@ function set_idioma(){
 			recurso_nombre[idr_cobre] = "Copper"
 			recurso_nombre[idr_compuesto_incendiario] = "Incendiary Compound"
 			recurso_nombre[idr_concreto] = "Concrete"
+			recurso_nombre[idr_electronicos] = "Electronics"
 			recurso_nombre[idr_explosivo] = "Explosive"
 			recurso_nombre[idr_hierro] = "Iron"
 			recurso_nombre[idr_modulos] = "Modules"
@@ -27,77 +30,86 @@ function set_idioma(){
 			recurso_nombre[idr_uranio_bruto] = "Raw Uranium"
 			recurso_nombre[idr_uranio_empobrecido] = "Depleted Uranium"
 			recurso_nombre[idr_uranio_enriquecido] = "Enriched Uranium"
+			//Categorias
+			categoria_nombre[0] = "Transport"
+			categoria_nombre[1] = "Extraction"
+			categoria_nombre[2] = "Production"
+			categoria_nombre[3] = "Electricity"
+			categoria_nombre[4] = "Liquids"
+			categoria_nombre[5] = "Defense"
+			categoria_nombre[6] = "Logic"
+			categoria_nombre[7] = "Drons"
+			//Terrenos
 			terreno_nombre[idt_agua] = "Water"
 			terreno_nombre[idt_agua_profunda] = "Deep Water"
 			terreno_nombre[idt_agua_salada] = "Salt Water"
 			terreno_nombre[idt_agua_salada_profunda] = "Deep Salt Water"
-			edificio_nombre[id_almacen] = "Warehouse"
-			dron_nombre[idd_arana] = "Spider"
+			terreno_nombre[idt_arena] = "Sand"
 			terreno_nombre[idt_basalto] = "Basalt"
 			terreno_nombre[idt_basalto_sulfatado] = "Sulfated Basalt"
+			terreno_nombre[idt_ceniza] = "Ash"
+			terreno_nombre[idt_hielo] = "Ice"
+			terreno_nombre[idt_lava] = "Lava"
+			terreno_nombre[idt_nieve] = "Snow"
+			terreno_nombre[idt_pared_de_arena] = "Sand Wall"
+			terreno_nombre[idt_pared_de_nieve] = "Snow Wall"
+			terreno_nombre[idt_pared_de_pasto] = "Grass Wall"
+			terreno_nombre[idt_pared_de_piedra] = "Stone Wall"
+			terreno_nombre[idt_pasto] = "Grass"
+			terreno_nombre[idt_petroleo] = "Oil"
+			terreno_nombre[idt_piedra] = "Stone"
+			terreno_nombre[idt_piedra_cuprica] = "Cupric stone"
+			terreno_nombre[idt_piedra_ferrica] = "Ferric stone"
+			terreno_nombre[idt_salar] = "Salt flat"
+			//
+			edificio_nombre[id_almacen] = "Warehouse"
+			dron_nombre[idd_arana] = "Spider"
 			edificio_nombre[id_bateria] = "Battery"
 			edificio_nombre[id_bomba_hidraulica] = "Hydraulic Pump"
 			edificio_nombre[id_bomba_de_evaporacion] = "Evaporation Pump"
 			dron_nombre[idd_bombardero] = "Bomber"
 			edificio_nombre[id_cable] = "Cable"
-			terreno_nombre[idt_ceniza] = "Ash"
 			edificio_nombre[id_cinta_grande] = "Large Conveyor"
 			edificio_nombre[id_cinta_magnetica] = "Magnetic Belt"
 			edificio_nombre[id_cinta_transportadora] = "Conveyor Belt"
 			edificio_nombre[id_cruce] = "Crossing"
-			categoria_nombre[5] = "Defense"
 			edificio_nombre[id_deposito] = "Storage"
 			dron_nombre[idd_dron] = "Drone"
-			categoria_nombre[7] = "Drons"
-			categoria_nombre[3] = "Electricity"
-			variable_struct_set(L, "Electronicos", "Electronics")
 			edificio_nombre[id_embotelladora] = "Bottling Plant"
 			edificio_nombre[id_energia_infinita] = "Infinite Energy"
 			edificio_nombre[id_enrutador] = "Router"
 			edificio_nombre[id_ensambladora] = "Assembler"
-			categoria_nombre[1] = "Extraction"
+			dron_nombre[idd_explosivo] = "Explosive"
 			edificio_nombre[id_extractor_atmosferico] = "Atmospheric Extractor"
 			edificio_nombre[id_fabrica_de_concreto] = "Concrete Factory"
 			edificio_nombre[id_fabrica_de_drones] = "Drone Factory"
 			edificio_nombre[id_fabrica_de_drones_grande] = "Large Drone Factory"
 			edificio_nombre[id_generador] = "Generator"
 			edificio_nombre[id_generador_geotermico] = "Geothermal Generator"
-			variable_struct_set(L, "Helicóptero", "Helicopter")
-			terreno_nombre[idt_hielo] = "Ice"
+			dron_nombre[idd_helicoptero] = "Helicopter"
 			edificio_nombre[id_horno] = "Furnace"
 			edificio_nombre[id_horno_de_lava] = "Lava Furnace"
 			edificio_nombre[id_lanzallamas] = "Flamethrower"
-			terreno_nombre[idt_lava] = "Lava"
 			edificio_nombre[id_laser] = "Laser"
 			edificio_nombre[id_liquido_infinito] = "Infinite Liquid"
-			categoria_nombre[4] = "Liquids"
-			categoria_nombre[6] = "Logic"
 			edificio_nombre[id_memoria] = "Memory"
 			edificio_nombre[id_mensaje] = "Message"
 			edificio_nombre[id_mortero] = "Mortar"
 			edificio_nombre[id_muro] = "Wall"
 			edificio_nombre[id_muro_reforzado] = "Reinforced Wall"
 			edificio_nombre[id_modulo] = "Module"
-			terreno_nombre[idt_nieve] = "Snow"
 			edificio_nombre[id_nucleo] = "Nucleus"
 			edificio_nombre[id_onda_de_choque] = "Shockwave"
 			edificio_nombre[id_overflow] = "Overflow"
 			edificio_nombre[id_panel_solar] = "Solar Panel"
 			edificio_nombre[id_pantalla] = "Display"
-			terreno_nombre[idt_pared_de_arena] = "Sand Wall"
-			terreno_nombre[idt_pared_de_nieve] = "Snow Wall"
-			terreno_nombre[idt_pared_de_pasto] = "Grass Wall"
-			terreno_nombre[idt_pared_de_piedra] = "Stone Wall"
-			terreno_nombre[idt_pasto] = "Grass"
 			edificio_nombre[id_perforadora_de_petroleo] = "Oil Driller"
-			terreno_nombre[idt_petroleo] = "Oil"
 			edificio_nombre[id_planta_desalinizadora] = "Desalination Plant"
 			edificio_nombre[id_planta_nuclear] = "Nuclear Plant"
 			edificio_nombre[id_planta_quimica] = "Chemical Plant"
 			edificio_nombre[id_planta_de_enriquecimiento] = "Enrichment Plant"
 			edificio_nombre[id_planta_de_reciclaje] = "Recycling Plant"
 			edificio_nombre[id_procesador] = "Processor"
-			categoria_nombre[2] = "Production"
 			edificio_nombre[id_puerto_de_carga] = "Charging Port"
 			edificio_nombre[id_recurso_infinito] = "Infinite Resource"
 			edificio_nombre[id_refineria_de_metales] = "Metal Refinery"
@@ -114,7 +126,6 @@ function set_idioma(){
 			edificio_nombre[id_torre_reparadora] = "Repair Tower"
 			edificio_nombre[id_torre_basica] = "Basic Tower"
 			edificio_nombre[id_torre_de_alta_tension] = "High Voltage Tower"
-			categoria_nombre[0] = "Transport"
 			edificio_nombre[id_triturador] = "Crusher"
 			edificio_nombre[id_tuberia] = "Pipe"
 			edificio_nombre[id_tuberia_subterranea] = "Underground Pipe"
@@ -480,11 +491,19 @@ function set_idioma(){
 			variable_struct_set(L, "win_tecnologias", "Technologies researched")
 			variable_struct_set(L, "win_tiempo", "Time")
 			variable_struct_set(L, "win_victoria", "Victory")
+			variable_struct_set(L, "editar_desde_adentro", "Edit from inside")
 		}
 		//Español
 		else if idioma = 1{
+			terreno_nombre[idt_arena] = "Arena"
+			terreno_nombre[idt_piedra] = "Piedra"
+			terreno_nombre[idt_piedra_cuprica] = "Piedra Cúprica"
+			terreno_nombre[idt_piedra_ferrica] = "Piedra Férrica"
+			terreno_nombre[idt_salar] = "Salar"
+			
 			recurso_nombre[idr_acero] = "Acero"
 			terreno_nombre[idt_agua] = "Agua"
+			recurso_nombre[idr_bateria] = "Batería"
 			terreno_nombre[idt_agua_profunda] = "Agua Profunda"
 			terreno_nombre[idt_agua_salada] = "Agua Salada"
 			terreno_nombre[idt_agua_salada_profunda] = "Agua Salada Profunda"
@@ -524,6 +543,7 @@ function set_idioma(){
 			edificio_nombre[id_enrutador] = "Enrutador"
 			edificio_nombre[id_ensambladora] = "Ensambladora"
 			recurso_nombre[idr_explosivo] = "Explosivo"
+			dron_nombre[idd_explosivo] = "Explosivo"
 			categoria_nombre[1] = "Extracción"
 			edificio_nombre[id_extractor_atmosferico] = "Extractor Atmosférico"
 			edificio_nombre[id_fabrica_de_concreto] = "Fábrica de Concreto"
@@ -531,7 +551,7 @@ function set_idioma(){
 			edificio_nombre[id_fabrica_de_drones_grande] = "Fábrica de Drones Grande"
 			edificio_nombre[id_generador] = "Generador"
 			edificio_nombre[id_generador_geotermico] = "Generador Geotérmico"
-			dron_nombre[idd_helicoptero] = "Helicoptero"
+			dron_nombre[idd_helicoptero] = "Helicóptero"
 			terreno_nombre[idt_hielo] = "Hielo"
 			recurso_nombre[idr_hierro] = "Hierro"
 			edificio_nombre[id_horno] = "Horno"
@@ -962,11 +982,19 @@ function set_idioma(){
 			variable_struct_set(L, "win_tecnologias", "Tecnologías estudiadas")
 			variable_struct_set(L, "win_tiempo", "Tiempo")
 			variable_struct_set(L, "win_victoria", "Victoria")
+			variable_struct_set(L, "editar_desde_adentro", "Editar desde adentro")
 		}
 		//Русский
 		else if idioma = 2{
+			terreno_nombre[idt_arena] = "Паук"
+			terreno_nombre[idt_piedra] = "Камень"
+			terreno_nombre[idt_piedra_cuprica] = "Медная порода"
+			terreno_nombre[idt_piedra_ferrica] = "Железный камень"
+			terreno_nombre[idt_salar] = "Солончак"
+			
 			recurso_nombre[idr_acero] = "Сталь"
 			terreno_nombre[idt_agua] = "Вода"
+			recurso_nombre[idr_bateria] = "Батарея"
 			terreno_nombre[idt_agua_profunda] = "Глубокая вода"
 			terreno_nombre[idt_agua_salada] = "Солёная вода"
 			terreno_nombre[idt_agua_salada_profunda] = "Глубокая солёная вода"
@@ -1006,6 +1034,7 @@ function set_idioma(){
 			edificio_nombre[id_enrutador] = "Распределитель"
 			edificio_nombre[id_ensambladora] = "Сборщик"
 			recurso_nombre[idr_explosivo] = "Взрывник"
+			dron_nombre[idd_explosivo] = "Взрывник"
 			categoria_nombre[1] = "Добыча"
 			edificio_nombre[id_extractor_atmosferico] = "Атмосферный экстрактор"
 			edificio_nombre[id_fabrica_de_concreto] = "Бетонный завод"
@@ -1013,7 +1042,7 @@ function set_idioma(){
 			edificio_nombre[id_fabrica_de_drones_grande] = "Крупный завод дронов"
 			edificio_nombre[id_generador] = "Генератор"
 			edificio_nombre[id_generador_geotermico] = "Геотермальный генератор"
-			variable_struct_set(L, "Helicóptero", "Вертолёт")
+			dron_nombre[idd_helicoptero] = "Вертолёт"
 			terreno_nombre[idt_hielo] = "Лёд"
 			recurso_nombre[idr_hierro] = "Железо"
 			edificio_nombre[id_horno] = "Печь"
@@ -1032,6 +1061,7 @@ function set_idioma(){
 			edificio_nombre[id_modulo] = "Модуль"
 			recurso_nombre[idr_modulos] = "Модули"
 			terreno_nombre[idt_nieve] = "Снег"
+			edificio_nombre[id_nucleo] = "Ядро"
 			edificio_nombre[id_onda_de_choque] = "Ударная волна"
 			edificio_nombre[id_overflow] = "Переполнение"
 			edificio_nombre[id_panel_solar] = "Солнечная панель"
@@ -1442,7 +1472,7 @@ function set_idioma(){
 			variable_struct_set(L, "win_tecnologias", "Изученные технологии")
 			variable_struct_set(L, "win_tiempo", "Время")
 			variable_struct_set(L, "win_victoria", "Победа")
-			variable_struct_set(L, "Нúcleo", "Ядро")
+			variable_struct_set(L, "editar_desde_adentro", "Редактировать изнутри")
 		}
 		if 3 = 3
 			exit
@@ -1505,6 +1535,5 @@ function set_idioma(){
 					show_debug_message($"variable_struct_set(L, \"{this_variable}\", \"{variable_struct_get(L, variables[a])}\")")
 			}
 		}
-		
 	}
 }

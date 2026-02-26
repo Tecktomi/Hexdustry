@@ -657,10 +657,10 @@ function menu_editor(){
 			}
 			b += ore_max
 			if a = b++ and draw_sprite_boton(dron_sprite[idd_arana],, 10 + (a mod 5) * 36, ypos,,,, function(){
-				sprite_boton_text = "Cambiar spawn enemigo"})
+				sprite_boton_text = L.editor_cambiar_zona})
 				editor_herramienta = 1
 			if a = b++ and draw_sprite_boton(edificio_sprite[id_nucleo],, 10 + (a mod 5) * 36, ypos,,,, function(){
-				sprite_boton_text = "Cambiar posición del núcleo"})
+				sprite_boton_text = L.editor_cambiar_base})
 				editor_herramienta = 2
 			if (a mod 5) = 4
 				ypos += 36
@@ -682,7 +682,7 @@ function menu_editor(){
 			exit
 		}
 		ypos += text_y + 10
-		if draw_boton(10, ypos, "Editar desde dentro"){
+		if draw_boton(10, ypos, L.editar_desde_adentro, ui_azul){
 			clear_edit()
 			menu = 3
 			cheat = true
