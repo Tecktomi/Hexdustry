@@ -2908,20 +2908,20 @@ if build_index > 0 and win = 0{
 						}
 						//Taberías subterraneas
 						else if build_index = id_tuberia_subterranea{
-							var temp_list = get_size(mx, my, 0, 7), flag_2 = false, temp_edificio = null_edificio
+							var temp_list = get_size(mx, my, 0, 7), flag = false, temp_edificio = null_edificio
 							for(var c = ds_list_size(temp_list) - 1; c >= 0; c--){
 								var temp_complex_2 = temp_list[|c], aa = temp_complex_2.a, bb = temp_complex_2.b
 								if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 									continue
-								if edificio_bool[# temp_complex.a, temp_complex.b] and not (temp_complex.a = mx and temp_complex.b = my){
-									temp_edificio = edificio_id[# temp_complex.a, temp_complex.b]
-									if temp_edificio.index = build_index and temp_edificio.link = null_edificio and temp_edificio.enemigo = build_enemigo {
-										flag_2 = true
+								if edificio_bool[# aa, bb] and not (aa = mx and bb = my){
+									temp_edificio = edificio_id[# aa, bb]
+									if temp_edificio.index = build_index and temp_edificio.link = null_edificio and temp_edificio.enemigo = build_enemigo{
+										flag = true
 										break
 									}
 								}
 							}
-							if flag_2{
+							if flag{
 								draw_set_color(c_blue)
 								draw_line_off(temp_complex.a, temp_complex.b, temp_edificio.center_x, temp_edificio.center_y)
 							}
