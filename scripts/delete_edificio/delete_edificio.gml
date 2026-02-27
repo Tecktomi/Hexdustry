@@ -14,6 +14,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false){
 					win = 2
 					selected_dron = null_dron
 				}
+				ds_grid_clear(edificio_cercano_dir, -1)
 			}
 		}
 		if enemigo{
@@ -151,7 +152,6 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false){
 						}
 					}
 		edificio.vivo = false
-		ds_grid_clear(edificio_cercano_dir, -1)
 		if edificio_armas[index]{
 			if edificio.target != null_dron and edificio.target.vida > 0
 				array_disorder_remove(edificio.target.torres, edificio, 2)
