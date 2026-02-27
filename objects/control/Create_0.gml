@@ -12,7 +12,7 @@ else{
 draw_set_font(font_normal)
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
-ini_write_string("Global", "version", "25_02_2026")
+ini_write_string("Global", "version", "27_02_2026")
 medallas = array_create(6)
 default_maps = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas", "Asalto"]
 for(var a = 0; a < array_length(default_maps); a++){
@@ -736,9 +736,9 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 }
 #region Definicion
 	idd_arana = def_dron("Araña", spr_arana,, 100, 400, 10_000, [idr_bronce, idr_bateria, idr_electronicos], [6, 1, 3], 600,, 1, 12)
-	idd_dron = def_dron("Dron", spr_dron,, 40, 400, 100, [idr_bronce, idr_hierro, idr_electronicos], [10, 5, 3], 900, true, 2)
+	idd_mula = def_dron("Mula", spr_dron,, 40, 400, 100, [idr_bronce, idr_hierro, idr_electronicos], [10, 5, 3], 900, true, 2)
 	idd_reparador = def_dron("Reparador", spr_reparador,, 120, 900, 3600, [idr_silicio, idr_bateria, idr_electronicos], [10, 5, 5], 1200, true, 2)
-	idd_explosivo = def_dron("Explosivo", spr_dron_explosivo,, 50, 400, 400, [idr_hierro, idr_explosivo, idr_electronicos], [6, 2, 2], 450, true, 2.5)
+	idd_kamikaze = def_dron("Kamikaze", spr_dron_explosivo,, 50, 400, 400, [idr_hierro, idr_explosivo, idr_electronicos], [6, 2, 2], 450, true, 2.5)
 	idd_tanque = def_dron("Tanque", spr_tanque, spr_tanque_2, 750, 1600, 90_000, [idr_bronce, idr_acero, idr_electronicos], [15, 25, 10], 1800,, 0.9, 120)
 	idd_helicoptero = def_dron("Helicóptero", spr_helicoptero, spr_helicoptero_2, 400, 900, 40_000, [idr_bronce, idr_acero, idr_electronicos], [10, 15, 15], 1800, true, 2, 110)
 	idd_titan = def_dron("Titán", spr_titan, spr_titan_leg, 1500, 2500, 160_000, [idr_bronce, idr_acero, idr_uranio_bruto, idr_modulos], [30, 40, 75, 5], 3000,, 1.1, 75)

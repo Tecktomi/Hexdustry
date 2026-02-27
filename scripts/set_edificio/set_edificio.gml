@@ -107,7 +107,7 @@ function set_edificio(mode, select, edificio = control.null_edificio){
 			mover_in(edificio)
 		}
 		//Fábrica de drones
-		else if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande) and edificio.select != select and not grafic_array_drones_terrestres[select]{
+		else if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande) and edificio.select != select and (edificio.enemigo or not grafic_array_drones_terrestres[select]){
 			edificio.carga = array_create(rss_max, 0)
 			edificio.carga_max = array_create(rss_max, 0)
 			edificio.carga_input = array_create(rss_max, false)

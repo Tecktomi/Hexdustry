@@ -1402,7 +1402,14 @@ if show_menu{
 		else if index = id_planta_quimica
 			draw_rectangle(aa - 90 * zoom, bb + 40 * zoom, aa + 90 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, false)
 		else if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
-			var temp_array = index = id_fabrica_de_drones ? [idd_dron, idd_explosivo] : [idd_reparador, idd_helicoptero, idd_bombardero], len = array_length(temp_array)
+			var temp_array = index = id_fabrica_de_drones ? [idd_mula, idd_kamikaze] : [idd_reparador, idd_helicoptero, idd_bombardero], len = array_length(temp_array)
+			if edificio.enemigo{
+				if index = id_fabrica_de_drones
+					array_push(temp_array, idd_arana)
+				else if index = id_fabrica_de_drones_grande
+					array_push(temp_array, idd_tanque)
+				len++
+			}
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * len) * zoom, false)
 		}
 		else if index = id_refineria_de_petroleo{
@@ -1436,7 +1443,14 @@ if show_menu{
 			}
 		}
 		if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
-			var temp_array = index = id_fabrica_de_drones ? [idd_dron, idd_explosivo] : [idd_reparador, idd_helicoptero, idd_bombardero], len = array_length(temp_array)
+			var temp_array = index = id_fabrica_de_drones ? [idd_mula, idd_kamikaze] : [idd_reparador, idd_helicoptero, idd_bombardero], len = array_length(temp_array)
+			if edificio.enemigo{
+				if index = id_fabrica_de_drones
+					array_push(temp_array, idd_arana)
+				else if index = id_fabrica_de_drones_grande
+					array_push(temp_array, idd_tanque)
+				len++
+			}
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * len) * zoom, true)
 			draw_text(aa - 80 * zoom, bb + 20 * zoom, L.show_menu_unidad)
 			for(var a = 0; a < len; a++)
@@ -1517,7 +1531,14 @@ if show_menu{
 				}
 			}
 			else if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
-				var temp_array = index = id_fabrica_de_drones ? [idd_dron, idd_explosivo] : [idd_reparador, idd_helicoptero, idd_bombardero], len = array_length(temp_array)
+				var temp_array = index = id_fabrica_de_drones ? [idd_mula, idd_kamikaze] : [idd_reparador, idd_helicoptero, idd_bombardero], len = array_length(temp_array)
+				if edificio.enemigo{
+					if index = id_fabrica_de_drones
+						array_push(temp_array, idd_arana)
+					else if index = id_fabrica_de_drones_grande
+						array_push(temp_array, idd_tanque)
+					len++
+				}
 				if mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * len) * zoom{
 					var a = temp_array[floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))], temp_text = $"{dron_descripcion[a]}\n"
 					for(var b = array_length(dron_precio_id[a]) - 1; b >= 0; b--)
@@ -2039,7 +2060,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		my_clic = ymouse
 		clicked = true
 	}
-	if mouse_check_button(mb_left) and clicked and build_index = 0{
+	if mouse_check_button(mb_left) and clicked and build_index = 0 and not keyboard_check(ord("Q")){
 		draw_set_alpha(0.5)
 		draw_set_color(c_black)
 		draw_rectangle_off(mx_clic, my_clic, xmouse, ymouse, false)
@@ -2047,7 +2068,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		var minx = min(mx_clic, xmouse), miny = min(my_clic, ymouse), maxx = max(mx_clic, xmouse), maxy = max(my_clic, ymouse)
 		for(var a = array_length(drones_aliados) - 1; a >= 0; a--){
 			var dron = drones_aliados[a]
-			if in(dron.index, idd_explosivo, idd_helicoptero, idd_bombardero){
+			if in(dron.index, idd_kamikaze, idd_helicoptero, idd_bombardero){
 				var xx = dron.x, yy = dron.y
 				if xx > minx and yy > miny and xx < maxx and yy < maxy
 					draw_circle_off(xx, yy, 30, true)
@@ -2060,7 +2081,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		var minx = min(mx_clic, xmouse), miny = min(my_clic, ymouse), maxx = max(mx_clic, xmouse), maxy = max(my_clic, ymouse)
 		for(var a = array_length(drones_aliados) - 1; a >= 0; a--){
 			var dron = drones_aliados[a]
-			if in(dron.index, idd_explosivo, idd_helicoptero, idd_bombardero){
+			if in(dron.index, idd_kamikaze, idd_helicoptero, idd_bombardero){
 				var xx = dron.x, yy = dron.y
 				if xx > minx and yy > miny and xx < maxx and yy < maxy{
 					array_push(selected_drones, dron)
@@ -2115,7 +2136,6 @@ if puerto_carga_bool or (procesador_select != null_edificio) or (misil_set_targe
 		procesador_select = null_edificio
 	}
 }
-var flag_just_pressed = false
 if sonido
 	for(var a = 0; a < sonidos_max; a++)
 		volumen[a] = 0
@@ -2214,9 +2234,9 @@ if sonido
 				}
 				else{
 					build_index = a
-					flag_just_pressed = true
 					just_pressed = true
 					prev_change = true
+					clicked = false
 				}
 			}
 		}
@@ -2234,7 +2254,7 @@ if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastchar, "A", "D", "W
 			keyboard_string = ""
 			build_index = a
 			build_menu = 0
-			flag_just_pressed = true
+			just_pressed = true
 			deselect_drones()
 			clicked = false
 			prev_change = true
@@ -2250,10 +2270,10 @@ if (mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape)) a
 	clear_edit()
 }
 //CONSTRUCCIÓN
-if build_index > 0 and win = 0{
-	if flag_just_pressed and not edificio_rotable[build_index]
+if build_index > 0 and win = 0 and not just_pressed{
+	if not edificio_rotable[build_index]
 		build_dir = 0
-	if flag_just_pressed and edificio_size[build_index] mod 2 = 0
+	if edificio_size[build_index] mod 2 = 0
 		build_dir = 5 * (build_dir mod 2)
 	//Rotar
 	if (edificio_rotable[build_index] or edificio_size[build_index] mod 2 = 0) and not keyboard_check(vk_lcontrol){
@@ -3309,7 +3329,7 @@ if menu = 1{
 				if not dron_aereo[index] and terreno[# dron.a, dron.b] = idt_hielo
 					vel *= 1.2
 				//Dron de Transporte
-				if index = idd_dron{
+				if index = idd_mula{
 					if array_length(puerto_carga_array) > 0{
 						if dron.modo = 0{
 							puerto_carga_atended = (++puerto_carga_atended) mod array_length(puerto_carga_array)
@@ -3644,7 +3664,7 @@ if menu = 1{
 								i += 4
 							}
 							else
-								enemigo = add_dron(aa, bb, idd_explosivo)
+								enemigo = add_dron(aa, bb, idd_kamikaze)
 						}
 						else{
 							if irandom(min(ds_list_size(temp_complex_list), d)) > i + 15{
