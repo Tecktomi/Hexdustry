@@ -1,5 +1,7 @@
 function add_edificio(index, dir, a, b, enemigo = false){
 	with control{
+		if edificio_bool[# a, b]
+			exit
 		var temp_complex = abtoxy(a, b)
 		x = temp_complex.a
 		y = temp_complex.b
@@ -597,6 +599,8 @@ function add_edificio(index, dir, a, b, enemigo = false){
 		}
 		ds_list_destroy(temp_list_size)
 		ds_list_destroy(temp_list_arround)
+		if online
+			server_add_edificio(index, dir, a, b, enemigo)
 		return edificio
 	}
 }

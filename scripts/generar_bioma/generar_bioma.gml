@@ -1,6 +1,5 @@
 function generar_bioma(bioma){
 	with control{
-		var time = current_time
 		ds_grid_clear(ore, -1)
 		ds_grid_clear(ore_amount, 0)
 		ds_grid_clear(edificio_cercano, null_edificio)
@@ -8,6 +7,7 @@ function generar_bioma(bioma){
 		ds_grid_clear(edificio_cercano_dir, -1)
 		ds_grid_clear(terreno_pared_index, 0)
 		var temp_peso_data, borde_agua = idt_arena
+		random_set_seed(seed)
 		//Generar terreno inicial
 		if bioma = 0{
 			ds_grid_clear(terreno, idt_pasto)
@@ -217,7 +217,5 @@ function generar_bioma(bioma){
 			}
 		}
 		until terreno_caminable[terreno[# spawn_x, spawn_y]]
-		show_debug_message(current_time - time)
-		//
 	}
 }

@@ -8,6 +8,12 @@
 	max_chunka = min(ceil(maxa / chunk_width), chunk_xsize)
 	max_chunkb = min(ceil(maxb / chunk_height), chunk_ysize)
 #endregion
+if servidor and image_index mod 60 = 0{
+	var buffer = buffer_create(64, buffer_grow, 1)
+	buffer_write(buffer, buffer_string, "HEXDUSTRY")
+	network_send_udp(udp_socket, "255.255.255.255", 6501, buffer, buffer_tell(buffer))
+	buffer_delete(buffer)
+}
 //Menú principal
 if menu = 0{
 	dibujar_fondo(1)
@@ -60,6 +66,15 @@ if menu = 0{
 	ypos += text_y * 2
 	if draw_boton(room_width / 2, ypos, L.menu_editor, ui_azul)
 		menu = 2
+	ypos += text_y * 2
+	if draw_boton(room_width / 2, ypos, "Conectarse"){
+		socket = network_create_socket(network_socket_tcp)
+		server = network_connect(socket, sender_ip, 6500)
+		if server = -1
+			show_debug_message("Error de conexión")
+		else
+			server_hello()
+	}
 	ypos += text_y * 2
 	draw_set_halign(fa_left)
 	if get_file > 0{
@@ -260,7 +275,9 @@ if menu = 0{
 					draw_rectangle(xpos - 2, ypos - 2, xpos + 97, ypos + 97, false)
 				}
 				if draw_sprite_boton(spr_random_map,, xpos, ypos, 96, 96, 1){
-					generar_bioma(irandom(2))
+					biome_seed = irandom(2)
+					seed = random_get_seed()
+					generar_bioma(biome_seed)
 					mapa = -1
 				}
 				xpos += 120
@@ -870,6 +887,7 @@ if in(menu, 1, 3){
 	}
 	sprite_boton_text = ""
 	clic_sound = false
+	draw_text(room_width / 2, 300, seed)
 }
 //Pausa - Menú
 if pausa = 1{
@@ -922,12 +940,31 @@ if pausa = 1{
 		sound_change()
 	if draw_boton(a, 540, (grafic_energia ? L.pausa_desactivar : L.pausa_activar) + $" {L.red_energia}", grafic_energia ? ui_verde : ui_rojo)
 		grafic_energia = not grafic_energia
+	if server = -1 and menu = 1{
+		if draw_boton(a, 580, "Abrir en LAN"){
+			server = network_create_server(network_socket_tcp, 6500, 8)
+			if server = -1
+				show_message("Error de conexión")
+			else{
+				show_debug_message("Servidor creado")
+				udp_socket = network_create_socket(network_socket_udp)
+				servidor = true
+			}
+		}
+	}
+	else
+		draw_text(a, 580, $"IP: {server}")
 	if draw_boton(a, 620, L.salir, ui_rojo)
 		if menu = 1{
 			clear_edit()
 			menu = 0
 			pausa = 0
 			cheat = false
+			if server != -1{
+				network_destroy(server)
+				server = -1
+				servidor = false
+			}
 			exit
 		}
 		else if menu = 3{
