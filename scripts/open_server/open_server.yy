@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"open_server",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"open_server",
+  "parent":{
+    "name":"SERVER",
+    "path":"folders/SCRIPTS/SERVER.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
