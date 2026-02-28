@@ -6,6 +6,8 @@ function handle_hello(socket, buffer){
 		buffer_write(reply, buffer_u8, 2) //Welcome
 		buffer_write(reply, buffer_u32, seed)
 		buffer_write(reply, buffer_u8, biome_seed)
+		buffer_write(reply, buffer_u32, timer)
+		buffer_write(reply, buffer_u32, oleadas_timer)
 		network_send_packet(socket, reply, buffer_tell(reply))
 		buffer_delete(reply)
 	}

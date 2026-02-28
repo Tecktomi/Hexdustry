@@ -172,6 +172,7 @@
     {"id":{"name":"next_to","path":"scripts/next_to/next_to.yy",},},
     {"id":{"name":"null_function","path":"scripts/null_function/null_function.yy",},},
     {"id":{"name":"num_format","path":"scripts/num_format/num_format.yy",},},
+    {"id":{"name":"open_server","path":"scripts/open_server/open_server.yy",},},
     {"id":{"name":"pasar_mision","path":"scripts/pasar_mision/pasar_mision.yy",},},
     {"id":{"name":"procesador_valor","path":"scripts/procesador_valor/procesador_valor.yy",},},
     {"id":{"name":"procesador_var","path":"scripts/procesador_var/procesador_var.yy",},},

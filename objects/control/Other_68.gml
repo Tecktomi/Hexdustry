@@ -15,6 +15,13 @@ if type = network_type_data{
 		handle_add_edificio(buffer)
 	else if msg = 4
 		handle_delete_edificio(buffer)
-    sender_ip = async_load[? "ip"]
-    show_debug_message("Servidor encontrado en: " + sender_ip)
+    else if msg = 5 and servidor{
+		var reply = buffer_create(256, buffer_grow, 1)
+		buffer_write(reply, buffer_u8, 6)
+		network_send_udp(udp_socket, async_load[? "ip"], async_load[? "port"], reply, buffer_tell(reply))
+		buffer_delete(reply)
+	}
+	else if msg = 6{
+		server_ip = async_load[? "ip"]
+	}
 }

@@ -12,7 +12,7 @@ else{
 draw_set_font(font_normal)
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
-ini_write_string("Global", "version", "27_02_2026")
+ini_write_string("Global", "version", "28_02_2026")
 medallas = array_create(6)
 default_maps = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas", "Asalto"]
 for(var a = 0; a < array_length(default_maps); a++){
@@ -266,9 +266,9 @@ L = {}
 #region SERVER
 	server = -1
 	online = false
-	socket = -1
-	udp_socket = -1
-	sender_ip = "127.0.0.1"
+	socket = network_create_socket(network_socket_tcp)
+	udp_socket = network_create_socket(network_socket_udp)
+	server_ip = ""
 	servidor = false
 	server_jugadores = array_create(0)
 #endregion
