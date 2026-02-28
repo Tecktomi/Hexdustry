@@ -67,8 +67,21 @@ if menu = 0{
 		network_send_broadcast(udp_socket, 6501, buffer, buffer_tell(buffer))
 		buffer_delete(buffer)
 	}
-	if server_ip != ""{
-		ypos += text_y * 2
+	ypos += text_y * 2
+	if server_ip = ""{
+		if draw_boton(room_width / 2, ypos, "Conexión Directa"){
+			window_set_fullscreen(false)
+			var temp_server_ip = get_string("Dirección IP", "192.168.1.x")
+			network_connect(socket, temp_server_ip, 6500)
+			if server = -1
+				show_debug_message("Error de conexión")
+			else{
+				server_ip = temp_server_ip
+				server_hello()
+			}
+		}
+	}
+	else{
 		if draw_boton(room_width / 2, ypos, $"Conectarse a {server_ip}"){
 			server = network_connect(socket, server_ip, 6500)
 			if server = -1
