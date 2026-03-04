@@ -1,4 +1,4 @@
-function delete_edificio(edificio = control.null_edificio, destruccion = false){
+function delete_edificio(edificio = control.null_edificio, destruccion = false, server = false){
 	with control{
 		if not edificio_bool[# edificio.a, edificio.b]{
 			show_debug_message($"###ADVERTENCIA###\n  Intentando eliminar {edificio_nombre[edificio.index]} en {edificio.a}, {edificio.b}")
@@ -13,6 +13,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false){
 				if array_length(nucleos) = 0{
 					win = 2
 					selected_dron = null_dron
+					pausa = 0
 				}
 				ds_grid_clear(edificio_cercano_dir, -1)
 			}
@@ -435,7 +436,10 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false){
 			show_menu = false
 			show_menu_build = null_edificio
 		}
-		if online
+		var log = {a : aa, b : bb, destruccion: destruccion}
+		array_push(historial, log)
+		array_push(historial_tipo, 1)
+		if online and not server
 			server_delete_edificio(aa, bb, destruccion)
 		delete(edificio)
 	}

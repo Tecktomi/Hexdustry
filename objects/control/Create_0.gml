@@ -12,7 +12,7 @@ else{
 draw_set_font(font_normal)
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
-ini_write_string("Global", "version", "28_02_2026")
+ini_write_string("Global", "version", "04_03_2026")
 medallas = array_create(6)
 default_maps = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas", "Asalto"]
 for(var a = 0; a < array_length(default_maps); a++){
@@ -24,8 +24,6 @@ for(var a = 0; a < array_length(default_maps); a++){
 	}
 	if browser
 		default_maps_image[a] = sprite_add($"{default_maps[a]}.png", 1, false, false, 0, 0)
-	else
-		default_maps_image[a] = spr_preset_maps
 }
 ini_close() 
 save_files = browser ? scan_files("*.txt", fa_none) : []
@@ -40,6 +38,8 @@ if browser{
 		save_files_png[a] = temp_image
 	}
 }
+else
+	default_maps_image = [spr_preset_maps_pradera, spr_preset_maps_cuevas, spr_preset_maps_desierto, spr_preset_maps_nieve, spr_preset_maps_islas, spr_preset_maps_asalto]
 save_codes = (browser) ? scan_files("*.code", fa_none) : []
 idiomas = 3
 idioma_name = ["en", "es", "ru"]
@@ -271,6 +271,8 @@ L = {}
 	server_ip = ""
 	servidor = false
 	server_jugadores = array_create(0)
+	historial = array_create(0, {})
+	historial_tipo = array_create(0, 0)
 #endregion
 #region UI
 	ui_fondo = #282828

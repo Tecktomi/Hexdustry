@@ -5,6 +5,6 @@ function handle_add_edificio(buffer){
 		var a = real(buffer_read(buffer, buffer_u16))
 		var b = real(buffer_read(buffer, buffer_u16))
 		var enemigo = bool(buffer_read(buffer, buffer_bool))
-		construir(index, dir, a, b, enemigo)
+		construir(index, dir, a, b, enemigo, true)
 	}
 }
