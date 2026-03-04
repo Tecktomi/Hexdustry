@@ -492,7 +492,20 @@ function set_idioma(){
 			variable_struct_set(L, "win_tecnologias", "Technologies researched")
 			variable_struct_set(L, "win_tiempo", "Time")
 			variable_struct_set(L, "win_victoria", "Victory")
+			
 			variable_struct_set(L, "editar_desde_adentro", "Edit from inside")
+			variable_struct_set(L, "buscar_servidores_en_LAN", "Search for LAN servers")
+			variable_struct_set(L, "conectarse_a", "Connect to")
+			variable_struct_set(L, "conexion_directa", "Direct Connection")
+			variable_struct_set(L, "direccion_IP", "IP Address")
+			variable_struct_set(L, "descargar_para_jugar_en_LAN", "Download to play on LAN")
+			variable_struct_set(L, "abrir_en_LAN", "Open in LAN")
+			misiles_descripcion[0] = "A simple guided missile"
+			misiles_descripcion[1] = "Destroys an area with multiple explosions"
+			misiles_descripcion[2] = "Destroys the enemy base and instantly wins the match"
+			misiles_nombre[0] = "Cruise Missile"
+			misiles_nombre[1] = "Cluster Missile"
+			misiles_nombre[2] = "Nuclear Missile"
 		}
 		//Español
 		else if idioma = 1{
@@ -984,6 +997,19 @@ function set_idioma(){
 			variable_struct_set(L, "win_tiempo", "Tiempo")
 			variable_struct_set(L, "win_victoria", "Victoria")
 			variable_struct_set(L, "editar_desde_adentro", "Editar desde adentro")
+			
+			variable_struct_set(L, "buscar_servidores_en_LAN", "Buscar servidores en LAN")
+			variable_struct_set(L, "conectarse_a", "Conectarse a")
+			variable_struct_set(L, "conexion_directa", "Conexión Directa")
+			variable_struct_set(L, "direccion_IP", "Dirección IP")
+			variable_struct_set(L, "descargar_para_jugar_en_LAN", "Descargar para jugar en LAN")
+			variable_struct_set(L, "abrir_en_LAN", "Abrir en LAN")
+			misiles_descripcion[0] = "Un simple misil teledirigido"
+			misiles_descripcion[1] = "Destruye un área con múltiples explosiones"
+			misiles_descripcion[2] = "Destruye la base enemiga y gana la partida instantánemanetes"
+			misiles_nombre[0] = "Misil de Crucero"
+			misiles_nombre[1] = "Misil de Racimo"
+			misiles_nombre[2] = "Misil Nuclear"
 		}
 		//Русский
 		else if idioma = 2{
@@ -1473,68 +1499,21 @@ function set_idioma(){
 			variable_struct_set(L, "win_tecnologias", "Изученные технологии")
 			variable_struct_set(L, "win_tiempo", "Время")
 			variable_struct_set(L, "win_victoria", "Победа")
+			
 			variable_struct_set(L, "editar_desde_adentro", "Редактировать изнутри")
+			variable_struct_set(L, "buscar_servidores_en_LAN", "Поиск серверов в LAN")
+			variable_struct_set(L, "conectarse_a", "Подключиться к")
+			variable_struct_set(L, "conexion_directa", "Прямое подключение")
+			variable_struct_set(L, "direccion_IP", "IP-адрес")
+			variable_struct_set(L, "descargar_para_jugar_en_LAN", "Скачать для игры по LAN")
+			variable_struct_set(L, "abrir_en_LAN", "Открыть в LAN")
+			misiles_descripcion[0] = "Простая управляемая ракета"
+			misiles_descripcion[1] = "Уничтожает область множественными взрывами"
+			misiles_descripcion[2] = "Уничтожает вражескую базу и мгновенно выигрывает матч"
+			misiles_nombre[0] = "Крылатая ракета"
+			misiles_nombre[1] = "Кассетная ракета"
+			misiles_nombre[2] = "Ядерная ракета"
 		}
-		if 3 = 3
-			exit
-		function format(a){
-			a = string_lower(string_replace_all(a, " ", "_"))
-			a = string_replace_all(a, "á", "a")
-			a = string_replace_all(a, "é", "e")
-			a = string_replace_all(a, "í", "i")
-			a = string_replace_all(a, "ó", "o")
-			a = string_replace_all(a, "ú", "u")
-			a = string_replace_all(a, "ü", "u")
-			a = string_replace_all(a, "ñ", "n")
-			return a
-		}
-		var variables = struct_get_names(L), len = array_length(variables), abba = string_length("descripcion_"), abba2 = string_length("objetivo_"), abba3 = string_length("procesador_"), cc = 0, co = 0, cp = 0, cq = 0, cq2 = 0
-		array_sort(variables, function(elm1, elm2){return elm1 < elm2 ? -1 : 1})
-		for(var a = 0; a < len; a++){
-			var this_variable = variables[a]
-			if string_starts_with(this_variable, "descripcion_"){
-				this_variable = string_delete(this_variable, 0, abba)
-				if array_contains(edificio_nombre, this_variable)
-					show_debug_message($"edificio_descripcion[id_{format(this_variable)}] = \"{variable_struct_get(L, variables[a])}\"")
-				else if array_contains(recurso_nombre, this_variable)
-					show_debug_message($"recurso_descripcion[idr_{format(this_variable)}] = \"{variable_struct_get(L, variables[a])}\"")
-				else if array_contains(dron_nombre, this_variable)
-					show_debug_message($"dron_descripcion[idd_{format(this_variable)}] = \"{variable_struct_get(L, variables[a])}\"")
-			}
-			else if string_starts_with(this_variable, "objetivo_"){
-				this_variable = string_delete(this_variable, 0, abba2)
-				if array_contains(objetivos_nombre, this_variable)
-					show_debug_message($"objetivos_nombre[{co++}] = \"{variable_struct_get(L, variables[a])}\"")
-			}
-			else if string_starts_with(this_variable, "procesador_"){
-				this_variable = string_delete(this_variable, 0, abba3)
-				if array_contains(procesador_instrucciones_nombre, this_variable)
-					show_debug_message($"procesador_instrucciones_nombre[{cp++}] = \"{variable_struct_get(L, variables[a])}\"")
-			}
-			else if string_starts_with(this_variable, "planta_quimica_receta "){
-				this_variable = string_delete(this_variable, 0, string_length("planta_quimica_receta "))
-				show_debug_message($"planta_quimica_receta[{real(this_variable)}] = \"{variable_struct_get(L, variables[a])}\"")
-			}
-			else if string_starts_with(this_variable, "planta_quimica_descripcion "){
-				this_variable = string_delete(this_variable, 0, string_length("planta_quimica_descripcion "))
-				show_debug_message($"planta_quimica_descripcion[{real(this_variable)}] = \"{variable_struct_get(L, variables[a])}\"")
-			}
-			else{
-				if array_contains(edificio_nombre, this_variable)
-					show_debug_message($"edificio_nombre[id_{format(this_variable)}] = \"{variable_struct_get(L, variables[a])}\"")
-				else if array_contains(recurso_nombre, this_variable)
-					show_debug_message($"recurso_nombre[idr_{format(this_variable)}] = \"{variable_struct_get(L, variables[a])}\"")
-				else if array_contains(terreno_nombre, this_variable)
-					show_debug_message($"terreno_nombre[idt_{format(this_variable)}] = \"{variable_struct_get(L, variables[a])}\"")
-				else if array_contains(dron_nombre, this_variable)
-					show_debug_message($"dron_nombre[idd_{format(this_variable)}] = \"{variable_struct_get(L, variables[a])}\"")
-				else if array_contains(liquido_nombre, this_variable)
-					show_debug_message($"liquido_nombre[idl_{string_lower(this_variable)}] = \"{variable_struct_get(L, variables[a])}\"")
-				else if array_contains(categoria_nombre, this_variable)
-					show_debug_message($"categoria_nombre[{cc++}] = \"{variable_struct_get(L, variables[a])}\"")
-				else
-					show_debug_message($"variable_struct_set(L, \"{this_variable}\", \"{variable_struct_get(L, variables[a])}\")")
-			}
-		}
+		//?
 	}
 }

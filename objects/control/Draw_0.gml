@@ -61,36 +61,37 @@ if menu = 0{
 	if draw_boton(room_width / 2, ypos, L.menu_editor, ui_azul)
 		menu = 2
 	ypos += text_y * 2
-	if draw_boton(room_width / 2, ypos, "Buscar servidores en LAN"){
-		var buffer = buffer_create(256, buffer_grow, 1)
-		buffer_write(buffer, buffer_u8, 5) //Buscar servidor
-		network_send_broadcast(udp_socket, 6501, buffer, buffer_tell(buffer))
-		buffer_delete(buffer)
-	}
-	ypos += text_y * 2
-	if server_ip = ""{
-		if draw_boton(room_width / 2, ypos, "Conexión Directa"){
+	//Configuración online
+	if os_browser = browser_not_a_browser{
+		if server_ip = ""{
+			if draw_boton(room_width / 2, ypos, L.buscar_servidores_en_LAN, ui_azul){
+				var buffer = buffer_create(256, buffer_grow, 1)
+				buffer_write(buffer, buffer_u8, 5)
+				network_send_broadcast(udp_socket, 6501, buffer, buffer_tell(buffer))
+				buffer_delete(buffer)
+			}
+		}
+		else{
+			if draw_boton(room_width / 2, ypos, $"{L.conectarse_a} {server_ip}", ui_verde){
+				server = network_connect(socket, server_ip, 6500)
+				if server != -1
+					server_hello()
+			}
+		}
+		ypos += text_y * 2
+		if draw_boton(room_width / 2, ypos, L.conexion_directa, ui_azul){
 			window_set_fullscreen(false)
-			var temp_server_ip = get_string("Dirección IP", "192.168.1.x")
-			network_connect(socket, temp_server_ip, 6500)
-			if server = -1
-				show_debug_message("Error de conexión")
-			else{
+			var temp_server_ip = get_string(L.direccion_IP, "192.168.1.x")
+			server = network_connect(socket, temp_server_ip, 6500)
+			if server != -1{
 				server_ip = temp_server_ip
 				server_hello()
 			}
 		}
+		ypos += text_y * 2
 	}
-	else{
-		if draw_boton(room_width / 2, ypos, $"Conectarse a {server_ip}"){
-			server = network_connect(socket, server_ip, 6500)
-			if server = -1
-				show_debug_message("Error de conexión")
-			else
-				server_hello()
-		}
-	}
-	ypos += text_y * 2
+	else
+		draw_boton(room_width / 2, ypos, L.descargar_para_jugar_en_LAN, ui_gris)
 	draw_set_halign(fa_left)
 	if get_file > 0{
 		draw_set_color(c_dkgray)
@@ -954,12 +955,16 @@ if pausa = 1{
 		sound_change()
 	if draw_boton(a, 540, (grafic_energia ? L.pausa_desactivar : L.pausa_activar) + $" {L.red_energia}", grafic_energia ? ui_verde : ui_rojo)
 		grafic_energia = not grafic_energia
-	if server = -1 and menu = 1{
-		if draw_boton(a, 580, "Abrir en LAN")
-			open_server()
+	if os_browser = browser_not_a_browser{
+		if server = -1 and menu = 1{
+			if draw_boton(a, 580, L.abrir_en_LAN, ui_azul)
+				open_server()
+		}
+		else
+			draw_boton(a, 580, $"IP: {server}", ui_verde)
 	}
 	else
-		draw_text(a, 580, $"IP: {server}")
+		draw_boton(a, 580, L.descargar_para_jugar_en_LAN, ui_gris)
 	if draw_boton(a, 620, L.salir, ui_rojo)
 		if menu = 1{
 			clear_edit()

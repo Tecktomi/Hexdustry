@@ -1,4 +1,4 @@
-function construir(index, dir, mx, my, enemigo = false){
+function construir(index, dir, mx, my, enemigo = false, server = false){
 	with control{
 		var flag = true, flag_2 = false, build_list = get_size(mx, my, dir, edificio_size[index]), edificio = control.null_edificio, temp_complex = abtoxy(mx, my)
 		for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
@@ -77,7 +77,7 @@ function construir(index, dir, mx, my, enemigo = false){
 			return null_edificio
 		if in(index, id_tunel, id_tunel_salida) and build_able and build_target.index = id_tunel
 			index = id_tunel_salida
-		edificio = add_edificio(index, dir, mx, my, enemigo)
+		edificio = add_edificio(index, dir, mx, my, enemigo, server)
 		//Algoritmo link de tuneles
 		if in(index, id_tunel, id_tunel_salida){
 			build_able = false
