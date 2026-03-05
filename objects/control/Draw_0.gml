@@ -58,8 +58,10 @@ if menu = 0{
 	if draw_boton(room_width / 2, ypos, L.menu_tutorial, ui_verde)
 		menu = 4
 	ypos += text_y * 2
-	if draw_boton(room_width / 2, ypos, L.menu_editor, ui_azul)
+	if draw_boton(room_width / 2, ypos, L.menu_editor, ui_azul){
+		mapa_editado = true
 		menu = 2
+	}
 	ypos += text_y * 2
 	//Configuración online
 	if os_browser = browser_not_a_browser{
@@ -319,16 +321,53 @@ if menu = 0{
 			})
 			ypos = room_height - 180
 			draw_set_halign(fa_right)
-			if browser and draw_boton(room_width / 2 - 200, ypos, L.menu_cargar_escenario, ui_azul,,,, 1){
-				if not nucleo.vivo
-					game_restart()
-				get_file = 1
-				input_layer = 1
-				scan_files_save()
+			if browser{
+				if draw_boton(room_width / 2 - 200, ypos, L.menu_cargar_escenario, ui_azul,,,, 1){
+					if not nucleo.vivo
+						game_restart()
+					get_file = 1
+					scan_files_save()
+				}
+				if draw_boton(room_width / 2 - 200, ypos + text_y, "Cargar partida", ui_azul,,,, 1){
+					if not nucleo.vivo
+						game_restart()
+					get_file = 3
+					partidas = scan_files(game_save_id + "*.save", fa_none)
+				}
 			}
 			draw_set_halign(fa_left)
 			if draw_boton(room_width / 2 + 200, ypos, L.menu_juego_rapido, ui_verde,,,, 1)
 				game_start()
+		}
+		//Cargar partidas
+		else if get_file = 3{
+			draw_set_valign(fa_bottom)
+			for(var a = 0; a < array_length(partidas); a++){
+				var xpos = 120 + 120 * (a mod 9)
+				ypos = 200 + 120 * floor(a / 9)
+				var temp_text = string_delete(partidas[a], string_pos(".", partidas[a]), 5)
+				if draw_sprite_boton(spr_null_image,, xpos, ypos, 96, 96, 1){
+					var buffer = buffer_create(4096, buffer_grow, 1)
+					buffer = buffer_load(partidas[a])
+					load_game_buffer(buffer)
+				}
+				if draw_sprite_boton(spr_basura,, xpos - 10, ypos - 30,,, 1){
+					file_delete(temp_text + ".save")
+					array_delete(partidas, a, 1)
+					continue
+				}
+				draw_text(xpos + 20, ypos, text_wrap(temp_text, 100))
+			}
+			draw_set_valign(fa_top)
+			if array_length(partidas) = 0{
+				draw_set_halign(fa_center)
+				draw_text(room_width / 2, 200, L.menu_sin_archivos)
+				draw_set_halign(fa_left)
+			}
+			if draw_boton(120, 120, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape){
+				keyboard_clear(vk_escape)
+				get_file = 2
+			}
 		}
 	}
 	draw_set_valign(fa_bottom)
@@ -923,49 +962,67 @@ if pausa = 1{
 	draw_set_font(font_normal)
 	draw_text(room_width / 2, 150,	$"{L.pausa_continuar}\n{L.pausa_red}\n{L.pausa_liquido}\n{L.pausa_enciclopedia}\n{L.pausa_reparar}")
 	draw_set_halign(fa_left)
-	var a = room_width / 2
+	var a = room_width / 2, ypos = 300
 	draw_set_halign(fa_center)
-	if draw_boton(a, 300, (info ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_info}", info ? ui_verde : ui_rojo){
+	if draw_boton(a, ypos, (info ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_info}", info ? ui_verde : ui_rojo){
 		info = not info
 		ini_open("settings.ini")
 			ini_write_real("", "info", info)
 		ini_close()
 	}
-	if draw_boton(a, 340, (grafic_tile_animation ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_animacion}", grafic_tile_animation ? ui_verde : ui_rojo){
+	ypos += 40
+	if draw_boton(a, ypos, (grafic_tile_animation ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_animacion}", grafic_tile_animation ? ui_verde : ui_rojo){
 		grafic_tile_animation = not grafic_tile_animation
 		ini_open("settings.ini")
 			ini_write_real("", "grafic_tile_animation", grafic_tile_animation)
 		ini_close()
 	}
-	if draw_boton(a, 380, (grafic_luz ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_iluminacion}", grafic_luz ? ui_verde : ui_rojo){
+	ypos += 40
+	if draw_boton(a, ypos, (grafic_luz ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_iluminacion}", grafic_luz ? ui_verde : ui_rojo){
 		grafic_luz = not grafic_luz
 		ini_open("settings.ini")
 			ini_write_real("", "grafic_luz", grafic_luz)
 		ini_close()
 	}
-	if draw_boton(a, 420, (grafic_humo ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_humo}", grafic_humo ? ui_verde : ui_rojo){
+	ypos += 40
+	if draw_boton(a, ypos, (grafic_humo ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_humo}", grafic_humo ? ui_verde : ui_rojo){
 		grafic_humo = not grafic_humo
 		ini_open("settings.ini")
 			ini_write_real("", "grafic_humo", grafic_humo)
 		ini_close()
 	}
-	if draw_boton(a, 460, (grafic_hideui ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_UI}", grafic_hideui ? ui_rojo : ui_verde)
+	ypos += 40
+	if draw_boton(a, ypos, (grafic_hideui ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_UI}", grafic_hideui ? ui_rojo : ui_verde)
 		grafic_hideui = not grafic_hideui
-	if draw_boton(a, 500, (sonido ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_sonido}", sonido ? ui_verde : ui_rojo)
+	ypos += 40
+	if draw_boton(a, ypos, (sonido ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_sonido}", sonido ? ui_verde : ui_rojo)
 		sound_change()
-	if draw_boton(a, 540, (grafic_energia ? L.pausa_desactivar : L.pausa_activar) + $" {L.red_energia}", grafic_energia ? ui_verde : ui_rojo)
+	ypos += 40
+	if draw_boton(a, ypos, (grafic_energia ? L.pausa_desactivar : L.pausa_activar) + $" {L.red_energia}", grafic_energia ? ui_verde : ui_rojo)
 		grafic_energia = not grafic_energia
-	if os_browser = browser_not_a_browser{
-		if server = -1 and menu = 1{
-			if draw_boton(a, 580, L.abrir_en_LAN, ui_azul)
-				open_server()
+	if menu = 1{
+		ypos += 40
+		if os_browser = browser_not_a_browser{
+			if not mapa_editado{
+				if server = -1 and menu = 1{
+					if draw_boton(a, ypos, L.abrir_en_LAN, ui_azul)
+						open_server()
+				}
+				else
+					draw_boton(a, ypos, $"IP: {server}", ui_verde)
+			}
 		}
 		else
-			draw_boton(a, 580, $"IP: {server}", ui_verde)
+			draw_boton(a, ypos, L.descargar_para_jugar_en_LAN, ui_gris)
 	}
-	else
-		draw_boton(a, 580, L.descargar_para_jugar_en_LAN, ui_gris)
-	if draw_boton(a, 620, L.salir, ui_rojo)
+	ypos += 40
+	if draw_boton(a, ypos, "Guardar"){
+		var buffer = buffer_create(4096, buffer_grow, 1)
+		save_game_buffer(buffer)
+		buffer_save(buffer, $"{current_day}_{current_hour}_{current_minute}.save")
+	}
+	ypos += 40
+	if draw_boton(a, ypos, L.salir, ui_rojo)
 		if menu = 1{
 			clear_edit()
 			menu = 0

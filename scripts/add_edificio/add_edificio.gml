@@ -74,10 +74,10 @@ function add_edificio(index, dir, a, b, enemigo = false, server = false){
 			sound : undefined,
 			modulo : false,
 			// 0 = edificios, 1 = chunk_edificios, 2 = [torres_tension, plantas_reciclaje, torres_reparadoras, puertos_carga, target.torres], 3 = luz, 4 = edificios_activos
-			// 5 = red, 6 = flujo, 7 = torres, 8 = edificios_index, 9 = edificio_dinamico/estatico, 10 = edificio_draw
-			punteros : array_create(10, 0),
+			// 5 = red, 6 = flujo, 7 = torres, 8 = edificios_index, 9 = edificio_dinamico/estatico, 10 = edificio_draw, 11 = historial_add, 12 = historial_select
+			punteros : array_create(13, 0),
 			enemigo : enemigo,
-			prioridad : 0,
+			prioridad : edificio_prioridad[index],
 			inputs_carga : array_create(0, null_edificio),
 			outputs_carga : array_create(0, null_edificio),
 			outputs_carga_index : 0,
@@ -599,9 +599,9 @@ function add_edificio(index, dir, a, b, enemigo = false, server = false){
 		}
 		ds_list_destroy(temp_list_size)
 		ds_list_destroy(temp_list_arround)
-		var log = {index : index, dir : dir, a : a, b : b, enemigo : enemigo}
+		var log = {tipo : 0, index : index, dir : dir, a : a, b : b, enemigo : enemigo}
+		edificio.punteros[11] = array_length(historial)
 		array_push(historial, log)
-		array_push(historial_tipo, 0)
 		if online and not server
 			server_add_edificio(index, dir, a, b, enemigo)
 		return edificio

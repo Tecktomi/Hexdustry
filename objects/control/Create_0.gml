@@ -262,6 +262,7 @@ L = {}
 	build_enemigo = false
 	panel_xpos = 0
 	panel_ypos = 0
+	partidas = array_create(0, "")
 #endregion
 #region SERVER
 	server = -1
@@ -271,8 +272,8 @@ L = {}
 	server_ip = ""
 	servidor = false
 	server_jugadores = array_create(0)
-	historial = array_create(0, {})
-	historial_tipo = array_create(0, 0)
+	historial = array_create(0, {tipo : 0})
+	mapa_editado = false
 #endregion
 #region UI
 	ui_fondo = #282828
@@ -363,7 +364,7 @@ null_edificio = {
 	imagen : spr_hexagono,
 	sound : undefined,
 	modulo : false,
-	punteros : array_create(5, 0),
+	punteros : array_create(13, -1),
 	enemigo : false,
 	prioridad : 0,
 	inputs_carga : [],
@@ -501,7 +502,7 @@ null_dron = {
 	random_int : random(1),
 	enemigo : true,
 	selected : false,
-	punteros : array_create(0, 0)
+	punteros : array_create(2, 0)
 }
 enemigos = array_create(0, null_dron)
 drones_aliados = array_create(0, null_dron)
