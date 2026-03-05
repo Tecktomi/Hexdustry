@@ -436,9 +436,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			show_menu = false
 			show_menu_build = null_edificio
 		}
-		var log = {a : aa, b : bb, destruccion: destruccion}
-		array_push(historial, log)
-		array_push(historial_tipo, 1)
+		array_delete(historial, edificio.punteros[11], 1)
 		if online and not server
 			server_delete_edificio(aa, bb, destruccion)
 		delete(edificio)

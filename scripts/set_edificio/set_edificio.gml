@@ -152,5 +152,13 @@ function set_edificio(mode, select, edificio = control.null_edificio){
 			for(var c = edificio.chunk_mina; c <= edificio.chunk_maxa; c++)
 				for(var d = edificio.chunk_minb; d <= edificio.chunk_maxb; d++)
 					chunk_edificios_dirty[# c, d] = true
+		//Comunicar estado
+		var log = {tipo : 1, a : edificio.a, b : edificio.b, mode : bool(mode), select : real(select)}
+		if edificio.punteros[12] = 0{
+			edificio.punteros[12] = array_length(historial)
+			array_push(historial, log)
+		}
+		else
+			array_set(historial, edificio.punteros[12], log)
 	}
 }

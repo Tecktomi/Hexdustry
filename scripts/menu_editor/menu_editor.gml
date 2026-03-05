@@ -329,8 +329,8 @@ function menu_editor(){
 				editor_menu = 0
 			}
 			if draw_boton(110, 180, L.editor_generar_terreno, ui_azul){
-				//show_debug_message(editor_instrucciones)
 				generar_mapa(editor_seed, editor_fondo, editor_instrucciones)
+				mapa_editado = true
 			}
 			draw_set_color(c_dkgray)
 			var xpos = 120, ypos = 220
@@ -615,6 +615,7 @@ function menu_editor(){
 					temp_text += $"\n{recurso_nombre[ore_recurso[ore[# mx, my]]]}: {ore_amount[# mx, my]}"
 				if edificio_bool[# mx, my]
 					temp_text += $"\n{edificio_nombre[edificio_id[# mx, my].index]}"
+				
 				draw_text_background(200, 0, temp_text)
 			}
 			//Borrar edificio
