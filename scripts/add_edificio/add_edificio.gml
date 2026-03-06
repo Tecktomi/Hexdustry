@@ -74,7 +74,7 @@ function add_edificio(index, dir, a, b, enemigo = false, server = false){
 			sound : undefined,
 			modulo : false,
 			// 0 = edificios, 1 = chunk_edificios, 2 = [torres_tension, plantas_reciclaje, torres_reparadoras, puertos_carga, target.torres], 3 = luz, 4 = edificios_activos
-			// 5 = red, 6 = flujo, 7 = torres, 8 = edificios_index, 9 = edificio_dinamico/estatico, 10 = edificio_draw, 11 = historial_add, 12 = historial_select
+			// 5 = red, 6 = flujo, 7 = torres, 8 = edificios_index, 9 = edificio_dinamico/estatico, 10 = edificio_draw, 11 = historial_set, 12 = edificios_totales
 			punteros : array_create(13, 0),
 			enemigo : enemigo,
 			prioridad : edificio_prioridad[index],
@@ -118,6 +118,7 @@ function add_edificio(index, dir, a, b, enemigo = false, server = false){
 				edificio.xscale = -1 + 2 * (dir = 0)
 			}
 		}
+		array_disorder_push(edificios_totales, edificio, 12)
 		var center_x = edificio.center_x, center_y = edificio.center_y
 		ds_grid_clear(edificio.coordenadas_dis, infinity)
 		ds_list_add(edificio.coordenadas_close, {a : 0, b : 0})
@@ -239,8 +240,9 @@ function add_edificio(index, dir, a, b, enemigo = false, server = false){
 			var alc = edificio_alcance_sqr[id_torre_reparadora]
 			if index = id_torre_reparadora{
 				array_disorder_push(torres_reparadoras, edificio, 2)
-				for(var c = array_length(edificios) - 2; c >= 0; c--){
-					var temp_edificio = edificios[c]
+				var temp_array = enemigo ? edificios_enemigos : edificios
+				for(var c = array_length(temp_array) - 2; c >= 0; c--){
+					var temp_edificio = temp_array[c]
 					if temp_edificio.enemigo = enemigo and distance_sqr(temp_edificio.center_x, temp_edificio.center_y, x, y) < alc{
 						array_push(edificio.edificios_cercanos, temp_edificio)
 						array_push(temp_edificio.reparadores_cercanos, edificio)
@@ -599,9 +601,6 @@ function add_edificio(index, dir, a, b, enemigo = false, server = false){
 		}
 		ds_list_destroy(temp_list_size)
 		ds_list_destroy(temp_list_arround)
-		var log = {tipo : 0, index : index, dir : dir, a : a, b : b, enemigo : enemigo}
-		edificio.punteros[11] = array_length(historial)
-		array_push(historial, log)
 		if online and not server
 			server_add_edificio(index, dir, a, b, enemigo)
 		return edificio

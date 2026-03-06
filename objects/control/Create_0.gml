@@ -12,7 +12,7 @@ else{
 draw_set_font(font_normal)
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
-ini_write_string("Global", "version", "04_03_2026")
+ini_write_string("Global", "version", "06_03_2026")
 medallas = array_create(6)
 default_maps = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas", "Asalto"]
 for(var a = 0; a < array_length(default_maps); a++){
@@ -263,6 +263,8 @@ L = {}
 	panel_xpos = 0
 	panel_ypos = 0
 	partidas = array_create(0, "")
+	partidas_png = array_create(0, "")
+	guardado = false
 #endregion
 #region SERVER
 	server = -1
@@ -364,7 +366,7 @@ null_edificio = {
 	imagen : spr_hexagono,
 	sound : undefined,
 	modulo : false,
-	punteros : array_create(13, -1),
+	punteros : array_create(12, -1),
 	enemigo : false,
 	prioridad : 0,
 	inputs_carga : [],
@@ -396,6 +398,7 @@ edificios_activos = array_create(0, null_edificio)
 procesador_select = null_edificio
 null_edificio.procesador_link = array_create(0, null_edificio)
 edificios_pendientes = array_create(0, null_edificio)
+edificios_totales = array_create(0, null_edificio)
 luces = array_create(0, {a : 0, b : 0, x : 0, y : 0, r : 0, source : null_edificio})
 //Puertos de Carga
 puerto_carga_bool = false
@@ -477,18 +480,19 @@ puerto_carga_atended = 0
 efectos_nombre = ["Shock", "Fuego"]
 efectos_max = array_length(efectos_nombre)
 null_dron = {
+	a : 0,
+	b : 0,
+	index : 0,
+	enemigo : true,
 	x : 0,
 	y : 0,
-	index : 0,
-	vida : 5,
 	vida_max : 5,
+	vida : 5,
 	target : null_edificio,
 	temp_target : null_edificio,
 	target_dron : undefined,
 	chunk_x : 0,
 	chunk_y : 0,
-	a : 0,
-	b : 0,
 	carga : array_create(0, 0),
 	carga_total : 0,
 	modo : 0,
@@ -497,10 +501,13 @@ null_dron = {
 	dir_move : 0,
 	step : 0,
 	efecto : array_create(efectos_max, 0),
-	array_real : array_create(0, 0),
+	move_xmove : 0,
+	move_ymove : 0,
+	move_dis : 0,
+	move_x : 0,
+	move_y : 0,
 	oleada : 0,
 	random_int : random(1),
-	enemigo : true,
 	selected : false,
 	punteros : array_create(2, 0)
 }
@@ -509,6 +516,7 @@ drones_aliados = array_create(0, null_dron)
 null_edificio.target = null_dron
 null_dron = null_dron
 selected_drones = array_create(0, null_dron)
+drones = array_create(0, null_dron)
 background = ds_grid_create(chunk_xsize, chunk_ysize)
 chunk_dron_enemigo = ds_grid_create(chunk_xsize, chunk_ysize)
 chunk_dron_aliado = ds_grid_create(chunk_xsize, chunk_ysize)

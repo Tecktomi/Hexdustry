@@ -321,6 +321,7 @@ if menu = 0{
 			})
 			ypos = room_height - 180
 			draw_set_halign(fa_right)
+			//Cargar esenarios / partidas
 			if browser{
 				if draw_boton(room_width / 2 - 200, ypos, L.menu_cargar_escenario, ui_azul,,,, 1){
 					if not nucleo.vivo
@@ -333,6 +334,16 @@ if menu = 0{
 						game_restart()
 					get_file = 3
 					partidas = scan_files(game_save_id + "*.save", fa_none)
+					for(var a = array_length(partidas) - 1; a >= 0; a--){
+						if array_length(partidas_png) > a and partidas_png[a] != spr_null_image
+							sprite_delete(partidas_png[a])
+						var temp_text = string_delete(partidas[a], string_pos(".", partidas[a]), 5)
+						if file_exists(temp_text + ".png")
+							var temp_image = sprite_add(temp_text + ".png", 1, false, false, 0, 0)
+						else
+							temp_image = spr_null_image
+						partidas_png[a] = temp_image
+					}
 				}
 			}
 			draw_set_halign(fa_left)
@@ -346,12 +357,13 @@ if menu = 0{
 				var xpos = 120 + 120 * (a mod 9)
 				ypos = 200 + 120 * floor(a / 9)
 				var temp_text = string_delete(partidas[a], string_pos(".", partidas[a]), 5)
-				if draw_sprite_boton(spr_null_image,, xpos, ypos, 96, 96, 1){
+				if draw_sprite_boton(partidas_png[a],, xpos, ypos, 96, 96, 1){
 					var buffer = buffer_create(4096, buffer_grow, 1)
 					buffer = buffer_load(partidas[a])
 					load_game_buffer(buffer)
 				}
 				if draw_sprite_boton(spr_basura,, xpos - 10, ypos - 30,,, 1){
+					file_delete(temp_text + ".png")
 					file_delete(temp_text + ".save")
 					array_delete(partidas, a, 1)
 					continue
@@ -1010,24 +1022,28 @@ if pausa = 1{
 				}
 				else
 					draw_boton(a, ypos, $"IP: {server}", ui_verde)
+				ypos += 40
+				if guardado
+					draw_boton(a, ypos, "Guardado", ui_verde)
+				else if draw_boton(a, ypos, "Guardar", ui_azul){
+					guardado = true
+					var buffer = buffer_create(4096, buffer_grow, 1)
+					save_game_buffer(buffer)
+					var temp_text = $"{string_delete(string(current_year), 0, 2)}{current_month}{current_day}_{current_hour}{current_minute}"
+					buffer_save(buffer, $"{temp_text}.save")
+					var temp_sprite = minimapa(terreno)
+					sprite_save(temp_sprite, 0, $"{temp_text}.png")
+				}
 			}
 		}
 		else
 			draw_boton(a, ypos, L.descargar_para_jugar_en_LAN, ui_gris)
 	}
 	ypos += 40
-	if draw_boton(a, ypos, "Guardar"){
-		var buffer = buffer_create(4096, buffer_grow, 1)
-		save_game_buffer(buffer)
-		buffer_save(buffer, $"{current_day}_{current_hour}_{current_minute}.save")
-	}
-	ypos += 40
-	if draw_boton(a, ypos, L.salir, ui_rojo)
+	if draw_boton(a, ypos, L.salir, ui_rojo){
+		clear_edit()
 		if menu = 1{
-			clear_edit()
 			menu = 0
-			pausa = 0
-			cheat = false
 			if server != -1{
 				network_destroy(server)
 				server = -1
@@ -1036,16 +1052,17 @@ if pausa = 1{
 			exit
 		}
 		else if menu = 3{
-			clear_edit()
 			menu = 2
 			build_index = -1
 			build_enemigo = false
-			cheat = false
-			pausa = 0
 			draw_set_halign(fa_left)
 			draw_set_color(color)
 			exit
 		}
+		pausa = 0
+		cheat = false
+		exit
+	}
 	draw_set_halign(fa_left)
 	if os_type == os_windows
 		for(a = 0; a < idiomas; a++)
@@ -2206,7 +2223,7 @@ if array_length(selected_drones) > 0{
 		draw_set_color(c_white)
 		draw_circle_off(dron.x, dron.y, 30, true)
 		if dron.modo = 1
-			draw_sprite_off(spr_target, 0, dron.array_real[3], dron.array_real[4])
+			draw_sprite_off(spr_target, 0, dron.move_x, dron.move_y)
 		if right_clicked and in(dron.index, 3, 5, 7){
 			mouse_clear(mb_right)
 			mover_dron(dron, xmouse, ymouse)
@@ -2246,7 +2263,7 @@ if sonido
 		volumen[a] = 0
 #region Menú de edificios
 	var just_pressed = false
-	if mouse_check_button_pressed(mb_right) and build_index = 0 and not edificio_bool[# mx, my] and not keyboard_check(ord("Q")){
+	if mouse_check_button_pressed(mb_right) and build_index = 0 and not edificio_bool[# mx, my] and not keyboard_check(ord("Q")) and pausa != 1{
 		mouse_clear(mb_right)
 		if build_menu = 0{
 			build_menu = 1
@@ -2375,11 +2392,13 @@ if (mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape)) a
 	clear_edit()
 }
 //CONSTRUCCIÓN
-if build_index > 0 and win = 0 and not just_pressed{
-	if not edificio_rotable[build_index]
-		build_dir = 0
-	if edificio_size[build_index] mod 2 = 0
-		build_dir = 5 * (build_dir mod 2)
+if build_index > 0 and win = 0{
+	if just_pressed{
+		if not edificio_rotable[build_index]
+			build_dir = 0
+		if edificio_size[build_index] mod 2 = 0
+			build_dir = 5 * (build_dir mod 2)
+	}
 	//Rotar
 	if (edificio_rotable[build_index] or edificio_size[build_index] mod 2 = 0) and not keyboard_check(vk_lcontrol){
 		if mouse_wheel_up() or keyboard_check_pressed(ord("R")){
@@ -2419,7 +2438,7 @@ if build_index > 0 and win = 0 and not just_pressed{
 			break
 		}
 	}
-	if comprable and not outside{
+	if comprable and not outside and not just_pressed{
 		//Módulos
 		if build_index = id_modulo{
 			var temp_complex = abtoxy(mx, my)
@@ -3527,7 +3546,7 @@ if menu = 1{
 					if dron.modo = 1{
 						if index = idd_bombardero{
 							if dron.step <= dron_step[index]{
-								var dir = point_direction(dron.x, dron.y, dron.array_real[0], dron.array_real[1])
+								var dir = point_direction(dron.x, dron.y, dron.move_xmove, dron.move_ymove)
 								var diff = angle_difference(dir, dron.dir)
 								diff += random_range(-0.01, 0.01)
 								dron.dir += 0.02 * diff
@@ -3538,10 +3557,10 @@ if menu = 1{
 							dron.y += lengthdir_y(vel, dron.dir)
 						}
 						else{
-							dron.dir = (9 * dron.dir + radtodeg(arctan2(dron.array_real[1], -dron.array_real[0]))) / 10
-							dron.x += vel * dron.array_real[0]
-							dron.y += vel * dron.array_real[1]
-							if --dron.array_real[2] <= 0
+							dron.dir = (9 * dron.dir + radtodeg(arctan2(dron.move_ymove, -dron.move_xmove))) / 10
+							dron.x += vel * dron.move_xmove
+							dron.y += vel * dron.move_ymove
+							if --dron.move_dis <= 0
 								dron.modo = 0
 						}
 					}
@@ -3959,8 +3978,10 @@ if menu = 1{
 				clear_edit()
 			}
 			if keyboard_check_pressed(vk_escape){
-				if pausa > 0
+				if pausa > 0{
 					pausa = 0
+					guardado = false
+				}
 				else{
 					pausa = 1
 					clear_edit()
@@ -4112,7 +4133,6 @@ if menu = 1{
 							usable_rss_bool[a] = not usable_rss_bool[a]
 						ypos += text_y
 					}
-				show_debug_message(show_array)
 				draw_graph(xpos - 200, ypos, 400, 100, show_array, recurso_color)
 			}
 			//Info energía

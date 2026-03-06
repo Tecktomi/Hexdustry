@@ -40,6 +40,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				array_remove(chunk_edificios_draw[# c, d], edificio)
 			}
 		edificios_counter[index]--
+		array_disorder_remove(edificios_totales, edificio, 12)
 		ds_grid_destroy(edificio.coordenadas_dis)
 		if destruccion
 			if enemigo
@@ -436,7 +437,6 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			show_menu = false
 			show_menu_build = null_edificio
 		}
-		array_delete(historial, edificio.punteros[11], 1)
 		if online and not server
 			server_delete_edificio(aa, bb, destruccion)
 		delete(edificio)
