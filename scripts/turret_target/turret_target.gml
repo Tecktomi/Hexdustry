@@ -40,10 +40,8 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 				if prev_enemigo != null_dron
 					array_disorder_remove(prev_enemigo.torres, edificio, 2)
 				array_disorder_push(dron_final.torres, edificio, 2)
-				edificio.target = dron_final
 			}
-			else
-				edificio.target = dron_final
+			edificio.target = dron_final
 			//Target edificios
 			if edificio.target != null_dron
 				exit

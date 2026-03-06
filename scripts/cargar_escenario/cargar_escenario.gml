@@ -129,15 +129,11 @@ function cargar_escenario(file = "", config = true){
 				ds_grid_set(chunk_dron_enemigo, a, b, array_create(0, null_dron))
 				ds_grid_set(chunk_dron_aliado, a, b, array_create(0, null_dron))
 				var chunk = chunk_edificios[# a, b], len = array_length(chunk)
-				if len != 0
-					show_debug_message($"chunk: {len}")
 				for(var c = len - 1; c >= 0; c--)
 					delete_edificio(chunk[c])
 				ds_grid_set(chunk_edificios, a, b, array_create(0, null_edificio))
 				chunk = chunk_edificios_enemigo[# a, b]
 				len = array_length(chunk)
-				if len != 0
-					show_debug_message($"chunk_enemigos: {len}, {array_length(chunk_edificios_dinamico[# a, b])}, {array_length(chunk_edificios_estatico[# a, b])}")
 				for(var c = len - 1; c >= 0; c--)
 					delete_edificio(chunk[c])
 				ds_grid_set(chunk_edificios_enemigo, a, b, array_create(0, null_edificio))

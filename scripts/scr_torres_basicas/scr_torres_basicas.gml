@@ -34,6 +34,10 @@ function scr_torres_basicas(edificio = control.null_edificio){
 				target_y = dron.y
 			}
 			else{
+				if dron.vida <= 0{
+					edificio.target = null_dron
+					exit
+				}
 				target_x = target_edificio.center_x
 				target_y = target_edificio.center_y
 			}
