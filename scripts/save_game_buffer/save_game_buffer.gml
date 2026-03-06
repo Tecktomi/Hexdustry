@@ -126,5 +126,25 @@ function save_game_buffer(buffer){
 			if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(dron.move_y))
 			if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(dron.oleada))
 		}
+		//Municiones
+		len = real(array_length(municiones))
+		buffer_write(buffer, buffer_u16, len)
+		for(var a = 0; a < len; a++){
+			var municion = municiones[a]
+			buffer_write(buffer, buffer_f16, municion.x)
+			buffer_write(buffer, buffer_f16, municion.y)
+			buffer_write(buffer, buffer_f16, municion.origen_x)
+			buffer_write(buffer, buffer_f16, municion.origen_y)
+			buffer_write(buffer, buffer_f16, municion.hmove)
+			buffer_write(buffer, buffer_f16, municion.vmove)
+			buffer_write(buffer, buffer_u8, municion.tipo)
+			buffer_write(buffer, buffer_f16, municion.dis)
+			buffer_write(buffer, buffer_f16, municion.dmg)
+			buffer_write(buffer, buffer_f16, municion.radio)
+			buffer_write(buffer, buffer_bool, municion.enemigo)
+			buffer_write(buffer, buffer_bool, municion.humo)
+			buffer_write(buffer, buffer_u16, municion.target.punteros[2])
+			buffer_write(buffer, buffer_u16, municion.target_build.punteros[12])
+		}
 	}
 }
