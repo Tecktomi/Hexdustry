@@ -106,5 +106,29 @@ function load_game_buffer(buffer){
 				array_disorder_push(dron.torres, edificio, 2)
 				edificio.target = dron
 			}
+		//Municiones
+		len = real(buffer_read(buffer, buffer_u16))
+		repeat(len){
+			var a = buffer_read(buffer, buffer_f16), b = buffer_read(buffer, buffer_f16)
+			var municion = add_municion(
+				buffer_read(buffer, buffer_f16),
+				buffer_read(buffer, buffer_f16),
+				buffer_read(buffer, buffer_f16),
+				buffer_read(buffer, buffer_f16),
+				buffer_read(buffer, buffer_u8),
+				buffer_read(buffer, buffer_f16),
+				buffer_read(buffer, buffer_f16),
+				buffer_read(buffer, buffer_f16),,,
+				buffer_read(buffer, buffer_bool),
+				buffer_read(buffer, buffer_bool))
+			municion.x = a
+			municion.y = b
+			a = buffer_read(buffer, buffer_u16)
+			if a < 65535
+				municion.target = drones[a]
+			a = buffer_read(buffer, buffer_u16)
+			if a < 65535
+				municion.target_build = edificios_totales[a]
+		}
 	}
 }
