@@ -12,7 +12,7 @@ else{
 draw_set_font(font_normal)
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
-ini_write_string("Global", "version", "06_03_2026")
+ini_write_string("Global", "version", "19_03_2026")
 medallas = array_create(6)
 default_maps = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas", "Asalto"]
 for(var a = 0; a < array_length(default_maps); a++){
@@ -25,7 +25,7 @@ for(var a = 0; a < array_length(default_maps); a++){
 	if browser
 		default_maps_image[a] = sprite_add($"{default_maps[a]}.png", 1, false, false, 0, 0)
 }
-ini_close() 
+ini_close()
 save_files = browser ? scan_files("*.txt", fa_none) : []
 if browser{
 	for(var a = array_length(save_files) - 1; a >= 0; a--){
@@ -37,6 +37,12 @@ if browser{
 			temp_image = spr_null_image
 		save_files_png[a] = temp_image
 	}
+	if not directory_exists("Saves")
+		directory_create("Saves")
+	if not directory_exists("Codes")
+		directory_create("Codes")
+	if not directory_exists("Scenarios")
+		directory_create("Scenarios")
 }
 else
 	default_maps_image = [spr_preset_maps_pradera, spr_preset_maps_cuevas, spr_preset_maps_desierto, spr_preset_maps_nieve, spr_preset_maps_islas, spr_preset_maps_asalto]
@@ -266,15 +272,20 @@ L = {}
 	partidas_png = array_create(0, "")
 	guardado = false
 #endregion
+#region Procesador
+	procesador_nombres_1var = ["sin", "cos", "tan", "random", "floor", "round", "ceil", "sqr", "sqrt", "pi"]
+	procesador_nombres_2var = [" + ", " - ", " * ", " / ", " div ", " mod ", " or ", " and ", " xor ", " << ", " >> ", " power "]
+	procesador_nombres_read_data = ["eneabled", "carga", "líquido tipo", "líquido almacen", "líquido capacidad", "líquido produccion", "líquido consumo", "energía almacenada", "energía capacidad", "energía producida", "energía consumida"]
+	procesador_nombres_draw = ["Clear", "Color grb", "Color hsv", "Rectangle", "Line", "Triangle", "Circle", "Texto", "Draw_flush"]
+#endregion
 #region SERVER
 	server = -1
 	online = false
 	socket = network_create_socket(network_socket_tcp)
 	udp_socket = network_create_socket(network_socket_udp)
-	server_ip = ""
+	server_ip = "192.168.1.x"
 	servidor = false
 	server_jugadores = array_create(0)
-	historial = array_create(0, {tipo : 0})
 	mapa_editado = false
 #endregion
 #region UI
@@ -514,7 +525,7 @@ null_dron = {
 enemigos = array_create(0, null_dron)
 drones_aliados = array_create(0, null_dron)
 null_edificio.target = null_dron
-null_dron = null_dron
+null_dron.target_dron = null_dron
 selected_drones = array_create(0, null_dron)
 drones = array_create(0, null_dron)
 background = ds_grid_create(chunk_xsize, chunk_ysize)
@@ -634,8 +645,8 @@ municiones = array_create(0, null_municion)
 #region Tipos de Disparos
 	armas = [
 		[{recurso : idr_cobre, cantidad : 0.15, dmg : 10}, {recurso : idr_hierro, cantidad : 0.15, dmg : 15}, {recurso : idr_plastico, cantidad : 0.15, dmg : 20}],
-		[{recurso : idr_bronce, cantidad : 0.5, dmg : 40}, {recurso : idr_acero, cantidad : 0.5, dmg : 50}, {recurso : idr_uranio_bruto, cantidad : 1, dmg : 70}],
-		[{recurso : idr_explosivo, cantidad : 1, dmg : 500}, {recurso : idr_uranio_bruto, cantidad : 1, dmg : 400}],
+		[{recurso : idr_bronce, cantidad : 0.5, dmg : 80}, {recurso : idr_acero, cantidad : 0.5, dmg : 90}, {recurso : idr_uranio_bruto, cantidad : 1, dmg : 100}],
+		[{recurso : idr_explosivo, cantidad : 1, dmg : 650}, {recurso : idr_uranio_bruto, cantidad : 1, dmg : 500}],
 		[{recurso : idr_carbon, cantidad : 0.03, dmg : 2}, {recurso : idr_compuesto_incendiario, cantidad : 0.03, dmg : 5}]]
 #endregion
 //Terrenos
@@ -715,7 +726,8 @@ ore_max = array_length(ore_sprite)
 			"Unidad de asedio superior, dispara explosivos dañando todo a su alrededor",
 			"Unidad aerea superior, dispara a distancia",
 			"Unidad terrestre máxima, dispara una ráfaga de explosivos de largo alcance",
-			"Vuela sobre sus enemigos soltando devastadores explosivos en línea recta"
+			"Vuela sobre sus enemigos soltando devastadores explosivos en línea recta",
+			"Reconstruye edificios destruidos"
 		]
 	for(var a = array_length(dron_descripcion) - 1; a >= 0; a--)
 		dron_descripcion[a] = text_wrap(dron_descripcion[a], 400)
@@ -736,7 +748,7 @@ ore_max = array_length(ore_sprite)
 	dron_vel = array_create(0, 0)
 	dron_step = array_create(0, 0)
 #endregion
-function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vida = 0, size = 0, alcance = 0, precio_id = array_create(0, 0), precio_num = array_create(0, 0), time = 0, aereo = false, vel = 2, step = 0){
+function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vida = 0, size = 0, alcance = 0, precio_id = array_create(0, 0), precio_num = array_create(0, 0), time = 0, aereo = false, vel = 2, step = infinity){
 	array_push(dron_nombre, string(nombre))
 	array_push(dron_sprite, sprite)
 	array_push(dron_sprite_color, sprite_color)
@@ -763,6 +775,7 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 	idd_helicoptero = def_dron("Helicóptero", spr_helicoptero, spr_helicoptero_2, 400, 900, 40_000, [idr_bronce, idr_acero, idr_electronicos], [10, 15, 15], 1800, true, 2, 110)
 	idd_titan = def_dron("Titán", spr_titan, spr_titan_leg, 1500, 2500, 160_000, [idr_bronce, idr_acero, idr_uranio_bruto, idr_modulos], [30, 40, 75, 5], 3000,, 1.1, 75)
 	idd_bombardero = def_dron("Bombardero", spr_bombardero,, 800, 900, 1_600, [idr_bronce, idr_acero, idr_uranio_bruto, idr_modulos], [30, 40, 50, 5], 6000, true, 3, 80)
+	idd_reconstructor = def_dron("Reconstructor", spr_reconstructor,, 100, 1_600, 1_600, [idr_modulos], [1], 100, true, 2)
 #endregion
 dron_max = array_length(dron_nombre)
 //Liquidos
@@ -847,7 +860,8 @@ dron_max = array_length(dron_nombre)
 		"Mejora las características de algún edificio",
 		//60
 		"Permite fabricar drones más grandes usando Ácido",
-		"Transporta drones entre fábricas"
+		"Transporta drones entre fábricas",
+		"Se coloca en un sitio y explota cuando los enemigos terrestres pasan encima"
 	]
 	for(var a = array_length(edificio_descripcion) - 1; a >= 0; a--)
 		edificio_descripcion[a] = text_wrap(edificio_descripcion[a], 400)
@@ -1013,6 +1027,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 	//60
 	id_fabrica_de_drones_grande = def_edificio("Fábrica de Drones Grande", 3, spr_fabrica_drones_grande,, 400,, scr_fabrica_drones,,,, [idr_cobre, idr_acero, idr_electronicos, idr_uranio_bruto], [60, 40, 20, 40], 20, true, false, [], []); def_edificio_2(250, 10, 10, idl_acido,,,, 3)
 	id_cinta_grande = def_edificio("Cinta Grande", 2, spr_cinta_grande, spr_cinta_grande_diagonal, 80, 30, scr_cinta_grande,,,, [idr_bronce, idr_hierro], [5, 5]); def_edificio_2()
+	id_mina = def_edificio("Mina", 1, spr_mina,,,,,,,, [idr_acero, idr_explosivo], [3, 2]); def_edificio_2(,,,,,, true, -2)
 #endregion
 #region Categorias
 	categoria_edificios = [
@@ -1021,7 +1036,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 		[id_horno, id_triturador, id_fabrica_de_concreto, id_ensambladora, id_planta_quimica, id_refineria_de_petroleo, id_refineria_de_metales, id_horno_de_lava, id_planta_de_enriquecimiento],
 		[id_cable, id_torre_de_alta_tension, id_bateria, id_generador, id_turbina, id_panel_solar, id_generador_geotermico, id_planta_nuclear],
 		[id_tuberia, id_tuberia_subterranea, id_bomba_de_evaporacion, id_bomba_hidraulica, id_deposito, id_planta_desalinizadora, id_embotelladora, id_extractor_atmosferico],
-		[id_torre_basica, id_rifle, id_lanzallamas, id_laser, id_mortero, id_onda_de_choque, id_torre_reparadora, id_muro, id_muro_reforzado, id_silo_de_misiles],
+		[id_torre_basica, id_rifle, id_lanzallamas, id_laser, id_mortero, id_onda_de_choque, id_torre_reparadora, id_muro, id_muro_reforzado, id_silo_de_misiles, id_mina],
 		[id_procesador, id_mensaje, id_memoria, id_pantalla, id_modulo],
 		[id_fabrica_de_drones, id_fabrica_de_drones_grande, id_cinta_grande, id_puerto_de_carga, id_planta_de_reciclaje]]
 	for(var a = 0; a < array_length(categoria_edificios); a++)

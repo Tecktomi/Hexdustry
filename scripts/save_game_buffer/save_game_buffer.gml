@@ -29,19 +29,6 @@ function save_game_buffer(buffer){
 		//Estado edificios
 		for(var a = 0; a < len; a++)
 			save_edificio(buffer, edificios_totales[a])
-		//Historial de cambios
-		len = array_length(historial)
-		buffer_write(buffer, buffer_u16, len)
-		for(var a = 0; a < len; a++){
-			var log = historial[a], tipo = log.tipo
-			buffer_write(buffer, buffer_u8, tipo)
-			if tipo = 0{ //Set edificio
-				buffer_write(buffer, buffer_u16, real(log.a))
-				buffer_write(buffer, buffer_u16, real(log.b))
-				buffer_write(buffer, buffer_bool, bool(log.mode))
-				buffer_write(buffer, buffer_u8, real(log.select))
-			}
-		}
 		//Redes
 		len = array_length(redes)
 		buffer_write(buffer, buffer_u16, len)
@@ -94,7 +81,7 @@ function save_game_buffer(buffer){
 			mask += (dron.dir != 0) << c++
 			mask += (dron.dir_move != 0) << c++
 			mask += (dron.step != 0) << c++
-			for(var i = 0; i < array_length(efectos); i++)
+			for(var i = 0; i < array_length(efectos_max); i++)
 				mask += (dron.efecto[i] != 0) << c++
 			mask += (dron.move_xmove != 0) << c++
 			mask += (dron.move_ymove != 0) << c++

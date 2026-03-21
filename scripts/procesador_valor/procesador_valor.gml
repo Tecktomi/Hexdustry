@@ -13,7 +13,7 @@ function procesador_valor(xpos, ypos, pc, a, b, es_real = false){
 			}
 		}
 		var var_text_x = text_x
-		xpos = draw_text_xpos(xpos + var_text_x, ypos, pc[a] ? "_" : " ")
+		xpos = draw_text_xpos(xpos + var_text_x, ypos, (pc[a] = 0) ? "_" : " ")
 		var_text_x += text_x
 		if pc[a] = 0
 			pc[b] = procesador_var(xpos, ypos, pc, b)

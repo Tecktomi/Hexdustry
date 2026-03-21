@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"check_reconstruible",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"check_reconstruible",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -718,13 +718,13 @@ function menu_editor(){
 					if draw_sprite_boton(save_files_png[a],, xpos, ypos, 96, 96, 1){
 						input_layer = 0
 						get_file = 0
-						save_file = cargar_escenario(save_files[a])
+						save_file = cargar_escenario("Scenarios/" + save_files[a])
 						if string_pos(".", save_file) > 0
 							save_file = string_delete(save_file, string_pos(".", save_file), 4)
 					}
 					if draw_sprite_boton(spr_basura,, xpos - 10, ypos - 30,,, 1){
-						file_delete(temp_text + ".txt")
-						file_delete(temp_text + ".png")
+						file_delete("Scenarios/" + temp_text + ".txt")
+						file_delete("Scenarios/" + temp_text + ".png")
 						array_delete(save_files, a, 1)
 						array_delete(save_files_png, a, 1)
 						continue
@@ -758,7 +758,7 @@ function menu_editor(){
 					}
 				}
 				if flag
-					save_escenario(save_file)
+					save_escenario("Scenarios/" + save_file)
 			}
 			if draw_boton(120, 120, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape){
 				keyboard_clear(vk_escape)

@@ -106,10 +106,10 @@ function scr_procesador(edificio = control.null_edificio){
 					val1 = real(val1)
 				else
 					val1 = string(val1)
-				if pc[5] = 0
-					val2 = edificio.variables[pc[6]]
+				if pc[4] = 0
+					val2 = edificio.variables[pc[5]]
 				else
-					val2 = pc[6]
+					val2 = pc[5]
 				if string_digits(string(val2)) = string(val2)
 					val2 = real(val2)
 				else
@@ -118,15 +118,21 @@ function scr_procesador(edificio = control.null_edificio){
 					show_debug_message($"{val1}, {val2}")
 					continue
 				}
-				if pc[7] = 0
-					val3 = edificio.variables[pc[8]] - 1
+				if pc[6] = 0
+					val3 = edificio.variables[pc[7]] - 1
 				else
-					val3 = pc[8] - 1
-				if pc[4] = 0 and (not pc[3] xor (val1 < val2))
+					val3 = pc[7] - 1
+				if pc[3] = 0 and val1 < val2
 					edificio.select = val3
-				if pc[4] = 1 and (not pc[3] xor (val1 > val2))
+				else if pc[3] = 1 and val1 <= val2
 					edificio.select = val3
-				if pc[4] = 2 and (not pc[3] xor (val1 = val2))
+				else if pc[3] = 2 and val1 = val2
+					edificio.select = val3
+				else if pc[3] = 3 and val1 >= val2
+					edificio.select = val3
+				else if pc[3] = 4 and val1 > val2
+					edificio.select = val3
+				else if pc[3] = 5 and val1 != val2
 					edificio.select = val3
 			}
 			//Set VAR_{A} to [eneabled, carga, etc...][VAR]{B} from LINK[VAR]{C}

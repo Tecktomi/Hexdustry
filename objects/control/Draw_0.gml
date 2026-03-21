@@ -65,30 +65,9 @@ if menu = 0{
 	ypos += text_y * 2
 	//Configuración online
 	if os_browser = browser_not_a_browser{
-		if server_ip = ""{
-			if draw_boton(room_width / 2, ypos, L.buscar_servidores_en_LAN, ui_azul){
-				var buffer = buffer_create(256, buffer_grow, 1)
-				buffer_write(buffer, buffer_u8, 5)
-				network_send_broadcast(udp_socket, 6501, buffer, buffer_tell(buffer))
-				buffer_delete(buffer)
-			}
-		}
-		else{
-			if draw_boton(room_width / 2, ypos, $"{L.conectarse_a} {server_ip}", ui_verde){
-				server = network_connect(socket, server_ip, 6500)
-				if server != -1
-					server_hello()
-			}
-		}
-		ypos += text_y * 2
-		if draw_boton(room_width / 2, ypos, L.conexion_directa, ui_azul){
-			window_set_fullscreen(false)
-			var temp_server_ip = get_string(L.direccion_IP, "192.168.1.x")
-			server = network_connect(socket, temp_server_ip, 6500)
-			if server != -1{
-				server_ip = temp_server_ip
-				server_hello()
-			}
+		if draw_boton(room_width / 2, ypos, "Multijugador"){
+			input_layer = 1
+			get_file = 4
 		}
 		ypos += text_y * 2
 	}
@@ -112,12 +91,12 @@ if menu = 0{
 				var temp_text = string_delete(save_files[a], string_pos(".", save_files[a]), 4)
 				if draw_sprite_boton(save_files_png[a],, xpos, ypos, 96, 96, 1){
 					tecnologia = true
-					cargar_escenario(save_files[a])
+					cargar_escenario("Scenarios/" + save_files[a])
 					game_start()
 				}
 				if draw_sprite_boton(spr_basura,, xpos - 10, ypos - 30,,, 1){
-					file_delete(temp_text + ".txt")
-					file_delete(temp_text + ".png")
+					file_delete("Scenarios/" + temp_text + ".txt")
+					file_delete("Scenarios/" + temp_text + ".png")
 					array_delete(save_files, a, 1)
 					array_delete(save_files_png, a, 1)
 					continue
@@ -333,13 +312,13 @@ if menu = 0{
 					if not nucleo.vivo
 						game_restart()
 					get_file = 3
-					partidas = scan_files(game_save_id + "*.save", fa_none)
+					partidas = scan_files("Saves/*.save", fa_none)
 					for(var a = array_length(partidas) - 1; a >= 0; a--){
 						if array_length(partidas_png) > a and partidas_png[a] != spr_null_image
 							sprite_delete(partidas_png[a])
 						var temp_text = string_delete(partidas[a], string_pos(".", partidas[a]), 5)
-						if file_exists(temp_text + ".png")
-							var temp_image = sprite_add(temp_text + ".png", 1, false, false, 0, 0)
+						if file_exists("Saves/" + temp_text + ".png")
+							var temp_image = sprite_add("Saves/" + temp_text + ".png", 1, false, false, 0, 0)
 						else
 							temp_image = spr_null_image
 						partidas_png[a] = temp_image
@@ -359,12 +338,12 @@ if menu = 0{
 				var temp_text = string_delete(partidas[a], string_pos(".", partidas[a]), 5)
 				if draw_sprite_boton(partidas_png[a],, xpos, ypos, 96, 96, 1){
 					var buffer = buffer_create(4096, buffer_grow, 1)
-					buffer = buffer_load(partidas[a])
+					buffer = buffer_load("Saves/" + partidas[a])
 					load_game_buffer(buffer)
 				}
 				if draw_sprite_boton(spr_basura,, xpos - 10, ypos - 30,,, 1){
-					file_delete(temp_text + ".png")
-					file_delete(temp_text + ".save")
+					file_delete("Saves/" + temp_text + ".png")
+					file_delete("Saves/" + temp_text + ".save")
 					array_delete(partidas, a, 1)
 					continue
 				}
@@ -380,6 +359,35 @@ if menu = 0{
 				keyboard_clear(vk_escape)
 				get_file = 2
 			}
+		}
+		//Multijugador
+		else if get_file = 4{
+			ypos = 110
+			if draw_boton(120, ypos, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape){
+				keyboard_clear(vk_escape)
+				get_file = 0
+				input_layer = 0
+				exit
+			}
+			draw_set_halign(fa_center)
+			ypos += text_y * 1.2
+			if draw_boton(room_width / 2, ypos, L.buscar_servidores_en_LAN, ui_azul,,,, 1){
+				var buffer = buffer_create(256, buffer_grow, 1)
+				buffer_write(buffer, buffer_u8, 5)
+				network_send_broadcast(udp_socket, 6501, buffer, buffer_tell(buffer))
+				buffer_delete(buffer)
+			}
+			ypos += text_y * 1.2
+			if server_ip != "" and draw_boton(room_width / 2, ypos, $"{L.conectarse_a} {server_ip}", ui_verde,,,, 1){
+				server = network_connect(socket, server_ip, 6500)
+				if server != -1
+					server_hello()
+			}
+			ypos += text_y * 2
+			draw_boton_text_counter = 0
+			server_ip = draw_boton_text(room_width / 2, ypos, server_ip, false,, true, 1)
+			input_layer = 1
+			get_file = 4
 		}
 	}
 	draw_set_valign(fa_bottom)
@@ -1012,6 +1020,7 @@ if pausa = 1{
 	ypos += 40
 	if draw_boton(a, ypos, (grafic_energia ? L.pausa_desactivar : L.pausa_activar) + $" {L.red_energia}", grafic_energia ? ui_verde : ui_rojo)
 		grafic_energia = not grafic_energia
+	//Guardar / Abrir en LAN
 	if menu = 1{
 		ypos += 40
 		if os_browser = browser_not_a_browser{
@@ -1029,8 +1038,9 @@ if pausa = 1{
 					guardado = true
 					var buffer = buffer_create(4096, buffer_grow, 1)
 					save_game_buffer(buffer)
-					var temp_text = $"{string_delete(string(current_year), 0, 2)}{current_month}{current_day}_{current_hour}{current_minute}"
+					var temp_text = $"Saves/{string_delete(string(current_year), 0, 2)}{current_month}{current_day}_{current_hour}{current_minute}"
 					buffer_save(buffer, $"{temp_text}.save")
+					buffer_delete(buffer)
 					var temp_sprite = minimapa(terreno)
 					sprite_save(temp_sprite, 0, $"{temp_text}.png")
 				}
@@ -1153,12 +1163,11 @@ if show_menu{
 			}
 			//Set {A} to [sin, cos, tan, random, floor, round, ceil, sqr, sqrt, pi] [VAR]{B}
 			else if pc0 = 2{
-				var signs = ["sin", "cos", "tan", "random", "floor", "round", "ceil", "sqr", "sqrt", "pi"]
+				var signs = procesador_nombres_1var
 				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_set} VAR_")
 				pc[1] = procesador_var(xpos, ypos, pc, 1)
 				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to} ")
-				if draw_boton(xpos, ypos, $"{signs[pc[2]]}",,,, false)
-					pc[2] = (pc[2] + 1) mod array_length(signs)
+				pc[2] = draw_boton_text_list(xpos, ypos, pc[2], signs,, 10)
 				if not in(signs[pc[2]], "pi"){
 					xpos = draw_text_xpos(xpos + text_x, ypos, $" ")
 					procesador_valor(xpos, ypos, pc, 3, 4)
@@ -1166,43 +1175,38 @@ if show_menu{
 			}
 			//Set {A} to [VAR]{B} [+, -, *, /, div, mod, or, and, xor, <<, >>, power] [VAR]{C}
 			else if pc0 = 3{
-				var signs = ["+", "-", "*", "/", "div", "mod", "or", "and", "xor", "<<", ">>", "power"]
+				var signs = procesador_nombres_2var
 				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_set} VAR_")
 				pc[1] = procesador_var(xpos, ypos, pc, 1)
 				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to} ")
 				procesador_valor(xpos, ypos, pc, 2, 3)
 				xpos += text_x
-				if draw_boton(xpos, ypos, $" {signs[pc[4]]} ",,,, false)
-					pc[4] = (pc[4] + 1) mod array_length(signs)
+				pc[4] = draw_boton_text_list(xpos, ypos, pc[4], signs,, 10)
 				procesador_valor(xpos + text_x, ypos, pc, 5, 6)
 			}
 			//If [VAR]{A} [yes, no][<, >, =] [VAR]{B}, jump to [VAR]{C}
 			else if pc0 = 4{
-				var signs = ["<", ">", "="]
+				var signs = [" < ", " <= ", " = ", " >= ", " > ", " != "]
 				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_if} ")
 				procesador_valor(xpos, ypos, pc, 1, 2, false)
 				xpos += text_x
-				if draw_boton(xpos, ypos, pc[3] ? $" {L.procesador_is}" : $" {L.procesador_is_not}",,,, false)
-					pc[3] = 1 - pc[3]
+				pc[3] = draw_boton_text_list(xpos, ypos, pc[3], signs,, 10)
 				xpos += text_x
-				if draw_boton(xpos, ypos, $" {signs[pc[4]]} ",,,, false)
-					pc[4] = (pc[4] + 1) mod 3
-				xpos += text_x
-				procesador_valor(xpos, ypos, pc, 5, 6, false)
+				procesador_valor(xpos, ypos, pc, 4, 5, false)
 				xpos = draw_text_xpos(xpos + text_x, ypos, $", {L.procesador_jump} ")
-				procesador_valor(xpos, ypos, pc, 7, 8, true)
-				if not pc[7]
-					pc[8] = clamp(pc[8], 0, size)
+				procesador_valor(xpos, ypos, pc, 6, 7, true)
+				if not pc[6]
+					pc[7] = clamp(pc[7], 0, size)
 				xpos += text_x
 				var val = 0, flag = true
-				if pc[7] = 0{
-					if is_real(edificio.variables[pc[8]])
-						val = real(edificio.variables[pc[8]])
+				if pc[6] = 0{
+					if is_real(edificio.variables[pc[7]])
+						val = real(edificio.variables[pc[7]])
 					else
 						flag = false
 				}
 				else
-					val = real(pc[8])
+					val = real(pc[7])
 				if flag and a != val{
 					draw_set_color(make_color_hsv((49 * b) mod 255, 127, 127))
 					draw_rectangle(xpos, ypos + 8, xpos + 10 + 10 * ++b, ypos + 12, false)
@@ -1213,13 +1217,12 @@ if show_menu{
 			}
 			//Set VAR_{A} to [eneabled, carga, etc...][VAR]{B} from LINK[VAR]{C}
 			else if pc0 = 5{
-				var signs = ["eneabled", "carga", "líquido tipo", "líquido almacen", "líquido capacidad", "líquido produccion", "líquido consumo", "energía almacenada", "energía capacidad", "energía producida", "energía consumida"]
+				var signs = procesador_nombres_read_data
 				var signs_subindex = [false, true, false, false, false, false, false, false, false, false, false]
 				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_set} VAR_")
 				pc[1] = procesador_var(xpos, ypos, pc, 1)
 				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to} ")
-				if draw_boton(xpos, ypos, signs[pc[2]],,,, false)
-					pc[2] = (pc[2] + 1) mod array_length(signs)
+				pc[2] = draw_boton_text_list(xpos, ypos, pc[2], signs,, 10)
 				xpos += text_x
 				if signs_subindex[pc[2]]{
 					xpos = draw_text_xpos(xpos, ypos, "[")
@@ -1260,16 +1263,16 @@ if show_menu{
 			}
 			//Draw to LINK[VAR]{B} [clear(), color(r, g, b), color(h, s, v), rectangle(x, y, w, h), line(x1, y1, x2, y2), triangle(x1, y1, x2, y2, x3, y3), circle(x, y, radio), draw_flush()]
 			else if pc0 = 9{
-				var signs = ["Clear", "Color grb", "Color hsv", "Rectangle", "Line", "Triangle", "Circle", "Texto", "Draw_flush"]
+				var signs = procesador_nombres_draw
 				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_write} {L.procesador_to} LINK_")
 				procesador_valor(xpos, ypos, pc, 1, 2, true)
 				xpos += text_x
-				if draw_boton(xpos, ypos, $" {signs[pc[3]]}",,,, false){
-					if pc[3] = 7{
-						pc[8] = 0
-						pc[9] = 0
-					}
-					pc[3] = (pc[3] + 1) mod array_length(signs)
+				xpos = draw_text_xpos(xpos, ypos, " ")
+				var prev_pc3 = pc[3]
+				pc[3] = draw_boton_text_list(xpos, ypos, pc[3], signs,, 10)
+				if pc[3] = 7 and prev_pc3 != 7{
+					pc[8] = 0
+					pc[9] = 0
 				}
 				if pc[3] = 0
 					xpos = draw_text_xpos(xpos + text_x, ypos, "()")
@@ -1351,6 +1354,7 @@ if show_menu{
 			}
 			ypos += 20
 		}
+		draw_boton_text_list_end()
 		if deslizante[0] + 25 < size and mouse_wheel_down()
 			deslizante[0]++
 		if deslizante[0] > 0 and mouse_wheel_up()
@@ -1401,13 +1405,13 @@ if show_menu{
 			edificio.proceso = 1
 		}
 		if browser and draw_boton(room_width - 120, 530, L.procesador_guardar, ui_azul,,, false) or (keyboard_check(vk_control) and keyboard_check_pressed(ord("S"))){
-			save_codes = scan_files("*.code", fa_none)
+			save_codes = scan_files("Codes/*.txt", fa_none)
 			get_file = 1
 			input_layer = 1
 			keyboard_clear(ord("S"))
 		}
 		if browser and draw_boton(room_width - 120, 560, L.procesador_cargar, ui_azul,,, false) or (keyboard_check(vk_control) and keyboard_check_pressed(ord("A"))){
-			save_codes = scan_files("*.code", fa_none)
+			save_codes = scan_files("Codes/*.txt", fa_none)
 			get_file = 2
 			input_layer = 1
 			keyboard_clear(ord("A"))
@@ -1423,7 +1427,7 @@ if show_menu{
 					if draw_boton(140, 160 + 30 * a, save_codes[a],,,,, 1){
 						input_layer = 0
 						get_file = 0
-						ini_open(save_codes[a])
+						ini_open("Codes/" + save_codes[a])
 						size = ini_read_real("Largo", "", 0)
 						edificio.instruccion = array_create(size, [])
 						for(b = 0; b < size; b++){
@@ -1447,12 +1451,12 @@ if show_menu{
 				for(var a = 0; a < array_length(save_codes); a++)
 					if draw_boton(140, 160 + 30 * a, save_codes[a],,,,, 1){
 						save_file = save_codes[a]
-						if string_count(".code", save_file)
-							save_file = string_delete(save_file, string_pos(".code", save_file), string_length(save_file))
+						if string_count(".txt", save_file)
+							save_file = string_delete(save_file, string_pos(".txt", save_file), string_length(save_file))
 						flag = true
 					}
 				save_file = string(draw_boton_text(140, 160 + 30 * (array_length(save_codes) + 1), save_file, false,,, 1))
-				draw_text(140 + text_x, 160 + 30 * (array_length(save_codes) + 1), ".code")
+				draw_text(140 + text_x, 160 + 30 * (array_length(save_codes) + 1), ".txt")
 				input_layer = 1
 				if save_file != "" and (draw_boton(120, 160 + 30 * array_length(save_codes), L.nuevo_archivo,,,,, 1) or keyboard_check_pressed(vk_enter)){
 					keyboard_clear(vk_enter)
@@ -1462,7 +1466,7 @@ if show_menu{
 					get_file = 0
 				}
 				if flag{
-					ini_open(save_file)
+					ini_open("Codes/" + save_file)
 					ini_write_real("Largo", "", size)
 					for(var a = 0; a < size; a++){
 						var size_2 = array_length(edificio.instruccion[a])
@@ -1524,7 +1528,7 @@ if show_menu{
 		else if index = id_planta_quimica
 			draw_rectangle(aa - 90 * zoom, bb + 40 * zoom, aa + 90 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, false)
 		else if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
-			var temp_array = index = id_fabrica_de_drones ? [idd_mula, idd_kamikaze] : [idd_reparador, idd_helicoptero, idd_bombardero], len = array_length(temp_array)
+			var temp_array = index = id_fabrica_de_drones ? [idd_mula, idd_kamikaze] : [idd_reparador, idd_helicoptero, idd_bombardero, idd_reconstructor], len = array_length(temp_array)
 			if edificio.enemigo{
 				if index = id_fabrica_de_drones
 					array_push(temp_array, idd_arana)
@@ -1565,7 +1569,7 @@ if show_menu{
 			}
 		}
 		if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
-			var temp_array = index = id_fabrica_de_drones ? [idd_mula, idd_kamikaze] : [idd_reparador, idd_helicoptero, idd_bombardero], len = array_length(temp_array)
+			var temp_array = index = id_fabrica_de_drones ? [idd_mula, idd_kamikaze] : [idd_reparador, idd_helicoptero, idd_bombardero, idd_reconstructor], len = array_length(temp_array)
 			if edificio.enemigo{
 				if index = id_fabrica_de_drones
 					array_push(temp_array, idd_arana)
@@ -1653,7 +1657,7 @@ if show_menu{
 				}
 			}
 			else if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
-				var temp_array = index = id_fabrica_de_drones ? [idd_mula, idd_kamikaze] : [idd_reparador, idd_helicoptero, idd_bombardero], len = array_length(temp_array)
+				var temp_array = index = id_fabrica_de_drones ? [idd_mula, idd_kamikaze] : [idd_reparador, idd_helicoptero, idd_bombardero, idd_reconstructor], len = array_length(temp_array)
 				if edificio.enemigo{
 					if index = id_fabrica_de_drones
 						array_push(temp_array, idd_arana)
@@ -2141,27 +2145,8 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		var b = repair_id[# mx, my], temp_text_2 = ""
 		if b > 0{
 			var comprable = true
-			if not cheat{
-				for(var a = 0; a < array_length(edificio_precio_id[b]); a++)
-					if nucleo.carga[edificio_precio_id[b, a]] < edificio_precio_num[b, a]{
-						comprable = false
-						temp_text_2 += $"  {recurso_nombre[edificio_precio_id[b, a]]} {nucleo.carga[edificio_precio_id[b, a]]}/{edificio_precio_num[b, a]}\n"
-					}
-				if not comprable
-					temp_text_2 = $"{L.construir_recursos_insuficientes}\n" + temp_text_2
-				draw_set_color(c_red)
-				var flag_3 = false, size_2 = array_length(enemigos)
-				for(var a = 0; a < size_2; a++){
-					var enemigo = enemigos[a]
-					draw_circle_off(enemigo.x, enemigo.y, 100, true)
-					if not flag_3 and (sqr(mouse_x - enemigo.x + camx) + sqr(mouse_y - enemigo.y + camy)) < 10000{//100^2
-						temp_text_2 += $"{L.construir_enemigos_cerca}\n"
-						comprable = false
-						flag_3 = true
-					}
-				}
-				draw_set_color(c_white)
-			}
+			if not cheat
+				comprable = check_reconstruible(b)
 			if not comprable{
 				var temp_complex = abtoxy(mx, my)
 				draw_sprite_off(spr_rojo, 0, temp_complex.a, temp_complex.b,,,,, 0.5)
@@ -3182,7 +3167,13 @@ if menu = 1{
 				array_push(energia_consumida, energia_consumida_time)
 				energia_consumida_time = 0
 				array_push(energia_perdida, energia_perdida_time)
-				energia_perdida_time = 0
+				if os_browser = browser_not_a_browser and not mapa_editado{
+					energia_perdida_time = 0
+					var buffer = buffer_create(4096, buffer_grow, 1)
+					save_game_buffer(buffer)
+					buffer_save(buffer, "last_save.save")
+					buffer_delete(buffer)
+				}
 			}
 			//Ciclo edificios
 			for(var a = array_length(edificios_activos) - 1; a >= 0; a--){
@@ -3206,6 +3197,8 @@ if menu = 1{
 			//Ciclo de los enemigos
 			var cam_center_x = (camx + room_width * zoom / 2), cam_center_y = (camy + room_height * zoom / 2)
 			for(var a = array_length(enemigos) - 1; a >= 0; a--){
+				if a > array_length(enemigos)
+					continue
 				var dron = enemigos[a], aa = dron.x, bb = dron.y, index = dron.index, vel = dron_vel[index]
 				draw_dron(dron, true)
 				if distance_sqr(cam_center_x, cam_center_y, aa, bb) > 250_000{
@@ -3248,8 +3241,19 @@ if menu = 1{
 						dron.target = edificio_cercano[# temp_complex.a, temp_complex.b]
 					}
 				}
-				if not dron_aereo[index] and terreno[# dron.a, dron.b] = idt_hielo
-					vel *= 1.2
+				if not dron_aereo[index]{
+					if terreno[# dron.a, dron.b] = idt_hielo
+						vel *= 1.2
+					if edificio_bool[# dron.a, dron.b]{
+						var temp_edificio = edificio_id[# dron.a, dron.b]
+						if temp_edificio.index = id_mina{
+							explosion(temp_edificio.center_x, temp_edificio.center_y,, temp_edificio.enemigo, 10_000, 1000)
+							delete_edificio(temp_edificio)
+							if dron.vida <= 0
+								continue
+						}
+					}
+				}
 				if dron.step != dron_step[index]
 					dron.step++
 				//Target edificios y drones
@@ -3324,6 +3328,7 @@ if menu = 1{
 					}
 					if dis < dron_alcance[index]{
 						ataque = true
+						show_debug_message(random(1))
 						if atacar_dron(dron, edificio)
 							continue
 					}
@@ -3331,25 +3336,33 @@ if menu = 1{
 					else if array_length(drones_aliados) > 0{
 						if dron = null_dron{
 							if (image_index mod 10) = (a mod 10){
-								var closest_dis = dron_alcance[dron.index]
+								var closest_dis = dron_alcance[index]
 								for(var u = minu; u <= maxu; u++)
 									for(var v = minv; v <= maxv; v++){
-										var temp_array_dron = chunk_dron_aliado[# u, v]
-										for(var i = array_length(temp_array_dron) - 1; i >= 0; i--){
-											var temp_dron = temp_array_dron[i], temp_dis = distance_sqr(aa, bb, temp_dron.x, temp_dron.y)
+										var chunk_dron = ds_grid_get(chunk_dron_aliado, u, v), len = array_length(chunk_dron)
+										for(var i = 0; i < len; i++){
+											var temp_dron_2 = chunk_dron[i], temp_dis = distance_sqr(aa, bb, temp_dron_2.x, temp_dron_2.y)
 											if temp_dis < closest_dis{
 												closest_dis = temp_dis
-												dron = temp_dron
+												dron.target_dron = temp_dron_2
 											}
 										}
 									}
 							}
 						}
-						else if dron.vida > 0{
-							ataque = true
-							if atacar_dron(dron,, dron)
-								continue
+						else if dron.target_dron.vida > 0{
+							dis = distance_sqr(aa, bb, dron.target_dron.x, dron.target_dron.y)
+							if dis < dron_alcance[index]{
+								ataque = true
+								show_debug_message(2 + random(1))
+								if atacar_dron(dron,, dron.target_dron)
+									continue
+							}
+							else
+								dron.target_dron = null_dron
 						}
+						else
+							dron.target_dron = null_dron
 					}
 					//Targetear edificios
 					if ataque = false{
@@ -3384,6 +3397,7 @@ if menu = 1{
 								if dis > dron_alcance[index]
 									dron.temp_target = null_edificio
 								else{
+									show_debug_message(1 + random(1))
 									ataque = true
 									if atacar_dron(dron, edificio)
 										continue
@@ -3535,6 +3549,44 @@ if menu = 1{
 						}
 					}
 				}
+				//Dron Reconstructor
+				else if index = idd_reconstructor{
+					//Buscar edificios destruidos
+					if dron.modo = 0{
+						var i = irandom(xsize - 1), j = irandom(ysize - 1)
+						if repair_id[# i, j] > 0{
+							dron.move_x = i
+							dron.move_y = j
+							var temp_complex = abtoxy(i, j)
+							dron.move_xmove = temp_complex.a
+							dron.move_ymove = temp_complex.b
+							dron.modo = 1
+						}
+					}
+					//Reconstruir edificios
+					else if dron.modo = 1{
+						var dis = distance_sqr(aa, bb, dron.move_xmove, dron.move_ymove)
+						//Ir al lugar
+						if dis > dron_alcance[index]{
+							dron.dir = (9 * dron.dir + radtodeg(arctan2(dron.move_ymove - bb, aa - dron.move_xmove))) / 10
+							dis = sqrt(dis)
+							dron.x += vel * (dron.move_xmove - aa) / dis
+							dron.y += vel * (dron.move_ymove - bb) / dis
+						}
+						//Reconstruir
+						else{
+							var i = dron.move_x, j = dron.move_y, b = repair_id[# i, j], comprable = (b > 0)
+							if comprable and not cheat
+								comprable = check_reconstruible(b)
+							if comprable{
+								var temp_edificio = construir(b, repair_dir[# i, j], i, j)
+								if edificio_seteable[b]
+									set_edificio(repair_mode[# i, j], repair_select[# i, j], temp_edificio)
+							}
+							dron.modo = 0
+						}
+					}
+				}
 				//Drones aereos
 				else if dron_aereo[index]{
 					var minu = max(0, dron.chunk_x - dron_alcance_chunk_x[index]), maxu = min(chunk_xsize - 1, dron.chunk_x + dron_alcance_chunk_x[index])
@@ -3571,22 +3623,29 @@ if menu = 1{
 								var closest_dis = dron_alcance[dron.index]
 								for(var u = minu; u <= maxu; u++)
 									for(var v = minv; v <= maxv; v++){
-										var chunk = chunk_dron_enemigo[# u, v]
-										for(var i = array_length(chunk) - 1; i >= 0; i--){
-											var temp_dron = chunk[i], temp_dis = distance_sqr(aa, bb, temp_dron.x, temp_dron.y)
+										var chunk_dron = ds_grid_get(chunk_dron_enemigo, u, v), len = array_length(chunk_dron)
+										for(var i = 0; i < len; i++){
+											var temp_dron_2 = chunk_dron[i], temp_dis = distance_sqr(aa, bb, temp_dron_2.x, temp_dron_2.y)
 											if temp_dis < closest_dis{
 												closest_dis = temp_dis
-												dron = temp_dron
+												dron.target_dron = temp_dron_2
 											}
 										}
 									}
 							}
 						}
-						else{
-							ataque = true
-							if atacar_dron(dron,, dron)
-								continue
+						else if dron.target_dron.vida <= 0{
+							var dis = distance_sqr(aa, bb, dron.target_dron.x, dron.target_dron.y)
+							if dis < dron_alcance[index]{
+								ataque = true
+								if atacar_dron(dron,, dron)
+									continue
+							}
+							else
+								dron.target_dron = null_dron
 						}
+						else
+							dron.target_dron = null_dron
 					}
 					//Atacar edificios
 					if ataque = false and array_length(edificios_enemigos) > 0{

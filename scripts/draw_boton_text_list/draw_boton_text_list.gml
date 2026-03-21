@@ -1,5 +1,6 @@
 function draw_boton_text_list(xpos, ypos, variable = 0, array_name = array_create(0, ""), array = array_create(0, 0), max_height = 25){
 	with control{
+		var color = draw_get_color()
 		if draw_boton(xpos, ypos, array_name[variable],,,, false){
 			get_keyboard_string = draw_boton_text_counter
 			input_layer = 1
@@ -12,6 +13,8 @@ function draw_boton_text_list(xpos, ypos, variable = 0, array_name = array_creat
 				for(var i = 0; i < array_length(array_name); i++)
 					array[i] = i
 			}
+			xpos = clamp(xpos, 0, room_width - max_width - 20)
+			ypos = clamp(ypos, 0, room_height - 20 * (min(max_height, size) + 1))
 			editor_xpos = xpos
 			editor_ypos = ypos
 			editor_array = array
@@ -37,6 +40,7 @@ function draw_boton_text_list(xpos, ypos, variable = 0, array_name = array_creat
 					get_keyboard_string = -1
 					input_layer = 0
 					text_x = a
+					draw_set_color(color)
 					return j
 				}
 				ypos += text_y
@@ -44,6 +48,7 @@ function draw_boton_text_list(xpos, ypos, variable = 0, array_name = array_creat
 			text_x = a
 			exit_keyboard_input()
 		}
+		draw_set_color(color)
 		return variable
 	}
 }
