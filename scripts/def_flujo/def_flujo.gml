@@ -8,7 +8,8 @@ function def_flujo(){
 		almacen_max : 0,
 		eficiencia : 0,
 		punteros : array_create(0, 0),
-		promedio : 0
+		promedio : 0,
+		pre_liq : -1
 	}
 	return flujo
 }

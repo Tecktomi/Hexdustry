@@ -74,8 +74,8 @@ function add_edificio(index, dir, a, b, enemigo = false, server = false){
 			sound : undefined,
 			modulo : false,
 			// 0 = edificios, 1 = chunk_edificios, 2 = [torres_tension, plantas_reciclaje, torres_reparadoras, puertos_carga, target.torres], 3 = luz, 4 = edificios_activos
-			// 5 = red, 6 = flujo, 7 = torres, 8 = edificios_index, 9 = edificio_dinamico/estatico, 10 = edificio_draw, 11 = historial_set, 12 = edificios_totales
-			punteros : array_create(13, 0),
+			// 5 = red, 6 = flujo, 7 = torres, 8 = edificios_index, 9 = edificio_dinamico/estatico, 10 = edificio_draw, 11 = edificios_totales
+			punteros : array_create(12, 0),
 			enemigo : enemigo,
 			prioridad : edificio_prioridad[index],
 			inputs_carga : array_create(0, null_edificio),

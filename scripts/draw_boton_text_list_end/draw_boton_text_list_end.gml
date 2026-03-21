@@ -1,7 +1,8 @@
 function draw_boton_text_list_end(){
 	with control{
+		var color = draw_get_color()
 		if not editor_list
-			return undefined
+			exit
 		if get_keyboard_string >= 0{
 			var max_width = 0, size = array_length(editor_array_name)
 			if array_length(editor_array) = 0{
@@ -28,5 +29,6 @@ function draw_boton_text_list_end(){
 				editor_ypos += text_y
 			}
 		}
+		draw_set_color(color)
 	}
 }

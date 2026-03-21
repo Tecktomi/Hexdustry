@@ -9,6 +9,8 @@ function save_edificio(buffer, edificio = control.null_edificio){
 			mask += (edificio.carga[a] != 0) << c++
 		mask += (edificio.carga_id != 0) << c++
 		mask += (edificio.fuel != 0) << c++
+		mask += (edificio.select != -1) << c++
+		mask += (not edificio.mode) << c++
 		mask += edificio.waiting << c++
 		mask += edificio.idle << c++
 		mask += (edificio.link != null_edificio) << c++
@@ -32,13 +34,15 @@ function save_edificio(buffer, edificio = control.null_edificio){
 		if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(edificio.input_index))
 		if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(edificio.output_index))
 		if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(edificio.proceso))
-		if mask & (1 << c++) buffer_write(buffer, buffer_bool, bool(edificio.start))
+		c++
 		for(var a = 0; a < rss_max; a++)
 			if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(edificio.carga[a]))
 		if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(edificio.carga_id))
 		if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(edificio.fuel))
-		if mask & (1 << c++) buffer_write(buffer, buffer_bool, bool(edificio.waiting))
-		if mask & (1 << c++) buffer_write(buffer, buffer_bool, bool(edificio.idle))
+		if mask & (1 << c++) buffer_write(buffer, buffer_s8, real(edificio.select))
+		c++
+		c++
+		c++
 		if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(edificio.link.punteros[12]))
 		if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(edificio.vida))
 		if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(edificio.target.punteros[2]))
@@ -48,16 +52,16 @@ function save_edificio(buffer, edificio = control.null_edificio){
 		if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(edificio.energia_consumo))
 		if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(edificio.energia_consumo_max))
 		if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(edificio.edificio_index))
-		if mask & (1 << c++) buffer_write(buffer, buffer_bool, bool(edificio.luz))
+		c++
 		if mask & (1 << c++){
 			var len = array_length(edificio.procesador_link)
 			buffer_write(buffer, buffer_u16, real(len))
 			for(var a = 0; a < len; a++)
 				buffer_write(buffer, buffer_u16, real(edificio.procesador_link[a].punteros[12]))
 		}
-		if mask & (1 << c++) buffer_write(buffer, buffer_bool, bool(edificio.eliminar))
-		if mask & (1 << c++) buffer_write(buffer, buffer_bool, bool(edificio.agregar))
-		if mask & (1 << c++) buffer_write(buffer, buffer_bool, bool(edificio.modulo))
+		c++
+		c++
+		c++
 		if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(edificio.outputs_carga_index))
 	}
 }

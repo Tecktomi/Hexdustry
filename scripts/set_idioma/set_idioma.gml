@@ -506,6 +506,10 @@ function set_idioma(){
 			misiles_nombre[0] = "Cruise Missile"
 			misiles_nombre[1] = "Cluster Missile"
 			misiles_nombre[2] = "Nuclear Missile"
+			procesador_nombres_1var = ["sine", "cosine", "tangent", "random", "floor", "round", "ceil", "square", "square root", "pi"]
+			procesador_nombres_2var = [" + ", " - ", " * ", " / ", " integer division ", " modulo ", " or ", " and ", " xor ", " << ", " >> ", " power "]
+			procesador_nombres_read_data = ["eneabled", "load", "liquid type", "liquid storage", "liquid capacity", "liquido production", "liquid consume", "energy storage", "energy capacity", "energy production", "energy consume"]
+			procesador_nombres_draw = ["Clear", "Color grb", "Color hsv", "Rectangle", "Line", "Triangle", "Circle", "Text", "Draw flush"]
 		}
 		//Español
 		else if idioma = 1{
@@ -1010,6 +1014,10 @@ function set_idioma(){
 			misiles_nombre[0] = "Misil de Crucero"
 			misiles_nombre[1] = "Misil de Racimo"
 			misiles_nombre[2] = "Misil Nuclear"
+			procesador_nombres_1var = ["seno", "coseno", "tangente", "aleatorio", "piso", "redondeo", "cielo", "cuadrado", "raíz", "pi"]
+			procesador_nombres_2var = [" + ", " - ", " * ", " / ", " división entera ", " módulo ", " o ", " y ", " o exclusivo ", " << ", " >> ", " elevado "]
+			procesador_nombres_read_data = ["activado", "carga", "líquido tipo", "líquido almacen", "líquido capacidad", "líquido produccion", "líquido consumo", "energía almacenada", "energía capacidad", "energía producida", "energía consumida"]
+			procesador_nombres_draw = ["Limpiar", "Color grb", "Color hsv", "Rectángulo", "Línea", "Triángulo", "Círculo", "Texto", "Imprimir"]
 		}
 		//Русский
 		else if idioma = 2{
@@ -1513,6 +1521,10 @@ function set_idioma(){
 			misiles_nombre[0] = "Крылатая ракета"
 			misiles_nombre[1] = "Кассетная ракета"
 			misiles_nombre[2] = "Ядерная ракета"
+			procesador_nombres_1var = ["синус", "косинус", "тангенс", "случайное", "пол", "округлить", "потолок", "квадрат", "квадратный корень", "пи"]
+			procesador_nombres_2var = [" + ", " - ", " * ", " / ", " целочисленное деление ", " модуль ", " или ", " и ", " исключающее или ", " << ", " >> ", " степень "]
+			procesador_nombres_read_data = ["включено", "заряд", "тип жидкости", "жидкости хранится", "ёмкость жидкости", "производство жидкости", "потребление жидкости", "энергии хранится", "ёмкость энергии", "энергии произведено", "энергии потреблено"]
+			procesador_nombres_draw = ["Очистить", "Цвет RGB", "Цвет HSV", "Прямоугольник", "Линия", "Треугольник", "Круг", "Текст", "Печать"]
 		}
 		//?
 	}

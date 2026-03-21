@@ -25,19 +25,6 @@ function load_game_buffer(buffer){
 		//Cargar estado
 		for(var a = 0; a < len; a++)
 			temp_edificios_target[a] = load_edificio(buffer, edificios_totales[a])
-		//Historial de cambios
-		len = buffer_read(buffer, buffer_u16)
-		repeat(len){
-			var tipo = buffer_read(buffer, buffer_u8)
-			if tipo = 0{
-				var a = real(buffer_read(buffer, buffer_u16))
-				var b = real(buffer_read(buffer, buffer_u16))
-				var mode = bool(buffer_read(buffer, buffer_bool))
-				var select = real(buffer_read(buffer, buffer_u8))
-				if edificio_bool[# a, b]
-					set_edificio(mode, select, edificio_id[# a, b])
-			}
-		}
 		//Redes
 		len = real(buffer_read(buffer, buffer_u16))
 		for(var a = 0; a < len; a++){

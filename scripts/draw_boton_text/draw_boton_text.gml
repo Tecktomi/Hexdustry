@@ -14,12 +14,13 @@ function draw_boton_text(xpos, ypos, variable, es_real = true, detect_real = fal
 			editor_list = false
 		}
 		if get_keyboard_string = draw_boton_text_counter++{
-			draw_line(xpos, ypos + 16, xpos + text_x, ypos + 16)
+			var xx = draw_get_halign() = fa_left ? 0 : (draw_get_halign() = fa_center ? text_x / 2 : text_x)
+			draw_line(xpos - xx, ypos + text_y, xpos + text_x - xx, ypos + text_y)
 			if detect_real
 				es_real = (keyboard_string = string_digits(keyboard_string))
 			var pre_text = string_copy($"'get_keyboard_text'", 1, get_keyboard_cursor)
 			var cursor_x = xpos + string_width(pre_text)
-			draw_line(cursor_x, ypos, cursor_x, ypos + 16)
+			draw_line(cursor_x - xx, ypos, cursor_x - xx, ypos + 16)
 			if keyboard_check_pressed(vk_anykey){
 				if keyboard_check_pressed(vk_left)
 					get_keyboard_cursor = max(1, get_keyboard_cursor - 1)
@@ -27,6 +28,10 @@ function draw_boton_text(xpos, ypos, variable, es_real = true, detect_real = fal
 					get_keyboard_cursor = min(string_length(get_keyboard_text) + 1, get_keyboard_cursor + 1)
 				else if keyboard_check_pressed(vk_backspace) and get_keyboard_cursor > 1
 					get_keyboard_text = string_delete(get_keyboard_text, --get_keyboard_cursor, 1)
+				else if keyboard_check(vk_lcontrol) and keyboard_lastchar = "V"{
+					get_keyboard_text += clipboard_get_text()
+					get_keyboard_cursor += string_length(clipboard_get_text())
+				}
 				else{
 					var new_input = keyboard_lastchar
 					if new_input != "" and ord(new_input) >= 32 and ord(new_input) < 127
