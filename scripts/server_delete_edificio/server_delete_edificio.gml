@@ -1,7 +1,8 @@
 function server_delete_edificio(a, b, destruccion){
 	with control{
-		var buffer = buffer_create(256, buffer_grow, 1)
+		var buffer = buffer_create(6, buffer_grow, 1)
 		buffer_write(buffer, buffer_u8, 4) //Delete edificio
+		buffer_write(buffer, buffer_u32, real(timer))
 		buffer_write(buffer, buffer_u16, real(a))
 		buffer_write(buffer, buffer_u16, real(b))
 		buffer_write(buffer, buffer_bool, bool(destruccion))

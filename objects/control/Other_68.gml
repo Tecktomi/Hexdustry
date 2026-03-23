@@ -3,7 +3,8 @@ if type = network_type_data{
 	var buffer = async_load[? "buffer"]
     buffer_seek(buffer, buffer_seek_start, 0)
     var msg = buffer_read(buffer, buffer_u8)
-	show_debug_message($"{msg}")
+	if msg != 8
+		show_debug_message($"{msg}")
 	if msg = 1{
 		var temp_socket = async_load[? "id"]
 		array_push(server_jugadores, temp_socket)
@@ -21,7 +22,12 @@ if type = network_type_data{
 		network_send_udp(udp_socket, async_load[? "ip"], async_load[? "port"], reply, buffer_tell(reply))
 		buffer_delete(reply)
 	}
-	else if msg = 6{
+	else if msg = 6
 		server_ip = async_load[? "ip"]
-	}
+	else if msg = 7
+		handle_set_edificio(buffer)
+	else if msg = 8
+		handle_sync_timer(buffer)
+	else if msg = 9
+		handle_mover_dron(buffer)
 }

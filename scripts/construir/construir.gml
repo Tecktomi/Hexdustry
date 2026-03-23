@@ -77,7 +77,12 @@ function construir(index, dir, mx, my, enemigo = false, server = false){
 			return null_edificio
 		if in(index, id_tunel, id_tunel_salida) and build_able and build_target.index = id_tunel
 			index = id_tunel_salida
-		edificio = add_edificio(index, dir, mx, my, enemigo, server)
+		if online and not server{
+			server_add_edificio(real(index), real(dir), real(mx), real(my), enemigo)
+			if not servidor
+				return null_edificio
+		}
+		edificio = add_edificio(index, dir, mx, my, enemigo)
 		//Algoritmo link de tuneles
 		if in(index, id_tunel, id_tunel_salida){
 			build_able = false

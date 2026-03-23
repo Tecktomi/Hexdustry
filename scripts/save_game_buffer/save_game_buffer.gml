@@ -1,5 +1,6 @@
 function save_game_buffer(buffer){
 	with control{
+		buffer_write(buffer, buffer_u32, FILE_VERSION)
 		buffer_write(buffer, buffer_s8, mapa)
 		if mapa = -1{
 			buffer_write(buffer, buffer_u32, seed)
@@ -7,6 +8,8 @@ function save_game_buffer(buffer){
 		}
 		buffer_write(buffer, buffer_u32, timer)
 		buffer_write(buffer, buffer_u32, oleadas_timer)
+		buffer_write(buffer, buffer_u32, oleadas_tiempo)
+		buffer_write(buffer, buffer_u32, oleadas_tiempo_primera)
 		//Filtrar Edificios
 		var len = array_length(edificios_totales), b = 0
 		for(var a = 0; a < len; a++){

@@ -5,6 +5,11 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			exit
 		}
 		var index = edificio.index, pre_vida = edificio.vida, aa = edificio.a, bb = edificio.b, enemigo = edificio.enemigo
+		if online and not server{
+			server_delete_edificio(aa, bb, destruccion)
+			if not servidor
+				exit
+		}
 		edificio.vida = 0
 		if index = id_nucleo and not enemigo{
 			array_remove(nucleos, edificio)
@@ -437,8 +442,6 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			show_menu = false
 			show_menu_build = null_edificio
 		}
-		if online and not server
-			server_delete_edificio(aa, bb, destruccion)
 		delete(edificio)
 	}
 }

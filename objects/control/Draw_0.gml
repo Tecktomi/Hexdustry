@@ -54,6 +54,15 @@ if menu = 0{
 			dificultad = -1
 		}
 	}
+	if file_exists("last_save.save"){
+		ypos += text_y * 1.2
+		if draw_boton(room_width / 2, ypos, L.continuar, ui_verde){
+			var buffer = buffer_create(4096, buffer_grow, 1)
+			buffer = buffer_load("last_save.save")
+			if not load_game_buffer(buffer)
+				show_message("Error, archivo obsoleto")
+		}
+	}
 	ypos += text_y * 2
 	if draw_boton(room_width / 2, ypos, L.menu_tutorial, ui_verde)
 		menu = 4
@@ -339,7 +348,8 @@ if menu = 0{
 				if draw_sprite_boton(partidas_png[a],, xpos, ypos, 96, 96, 1){
 					var buffer = buffer_create(4096, buffer_grow, 1)
 					buffer = buffer_load("Saves/" + partidas[a])
-					load_game_buffer(buffer)
+					if not load_game_buffer(buffer)
+						show_message("Error, archivo obsoleto")
 				}
 				if draw_sprite_boton(spr_basura,, xpos - 10, ypos - 30,,, 1){
 					file_delete("Saves/" + temp_text + ".png")
@@ -1030,7 +1040,7 @@ if pausa = 1{
 						open_server()
 				}
 				else
-					draw_boton(a, ypos, $"IP: {server}", ui_verde)
+					draw_boton(a, ypos, $"{array_length(server_jugadores)} jugadores", ui_verde)
 				ypos += 40
 				if guardado
 					draw_boton(a, ypos, "Guardado", ui_verde)
@@ -1053,6 +1063,12 @@ if pausa = 1{
 	if draw_boton(a, ypos, L.salir, ui_rojo){
 		clear_edit()
 		if menu = 1{
+			if os_browser = browser_not_a_browser and not mapa_editado{
+				var buffer = buffer_create(4096, buffer_grow, 1)
+				save_game_buffer(buffer)
+				buffer_save(buffer, "last_save.save")
+				buffer_delete(buffer)
+			}
 			menu = 0
 			if server != -1{
 				network_destroy(server)
@@ -1711,13 +1727,12 @@ if show_menu{
 	}
 }
 //Terreno bajo el mouse
-var temp_complex_mouse = xytoab(xmouse, ymouse), mx = temp_complex_mouse.a, my = temp_complex_mouse.b, outside = false
+var temp_complex_mouse = xytoab(xmouse, ymouse), mx = temp_complex_mouse.a, my = temp_complex_mouse.b, outside = false, prev_change = false
 if mx < 0 or my < 0 or mx >= xsize or my >= ysize{
 	outside = true
 	mx = clamp(mx, 0, xsize - 1)
 	my = clamp(my, 0, ysize - 1)
 }
-var prev_change = false
 if mx != prev_x or my != prev_y{
 	prev_x = mx
 	prev_y = my
@@ -3100,7 +3115,7 @@ if build_index > 0 and win = 0{
 					}
 					if mouse_check_button_pressed(mb_left) and flag_camino and comprable and (not edificio_bool[# mx, my] or (build_index = id_cruce and edificio_camino[edificio_id[# mx, my].index])){
 						var temp_edificio = construir(build_index, build_dir, mx, my, build_enemigo)
-						if grafic_array_dron_encima[temp_edificio.index]{
+						if temp_edificio != null_edificio and grafic_array_dron_encima[temp_edificio.index]{
 							array_copy(temp_edificio.inputs_carga, 0, build_array_edificios_input, 0, array_length(build_array_edificios_input))
 							for(var a = array_length(temp_edificio.inputs_carga) - 1; a >= 0; a--){
 								var temp_edificio_2 = temp_edificio.inputs_carga[a]
@@ -3152,28 +3167,51 @@ if menu = 1{
 	if pausa = 0 or online{
 		var frame_time = min(delta_time / 1_000_000, 0.25)
 		acumulator += frame_time
+		if online and not servidor and timer + LAG < server_timer
+			acumulator++
 		for(ticks = 0; (acumulator >= LOGIC_DT and ticks < 5) or ticks = 0; ticks++){
-			acumulator -= LOGIC_DT
-			timer++
-			if win = 0 and (timer mod 3600) = 0{
-				var temp_array_real = array_create(rss_max, 0)
-				array_copy(temp_array_real, 0, recursos_obtenidos_time_temp, 0, rss_max)
-				for(var a = 0; a < rss_max; a++)
-					recursos_obtenidos[a] += recursos_obtenidos_time_temp[a]
-				array_push(recursos_obtenidos_time, temp_array_real)
-				recursos_obtenidos_time_temp = array_create(rss_max, 0)
-				array_push(energia_producida, energia_producida_time)
-				energia_producida_time = 0
-				array_push(energia_consumida, energia_consumida_time)
-				energia_consumida_time = 0
-				array_push(energia_perdida, energia_perdida_time)
-				if os_browser = browser_not_a_browser and not mapa_editado{
-					energia_perdida_time = 0
-					var buffer = buffer_create(4096, buffer_grow, 1)
-					save_game_buffer(buffer)
-					buffer_save(buffer, "last_save.save")
-					buffer_delete(buffer)
+			if online and not servidor and timer + LAG > server_timer
+				break
+			//Input multijugador
+			if online and not servidor
+				for(var a = array_length(cambios) - 1; a >= 0; a--){
+					var cambio = cambios[a]
+					if cambio.step <= timer{
+						array_delete(cambios, a, 1)
+						if cambio.tipo = 0
+							construir(cambio.data.index, cambio.data.dir, cambio.data.a, cambio.data.b, cambio.data.enemigo, true)
+						else if cambio.tipo = 1
+							delete_edificio(edificio_id[# cambio.data.a, cambio.data.b], cambio.data.destruccion, true)
+						else if cambio.tipo = 2
+							set_edificio(cambio.data.mode, cambio.data.select, edificio_id[# cambio.data.a, cambio.data.b], true)
+						else if cambio.tipo = 3
+							mover_dron(drones[cambio.data.index], cambio.data.x, cambio.data.y, true)
+					}
 				}
+			acumulator -= LOGIC_DT
+			if win = 0{
+				if (++timer mod 3600) = 0{
+					var temp_array_real = array_create(rss_max, 0)
+					array_copy(temp_array_real, 0, recursos_obtenidos_time_temp, 0, rss_max)
+					for(var a = 0; a < rss_max; a++)
+						recursos_obtenidos[a] += recursos_obtenidos_time_temp[a]
+					array_push(recursos_obtenidos_time, temp_array_real)
+					recursos_obtenidos_time_temp = array_create(rss_max, 0)
+					array_push(energia_producida, energia_producida_time)
+					energia_producida_time = 0
+					array_push(energia_consumida, energia_consumida_time)
+					energia_consumida_time = 0
+					array_push(energia_perdida, energia_perdida_time)
+					energia_perdida_time = 0
+					if os_browser = browser_not_a_browser and not mapa_editado{
+						var buffer = buffer_create(4096, buffer_grow, 1)
+						save_game_buffer(buffer)
+						buffer_save(buffer, "last_save.save")
+						buffer_delete(buffer)
+					}
+				}
+				if online and servidor and (timer mod 10)
+					server_sync_timer()
 			}
 			//Ciclo edificios
 			for(var a = array_length(edificios_activos) - 1; a >= 0; a--){
@@ -4137,7 +4175,7 @@ if menu = 1{
 			draw_set_halign(fa_center)
 			draw_text(room_width / 2, 100, (win mod 10) = 1 ? L.win_victoria : L.win_derrota)
 			draw_set_font(font_normal)
-			var xpos = room_width / 2, ypos = 200, sec = floor(--timer / 60)
+			var xpos = room_width / 2, ypos = 200, sec = floor(timer / 60)
 			//Info general
 			if win < 10{
 				ypos = draw_text_ypos(xpos, ypos, $"{L.win_tiempo}: {sec >= 60 ? string(floor(sec / 60)) + "m " : ""}{sec mod 60}s")
