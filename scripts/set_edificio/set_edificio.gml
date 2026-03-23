@@ -1,6 +1,13 @@
-function set_edificio(mode, select, edificio = control.null_edificio){
+function set_edificio(mode, select, edificio = control.null_edificio, server = false){
 	with control{
+		if edificio = null_edificio or edificio.vida <= 0
+			exit
 		var index = edificio.index
+		if online and not server{
+			server_set_edificio(mode, select, edificio)
+			if not servidor
+				exit
+		}
 		//Cambiar modo
 		if in(index, id_selector, id_overflow, id_embotelladora) and edificio.mode != mode{
 			edificio.mode = bool(mode)

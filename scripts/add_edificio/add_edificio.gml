@@ -1,4 +1,4 @@
-function add_edificio(index, dir, a, b, enemigo = false, server = false){
+function add_edificio(index, dir, a, b, enemigo = false){
 	with control{
 		if edificio_bool[# a, b]
 			exit
@@ -601,8 +601,6 @@ function add_edificio(index, dir, a, b, enemigo = false, server = false){
 		}
 		ds_list_destroy(temp_list_size)
 		ds_list_destroy(temp_list_arround)
-		if online and not server
-			server_add_edificio(index, dir, a, b, enemigo)
 		return edificio
 	}
 }

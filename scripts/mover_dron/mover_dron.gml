@@ -1,5 +1,10 @@
-function mover_dron(dron = control.null_dron, x, y){
+function mover_dron(dron = control.null_dron, x, y, server = false){
 	with control{
+		if online and not server{
+			server_mover_dron(x, y, dron)
+			if not servidor
+				exit
+		}
 		dron.modo = 1
 		if dron.index = idd_bombardero{
 			dron.move_xmove = x

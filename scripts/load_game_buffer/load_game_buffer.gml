@@ -1,5 +1,15 @@
 function load_game_buffer(buffer){
 	with control{
+		var version = buffer_read(buffer, buffer_u32)
+		if version != FILE_VERSION{
+			/* Retrocompatibilidad
+			if version = 2026_03_23{
+				...
+				version = 2026_03_24
+			}
+			*/
+			return false
+		}
 		mapa = buffer_read(buffer, buffer_s8)
 		if mapa = -1{
 			seed = buffer_read(buffer, buffer_u32)
@@ -11,6 +21,8 @@ function load_game_buffer(buffer){
 		game_start()
 		timer = buffer_read(buffer, buffer_u32)
 		oleadas_timer = buffer_read(buffer, buffer_u32)
+		oleadas_tiempo = buffer_read(buffer, buffer_u32)
+		oleadas_tiempo_primera = buffer_read(buffer, buffer_u32)
 		//Construir edificios
 		var len = real(buffer_read(buffer, buffer_u16))
 		var temp_edificios_target = array_create(len, -1)
@@ -117,5 +129,6 @@ function load_game_buffer(buffer){
 			if a < 65535
 				municion.target_build = edificios_totales[a]
 		}
+		return true
 	}
 }

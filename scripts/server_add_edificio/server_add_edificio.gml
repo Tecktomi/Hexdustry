@@ -1,7 +1,8 @@
 function server_add_edificio(index, dir, a, b, enemigo){
 	with control{
-		var buffer = buffer_create(256, buffer_grow, 1)
+		var buffer = buffer_create(8, buffer_grow, 1)
 		buffer_write(buffer, buffer_u8, 3) //Add edificio
+		buffer_write(buffer, buffer_u32, real(timer))
 		buffer_write(buffer, buffer_u8, real(index))
 		buffer_write(buffer, buffer_u8, real(dir))
 		buffer_write(buffer, buffer_u16, real(a))

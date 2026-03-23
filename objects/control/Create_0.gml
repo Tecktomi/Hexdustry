@@ -10,9 +10,9 @@ else{
 	font_titulo = ft_titulo_android
 }
 draw_set_font(font_normal)
+FILE_VERSION = 2026_03_23
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
-ini_write_string("Global", "version", "19_03_2026")
 medallas = array_create(6)
 default_maps = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas", "Asalto"]
 for(var a = 0; a < array_length(default_maps); a++){
@@ -287,6 +287,14 @@ L = {}
 	servidor = false
 	server_jugadores = array_create(0)
 	mapa_editado = false
+	null_cambio = {
+		step : 0,
+		tipo : 0,
+		data : {}
+	}
+	cambios = array_create(0, null_cambio)
+	server_timer = 0
+	LAG = 20
 #endregion
 #region UI
 	ui_fondo = #282828

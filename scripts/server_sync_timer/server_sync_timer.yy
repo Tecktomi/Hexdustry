@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"server_sync_timer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"server_sync_timer",
+  "parent":{
+    "name":"SERVER",
+    "path":"folders/SCRIPTS/SERVER.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
