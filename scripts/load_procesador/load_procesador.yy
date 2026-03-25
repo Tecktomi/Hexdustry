@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"load_procesador",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"load_procesador",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

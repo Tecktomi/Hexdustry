@@ -28,6 +28,8 @@ function save_game_buffer(buffer){
 			buffer_write(buffer, buffer_u16, real(edificio.a))
 			buffer_write(buffer, buffer_u16, real(edificio.b))
 			buffer_write(buffer, buffer_bool, real(edificio.enemigo))
+			if edificio.index = id_procesador
+				save_procesador(buffer, edificio)
 		}
 		//Estado edificios
 		for(var a = 0; a < len; a++)

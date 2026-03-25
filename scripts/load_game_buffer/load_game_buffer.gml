@@ -32,7 +32,9 @@ function load_game_buffer(buffer){
 			var a = real(buffer_read(buffer, buffer_u16))
 			var b = real(buffer_read(buffer, buffer_u16))
 			var enemigo = bool(buffer_read(buffer, buffer_bool))
-			construir(index, dir, a, b, enemigo, true)
+			var edificio = construir(index, dir, a, b, enemigo, true)
+			if index = id_procesador
+				load_procesador(buffer, edificio)
 		}
 		//Cargar estado
 		for(var a = 0; a < len; a++)
