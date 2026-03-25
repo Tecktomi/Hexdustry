@@ -102,6 +102,7 @@ texto victoria="Todos los objetivos cumplidos"
 59="0.000000"
 60="0.000000"
 61="0.000000"
+62="0.000000"
 [Terreno]
 0,0="4.000000"
 0,1="4.000000"
