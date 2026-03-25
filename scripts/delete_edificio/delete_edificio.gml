@@ -5,8 +5,8 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			exit
 		}
 		var index = edificio.index, pre_vida = edificio.vida, aa = edificio.a, bb = edificio.b, enemigo = edificio.enemigo
-		if online and not server{
-			server_delete_edificio(aa, bb, destruccion)
+		if online and not server and not destruccion{
+			server_delete_edificio(aa, bb)
 			if not servidor
 				exit
 		}
@@ -47,11 +47,12 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		edificios_counter[index]--
 		array_disorder_remove(edificios_totales, edificio, 12)
 		ds_grid_destroy(edificio.coordenadas_dis)
-		if destruccion
+		if destruccion{
 			if enemigo
 				edificios_destruidos++
 			else
 				edificios_perdidos++
+		}
 		if index = id_puerto_de_carga and edificio.link != null_edificio{
 			if edificio.receptor
 				array_disorder_remove(puerto_carga_array, edificio, 2)
@@ -390,7 +391,8 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			nuclear_y = ypos
 			nuclear_step = 300
 		}
-		if destruccion and edificio.carga[idr_explosivo] > 0
+		//Destrucción en cadena
+		if destruccion and (edificio.carga[idr_explosivo] > 0 or (edificio_flujo[index] and edificio.flujo.liquido = idl_petroleo and edificio.flujo.almacen > 0))
 			array_push(explosion_queue, {
 				x : edificio.x,
 				y : edificio.y,

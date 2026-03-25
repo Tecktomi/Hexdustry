@@ -5,29 +5,29 @@ if type = network_type_data{
     var msg = buffer_read(buffer, buffer_u8)
 	if msg != 8
 		show_debug_message($"{msg}")
-	if msg = 1{
+	if msg = 1{ //Handle Hello
 		var temp_socket = async_load[? "id"]
 		array_push(server_jugadores, temp_socket)
 		handle_hello(temp_socket, buffer)
 	}
-	else if msg = 2
+	else if msg = 2 //Handle Welcome
 		handle_welcome(buffer)
-	else if msg = 3
+	else if msg = 3 //Handle add edificio
 		handle_add_edificio(buffer)
-	else if msg = 4
+	else if msg = 4 //Handle delete edificio
 		handle_delete_edificio(buffer)
-    else if msg = 5 and servidor{
+    else if msg = 5 and servidor{ //Handle buscar servidor
 		var reply = buffer_create(256, buffer_grow, 1)
 		buffer_write(reply, buffer_u8, 6)
 		network_send_udp(udp_socket, async_load[? "ip"], async_load[? "port"], reply, buffer_tell(reply))
 		buffer_delete(reply)
 	}
-	else if msg = 6
+	else if msg = 6 //Handle respuesta buscar servidor
 		server_ip = async_load[? "ip"]
-	else if msg = 7
+	else if msg = 7 //Handle set edificio
 		handle_set_edificio(buffer)
-	else if msg = 8
+	else if msg = 8 //Handle timer
 		handle_sync_timer(buffer)
-	else if msg = 9
+	else if msg = 9 //Handle mover dron
 		handle_mover_dron(buffer)
 }

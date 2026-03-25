@@ -409,14 +409,14 @@ function set_idioma(){
 			variable_struct_set(L, "pausa_animacion", "terrain animations")
 			variable_struct_set(L, "pausa_continuar", "Press Esc to continue")
 			variable_struct_set(L, "pausa_desactivar", "Disable")
-			variable_struct_set(L, "pausa_enciclopedia", "\"Y\" to open the encyclopedia")
+			variable_struct_set(L, "pausa_enciclopedia", "to open the encyclopedia")
 			variable_struct_set(L, "pausa_humo", "smoke")
 			variable_struct_set(L, "pausa_iluminacion", "lighting")
 			variable_struct_set(L, "pausa_info", "additional information")
-			variable_struct_set(L, "pausa_liquido", "\"I\" to view the liquid networks")
+			variable_struct_set(L, "pausa_liquido", "to view the liquid networks")
 			variable_struct_set(L, "pausa_paredes", "wall textures")
-			variable_struct_set(L, "pausa_red", "\"O\" to view the power grid")
-			variable_struct_set(L, "pausa_reparar", "\"Q\" rebuild structures")
+			variable_struct_set(L, "pausa_red", "to view the power grid")
+			variable_struct_set(L, "pausa_reparar", "rebuild structures")
 			variable_struct_set(L, "pausa_sonido", "sound")
 			variable_struct_set(L, "personalizado", "Custom")
 			planta_quimica_descripcion[0] = "Consumes Sulfated Stone and energy to produce Acid"
@@ -511,6 +511,13 @@ function set_idioma(){
 			procesador_nombres_read_data = ["eneabled", "load", "liquid type", "liquid storage", "liquid capacity", "liquido production", "liquid consume", "energy storage", "energy capacity", "energy production", "energy consume"]
 			procesador_nombres_draw = ["Clear", "Color grb", "Color hsv", "Rectangle", "Line", "Triangle", "Circle", "Text", "Draw flush"]
 			variable_struct_set(L, "continuar", "Continue")
+			variable_struct_set(L, "multijugador", "Multiplayer")
+			variable_struct_set(L, "cargar_partida", "Load Game")
+			variable_struct_set(L, "guardar", "Save")
+			variable_struct_set(L, "jugadores", "Players")
+			variable_struct_set(L, "controles", "Controls")
+			CONTROL_NOMBRE = ["Left", "Right", "Up", "Down", "Pause", "Menu", "Toggle Sound", "Toggle Waves", "Hide Interface", "Show Information", "Show Vectors",
+				"Encyclopedia", "Rotate Building", "Rebuild Buildings", "Show Networks", "Show Flows"]
 		}
 		//Español
 		else if idioma = 1{
@@ -918,14 +925,14 @@ function set_idioma(){
 			variable_struct_set(L, "pausa_animacion", "animaciones del terreno")
 			variable_struct_set(L, "pausa_continuar", "Presiona Esc para continuar")
 			variable_struct_set(L, "pausa_desactivar", "Desactivar")
-			variable_struct_set(L, "pausa_enciclopedia", "\"Y\" para abrir la enciclopedia")
+			variable_struct_set(L, "pausa_enciclopedia", "para abrir la enciclopedia")
 			variable_struct_set(L, "pausa_humo", "humo")
 			variable_struct_set(L, "pausa_iluminacion", "la iluminación")
 			variable_struct_set(L, "pausa_info", "información adicional")
-			variable_struct_set(L, "pausa_liquido", "\"I\" para ver las redes de líquidos")
+			variable_struct_set(L, "pausa_liquido", "para ver las redes de líquidos")
 			variable_struct_set(L, "pausa_paredes", "texturas de paredes")
-			variable_struct_set(L, "pausa_red", "\"O\" para ver las redes eléctricas")
-			variable_struct_set(L, "pausa_reparar", "\"Q\" para reconstruir edificios")
+			variable_struct_set(L, "pausa_red", "para ver las redes eléctricas")
+			variable_struct_set(L, "pausa_reparar", "para reconstruir edificios")
 			variable_struct_set(L, "pausa_sonido", "sonido")
 			variable_struct_set(L, "personalizado", "Personalizado")
 			planta_quimica_descripcion[0] = "Consume Piedra Sulfatada y energía para producir Ácido"
@@ -1020,6 +1027,13 @@ function set_idioma(){
 			procesador_nombres_read_data = ["activado", "carga", "líquido tipo", "líquido almacen", "líquido capacidad", "líquido produccion", "líquido consumo", "energía almacenada", "energía capacidad", "energía producida", "energía consumida"]
 			procesador_nombres_draw = ["Limpiar", "Color grb", "Color hsv", "Rectángulo", "Línea", "Triángulo", "Círculo", "Texto", "Imprimir"]
 			variable_struct_set(L, "continuar", "Continuar")
+			variable_struct_set(L, "multijugador", "Multijugador")
+			variable_struct_set(L, "cargar_partida", "Cargar Partida")
+			variable_struct_set(L, "guardar", "Guardar")
+			variable_struct_set(L, "jugadores", "Jugadores")
+			variable_struct_set(L, "controles", "Controles")
+			CONTROL_NOMBRE = ["Izquierda", "Derecha", "Arriba", "Abajo", "Pausa", "Menú", "Activar Sonido", "Activar Oleadas", "Esconder Interfaz", "Mostrar Información", "Mostrar vectores",
+				"Enciclopedia", "Rotar edificio", "Reconstruir edificios", "Mostrar Redes", "Mostrar Flujos"]
 		}
 		//Русский
 		else if idioma = 2{
@@ -1426,14 +1440,14 @@ function set_idioma(){
 			variable_struct_set(L, "pausa_animacion", "анимации местности")
 			variable_struct_set(L, "pausa_continuar", "Нажмите Esc чтобы продолжить")
 			variable_struct_set(L, "pausa_desactivar", "Выключить")
-			variable_struct_set(L, "pausa_enciclopedia", "\"Y\" чтобы открыть энциклопедию")
+			variable_struct_set(L, "pausa_enciclopedia", "чтобы открыть энциклопедию")
 			variable_struct_set(L, "pausa_humo", "дым")
 			variable_struct_set(L, "pausa_iluminacion", "освещение")
 			variable_struct_set(L, "pausa_info", "дополнительная информация")
-			variable_struct_set(L, "pausa_liquido", "\"I\" чтобы увидеть сети жидкости")
+			variable_struct_set(L, "pausa_liquido", "чтобы увидеть сети жидкости")
 			variable_struct_set(L, "pausa_paredes", "текстуры стен")
-			variable_struct_set(L, "pausa_red", "\"O\" чтобы увидеть энергосеть")
-			variable_struct_set(L, "pausa_reparar", "\"Q\" для восстановления зданий")
+			variable_struct_set(L, "pausa_red", "чтобы увидеть энергосеть")
+			variable_struct_set(L, "pausa_reparar", "для восстановления зданий")
 			variable_struct_set(L, "pausa_sonido", "звук")
 			variable_struct_set(L, "personalizado", "Пользовательская")
 			planta_quimica_descripcion[0] = "Потребляет сульфатированный камень и энергию для производства кислоты"
@@ -1528,6 +1542,13 @@ function set_idioma(){
 			procesador_nombres_read_data = ["включено", "заряд", "тип жидкости", "жидкости хранится", "ёмкость жидкости", "производство жидкости", "потребление жидкости", "энергии хранится", "ёмкость энергии", "энергии произведено", "энергии потреблено"]
 			procesador_nombres_draw = ["Очистить", "Цвет RGB", "Цвет HSV", "Прямоугольник", "Линия", "Треугольник", "Круг", "Текст", "Печать"]
 			variable_struct_set(L, "continuar", "Продолжать")
+			variable_struct_set(L, "multijugador", "Мультиплеер")
+			variable_struct_set(L, "cargar_partida", "Загрузить игру")
+			variable_struct_set(L, "guardar", "Сохранять")
+			variable_struct_set(L, "jugadores", "Игроки")
+			variable_struct_set(L, "controles", "Элементы управления")
+			CONTROL_NOMBRE = ["Влево", "Вправо", "Вверх", "Вниз", "Пауза", "Меню", "Вкл/выкл звук", "Вкл/выкл волны", "Скрыть интерфейс", "Показать информацию", "Показать векторы",
+				"Энциклопедия", "Повернуть здание", "Перестроить здания", "Показать сети", "Показать потоки"]
 		}
 		//?
 	}

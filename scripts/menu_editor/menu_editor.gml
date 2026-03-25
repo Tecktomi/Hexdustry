@@ -287,7 +287,7 @@ function menu_editor(){
 						draw_circle(xpos, ypos, 18, false)
 						draw_set_color(c_black)
 						draw_circle(xpos, ypos, 18, true)
-						if draw_sprite_boton(edificio_sprite[a],, xpos - 15, ypos - 15){
+						if draw_sprite_boton(edificio_sprite[a],, xpos - 15, ypos - 15, 40, 40){
 							if not mision_edificios[a]{
 								mision_edificios[a] = true
 								edificio_tecnologia[a] = true
@@ -303,7 +303,6 @@ function menu_editor(){
 								edificio_tecnologia[a] = false
 								edificio_tecnologia_desbloqueable[a] = false
 							}
-						
 						}
 						ypos += 40
 						if (++b mod 12) = 0{

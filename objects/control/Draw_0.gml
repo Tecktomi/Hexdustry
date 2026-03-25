@@ -74,7 +74,7 @@ if menu = 0{
 	ypos += text_y * 2
 	//Configuración online
 	if os_browser = browser_not_a_browser{
-		if draw_boton(room_width / 2, ypos, "Multijugador"){
+		if draw_boton(room_width / 2, ypos, L.multijugador){
 			input_layer = 1
 			get_file = 4
 		}
@@ -317,7 +317,7 @@ if menu = 0{
 					get_file = 1
 					scan_files_save()
 				}
-				if draw_boton(room_width / 2 - 200, ypos + text_y, "Cargar partida", ui_azul,,,, 1){
+				if draw_boton(room_width / 2 - 200, ypos + text_y, L.cargar_partida, ui_azul,,,, 1){
 					if not nucleo.vivo
 						game_restart()
 					get_file = 3
@@ -508,7 +508,7 @@ if in(menu, 1, 3){
 			}
 		}
 	//Reconstruir
-	if keyboard_check(ord("Q"))
+	if keyboard_check(CONTROL_REPARAR)
 		for(var a = mina; a < maxa; a++)
 			for(var b = minb; b < maxb; b++)
 				if repair_id[# a, b] >= 0{
@@ -954,10 +954,10 @@ if in(menu, 1, 3){
 			}
 			draw_text_background(mouse_x + 20, mouse_y, sprite_boton_text)
 		}
-		if keyboard_check_pressed(vk_escape) or keyboard_check_pressed(ord("Y")) or mouse_check_button_pressed(mb_right) or (mouse_check_button_pressed(mb_left) and (mouse_x < 100 or mouse_y < 100 or mouse_x > room_width - 100 or mouse_y > room_height - 100)){
+		if keyboard_check_pressed(vk_escape) or keyboard_check_pressed(CONTROL_ENCICLOPEDIA) or mouse_check_button_pressed(mb_right) or (mouse_check_button_pressed(mb_left) and (mouse_x < 100 or mouse_y < 100 or mouse_x > room_width - 100 or mouse_y > room_height - 100)){
 			mouse_clear(mouse_lastbutton)
 			keyboard_clear(vk_escape)
-			keyboard_clear(ord("K"))
+			keyboard_clear(CONTROL_ENCICLOPEDIA)
 			enciclopedia = false
 		}
 		update_cursor()
@@ -990,113 +990,189 @@ if pausa = 1{
 	draw_set_font(font_titulo)
 	draw_text(room_width / 2, 100, L.pausa)
 	draw_set_font(font_normal)
-	draw_text(room_width / 2, 150,	$"{L.pausa_continuar}\n{L.pausa_red}\n{L.pausa_liquido}\n{L.pausa_enciclopedia}\n{L.pausa_reparar}")
-	draw_set_halign(fa_left)
-	var a = room_width / 2, ypos = 300
-	draw_set_halign(fa_center)
-	if draw_boton(a, ypos, (info ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_info}", info ? ui_verde : ui_rojo){
-		info = not info
-		ini_open("settings.ini")
+	var xpos = room_width / 2, ypos = 300
+	//Ajustes generales
+	if get_file = 0{
+		draw_text(room_width / 2, 150,	$"{L.pausa_continuar}\n\"{chr(CONTROL_REDES)}\" {L.pausa_red}\n\"{chr(CONTROL_FLUJO)}\" {L.pausa_liquido}\n\"{chr(CONTROL_ENCICLOPEDIA)}\" {L.pausa_enciclopedia}\n\"{chr(CONTROL_REPARAR)}\" {L.pausa_reparar}")
+		if draw_boton(xpos, ypos, L.controles, ui_azul)
+			get_file = 1
+		ypos += text_y * 1.2
+		if draw_boton(xpos, ypos, (info ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_info}", info ? ui_verde : ui_rojo){
+			info = not info
+			ini_open("settings.ini")
 			ini_write_real("", "info", info)
-		ini_close()
-	}
-	ypos += 40
-	if draw_boton(a, ypos, (grafic_tile_animation ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_animacion}", grafic_tile_animation ? ui_verde : ui_rojo){
-		grafic_tile_animation = not grafic_tile_animation
-		ini_open("settings.ini")
-			ini_write_real("", "grafic_tile_animation", grafic_tile_animation)
-		ini_close()
-	}
-	ypos += 40
-	if draw_boton(a, ypos, (grafic_luz ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_iluminacion}", grafic_luz ? ui_verde : ui_rojo){
-		grafic_luz = not grafic_luz
-		ini_open("settings.ini")
-			ini_write_real("", "grafic_luz", grafic_luz)
-		ini_close()
-	}
-	ypos += 40
-	if draw_boton(a, ypos, (grafic_humo ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_humo}", grafic_humo ? ui_verde : ui_rojo){
-		grafic_humo = not grafic_humo
-		ini_open("settings.ini")
-			ini_write_real("", "grafic_humo", grafic_humo)
-		ini_close()
-	}
-	ypos += 40
-	if draw_boton(a, ypos, (grafic_hideui ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_UI}", grafic_hideui ? ui_rojo : ui_verde)
-		grafic_hideui = not grafic_hideui
-	ypos += 40
-	if draw_boton(a, ypos, (sonido ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_sonido}", sonido ? ui_verde : ui_rojo)
-		sound_change()
-	ypos += 40
-	if draw_boton(a, ypos, (grafic_energia ? L.pausa_desactivar : L.pausa_activar) + $" {L.red_energia}", grafic_energia ? ui_verde : ui_rojo)
-		grafic_energia = not grafic_energia
-	//Guardar / Abrir en LAN
-	if menu = 1{
+			ini_close()
+		}
 		ypos += 40
-		if os_browser = browser_not_a_browser{
-			if not mapa_editado{
-				if server = -1 and menu = 1{
-					if draw_boton(a, ypos, L.abrir_en_LAN, ui_azul)
-						open_server()
+		if draw_boton(xpos, ypos, (grafic_tile_animation ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_animacion}", grafic_tile_animation ? ui_verde : ui_rojo){
+			grafic_tile_animation = not grafic_tile_animation
+			ini_open("settings.ini")
+				ini_write_real("", "grafic_tile_animation", grafic_tile_animation)
+			ini_close()
+		}
+		ypos += 40
+		if draw_boton(xpos, ypos, (grafic_luz ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_iluminacion}", grafic_luz ? ui_verde : ui_rojo){
+			grafic_luz = not grafic_luz
+			ini_open("settings.ini")
+				ini_write_real("", "grafic_luz", grafic_luz)
+			ini_close()
+		}
+		ypos += 40
+		if draw_boton(xpos, ypos, (grafic_humo ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_humo}", grafic_humo ? ui_verde : ui_rojo){
+			grafic_humo = not grafic_humo
+			ini_open("settings.ini")
+				ini_write_real("", "grafic_humo", grafic_humo)
+			ini_close()
+		}
+		ypos += 40
+		if draw_boton(xpos, ypos, (grafic_hideui ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_UI}", grafic_hideui ? ui_rojo : ui_verde)
+			grafic_hideui = not grafic_hideui
+		ypos += 40
+		if draw_boton(xpos, ypos, (sonido ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_sonido}", sonido ? ui_verde : ui_rojo)
+			sound_change()
+		ypos += 40
+		if draw_boton(xpos, ypos, (grafic_energia ? L.pausa_desactivar : L.pausa_activar) + $" {L.red_energia}", grafic_energia ? ui_verde : ui_rojo)
+			grafic_energia = not grafic_energia
+		//Guardar / Abrir en LAN
+		if menu = 1{
+			ypos += 40
+			if os_browser = browser_not_a_browser{
+				if not mapa_editado{
+					if server = -1 and menu = 1{
+						if draw_boton(xpos, ypos, L.abrir_en_LAN, ui_azul)
+							open_server()
+					}
+					else
+						draw_boton(xpos, ypos, $"{array_length(server_jugadores)} {L.jugadores}", ui_verde)
+					ypos += 40
+					if guardado
+						draw_boton(xpos, ypos, "Guardado", ui_verde)
+					else if draw_boton(xpos, ypos, L.guardar, ui_azul){
+						guardado = true
+						var buffer = buffer_create(4096, buffer_grow, 1)
+						save_game_buffer(buffer)
+						var temp_text = $"Saves/{string_delete(string(current_year), 0, 2)}{current_month}{current_day}_{current_hour}{current_minute}"
+						buffer_save(buffer, $"{temp_text}.save")
+						buffer_delete(buffer)
+						var temp_sprite = minimapa(terreno)
+						sprite_save(temp_sprite, 0, $"{temp_text}.png")
+					}
 				}
-				else
-					draw_boton(a, ypos, $"{array_length(server_jugadores)} jugadores", ui_verde)
-				ypos += 40
-				if guardado
-					draw_boton(a, ypos, "Guardado", ui_verde)
-				else if draw_boton(a, ypos, "Guardar", ui_azul){
-					guardado = true
+			}
+			else
+				draw_boton(xpos, ypos, L.descargar_para_jugar_en_LAN, ui_gris)
+		}
+		ypos += 40
+		if draw_boton(xpos, ypos, L.salir, ui_rojo){
+			clear_edit()
+			if menu = 1{
+				if os_browser = browser_not_a_browser and not mapa_editado{
 					var buffer = buffer_create(4096, buffer_grow, 1)
 					save_game_buffer(buffer)
-					var temp_text = $"Saves/{string_delete(string(current_year), 0, 2)}{current_month}{current_day}_{current_hour}{current_minute}"
-					buffer_save(buffer, $"{temp_text}.save")
+					buffer_save(buffer, "last_save.save")
 					buffer_delete(buffer)
-					var temp_sprite = minimapa(terreno)
-					sprite_save(temp_sprite, 0, $"{temp_text}.png")
 				}
+				menu = 0
+				if server != -1{
+					network_destroy(server)
+					server = -1
+					servidor = false
+				}
+				exit
 			}
+			else if menu = 3{
+				menu = 2
+				build_index = -1
+				build_enemigo = false
+				draw_set_halign(fa_left)
+				draw_set_color(color)
+				exit
+			}
+			pausa = 0
+			cheat = false
+			exit
 		}
-		else
-			draw_boton(a, ypos, L.descargar_para_jugar_en_LAN, ui_gris)
 	}
-	ypos += 40
-	if draw_boton(a, ypos, L.salir, ui_rojo){
-		clear_edit()
-		if menu = 1{
-			if os_browser = browser_not_a_browser and not mapa_editado{
-				var buffer = buffer_create(4096, buffer_grow, 1)
-				save_game_buffer(buffer)
-				buffer_save(buffer, "last_save.save")
-				buffer_delete(buffer)
-			}
-			menu = 0
-			if server != -1{
-				network_destroy(server)
-				server = -1
-				servidor = false
-			}
-			exit
+	//Controles
+	else{
+		ypos = 200
+		for(var a = 0; a < 15; a++){
+			var key = CONTROL_USADAS[a]
+			if key = vk_space
+				var char = "Espacio"
+			else if key = vk_escape
+				char = "Escape"
+			else if key >= vk_f1 and key <= vk_f12
+				char = $"F{chr(key - ord("p") + ord(1))}"
+			else
+				char = chr(key)
+			if draw_boton(xpos, ypos, $"{CONTROL_NOMBRE[a]} \"{char}\"")
+				get_file = 2 + a
+			ypos += text_y * 1.2
 		}
-		else if menu = 3{
-			menu = 2
-			build_index = -1
-			build_enemigo = false
-			draw_set_halign(fa_left)
-			draw_set_color(color)
-			exit
+		if get_file > 1{
+			draw_set_color(c_black)
+			draw_set_alpha(0.5)
+			draw_rectangle(0, 0, room_width, room_height, false)
+			draw_set_color(c_white)
+			draw_set_alpha(1)
+			draw_text(xpos, ypos, "PRESIONA CUALQUIER TECLA")
+			if keyboard_check_pressed(vk_anykey) and (keyboard_lastkey = CONTROL_USADAS[get_file - 2] or not array_contains(CONTROL_USADAS, keyboard_lastkey)){
+				if get_file = 2
+					CONTROL_LEFT = keyboard_lastkey
+				else if get_file = 3
+					CONTROL_RIGHT = keyboard_lastkey
+				else if get_file = 4
+					CONTROL_UP = keyboard_lastkey
+				else if get_file = 5
+					CONTROL_DOWN = keyboard_lastkey
+				else if get_file = 6
+					CONTROL_PAUSE = keyboard_lastkey
+				else if get_file = 7
+					CONTROL_MENU = keyboard_lastkey
+				else if get_file = 8
+					CONTROL_MUSIC = keyboard_lastkey
+				else if get_file = 9
+					CONTROL_WAVES = keyboard_lastkey
+				else if get_file = 10
+					CONTROL_HIDEUI = keyboard_lastkey
+				else if get_file = 11
+					CONTROL_INFO = keyboard_lastkey
+				else if get_file = 12
+					CONTROL_FLOW = keyboard_lastkey
+				else if get_file = 13
+					CONTROL_ENCICLOPEDIA = keyboard_lastkey
+				else if get_file = 14
+					CONTROL_ROTAR = keyboard_lastkey
+				else if get_file = 15
+					CONTROL_REPARAR = keyboard_lastkey
+				else if get_file = 16
+					CONTROL_REDES = keyboard_lastkey
+				else if get_file = 17
+					CONTROL_FLUJO = keyboard_lastkey
+				CONTROL_USADAS[get_file - 2] = keyboard_lastkey
+				keyboard_clear(keyboard_lastkey)
+				get_file = 1
+			}
 		}
-		pausa = 0
-		cheat = false
-		exit
 	}
 	draw_set_halign(fa_left)
 	if os_type == os_windows
-		for(a = 0; a < idiomas; a++)
+		for(var a = 0; a < idiomas; a++)
 			if draw_sprite_boton(spr_bandera, a, 20 + 80 * a, 20, 64, 48,, function(data){draw_text_background(0, 80, idioma_name[data.a])}, {a : a}){
 				idioma = a
 				set_idioma()
 			}
 	draw_set_color(color)
+	if keyboard_check_pressed(CONTROL_MENU){
+		keyboard_clear(CONTROL_MENU)
+		if get_file = 0{
+			pausa = 0
+			guardado = false
+		}
+		else if get_file = 1
+			get_file = 0
+	}
 }
 //Solo pausa
 if pausa = 2{
@@ -1443,21 +1519,10 @@ if show_menu{
 					if draw_boton(140, 160 + 30 * a, save_codes[a],,,,, 1){
 						input_layer = 0
 						get_file = 0
-						ini_open("Codes/" + save_codes[a])
-						size = ini_read_real("Largo", "", 0)
-						edificio.instruccion = array_create(size, [])
-						for(b = 0; b < size; b++){
-							var size_2 = ini_read_real("Largo", b, 0)
-							edificio.instruccion[b] = array_create(size_2)
-							for(var c = 0; c < size_2; c++){
-								var val = ini_read_string(string(b), string(c), "0")
-								if string_digits(val) = val and val != ""
-									array_set(edificio.instruccion[b], c, real(val))
-								else
-									array_set(edificio.instruccion[b], c, string(val))
-							}
-						}
-						ini_close()
+						var buffer = buffer_create(6, buffer_grow, 1)
+						buffer = buffer_load("Codes/" + save_codes[a])
+						load_procesador(buffer, edificio)
+						buffer_delete(buffer)
 						edificio.select = 0
 					}
 			}
@@ -1476,21 +1541,16 @@ if show_menu{
 				input_layer = 1
 				if save_file != "" and (draw_boton(120, 160 + 30 * array_length(save_codes), L.nuevo_archivo,,,,, 1) or keyboard_check_pressed(vk_enter)){
 					keyboard_clear(vk_enter)
-					save_file += ".code"
+					save_file += ".txt"
 					flag = true
 					input_layer = 0
 					get_file = 0
 				}
 				if flag{
-					ini_open("Codes/" + save_file)
-					ini_write_real("Largo", "", size)
-					for(var a = 0; a < size; a++){
-						var size_2 = array_length(edificio.instruccion[a])
-						ini_write_real("Largo", a, size_2)
-						for(b = 0; b < size_2; b++)
-							ini_write_string(string(a), string(b), string(edificio.instruccion[a, b]))
-					}
-					ini_close()
+					var buffer = buffer_create(6, buffer_grow, 1)
+					save_procesador(buffer, edificio)
+					buffer_save(buffer, "Codes/" + save_file)
+					buffer_delete(buffer)
 				}
 			}
 			if draw_boton(120, 120, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape){
@@ -1992,8 +2052,8 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			}
 			//Mostrar rutas de tuneles
 			if in(index, id_tunel, id_tunel_salida){
-				if keyboard_check_pressed(ord("R")) and edificio.link != null_edificio{
-					keyboard_clear(ord("R"))
+				if keyboard_check_pressed(CONTROL_ROTAR) and edificio.link != null_edificio{
+					keyboard_clear(CONTROL_ROTAR)
 					if edificio.index = 16{
 						edificio.index = 6
 						edificio.link.index = 16
@@ -2156,7 +2216,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		}
 	}
 	//Reconstruir edificios
-	else if keyboard_check(ord("Q")){
+	else if keyboard_check(CONTROL_REPARAR){
 		var b = repair_id[# mx, my], temp_text_2 = ""
 		if b > 0{
 			var comprable = true
@@ -2182,7 +2242,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		my_clic = ymouse
 		clicked = true
 	}
-	if mouse_check_button(mb_left) and clicked and build_index = 0 and not keyboard_check(ord("Q")){
+	if mouse_check_button(mb_left) and clicked and build_index = 0 and not keyboard_check(CONTROL_REPARAR){
 		draw_set_alpha(0.5)
 		draw_set_color(c_black)
 		draw_rectangle_off(mx_clic, my_clic, xmouse, ymouse, false)
@@ -2263,7 +2323,7 @@ if sonido
 		volumen[a] = 0
 #region Menú de edificios
 	var just_pressed = false
-	if mouse_check_button_pressed(mb_right) and build_index = 0 and not edificio_bool[# mx, my] and not keyboard_check(ord("Q")) and pausa != 1{
+	if mouse_check_button_pressed(mb_right) and build_index = 0 and not edificio_bool[# mx, my] and not keyboard_check(CONTROL_REPARAR) and pausa != 1{
 		mouse_clear(mb_right)
 		if build_menu = 0{
 			build_menu = 1
@@ -2369,7 +2429,7 @@ if sonido
 	}
 #endregion
 //Acceso directo
-if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastchar, "A", "D", "W", "S", " ") or cheat) and win = 0 and not show_menu{
+if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastchar, CONTROL_LEFT, CONTROL_RIGHT, CONTROL_UP, CONTROL_DOWN, " ") or cheat) and win = 0 and not show_menu{
 	for(var a = 1; a < edificio_max; a++)
 		if edificio_key[a] != "" and string_ends_with(keyboard_string, edificio_key[a]) and (cheat or edificio_tecnologia[a] or not tecnologia){
 			selected_dron = null_dron
@@ -2401,8 +2461,8 @@ if build_index > 0 and win = 0{
 	}
 	//Rotar
 	if (edificio_rotable[build_index] or edificio_size[build_index] mod 2 = 0) and not keyboard_check(vk_lcontrol){
-		if mouse_wheel_up() or keyboard_check_pressed(ord("R")){
-			keyboard_clear(ord("R"))
+		if mouse_wheel_up() or keyboard_check_pressed(CONTROL_ROTAR){
+			keyboard_clear(CONTROL_ROTAR)
 			if not edificio_rotable[build_index] and edificio_size[build_index] mod 2 = 0
 				build_dir = 5 - build_dir
 			else
@@ -3931,7 +3991,7 @@ if menu = 1{
 					}
 				}
 				else if mision_objetivo[a] = 6{
-					mision_counter += (keyboard_check(ord("A")) or keyboard_check(ord("D")) or keyboard_check(ord("W")) or keyboard_check(ord("S")))
+					mision_counter += (keyboard_check(CONTROL_RIGHT) or keyboard_check(CONTROL_LEFT) or keyboard_check(CONTROL_UP) or keyboard_check(CONTROL_DOWN))
 					if mision_counter >= mision_target_num[a]{
 						pasar_mision()
 						a++
@@ -4059,40 +4119,35 @@ if menu = 1{
 	//Input
 	if win = 0 and not show_menu{
 		if keyboard_check_pressed(vk_anykey){
-			if keyboard_check_pressed(vk_space){
-				if pausa = 2
-					pausa = 0
-				else if pausa = 0
+			if keyboard_check_pressed(CONTROL_PAUSE){
+				keyboard_clear(CONTROL_PAUSE)
+				if pausa = 0
 					pausa = 2
+				else if pausa = 2
+					pausa = 0
 			}
-			if keyboard_check_pressed(ord("U"))
+			if keyboard_check_pressed(CONTROL_INFO)
 				info = not info
-			if keyboard_check_pressed(ord("L"))
+			if keyboard_check_pressed(CONTROL_FLOW)
 				flow = (flow + 1) mod 7
 			if string_ends_with(keyboard_string, "cheat"){
 				keyboard_string = ""
 				cheat = not cheat
 				clear_edit()
 			}
-			if keyboard_check_pressed(vk_escape){
-				if pausa > 0{
-					pausa = 0
-					guardado = false
-				}
-				else{
-					pausa = 1
-					clear_edit()
-					mouse_clear(mb_any)
-					keyboard_clear(vk_anykey)
-				}
+			if keyboard_check_pressed(CONTROL_MENU) and pausa = 0{
+				pausa = 1
+				clear_edit()
+				mouse_clear(mb_any)
+				keyboard_clear(vk_anykey)
 			}
-			if keyboard_check_pressed(vk_f1)
+			if keyboard_check_pressed(CONTROL_HIDEUI)
 				grafic_hideui = not grafic_hideui
-			if keyboard_check_pressed(ord("N"))
+			if cheat and keyboard_check_pressed(CONTROL_WAVES)
 				oleadas = not oleadas
-			if keyboard_check_pressed(ord("M"))
+			if keyboard_check_pressed(CONTROL_MUSIC)
 				sound_change()
-			if keyboard_check_pressed(ord("Y")){
+			if keyboard_check_pressed(CONTROL_ENCICLOPEDIA){
 				if enciclopedia = 0
 					enciclopedia = 1
 				else
@@ -4102,7 +4157,7 @@ if menu = 1{
 				pasar_mision()
 		}
 		//Mostrar redes electricas
-		if keyboard_check(ord("O")){
+		if keyboard_check(CONTROL_REDES){
 			var temp_text = ""
 			for(var a = array_length(redes) - 1; a >= 0; a--){
 				var red = redes[a]
@@ -4126,7 +4181,7 @@ if menu = 1{
 			draw_text_background(0, 0, temp_text)
 		}
 		//Mostrar redes hidraulicas
-		if keyboard_check(ord("I")){
+		if keyboard_check(CONTROL_FLUJO){
 			var temp_text = ""
 			for(var a = array_length(flujos) - 1; a >= 0; a--){
 				var flujo = flujos[a]
@@ -4325,19 +4380,8 @@ if menu = 1{
 		draw_set_alpha(1)
 	}
 }
-else{
-	if keyboard_check_pressed(vk_escape){
-		if pausa > 0
-			pausa = 0
-		else{
-			pausa = 1
-			clear_edit()
-			mouse_clear(mb_any)
-			keyboard_clear(vk_anykey)
-		}
-	}
+else
 	control_camara()
-}
 update_cursor()
 if sprite_boton_text != ""
 	draw_text_background(mouse_x, mouse_y + 20, sprite_boton_text)

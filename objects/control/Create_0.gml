@@ -11,6 +11,29 @@ else{
 }
 draw_set_font(font_normal)
 FILE_VERSION = 2026_03_23
+PROCESADOR_VERSION = 2026_03_25
+#region Controles
+	CONTROL_LEFT = ord("A")
+	CONTROL_RIGHT = ord("D")
+	CONTROL_UP = ord("W")
+	CONTROL_DOWN = ord("S")
+	CONTROL_PAUSE = vk_space
+	CONTROL_MENU = vk_escape
+	CONTROL_MUSIC = ord("M")
+	CONTROL_WAVES = ord("N")
+	CONTROL_HIDEUI = vk_f1
+	CONTROL_INFO = ord("U")
+	CONTROL_FLOW = ord("L")
+	CONTROL_ENCICLOPEDIA = ord("Y")
+	CONTROL_ROTAR = ord("R")
+	CONTROL_REPARAR = ord("Q")
+	CONTROL_REDES = ord("O")
+	CONTROL_FLUJO = ord("I")
+	CONTROL_USADAS = [CONTROL_LEFT, CONTROL_RIGHT, CONTROL_UP, CONTROL_DOWN, CONTROL_PAUSE, CONTROL_MENU, CONTROL_MUSIC, CONTROL_WAVES, CONTROL_HIDEUI, CONTROL_INFO,
+		CONTROL_FLOW, CONTROL_ENCICLOPEDIA, CONTROL_ROTAR, CONTROL_REPARAR, CONTROL_REDES, CONTROL_FLUJO]
+	CONTROL_NOMBRE = ["Izquierda", "Derecha", "Arriba", "Abajo", "Pausa", "Menú", "Activar Sonido", "Activar Oleadas", "Esconder Interfaz", "Mostrar Información", "Mostrar vectores",
+		"Enciclopedia", "Rotar edificio", "Reconstruir edificios", "Mostrar Redes", "Mostrar Flujos"]
+#endregion
 ini_open("settings.ini")
 sonido = bool(ini_read_real("", "sonido", 1))
 medallas = array_create(6)
@@ -1048,8 +1071,12 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 		[id_procesador, id_mensaje, id_memoria, id_pantalla, id_modulo],
 		[id_fabrica_de_drones, id_fabrica_de_drones_grande, id_cinta_grande, id_puerto_de_carga, id_planta_de_reciclaje]]
 	for(var a = 0; a < array_length(categoria_edificios); a++)
-		for(var b = 0; b < array_length(categoria_edificios[a]); b++)
-			edificio_key[categoria_edificios[a, b]] = $"{a + 1}{(b + 1) mod 10}"
+		for(var b = 0; b < array_length(categoria_edificios[a]); b++){
+			if b < 10
+				edificio_key[categoria_edificios[a, b]] = $"{a + 1}{(b + 1) mod 10}"
+			else
+				edificio_key[categoria_edificios[a, b]] = $"{a + 1}{chr(ord("A") + b - 10)}"
+		}
 	categoria_nombre = ["Transporte", "Extracción", "Producción", "Electricidad", "Líquidos", "Defensa", "Lógica", "Drones"]
 	categoria_nombre_disponible = array_create(0, "")
 	array_copy(categoria_nombre_disponible, 0, categoria_nombre, 0, array_length(categoria_nombre))
