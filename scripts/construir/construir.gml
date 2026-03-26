@@ -2,7 +2,7 @@ function construir(index, dir, mx, my, enemigo = false, server = false){
 	with control{
 		var flag = true, flag_2 = false, build_list = get_size(mx, my, dir, edificio_size[index]), edificio = control.null_edificio, temp_complex = abtoxy(mx, my)
 		for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
-			var temp_complex_2 = build_list[|a], aa = temp_complex_2.a, bb = temp_complex_2.b
+			var temp_complex_2 = build_list[|a], aa = temp_complex_2[0], bb = temp_complex_2[1]
 			//Asegurarse de que esté dentro del mundo
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize{
 				flag = false
@@ -65,7 +65,7 @@ function construir(index, dir, mx, my, enemigo = false, server = false){
 		if flag and not cheat and not enemigo{
 			for(var a = array_length(enemigos) - 1; a >= 0; a--){
 				var dron = enemigos[a]
-				if distance_sqr(dron.x, dron.y, temp_complex.a, temp_complex.b) < 10_000{//100^2
+				if distance_sqr(dron.x, dron.y, temp_complex[0], temp_complex[1]) < 10_000{//100^2
 					flag = false
 					break
 				}
@@ -89,8 +89,8 @@ function construir(index, dir, mx, my, enemigo = false, server = false){
 			var a = mx, b = my
 			repeat(10){
 				var temp_complex_2 = next_to(a, b, dir)
-				a = temp_complex_2.a
-				b = temp_complex_2.b
+				a = temp_complex_2[0]
+				b = temp_complex_2[1]
 				if a < 0 or b < 0 or a >= xsize or b >= ysize
 					break
 				if edificio_bool[# a, b]{

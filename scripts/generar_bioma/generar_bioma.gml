@@ -31,7 +31,7 @@ function generar_bioma(bioma){
 				repeat(magnitud){
 					var temp_list = get_size(a, b, 0, 3)
 					for(var k = 0; k < 7; k++){
-						var temp_complex = temp_list[|k], aa = temp_complex.a, bb = temp_complex.b
+						var temp_complex = temp_list[|k], aa = temp_complex[0], bb = temp_complex[1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if terreno[# aa, bb] != idt_agua{
@@ -48,8 +48,8 @@ function generar_bioma(bioma){
 					repeat(2){
 						var d = irandom(5)
 						var temp_complex = next_to(a, b, d)
-						a = clamp(temp_complex.a, 0, xsize - 1)
-						b = clamp(temp_complex.b, 0, ysize - 1)
+						a = clamp(temp_complex[0], 0, xsize - 1)
+						b = clamp(temp_complex[1], 0, ysize - 1)
 					}
 				}
 			}
@@ -61,15 +61,15 @@ function generar_bioma(bioma){
 				//Añadir arena
 				if grafic_array_agua_baja[temp_terreno]{
 					for(var c = 0; c < 6; c++){
-						var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
+						var temp_complex = next_to(a, b, c), aa = temp_complex[0], bb = temp_complex[1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if not grafic_array_agua[terreno[# aa, bb]]
 							set_terreno(aa, bb, borde_agua)
 						if brandom(){
 							temp_complex = next_to(aa, bb, c)
-							aa = temp_complex.a
-							bb = temp_complex.b
+							aa = temp_complex[0]
+							bb = temp_complex[1]
 							if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 								continue
 							if not grafic_array_agua[terreno[# aa, bb]]
@@ -80,7 +80,7 @@ function generar_bioma(bioma){
 				//Piedra al rededor de Petróleo
 				else if temp_terreno = idt_petroleo{
 					for(var c = 0; c < 6; c++){
-						var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
+						var temp_complex = next_to(a, b, c), aa = temp_complex[0], bb = temp_complex[1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if terreno[# aa, bb] != idt_petroleo
@@ -90,7 +90,7 @@ function generar_bioma(bioma){
 				//Basalto al rededor de la Lava
 				else if temp_terreno = idt_lava{
 					for(var c = 0; c < 6; c++){
-						var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
+						var temp_complex = next_to(a, b, c), aa = temp_complex[0], bb = temp_complex[1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if terreno[# aa, bb] != idt_lava{
@@ -101,8 +101,8 @@ function generar_bioma(bioma){
 						}
 						if brandom(){
 							temp_complex = next_to(aa, bb, irandom(5))
-							aa = temp_complex.a
-							bb = temp_complex.b
+							aa = temp_complex[0]
+							bb = temp_complex[1]
 							if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 								continue
 							if terreno[# aa, bb] != idt_lava{
@@ -118,7 +118,7 @@ function generar_bioma(bioma){
 				if grafic_array_agua_baja[temp_terreno]{
 					var flag = true
 					for(var c = 0; c < 6; c++){
-						var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
+						var temp_complex = next_to(a, b, c), aa = temp_complex[0], bb = temp_complex[1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if not grafic_array_agua[terreno[# aa, bb]]{
@@ -136,7 +136,7 @@ function generar_bioma(bioma){
 		//Limpiar_zona del núcleo
 		var temp_list_nucleo = get_size(floor(xsize / 2), floor(ysize / 2), 0, 7)
 		for(var a = ds_list_size(temp_list_nucleo) - 1; a >= 0; a--){
-			var temp_complex = temp_list_nucleo[|a], aa = temp_complex.a, bb = temp_complex.b
+			var temp_complex = temp_list_nucleo[|a], aa = temp_complex[0], bb = temp_complex[1]
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 				continue
 			if not terreno_caminable[terreno[# aa, bb]]{
@@ -176,7 +176,7 @@ function generar_bioma(bioma){
 				repeat(magnitud){
 					var temp_list = get_size(a, b, 0, 3)
 					for(var k = 0; k < 7; k++){
-						var temp_complex = temp_list[|k], aa = temp_complex.a, bb = temp_complex.b
+						var temp_complex = temp_list[|k], aa = temp_complex[0], bb = temp_complex[1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						var temp_terreno = terreno[# aa, bb]
@@ -192,14 +192,14 @@ function generar_bioma(bioma){
 					}
 					var d = irandom(5)
 					var temp_complex = next_to(a, b, d)
-					a = clamp(temp_complex.a, 0, xsize - 1)
-					b = clamp(temp_complex.b, 0, ysize - 1)
+					a = clamp(temp_complex[0], 0, xsize - 1)
+					b = clamp(temp_complex[1], 0, ysize - 1)
 				}
 			}
 		}
 		//Limpiar al rededor del núcleo
 		for(var a = ds_list_size(temp_list_nucleo) - 1; a >= 0; a--){
-			var temp_complex = temp_list_nucleo[|a], aa = temp_complex.a, bb = temp_complex.b
+			var temp_complex = temp_list_nucleo[|a], aa = temp_complex[0], bb = temp_complex[1]
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 				continue
 			ds_grid_set(ore, aa, bb, -1)

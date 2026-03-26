@@ -4,15 +4,15 @@ function camino_calcular_in(edificio = control.null_edificio){
 		for(var c = 0; c < 6; c++){
 			if c = edificio.dir or c = ((edificio.dir + 3) mod 6)
 				continue
-			var temp_complex = next_to(edificio.a, edificio.b, c), aa = temp_complex.a, bb = temp_complex.b
+			var temp_complex = next_to(edificio.a, edificio.b, c), aa = temp_complex[0], bb = temp_complex[1]
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 				continue
 			if edificio_bool[# aa, bb]{
 				var temp_edificio = edificio_id[# aa, bb]
 				if temp_edificio.index = id_cruce{
 					temp_complex = next_to(aa, bb, c)
-					aa = temp_complex.a
-					bb = temp_complex.b
+					aa = temp_complex[0]
+					bb = temp_complex[1]
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or not edificio_bool[# aa, bb]
 						continue
 					temp_edificio = edificio_id[# aa, bb]

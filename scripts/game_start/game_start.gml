@@ -40,7 +40,7 @@ function game_start(){
 			for(var b = 0; b < ysize; b++){
 				if terreno[# a, b] = idt_lava{
 					var temp_complex = abtoxy(a, b)
-					array_push(luces, {a : a, b : b, x : temp_complex.a, y : temp_complex.b, r : 10, source : null_edificio})
+					array_push(luces, {a : a, b : b, x : temp_complex[0], y : temp_complex[1], r : 10, source : null_edificio})
 				}
 				if edificio_bool[# a, b]{
 					var edificio = edificio_id[# a, b]

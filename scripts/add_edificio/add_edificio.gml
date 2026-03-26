@@ -3,8 +3,8 @@ function add_edificio(index, dir, a, b, enemigo = false){
 		if edificio_bool[# a, b]
 			exit
 		var temp_complex = abtoxy(a, b)
-		x = temp_complex.a
-		y = temp_complex.b
+		x = temp_complex[0]
+		y = temp_complex[1]
 		var edificio = {
 			index : floor(index),
 			dir : floor(dir),
@@ -60,7 +60,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			agregar : false,
 			chunk_x : clamp(floor(a / chunk_width), 0, chunk_xsize - 1),
 			chunk_y : clamp(floor(b / chunk_height), 0, chunk_ysize - 1),
-			target_chunks : array_create(0, {a : 0, b : 0}),
+			target_chunks : array_create(0, [0, 0]),
 			//caminos: 0 = [cos(), 1 = sin()], silo_de_misiles: [0 = petroleo, 1 = tiempo_max], farbicas_de_drones: [0 = salida_x, 1 = salida_y]
 			array_real : array_create(0, 0),
 			xscale : 1,
@@ -121,7 +121,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 		array_disorder_push(edificios_totales, edificio, 12)
 		var center_x = edificio.center_x, center_y = edificio.center_y
 		ds_grid_clear(edificio.coordenadas_dis, infinity)
-		ds_list_add(edificio.coordenadas_close, {a : 0, b : 0})
+		ds_list_add(edificio.coordenadas_close, [0, 0])
 		ds_list_clear(edificio.coordenadas_close)
 		if not enemigo{
 			edificios_construidos++
@@ -129,7 +129,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 		}
 		if mision_actual >= 0 and mision_objetivo[mision_actual] = 2 and mision_target_id[mision_actual] = index and ++mision_counter >= mision_target_num[mision_actual]
 			pasar_mision()
-		temp_complex = {a : 0, b : 0}
+		temp_complex = [0, 0]
 		if in(index, id_planta_quimica, id_fabrica_de_drones){
 			edificio.carga_max = array_create(rss_max, 0)
 			edificio.carga_output = array_create(rss_max, 0)
@@ -161,8 +161,8 @@ function add_edificio(index, dir, a, b, enemigo = false){
 		if edificio_size[index] != 1
 			for(var c = ds_list_size(temp_list_size) - 1; c >= 0; c--){
 				temp_complex = temp_list_size[|c]
-				var aa = clamp(floor(temp_complex.a / chunk_width), 0, chunk_xsize - 1)
-				var bb = clamp(floor(temp_complex.b / chunk_height), 0, chunk_ysize - 1)
+				var aa = clamp(floor(temp_complex[0] / chunk_width), 0, chunk_xsize - 1)
+				var bb = clamp(floor(temp_complex[1] / chunk_height), 0, chunk_ysize - 1)
 				chunk_mina = min(chunk_mina, aa)
 				chunk_minb = min(chunk_minb, bb)
 				chunk_maxa = max(chunk_maxa, aa)
@@ -186,7 +186,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			edificio.select = 0.8
 			for(var c = ds_list_size(temp_list_size) - 1; c >= 0; c--){
 				temp_complex = temp_list_size[|c]
-				var aa = temp_complex.a, bb = temp_complex.b
+				var aa = temp_complex[0], bb = temp_complex[1]
 				if ore[# aa, bb] >= 0
 					edificio.select += 0.05
 				if index = id_taladro_electrico and terreno_recurso_bool[terreno[# aa, bb]]
@@ -217,7 +217,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 						distance_sqr(center_x, center_y, chunk_x + chunk_size_x, chunk_y) < dis or
 						distance_sqr(center_x, center_y, chunk_x, chunk_y + chunk_size_y) < dis or
 						distance_sqr(center_x, center_y, chunk_x + chunk_size_x, chunk_y + chunk_size_y) < dis
-						array_push(edificio.target_chunks, {a : i, b : j})
+						array_push(edificio.target_chunks, [i, j])
 				}
 			if index = id_lanzallamas{
 				edificio.array_real[4] = 0
@@ -265,14 +265,14 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			for(var c = array_length(enemigos) - 1; c >= 0; c--){
 				var temp_enemigo = enemigos[c]
 				temp_complex = xytoab(temp_enemigo.x, temp_enemigo.y)
-				if temp_complex.a >= 0
-					temp_enemigo.target = edificio_cercano[# temp_complex.a, temp_complex.b]
+				if temp_complex[0] >= 0
+					temp_enemigo.target = edificio_cercano[# temp_complex[0], temp_complex[1]]
 			}
 		}
 		else if index = id_ensambladora and (edificio_tecnologia[id_modulo] or not tecnologia){
 			for(var c = ds_list_size(temp_list_arround) - 1; c >= 0; c--){
 				temp_complex = temp_list_arround[|c]
-				var aa = temp_complex.a, bb = temp_complex.b
+				var aa = temp_complex[0], bb = temp_complex[1]
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if edificio_bool[# aa, bb]{
@@ -319,7 +319,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 		}
 		for(var c = ds_list_size(temp_list_size) - 1; c >= 0; c--){
 			temp_complex = temp_list_size[|c]
-			var aa = temp_complex.a, bb = temp_complex.b
+			var aa = temp_complex[0], bb = temp_complex[1]
 			ds_grid_set(edificio_bool, aa, bb, true)
 			ds_grid_set(edificio_id, aa, bb, edificio)
 			ds_grid_set(repair_id, aa, bb, -1)
@@ -328,7 +328,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 				ds_grid_set(edificio.coordenadas_dis, aa, bb, 0)
 				ds_grid_set(edificio_cercano_dis, aa, bb, 0)
 				ds_grid_set(edificio_cercano, aa, bb, edificio)
-				ds_list_add(edificio.coordenadas_close, {a : aa, b : bb})
+				ds_list_add(edificio.coordenadas_close, [aa, bb])
 			}
 		}
 		calculate_in_out_2(edificio)
@@ -340,7 +340,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			var temp_list_redes = ds_list_create()
 			for(var c = ds_list_size(temp_list_arround) - 1; c >= 0; c--){
 				temp_complex = temp_list_arround[|c]
-				var aa = temp_complex.a, bb = temp_complex.b
+				var aa = temp_complex[0], bb = temp_complex[1]
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if edificio_bool[# aa, bb]{
@@ -359,7 +359,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			var temp_list = get_size(a, b, dir, 7)
 			for(var c = ds_list_size(temp_list) - 1; c >= 0; c--){
 				temp_complex = temp_list[|c]
-				var aa = temp_complex.a, bb = temp_complex.b
+				var aa = temp_complex[0], bb = temp_complex[1]
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if (aa != a or bb != b) and edificio_bool[# aa, bb]{
@@ -434,7 +434,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 				edificio.select = 0
 				for(var c = ds_list_size(temp_list_size) - 1; c >= 0; c--){
 					temp_complex = temp_list_size[|c]
-					var aa = temp_complex.a, bb = temp_complex.b
+					var aa = temp_complex[0], bb = temp_complex[1]
 					if in(terreno[# aa, bb], idt_agua, idt_agua_profunda){
 						edificio.select++
 						if terreno[# aa, bb] = idt_agua_profunda
@@ -461,7 +461,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			var temp_list_flujos = ds_list_create()
 			for(var c = ds_list_size(temp_list_arround) - 1; c >= 0; c--){
 				temp_complex = temp_list_arround[|c]
-				var aa = temp_complex.a, bb = temp_complex.b
+				var aa = temp_complex[0], bb = temp_complex[1]
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if edificio_bool[# aa, bb]{
@@ -481,11 +481,11 @@ function add_edificio(index, dir, a, b, enemigo = false){
 				var temp_list = get_size(a, b, 0, 7), flag = false, temp_edificio = null_edificio
 				for(var c = ds_list_size(temp_list) - 1; c >= 0; c--){
 					temp_complex = temp_list[|c]
-					var aa = temp_complex.a, bb = temp_complex.b
+					var aa = temp_complex[0], bb = temp_complex[1]
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 						continue
-					if edificio_bool[# temp_complex.a, temp_complex.b] and not (temp_complex.a = a and temp_complex.b = b){
-						temp_edificio = edificio_id[# temp_complex.a, temp_complex.b]
+					if edificio_bool[# temp_complex[0], temp_complex[1]] and not (temp_complex[0] = a and temp_complex[1] = b){
+						temp_edificio = edificio_id[# temp_complex[0], temp_complex[1]]
 						if temp_edificio.index = index and temp_edificio.link = null_edificio and temp_edificio.enemigo = enemigo{
 							flag = true
 							break
@@ -549,14 +549,14 @@ function add_edificio(index, dir, a, b, enemigo = false){
 				if index = id_generador_geotermico{
 					edificio.select = 0
 					for(var c = ds_list_size(temp_list_size) - 1; c >= 0; c--){
-						var temp_complex_2 = temp_list_size[|c], aa = temp_complex_2.a, bb = temp_complex_2.b
+						var temp_complex_2 = temp_list_size[|c], aa = temp_complex_2[0], bb = temp_complex_2[1]
 						edificio.select += (terreno[# aa, bb] = idt_lava)
 					}
 				}
 				else if index = id_extractor_atmosferico{
 					edificio.select = 0
 					for(var c = ds_list_size(temp_list_size) - 1; c >= 0; c--){
-						var temp_complex_2 = temp_list_size[|c], aa = temp_complex_2.a, bb = temp_complex_2.b, d = terreno[# aa, bb]
+						var temp_complex_2 = temp_list_size[|c], aa = temp_complex_2[0], bb = temp_complex_2[1], d = terreno[# aa, bb]
 						if d = idt_hielo
 							edificio.select += 1.5
 						else if d = idt_nieve

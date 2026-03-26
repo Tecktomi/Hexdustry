@@ -4,7 +4,7 @@ function set_terreno(a, b, index){
 		if terreno_prev != index{
 			if terreno_liquido[terreno_prev] and not terreno_liquido[index]{
 				for(var i = 0; i < 6; i++){
-					var temp_complex = next_to(a, b, i), aa = temp_complex.a, bb = temp_complex.b
+					var temp_complex = next_to(a, b, i), aa = temp_complex[0], bb = temp_complex[1]
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 						continue
 					if terreno[# aa, bb] = idt_agua_salada{
@@ -15,7 +15,7 @@ function set_terreno(a, b, index){
 			}
 			else if terreno_liquido[index] and not terreno_liquido[terreno_prev]{
 				for(var i = 0; i < 6; i++){
-					var temp_complex = next_to(a, b, i), aa = temp_complex.a, bb = temp_complex.b
+					var temp_complex = next_to(a, b, i), aa = temp_complex[0], bb = temp_complex[1]
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 						continue
 					if terreno[# aa, bb] = idt_agua_salada{
@@ -26,7 +26,7 @@ function set_terreno(a, b, index){
 			}
 			if terreno_pared[terreno_prev] and not terreno_pared[index]{
 				for(var i = 0; i < 3; i++){
-					var temp_complex = next_to(a, b, i), aa = temp_complex.a, bb = temp_complex.b
+					var temp_complex = next_to(a, b, i), aa = temp_complex[0], bb = temp_complex[1]
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 						continue
 					if terreno_pared[terreno[# aa, bb]]
@@ -35,7 +35,7 @@ function set_terreno(a, b, index){
 			}
 			else if terreno_pared[index] and not terreno_pared[terreno_prev]{
 				for(var i = 0; i < 3; i++){
-					var temp_complex = next_to(a, b, i), aa = temp_complex.a, bb = temp_complex.b
+					var temp_complex = next_to(a, b, i), aa = temp_complex[0], bb = temp_complex[1]
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 						continue
 					if terreno_pared[terreno[# aa, bb]]
@@ -47,7 +47,7 @@ function set_terreno(a, b, index){
 			if terreno_pared[index]{
 				var c = 0
 				for(var i = 0; i < 3; i++){
-					var temp_complex = next_to(a, b, 3 + i), aa = temp_complex.a, bb = temp_complex.b
+					var temp_complex = next_to(a, b, 3 + i), aa = temp_complex[0], bb = temp_complex[1]
 					if aa < 0 or aa >= xsize or bb >= ysize
 						continue
 					if terreno_pared[terreno[# aa, bb]]
@@ -62,7 +62,7 @@ function set_terreno(a, b, index){
 			if index = idt_agua_salada{
 				var d = 0
 				for(var i = 0; i < 6; i++){
-					var temp_complex = next_to(a, b, i), aa = temp_complex.a, bb = temp_complex.b
+					var temp_complex = next_to(a, b, i), aa = temp_complex[0], bb = temp_complex[1]
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 						continue
 					if not terreno_liquido[terreno[# aa, bb]]

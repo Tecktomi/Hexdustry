@@ -4,7 +4,7 @@ function tuberia_arround(edificio = control.null_edificio){
 		edificio.select = 0
 		for(var c = 0; c < 6; c++){
 			temp_complex = next_to(edificio.a, edificio.b, c)
-			var aa = temp_complex.a, bb = temp_complex.b
+			var aa = temp_complex[0], bb = temp_complex[1]
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or not edificio_bool[# aa, bb]
 				continue
 			var temp_edificio = edificio_id[# aa, bb]

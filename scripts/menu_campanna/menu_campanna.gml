@@ -16,7 +16,7 @@ function menu_campanna(){
 			for(var b = 0; b < world_height; b++){
 				var view = world_visible[# a, b]
 				if view > 0{
-					var temp_complex = abtoxy(a, b), aa =  2 * temp_complex.a + (room_width - total_width) / 2, bb = 2 * temp_complex.b + (room_height - total_height) / 2
+					var temp_complex = abtoxy(a, b), aa =  2 * temp_complex[0] + (room_width - total_width) / 2, bb = 2 * temp_complex[1] + (room_height - total_height) / 2
 					if draw_sprite_boton(world_sprite[# a, b],, aa, bb, 64, 56,, function(data){
 						draw_text_background(0, 0, $"{data.a}, {data.b}, {data.c}")}, {a : a, b : b, c : view}) and
 						view = 2{

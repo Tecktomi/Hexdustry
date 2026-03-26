@@ -1,3 +1,3 @@
-function complex_equal(complex_1 = {a : 0, b : 0}, complex_2 = {a : 0, b : 0}){
-	return ((complex_1.a = complex_2.a) and (complex_1.b = complex_2.b))
+function complex_equal(complex_1 = [0, 0], complex_2 = [0, 0]){
+	return ((complex_1[0] = complex_2[0]) and (complex_1[1] = complex_2[1]))
 }

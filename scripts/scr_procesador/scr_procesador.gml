@@ -1,8 +1,7 @@
 function scr_procesador(edificio = control.null_edificio){
 	with control{
 		var index = edificio.index
-		if edificio_energia[index]
-			var red = edificio.red, red_power = red.eficiencia
+		var red = edificio.red, red_power = red.eficiencia
 		if procesador_select != edificio
 			edificio.proceso += red_power
 		while edificio.proceso >= 1{

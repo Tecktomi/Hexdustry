@@ -6,8 +6,8 @@ function add_dron(a, b, index, enemigo = true){
 			b : b,
 			index : real(index),
 			enemigo : enemigo,
-			x : temp_complex.a + random_range(-4, 4),
-			y : temp_complex.b + random_range(-4, 4),
+			x : temp_complex[0] + random_range(-4, 4),
+			y : temp_complex[1] + random_range(-4, 4),
 			vida_max : dron_vida_max[index],
 			vida : dron_vida_max[index],
 			target : null_edificio,
@@ -40,7 +40,7 @@ function add_dron(a, b, index, enemigo = true){
 			dron.vida = dron.vida_max
 			dron.target = edificio_cercano[# a, b]
 			if dron_aereo[dron.index]{
-				var min_dis = infinity, temp_edificio = dron.target, aaa = temp_complex.a, bbb = temp_complex.b
+				var min_dis = infinity, temp_edificio = dron.target, aaa = temp_complex[0], bbb = temp_complex[1]
 				if brandom(){
 					for(var j = array_length(nucleos) - 1; j >= 0; j--){
 						temp_edificio = nucleos[j]

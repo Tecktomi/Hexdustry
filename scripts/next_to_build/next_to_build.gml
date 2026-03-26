@@ -1,9 +1,9 @@
-function next_to_build(complex = {a : 0, b : 0}, edificio = control.null_edificio){
-	if complex.a < 0 or complex.b < 0 or complex.a >= xsize or complex.b >= ysize
+function next_to_build(complex = [0, 0], edificio = control.null_edificio){
+	if complex[0] < 0 or complex[1] < 0 or complex[0] >= xsize or complex[1] >= ysize
 		return false
-	if not control.edificio_bool[# complex.a, complex.b]
+	if not control.edificio_bool[# complex[0], complex[1]]
 		return false
-	if control.edificio_id[# complex.a, complex.b] = edificio
+	if control.edificio_id[# complex[0], complex[1]] = edificio
 		return true
 	return false
 }

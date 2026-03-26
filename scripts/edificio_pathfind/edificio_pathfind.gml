@@ -4,7 +4,7 @@ function edificio_pathfind(edificio = control.null_edificio){
 		var visitado = usable_grid_bool, temp_queue = ds_queue_create(), temp_list = get_size(a, b, dir, edificio_size[index]), size = ds_list_size(temp_list)
 		ds_grid_clear(visitado, false)
 		for(var c = 0; c < size; c++){
-			var temp_complex = temp_list[|c], aa = temp_complex.a, bb = temp_complex.b, temp_priority = ds_grid_get(edificio_cercano_priority, aa, bb)
+			var temp_complex = temp_list[|c], aa = temp_complex[0], bb = temp_complex[1], temp_priority = ds_grid_get(edificio_cercano_priority, aa, bb)
 			ds_grid_set(visitado, aa, bb, true)
 			ds_queue_enqueue(temp_queue, [aa, bb, 0, 0]) //a, b, dis, dir
 			ds_priority_add(temp_priority, edificio, 0)
@@ -14,7 +14,7 @@ function edificio_pathfind(edificio = control.null_edificio){
 		while not ds_queue_empty(temp_queue){
 			var temp_trio = ds_queue_dequeue(temp_queue), dis = temp_trio[2] + 1, maxi = 3 + 3 * (dis = 1), desj = temp_trio[3] + 5
 			for(var i = 0; i < maxi; i++){
-				var j = (i + desj) mod 6, temp_complex_2 = next_to(temp_trio[0], temp_trio[1], j), aa = temp_complex_2.a, bb = temp_complex_2.b
+				var j = (i + desj) mod 6, temp_complex_2 = next_to(temp_trio[0], temp_trio[1], j), aa = temp_complex_2[0], bb = temp_complex_2[1]
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if not visitado[# aa, bb] and terreno_caminable[terreno[# aa, bb]]{
@@ -38,7 +38,7 @@ function edificio_pathfind(edificio = control.null_edificio){
 		for(var c = 0; c < xsize; c++)
 			for(var d = 0; d < ysize; d++){
 				var temp_edificio = edificio_cercano[# c, d]
-				ds_list_add(temp_edificio.coordenadas_close, {a : c, b : d})
+				ds_list_add(temp_edificio.coordenadas_close, [c, d])
 			}
 		ds_queue_destroy(temp_queue)
 	}

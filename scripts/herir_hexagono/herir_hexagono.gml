@@ -9,7 +9,7 @@ function herir_hexagono(a, b, dmg, efecto = true, enemigo = false){
 		}
 		if efecto{
 			var temp_complex = abtoxy(a, b)
-			array_push(efectos, add_efecto(spr_impacto, 0, temp_complex.a, temp_complex.b, 7, 1))
+			array_push(efectos, add_efecto(spr_impacto, 0, temp_complex[0], temp_complex[1], 7, 1))
 		}
 	}
 }

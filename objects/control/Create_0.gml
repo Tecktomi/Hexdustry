@@ -13,22 +13,24 @@ draw_set_font(font_normal)
 FILE_VERSION = 2026_03_23
 PROCESADOR_VERSION = 2026_03_25
 #region Controles
-	CONTROL_LEFT = ord("A")
-	CONTROL_RIGHT = ord("D")
-	CONTROL_UP = ord("W")
-	CONTROL_DOWN = ord("S")
-	CONTROL_PAUSE = vk_space
-	CONTROL_MENU = vk_escape
-	CONTROL_MUSIC = ord("M")
-	CONTROL_WAVES = ord("N")
-	CONTROL_HIDEUI = vk_f1
-	CONTROL_INFO = ord("U")
-	CONTROL_FLOW = ord("L")
-	CONTROL_ENCICLOPEDIA = ord("Y")
-	CONTROL_ROTAR = ord("R")
-	CONTROL_REPARAR = ord("Q")
-	CONTROL_REDES = ord("O")
-	CONTROL_FLUJO = ord("I")
+	ini_open("settings.ini")
+	CONTROL_LEFT = ini_read_real("Controles", 0, ord("A"))
+	CONTROL_RIGHT = ini_read_real("Controles", 1, ord("D"))
+	CONTROL_UP = ini_read_real("Controles", 2, ord("W"))
+	CONTROL_DOWN = ini_read_real("Controles", 3, ord("S"))
+	CONTROL_PAUSE = ini_read_real("Controles", 4, vk_space)
+	CONTROL_MENU = ini_read_real("Controles", 5, vk_escape)
+	CONTROL_MUSIC = ini_read_real("Controles", 6, ord("M"))
+	CONTROL_WAVES = ini_read_real("Controles", 7, ord("N"))
+	CONTROL_HIDEUI = ini_read_real("Controles", 8, vk_f1)
+	CONTROL_INFO = ini_read_real("Controles", 9, ord("U"))
+	CONTROL_FLOW = ini_read_real("Controles", 10, ord("L"))
+	CONTROL_ENCICLOPEDIA = ini_read_real("Controles", 11, ord("Y"))
+	CONTROL_ROTAR = ini_read_real("Controles", 12, ord("R"))
+	CONTROL_REPARAR = ini_read_real("Controles", 13, ord("Q"))
+	CONTROL_REDES = ini_read_real("Controles", 14, ord("O"))
+	CONTROL_FLUJO = ini_read_real("Controles", 15, ord("I"))
+	ini_close()
 	CONTROL_USADAS = [CONTROL_LEFT, CONTROL_RIGHT, CONTROL_UP, CONTROL_DOWN, CONTROL_PAUSE, CONTROL_MENU, CONTROL_MUSIC, CONTROL_WAVES, CONTROL_HIDEUI, CONTROL_INFO,
 		CONTROL_FLOW, CONTROL_ENCICLOPEDIA, CONTROL_ROTAR, CONTROL_REPARAR, CONTROL_REDES, CONTROL_FLUJO]
 	CONTROL_NOMBRE = ["Izquierda", "Derecha", "Arriba", "Abajo", "Pausa", "Menú", "Activar Sonido", "Activar Oleadas", "Esconder Interfaz", "Mostrar Información", "Mostrar vectores",
@@ -156,7 +158,7 @@ L = {}
 		cos_angle_dir[a] = cos(angle_dir[a])
 		sin_angle_dir[a] = sin(angle_dir[a])
 	}
-	pre_build_list = array_create(0, {a : 0, b : 0})
+	pre_build_list = array_create(0, [0, 0])
 	pre_build_list_cruce = array_create(0, false)
 	sprite_boton_text = ""
 	editor_menu = 0
@@ -300,6 +302,7 @@ L = {}
 	procesador_nombres_2var = [" + ", " - ", " * ", " / ", " div ", " mod ", " or ", " and ", " xor ", " << ", " >> ", " power "]
 	procesador_nombres_read_data = ["eneabled", "carga", "líquido tipo", "líquido almacen", "líquido capacidad", "líquido produccion", "líquido consumo", "energía almacenada", "energía capacidad", "energía producida", "energía consumida"]
 	procesador_nombres_draw = ["Clear", "Color grb", "Color hsv", "Rectangle", "Line", "Triangle", "Circle", "Texto", "Draw_flush"]
+	procesador_link_handle = -1
 #endregion
 #region SERVER
 	server = -1
@@ -397,7 +400,7 @@ null_edificio = {
 	agregar : false,
 	chunk_x : 0,
 	chunk_y : 0,
-	target_chunks : array_create(0, {a : 0, b : 0}),
+	target_chunks : array_create(0, [0, 0]),
 	array_real : array_create(0, 0),
 	xscale : 1,
 	yscale : 1,
@@ -421,14 +424,14 @@ null_edificio = {
 	chunk_maxb : 0
 }
 null_edificio.link = null_edificio
-ds_list_add(null_edificio.coordenadas, {a : 0, b : 0})
+ds_list_add(null_edificio.coordenadas, [0, 0])
 ds_list_clear(null_edificio.coordenadas)
-ds_list_add(null_edificio.bordes, {a : 0, b : 0})
+ds_list_add(null_edificio.bordes, [0, 0])
 ds_list_clear(null_edificio.bordes)
 null_edificio.energia_link = array_create(0, null_edificio)
 null_edificio.flujo_link = array_create(0, null_edificio)
 ds_grid_clear(null_edificio.coordenadas_dis, 0)
-ds_list_add(null_edificio.coordenadas_close, {a : 0, b : 0})
+ds_list_add(null_edificio.coordenadas_close, [0, 0])
 ds_list_clear(null_edificio.coordenadas_close)
 null_edificio.edificios_cercanos = array_create(0, null_edificio)
 null_edificio.edificios_cercanos_heridos = array_create(0, null_edificio)
@@ -470,38 +473,23 @@ puerto_carga_atended = 0
 	ds_grid_clear(edificio_cercano_dir, -1)
 	edificio_cercano_priority = ds_grid_create(xsize, ysize)
 	pre_abtoxy = ds_grid_create(xsize + 2, ysize + 2)
-	ds_grid_clear(pre_abtoxy, {a : 0, b : 0})
+	ds_grid_clear(pre_abtoxy, [0, 0])
 	for(var a = 0; a < xsize; a++){
-		ds_grid_set(pre_abtoxy, a, 0, {
-			a : real(a + 0.5) * 48 + 16,
-			b : 0
-		})
-		ds_grid_set(pre_abtoxy, a, ysize + 1, {
-			a : real(a + 0.5) * 48 + 16,
-			b : (ysize + 2) * 14
-		})
+		ds_grid_set(pre_abtoxy, a, 0, [real(a + 0.5) * 48 + 16, 0])
+		ds_grid_set(pre_abtoxy, a, ysize + 1, [real(a + 0.5) * 48 + 16, (ysize + 2) * 14])
 		for(var b = 0; b < ysize; b++){
 			var temp_priority = ds_priority_create()
 			ds_priority_add(temp_priority, null_edificio, 0)
 			ds_priority_delete_max(temp_priority)
 			ds_grid_set(edificio_cercano_priority, a, b, temp_priority)
-			var temp_complex = {
-				a : real(a + (b mod 2) / 2) * 48 + 16,
-				b : real(b + 1) * 14
-			}
+			var temp_complex = [real(a + (b mod 2) / 2) * 48 + 16, real(b + 1) * 14]
 			ds_grid_set(pre_abtoxy, a + 1, b + 1, temp_complex)
 			ds_grid_set(ore_random, a, b, random(1))
 		}
 	}
 	for(var b = 0; b < ysize; b++){
-		ds_grid_set(pre_abtoxy, 0, b, {
-			a : real((b mod 2) / 2) * 48 + 16,
-			b : real(b + 1) * 14
-		})
-		ds_grid_set(pre_abtoxy, xsize + 1, b, {
-			a : real(xsize + 1 + (b mod 2) / 2) * 48 + 16,
-			b : real(b + 1) * 14
-		})
+		ds_grid_set(pre_abtoxy, 0, b, [real((b mod 2) / 2) * 48 + 16, real(b + 1) * 14])
+		ds_grid_set(pre_abtoxy, xsize + 1, b, [real(xsize + 1 + (b mod 2) / 2) * 48 + 16, real(b + 1) * 14])
 	}
 	terreno_pared_index = ds_grid_create(xsize, ysize)
 	ds_grid_clear(terreno_pared_index, 0)
@@ -626,6 +614,7 @@ selected_dron = null_dron
 	recurso_combustion = []
 	recurso_combustion_time = []
 	recurso_tier = []
+	recurso_keyword = array_create(0, "")
 #endregion
 function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion = 0, tier = 0){
 	array_push(recurso_nombre, string(name))
@@ -634,6 +623,7 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 	array_push(recurso_combustion_time, combustion)
 	array_push(recurso_combustion, (combustion > 0))
 	array_push(recurso_tier, tier)
+	array_push(recurso_keyword, string(name))
 	return array_length(recurso_nombre) - 1
 }
 #region Definición
@@ -1063,10 +1053,10 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 #region Categorias
 	categoria_edificios = [
 		[id_cinta_transportadora, id_cinta_magnetica, id_cruce, id_enrutador, id_selector, id_overflow, id_tunel, id_almacen],
-		[id_taladro, id_taladro_electrico, id_taladro_de_explosion, id_perforadora_de_petroleo],
+		[id_taladro, id_taladro_electrico, id_taladro_de_explosion, id_perforadora_de_petroleo, id_extractor_atmosferico],
 		[id_horno, id_triturador, id_fabrica_de_concreto, id_ensambladora, id_planta_quimica, id_refineria_de_petroleo, id_refineria_de_metales, id_horno_de_lava, id_planta_de_enriquecimiento],
 		[id_cable, id_torre_de_alta_tension, id_bateria, id_generador, id_turbina, id_panel_solar, id_generador_geotermico, id_planta_nuclear],
-		[id_tuberia, id_tuberia_subterranea, id_bomba_de_evaporacion, id_bomba_hidraulica, id_deposito, id_planta_desalinizadora, id_embotelladora, id_extractor_atmosferico],
+		[id_tuberia, id_tuberia_subterranea, id_bomba_de_evaporacion, id_bomba_hidraulica, id_deposito, id_planta_desalinizadora, id_embotelladora],
 		[id_torre_basica, id_rifle, id_lanzallamas, id_laser, id_mortero, id_onda_de_choque, id_torre_reparadora, id_muro, id_muro_reforzado, id_silo_de_misiles, id_mina],
 		[id_procesador, id_mensaje, id_memoria, id_pantalla, id_modulo],
 		[id_fabrica_de_drones, id_fabrica_de_drones_grande, id_cinta_grande, id_puerto_de_carga, id_planta_de_reciclaje]]
