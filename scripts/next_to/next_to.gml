@@ -9,8 +9,5 @@ function next_to(a, b, dir){
 		aa = a + impar[dir, 0]
 		bb = b + impar[dir, 1]
 	}
-	return {
-		a : aa,
-		b : bb
-	}
+	return [aa, bb]
 }

@@ -27,12 +27,12 @@ function xytoab(x, y){
 		}
 		else{
 			var n = next_to(rx, rz, dir)
-			a = n.a
-			b = n.b
+			a = n[0]
+			b = n[1]
 		}
 		if a < 0 or b < 0 or a >= xsize or b >= ysize
 			continue
-		var temp_complex = abtoxy(a, b), hx = temp_complex.a, hy = temp_complex.b;
+		var temp_complex = abtoxy(a, b), hx = temp_complex[0], hy = temp_complex[1];
 		var dxx = x - hx, dyy = y - hy, d = dxx * dxx + dyy * dyy;
 		if d < best_d{
 			best_d = d
@@ -40,8 +40,5 @@ function xytoab(x, y){
 			best_b = b
 		}
 	}
-	return {
-		a : best_a,
-		b : best_b
-	}
+	return [best_a, best_b]
 }

@@ -3,7 +3,7 @@ function menu_editor(){
 		dibujar_fondo(1)
 		dibujar_edificios()
 		var xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / zoom
-		var temp_complex_mouse = xytoab(xmouse, ymouse), mx = temp_complex_mouse.a, my = temp_complex_mouse.b, outside = false
+		var temp_complex_mouse = xytoab(xmouse, ymouse), mx = temp_complex_mouse[0], my = temp_complex_mouse[1], outside = false
 		if mx < 0 or my < 0 or mx >= xsize or my >= ysize{
 			outside = true
 			mx = clamp(mx, 0, xsize - 1)
@@ -476,10 +476,10 @@ function menu_editor(){
 				if mouse_check_button_pressed(mb_left){
 					var temp_complex = abtoxy(mx, my)
 					if mision_choosing_coord_tipo = 0
-						array_push(mision_texto[mision_choosing_coord_i], {x : temp_complex.a, y : temp_complex.b, texto : ""})
+						array_push(mision_texto[mision_choosing_coord_i], {x : temp_complex[0], y : temp_complex[1], texto : ""})
 					else if mision_choosing_coord_tipo = 1{
-						mision_camara_x[mision_choosing_coord_i] = temp_complex.a
-						mision_camara_y[mision_choosing_coord_i] = temp_complex.b
+						mision_camara_x[mision_choosing_coord_i] = temp_complex[0]
+						mision_camara_y[mision_choosing_coord_i] = temp_complex[1]
 					}
 					mision_choosing_coord = false
 				}
@@ -494,7 +494,7 @@ function menu_editor(){
 						last_mx = -1
 						last_my = -1
 						for(var i = ds_list_size(build_list) - 1; i >= 0; i--){
-							var temp_complex = build_list[|i], aa = temp_complex.a, bb = temp_complex.b
+							var temp_complex = build_list[|i], aa = temp_complex[0], bb = temp_complex[1]
 							set_terreno(aa, bb, build_index)
 						}
 					}
@@ -511,11 +511,11 @@ function menu_editor(){
 						var target_id = terreno[# mx, my]
 						while not ds_queue_empty(temp_queue){
 							var temp_trio = ds_queue_dequeue(temp_queue), a = temp_trio.a, b = temp_trio.b, dir = temp_trio.dir
-							ds_list_add(build_list, {a : a, b : b})
+							ds_list_add(build_list, [a, b])
 							for(var i = 0; i < 6; i++){
 								if i= temp_trio.dir
 									continue
-								var temp_complex_2 = next_to(a, b, i), aa = temp_complex_2.a, bb = temp_complex_2.b
+								var temp_complex_2 = next_to(a, b, i), aa = temp_complex_2[0], bb = temp_complex_2[1]
 								if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 									continue
 								if not visitado[# aa, bb]{
@@ -529,8 +529,8 @@ function menu_editor(){
 				if mx = last_mx and my = last_my{
 					var temp_sprite = terreno_sprite[build_index]
 					for(var i = ds_list_size(build_list) - 1; i >= 0; i--){
-						var temp_complex = build_list[|i], a = temp_complex.a, b = temp_complex.b
-						var temp_complex_2 = abtoxy(a, b), aa = temp_complex_2.a, bb = temp_complex_2.b
+						var temp_complex = build_list[|i], a = temp_complex[0], b = temp_complex[1]
+						var temp_complex_2 = abtoxy(a, b), aa = temp_complex_2[0], bb = temp_complex_2[1]
 						draw_sprite_off(temp_sprite, 0, aa, bb,,,,, 0.5)
 					}
 					draw_text_background(mouse_x, mouse_y + 20, L.editor_clic_aplicar)
@@ -542,7 +542,7 @@ function menu_editor(){
 				if editor_herramienta = 1 and terreno_caminable[terreno[# mx, my]]{
 					draw_set_color(c_red)
 					var temp_complex = abtoxy(mx, my)
-					draw_circle_off(temp_complex.a, temp_complex.b, 200, true)
+					draw_circle_off(temp_complex[0], temp_complex[1], 200, true)
 					if mouse_check_button_pressed(mb_left){
 						mouse_clear(mb_left)
 						spawn_x = mx
@@ -553,7 +553,7 @@ function menu_editor(){
 				//Base
 				else if editor_herramienta = 2{
 					var temp_complex = abtoxy(mx, my)
-					draw_sprite_off(spr_base, 0, temp_complex.a, temp_complex.b,,,,, 0.5)
+					draw_sprite_off(spr_base, 0, temp_complex[0], temp_complex[1],,,,, 0.5)
 					if mouse_check_button_pressed(mb_left){
 						mouse_clear(mb_left)
 						var temp_nucleo = add_edificio(0, 0, mx, my)
@@ -570,11 +570,11 @@ function menu_editor(){
 						build_size--
 					var temp_list = get_size(mx, my, 0, build_size)
 					for(var i = ds_list_size(temp_list) - 1; i >= 0; i--){
-						var temp_complex = temp_list[|i], a = temp_complex.a, b = temp_complex.b
+						var temp_complex = temp_list[|i], a = temp_complex[0], b = temp_complex[1]
 						if a < 0 or b < 0 or a >= xsize or b >= ysize
 							continue
 						temp_complex = abtoxy(a, b)
-						var aa = temp_complex.a, bb = temp_complex.b
+						var aa = temp_complex[0], bb = temp_complex[1]
 						//Eliminar minerales
 						if editor_herramienta = 3{
 							draw_sprite_off(spr_rojo, 0, aa, bb,,,,, 0.5)
@@ -634,7 +634,7 @@ function menu_editor(){
 		}
 		draw_set_color(c_red)
 		var temp_complex = abtoxy(spawn_x, spawn_y)
-		draw_circle_off(temp_complex.a, temp_complex.b, 200, true)
+		draw_circle_off(temp_complex[0], temp_complex[1], 200, true)
 		draw_set_color(c_ltgray)
 		draw_rectangle(0, 0, 200, room_height, false)
 		draw_set_color(c_black)

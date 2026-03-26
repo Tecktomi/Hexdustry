@@ -4,7 +4,7 @@ function dibujar_fondo(editor = 0){
 			var step = image_index / 10
 			for(var a = mina; a < maxa; a++)
 				for(var b = minb; b < maxb; b++){
-					var temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b, d = terreno[# a, b], e = ore[# a, b]
+					var temp_complex = abtoxy(a, b), aa = temp_complex[0], bb = temp_complex[1], d = terreno[# a, b], e = ore[# a, b]
 					if terreno_pared[d]
 						draw_sprite_off(terreno_sprite[d], terreno_pared_index[# a, b], aa, bb)
 					else
@@ -25,11 +25,11 @@ function dibujar_fondo(editor = 0){
 				for(var b = minb; b < maxb; b++){
 					var c = terreno[# a, b]
 					if c = 14{
-						var temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b
+						var temp_complex = abtoxy(a, b), aa = temp_complex[0], bb = temp_complex[1]
 						draw_sprite_off(spr_lava_animacion, step + 16 * ore_random[# a, b], aa, bb)
 					}
 					else if c = 18{
-						var temp_complex = abtoxy(a, b), aa = temp_complex.a, bb = temp_complex.b
+						var temp_complex = abtoxy(a, b), aa = temp_complex[0], bb = temp_complex[1]
 						draw_sprite_off(olas[terreno_pared_index[# a, b]], step + 16 * ore_random[# a, b], aa, bb)
 					}
 				}
@@ -45,7 +45,7 @@ function dibujar_fondo(editor = 0){
 						var minc = a * chunk_width, mind = b * chunk_height, maxc = min((a + 1) * chunk_width, xsize), maxd = min((b + 1) * chunk_height, ysize)
 						for(var c = minc; c < maxc; c++)
 							for(var d = mind; d < maxd; d++){
-								var temp_complex = abtoxy(c, d), aa = temp_complex.a - a * chunk_width * 48, bb = temp_complex.b - b * chunk_height * 14, f = terreno[# c, d], e = ore[# c, d]
+								var temp_complex = abtoxy(c, d), aa = temp_complex[0] - a * chunk_width * 48, bb = temp_complex[1] - b * chunk_height * 14, f = terreno[# c, d], e = ore[# c, d]
 								if terreno_pared[f]
 									draw_sprite(terreno_sprite[f], terreno_pared_index[# c, d], aa, bb)
 								else{

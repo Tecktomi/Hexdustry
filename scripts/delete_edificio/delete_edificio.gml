@@ -112,7 +112,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		}
 		//Cancelar coordenadas
 		for(var i = ds_list_size(edificio.coordenadas) - 1; i >= 0; i--){
-			var temp_coordenada_2 = edificio.coordenadas[|i], a = temp_coordenada_2.a, b = temp_coordenada_2.b
+			var temp_coordenada_2 = edificio.coordenadas[|i], a = temp_coordenada_2[0], b = temp_coordenada_2[1]
 			if index = 0{
 				ds_grid_set(edificio_cercano, a, b, null_edificio)
 				ds_grid_set(edificio_cercano_dis, a, b, infinity)
@@ -334,7 +334,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				edificio.link.link = null_edificio
 			var temp_list = get_arround(aa, bb, edificio.dir, edificio_size[index])
 			for(var a = ds_list_size(temp_list) - 1; a >= 0; a--){
-				var temp_complex = temp_list[|a], aaa = temp_complex.a, bbb = temp_complex.b
+				var temp_complex = temp_list[|a], aaa = temp_complex[0], bbb = temp_complex[1]
 				if aaa < 0 or bbb < 0 or aaa >= xsize or bbb >= ysize or not edificio_bool[# aaa, bbb]
 					continue
 				var temp_edificio = edificio_id[# aaa, bbb]
@@ -357,8 +357,8 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				var temp_enemigo = enemigos[a]
 				if temp_enemigo.target = edificio{
 					var temp_complex = xytoab(temp_enemigo.x, temp_enemigo.y)
-					if temp_complex.a >= 0{
-						var temp_edificio = edificio_cercano[# temp_complex.a, temp_complex.b]
+					if temp_complex[0] >= 0{
+						var temp_edificio = edificio_cercano[# temp_complex[0], temp_complex[1]]
 						if temp_edificio = null_edificio
 							temp_enemigo.target = nucleos[0]
 						else
@@ -404,7 +404,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		//Cruce de caminos
 		if index = id_cruce
 			for(var a = 0; a < 3; a++){
-				var temp_complex = next_to(aa, bb, a), aaa = temp_complex.a, bbb = temp_complex.b
+				var temp_complex = next_to(aa, bb, a), aaa = temp_complex[0], bbb = temp_complex[1]
 				if aaa < 0 or bbb < 0 or aaa >= xsize or bbb >= ysize
 					continue
 				if edificio_bool[# aaa, bbb]{

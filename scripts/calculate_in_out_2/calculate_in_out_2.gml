@@ -20,15 +20,15 @@ function calculate_in_out_2(edificio = control.null_edificio, set_receptor = tru
 		//Cruce de caminos
 		if index = id_cruce{
 			for(var c = 0; c < 3; c++){
-				var temp_complex = next_to(a, b, c), aa = temp_complex.a, bb = temp_complex.b
+				var temp_complex = next_to(a, b, c), aa = temp_complex[0], bb = temp_complex[1]
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if edificio_bool[# aa, bb]{
 					var temp_edificio = edificio_id[# aa, bb], flag = false
 					while temp_edificio.index = id_cruce and aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
 						temp_complex = next_to(aa, bb, c)
-						aa = temp_complex.a
-						bb = temp_complex.b
+						aa = temp_complex[0]
+						bb = temp_complex[1]
 						if edificio_bool[# aa, bb]
 							temp_edificio = edificio_id[# aa, bb]
 						else{
@@ -39,8 +39,8 @@ function calculate_in_out_2(edificio = control.null_edificio, set_receptor = tru
 					if flag
 						continue
 					temp_complex = next_to(a, b, (c + 3) mod 6)
-					aa = temp_complex.a
-					bb = temp_complex.b
+					aa = temp_complex[0]
+					bb = temp_complex[1]
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 						continue
 					if edificio_bool[# aa, bb]{
@@ -48,8 +48,8 @@ function calculate_in_out_2(edificio = control.null_edificio, set_receptor = tru
 						flag = false
 						while temp_edificio_2.index = id_cruce and aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
 							temp_complex = next_to(aa, bb, (c + 3) mod 6)
-							aa = temp_complex.a
-							bb = temp_complex.b
+							aa = temp_complex[0]
+							bb = temp_complex[1]
 							if edificio_bool[# aa, bb]
 								temp_edificio_2 = edificio_id[# aa, bb]
 							else{
@@ -123,7 +123,7 @@ function calculate_in_out_2(edificio = control.null_edificio, set_receptor = tru
 		else{
 			var temp_list = get_arround(a, b, dir, edificio_size[index])
 			for(var c = ds_list_size(temp_list) - 1; c >= 0; c--){
-				var temp_complex = temp_list[|c], aa = temp_complex.a, bb = temp_complex.b
+				var temp_complex = temp_list[|c], aa = temp_complex[0], bb = temp_complex[1]
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if not edificio_bool[# aa, bb]

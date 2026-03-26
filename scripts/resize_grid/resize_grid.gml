@@ -31,10 +31,7 @@ function resize_grid(minx = 0, miny = 0){
 		ds_grid_set_region(edificio_cercano, minx, miny, xsize, ysize, null_edificio)
 		for(var a = minx; a < xsize; a++)
 			for(var b = miny; b < ysize; b++){
-				var temp_complex_2 = {
-					a : real(a + (b mod 2) / 2) * 48 + 16,
-					b : real(b + 1) * 14
-				}
+				var temp_complex_2 = [real(a + (b mod 2) / 2) * 48 + 16, real(b + 1) * 14]
 				ds_grid_set(pre_abtoxy, a + 1, b + 1, temp_complex_2)
 				ds_grid_set(ore_random, a, b, random(1))
 				var temp_priority = ds_priority_create()

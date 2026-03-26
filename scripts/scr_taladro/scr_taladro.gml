@@ -23,7 +23,7 @@ function scr_taladro(edificio = control.null_edificio){
 				ds_list_shuffle(temp_list)
 				while not ds_list_empty(temp_list){
 					temp_complex_2 = temp_list[|0]
-					var aa = temp_complex_2.a, bb = temp_complex_2.b
+					var aa = temp_complex_2[0], bb = temp_complex_2[1]
 					ds_list_delete(temp_list, 0)
 					if in(ore[# aa, bb], ido_cobre, ido_hierro, ido_carbon){
 						edificio.carga[ore_recurso[ore[# aa, bb]]]++

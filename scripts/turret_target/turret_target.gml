@@ -8,7 +8,7 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 			//Disparo normal
 			if alc_min = 0{
 				for(var a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
-					var temp_complex = edificio.target_chunks[a], temp_array = temp_array_dron[# temp_complex.a, temp_complex.b]
+					var temp_complex = edificio.target_chunks[a], temp_array = temp_array_dron[# temp_complex[0], temp_complex[1]]
 					for(var b = array_length(temp_array) - 1; b >= 0; b--){
 						var dron = temp_array[b]
 						if dron.vida <= 0
@@ -23,7 +23,7 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 			}
 			//Mortero
 			else for(var a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
-				var temp_complex = edificio.target_chunks[a], temp_array = temp_array_dron[# temp_complex.a, temp_complex.b]
+				var temp_complex = edificio.target_chunks[a], temp_array = temp_array_dron[# temp_complex[0], temp_complex[1]]
 				for(var b = array_length(temp_array) - 1; b >= 0; b--){
 					var dron = temp_array[b]
 					if dron.vida < 0
@@ -50,7 +50,7 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 		//Disparo normal
 		if alc_min = 0{
 			for(var a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
-				var temp_complex = edificio.target_chunks[a], temp_array_edificio = target_chunk_edificio[# temp_complex.a, temp_complex.b]
+				var temp_complex = edificio.target_chunks[a], temp_array_edificio = target_chunk_edificio[# temp_complex[0], temp_complex[1]]
 				for(var b = array_length(temp_array_edificio) - 1; b >= 0; b--){
 					var temp_edificio = temp_array_edificio[b]
 					if temp_edificio.vida <= 0
@@ -65,7 +65,7 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 		}
 		//Mortero
 		else for(var a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
-			var temp_complex = edificio.target_chunks[a], temp_array_edificio = target_chunk_edificio[# temp_complex.a, temp_complex.b]
+			var temp_complex = edificio.target_chunks[a], temp_array_edificio = target_chunk_edificio[# temp_complex[0], temp_complex[1]]
 			for(var b = array_length(temp_array_edificio) - 1; b >= 0; b--){
 				var temp_edificio = temp_array_edificio[b]
 				if temp_edificio.vida < 0
