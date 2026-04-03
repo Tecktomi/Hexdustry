@@ -10,10 +10,10 @@ else{
 	font_titulo = ft_titulo_android
 }
 draw_set_font(font_normal)
-FILE_VERSION = 2026_03_23
+FILE_VERSION = 2026_04_01
 PROCESADOR_VERSION = 2026_03_25
+ini_open("settings.ini")
 #region Controles
-	ini_open("settings.ini")
 	CONTROL_LEFT = ini_read_real("Controles", 0, ord("A"))
 	CONTROL_RIGHT = ini_read_real("Controles", 1, ord("D"))
 	CONTROL_UP = ini_read_real("Controles", 2, ord("W"))
@@ -30,14 +30,21 @@ PROCESADOR_VERSION = 2026_03_25
 	CONTROL_REPARAR = ini_read_real("Controles", 13, ord("Q"))
 	CONTROL_REDES = ini_read_real("Controles", 14, ord("O"))
 	CONTROL_FLUJO = ini_read_real("Controles", 15, ord("I"))
-	ini_close()
 	CONTROL_USADAS = [CONTROL_LEFT, CONTROL_RIGHT, CONTROL_UP, CONTROL_DOWN, CONTROL_PAUSE, CONTROL_MENU, CONTROL_MUSIC, CONTROL_WAVES, CONTROL_HIDEUI, CONTROL_INFO,
 		CONTROL_FLOW, CONTROL_ENCICLOPEDIA, CONTROL_ROTAR, CONTROL_REPARAR, CONTROL_REDES, CONTROL_FLUJO]
 	CONTROL_NOMBRE = ["Izquierda", "Derecha", "Arriba", "Abajo", "Pausa", "Menú", "Activar Sonido", "Activar Oleadas", "Esconder Interfaz", "Mostrar Información", "Mostrar vectores",
 		"Enciclopedia", "Rotar edificio", "Reconstruir edificios", "Mostrar Redes", "Mostrar Flujos"]
 #endregion
-ini_open("settings.ini")
-sonido = bool(ini_read_real("", "sonido", 1))
+#region Settings
+	sonido = bool(ini_read_real("", "sonido", 1))
+	info = bool(ini_read_real("", "info", 0))
+	grafic_tile_animation = bool(ini_read_real("", "grafic_tile_animation", 1))
+	grafic_luz = bool(ini_read_real("", "grafic_luz", 0))
+	grafic_humo = bool(ini_read_real("", "grafic_humo", 1))
+	grafic_energia = bool(ini_read_real("", "grafic_energia", 1))
+	auto_guardado = bool(ini_read_real("", "auto_guardado", 1))
+	grafic_hideui = false
+#endregion
 medallas = array_create(6)
 default_maps = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas", "Asalto"]
 for(var a = 0; a < array_length(default_maps); a++){
@@ -89,11 +96,13 @@ L = {}
 	ds_grid_clear(world_sprite, spr_hexagono)
 	world_bioma = ds_grid_create(world_width, world_height)
 	ds_grid_clear(world_bioma, 0)
+	tutorial_nombre = array_create(0, "")
 	function set_world(a, b, escenario = "", tutorial = 1, sprite = spr_hexagono, bioma = 0){
 		world_escenario[# a, b] = escenario
 		world_tutorial[# a, b] = tutorial
 		world_sprite[# a, b] = sprite
 		world_bioma[# a, b] = bioma
+		array_push(tutorial_nombre, escenario)
 	}
 	set_world(4, 7, "mision_1.txt", 1, spr_minimap_1)
 	set_world(4, 8, "mision_2.txt", 2, spr_minimap_2)
@@ -162,29 +171,6 @@ L = {}
 	pre_build_list_cruce = array_create(0, false)
 	sprite_boton_text = ""
 	editor_menu = 0
-	mision_nombre = array_create(0, "")
-	mision_objetivo = array_create(0, 0)
-	mision_target_id = array_create(0, 0)
-	mision_target_num = array_create(0, 0)
-	mision_tiempo = array_create(0, 0)
-	mision_tiempo_edit = array_create(0, false)
-	mision_tiempo_victoria = array_create(0, false)
-	mision_tiempo_show = array_create(0, true)
-	mision_texto = array_create(0, array_create(0, {x : 0, y : 0, texto : ""}))
-	mision_camara_move = array_create(0, false)
-	mision_camara_x = array_create(0, 0)
-	mision_camara_y = array_create(0, 0)
-	mision_camara_step = 0
-	mision_camara_x_start = 0
-	mision_camara_y_start = 0
-	mision_texto_victoria = "Todos los objetivos cumplidos"
-	mision_actual = -1
-	mision_counter = 0
-	mision_current_tiempo = 0
-	mision_choosing_coord = false
-	mision_choosing_coord_tipo = 0
-	mision_choosing_coord_i = 0
-	mision_switch_oleadas = array_create(0, false)
 	get_keyboard_string = -1
 	get_keyboard_cursor = 0
 	get_keyboard_text = ""
@@ -195,11 +181,6 @@ L = {}
 	oleadas_tiempo = 75
 	null_efecto = add_efecto()
 	efectos = array_create(0, null_efecto)
-	grafic_tile_animation = browser
-	grafic_luz = false
-	grafic_humo = browser
-	grafic_hideui = false
-	grafic_energia = true
 	text_x = 0
 	text_y = 0
 	enciclopedia = 0
@@ -296,6 +277,31 @@ L = {}
 	partidas = array_create(0, "")
 	partidas_png = array_create(0, "")
 	guardado = false
+#endregion
+#region Misiones
+	mision_nombre = array_create(0, "")
+	mision_objetivo = array_create(0, 0)
+	mision_target_id = array_create(0, 0)
+	mision_target_num = array_create(0, 0)
+	mision_tiempo = array_create(0, 0)
+	mision_tiempo_edit = array_create(0, false)
+	mision_tiempo_victoria = array_create(0, false)
+	mision_tiempo_show = array_create(0, true)
+	mision_texto = array_create(0, array_create(0, {x : 0, y : 0, texto : ""}))
+	mision_camara_move = array_create(0, false)
+	mision_camara_x = array_create(0, 0)
+	mision_camara_y = array_create(0, 0)
+	mision_switch_oleadas = array_create(0, false)
+	mision_camara_step = 0
+	mision_camara_x_start = 0
+	mision_camara_y_start = 0
+	mision_texto_victoria = "Todos los objetivos cumplidos"
+	mision_actual = -1
+	mision_counter = 0
+	mision_current_tiempo = 0
+	mision_choosing_coord = false
+	mision_choosing_coord_tipo = 0
+	mision_choosing_coord_i = 0
 #endregion
 #region Procesador
 	procesador_nombres_1var = ["sin", "cos", "tan", "random", "floor", "round", "ceil", "sqr", "sqrt", "pi"]
@@ -1249,6 +1255,17 @@ for(var a = array_length(misiles_nombre) - 1; a >= 0; a--){
 		c += misiles_precio_num[a, b]
 	edificio_carga_max[id_silo_de_misiles] = max(edificio_carga_max[id_silo_de_misiles], c)
 }
+modulo_precio_id = [[idr_modulos], [idr_modulos, idr_silicio], [idr_modulos, idr_electronicos], [idr_modulos, idr_electronicos, idr_uranio_bruto], [idr_modulos, idr_electronicos, idr_plastico, idr_uranio_bruto]]
+modulo_precio_num = [[1], [2, 2], [3, 5], [5, 5, 10], [20, 25, 40, 100]]
+var modulo_edificios = [[id_taladro, id_torre_basica, id_bomba_hidraulica],
+	[id_rifle, id_lanzallamas, id_ensambladora, id_generador_geotermico, id_planta_desalinizadora, id_torre_reparadora, id_triturador, id_turbina],
+	[id_taladro_electrico, id_laser, id_mortero, id_fabrica_de_concreto, id_perforadora_de_petroleo, id_planta_de_reciclaje, id_planta_quimica, id_refineria_de_metales],
+	[id_onda_de_choque, id_fabrica_de_drones, id_fabrica_de_drones_grande, id_planta_de_enriquecimiento, id_planta_nuclear, id_refineria_de_petroleo, id_taladro_de_explosion],
+	[id_nucleo]]
+edificio_modulo_tier = array_create(edificio_max, -1)
+for(var a = 0; a < array_length(modulo_edificios); a++)
+	for(var b = 0; b < array_length(modulo_edificios[a]); b++)
+		edificio_modulo_tier[modulo_edificios[a, b]] = a
 edificios_construibles = array_create(0, 0)
 for(var a = 0; a < array_length(categoria_nombre); a++)
 	edificios_construibles = array_concat(edificios_construibles, categoria_edificios[a])

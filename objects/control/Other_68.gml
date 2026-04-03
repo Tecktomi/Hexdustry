@@ -30,4 +30,8 @@ if type = network_type_data{
 		handle_sync_timer(buffer)
 	else if msg = 9 //Handle mover dron
 		handle_mover_dron(buffer)
+	else if msg = 10 //Handle add modulo
+		handle_add_modulo(buffer)
+	else if msg = 11 //Handle investigar
+		handle_investigar(buffer)
 }

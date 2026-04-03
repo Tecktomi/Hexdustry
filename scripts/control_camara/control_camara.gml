@@ -1,8 +1,6 @@
 function control_camara(min_camx = 0){
 	with control{
 		var cam_vel = 8
-		if keyboard_check_pressed(vk_f4)
-			window_set_fullscreen(not window_get_fullscreen())
 		if keyboard_check(vk_lcontrol) and mouse_wheel_up() and zoom < 4{
 			camx -= xsize * 48 * zoom / 2
 			camy -= ysize * 14 * zoom / 2

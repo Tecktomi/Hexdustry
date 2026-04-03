@@ -3,10 +3,11 @@ function handle_delete_edificio(buffer){
 		var _timer = real(buffer_read(buffer, buffer_u32))
 		var a = real(buffer_read(buffer, buffer_u16))
 		var b = real(buffer_read(buffer, buffer_u16))
+		var _cheat = bool(buffer_read(buffer, buffer_bool))
 		if server{
 			if edificio_bool[# a, b]{
-				delete_edificio(edificio_id[# a, b], false, true)
-				server_delete_edificio(a, b)
+				delete_edificio(edificio_id[# a, b], false, true, _cheat)
+				server_delete_edificio(a, b, _cheat)
 			}
 		}
 		else{
@@ -16,7 +17,7 @@ function handle_delete_edificio(buffer){
 				data : {
 					a : a,
 					b : b,
-					destruccion : destruccion
+					cheat : _cheat
 				}
 			}
 			array_push(cambios, cambio)

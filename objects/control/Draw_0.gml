@@ -7,6 +7,10 @@
 	min_chunkb = max(0, floor(minb / chunk_height))
 	max_chunka = min(ceil(maxa / chunk_width), chunk_xsize)
 	max_chunkb = min(ceil(maxb / chunk_height), chunk_ysize)
+	if keyboard_check_pressed(vk_f4){
+		keyboard_clear(vk_f4)
+		window_set_fullscreen(not window_get_fullscreen())
+	}
 #endregion
 //Menú principal
 if menu = 0{
@@ -37,15 +41,9 @@ if menu = 0{
 			oleadas_tiempo = 90
 			multiplicador_vida_enemigos = 50
 			cheat = false
+			default_mision()
 			mision_objetivo = [4]
-			mision_nombre = [""]
 			mision_target_num = [15]
-			mision_target_id = [0]
-			mision_tiempo = [0]
-			mision_switch_oleadas = [false]
-			mision_camara_move = [false]
-			mision_texto = [[]]
-			mision_tiempo_edit = [0]
 			flow = 0
 			dificultad = 0
 		}
@@ -57,10 +55,10 @@ if menu = 0{
 	if file_exists("last_save.save"){
 		ypos += text_y * 1.2
 		if draw_boton(room_width / 2, ypos, L.continuar, ui_verde){
-			var buffer = buffer_create(4096, buffer_grow, 1)
+			var buffer = buffer_create(128, buffer_grow, 1)
 			buffer = buffer_load("last_save.save")
-			if not load_game_buffer(buffer)
-				show_message("Error, archivo obsoleto")
+			load_game_buffer(buffer)
+			buffer_delete(buffer)
 		}
 	}
 	ypos += text_y * 2
@@ -142,15 +140,9 @@ if menu = 0{
 					oleadas_tiempo = 90
 					multiplicador_vida_enemigos = 50
 					cheat = false
+					default_mision()
 					mision_objetivo = [4]
-					mision_nombre = [""]
 					mision_target_num = [15]
-					mision_target_id = [0]
-					mision_tiempo = [0]
-					mision_switch_oleadas = [false]
-					mision_camara_move = [false]
-					mision_texto = [[]]
-					mision_tiempo_edit = [0]
 					flow = 0
 					dificultad = 0
 				}
@@ -162,15 +154,9 @@ if menu = 0{
 					oleadas_tiempo = 75
 					multiplicador_vida_enemigos = 100
 					cheat = false
+					default_mision()
 					mision_objetivo = [4]
-					mision_nombre = [""]
 					mision_target_num = [22]
-					mision_target_id = [0]
-					mision_tiempo = [0]
-					mision_switch_oleadas = [false]
-					mision_camara_move = [false]
-					mision_texto = [[]]
-					mision_tiempo_edit = [0]
 					flow = 1
 					dificultad = 1
 				}
@@ -182,15 +168,9 @@ if menu = 0{
 					oleadas_tiempo = 60
 					multiplicador_vida_enemigos = 160
 					cheat = false
+					default_mision()
 					mision_objetivo = [4]
-					mision_nombre = [""]
 					mision_target_num = [35]
-					mision_target_id = [0]
-					mision_tiempo = [0]
-					mision_switch_oleadas = [false]
-					mision_camara_move = [false]
-					mision_texto = [[]]
-					mision_tiempo_edit = [0]
 					flow = 2
 					dificultad = 2
 				}
@@ -236,28 +216,14 @@ if menu = 0{
 					//Modos de Juego
 					xpos = 200
 					if draw_boton(xpos, ypos, L.menu_modo_infinito, flow = 3 ? ui_azul : ui_gris,,,, 1){
-						mision_objetivo = array_create(0, 0)
-						mision_nombre = array_create(0, "")
-						mision_target_num = array_create(0, 0)
-						mision_target_id = array_create(0, 0)
-						mision_tiempo = array_create(0, 0)
-						mision_switch_oleadas = array_create(0, false)
-						mision_camara_move = array_create(0, false)
-						mision_texto = [[]]
-						mision_tiempo_edit = array_create(0, 0)
+						default_mision(0)
 						flow = 3
 					}
 					xpos += text_x + 20
 					if draw_boton(xpos, ypos, L.menu_modo_oleadas, flow = 4 ? ui_azul : ui_gris,,,, 1){
+						default_mision()
 						mision_objetivo = [4]
-						mision_nombre = [""]
 						mision_target_num = [20]
-						mision_target_id = [0]
-						mision_tiempo = [0]
-						mision_switch_oleadas = [false]
-						mision_camara_move = [false]
-						mision_texto = [[]]
-						mision_tiempo_edit = [0]
 						flow = 4
 					}
 					xpos += text_x + 20
@@ -412,10 +378,6 @@ if menu = 0{
 				idioma = a
 				set_idioma()
 			}
-	if keyboard_check_pressed(vk_f4){
-		keyboard_clear(vk_f4)
-		window_set_fullscreen(not window_get_fullscreen())
-	}
 	exit
 }
 //Editor
@@ -847,31 +809,8 @@ if in(menu, 1, 3){
 							}
 						}
 					draw_set_valign(fa_middle)
-					if draw_boton(xpos + 100, ypos + 100, (flag ? L.enciclopedia_investigar : L.almacen_sin_recursos) + temp_text, flag ? ui_verde : ui_rojo) and flag{
-						if not cheat
-							for(var a = 0; a < array_length(edificio_tecnologia_precio[ei]); a++){
-								var temp_precio = edificio_tecnologia_precio[ei, a]
-								nucleo.carga[temp_precio.id] -= temp_precio.num
-							}
-						edificio_tecnologia_desbloqueable[ei] = false
-						edificio_tecnologia[ei] = true
-						tecnologias_estudiadas++
-						for(var a = 0; a < array_length(edificio_tecnologia_next[ei]); a++){
-							b = edificio_tecnologia_next[ei, a]
-							if not edificio_tecnologia[b]{
-								flag = true
-								for(var c = 0; c < array_length(edificio_tecnologia_prev[b]); c++){
-									var d = edificio_tecnologia_prev[b, c]
-									if not edificio_tecnologia[d]{
-										flag = false
-										break
-									}
-								}
-								if flag
-									edificio_tecnologia_desbloqueable[b] = true
-							}
-						}
-					}
+					if draw_boton(xpos + 100, ypos + 100, (flag ? L.enciclopedia_investigar : L.almacen_sin_recursos) + temp_text, flag ? ui_verde : ui_rojo) and flag
+						investigar(ei)
 					draw_set_valign(fa_top)
 					draw_set_color(c_yellow)
 				}
@@ -1007,36 +946,39 @@ if pausa = 1{
 			ini_write_real("", "info", info)
 			ini_close()
 		}
-		ypos += 40
+		ypos += text_y * 1.2
 		if draw_boton(xpos, ypos, (grafic_tile_animation ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_animacion}", grafic_tile_animation ? ui_verde : ui_rojo){
 			grafic_tile_animation = not grafic_tile_animation
 			ini_open("settings.ini")
 				ini_write_real("", "grafic_tile_animation", grafic_tile_animation)
 			ini_close()
 		}
-		ypos += 40
+		ypos += text_y * 1.2
 		if draw_boton(xpos, ypos, (grafic_luz ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_iluminacion}", grafic_luz ? ui_verde : ui_rojo){
 			grafic_luz = not grafic_luz
 			ini_open("settings.ini")
 				ini_write_real("", "grafic_luz", grafic_luz)
 			ini_close()
 		}
-		ypos += 40
+		ypos += text_y * 1.2
 		if draw_boton(xpos, ypos, (grafic_humo ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_humo}", grafic_humo ? ui_verde : ui_rojo){
 			grafic_humo = not grafic_humo
 			ini_open("settings.ini")
 				ini_write_real("", "grafic_humo", grafic_humo)
 			ini_close()
 		}
-		ypos += 40
+		ypos += text_y * 1.2
 		if draw_boton(xpos, ypos, (grafic_hideui ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_UI}", grafic_hideui ? ui_rojo : ui_verde)
 			grafic_hideui = not grafic_hideui
-		ypos += 40
+		ypos += text_y * 1.2
 		if draw_boton(xpos, ypos, (sonido ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_sonido}", sonido ? ui_verde : ui_rojo)
 			sound_change()
-		ypos += 40
+		ypos += text_y * 1.2
 		if draw_boton(xpos, ypos, (grafic_energia ? L.pausa_desactivar : L.pausa_activar) + $" {L.red_energia}", grafic_energia ? ui_verde : ui_rojo)
 			grafic_energia = not grafic_energia
+		ypos += text_y * 1.2
+		if draw_boton(xpos, ypos, (auto_guardado ? L.pausa_desactivar : L.pausa_activar) + $" {L.autoguardado}", auto_guardado ? ui_verde : ui_rojo)
+			auto_guardado = not auto_guardado
 		//Guardar / Abrir en LAN
 		if menu = 1{
 			ypos += 40
@@ -1051,11 +993,11 @@ if pausa = 1{
 					ypos += 40
 					if guardado
 						draw_boton(xpos, ypos, "Guardado", ui_verde)
-					else if draw_boton(xpos, ypos, L.guardar, ui_azul){
+					else if tutorial = 0 and draw_boton(xpos, ypos, L.guardar, ui_azul){
 						guardado = true
 						var buffer = buffer_create(4096, buffer_grow, 1)
 						save_game_buffer(buffer)
-						var temp_text = $"Saves/{string_delete(string(current_year), 0, 2)}{current_month}{current_day}_{current_hour}{current_minute}"
+						var temp_text = $"Saves/{day_format()}"
 						buffer_save(buffer, $"{temp_text}.save")
 						buffer_delete(buffer)
 						var temp_sprite = minimapa(terreno)
@@ -1070,7 +1012,7 @@ if pausa = 1{
 		if draw_boton(xpos, ypos, L.salir, ui_rojo){
 			clear_edit()
 			if menu = 1{
-				if os_browser = browser_not_a_browser and not mapa_editado{
+				if tutorial = 0 and os_browser = browser_not_a_browser and not mapa_editado{
 					var buffer = buffer_create(4096, buffer_grow, 1)
 					save_game_buffer(buffer)
 					buffer_save(buffer, "last_save.save")
@@ -2538,31 +2480,12 @@ if build_index > 0 and win = 0{
 			var temp_complex = abtoxy(mx, my)
 			draw_sprite_off(spr_item_modulo, 0, temp_complex[0], temp_complex[1],,,,, 0.5)
 			if edificio_bool[# mx, my]{
-				var temp_edificio = edificio_id[# mx, my]
-				if temp_edificio.enemigo = build_enemigo{
-					var index = edificio.index, temp_precio_id = array_create(0, 0), temp_precio_num = array_create(0, 0), flag_2 = true
-					#region Precios
-						if in(index, id_taladro, id_torre_basica, id_bomba_hidraulica){
-							temp_precio_id = [idr_modulos]
-							temp_precio_num = [1]
-						}
-						else if in(index, id_rifle, id_lanzallamas, id_ensambladora, id_generador_geotermico, id_planta_desalinizadora, id_torre_reparadora, id_triturador, id_turbina){
-							temp_precio_id = [idr_modulos, idr_silicio]
-							temp_precio_num = [2, 2]
-						}
-						else if in(index, id_taladro_electrico, id_laser, id_mortero, id_fabrica_de_concreto, id_perforadora_de_petroleo, id_planta_de_reciclaje, , id_planta_quimica, id_refineria_de_metales){
-							temp_precio_id = [idr_modulos, idr_electronicos]
-							temp_precio_num = [3, 5]
-						}
-						else if in(index, id_onda_de_choque, id_fabrica_de_drones, id_fabrica_de_drones_grande, id_planta_de_enriquecimiento, id_planta_nuclear, id_refineria_de_petroleo, id_taladro_de_explosion){
-							temp_precio_id = [idr_modulos, idr_electronicos, idr_uranio_bruto]
-							temp_precio_num = [5, 5, 10]
-						}
-						else if index = id_nucleo{
-							temp_precio_id = [idr_modulos, idr_electronicos, idr_plastico, idr_uranio_bruto]
-							temp_precio_num = [20, 25, 40, 100]
-						}
-					#endregion
+				var temp_edificio = edificio_id[# mx, my], index = edificio.index, temp_modulo_tier = edificio_modulo_tier[index], flag_2 = true
+				if temp_modulo_tier = -1{
+					temp_text = L.modulo_edificio_con_modulo
+					flag_2 = false
+				}
+				if flag_2 and temp_edificio.enemigo = build_enemigo{
 					#region Efectos
 						//Más extracción
 						if in(index, id_taladro, id_taladro_electrico, id_taladro_de_explosion)
@@ -2604,28 +2527,17 @@ if build_index > 0 and win = 0{
 						else if index = id_nucleo
 							temp_text = L.modulo_nucleo
 					#endregion
-					if array_length(temp_precio_id) = 0{
-						temp_text = L.modulo_edificio_sin_modulo
-						flag_2 = false
-					}
-					else if temp_edificio.modulo{
-						temp_text = L.modulo_edificio_con_modulo
-						flag_2 = false
-					}
 					if flag_2{
 						if not cheat 
-							for(var a = array_length(temp_precio_id) - 1; a >= 0; a--){
-								temp_text += $"  {recurso_nombre[temp_precio_id[a]]}: {temp_precio_num[a]}\n"
-								if flag_2 and nucleo.carga[temp_precio_id[a]] < temp_precio_num[a]
+							for(var a = array_length(modulo_precio_id[temp_modulo_tier]) - 1; a >= 0; a--){
+								temp_text += $"  {recurso_nombre[modulo_precio_id[temp_modulo_tier, a]]}: {modulo_precio_num[temp_modulo_tier, a]}\n"
+								if flag_2 and nucleo.carga[modulo_precio_id[temp_modulo_tier, a]] < modulo_precio_num[temp_modulo_tier, a]
 									flag_2 = false
 							}
 						if not flag_2
 							temp_text += $"{L.construir_recursos_insuficientes}\n"
 						else if mouse_check_button_pressed(mb_left){
-							if not cheat and not build_enemigo
-								for(var a = array_length(temp_precio_id) - 1; a >= 0; a--)
-									nucleo.carga[temp_precio_id[a]] -= temp_precio_num[a]
-							temp_edificio.modulo = true
+							add_modulo(temp_edificio)
 							mouse_clear(mb_left)
 						}
 					}
@@ -3273,16 +3185,21 @@ if menu = 1{
 					if cambio.step <= timer{
 						array_delete(cambios, a, 1)
 						if cambio.tipo = 0
-							construir(cambio.data.index, cambio.data.dir, cambio.data.a, cambio.data.b, cambio.data.enemigo, true)
+							construir(cambio.data.index, cambio.data.dir, cambio.data.a, cambio.data.b, cambio.data.enemigo, true, cambio.data.cheat)
 						else if cambio.tipo = 1
-							delete_edificio(edificio_id[# cambio.data.a, cambio.data.b], cambio.data.destruccion, true)
+							delete_edificio(edificio_id[# cambio.data.a, cambio.data.b], cambio.data.destruccion, true, cambio.data.cheat)
 						else if cambio.tipo = 2
 							set_edificio(cambio.data.mode, cambio.data.select, edificio_id[# cambio.data.a, cambio.data.b], true)
 						else if cambio.tipo = 3
 							mover_dron(drones[cambio.data.index], cambio.data.x, cambio.data.y, true)
+						else if cambio.tipo = 4
+							add_modulo(edificio_id[# cambio.data.a, cambio.data.b], true, cambio.data.cheat)
+						else if cambio.tipo = 5
+							investigar(cambio.data.index, true, cambio.data.cheat)
 					}
 				}
 			acumulator -= LOGIC_DT
+			//Estadísticas / Guardado automático
 			if win = 0{
 				if (++timer mod 3600) = 0{
 					var temp_array_real = array_create(rss_max, 0)
@@ -3297,7 +3214,7 @@ if menu = 1{
 					energia_consumida_time = 0
 					array_push(energia_perdida, energia_perdida_time)
 					energia_perdida_time = 0
-					if os_browser = browser_not_a_browser and not mapa_editado{
+					if auto_guardado and tutorial = 0 and os_browser = browser_not_a_browser and not mapa_editado{
 						var buffer = buffer_create(4096, buffer_grow, 1)
 						save_game_buffer(buffer)
 						buffer_save(buffer, "last_save.save")
@@ -3471,8 +3388,8 @@ if menu = 1{
 								var closest_dis = dron_alcance[index]
 								for(var u = minu; u <= maxu; u++)
 									for(var v = minv; v <= maxv; v++){
-										var chunk_dron = ds_grid_get(chunk_dron_aliado, u, v), len = array_length(chunk_dron)
-										for(var i = 0; i < len; i++){
+										var chunk_dron = ds_grid_get(chunk_dron_aliado, u, v), len_2 = array_length(chunk_dron)
+										for(var i = 0; i < len_2; i++){
 											var temp_dron_2 = chunk_dron[i], temp_dis = distance_sqr(aa, bb, temp_dron_2.x, temp_dron_2.y)
 											if temp_dis < closest_dis{
 												closest_dis = temp_dis
@@ -3755,8 +3672,8 @@ if menu = 1{
 								var closest_dis = dron_alcance[dron.index]
 								for(var u = minu; u <= maxu; u++)
 									for(var v = minv; v <= maxv; v++){
-										var chunk_dron = ds_grid_get(chunk_dron_enemigo, u, v), len = array_length(chunk_dron)
-										for(var i = 0; i < len; i++){
+										var chunk_dron = ds_grid_get(chunk_dron_enemigo, u, v), len_2 = array_length(chunk_dron)
+										for(var i = 0; i < len_2; i++){
 											var temp_dron_2 = chunk_dron[i], temp_dis = distance_sqr(aa, bb, temp_dron_2.x, temp_dron_2.y)
 											if temp_dis < closest_dis{
 												closest_dis = temp_dis
@@ -4003,7 +3920,8 @@ if menu = 1{
 					pasar_mision()
 				}
 				if mision_tiempo[a] > 0{
-					if mision_camara_step <= 0 and --mision_current_tiempo <= 0{
+					if mision_camara_step <= 0 and mision_current_tiempo <= 0{
+						mision_current_tiempo--
 						if mision_tiempo_victoria[a]
 							pasar_mision()
 						else
@@ -4160,27 +4078,13 @@ if menu = 1{
 				else if pausa = 2
 					pausa = 0
 			}
-			if keyboard_check_pressed(CONTROL_INFO)
-				info = not info
-			if keyboard_check_pressed(CONTROL_FLOW)
-				flow = (flow + 1) mod 7
 			if string_ends_with(keyboard_string, "cheat"){
 				keyboard_string = ""
 				cheat = not cheat
 				clear_edit()
 			}
-			if keyboard_check_pressed(CONTROL_MENU) and pausa = 0{
-				pausa = 1
-				clear_edit()
-				mouse_clear(mb_any)
-				keyboard_clear(vk_anykey)
-			}
-			if keyboard_check_pressed(CONTROL_HIDEUI)
-				grafic_hideui = not grafic_hideui
 			if cheat and keyboard_check_pressed(CONTROL_WAVES)
 				oleadas = not oleadas
-			if keyboard_check_pressed(CONTROL_MUSIC)
-				sound_change()
 			if keyboard_check_pressed(CONTROL_ENCICLOPEDIA){
 				if enciclopedia = 0
 					enciclopedia = 1
@@ -4244,7 +4148,8 @@ if menu = 1{
 		}
 	}
 	//Control de cámara
-	if mision_actual >= 0 and --mision_camara_step > 0{
+	if mision_actual = 0 and mision_camara_step > 0{
+		mision_camara_step--
 		zoom = 1
 		camx = clamp(((mision_camara_x[mision_actual] - room_width / 2) * (60 - mision_camara_step) + mision_camara_x_start * mision_camara_step) / 60, 0, xsize * 48 * zoom - room_width)
 		camy = clamp(((mision_camara_y[mision_actual] - room_height / 2) * (60 - mision_camara_step) + mision_camara_y_start * mision_camara_step) / 60, 0, ysize * 14 * zoom - room_height)
@@ -4416,6 +4321,24 @@ if menu = 1{
 }
 else
 	control_camara()
+if menu = 1 or menu = 3{
+	if win = 0 and not show_menu and keyboard_check_pressed(vk_anykey){
+		if keyboard_check_pressed(CONTROL_MENU) and pausa = 0{
+			pausa = 1
+			clear_edit()
+			mouse_clear(mb_any)
+			keyboard_clear(vk_anykey)
+		}
+		if keyboard_check_pressed(CONTROL_HIDEUI)
+			grafic_hideui = not grafic_hideui
+		if keyboard_check_pressed(CONTROL_MUSIC)
+			sound_change()
+		if keyboard_check_pressed(CONTROL_INFO)
+			info = not info
+		if keyboard_check_pressed(CONTROL_FLOW)
+			flow = (flow + 1) mod 7
+	}
+}
 update_cursor()
 if sprite_boton_text != ""
 	draw_text_background(mouse_x, mouse_y + 20, sprite_boton_text)
@@ -4440,3 +4363,4 @@ if sonido{
 	if clic_sound
 		audio_play_sound(snd_click, 1, false, 0.3)
 }
+draw_sprite(spr_vineta, 0, 0, 0)
