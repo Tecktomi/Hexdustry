@@ -1,17 +1,66 @@
 function save_game_buffer(buffer){
 	with control{
 		buffer_write(buffer, buffer_u32, FILE_VERSION)
-		buffer_write(buffer, buffer_s8, mapa)
-		if mapa = -1{
-			buffer_write(buffer, buffer_u32, seed)
-			buffer_write(buffer, buffer_u8, biome_seed)
+		if tutorial > 0
+			buffer_write(buffer, buffer_s8, -1 - tutorial)
+		else{
+			buffer_write(buffer, buffer_s8, mapa)
+			if mapa = -1{
+				buffer_write(buffer, buffer_u32, seed)
+				buffer_write(buffer, buffer_u8, biome_seed)
+			}
 		}
+		buffer_write(buffer, buffer_f16, camx)
+		buffer_write(buffer, buffer_f16, camy)
+		buffer_write(buffer, buffer_f16, zoom)
 		buffer_write(buffer, buffer_u32, timer)
 		buffer_write(buffer, buffer_u32, oleadas_timer)
 		buffer_write(buffer, buffer_u32, oleadas_tiempo)
 		buffer_write(buffer, buffer_u32, oleadas_tiempo_primera)
+		buffer_write(buffer, buffer_bool, tecnologia)
+		buffer_write(buffer, buffer_f16, tecnologia_precio_multiplicador)
+		buffer_write(buffer, buffer_f16, multiplicador_vida_enemigos)
+		buffer_write(buffer, buffer_s8, dificultad)
+		buffer_write(buffer, buffer_bool, modo_misiones)
+		#region Misiones
+			show_debug_message(buffer_get_used_size(buffer))
+			var len = array_length(mision_nombre)
+			buffer_write(buffer, buffer_u8, len)
+			for(var a = 0; a < len; a++){
+				buffer_write(buffer, buffer_string, mision_nombre[a])
+				buffer_write(buffer, buffer_s8, mision_objetivo[a])
+				buffer_write(buffer, buffer_s8, mision_target_id[a])
+				buffer_write(buffer, buffer_u16, mision_target_num[a])
+				buffer_write(buffer, buffer_u16, mision_tiempo[a])
+				buffer_write(buffer, buffer_bool, mision_tiempo_edit[a])
+				buffer_write(buffer, buffer_bool, mision_tiempo_victoria[a])
+				buffer_write(buffer, buffer_bool, mision_tiempo_show[a])
+				var len_2 = array_length(mision_texto[a])
+				buffer_write(buffer, buffer_u8, len_2)
+				for(var b = 0; b < len_2; b++){
+					var temp_texto = mision_texto[a, b]
+					buffer_write(buffer, buffer_f16, temp_texto.x)
+					buffer_write(buffer, buffer_f16, temp_texto.y)
+					buffer_write(buffer, buffer_string, temp_texto.texto)
+				}
+				buffer_write(buffer, buffer_bool, mision_camara_move[a])
+				buffer_write(buffer, buffer_f16, mision_camara_x[a])
+				buffer_write(buffer, buffer_f16, mision_camara_y[a])
+				buffer_write(buffer, buffer_bool, mision_switch_oleadas[a])
+			}
+			buffer_write(buffer, buffer_u8, min(mision_camara_step, 255))
+			buffer_write(buffer, buffer_f16, mision_camara_x_start)
+			buffer_write(buffer, buffer_f16, mision_camara_y_start)
+			buffer_write(buffer, buffer_string, mision_texto_victoria)
+			buffer_write(buffer, buffer_s8, mision_actual)
+			buffer_write(buffer, buffer_u16, mision_counter)
+			buffer_write(buffer, buffer_s16, mision_current_tiempo)
+			buffer_write(buffer, buffer_bool, mision_choosing_coord)
+			show_debug_message(buffer_get_used_size(buffer))
+		#endregion
 		//Filtrar Edificios
-		var len = array_length(edificios_totales), b = 0
+		len = array_length(edificios_totales)
+		var b = 0
 		for(var a = 0; a < len; a++){
 			var edificio = edificios_totales[a]
 			if not edificio.vivo or edificio.vida <= 0
@@ -138,5 +187,6 @@ function save_game_buffer(buffer){
 			buffer_write(buffer, buffer_u16, municion.target.punteros[2])
 			buffer_write(buffer, buffer_u16, municion.target_build.punteros[12])
 		}
+		show_debug_message(buffer_get_used_size(buffer))
 	}
 }

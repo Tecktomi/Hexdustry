@@ -1,6 +1,6 @@
-function game_start(){
+function game_start(_nucleo = true){
 	with control{
-		if not nucleo.vivo
+		if not nucleo.vivo and _nucleo
 			game_restart()
 		redo_pathfind()
 		if array_length(mision_nombre) > 0{
@@ -14,6 +14,7 @@ function game_start(){
 					temp_array[b].num = round(tecnologia_precio_multiplicador * temp_array[b].num)
 			}
 		clear_edit()
+		pausa = 0
 		input_layer = 0
 		get_file = 0
 		win_step = 0
@@ -57,12 +58,6 @@ function game_start(){
 		for(var a = 0; a < chunk_xsize; a++)
 			for(var b = 0; b < chunk_ysize; b++)
 				update_background(a * chunk_width, b * chunk_height)
-		ini_open("settings.ini")
-		info = bool(ini_read_real("", "info", 0))
-		grafic_tile_animation = bool(ini_read_real("", "grafic_tile_animation", 1))
-		grafic_luz = bool(ini_read_real("", "grafic_luz", 0))
-		grafic_humo = bool(ini_read_real("", "grafic_humo", 1))
 		grafic_hideui = false
-		ini_close()
 	}
 }

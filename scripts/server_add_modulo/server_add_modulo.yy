@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"server_add_modulo",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"server_add_modulo",
+  "parent":{
+    "name":"SERVER",
+    "path":"folders/SCRIPTS/SERVER.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

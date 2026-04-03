@@ -1,4 +1,4 @@
-function delete_edificio(edificio = control.null_edificio, destruccion = false, server = false){
+function delete_edificio(edificio = control.null_edificio, destruccion = false, server = false, _cheat = control.cheat){
 	with control{
 		if not edificio_bool[# edificio.a, edificio.b]{
 			show_debug_message($"###ADVERTENCIA###\n  Intentando eliminar {edificio_nombre[edificio.index]} en {edificio.a}, {edificio.b}")
@@ -343,7 +343,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			}
 		}
 		//Retorno de recursos
-		if not cheat and not destruccion{
+		if not _cheat and not destruccion{
 			var b = pre_vida / edificio_vida[index]
 			for(var a = array_length(edificio_precio_id[index]) - 1; a >= 0; a--){
 				var c = floor(b * edificio_precio_num[index, a] / 2)

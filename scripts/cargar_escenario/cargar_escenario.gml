@@ -1,4 +1,4 @@
-function cargar_escenario(file = "", config = true){
+function cargar_escenario(file = "", config = true, _nucleo = true){
 	with control{
 		if file = ""
 			file = get_open_filename("*.txt", "save.txt")
@@ -24,24 +24,14 @@ function cargar_escenario(file = "", config = true){
 			var objetivos_max = ini_read_real("Global", "objetivos", 0)
 			if objetivos_max > 0
 				mision_texto_victoria = ini_read_string("Global", "texto victoria", mision_texto_victoria)
-			array_resize(mision_nombre, objetivos_max)
-			array_resize(mision_objetivo, objetivos_max)
-			array_resize(mision_target_id, objetivos_max)
-			array_resize(mision_target_num, objetivos_max)
-			array_resize(mision_tiempo, objetivos_max)
-			array_resize(mision_tiempo_edit, objetivos_max)
-			array_resize(mision_tiempo_victoria, objetivos_max)
-			array_resize(mision_tiempo_show, objetivos_max)
-			array_resize(mision_camara_move, objetivos_max)
-			array_resize(mision_camara_x, objetivos_max)
-			array_resize(mision_camara_y, objetivos_max)
-			array_resize(mision_texto, objetivos_max)
-			array_resize(mision_switch_oleadas, objetivos_max)
+			default_mision(objetivos_max)
 			for(var a = 0; a < objetivos_max; a++){
 				if ini_key_exists($"Objetivo {a}", $"nombre_{idioma_name[idioma]}")
 					mision_nombre[a] = ini_read_string($"Objetivo {a}", $"nombre_{idioma_name[idioma]}", $"objetivo {a}")
 				else
 					mision_nombre[a] = ini_read_string($"Objetivo {a}", "nombre", $"objetivo {a}")
+				if not ini_key_exists($"Objetivo {a}", $"nombre_{idioma_name[idioma]}")
+					ini_write_string($"Objetivo {a}", $"nombre_{idioma_name[idioma]}", mision_nombre[a])
 				mision_objetivo[a] = ini_read_real($"Objetivo {a}", "objetivo", 0)
 				mision_target_id[a] = ini_read_real($"Objetivo {a}", "target_id", 0)
 				mision_target_num[a] = ini_read_real($"Objetivo {a}", "target_num", 0)
@@ -49,23 +39,25 @@ function cargar_escenario(file = "", config = true){
 				mision_tiempo_edit[a] = (mision_tiempo[a] > 0)
 				mision_tiempo_victoria[a] = bool(ini_read_real($"Objetivo {a}", "tiempo victoria", 0))
 				mision_tiempo_show[a] = bool(ini_read_real($"Objetivo {a}", "tiempo show", 1))
-				mision_camara_move[a] = bool(ini_read_real($"Objetivo {a}", "camara move", 0))
-				mision_camara_x[a] = ini_read_real($"Objetivo {a}", "camara x", 0)
-				mision_camara_y[a] = ini_read_real($"Objetivo {a}", "camara y", 0)
 				var objetivo_textos = ini_read_real($"Objetivo {a}", "textos", 0)
-				array_set(mision_texto, a, [])
-				array_resize(mision_texto[a], objetivo_textos)
+				mision_texto[a] = array_create(objetivo_textos, {x : 0, y : 0, texto : ""})
 				for(var b = 0; b < objetivo_textos; b++){
 					if ini_key_exists($"Objetivo {a}", $"texto {b}_{idioma_name[idioma]}")
 						var text = ini_read_string($"Objetivo {a}", $"texto {b}_{idioma_name[idioma]}", "")
 					else
 						text = ini_read_string($"Objetivo {a}", $"texto {b}", "")
-					array_set(mision_texto[a], b, {
+					if not ini_key_exists($"Objetivo {a}", $"texto {b}_{idioma_name[idioma]}")
+						ini_write_string($"Objetivo {a}", $"texto {b}_{idioma_name[idioma]}", text)
+					var temp_texto = {
 						x : ini_read_real($"Objetivo {a}", $"x {b}", 0),
 						y : ini_read_real($"Objetivo {a}", $"y {b}", 0),
 						texto : text
-					})
+					}
+					array_set(mision_texto[a], b, temp_texto)
 				}
+				mision_camara_move[a] = bool(ini_read_real($"Objetivo {a}", "camara move", 0))
+				mision_camara_x[a] = ini_read_real($"Objetivo {a}", "camara x", 0)
+				mision_camara_y[a] = ini_read_real($"Objetivo {a}", "camara y", 0)
 				mision_switch_oleadas[a] = bool(ini_read_real($"Objetivo {a}", "switch oleadas", 0))
 			}
 			//0 = no disponible, 1 = investigable, 2 = investigado
@@ -138,19 +130,21 @@ function cargar_escenario(file = "", config = true){
 					delete_edificio(chunk[c])
 				ds_grid_set(chunk_edificios_enemigo, a, b, array_create(0, null_edificio))
 			}
-		nucleo = add_edificio(0, 0, ini_read_real("Global", "nucleo_x", floor(xsize / 2)), ini_read_real("Global", "nucleo_y", floor(ysize / 2)))
-		array_copy(nucleo.carga, 0, carga_inicial, 0, rss_max)
-		var edificios_enemigos_total = ini_read_real("Edificios enemigos", "total", 0)
-		for(var i = edificios_enemigos_total - 1; i >= 0; i--){
-			var a = ini_read_real("Edificios enemigos", $"{i}.a", 0)
-			var b = ini_read_real("Edificios enemigos", $"{i}.b", 0)
-			var index = ini_read_real("Edificios enemigos", $"{i}.index", 0)
-			var dir = ini_read_real("Edificios enemigos", $"{i}.dir", 0)
-			var edificio = construir(index, dir, a, b, true)
-			if edificio_seteable[index]{
-				var mode = bool(ini_read_real("Edificios enemigos", $"{i}.mode", 0))
-				var select = ini_read_real("Edificios enemigos", $"{i}.select", 0)
-				set_edificio(mode, select, edificio)
+		if _nucleo{
+			nucleo = add_edificio(0, 0, ini_read_real("Global", "nucleo_x", floor(xsize / 2)), ini_read_real("Global", "nucleo_y", floor(ysize / 2)))
+			array_copy(nucleo.carga, 0, carga_inicial, 0, rss_max)
+			var edificios_enemigos_total = ini_read_real("Edificios enemigos", "total", 0)
+			for(var i = edificios_enemigos_total - 1; i >= 0; i--){
+				var a = ini_read_real("Edificios enemigos", $"{i}.a", 0)
+				var b = ini_read_real("Edificios enemigos", $"{i}.b", 0)
+				var index = ini_read_real("Edificios enemigos", $"{i}.index", 0)
+				var dir = ini_read_real("Edificios enemigos", $"{i}.dir", 0)
+				var edificio = construir(index, dir, a, b, true)
+				if edificio_seteable[index]{
+					var mode = bool(ini_read_real("Edificios enemigos", $"{i}.mode", 0))
+					var select = ini_read_real("Edificios enemigos", $"{i}.select", 0)
+					set_edificio(mode, select, edificio)
+				}
 			}
 		}
 		ini_close()

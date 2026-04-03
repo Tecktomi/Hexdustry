@@ -518,6 +518,7 @@ function set_idioma(){
 			variable_struct_set(L, "controles", "Controls")
 			CONTROL_NOMBRE = ["Left", "Right", "Up", "Down", "Pause", "Menu", "Toggle Sound", "Toggle Waves", "Hide Interface", "Show Information", "Show Vectors",
 				"Encyclopedia", "Rotate Building", "Rebuild Buildings", "Show Networks", "Show Flows"]
+			variable_struct_set(L, "autoguardado", "Auto Save")
 		}
 		//Español
 		else if idioma = 1{
@@ -1034,6 +1035,7 @@ function set_idioma(){
 			variable_struct_set(L, "controles", "Controles")
 			CONTROL_NOMBRE = ["Izquierda", "Derecha", "Arriba", "Abajo", "Pausa", "Menú", "Activar Sonido", "Activar Oleadas", "Esconder Interfaz", "Mostrar Información", "Mostrar vectores",
 				"Enciclopedia", "Rotar edificio", "Reconstruir edificios", "Mostrar Redes", "Mostrar Flujos"]
+			variable_struct_set(L, "autoguardado", "Guardado Automático")
 		}
 		//Русский
 		else if idioma = 2{
@@ -1549,6 +1551,7 @@ function set_idioma(){
 			variable_struct_set(L, "controles", "Элементы управления")
 			CONTROL_NOMBRE = ["Влево", "Вправо", "Вверх", "Вниз", "Пауза", "Меню", "Вкл/выкл звук", "Вкл/выкл волны", "Скрыть интерфейс", "Показать информацию", "Показать векторы",
 				"Энциклопедия", "Повернуть здание", "Перестроить здания", "Показать сети", "Показать потоки"]
+			variable_struct_set(L, "autoguardado", "Автоматическое сохранение")
 		}
 		//?
 	}

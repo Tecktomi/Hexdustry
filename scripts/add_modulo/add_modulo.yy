@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"add_modulo",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"add_modulo",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

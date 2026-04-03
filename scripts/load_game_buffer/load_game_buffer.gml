@@ -1,13 +1,10 @@
 function load_game_buffer(buffer){
 	with control{
-		var version = buffer_read(buffer, buffer_u32)
-		if version != FILE_VERSION{
-			/* Retrocompatibilidad
-			if version = 2026_03_23{
-				...
-				version = 2026_03_24
-			}
-			*/
+		show_debug_message(buffer_get_used_size(buffer))
+		var _version = buffer_read(buffer, buffer_u32)
+		if _version != FILE_VERSION{
+			if _version = 2026_03_27
+				load_game_buffer_2026_03_27(buffer)
 			return false
 		}
 		mapa = buffer_read(buffer, buffer_s8)
@@ -16,15 +13,64 @@ function load_game_buffer(buffer){
 			biome_seed = buffer_read(buffer, buffer_u8)
 			generar_bioma(biome_seed)
 		}
+		else if mapa < -1{
+			tutorial = -1 - mapa
+			cargar_escenario(tutorial_nombre[tutorial - 1], false, false)
+		}
 		else
-			var file = cargar_escenario($"{default_maps[mapa]}.txt", false)
-		game_start()
+			cargar_escenario($"{default_maps[mapa]}.txt", false)
+		game_start(false)
+		camx = buffer_read(buffer, buffer_f16)
+		camy = buffer_read(buffer, buffer_f16)
+		zoom = buffer_read(buffer, buffer_f16)
 		timer = buffer_read(buffer, buffer_u32)
 		oleadas_timer = buffer_read(buffer, buffer_u32)
 		oleadas_tiempo = buffer_read(buffer, buffer_u32)
 		oleadas_tiempo_primera = buffer_read(buffer, buffer_u32)
+		tecnologia = buffer_read(buffer, buffer_bool)
+		tecnologia_precio_multiplicador = buffer_read(buffer, buffer_f16)
+		multiplicador_vida_enemigos = buffer_read(buffer, buffer_u16)
+		dificultad = buffer_read(buffer, buffer_s8)
+		modo_misiones = buffer_read(buffer, buffer_bool)
+		#region Misiones
+			var len = buffer_read(buffer, buffer_u8)
+			for(var a = 0; a < len; a++){
+				mision_nombre[a] = buffer_read(buffer, buffer_string)
+				mision_objetivo[a] = buffer_read(buffer, buffer_s8)
+				mision_target_id[a] = buffer_read(buffer, buffer_s8)
+				mision_target_num[a] = buffer_read(buffer, buffer_u16)
+				mision_tiempo[a] = buffer_read(buffer, buffer_u16)
+				mision_tiempo_edit[a] = buffer_read(buffer, buffer_bool)
+				mision_tiempo_victoria[a] = buffer_read(buffer, buffer_bool)
+				mision_tiempo_show[a] = buffer_read(buffer, buffer_bool)
+				var len_2 = buffer_read(buffer, buffer_u8)
+				mision_texto[a] = array_create(len_2, {x : 0, y : 0, texto : ""})
+				for(var b = 0; b < len_2; b++){
+					var _x = real(buffer_read(buffer, buffer_f16))
+					var _y = real(buffer_read(buffer, buffer_f16))
+					var temp_texto = string(buffer_read(buffer, buffer_string))
+					array_set(mision_texto[a], b, {
+						x : _x,
+						y : _y,
+						texto : temp_texto
+					})
+				}
+				mision_camara_move[a] = buffer_read(buffer, buffer_bool)
+				mision_camara_x[a] = buffer_read(buffer, buffer_f16)
+				mision_camara_y[a] = buffer_read(buffer, buffer_f16)
+				mision_switch_oleadas[a] = buffer_read(buffer, buffer_bool)
+			}
+			mision_camara_step = buffer_read(buffer, buffer_u8)
+			mision_camara_x_start = buffer_read(buffer, buffer_f16)
+			mision_camara_y_start = buffer_read(buffer, buffer_f16)
+			mision_texto_victoria = buffer_read(buffer, buffer_string)
+			mision_actual = buffer_read(buffer, buffer_s8)
+			mision_counter = buffer_read(buffer, buffer_u16)
+			mision_current_tiempo = buffer_read(buffer, buffer_s16)
+			mision_choosing_coord = buffer_read(buffer, buffer_bool)
+		#endregion
 		//Construir edificios
-		var len = real(buffer_read(buffer, buffer_u16))
+		len = real(buffer_read(buffer, buffer_u16))
 		var temp_edificios_target = array_create(len, -1)
 		for(var i = 0; i < len; i++){
 			var index = real(buffer_read(buffer, buffer_u8))
@@ -32,7 +78,10 @@ function load_game_buffer(buffer){
 			var a = real(buffer_read(buffer, buffer_u16))
 			var b = real(buffer_read(buffer, buffer_u16))
 			var enemigo = bool(buffer_read(buffer, buffer_bool))
-			var edificio = construir(index, dir, a, b, enemigo, true)
+			if index = id_nucleo
+				var edificio = add_edificio(index, dir, a, b, enemigo)
+			else
+				edificio = construir(index, dir, a, b, enemigo, true)
 			if index = id_procesador
 				load_procesador(buffer, edificio)
 		}

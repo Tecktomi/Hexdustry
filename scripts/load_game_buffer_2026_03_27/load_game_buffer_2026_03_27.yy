@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"load_game_buffer_2026_03_27",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"load_game_buffer_2026_03_27",
+  "parent":{
+    "name":"SERVER",
+    "path":"folders/SCRIPTS/SERVER.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

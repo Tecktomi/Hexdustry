@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"load_map_buffer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"load_map_buffer",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

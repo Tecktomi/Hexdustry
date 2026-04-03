@@ -1,4 +1,4 @@
-function construir(index, dir, mx, my, enemigo = false, server = false){
+function construir(index, dir, mx, my, enemigo = false, server = false, _cheat = control.cheat){
 	with control{
 		var flag = true, flag_2 = false, build_list = get_size(mx, my, dir, edificio_size[index]), edificio = control.null_edificio, temp_complex = abtoxy(mx, my)
 		for(var a = ds_list_size(build_list) - 1; a >= 0; a--){
@@ -62,7 +62,7 @@ function construir(index, dir, mx, my, enemigo = false, server = false){
 				flag = false
 		}
 		//Detectar enemigos cerca
-		if flag and not cheat and not enemigo{
+		if flag and not _cheat and not enemigo{
 			for(var a = array_length(enemigos) - 1; a >= 0; a--){
 				var dron = enemigos[a]
 				if distance_sqr(dron.x, dron.y, temp_complex[0], temp_complex[1]) < 10_000{//100^2
@@ -78,7 +78,7 @@ function construir(index, dir, mx, my, enemigo = false, server = false){
 		if in(index, id_tunel, id_tunel_salida) and build_able and build_target.index = id_tunel
 			index = id_tunel_salida
 		if online and not server{
-			server_add_edificio(real(index), real(dir), real(mx), real(my), enemigo)
+			server_add_edificio(real(index), real(dir), real(mx), real(my), enemigo, _cheat)
 			if not servidor
 				return null_edificio
 		}
@@ -133,7 +133,7 @@ function construir(index, dir, mx, my, enemigo = false, server = false){
 		}
 		//Actualizar recursos
 		if not enemigo{
-			if not cheat
+			if not _cheat
 				for(var a = 0; a < array_length(edificio_precio_id[index]); a++){
 					nucleo.carga[edificio_precio_id[index, a]] -= edificio_precio_num[index, a]
 					nucleo.carga_total -= edificio_precio_num[index, a]
