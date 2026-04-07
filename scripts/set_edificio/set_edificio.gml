@@ -15,18 +15,20 @@ function set_edificio(mode, select, edificio = control.null_edificio, server = f
 				var temp_array = [idr_barril_con_agua, idr_barril_con_acido, idr_barril_con_petroleo, idr_barril_con_lava, idr_barril_con_agua_salada]
 				if edificio.mode{
 					for(var a = array_length(temp_array) - 1; a >= 0; a--){
-						edificio.carga_output[a] = false
-						edificio.carga_input[a] = true
-						edificio.carga_max[a] = 10
+						var b = temp_array[a]
+						edificio.carga_output[b] = false
+						edificio.carga_input[b] = true
+						edificio.carga_max[b] = 10
 					}
 					edificio.receptor = true
 					edificio.emisor = false
 				}
 				else{
 					for(var a = array_length(temp_array) - 1; a >= 0; a--){
-						edificio.carga_output[a] = true
-						edificio.carga_input[a] = false
-						edificio.carga_max[a] = 0
+						var b = temp_array[a]
+						edificio.carga_output[b] = true
+						edificio.carga_input[b] = false
+						edificio.carga_max[b] = 0
 					}
 					edificio.receptor = false
 					edificio.emisor = true

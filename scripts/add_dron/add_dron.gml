@@ -64,6 +64,14 @@ function add_dron(a, b, index, enemigo = true){
 						temp_edificio = edificios_index[id_generador, 0]
 					else if array_length(edificios_index[id_panel_solar]) > 0
 						temp_edificio = edificios_index[id_panel_solar, 0]
+					else for(var j = array_length(nucleos) - 1; j >= 0; j--){
+						temp_edificio = nucleos[j]
+						var dis = distance_sqr(aaa, bbb, temp_edificio.center_x, temp_edificio.center_y)
+						if dis < min_dis{
+							min_dis = dis
+							dron.target = temp_edificio
+						}
+					}
 					dron.target = temp_edificio
 				}
 			}

@@ -53,6 +53,8 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			else
 				edificios_perdidos++
 		}
+		if index = id_almacen
+			array_disorder_remove(almacenes, edificio, 2)
 		if index = id_puerto_de_carga and edificio.link != null_edificio{
 			if edificio.receptor
 				array_disorder_remove(puerto_carga_array, edificio, 2)

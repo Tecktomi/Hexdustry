@@ -14,6 +14,7 @@ function scr_taladro_explosion(edificio = control.null_edificio){
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if ore[# aa, bb] >= 0{
+							minar(aa, bb)
 							edificio.carga[ore_recurso[ore[# aa, bb]]]++
 							edificio.carga_total++
 							flag = true

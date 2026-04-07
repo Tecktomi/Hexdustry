@@ -519,6 +519,12 @@ function set_idioma(){
 			CONTROL_NOMBRE = ["Left", "Right", "Up", "Down", "Pause", "Menu", "Toggle Sound", "Toggle Waves", "Hide Interface", "Show Information", "Show Vectors",
 				"Encyclopedia", "Rotate Building", "Rebuild Buildings", "Show Networks", "Show Flows"]
 			variable_struct_set(L, "autoguardado", "Auto Save")
+			dron_nombre[idd_minero] = "Miner"
+			dron_descripcion[idd_minero] = "Mines resources on the map and delivers them to a nearby Storage"
+			dron_nombre[idd_reconstructor] = "Reconstructor"
+			dron_descripcion[idd_reconstructor] = "Rebuilds destroyed buildings"
+			dron_descripcion[idd_kamikaze] = "Approaches its target and explodes, dealing damage"
+			dron_descripcion[idd_helicoptero] = "Advanced aerial unit, attacks from a distance"
 		}
 		//Español
 		else if idioma = 1{
@@ -1036,6 +1042,12 @@ function set_idioma(){
 			CONTROL_NOMBRE = ["Izquierda", "Derecha", "Arriba", "Abajo", "Pausa", "Menú", "Activar Sonido", "Activar Oleadas", "Esconder Interfaz", "Mostrar Información", "Mostrar vectores",
 				"Enciclopedia", "Rotar edificio", "Reconstruir edificios", "Mostrar Redes", "Mostrar Flujos"]
 			variable_struct_set(L, "autoguardado", "Guardado Automático")
+			dron_nombre[idd_minero] = "Minero"
+			dron_descripcion[idd_minero] = "Mina recursos en el mapa y los lleva a un Almacén cercano"
+			dron_nombre[idd_reconstructor] = "Reconstructor"
+			dron_descripcion[idd_reconstructor] = "Reconstruye edificios destruidos"
+			dron_descripcion[idd_kamikaze] = "Se acerca a su objetivo y explota infilgiendo daño"
+			dron_descripcion[idd_helicoptero] = "Unidad aerea superior, dispara a distancia"
 		}
 		//Русский
 		else if idioma = 2{
@@ -1552,7 +1564,18 @@ function set_idioma(){
 			CONTROL_NOMBRE = ["Влево", "Вправо", "Вверх", "Вниз", "Пауза", "Меню", "Вкл/выкл звук", "Вкл/выкл волны", "Скрыть интерфейс", "Показать информацию", "Показать векторы",
 				"Энциклопедия", "Повернуть здание", "Перестроить здания", "Показать сети", "Показать потоки"]
 			variable_struct_set(L, "autoguardado", "Автоматическое сохранение")
+			dron_nombre[idd_minero] = "Шахтёр"
+			dron_descripcion[idd_minero] = "Добывает ресурсы на карте и доставляет их на ближайший склад"
+			dron_nombre[idd_reconstructor] = "Реконструктор"
+			dron_descripcion[idd_reconstructor] = "Восстанавливает разрушенные здания"
+			dron_descripcion[idd_kamikaze] = "Приближается к цели и взрывается, нанося урон"
+			dron_descripcion[idd_helicoptero] = "Продвинутая воздушная единица, атакует на расстоянии"
 		}
-		//?
+		for(var a = 0; a < rss_max; a++)
+			recurso_descripcion[a] = string_trim(text_wrap(recurso_descripcion[a], 400))
+		for(var a = 0; a < dron_max; a++)
+			dron_descripcion[a] = string_trim(text_wrap(dron_descripcion[a], 400))
+		for(var a = 0; a < edificio_max; a++)
+			edificio_descripcion[a] = string_trim(text_wrap(edificio_descripcion[a], 400))
 	}
 }
