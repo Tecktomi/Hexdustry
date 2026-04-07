@@ -138,7 +138,7 @@ function construir(index, dir, mx, my, enemigo = false, server = false, _cheat =
 					nucleo.carga[edificio_precio_id[index, a]] -= edificio_precio_num[index, a]
 					nucleo.carga_total -= edificio_precio_num[index, a]
 				}
-			if in(index, id_planta_quimica, id_fabrica_de_drones, id_silo_de_misiles, id_fabrica_de_drones_grande){
+			if not server and in(index, id_planta_quimica, id_fabrica_de_drones, id_silo_de_misiles, id_fabrica_de_drones_grande){
 				clear_edit()
 				show_menu = true
 				show_menu_build = edificio

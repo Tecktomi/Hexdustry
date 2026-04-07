@@ -71,9 +71,9 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			edificios_cercanos_heridos : array_create(0, null_edificio),
 			reparadores_cercanos : array_create(0, null_edificio),
 			imagen : spr_hexagono,
-			sound : undefined,
+			sound : null_sound,
 			modulo : false,
-			// 0 = edificios, 1 = chunk_edificios, 2 = [torres_tension, plantas_reciclaje, torres_reparadoras, puertos_carga, target.torres], 3 = luz, 4 = edificios_activos
+			// 0 = edificios, 1 = chunk_edificios, 2 = [torres_tension, plantas_reciclaje, torres_reparadoras, puertos_carga, target.torres, almacenes], 3 = luz, 4 = edificios_activos
 			// 5 = red, 6 = flujo, 7 = torres, 8 = edificios_index, 9 = edificio_dinamico/estatico, 10 = edificio_draw, 11 = edificios_totales
 			punteros : array_create(12, 0),
 			enemigo : enemigo,
@@ -575,6 +575,8 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			if index = id_tuberia
 				tuberia_arround(edificio)
 		}
+		if index = id_almacen
+			array_disorder_push(almacenes, edificio, 2)
 		if index = id_laser
 			edificio.mode = true
 		if in(index, id_rifle, id_mortero, id_onda_de_choque)

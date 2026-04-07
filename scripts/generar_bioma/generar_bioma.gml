@@ -133,7 +133,7 @@ function generar_bioma(bioma){
 							set_terreno(a, b, idt_agua_salada_profunda)
 				}
 			}
-		//Limpiar_zona del núcleo
+		//Limpiar zona del núcleo
 		var temp_list_nucleo = get_size(floor(xsize / 2), floor(ysize / 2), 0, 7)
 		for(var a = ds_list_size(temp_list_nucleo) - 1; a >= 0; a--){
 			var temp_complex = temp_list_nucleo[|a], aa = temp_complex[0], bb = temp_complex[1]
@@ -163,6 +163,7 @@ function generar_bioma(bioma){
 			array_copy(carga_inicial, 0, nucleo.carga, 0, rss_max)
 		}
 		//Menas de recursos
+		betas = array_create(0, null_beta)
 		if bioma = 0
 			temp_peso_data = [[4, 30], [4, 30], [4, 25], [2, 30]]
 		else if bioma = 1
@@ -173,6 +174,13 @@ function generar_bioma(bioma){
 			var cantidad = temp_peso_data[i, 0], magnitud = temp_peso_data[i, 1]
 			for(var j = 0; j < cantidad; j++){
 				var a = j * xsize / cantidad + irandom(floor(xsize / cantidad)), b = irandom(ysize - 1)
+				var new_beta = {
+					recurso : i,
+					terrenos : array_create(0, [0, 0]),
+					center_x : 0,
+					center_y : 0
+				}
+				array_push(betas, new_beta)
 				repeat(magnitud){
 					var temp_list = get_size(a, b, 0, 3)
 					for(var k = 0; k < 7; k++){
@@ -186,6 +194,8 @@ function generar_bioma(bioma){
 								if grafic_array_ore_piedras[i] and grafic_array_terreno_piedras[temp_terreno]
 									set_terreno(aa, bb, i = ido_cobre ? idt_piedra_cuprica : idt_piedra_ferrica)
 								ore[# aa, bb] = i
+								beta[# aa, bb] = new_beta
+								array_push(new_beta.terrenos, [real(aa), real(bb)])
 							}
 							ds_grid_add(ore_amount, aa, bb, floor(random_range(0.3, 1) * ore_size[i]))
 						}
@@ -196,6 +206,16 @@ function generar_bioma(bioma){
 					b = clamp(temp_complex[1], 0, ysize - 1)
 				}
 			}
+		}
+		//Betas
+		for(var a = 0; a < array_length(betas); a++){
+			var temp_beta = betas[a], len = array_length(temp_beta.terrenos)
+			for(var b = 0; b < len; b++){
+				temp_beta.center_x += temp_beta.terrenos[b, 0]
+				temp_beta.center_y += temp_beta.terrenos[b, 1]
+			}
+			temp_beta.center_x = round(temp_beta.center_x / len)
+			temp_beta.center_y = round(temp_beta.center_y / len)
 		}
 		//Limpiar al rededor del núcleo
 		for(var a = ds_list_size(temp_list_nucleo) - 1; a >= 0; a--){

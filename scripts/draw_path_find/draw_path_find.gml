@@ -49,6 +49,7 @@ function draw_path_find(){
 					var temp_array_dron = chunk_dron_enemigo[# a, b], temp_array_dron_2 = chunk_dron_aliado[# a, b]
 					draw_text_off(temp_complex[0], temp_complex[1], $"{array_length(temp_array_dron)}\n{array_length(temp_array_dron_2)}")
 				}
+				break
 			}
 			case 7:{
 				for(var a = min_chunka; a < max_chunka; a++) for(var b = min_chunkb; b < max_chunkb; b++){
@@ -56,6 +57,21 @@ function draw_path_find(){
 					var temp_array_1 = chunk_edificios_estatico[# a, b], temp_array_2 = chunk_edificios_dinamico[# a, b], temp_array_3 = chunk_edificios_draw[# a, b]
 					draw_text_off(temp_complex[0], temp_complex[1], $"{array_length(temp_array_1)}\n{array_length(temp_array_2)}\n{array_length(temp_array_3)}")
 				}
+				break
+			}
+			case 8:{
+				var len = array_length(betas)
+				for(var a = 0; a < len; a++){
+					var temp_beta = betas[a], len_2 = array_length(temp_beta.terrenos), color = make_color_hsv(255 * a / len, 127, 127)
+					for(var b = 0; b < len_2; b++){
+						var temp_terreno = temp_beta.terrenos[b], temp_complex = abtoxy(temp_terreno[0], temp_terreno[1])
+						draw_sprite_off(spr_hexagono, 0, temp_complex[0], temp_complex[1],,,, color, 0.5)
+					}
+					draw_set_color(c_white)
+					var temp_complex = abtoxy(temp_beta.center_x, temp_beta.center_y)
+					draw_text_off(temp_complex[0], temp_complex[1], a)
+				}
+				break
 			}
 		}
 		draw_set_halign(h)

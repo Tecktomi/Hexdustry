@@ -2,19 +2,17 @@ function scr_taladro(edificio = control.null_edificio){
 	with control{
 		var index = edificio.index
 		if edificio_energia[index]
-			var red = edificio.red
+			var red = edificio.red, red_power = red.eficiencia
 		var flujo = edificio.flujo
 		if edificio.carga_total < edificio_carga_max[index]{
 			if index = id_taladro_electrico{
 				change_energia(edificio_energia_consumo[index], edificio)
-				if red.eficiencia > 0 and flujo.liquido = idl_acido
+				if red_power > 0 and flujo.liquido = idl_agua
 					change_flujo(edificio_flujo_consumo[index], edificio)
-				edificio.proceso += red.eficiencia * (1 + 0.6 * (flujo.liquido = idl_acido ? flujo.eficiencia : 0)) * edificio.select * (1 + 0.4 * edificio.modulo)
+				edificio.proceso += red_power * (1 + 0.6 * (flujo.liquido = idl_agua ? flujo.eficiencia : 0)) * edificio.select * (1 + 0.4 * edificio.modulo)
 			}
-			else if index = id_taladro{
-				change_flujo(edificio_flujo_consumo[index], edificio)
-				edificio.proceso += (1 + 0.6 * (flujo.liquido = idl_agua ? flujo.eficiencia : 0)) * edificio.select * (1 + 0.4 * edificio.modulo)
-			}
+			else if index = id_taladro
+				edificio.proceso += edificio.select * (1 + 0.4 * edificio.modulo)
 			sound_play_edificio(3, edificio.center_x, edificio.center_y, 0.4)
 			if edificio.proceso >= edificio_proceso[index]{
 				edificio.proceso = 0
@@ -30,14 +28,8 @@ function scr_taladro(edificio = control.null_edificio){
 						edificio.carga_total++
 						if edificio.carga_total = edificio_carga_max[index]
 							change_energia(0, edificio)
-						ds_grid_add(ore_amount, aa, bb, -1)
-						if ore_amount[# aa, bb] = 50
-							update_background(aa, bb)
-						else if ore_amount[# aa, bb] = 0{
-							ds_grid_set(ore, aa, bb, -1)
-							update_background(aa, bb)
+						if minar(aa, bb)
 							edificio.select -= 0.05
-						}
 						flag = true
 						break
 					}
@@ -57,9 +49,7 @@ function scr_taladro(edificio = control.null_edificio){
 					edificio.idle = true
 					change_energia(0, edificio)
 				}
-				if index = id_taladro_electrico and flujo.liquido = idl_acido
-					change_flujo(0, edificio)
-				if index = id_taladro and flujo.liquido = idl_agua
+				if index = id_taladro_electrico and flujo.liquido = idl_agua
 					change_flujo(0, edificio)
 			}
 		}
