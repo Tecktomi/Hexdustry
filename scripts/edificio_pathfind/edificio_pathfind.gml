@@ -1,10 +1,10 @@
 function edificio_pathfind(edificio = control.null_edificio){
 	var a = edificio.a, b = edificio.b, dir = edificio.dir, index = edificio.index
 	with control{
-		var visitado = usable_grid_bool, temp_queue = ds_queue_create(), temp_list = get_size(a, b, dir, edificio_size[index]), size = ds_list_size(temp_list)
+		var visitado = usable_grid_bool, temp_queue = ds_queue_create(), temp_list = get_size(a, b, dir, edificio_size[index]), size = array_length(temp_list)
 		ds_grid_clear(visitado, false)
 		for(var c = 0; c < size; c++){
-			var temp_complex = temp_list[|c], aa = temp_complex[0], bb = temp_complex[1], temp_priority = ds_grid_get(edificio_cercano_priority, aa, bb)
+			var temp_complex = temp_list[c], aa = temp_complex[0], bb = temp_complex[1], temp_priority = ds_grid_get(edificio_cercano_priority, aa, bb)
 			ds_grid_set(visitado, aa, bb, true)
 			ds_queue_enqueue(temp_queue, [aa, bb, 0, 0]) //a, b, dis, dir
 			ds_priority_add(temp_priority, edificio, 0)

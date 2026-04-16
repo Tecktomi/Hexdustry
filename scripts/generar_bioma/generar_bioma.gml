@@ -31,7 +31,7 @@ function generar_bioma(bioma){
 				repeat(magnitud){
 					var temp_list = get_size(a, b, 0, 3)
 					for(var k = 0; k < 7; k++){
-						var temp_complex = temp_list[|k], aa = temp_complex[0], bb = temp_complex[1]
+						var temp_complex = temp_list[k], aa = temp_complex[0], bb = temp_complex[1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if terreno[# aa, bb] != idt_agua{
@@ -135,8 +135,8 @@ function generar_bioma(bioma){
 			}
 		//Limpiar zona del núcleo
 		var temp_list_nucleo = get_size(floor(xsize / 2), floor(ysize / 2), 0, 7)
-		for(var a = ds_list_size(temp_list_nucleo) - 1; a >= 0; a--){
-			var temp_complex = temp_list_nucleo[|a], aa = temp_complex[0], bb = temp_complex[1]
+		for(var a = array_length(temp_list_nucleo) - 1; a >= 0; a--){
+			var temp_complex = temp_list_nucleo[a], aa = temp_complex[0], bb = temp_complex[1]
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 				continue
 			if not terreno_caminable[terreno[# aa, bb]]{
@@ -184,7 +184,7 @@ function generar_bioma(bioma){
 				repeat(magnitud){
 					var temp_list = get_size(a, b, 0, 3)
 					for(var k = 0; k < 7; k++){
-						var temp_complex = temp_list[|k], aa = temp_complex[0], bb = temp_complex[1]
+						var temp_complex = temp_list[k], aa = temp_complex[0], bb = temp_complex[1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						var temp_terreno = terreno[# aa, bb]
@@ -218,8 +218,8 @@ function generar_bioma(bioma){
 			temp_beta.center_y = round(temp_beta.center_y / len)
 		}
 		//Limpiar al rededor del núcleo
-		for(var a = ds_list_size(temp_list_nucleo) - 1; a >= 0; a--){
-			var temp_complex = temp_list_nucleo[|a], aa = temp_complex[0], bb = temp_complex[1]
+		for(var a = array_length(temp_list_nucleo) - 1; a >= 0; a--){
+			var temp_complex = temp_list_nucleo[a], aa = temp_complex[0], bb = temp_complex[1]
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 				continue
 			ds_grid_set(ore, aa, bb, -1)

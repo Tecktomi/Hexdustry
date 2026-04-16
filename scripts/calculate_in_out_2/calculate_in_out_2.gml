@@ -122,8 +122,8 @@ function calculate_in_out_2(edificio = control.null_edificio, set_receptor = tru
 		//Inputs e Outputs
 		else{
 			var temp_list = get_arround(a, b, dir, edificio_size[index])
-			for(var c = ds_list_size(temp_list) - 1; c >= 0; c--){
-				var temp_complex = temp_list[|c], aa = temp_complex[0], bb = temp_complex[1]
+			for(var c = array_length(temp_list) - 1; c >= 0; c--){
+				var temp_complex = temp_list[c], aa = temp_complex[0], bb = temp_complex[1]
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if not edificio_bool[# aa, bb]
@@ -159,8 +159,8 @@ function calculate_in_out_2(edificio = control.null_edificio, set_receptor = tru
 						if flag and in(index, id_tunel_salida) and not(complex_equal(temp_complex, par_dir_2) or complex_equal(temp_complex, par_dir_3) or complex_equal(temp_complex, par_dir_4))
 							flag = false
 						if flag and in(temp_index, id_enrutador, id_selector, id_overflow, id_tunel)
-							for(var d = ds_list_size(edificio.coordenadas) - 1; d >= 0; d--){
-								var temp_complex_2 = edificio.coordenadas[|d]
+							for(var d = array_length(edificio.coordenadas) - 1; d >= 0; d--){
+								var temp_complex_2 = edificio.coordenadas[d]
 								if complex_equal(par_dir_a_5, temp_complex_2) or complex_equal(par_dir_a, temp_complex_2) or complex_equal(par_dir_a_1, temp_complex_2){
 									flag = false
 									break
@@ -191,8 +191,8 @@ function calculate_in_out_2(edificio = control.null_edificio, set_receptor = tru
 							flag = false
 						if flag and in(temp_index, id_enrutador, id_selector, id_overflow){
 							flag = false
-							for(var d = ds_list_size(edificio.coordenadas) - 1; d >= 0; d--){
-								var temp_complex_2 = edificio.coordenadas[|d]
+							for(var d = array_length(edificio.coordenadas) - 1; d >= 0; d--){
+								var temp_complex_2 = edificio.coordenadas[d]
 								if complex_equal(par_dir_a_5, temp_complex_2) or complex_equal(par_dir_a, temp_complex_2) or complex_equal(par_dir_a_1, temp_complex_2){
 									flag = true
 									break
@@ -201,8 +201,8 @@ function calculate_in_out_2(edificio = control.null_edificio, set_receptor = tru
 						}
 						if flag and temp_index = id_tunel_salida{
 							flag = false
-							for(var d = ds_list_size(edificio.coordenadas) - 1; d >= 0; d--){
-								var temp_complex_2 = edificio.coordenadas[|d]
+							for(var d = array_length(edificio.coordenadas) - 1; d >= 0; d--){
+								var temp_complex_2 = edificio.coordenadas[d]
 								if complex_equal(par_dir_a_2, temp_complex_2) or complex_equal(par_dir_a_3, temp_complex_2) or complex_equal(par_dir_a_4, temp_complex_2){
 									flag = true
 									break
@@ -218,7 +218,6 @@ function calculate_in_out_2(edificio = control.null_edificio, set_receptor = tru
 					}
 				}
 			}
-			ds_list_destroy(temp_list)
 			if index = id_cinta_transportadora
 				camino_calcular_in(edificio)
 			for(var c = array_length(edificio.outputs) - 1; c >= 0; c--){

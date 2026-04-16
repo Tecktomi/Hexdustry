@@ -517,7 +517,7 @@ function set_idioma(){
 			variable_struct_set(L, "jugadores", "Players")
 			variable_struct_set(L, "controles", "Controls")
 			CONTROL_NOMBRE = ["Left", "Right", "Up", "Down", "Pause", "Menu", "Toggle Sound", "Toggle Waves", "Hide Interface", "Show Information", "Show Vectors",
-				"Encyclopedia", "Rotate Building", "Rebuild Buildings", "Show Networks", "Show Flows"]
+				"Encyclopedia", "Rotate Building", "Rebuild Buildings", "Show Networks", "Show Flows", "Create Blueprint"]
 			variable_struct_set(L, "autoguardado", "Auto Save")
 			dron_nombre[idd_minero] = "Miner"
 			dron_descripcion[idd_minero] = "Mines resources on the map and delivers them to a nearby Storage"
@@ -525,6 +525,8 @@ function set_idioma(){
 			dron_descripcion[idd_reconstructor] = "Rebuilds destroyed buildings"
 			dron_descripcion[idd_kamikaze] = "Approaches its target and explodes, dealing damage"
 			dron_descripcion[idd_helicoptero] = "Advanced aerial unit, attacks from a distance"
+			variable_struct_set(L, "guardar_plano", "Save Blueprint")
+			variable_struct_set(L, "cargar_plano", "Load Blueprint")
 		}
 		//Español
 		else if idioma = 1{
@@ -1040,7 +1042,7 @@ function set_idioma(){
 			variable_struct_set(L, "jugadores", "Jugadores")
 			variable_struct_set(L, "controles", "Controles")
 			CONTROL_NOMBRE = ["Izquierda", "Derecha", "Arriba", "Abajo", "Pausa", "Menú", "Activar Sonido", "Activar Oleadas", "Esconder Interfaz", "Mostrar Información", "Mostrar vectores",
-				"Enciclopedia", "Rotar edificio", "Reconstruir edificios", "Mostrar Redes", "Mostrar Flujos"]
+				"Enciclopedia", "Rotar edificio", "Reconstruir edificios", "Mostrar Redes", "Mostrar Flujos", "Crear Planos"]
 			variable_struct_set(L, "autoguardado", "Guardado Automático")
 			dron_nombre[idd_minero] = "Minero"
 			dron_descripcion[idd_minero] = "Mina recursos en el mapa y los lleva a un Almacén cercano"
@@ -1048,6 +1050,8 @@ function set_idioma(){
 			dron_descripcion[idd_reconstructor] = "Reconstruye edificios destruidos"
 			dron_descripcion[idd_kamikaze] = "Se acerca a su objetivo y explota infilgiendo daño"
 			dron_descripcion[idd_helicoptero] = "Unidad aerea superior, dispara a distancia"
+			variable_struct_set(L, "guardar_plano", "Guardar Plano")
+			variable_struct_set(L, "cargar_plano", "Cargar Plano")
 		}
 		//Русский
 		else if idioma = 2{
@@ -1562,7 +1566,7 @@ function set_idioma(){
 			variable_struct_set(L, "jugadores", "Игроки")
 			variable_struct_set(L, "controles", "Элементы управления")
 			CONTROL_NOMBRE = ["Влево", "Вправо", "Вверх", "Вниз", "Пауза", "Меню", "Вкл/выкл звук", "Вкл/выкл волны", "Скрыть интерфейс", "Показать информацию", "Показать векторы",
-				"Энциклопедия", "Повернуть здание", "Перестроить здания", "Показать сети", "Показать потоки"]
+				"Энциклопедия", "Повернуть здание", "Перестроить здания", "Показать сети", "Показать потоки", "Создать проект"]
 			variable_struct_set(L, "autoguardado", "Автоматическое сохранение")
 			dron_nombre[idd_minero] = "Шахтёр"
 			dron_descripcion[idd_minero] = "Добывает ресурсы на карте и доставляет их на ближайший склад"
@@ -1570,6 +1574,8 @@ function set_idioma(){
 			dron_descripcion[idd_reconstructor] = "Восстанавливает разрушенные здания"
 			dron_descripcion[idd_kamikaze] = "Приближается к цели и взрывается, нанося урон"
 			dron_descripcion[idd_helicoptero] = "Продвинутая воздушная единица, атакует на расстоянии"
+			variable_struct_set(L, "guardar_plano", "Сохранить чертеж")
+			variable_struct_set(L, "cargar_plano", "Загрузить чертеж")
 		}
 		for(var a = 0; a < rss_max; a++)
 			recurso_descripcion[a] = string_trim(text_wrap(recurso_descripcion[a], 400))
