@@ -12,6 +12,8 @@ else{
 draw_set_font(font_normal)
 FILE_VERSION = 2026_04_01
 PROCESADOR_VERSION = 2026_03_25
+size_size = [1, 3, 7, 12, 19, 27, 37]
+size_borde = [6, 9, 12, 15, 18, 21]
 ini_open("settings.ini")
 #region Controles
 	CONTROL_LEFT = ini_read_real("Controles", 0, ord("A"))
@@ -30,10 +32,12 @@ ini_open("settings.ini")
 	CONTROL_REPARAR = ini_read_real("Controles", 13, ord("Q"))
 	CONTROL_REDES = ini_read_real("Controles", 14, ord("O"))
 	CONTROL_FLUJO = ini_read_real("Controles", 15, ord("I"))
+	CONTROL_BLUEPRINT = ini_read_real("Controles", 16, ord("K"))
 	CONTROL_USADAS = [CONTROL_LEFT, CONTROL_RIGHT, CONTROL_UP, CONTROL_DOWN, CONTROL_PAUSE, CONTROL_MENU, CONTROL_MUSIC, CONTROL_WAVES, CONTROL_HIDEUI, CONTROL_INFO,
-		CONTROL_FLOW, CONTROL_ENCICLOPEDIA, CONTROL_ROTAR, CONTROL_REPARAR, CONTROL_REDES, CONTROL_FLUJO]
+		CONTROL_FLOW, CONTROL_ENCICLOPEDIA, CONTROL_ROTAR, CONTROL_REPARAR, CONTROL_REDES, CONTROL_FLUJO, CONTROL_BLUEPRINT]
 	CONTROL_NOMBRE = ["Izquierda", "Derecha", "Arriba", "Abajo", "Pausa", "Menú", "Activar Sonido", "Activar Oleadas", "Esconder Interfaz", "Mostrar Información", "Mostrar vectores",
-		"Enciclopedia", "Rotar edificio", "Reconstruir edificios", "Mostrar Redes", "Mostrar Flujos"]
+		"Enciclopedia", "Rotar edificio", "Reconstruir edificios", "Mostrar Redes", "Mostrar Flujos", "Crear Planos"]
+	CONTROL_MAX = array_length(CONTROL_NOMBRE)
 #endregion
 #region Settings
 	sonido = bool(ini_read_real("", "sonido", 1))
@@ -351,6 +355,24 @@ L = {}
 	ui_boton_color = [ui_boton_verde, ui_boton_azul, ui_boton_gris, ui_boton_rojo]
 	ui_boton_color_hover = [ui_boton_verde_hover, ui_boton_azul_hover, ui_boton_gris_hover, ui_boton_rojo_hover]
 #endregion
+#region Blueprint
+	blueprint_mod2 = false
+	blueprint_safe = false
+	blueprint_mina = 0
+	blueprint_maxa = 0
+	blueprint_minb = 0
+	blueprint_maxb = 0
+	blueprint_grid = ds_grid_create(xsize, ysize)
+	ds_grid_clear(blueprint_grid, false)
+	null_blueprint = {
+		construible : true,
+		a : 0,
+		b : 0,
+		index : 0,
+		dir : 0
+	}
+	blueprint = array_create(0, null_blueprint)
+#endregion
 null_sound = sound_play(snd_explosion, 0, 0, 0)
 null_edificio = {
 	index : -1,
@@ -361,8 +383,8 @@ null_edificio = {
 	y : 0,
 	center_x : 0,
 	center_y : 0,
-	coordenadas : ds_list_create(),
-	bordes : ds_list_create(),
+	coordenadas : array_create(0, [0, 0]),
+	bordes : array_create(0, [0, 0]),
 	inputs : [],
 	input_index : 0,
 	outputs : [],
@@ -431,10 +453,6 @@ null_edificio = {
 	chunk_maxb : 0
 }
 null_edificio.link = null_edificio
-ds_list_add(null_edificio.coordenadas, [0, 0])
-ds_list_clear(null_edificio.coordenadas)
-ds_list_add(null_edificio.bordes, [0, 0])
-ds_list_clear(null_edificio.bordes)
 null_edificio.energia_link = array_create(0, null_edificio)
 null_edificio.flujo_link = array_create(0, null_edificio)
 ds_grid_clear(null_edificio.coordenadas_dis, 0)
@@ -1219,6 +1237,14 @@ var flag_rss = array_create(rss_max, false)
 		grafic_array_agua_baja[idt_agua] = true
 		grafic_array_agua_baja[idt_agua_salada] = true
 	#endregion
+	#region construible_en_liquido
+		grafic_array_construible_en_liquido = array_create(edificio_max, false)
+		grafic_array_construible_en_liquido[id_bomba_hidraulica] = true
+		grafic_array_construible_en_liquido[id_bomba_de_evaporacion] = true
+		grafic_array_construible_en_liquido[id_tuberia] = true
+		grafic_array_construible_en_liquido[id_generador_geotermico] = true
+		grafic_array_construible_en_liquido[id_tuberia_subterranea] = true
+	#endregion
 #endregion
 //Inputs y outputs de fábrica de drones y planta de reciclaje
 for(var a = 0; a < dron_max; a++){
@@ -1242,8 +1268,6 @@ for(var a = 0; a < edificio_max; a++){
 		for(var b = 0; b < array_length(edificio_precio_id[a]); b++)
 			edificio_precio[a] += edificio_precio_num[a, b] * (1 + recurso_tier[edificio_precio_id[a, b]])
 }
-size_size = [1, 3, 7, 12, 19]
-size_borde = [6, 9, 12, 15, 18, 21]
 size_fx = [fx_construir_1, fx_construir_2, fx_construir_3, fx_construir_4, spr_hexagono_5]
 misiles_descripcion = ["Un simple misil teledirigido", "Destruye un área con múltiples explosiones", "Destruye la base enemiga y gana la partida instantánemanetes"]
 misiles_nombre = ["Misil de Crucero", "Misil de Racimo", "Misil Nuclear"]

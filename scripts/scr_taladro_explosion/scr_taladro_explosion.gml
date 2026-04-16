@@ -9,8 +9,8 @@ function scr_taladro_explosion(edificio = control.null_edificio){
 					edificio.carga[idr_explosivo]--
 					edificio.carga_total--
 					var temp_list = get_size(edificio.a, edificio.b, edificio.dir, edificio_size[index] + 2), flag = false
-					for(var b = ds_list_size(temp_list) - 1; b >= 0; b--){
-						var temp_complex = temp_list[|b], aa = temp_complex[0], bb = temp_complex[1]
+					for(var b = array_length(temp_list) - 1; b >= 0; b--){
+						var temp_complex = temp_list[b], aa = temp_complex[0], bb = temp_complex[1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if ore[# aa, bb] >= 0{

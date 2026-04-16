@@ -493,14 +493,14 @@ function menu_editor(){
 					if mx = last_mx and my = last_my{
 						last_mx = -1
 						last_my = -1
-						for(var i = ds_list_size(build_list) - 1; i >= 0; i--){
-							var temp_complex = build_list[|i], aa = temp_complex[0], bb = temp_complex[1]
+						for(var i = array_length(build_list) - 1; i >= 0; i--){
+							var temp_complex = build_list[i], aa = temp_complex[0], bb = temp_complex[1]
 							set_terreno(aa, bb, build_index)
 						}
 					}
 					//Calcular tarro de pintura
 					else{
-						ds_list_clear(build_list)
+						build_list = array_create(0, [0, 0])
 						last_mx = mx
 						last_my = my
 						mouse_clear(mb_left)
@@ -511,7 +511,7 @@ function menu_editor(){
 						var target_id = terreno[# mx, my]
 						while not ds_queue_empty(temp_queue){
 							var temp_trio = ds_queue_dequeue(temp_queue), a = temp_trio.a, b = temp_trio.b, dir = temp_trio.dir
-							ds_list_add(build_list, [a, b])
+							array_push(build_list, [a, b])
 							for(var i = 0; i < 6; i++){
 								if i= temp_trio.dir
 									continue
@@ -528,8 +528,8 @@ function menu_editor(){
 					}
 				if mx = last_mx and my = last_my{
 					var temp_sprite = terreno_sprite[build_index]
-					for(var i = ds_list_size(build_list) - 1; i >= 0; i--){
-						var temp_complex = build_list[|i], a = temp_complex[0], b = temp_complex[1]
+					for(var i = array_length(build_list) - 1; i >= 0; i--){
+						var temp_complex = build_list[i], a = temp_complex[0], b = temp_complex[1]
 						var temp_complex_2 = abtoxy(a, b), aa = temp_complex_2[0], bb = temp_complex_2[1]
 						draw_sprite_off(temp_sprite, 0, aa, bb,,,,, 0.5)
 					}
@@ -569,8 +569,8 @@ function menu_editor(){
 					if mouse_wheel_down() and build_size > 1
 						build_size--
 					var temp_list = get_size(mx, my, 0, build_size)
-					for(var i = ds_list_size(temp_list) - 1; i >= 0; i--){
-						var temp_complex = temp_list[|i], a = temp_complex[0], b = temp_complex[1]
+					for(var i = array_length(temp_list) - 1; i >= 0; i--){
+						var temp_complex = temp_list[i], a = temp_complex[0], b = temp_complex[1]
 						if a < 0 or b < 0 or a >= xsize or b >= ysize
 							continue
 						temp_complex = abtoxy(a, b)

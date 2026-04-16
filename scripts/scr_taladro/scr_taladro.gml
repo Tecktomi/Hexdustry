@@ -16,13 +16,13 @@ function scr_taladro(edificio = control.null_edificio){
 			sound_play_edificio(3, edificio.center_x, edificio.center_y, 0.4)
 			if edificio.proceso >= edificio_proceso[index]{
 				edificio.proceso = 0
-				var temp_list = ds_list_create(), temp_complex_2 = {a : 0, b : 0}, flag = false
-				ds_list_copy(temp_list, edificio.coordenadas)
-				ds_list_shuffle(temp_list)
-				while not ds_list_empty(temp_list){
-					temp_complex_2 = temp_list[|0]
+				var temp_list = array_create(array_length(edificio.coordenadas)), temp_complex_2 = {a : 0, b : 0}, flag = false
+				array_clone(temp_list, edificio.coordenadas)
+				array_shuffle(temp_list)
+				while array_length(temp_list) > 0{
+					temp_complex_2 = temp_list[array_length(temp_list) - 1]
 					var aa = temp_complex_2[0], bb = temp_complex_2[1]
-					ds_list_delete(temp_list, 0)
+					array_pop(temp_list)
 					if in(ore[# aa, bb], ido_cobre, ido_hierro, ido_carbon){
 						edificio.carga[ore_recurso[ore[# aa, bb]]]++
 						edificio.carga_total++
@@ -42,7 +42,6 @@ function scr_taladro(edificio = control.null_edificio){
 						break
 					}
 				}
-				ds_list_destroy(temp_list)
 				if flag
 					edificio.waiting = not mover(edificio)
 				else{

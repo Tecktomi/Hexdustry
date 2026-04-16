@@ -113,8 +113,8 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			temp_edificio.link = null_edificio
 		}
 		//Cancelar coordenadas
-		for(var i = ds_list_size(edificio.coordenadas) - 1; i >= 0; i--){
-			var temp_coordenada_2 = edificio.coordenadas[|i], a = temp_coordenada_2[0], b = temp_coordenada_2[1]
+		for(var i = array_length(edificio.coordenadas) - 1; i >= 0; i--){
+			var temp_coordenada_2 = edificio.coordenadas[i], a = temp_coordenada_2[0], b = temp_coordenada_2[1]
 			if index = 0{
 				ds_grid_set(edificio_cercano, a, b, null_edificio)
 				ds_grid_set(edificio_cercano_dis, a, b, infinity)
@@ -133,7 +133,6 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				ds_grid_set(repair_select, aa, bb, edificio.select)
 			}
 		}
-		ds_list_destroy(edificio.coordenadas)
 		if menu = 1 and index = id_nucleo and array_length(edificios_targeteables) > 0
 			for(var a = 0; a < xsize; a++)
 				for(var b = 0; b < ysize; b++)
@@ -335,8 +334,8 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			if index = id_tuberia_subterranea
 				edificio.link.link = null_edificio
 			var temp_list = get_arround(aa, bb, edificio.dir, edificio_size[index])
-			for(var a = ds_list_size(temp_list) - 1; a >= 0; a--){
-				var temp_complex = temp_list[|a], aaa = temp_complex[0], bbb = temp_complex[1]
+			for(var a = array_length(temp_list) - 1; a >= 0; a--){
+				var temp_complex = temp_list[a], aaa = temp_complex[0], bbb = temp_complex[1]
 				if aaa < 0 or bbb < 0 or aaa >= xsize or bbb >= ysize or not edificio_bool[# aaa, bbb]
 					continue
 				var temp_edificio = edificio_id[# aaa, bbb]
