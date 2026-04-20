@@ -33,10 +33,11 @@ ini_open("settings.ini")
 	CONTROL_REDES = ini_read_real("Controles", 14, ord("O"))
 	CONTROL_FLUJO = ini_read_real("Controles", 15, ord("I"))
 	CONTROL_BLUEPRINT = ini_read_real("Controles", 16, ord("K"))
+	CONTROL_TAB = ini_read_real("Controles", 17, vk_tab)
 	CONTROL_USADAS = [CONTROL_LEFT, CONTROL_RIGHT, CONTROL_UP, CONTROL_DOWN, CONTROL_PAUSE, CONTROL_MENU, CONTROL_MUSIC, CONTROL_WAVES, CONTROL_HIDEUI, CONTROL_INFO,
-		CONTROL_FLOW, CONTROL_ENCICLOPEDIA, CONTROL_ROTAR, CONTROL_REPARAR, CONTROL_REDES, CONTROL_FLUJO, CONTROL_BLUEPRINT]
+		CONTROL_FLOW, CONTROL_ENCICLOPEDIA, CONTROL_ROTAR, CONTROL_REPARAR, CONTROL_REDES, CONTROL_FLUJO, CONTROL_BLUEPRINT, CONTROL_TAB]
 	CONTROL_NOMBRE = ["Izquierda", "Derecha", "Arriba", "Abajo", "Pausa", "Menú", "Activar Sonido", "Activar Oleadas", "Esconder Interfaz", "Mostrar Información", "Mostrar vectores",
-		"Enciclopedia", "Rotar edificio", "Reconstruir edificios", "Mostrar Redes", "Mostrar Flujos", "Crear Planos"]
+		"Enciclopedia", "Rotar edificio", "Reconstruir edificios", "Mostrar Redes", "Mostrar Flujos", "Crear Planos", "Ver Jugadores"]
 	CONTROL_MAX = array_length(CONTROL_NOMBRE)
 #endregion
 #region Settings
@@ -47,6 +48,7 @@ ini_open("settings.ini")
 	grafic_humo = bool(ini_read_real("", "grafic_humo", 1))
 	grafic_energia = bool(ini_read_real("", "grafic_energia", 1))
 	auto_guardado = bool(ini_read_real("", "auto_guardado", 1))
+	online_nombre = ini_read_string("", "Nombre Online", $"jugador_{irandom(255)}")
 	grafic_hideui = false
 #endregion
 medallas = array_create(6)
@@ -281,6 +283,10 @@ L = {}
 	partidas = array_create(0, "")
 	partidas_png = array_create(0, "")
 	guardado = false
+	chat = array_create(0, "")
+	chat_time = array_create(0, 0)
+	chat_text = ""
+	chat_input = false
 #endregion
 #region Misiones
 	mision_nombre = array_create(0, "")
@@ -321,7 +327,9 @@ L = {}
 	udp_socket = network_create_socket(network_socket_udp)
 	server_ip = "192.168.1.x"
 	servidor = false
-	server_jugadores = array_create(0)
+	server_jugadores = [-1]
+	server_jugadores_nombre = [online_nombre]
+	server_jugadores_timeout = [0]
 	mapa_editado = false
 	null_cambio = {
 		step : 0,
@@ -331,6 +339,8 @@ L = {}
 	cambios = array_create(0, null_cambio)
 	server_timer = 0
 	LAG = 20
+	server_yendose = false
+	server_sync_counter = 0
 #endregion
 #region UI
 	ui_fondo = #282828
@@ -1149,101 +1159,108 @@ edificio_seteable[id_fabrica_de_drones_grande] = true
 var flag_rss = array_create(rss_max, false)
 #region Arreglos de optimización
 	#region camino_o_tunel
-		grafic_array_camino_o_tunel = array_create(edificio_max, false)
-		grafic_array_camino_o_tunel[id_cinta_transportadora] = true
-		grafic_array_camino_o_tunel[id_enrutador] = true
-		grafic_array_camino_o_tunel[id_selector] = true
-		grafic_array_camino_o_tunel[id_overflow] = true
-		grafic_array_camino_o_tunel[id_cinta_magnetica] = true
-		grafic_array_camino_o_tunel[id_tunel] = true
-		grafic_array_camino_o_tunel[id_tunel_salida] = true
+		tag_camino_o_tunel = array_create(edificio_max, false)
+		tag_camino_o_tunel[id_cinta_transportadora] = true
+		tag_camino_o_tunel[id_enrutador] = true
+		tag_camino_o_tunel[id_selector] = true
+		tag_camino_o_tunel[id_overflow] = true
+		tag_camino_o_tunel[id_cinta_magnetica] = true
+		tag_camino_o_tunel[id_tunel] = true
+		tag_camino_o_tunel[id_tunel_salida] = true
 	#endregion
 	#region municion_armas
-		grafic_array_municion_armas = array_create(edificio_max, false)
-		grafic_array_municion_armas[id_torre_basica] = true
-		grafic_array_municion_armas[id_rifle] = true
-		grafic_array_municion_armas[id_lanzallamas] = true
-		grafic_array_municion_armas[id_mortero] = true
+		tag_municion_armas = array_create(edificio_max, false)
+		tag_municion_armas[id_torre_basica] = true
+		tag_municion_armas[id_rifle] = true
+		tag_municion_armas[id_lanzallamas] = true
+		tag_municion_armas[id_mortero] = true
 	#endregion
 	#region generadores_de_humo
-		grafic_array_generadores_de_humo = array_create(edificio_max, false)
-		grafic_array_generadores_de_humo[id_generador] = true
-		grafic_array_generadores_de_humo[id_turbina] = true
-		grafic_array_generadores_de_humo[id_planta_nuclear] = true
-		grafic_array_generadores_de_humo[id_horno] = true
-		grafic_array_generadores_de_humo[id_generador_geotermico] = true
-		grafic_array_generadores_de_humo[id_refineria_de_petroleo] = true
+		tag_generadores_de_humo = array_create(edificio_max, false)
+		tag_generadores_de_humo[id_generador] = true
+		tag_generadores_de_humo[id_turbina] = true
+		tag_generadores_de_humo[id_planta_nuclear] = true
+		tag_generadores_de_humo[id_horno] = true
+		tag_generadores_de_humo[id_generador_geotermico] = true
+		tag_generadores_de_humo[id_refineria_de_petroleo] = true
 	#endregion
 	#region dron_encima
-		grafic_array_dron_encima = array_create(edificio_max, false)
-		grafic_array_dron_encima[id_fabrica_de_drones] = true
-		grafic_array_dron_encima[id_planta_de_reciclaje] = true
-		grafic_array_dron_encima[id_fabrica_de_drones_grande] = true
-		grafic_array_dron_encima[id_cinta_grande] = true
+		tag_dron_encima = array_create(edificio_max, false)
+		tag_dron_encima[id_fabrica_de_drones] = true
+		tag_dron_encima[id_planta_de_reciclaje] = true
+		tag_dron_encima[id_fabrica_de_drones_grande] = true
+		tag_dron_encima[id_cinta_grande] = true
 	#endregion
 	#region drones_terrestres
-		grafic_array_drones_terrestres = array_create(dron_max, false)
-		grafic_array_drones_terrestres[idd_arana] = true
-		grafic_array_drones_terrestres[idd_tanque] = true
-		grafic_array_drones_terrestres[idd_titan] = true
+		tag_drones_terrestres = array_create(dron_max, false)
+		tag_drones_terrestres[idd_arana] = true
+		tag_drones_terrestres[idd_tanque] = true
+		tag_drones_terrestres[idd_titan] = true
 	#endregion
 	#region agua_salada
-		grafic_array_agua_salada = array_create(terreno_max, false)
-		grafic_array_agua_salada[idt_agua_salada] = true
-		grafic_array_agua_salada[idt_agua_salada_profunda] = true
+		tag_agua_salada = array_create(terreno_max, false)
+		tag_agua_salada[idt_agua_salada] = true
+		tag_agua_salada[idt_agua_salada_profunda] = true
 	#endregion
 	#region agua
-		grafic_array_agua = array_create(terreno_max, false)
-		grafic_array_agua[idt_agua] = true
-		grafic_array_agua[idt_agua_profunda] = true
-		grafic_array_agua[idt_agua_salada] = true
-		grafic_array_agua[idt_agua_salada_profunda] = true
+		tag_agua = array_create(terreno_max, false)
+		tag_agua[idt_agua] = true
+		tag_agua[idt_agua_profunda] = true
+		tag_agua[idt_agua_salada] = true
+		tag_agua[idt_agua_salada_profunda] = true
 	#endregion
 	#region mostrar_combustion
-		grafic_array_mostrar_combustion = array_create(edificio_max, false)
-		grafic_array_mostrar_combustion[id_generador] = true
-		grafic_array_mostrar_combustion[id_turbina] = true
-		grafic_array_mostrar_combustion[id_planta_nuclear] = true
+		tag_mostrar_combustion = array_create(edificio_max, false)
+		tag_mostrar_combustion[id_generador] = true
+		tag_mostrar_combustion[id_turbina] = true
+		tag_mostrar_combustion[id_planta_nuclear] = true
 	#endregion
 	#region liquido_obligatorio
-		grafic_array_liquido_obligatorio = array_create(edificio_max, false)
-		grafic_array_liquido_obligatorio[id_planta_quimica] = true
-		grafic_array_liquido_obligatorio[id_turbina] = true
-		grafic_array_liquido_obligatorio[id_refineria_de_metales] = true
-		grafic_array_liquido_obligatorio[id_horno_de_lava] = true
-		grafic_array_liquido_obligatorio[id_generador_geotermico] = true
-		grafic_array_liquido_obligatorio[id_planta_nuclear] = true
-		grafic_array_liquido_obligatorio[id_silo_de_misiles] = true
-		grafic_array_liquido_obligatorio[id_planta_de_enriquecimiento] = true
-		grafic_array_liquido_obligatorio[id_fabrica_de_concreto] = true
-		grafic_array_liquido_obligatorio[id_refineria_de_petroleo] = true
-		grafic_array_liquido_obligatorio[id_planta_de_reciclaje] = true
-		grafic_array_liquido_obligatorio[id_planta_desalinizadora] = true
-		grafic_array_liquido_obligatorio[id_fabrica_de_drones_grande] = true
+		tag_liquido_obligatorio = array_create(edificio_max, false)
+		tag_liquido_obligatorio[id_planta_quimica] = true
+		tag_liquido_obligatorio[id_turbina] = true
+		tag_liquido_obligatorio[id_refineria_de_metales] = true
+		tag_liquido_obligatorio[id_horno_de_lava] = true
+		tag_liquido_obligatorio[id_generador_geotermico] = true
+		tag_liquido_obligatorio[id_planta_nuclear] = true
+		tag_liquido_obligatorio[id_silo_de_misiles] = true
+		tag_liquido_obligatorio[id_planta_de_enriquecimiento] = true
+		tag_liquido_obligatorio[id_fabrica_de_concreto] = true
+		tag_liquido_obligatorio[id_refineria_de_petroleo] = true
+		tag_liquido_obligatorio[id_planta_de_reciclaje] = true
+		tag_liquido_obligatorio[id_planta_desalinizadora] = true
+		tag_liquido_obligatorio[id_fabrica_de_drones_grande] = true
 	#endregion
 	#region terreno_piedras
-		grafic_array_terreno_piedras = array_create(terreno_max, false)
-		grafic_array_terreno_piedras[idt_piedra] = true
-		grafic_array_terreno_piedras[idt_piedra_cuprica] = true
-		grafic_array_terreno_piedras[idt_piedra_ferrica] = true
+		tag_terreno_piedras = array_create(terreno_max, false)
+		tag_terreno_piedras[idt_piedra] = true
+		tag_terreno_piedras[idt_piedra_cuprica] = true
+		tag_terreno_piedras[idt_piedra_ferrica] = true
 	#endregion
 	#region ore_piedras
-		grafic_array_ore_piedras = array_create(ore_max, false)
-		grafic_array_ore_piedras[ido_cobre] = true
-		grafic_array_ore_piedras[ido_hierro] = true
+		tag_ore_piedras = array_create(ore_max, false)
+		tag_ore_piedras[ido_cobre] = true
+		tag_ore_piedras[ido_hierro] = true
 	#endregion
 	#region agua_baja
-		grafic_array_agua_baja = array_create(terreno_max, false)
-		grafic_array_agua_baja[idt_agua] = true
-		grafic_array_agua_baja[idt_agua_salada] = true
+		tag_agua_baja = array_create(terreno_max, false)
+		tag_agua_baja[idt_agua] = true
+		tag_agua_baja[idt_agua_salada] = true
 	#endregion
 	#region construible_en_liquido
-		grafic_array_construible_en_liquido = array_create(edificio_max, false)
-		grafic_array_construible_en_liquido[id_bomba_hidraulica] = true
-		grafic_array_construible_en_liquido[id_bomba_de_evaporacion] = true
-		grafic_array_construible_en_liquido[id_tuberia] = true
-		grafic_array_construible_en_liquido[id_generador_geotermico] = true
-		grafic_array_construible_en_liquido[id_tuberia_subterranea] = true
+		tag_construible_en_liquido = array_create(edificio_max, false)
+		tag_construible_en_liquido[id_bomba_hidraulica] = true
+		tag_construible_en_liquido[id_bomba_de_evaporacion] = true
+		tag_construible_en_liquido[id_tuberia] = true
+		tag_construible_en_liquido[id_generador_geotermico] = true
+		tag_construible_en_liquido[id_tuberia_subterranea] = true
+	#endregion
+	#region generadores de humo combustión
+		tag_generadores_de_humo_combustion = array_create(edificio_max, false)
+		tag_generadores_de_humo_combustion[id_generador] = true
+		tag_generadores_de_humo_combustion[id_turbina] = true
+		tag_generadores_de_humo_combustion[id_planta_nuclear] = true
+		tag_generadores_de_humo_combustion[id_horno] = true
 	#endregion
 #endregion
 //Inputs y outputs de fábrica de drones y planta de reciclaje

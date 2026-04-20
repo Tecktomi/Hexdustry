@@ -2,7 +2,7 @@ function construir(index, dir, mx, my, enemigo = false, server = false, _cheat =
 	with control{
 		var edificio = control.null_edificio, temp_complex = abtoxy(mx, my), flag = check_colision(mx, my, index, dir)
 		//Reemplazar caminos
-		if flag and (grafic_array_camino_o_tunel[index] or index = id_cruce) and edificio_bool[# mx, my]{
+		if flag and (tag_camino_o_tunel[index] or index = id_cruce) and edificio_bool[# mx, my]{
 			var temp_edificio = edificio_id[# mx, my]
 			if edificio_camino[temp_edificio.index] or temp_edificio.index = id_cruce{
 				if index = temp_edificio.index{

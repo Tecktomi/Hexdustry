@@ -23,7 +23,6 @@ function save_game_buffer(buffer){
 		buffer_write(buffer, buffer_s8, dificultad)
 		buffer_write(buffer, buffer_bool, modo_misiones)
 		#region Misiones
-			show_debug_message(buffer_get_used_size(buffer))
 			var len = array_length(mision_nombre)
 			buffer_write(buffer, buffer_u8, len)
 			for(var a = 0; a < len; a++){
@@ -56,7 +55,6 @@ function save_game_buffer(buffer){
 			buffer_write(buffer, buffer_u16, mision_counter)
 			buffer_write(buffer, buffer_s16, mision_current_tiempo)
 			buffer_write(buffer, buffer_bool, mision_choosing_coord)
-			show_debug_message(buffer_get_used_size(buffer))
 		#endregion
 		//Filtrar Edificios
 		len = array_length(edificios_totales)
@@ -187,6 +185,5 @@ function save_game_buffer(buffer){
 			buffer_write(buffer, buffer_u16, municion.target.punteros[2])
 			buffer_write(buffer, buffer_u16, municion.target_build.punteros[12])
 		}
-		show_debug_message(buffer_get_used_size(buffer))
 	}
 }

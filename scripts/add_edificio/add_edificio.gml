@@ -222,7 +222,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 				edificio.array_real[5] = 0
 			}
 		}
-		if grafic_array_camino_o_tunel[index]{
+		if tag_camino_o_tunel[index]{
 			if in(index, id_cinta_transportadora, id_enrutador, id_cinta_magnetica){
 				if (dir mod 3) = 1
 					edificio.yscale = power(-1, dir > 1)
@@ -445,7 +445,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 						edificio.select++
 						edificio.fuel = 3
 					}
-					else if grafic_array_agua_salada[terreno[# aa, bb]]{
+					else if tag_agua_salada[terreno[# aa, bb]]{
 						edificio.select++
 						if terreno[# aa, bb] = idt_agua_salada_profunda
 							edificio.select += 0.2

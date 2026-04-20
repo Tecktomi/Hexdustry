@@ -3,8 +3,8 @@ if type = network_type_data{
 	var buffer = async_load[? "buffer"]
     buffer_seek(buffer, buffer_seek_start, 0)
     var msg = buffer_read(buffer, buffer_u8)
-	if msg != 8
-		show_debug_message($"{msg}")
+	if not in(msg, 8, 19)
+		show_debug_message($"msg: {msg}")
 	if msg = 1{ //Handle Hello
 		var temp_socket = async_load[? "id"]
 		array_push(server_jugadores, temp_socket)
@@ -34,4 +34,22 @@ if type = network_type_data{
 		handle_add_modulo(buffer)
 	else if msg = 11 //Handle investigar
 		handle_investigar(buffer)
+	else if msg = 12 //Nuevo jugador unido
+		handle_nuevo_jugador(buffer)
+	else if msg = 13 //Handle jugador ido
+		handle_exit(buffer)
+	else if msg = 14 //Jugador eliminado
+		handle_jugador_eliminado(buffer)
+	else if msg = 15 //Server break
+		handle_server_break()
+	else if msg = 16 //Error: Nombre utilizado
+		show_message($"Error\n\nTu nombre: \"{online_nombre}\" ya está utilizado en ese servidor")
+	else if msg = 17 //Expulsado
+		handle_jugador_expulsado(buffer)
+	else if msg = 18 //Timeout
+		handle_jugador_expulsado(buffer, true)
+	else if msg = 19 //Dar señales de vida
+		handle_timeout(buffer)
+	else if msg = 20 //Mensaje
+		handle_mensaje(buffer)
 }

@@ -22,22 +22,52 @@ function draw_boton_text(xpos, ypos, variable, es_real = true, detect_real = fal
 			var cursor_x = xpos + string_width(pre_text)
 			draw_line(cursor_x - xx, ypos, cursor_x - xx, ypos + 16)
 			if keyboard_check_pressed(vk_anykey){
-				if keyboard_check_pressed(vk_left)
-					get_keyboard_cursor = max(1, get_keyboard_cursor - 1)
-				else if keyboard_check_pressed(vk_right)
-					get_keyboard_cursor = min(string_length(get_keyboard_text) + 1, get_keyboard_cursor + 1)
-				else if keyboard_check_pressed(vk_backspace) and get_keyboard_cursor > 1
-					get_keyboard_text = string_delete(get_keyboard_text, --get_keyboard_cursor, 1)
-				else if keyboard_check(vk_lcontrol) and keyboard_lastchar = "V"{
+				if keyboard_check_pressed(vk_left){
+					if keyboard_check(vk_lcontrol){
+						do get_keyboard_cursor = max(1, get_keyboard_cursor - 1)
+						until (get_keyboard_cursor = 1 or string_char_at(get_keyboard_text, get_keyboard_cursor - 1) = " ")
+					}
+					else
+						get_keyboard_cursor = max(1, get_keyboard_cursor - 1)
+				}
+				else if keyboard_check_pressed(vk_right){
+					if keyboard_check(vk_lcontrol){
+						do get_keyboard_cursor = min(string_length(get_keyboard_text) + 1, get_keyboard_cursor + 1)
+						until (get_keyboard_cursor = string_length(get_keyboard_text) + 1 or string_char_at(get_keyboard_text, get_keyboard_cursor - 1) = " ")
+					}
+					else
+						get_keyboard_cursor = min(string_length(get_keyboard_text) + 1, get_keyboard_cursor + 1)
+				}
+				else if keyboard_check_pressed(vk_backspace) and get_keyboard_cursor > 1{
+					if keyboard_check(vk_lcontrol){
+						do get_keyboard_text = string_delete(get_keyboard_text, --get_keyboard_cursor, 1)
+						until (string_char_at(get_keyboard_text, get_keyboard_cursor - 1) = " " or get_keyboard_cursor = 1)
+					}
+					else
+						get_keyboard_text = string_delete(get_keyboard_text, --get_keyboard_cursor, 1)
+				}
+				else if keyboard_check_pressed(vk_delete){
+					if keyboard_check(vk_lcontrol){
+						do get_keyboard_text = string_delete(get_keyboard_text, get_keyboard_cursor, 1)
+						until (string_char_at(get_keyboard_text, get_keyboard_cursor) = " " or get_keyboard_cursor = 1)
+					}
+					else
+						get_keyboard_text = string_delete(get_keyboard_text, get_keyboard_cursor, 1)
+				}
+				else if keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("V")){
 					get_keyboard_text += clipboard_get_text()
 					get_keyboard_cursor += string_length(clipboard_get_text())
 				}
-				else{
+				else if keyboard_check_pressed(vk_home)
+					get_keyboard_cursor = 1
+				else if keyboard_check_pressed(vk_end)
+					get_keyboard_cursor = string_length(get_keyboard_text) + 1
+				else if not keyboard_check_pressed(vk_lcontrol){
 					var new_input = keyboard_lastchar
 					if new_input != "" and ord(new_input) >= 32 and ord(new_input) < 127
 						get_keyboard_text = string_insert(new_input, get_keyboard_text, get_keyboard_cursor++)
 				}
-				if not keyboard_check_pressed(vk_escape)
+				if not (keyboard_check_pressed(vk_escape) or keyboard_check_pressed(vk_lcontrol))
 					keyboard_clear(keyboard_key)
 			}
 			keyboard_string = get_keyboard_text
