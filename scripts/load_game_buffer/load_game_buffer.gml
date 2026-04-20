@@ -1,6 +1,5 @@
 function load_game_buffer(buffer){
 	with control{
-		show_debug_message(buffer_get_used_size(buffer))
 		var _version = buffer_read(buffer, buffer_u32)
 		if _version != FILE_VERSION{
 			if _version = 2026_03_27

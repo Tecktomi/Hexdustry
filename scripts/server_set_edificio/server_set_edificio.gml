@@ -8,7 +8,7 @@ function server_set_edificio(mode, select, edificio = control.null_edificio){
 		buffer_write(buffer, buffer_u16, real(edificio.a))
 		buffer_write(buffer, buffer_u16, real(edificio.b))
 		if servidor{
-			for(var i = 0; i < array_length(server_jugadores); i++)
+			for(var i = 1; i < array_length(server_jugadores); i++)
 				network_send_packet(server_jugadores[i], buffer, buffer_tell(buffer))
 		}
 		else

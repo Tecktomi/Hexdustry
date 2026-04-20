@@ -59,12 +59,12 @@ function generar_bioma(bioma){
 			for(var b = 0; b < ysize; b++){
 				var temp_terreno = terreno[# a, b]
 				//Añadir arena
-				if grafic_array_agua_baja[temp_terreno]{
+				if tag_agua_baja[temp_terreno]{
 					for(var c = 0; c < 6; c++){
 						var temp_complex = next_to(a, b, c), aa = temp_complex[0], bb = temp_complex[1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
-						if not grafic_array_agua[terreno[# aa, bb]]
+						if not tag_agua[terreno[# aa, bb]]
 							set_terreno(aa, bb, borde_agua)
 						if brandom(){
 							temp_complex = next_to(aa, bb, c)
@@ -72,7 +72,7 @@ function generar_bioma(bioma){
 							bb = temp_complex[1]
 							if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 								continue
-							if not grafic_array_agua[terreno[# aa, bb]]
+							if not tag_agua[terreno[# aa, bb]]
 								set_terreno(aa, bb, borde_agua)
 						}
 					}
@@ -115,13 +115,13 @@ function generar_bioma(bioma){
 					}
 				}
 				//Añadir agua profunda
-				if grafic_array_agua_baja[temp_terreno]{
+				if tag_agua_baja[temp_terreno]{
 					var flag = true
 					for(var c = 0; c < 6; c++){
 						var temp_complex = next_to(a, b, c), aa = temp_complex[0], bb = temp_complex[1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
-						if not grafic_array_agua[terreno[# aa, bb]]{
+						if not tag_agua[terreno[# aa, bb]]{
 							flag = false
 							break
 						}
@@ -191,7 +191,7 @@ function generar_bioma(bioma){
 						if terreno_caminable[temp_terreno]{
 							if ore[# aa, bb] != i{
 								ds_grid_set(ore_amount, aa, bb, 0)
-								if grafic_array_ore_piedras[i] and grafic_array_terreno_piedras[temp_terreno]
+								if tag_ore_piedras[i] and tag_terreno_piedras[temp_terreno]
 									set_terreno(aa, bb, i = ido_cobre ? idt_piedra_cuprica : idt_piedra_ferrica)
 								ore[# aa, bb] = i
 								beta[# aa, bb] = new_beta

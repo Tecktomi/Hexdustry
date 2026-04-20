@@ -7,7 +7,7 @@ function server_delete_edificio(a, b, _cheat = control.cheat){
 		buffer_write(buffer, buffer_u16, real(b))
 		buffer_write(buffer, buffer_bool, bool(_cheat))
 		if servidor{
-			for(var i = 0; i < array_length(server_jugadores); i++)
+			for(var i = 1; i < array_length(server_jugadores); i++)
 				network_send_packet(server_jugadores[i], buffer, buffer_tell(buffer))
 		}
 		else

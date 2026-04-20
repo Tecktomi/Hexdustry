@@ -347,6 +347,9 @@ if menu = 0{
 				exit
 			}
 			draw_set_halign(fa_center)
+			draw_boton_text_counter = 0
+			ypos += text_y * 1.2
+			online_nombre = draw_boton_text(room_width / 2, ypos, online_nombre, false,, true, 1)
 			ypos += text_y * 1.2
 			if draw_boton(room_width / 2, ypos, L.buscar_servidores_en_LAN, ui_azul,,,, 1){
 				var buffer = buffer_create(256, buffer_grow, 1)
@@ -361,7 +364,6 @@ if menu = 0{
 					server_hello()
 			}
 			ypos += text_y * 2
-			draw_boton_text_counter = 0
 			server_ip = draw_boton_text(room_width / 2, ypos, server_ip, false,, true, 1)
 			input_layer = 1
 			get_file = 4
@@ -404,13 +406,13 @@ if in(menu, 1, 3){
 			for(var c = 0; c < len; c++){
 				var edificio = chunk[c], index = edificio.index, aa = edificio.x, bb = edificio.y, aaa = aa * zoom - camx, bbb = bb * zoom - camy, center_x = edificio.center_x, center_y = edificio.center_y, alert_count = 0
 				//Recursos sobre caminos
-				if grafic_array_camino_o_tunel[index] and edificio.carga_total > 0{
+				if tag_camino_o_tunel[index] and edificio.carga_total > 0{
 					var proceso = edificio_proceso[index]
 					var d = 1.2 * (max(edificio.proceso, edificio.waiting * proceso) - proceso / 2) * 20 / proceso
 					draw_sprite_off(recurso_sprite[edificio.carga_id], 0, aa + d * edificio.array_real[0], bb + d * edificio.array_real[1])
 				}
 				//Munición armas
-				else if grafic_array_municion_armas[index] and edificio.carga_total = 0{
+				else if tag_municion_armas[index] and edificio.carga_total = 0{
 					draw_sprite_off(spr_ammo, 0, aa, bb - 28 * ++alert_count)
 					draw_sprite_off(spr_falta, 0, aa, bb - 28 * alert_count)
 				}
@@ -432,8 +434,8 @@ if in(menu, 1, 3){
 				if index = id_planta_quimica and edificio.select >= 0
 					draw_sprite_off(planta_quimica_sprite[edificio.select], 0, aa, bb)
 				//Humo
-				if show_humo and grafic_array_generadores_de_humo[index]{
-					if ((in(index, id_generador, id_turbina, id_planta_nuclear, id_horno) and edificio.fuel > 0) or (index = id_generador_geotermico and in(edificio.flujo.liquido, 0, 4)) or (index = id_refineria_de_petroleo and edificio.flujo.liquido = 2 and edificio.red.eficiencia > 0)){
+				if show_humo and tag_generadores_de_humo[index]{
+					if ((tag_generadores_de_humo_combustion[index] and edificio.fuel > 0) or (index = id_generador_geotermico and in(edificio.flujo.liquido, 0, 4)) or (index = id_refineria_de_petroleo and edificio.flujo.liquido = 2 and edificio.red.eficiencia > 0)){
 						var dir = direccion_viento + random_range(-pi / 4, pi / 4)
 						array_push(humos, add_humo(aa, bb, edificio.a, edificio.b, cos(dir), sin(dir), irandom_range(70, 100)))
 					}
@@ -445,10 +447,10 @@ if in(menu, 1, 3){
 					draw_set_halign(fa_left)
 				}
 				//Planta de Reciclaje
-				else if grafic_array_dron_encima[index] and edificio.select >= 0
+				else if tag_dron_encima[index] and edificio.select >= 0
 					draw_sprite_off(dron_sprite[edificio.select], 0, center_x, center_y,,,,, 0.5)
 				//Dibujo falta líquido
-				if grafic_array_liquido_obligatorio[index]{
+				if tag_liquido_obligatorio[index]{
 					if edificio.flujo.liquido != edificio_flujo_liquido[index] and edificio.flujo_consumo_max > 0{
 						draw_sprite_off(liquido_sprite[edificio_flujo_liquido[index]], 0, aa, bb - 28 * ++alert_count)
 						draw_sprite_off(spr_falta, 0, aa, bb - 28 * alert_count)
@@ -1020,11 +1022,11 @@ if pausa = 1{
 					buffer_delete(buffer)
 				}
 				menu = 0
-				if server != -1{
-					network_destroy(server)
-					server = -1
-					servidor = false
-				}
+				if server != -1
+					if servidor
+						server_break()
+					else
+						server_exit()
 				exit
 			}
 			else if menu = 3{
@@ -1099,6 +1101,8 @@ if pausa = 1{
 					CONTROL_FLUJO = keyboard_lastkey
 				else if get_file = 18
 					CONTROL_BLUEPRINT = keyboard_lastkey
+				else if get_file = 19
+					CONTROL_TAB = keyboard_lastkey
 				CONTROL_USADAS[get_file - 2] = keyboard_lastkey
 				ini_open("settings.ini")
 				ini_write_real("Controles", $"{get_file - 2}", keyboard_lastkey)
@@ -1879,8 +1883,6 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 									}
 									array_push(blueprint, temp_blueprint)
 								}
-								else
-									show_debug_message(random(1))
 							}
 					if array_length(blueprint) > 0
 						build_index = -1
@@ -2079,7 +2081,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 				}
 			}
 			//Mostrar combustión
-			if grafic_array_mostrar_combustion[index]
+			if tag_mostrar_combustion[index]
 				temp_text += $"{L.almacen_combustion}: {floor(edificio.fuel / 30)} s\n"
 			//Mostrar rango de cables
 			if index = id_cable{
@@ -2137,7 +2139,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 					set_camino_dir(edificio.link)
 				}
 			}
-			else if grafic_array_dron_encima[index]{
+			else if tag_dron_encima[index]{
 				if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande) and edificio.select >= 0{
 					temp_text += $"{L.game_creando_dron} {dron_nombre[edificio.select]} ({array_length(drones_aliados)}/{8 + 2 * nucleo.modulo})\n"
 					for(var a = 0; a < array_length(dron_precio_id[edificio.select]); a++)
@@ -2744,7 +2746,7 @@ if build_index > 0 and win = 0{
 							count++
 							liquido = 3
 						}
-						else if grafic_array_agua_salada[terreno[# aa, bb]]{
+						else if tag_agua_salada[terreno[# aa, bb]]{
 							if not in(liquido, -1, 4){
 								flag = false
 								temp_text += $"{L.construir_combinar_liquidos}\n"
@@ -2782,7 +2784,7 @@ if build_index > 0 and win = 0{
 				var flag = false
 				for(var a = array_length(build_list) - 1; a >= 0; a--){
 					var temp_complex_2 = build_list[a], aa = temp_complex_2[0], bb = temp_complex_2[1]
-					if grafic_array_agua[terreno[# aa, bb]]{
+					if tag_agua[terreno[# aa, bb]]{
 						flag = true
 						break
 					}
@@ -3186,7 +3188,7 @@ if build_index > 0 and win = 0{
 							}
 						}
 						//Drones encima
-						else if grafic_array_dron_encima[build_index]{
+						else if tag_dron_encima[build_index]{
 							if last_mx != mx or last_my != my or prev_change{
 								var temp_complex_array = cinta_grande_check(mx, my, build_dir, build_index)
 								build_array_edificios_input = temp_complex_array.inputs
@@ -3210,7 +3212,7 @@ if build_index > 0 and win = 0{
 					}
 					if mouse_check_button_pressed(mb_left) and flag_camino and comprable and (not edificio_bool[# mx, my] or (build_index = id_cruce and edificio_camino[edificio_id[# mx, my].index])){
 						var temp_edificio = construir(build_index, build_dir, mx, my, build_enemigo)
-						if temp_edificio != null_edificio and grafic_array_dron_encima[temp_edificio.index]{
+						if temp_edificio != null_edificio and tag_dron_encima[temp_edificio.index]{
 							array_copy(temp_edificio.inputs_carga, 0, build_array_edificios_input, 0, array_length(build_array_edificios_input))
 							for(var a = array_length(temp_edificio.inputs_carga) - 1; a >= 0; a--){
 								var temp_edificio_2 = temp_edificio.inputs_carga[a]
@@ -3328,7 +3330,7 @@ if menu = 1{
 		if online and not servidor and timer + LAG < server_timer
 			acumulator++
 		for(ticks = 0; (acumulator >= LOGIC_DT and ticks < 5) or ticks = 0; ticks++){
-			if online and not servidor and timer + LAG > server_timer
+			if online and not servidor and timer + LAG > server_timer //Detenerse por LAG
 				break
 			//Input multijugador
 			if online and not servidor
@@ -3373,7 +3375,7 @@ if menu = 1{
 						buffer_delete(buffer)
 					}
 				}
-				if online and servidor and (timer mod 10)
+				if online and servidor and (timer mod 10) = 0
 					server_sync_timer()
 			}
 			//Ciclo edificios
@@ -3436,7 +3438,7 @@ if menu = 1{
 					dron.y--
 				if dron.target != null_edificio and dron.target.vida <= 0
 					dron.target = null_edificio
-				if grafic_array_drones_terrestres[index]{
+				if tag_drones_terrestres[index]{
 					if array_length(edificios) > 0 and dron.target = null_edificio{
 						var temp_complex = xytoab(aa, bb)
 						dron.target = edificio_cercano[# temp_complex[0], temp_complex[1]]
@@ -3467,7 +3469,7 @@ if menu = 1{
 					var temp_complex = xytoab(aa, bb), aaa = temp_complex[0], bbb = temp_complex[1], dir = -1, ataque = false
 					var dis = distance_sqr(aa, bb, edificio.center_x, edificio.center_y)
 					//Moverse
-					if grafic_array_drones_terrestres[index]{
+					if tag_drones_terrestres[index]{
 						if edificio_cercano_dis[# aaa, bbb] > 1 and dis > 2500{//50^2
 							if edificio_cercano_dir[# aaa, bbb] = -1{
 								var min_dis = edificio_cercano_dis[# aaa, bbb], min_dis_eu =  infinity
@@ -3529,7 +3531,6 @@ if menu = 1{
 					}
 					if dis < dron_alcance[index]{
 						ataque = true
-						show_debug_message(random(1))
 						if atacar_dron(dron, edificio)
 							continue
 					}
@@ -3555,7 +3556,6 @@ if menu = 1{
 							dis = distance_sqr(aa, bb, dron.target_dron.x, dron.target_dron.y)
 							if dis < dron_alcance[index]{
 								ataque = true
-								show_debug_message(2 + random(1))
 								if atacar_dron(dron,, dron.target_dron)
 									continue
 							}
@@ -3598,7 +3598,6 @@ if menu = 1{
 								if dis > dron_alcance[index]
 									dron.temp_target = null_edificio
 								else{
-									show_debug_message(1 + random(1))
 									ataque = true
 									if atacar_dron(dron, edificio)
 										continue
@@ -4090,7 +4089,7 @@ if menu = 1{
 				}
 			}
 			draw_set_alpha(1)
-			if oleadas and (++oleadas_timer >= 60 * oleadas_tiempo_primera or keyboard_check_pressed(vk_enter)){
+			if oleadas and (++oleadas_timer >= 60 * oleadas_tiempo_primera or (not chat_input and keyboard_check_pressed(vk_enter))){
 				var temp_time = oleadas_timer / 60 - oleadas_tiempo_primera
 				if (temp_time mod oleadas_tiempo) = 0 or keyboard_check_pressed(vk_enter){
 					var d = oleada_count++ + 3, e = 1, flag_2 = false
@@ -4136,7 +4135,7 @@ if menu = 1{
 			}
 			if mision_actual >= 0 and win = 0{
 				var a = mision_actual
-				if in(mision_objetivo[a], 5, 7) and not oleadas and keyboard_check_pressed(vk_enter){
+				if in(mision_objetivo[a], 5, 7) and not oleadas and (not chat_input and keyboard_check_pressed(vk_enter)){
 					keyboard_clear(vk_enter)
 					pasar_mision()
 				}
@@ -4290,7 +4289,7 @@ if menu = 1{
 		sprite_boton_text = $"{L.game_enciclopedia} (Y)"})
 		enciclopedia = true
 	//Input
-	if win = 0 and not show_menu{
+	if win = 0 and not show_menu and not chat_input{
 		if keyboard_check_pressed(vk_anykey){
 			if keyboard_check_pressed(CONTROL_PAUSE){
 				keyboard_clear(CONTROL_PAUSE)
@@ -4375,7 +4374,7 @@ if menu = 1{
 		camx = clamp(((mision_camara_x[mision_actual] - room_width / 2) * (60 - mision_camara_step) + mision_camara_x_start * mision_camara_step) / 60, 0, xsize * 48 * zoom - room_width)
 		camy = clamp(((mision_camara_y[mision_actual] - room_height / 2) * (60 - mision_camara_step) + mision_camara_y_start * mision_camara_step) / 60, 0, ysize * 14 * zoom - room_height)
 	}
-	else
+	else if not chat_input
 		control_camara()
 	if flow > 0
 		draw_path_find()
@@ -4540,10 +4539,10 @@ if menu = 1{
 		draw_set_alpha(1)
 	}
 }
-else
+else if not chat_input
 	control_camara()
 if menu = 1 or menu = 3{
-	if win = 0 and not show_menu and keyboard_check_pressed(vk_anykey){
+	if win = 0 and not show_menu and (not chat_input and keyboard_check_pressed(vk_anykey)){
 		if keyboard_check_pressed(CONTROL_MENU) and pausa = 0{
 			pausa = 1
 			clear_edit()
@@ -4583,5 +4582,61 @@ if sonido{
 	}
 	if clic_sound
 		audio_play_sound(snd_click, 1, false, 0.3)
+}
+if array_length(chat) >= 0{
+	var max_width = 0, pos
+	if get_keyboard_string != 0
+		for(pos = 0; pos < array_length(chat); pos++)
+			if chat_time[pos] > image_index - 600
+				break
+	pos = max(0, array_length(chat) - 10)
+	for(var a = pos; a < array_length(chat); a++)
+		max_width = max(max_width, string_width(string(chat[a])))
+	if get_keyboard_string = 0{
+		chat_input = true
+		max_width = max(max_width, string_width($"'{chat_text}'"))
+		if keyboard_check_pressed(vk_enter){
+			keyboard_clear(vk_enter)
+			chat_input = false
+			get_keyboard_string = -1
+			array_push(chat, chat_text)
+			array_push(chat_time, image_index)
+			if online
+				server_mensaje($"{online_nombre}: {chat_text}")
+			chat_text = ""
+		}
+		if keyboard_check_pressed(vk_escape)
+			chat_input = false
+	}
+	draw_set_color(c_black)
+	draw_set_alpha(0.5)
+	draw_rectangle(0, room_height, max_width, room_height - 20 * (array_length(chat) - pos) - 20, false)
+	draw_set_color(c_white)
+	draw_set_alpha(1)
+	for(var a = pos; a < array_length(chat); a++)
+		draw_text(0, room_height + 20 * (a - array_length(chat)) - 20, string(chat[a]))
+	draw_boton_text_counter = 0
+	chat_text = draw_boton_text(0, room_height - 20, chat_text, false,, false)
+}
+if keyboard_check(CONTROL_TAB) and online{
+	draw_set_color(c_black)
+	draw_set_halign(fa_center)
+	draw_set_alpha(0.5)
+	var max_width = 0
+	for(var a = 0; a < array_length(server_jugadores_nombre); a++)
+		max_width = max(max_width, string_width(server_jugadores_nombre[a]))
+	max_width += 30
+	draw_rectangle((room_width - max_width) / 2, 150, (room_width + max_width) / 2, 170 + 40 * array_length(server_jugadores_nombre), false)
+	draw_set_color(c_white)
+	draw_set_alpha(1)
+	if servidor{
+		for(var a = 0; a < array_length(server_jugadores_nombre); a++)
+			if draw_boton(room_width / 2, 160 + 40 * a, server_jugadores_nombre[a],,,, true) and a != 0
+				server_expulsar(a)
+	}
+	else
+		for(var a = 0; a < array_length(server_jugadores_nombre); a++)
+			draw_boton(room_width / 2, 160 + 40 * a, server_jugadores_nombre[a],,,, true)
+	draw_set_halign(fa_left)
 }
 draw_sprite(spr_vineta, 0, 0, 0)
