@@ -43,7 +43,7 @@ if type = network_type_data{
 	else if msg = 15 //Server break
 		handle_server_break()
 	else if msg = 16 //Error: Nombre utilizado
-		show_message($"Error\n\nTu nombre: \"{online_nombre}\" ya está utilizado en ese servidor")
+		show_message(string(L.server_error_nombre, online_nombre))
 	else if msg = 17 //Expulsado
 		handle_jugador_expulsado(buffer)
 	else if msg = 18 //Timeout

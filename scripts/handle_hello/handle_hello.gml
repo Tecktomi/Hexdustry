@@ -10,7 +10,7 @@ function handle_hello(socket, buffer){
 			array_pop(server_jugadores)
 			break
 		}
-		array_push(chat, $"{player_name} se ha unido")
+		array_push(chat, string(L.server_jugador_unido, player_name))
 		array_push(chat_time, image_index)
 		array_push(server_jugadores_nombre, player_name)
 		array_push(server_jugadores_timeout, -120)

@@ -13,7 +13,7 @@ function handle_exit(buffer){
 		array_delete(server_jugadores, pos, 1)
 		array_delete(server_jugadores_nombre, pos, 1)
 		array_delete(server_jugadores_timeout, pos, 1)
-		array_push(chat, $"{player_name} se ha ido")
+		array_push(chat, string(L.server_jugador_ido, player_name))
 		array_push(chat_time, image_index)
 	}
 }

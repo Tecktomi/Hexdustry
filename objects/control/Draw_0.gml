@@ -52,7 +52,7 @@ if menu = 0{
 			dificultad = -1
 		}
 	}
-	if file_exists("last_save.save"){
+	if os_browser = browser_not_a_browser and file_exists("last_save.save"){
 		ypos += text_y * 1.2
 		if draw_boton(room_width / 2, ypos, L.continuar, ui_verde){
 			var buffer = buffer_create(128, buffer_grow, 1)
@@ -316,7 +316,7 @@ if menu = 0{
 					var buffer = buffer_create(4096, buffer_grow, 1)
 					buffer = buffer_load("Saves/" + partidas[a])
 					if not load_game_buffer(buffer)
-						show_message("Error, archivo obsoleto")
+						show_message(L.archivo_obsoleto)
 				}
 				if draw_sprite_boton(spr_basura,, xpos - 10, ypos - 30,,, 1){
 					file_delete("Saves/" + temp_text + ".png")
@@ -349,7 +349,10 @@ if menu = 0{
 			draw_set_halign(fa_center)
 			draw_boton_text_counter = 0
 			ypos += text_y * 1.2
+			var prev_online_nombre = online_nombre
 			online_nombre = draw_boton_text(room_width / 2, ypos, online_nombre, false,, true, 1)
+			if online_nombre != prev_online_nombre
+				set_setting("", "online_nombre", online_nombre, false)
 			ypos += text_y * 1.2
 			if draw_boton(room_width / 2, ypos, L.buscar_servidores_en_LAN, ui_azul,,,, 1){
 				var buffer = buffer_create(256, buffer_grow, 1)
@@ -379,6 +382,7 @@ if menu = 0{
 		for(var a = 0; a < idiomas; a++)
 			if draw_sprite_boton(spr_bandera, a, 20 + 80 * a, 20, 64, 48,, function(data){draw_text_background(0, 80, idioma_name[data.a])}, {a : a}){
 				idioma = a
+				set_setting("", "Idioma", idioma, true)
 				set_idioma()
 			}
 	exit
@@ -945,30 +949,22 @@ if pausa = 1{
 		ypos += text_y * 1.2
 		if draw_boton(xpos, ypos, (info ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_info}", info ? ui_verde : ui_rojo){
 			info = not info
-			ini_open("settings.ini")
-			ini_write_real("", "info", info)
-			ini_close()
+			set_setting("", "info", info)
 		}
 		ypos += text_y * 1.2
 		if draw_boton(xpos, ypos, (grafic_tile_animation ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_animacion}", grafic_tile_animation ? ui_verde : ui_rojo){
 			grafic_tile_animation = not grafic_tile_animation
-			ini_open("settings.ini")
-				ini_write_real("", "grafic_tile_animation", grafic_tile_animation)
-			ini_close()
+			set_setting("", "grafic_tile_animation", grafic_tile_animation)
 		}
 		ypos += text_y * 1.2
 		if draw_boton(xpos, ypos, (grafic_luz ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_iluminacion}", grafic_luz ? ui_verde : ui_rojo){
 			grafic_luz = not grafic_luz
-			ini_open("settings.ini")
-				ini_write_real("", "grafic_luz", grafic_luz)
-			ini_close()
+			set_setting("", "grafic_luz", grafic_luz)
 		}
 		ypos += text_y * 1.2
 		if draw_boton(xpos, ypos, (grafic_humo ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_humo}", grafic_humo ? ui_verde : ui_rojo){
 			grafic_humo = not grafic_humo
-			ini_open("settings.ini")
-				ini_write_real("", "grafic_humo", grafic_humo)
-			ini_close()
+			set_setting("", "grafic_humo", grafic_humo)
 		}
 		ypos += text_y * 1.2
 		if draw_boton(xpos, ypos, (grafic_hideui ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_UI}", grafic_hideui ? ui_rojo : ui_verde)
@@ -977,11 +973,15 @@ if pausa = 1{
 		if draw_boton(xpos, ypos, (sonido ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_sonido}", sonido ? ui_verde : ui_rojo)
 			sound_change()
 		ypos += text_y * 1.2
-		if draw_boton(xpos, ypos, (grafic_energia ? L.pausa_desactivar : L.pausa_activar) + $" {L.red_energia}", grafic_energia ? ui_verde : ui_rojo)
+		if draw_boton(xpos, ypos, (grafic_energia ? L.pausa_desactivar : L.pausa_activar) + $" {L.red_energia}", grafic_energia ? ui_verde : ui_rojo){
 			grafic_energia = not grafic_energia
+			set_setting("", "grafic_energia", grafic_energia)
+		}
 		ypos += text_y * 1.2
-		if draw_boton(xpos, ypos, (auto_guardado ? L.pausa_desactivar : L.pausa_activar) + $" {L.autoguardado}", auto_guardado ? ui_verde : ui_rojo)
+		if draw_boton(xpos, ypos, (auto_guardado ? L.pausa_desactivar : L.pausa_activar) + $" {L.autoguardado}", auto_guardado ? ui_verde : ui_rojo){
 			auto_guardado = not auto_guardado
+			set_setting("", "auto_guardado", auto_guardado)
+		}
 		//Guardar / Abrir en LAN
 		if menu = 1{
 			ypos += 40
@@ -1016,7 +1016,7 @@ if pausa = 1{
 			clear_edit()
 			if menu = 1{
 				if tutorial = 0 and os_browser = browser_not_a_browser and not mapa_editado{
-					var buffer = buffer_create(4096, buffer_grow, 1)
+					var buffer = buffer_create(1024, buffer_grow, 1)
 					save_game_buffer(buffer)
 					buffer_save(buffer, "last_save.save")
 					buffer_delete(buffer)
@@ -1053,12 +1053,17 @@ if pausa = 1{
 				char = "Escape"
 			else if key >= vk_f1 and key <= vk_f12
 				char = $"F{chr(key - ord("p") + ord(1))}"
+			else if key = vk_tab
+				char = "TAB"
 			else
 				char = chr(key)
-			if draw_boton(xpos, ypos, $"{CONTROL_NOMBRE[a]} \"{char}\"")
+			draw_set_halign((a & 1) ? fa_left : fa_right)
+			if draw_boton(xpos + 40 * (a & 1) - 20, ypos, $"{CONTROL_NOMBRE[a]} \"{char}\"")
 				get_file = 2 + a
-			ypos += text_y * 1.2
+			if (a & 1)
+				ypos += text_y * 1.2
 		}
+		draw_set_halign(fa_center)
 		if get_file > 1{
 			draw_set_color(c_black)
 			draw_set_alpha(0.5)
@@ -1104,19 +1109,20 @@ if pausa = 1{
 				else if get_file = 19
 					CONTROL_TAB = keyboard_lastkey
 				CONTROL_USADAS[get_file - 2] = keyboard_lastkey
-				ini_open("settings.ini")
-				ini_write_real("Controles", $"{get_file - 2}", keyboard_lastkey)
-				ini_close()
+				set_setting("Controles", $"{get_file - 2}", keyboard_lastkey, false)
 				keyboard_clear(keyboard_lastkey)
 				get_file = 1
 			}
 		}
+		if draw_boton(xpos, room_height - 200, L.volver, ui_rojo)
+			get_file = 0
 	}
 	draw_set_halign(fa_left)
 	if os_type == os_windows
 		for(var a = 0; a < idiomas; a++)
 			if draw_sprite_boton(spr_bandera, a, 20 + 80 * a, 20, 64, 48,, function(data){draw_text_background(0, 80, idioma_name[data.a])}, {a : a}){
 				idioma = a
+				set_setting("", "Idioma", idioma, true)
 				set_idioma()
 			}
 	draw_set_color(color)
@@ -3251,7 +3257,8 @@ if build_index > 0 and win = 0{
 	last_my = my
 }
 else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
-	var len = array_length(blueprint)
+	var len = array_length(blueprint), flip = (((blueprint_mod2 + my) mod 2) = 1)
+	//Guardar
 	if not blueprint_safe{
 		draw_set_halign(fa_center)
 		if draw_boton(room_width / 2, 40, L.guardar_plano){
@@ -3271,23 +3278,33 @@ else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
 		}
 		draw_set_halign(fa_left)
 	}
-	var flip = (((blueprint_mod2 + my) mod 2) = 1)
+	//Cancelar
 	if mouse_check_button_pressed(mb_right){
 		mouse_clear(mb_right)
 		build_index = 0
 	}
+	//Detectar colisiones
 	if not (last_mx = mx and last_my = my){
 		for(var a = 0; a < len; a++){
 			var temp_blueprint = blueprint[a], aaa = temp_blueprint.a + mx
-			if flip and (temp_blueprint.b mod 2) = 1
-				aaa--
+			if flip and (temp_blueprint.b mod 2) = 1{
+				if blueprint_mod2
+					aaa--
+				else
+					aaa++
+			}
 			blueprint[a].construible = check_colision(aaa, temp_blueprint.b + my, temp_blueprint.index, temp_blueprint.dir)
 		}
 	}
+	//Dibujar Blueprint
 	for(var a = 0; a < len; a++){
 		var temp_blueprint = blueprint[a], aaa = temp_blueprint.a + mx
-		if flip and (temp_blueprint.b mod 2) = 1
-			aaa--
+		if flip and (temp_blueprint.b mod 2) = 1{
+			if blueprint_mod2
+				aaa--
+			else
+				aaa++
+		}
 		var temp_complex = abtoxy(aaa, temp_blueprint.b + my), aa = temp_complex[0], bb = temp_complex[1], index = temp_blueprint.index, dir = temp_blueprint.dir
 		draw_edificio(aa, bb, index, dir, 0.5)
 		if not temp_blueprint.construible{
@@ -3298,14 +3315,19 @@ else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
 			}
 		}
 	}
+	//Construir
 	if mouse_check_button_pressed(mb_left){
 		mouse_clear(mb_left)
 		if not keyboard_check(vk_lshift)
 			build_index = 0
 		for(var a = 0; a < len; a++){
 			var temp_blueprint = blueprint[a], aaa = temp_blueprint.a + mx
-			if flip and (temp_blueprint.b mod 2) = 1
-				aaa--
+			if flip and (temp_blueprint.b mod 2) = 1{
+				if blueprint_mod2
+					aaa--
+				else
+					aaa++
+			}
 			if temp_blueprint.construible and is_comprable(edificio_precio_id[temp_blueprint.index], edificio_precio_num[temp_blueprint.index])
 				construir(temp_blueprint.index, temp_blueprint.dir, aaa, temp_blueprint.b + my)
 		}
@@ -4553,8 +4575,10 @@ if menu = 1 or menu = 3{
 			grafic_hideui = not grafic_hideui
 		if keyboard_check_pressed(CONTROL_MUSIC)
 			sound_change()
-		if keyboard_check_pressed(CONTROL_INFO)
+		if keyboard_check_pressed(CONTROL_INFO){
 			info = not info
+			set_setting("", "info", info)
+		}
 		if keyboard_check_pressed(CONTROL_FLOW)
 			flow = (flow + 1) mod 9
 	}

@@ -8,7 +8,5 @@ function sound_change(){
 	}
 	else for(var a = 0; a < sonidos_max; a++)
 		audio_resume_sound(sonido_id[a])
-	ini_open("settings.ini")
-	ini_write_real("", "sonido", sonido)
-	ini_close()
+	set_setting("", "sonido", sonido)
 }

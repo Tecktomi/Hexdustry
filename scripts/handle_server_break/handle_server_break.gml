@@ -5,6 +5,6 @@ function handle_server_break(){
 		servidor = false
 		clear_edit()
 		menu = 0
-		show_message("El servidor ha muerto")
+		show_message(L.server_muerto)
 	}
 }

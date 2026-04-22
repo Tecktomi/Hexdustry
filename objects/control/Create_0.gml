@@ -48,7 +48,8 @@ ini_open("settings.ini")
 	grafic_humo = bool(ini_read_real("", "grafic_humo", 1))
 	grafic_energia = bool(ini_read_real("", "grafic_energia", 1))
 	auto_guardado = bool(ini_read_real("", "auto_guardado", 1))
-	online_nombre = ini_read_string("", "Nombre Online", $"jugador_{irandom(255)}")
+	online_nombre = ini_read_string("", "online_nombre", $"jugador_{irandom(255)}")
+	idioma = ini_read_real("", "Idioma", 0)
 	grafic_hideui = false
 #endregion
 medallas = array_create(6)
@@ -87,7 +88,6 @@ else
 save_codes = (browser) ? scan_files("*.code", fa_none) : []
 idiomas = 3
 idioma_name = ["en", "es", "ru"]
-idioma = 0
 L = {}
 #region Campaña
 	world_width = 10

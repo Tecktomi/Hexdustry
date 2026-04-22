@@ -3,7 +3,7 @@ function load_procesador(buffer, edificio = control.null_edificio){
 		var _version = buffer_read(buffer, buffer_u32)
 		if _version < PROCESADOR_VERSION{
 			//Retrocompatibilidad
-			show_debug_message("Código obsoleto")
+			show_debug_message(L.archivo_obsoleto)
 			return false
 		}
 		var size = real(buffer_read(buffer, buffer_u16))

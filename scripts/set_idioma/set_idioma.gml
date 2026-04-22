@@ -517,7 +517,7 @@ function set_idioma(){
 			variable_struct_set(L, "jugadores", "Players")
 			variable_struct_set(L, "controles", "Controls")
 			CONTROL_NOMBRE = ["Left", "Right", "Up", "Down", "Pause", "Menu", "Toggle Sound", "Toggle Waves", "Hide Interface", "Show Information", "Show Vectors",
-				"Encyclopedia", "Rotate Building", "Rebuild Buildings", "Show Networks", "Show Flows", "Create Blueprint"]
+				"Encyclopedia", "Rotate Building", "Rebuild Buildings", "Show Networks", "Show Flows", "Create Blueprint", "See Players"]
 			variable_struct_set(L, "autoguardado", "Auto Save")
 			dron_nombre[idd_minero] = "Miner"
 			dron_descripcion[idd_minero] = "Mines resources on the map and delivers them to a nearby Storage"
@@ -527,6 +527,15 @@ function set_idioma(){
 			dron_descripcion[idd_helicoptero] = "Advanced aerial unit, attacks from a distance"
 			variable_struct_set(L, "guardar_plano", "Save Blueprint")
 			variable_struct_set(L, "cargar_plano", "Load Blueprint")
+			variable_struct_set(L, "server_error_nombre", "Error\n\nYour name: \"{0}\" is already in use on this server")
+			variable_struct_set(L, "server_jugador_desconectado", "{0} has disconnected")
+			variable_struct_set(L, "server_jugador_expulsado", "{0} has been kicked")
+			variable_struct_set(L, "server_jugador_ido", "{0} has left")
+			variable_struct_set(L, "server_jugador_unido", "{0} has joined")
+			variable_struct_set(L, "server_desconectado", "Connection to the server has been lost")
+			variable_struct_set(L, "server_expulsado", "You have been kicked from the server")
+			variable_struct_set(L, "server_muerto", "The server has been closed")
+			variable_struct_set(L, "archivo_obsoleto", "Error\n\noutdated file")
 		}
 		//Español
 		else if idioma = 1{
@@ -1042,7 +1051,7 @@ function set_idioma(){
 			variable_struct_set(L, "jugadores", "Jugadores")
 			variable_struct_set(L, "controles", "Controles")
 			CONTROL_NOMBRE = ["Izquierda", "Derecha", "Arriba", "Abajo", "Pausa", "Menú", "Activar Sonido", "Activar Oleadas", "Esconder Interfaz", "Mostrar Información", "Mostrar vectores",
-				"Enciclopedia", "Rotar edificio", "Reconstruir edificios", "Mostrar Redes", "Mostrar Flujos", "Crear Planos"]
+				"Enciclopedia", "Rotar edificio", "Reconstruir edificios", "Mostrar Redes", "Mostrar Flujos", "Crear Planos", "Ver Jugadores"]
 			variable_struct_set(L, "autoguardado", "Guardado Automático")
 			dron_nombre[idd_minero] = "Minero"
 			dron_descripcion[idd_minero] = "Mina recursos en el mapa y los lleva a un Almacén cercano"
@@ -1052,6 +1061,15 @@ function set_idioma(){
 			dron_descripcion[idd_helicoptero] = "Unidad aerea superior, dispara a distancia"
 			variable_struct_set(L, "guardar_plano", "Guardar Plano")
 			variable_struct_set(L, "cargar_plano", "Cargar Plano")
+			variable_struct_set(L, "server_error_nombre", "Error\n\nTu nombre: \"{0}\" ya está utilizado en ese servidor")
+			variable_struct_set(L, "server_jugador_desconectado", "{0} se ha desconectado")
+			variable_struct_set(L, "server_jugador_expulsado", "{0} ha sido expulsado")
+			variable_struct_set(L, "server_jugador_ido", "{0} se ha ido")
+			variable_struct_set(L, "server_jugador_unido", "{0} se ha unido")
+			variable_struct_set(L, "server_desconectado", "Se ha perdido la conexión con el servidor")
+			variable_struct_set(L, "server_expulsado", "Te han expulsado del servidor")
+			variable_struct_set(L, "server_muerto", "Se ha cerrado el servidor")
+			variable_struct_set(L, "archivo_obsoleto", "Error\n\narchivo obsoleto")
 		}
 		//Русский
 		else if idioma = 2{
@@ -1566,7 +1584,7 @@ function set_idioma(){
 			variable_struct_set(L, "jugadores", "Игроки")
 			variable_struct_set(L, "controles", "Элементы управления")
 			CONTROL_NOMBRE = ["Влево", "Вправо", "Вверх", "Вниз", "Пауза", "Меню", "Вкл/выкл звук", "Вкл/выкл волны", "Скрыть интерфейс", "Показать информацию", "Показать векторы",
-				"Энциклопедия", "Повернуть здание", "Перестроить здания", "Показать сети", "Показать потоки", "Создать проект"]
+				"Энциклопедия", "Повернуть здание", "Перестроить здания", "Показать сети", "Показать потоки", "Создать проект", "Просмотреть Игроков"]
 			variable_struct_set(L, "autoguardado", "Автоматическое сохранение")
 			dron_nombre[idd_minero] = "Шахтёр"
 			dron_descripcion[idd_minero] = "Добывает ресурсы на карте и доставляет их на ближайший склад"
@@ -1576,6 +1594,15 @@ function set_idioma(){
 			dron_descripcion[idd_helicoptero] = "Продвинутая воздушная единица, атакует на расстоянии"
 			variable_struct_set(L, "guardar_plano", "Сохранить чертеж")
 			variable_struct_set(L, "cargar_plano", "Загрузить чертеж")
+			variable_struct_set(L, "server_error_nombre", "Ошибка\n\nВаше имя: \"{0}\" уже используется на этом сервере")
+			variable_struct_set(L, "server_jugador_desconectado", "{0} отключился")
+			variable_struct_set(L, "server_jugador_expulsado", "{0} был исключён")
+			variable_struct_set(L, "server_jugador_ido", "{0} вышел")
+			variable_struct_set(L, "server_jugador_unido", "{0} присоединился")
+			variable_struct_set(L, "server_desconectado", "Соединение с сервером потеряно")
+			variable_struct_set(L, "server_expulsado", "Вы были исключены с сервера")
+			variable_struct_set(L, "server_muerto", "Сервер был закрыт")
+			variable_struct_set(L, "archivo_obsoleto", "Ошибка\n\nустаревший файл")
 		}
 		for(var a = 0; a < rss_max; a++)
 			recurso_descripcion[a] = string_trim(text_wrap(recurso_descripcion[a], 400))
