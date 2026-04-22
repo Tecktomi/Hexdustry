@@ -7,9 +7,9 @@ function server_expulsar(index, timeout = false){
 			network_send_packet(server_jugadores[i], buffer, buffer_tell(buffer))
 		buffer_delete(buffer)
 		if timeout
-			array_push(chat, $"{server_jugadores_nombre[index]} se ha desconectado")
+			array_push(chat, string(L.server_jugador_desconectado, server_jugadores_nombre[index]))
 		else
-			array_push(chat, $"{server_jugadores_nombre[index]} ha sido expulsado")
+			array_push(chat, string(L.server_jugador_expulsado, server_jugadores_nombre[index]))
 		array_push(chat_time, image_index)
 		array_delete(server_jugadores, index, 1)
 		array_delete(server_jugadores_nombre, index, 1)

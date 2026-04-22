@@ -62,6 +62,8 @@ function draw_boton_text(xpos, ypos, variable, es_real = true, detect_real = fal
 					get_keyboard_cursor = 1
 				else if keyboard_check_pressed(vk_end)
 					get_keyboard_cursor = string_length(get_keyboard_text) + 1
+				else if keyboard_check_pressed(vk_enter)
+					get_keyboard_string = -1
 				else if not keyboard_check_pressed(vk_lcontrol){
 					var new_input = keyboard_lastchar
 					if new_input != "" and ord(new_input) >= 32 and ord(new_input) < 127
