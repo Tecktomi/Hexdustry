@@ -82,6 +82,8 @@ if browser{
 		directory_create("Codes")
 	if not directory_exists("Scenarios")
 		directory_create("Scenarios")
+	if not directory_exists("Blueprints")
+		directory_create("Blueprints")
 }
 else
 	default_maps_image = [spr_preset_maps_pradera, spr_preset_maps_cuevas, spr_preset_maps_desierto, spr_preset_maps_nieve, spr_preset_maps_islas, spr_preset_maps_asalto]
@@ -379,9 +381,14 @@ L = {}
 		a : 0,
 		b : 0,
 		index : 0,
-		dir : 0
+		dir : 0,
+		rot0 : 0,
+		rot4: 0,
+		rot5 : 0
 	}
 	blueprint = array_create(0, null_blueprint)
+	blueprints_file = array_create(0, "")
+	blueprints_image = array_create(0)
 #endregion
 null_sound = sound_play(snd_explosion, 0, 0, 0)
 null_edificio = {

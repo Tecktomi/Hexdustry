@@ -710,9 +710,9 @@ function menu_editor(){
 			//Cargar
 			if get_file = 1{
 				draw_set_valign(fa_bottom)
+				var xpos = 120
+				ypos = 200
 				for(var a = 0; a < array_length(save_files); a++){
-					var xpos = 120 + 120 * (a mod 9)
-					ypos = 200 + 120 * floor(a / 9)
 					var temp_text = string_delete(save_files[a], string_pos(".", save_files[a]), 4)
 					if draw_sprite_boton(save_files_png[a],, xpos, ypos, 96, 96, 1){
 						input_layer = 0
@@ -729,6 +729,11 @@ function menu_editor(){
 						continue
 					}
 					draw_text(xpos + 20, ypos, text_wrap(temp_text, 100))
+					xpos += 120
+					if (a mod 9) = 8{
+						xpos = 120
+						ypos += 150
+					}
 				}
 				draw_set_valign(fa_top)
 				if array_length(save_files) = 0{

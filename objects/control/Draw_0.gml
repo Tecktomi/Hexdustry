@@ -89,12 +89,12 @@ if menu = 0{
 		draw_set_halign(fa_center)
 		draw_text(room_width / 2, 110, get_file = 1 ? L.menu_cargar_escenario : L.menu_juego_rapido)
 		draw_set_halign(fa_left)
-		//Cargar Archivo
+		//Cargar Escenarios
 		if get_file = 1{
 			draw_set_valign(fa_bottom)
+			var xpos = 120
+			ypos = 200
 			for(var a = 0; a < array_length(save_files); a++){
-				var xpos = 120 + 120 * (a mod 9)
-				ypos = 200 + 120 * floor(a / 9)
 				var temp_text = string_delete(save_files[a], string_pos(".", save_files[a]), 4)
 				if draw_sprite_boton(save_files_png[a],, xpos, ypos, 96, 96, 1){
 					tecnologia = true
@@ -109,6 +109,11 @@ if menu = 0{
 					continue
 				}
 				draw_text(xpos + 20, ypos, text_wrap(temp_text, 100))
+				xpos += 120
+				if (a mod 9) = 8{
+					xpos = 120
+					ypos += 150
+				}
 			}
 			draw_set_valign(fa_top)
 			if array_length(save_files) = 0{
@@ -308,9 +313,9 @@ if menu = 0{
 		//Cargar partidas
 		else if get_file = 3{
 			draw_set_valign(fa_bottom)
+			var xpos = 120
+			ypos = 200
 			for(var a = 0; a < array_length(partidas); a++){
-				var xpos = 120 + 120 * (a mod 9)
-				ypos = 200 + 120 * floor(a / 9)
 				var temp_text = string_delete(partidas[a], string_pos(".", partidas[a]), 5)
 				if draw_sprite_boton(partidas_png[a],, xpos, ypos, 96, 96, 1){
 					var buffer = buffer_create(4096, buffer_grow, 1)
@@ -325,6 +330,11 @@ if menu = 0{
 					continue
 				}
 				draw_text(xpos + 20, ypos, text_wrap(temp_text, 100))
+				xpos += 120
+				if a mod 9 = 8{
+					xpos = 120
+					ypos += 150
+				}
 			}
 			draw_set_valign(fa_top)
 			if array_length(partidas) = 0{
@@ -1507,7 +1517,7 @@ if show_menu{
 					}
 			}
 			//Guardar
-			else{
+			else if get_file = 1{
 				var flag = false
 				for(var a = 0; a < array_length(save_codes); a++)
 					if draw_boton(140, 160 + 30 * a, save_codes[a],,,,, 1){
@@ -1789,25 +1799,20 @@ if keyboard_check(CONTROL_BLUEPRINT){
 	}
 	draw_set_halign(fa_center)
 	if array_length(blueprint) = 0 and draw_boton(room_width / 2, 40, L.cargar_plano){
-		blueprint_safe = true
-		build_index = -1
-		var buffer = buffer_create(2, buffer_grow, 1)
-		buffer = buffer_load("blueprint")
-		var len = real(buffer_read(buffer, buffer_u8))
-		blueprint_mod2 = bool(buffer_read(buffer, buffer_bool))
-		array_resize(blueprint, len)
-		for(var i = 0; i < len; i++){
-			var a = real(buffer_read(buffer, buffer_u8)), b = real(buffer_read(buffer, buffer_u8)), index = real(buffer_read(buffer, buffer_u8)), dir = real(buffer_read(buffer, buffer_u8))
-			var temp_blueprint = {
-				construible : true,
-				a : a,
-				b : b,
-				index : index,
-				dir : dir
-			}
-			blueprint[i] = temp_blueprint
+		get_file = 3
+		input_layer = 1
+		blueprints_files = scan_files("Blueprints/*.txt", fa_none)
+		for(var a = 0; a < array_length(blueprints_image); a++)
+			if blueprints_image[a] != spr_null_image
+				sprite_delete(blueprints_image[a])
+		for(var a = 0; a < array_length(blueprints_files); a++){
+			var temp_text = "Blueprints/" + string_delete(blueprints_files[a], string_pos(".", blueprints_files[a]), 4)
+			if file_exists(temp_text + ".png")
+				var temp_image = sprite_add(temp_text + ".png", 1, false, false, 0, 0)
+			else
+				temp_image = spr_null_image
+			blueprints_image[a] = temp_image
 		}
-		buffer_delete(buffer)
 	}
 	draw_set_halign(fa_left)
 	var temp_mina = max(mina, blueprint_mina), temp_maxa = min(maxa, blueprint_maxa + 1), temp_minb = max(minb, blueprint_minb), temp_maxb = min(maxb, blueprint_maxb + 1)
@@ -1817,6 +1822,120 @@ if keyboard_check(CONTROL_BLUEPRINT){
 				var temp_complex = abtoxy(a, b)
 				draw_sprite_off(spr_hexagono, 0, temp_complex[0], temp_complex[1],,,, c_blue, 0.5)
 			}
+	if mouse_check_button_released(mb_left){
+		blueprint_safe = false
+		blueprint_mod2 = (blueprint_minb & 1)
+		blueprint = array_create(0, null_blueprint)
+		var temp_array_bool = array_create(array_length(edificios), true)
+		var temp_blueprint_mina = infinity, temp_blueprint_maxa = 0, temp_blueprint_minb = infinity, temp_blueprint_maxb = 0
+		for(var a = blueprint_mina; a <= blueprint_maxa; a++)
+			for(var b = blueprint_minb; b <= blueprint_maxb; b++)
+				if blueprint_grid[# a, b] and edificio_bool[# a, b]{
+					var temp_edificio = edificio_id[# a, b]
+					if temp_array_bool[temp_edificio.punteros[0]]{
+						temp_array_bool[temp_edificio.punteros[0]] = false
+						var temp_a = blueprint_mina, temp_b = blueprint_minb, rot4 = real(floor((temp_edificio.b - blueprint_minb) / 2)), rot0 = real(temp_edificio.a - blueprint_mina), rot5 = rot0
+						temp_a += rot0
+						temp_b += 2 * rot4
+						if temp_a != temp_edificio.a or temp_b != temp_edificio.b
+							for(var i = 0; i < 6; i++){
+								var temp_complex = next_to(temp_a, temp_b, i)
+								if temp_complex[0] = temp_edificio.a and temp_complex[1] = temp_edificio.b{
+									if i = 0
+										rot0++
+									else if i = 2
+										rot5--
+									else if i = 3
+										rot0--
+									else if i = 5
+										rot5++
+									break
+								}
+							}
+						var temp_blueprint = {
+							construible : true,
+							a : real(temp_edificio.a - blueprint_mina),
+							b : real(temp_edificio.b - blueprint_minb),
+							index : real(temp_edificio.index),
+							dir : real(temp_edificio.dir),
+							rot0 : rot0,
+							rot4 : rot4,
+							rot5 : rot5
+						}
+						array_push(blueprint, temp_blueprint)
+					}
+				}
+		if array_length(blueprint) > 0
+			build_index = -1
+	}
+}
+if get_file = 3{
+	var color = draw_get_color(), halign = draw_get_halign()
+	draw_set_color(ui_fondo)
+	draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
+	draw_set_color(ui_texto)
+	draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
+	if array_length(blueprints_files) = 0{
+		draw_set_halign(fa_center)
+		draw_text(room_width / 2, 150, L.menu_sin_blueprints)
+	}
+	else{
+		var xpos = 120, ypos = 200
+		for(var i = 0; i < array_length(blueprints_files); i++){
+			draw_set_color(ui_panel_secundario)
+			draw_rectangle(xpos, ypos, xpos + 100, ypos + 100, false)
+			if draw_sprite_boton(blueprints_image[i],, xpos, ypos, 100, 100, 1){
+				get_file = 0
+				input_layer = 0
+				blueprint_safe = true
+				build_index = -1
+				var buffer = buffer_create(2, buffer_grow, 1)
+				buffer = buffer_load($"Blueprints\\{blueprints_files[i]}")
+				var len = real(buffer_read(buffer, buffer_u8))
+				blueprint_mod2 = bool(buffer_read(buffer, buffer_bool))
+				array_resize(blueprint, len)
+				for(var j = 0; j < len; j++){
+					var a = real(buffer_read(buffer, buffer_u8)), b = real(buffer_read(buffer, buffer_u8)), index = real(buffer_read(buffer, buffer_u8))
+					var dir = real(buffer_read(buffer, buffer_u8)), rot0 = real(buffer_read(buffer, buffer_u8)), rot4 = real(buffer_read(buffer, buffer_u8)), rot5 = real(buffer_read(buffer, buffer_u8))
+					var temp_blueprint = {
+						construible : true,
+						a : a,
+						b : b,
+						index : index,
+						dir : dir,
+						rot0 : rot0,
+						rot4 : rot4,
+						rot5 : rot5
+					}
+					blueprint[j] = temp_blueprint
+				}
+				buffer_delete(buffer)
+			}
+			draw_set_color(ui_texto)
+			draw_rectangle(xpos, ypos, xpos + 100, ypos + 100, true)
+			if draw_sprite_boton(spr_basura,, xpos, ypos - 20,,, 1){
+				file_delete($"Blueprints\\{blueprints_files[i]}")
+				file_delete($"Blueprints\\{blueprints_image[i]}")
+				array_delete(blueprints_files, i, 1)
+				array_delete(blueprints_image, i, 1)
+				break
+			}
+			draw_text(xpos + 20, ypos - 20, string_delete(blueprints_files[i], string_pos(".", blueprints_files[i]), 4))
+			xpos += 120
+			if (i mod 9) = 8{
+				xpos = 120
+				ypos += 150
+			}
+		}
+	}
+	draw_set_halign(fa_center)
+	if draw_boton(room_width / 2, room_height - 150, L.volver,,,,, 1) or keyboard_check_pressed(CONTROL_MENU){
+		keyboard_clear(CONTROL_MENU)
+		get_file = 0
+		input_layer = 0
+	}
+	draw_set_color(color)
+	draw_set_color(halign)
 }
 //Mostrar detalles de edificios al pasar el mouse_por encima
 if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_procesador){
@@ -1848,51 +1967,25 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			temp_text += "ENEMIGO\n"
 		else{
 			//Blueprint
-			if keyboard_check(CONTROL_BLUEPRINT){
-				if mouse_check_button(mb_left){
-					if mouse_check_button_pressed(mb_left){
-						blueprint_mina = infinity
-						blueprint_maxa = 0
-						blueprint_minb = infinity
-						blueprint_maxb = 0
-					}
-					if not (mx = last_mx and my = last_my) and edificio.index != id_nucleo{
-						var size = edificio.coordenadas
-						for(var a = 0; a < array_length(size); a++){
-							ds_grid_set(blueprint_grid, size[a, 0], size[a, 1], true)
-							blueprint_mina = min(blueprint_mina, size[a, 0])
-							blueprint_maxa = max(blueprint_maxa, size[a, 0])
-							blueprint_minb = min(blueprint_minb, size[a, 1])
-							blueprint_maxb = max(blueprint_maxb, size[a, 1])
-						}
-					}
-					last_mx = mx
-					last_my = my
+			if keyboard_check(CONTROL_BLUEPRINT) and mouse_check_button(mb_left){
+				if mouse_check_button_pressed(mb_left){
+					blueprint_mina = infinity
+					blueprint_maxa = 0
+					blueprint_minb = infinity
+					blueprint_maxb = 0
 				}
-				else if mouse_check_button_released(mb_left){
-					blueprint_safe = false
-					blueprint_mod2 = ((blueprint_minb mod 2) = 1)
-					blueprint = array_create(0, null_blueprint)
-					var temp_array_bool = array_create(array_length(edificios), true)
-					for(var a = blueprint_mina; a <= blueprint_maxa; a++)
-						for(var b = blueprint_minb; b <= blueprint_maxb; b++)
-							if blueprint_grid[# a, b] and edificio_bool[# a, b]{
-								var temp_edificio = edificio_id[# a, b]
-								if temp_array_bool[temp_edificio.punteros[0]]{
-									temp_array_bool[temp_edificio.punteros[0]] = false
-									var temp_blueprint = {
-										construible : true,
-										a : real(temp_edificio.a - blueprint_mina),
-										b : real(temp_edificio.b - blueprint_minb),
-										index : real(temp_edificio.index),
-										dir : real(temp_edificio.dir)
-									}
-									array_push(blueprint, temp_blueprint)
-								}
-							}
-					if array_length(blueprint) > 0
-						build_index = -1
+				if not (mx = last_mx and my = last_my) and edificio.index != id_nucleo{
+					var size = edificio.coordenadas
+					for(var a = 0; a < array_length(size); a++){
+						ds_grid_set(blueprint_grid, size[a, 0], size[a, 1], true)
+						blueprint_mina = min(blueprint_mina, size[a, 0])
+						blueprint_maxa = max(blueprint_maxa, size[a, 0])
+						blueprint_minb = min(blueprint_minb, size[a, 1])
+						blueprint_maxb = max(blueprint_maxb, size[a, 1])
+					}
 				}
+				last_mx = mx
+				last_my = my
 			}
 			if not edificio_inerte[index] and edificio.punteros[4] = -1{
 				draw_sprite_off(spr_diseneabled, 0, edificio.center_x, edificio.center_y)
@@ -2542,7 +2635,7 @@ if build_index > 0 and win = 0{
 	}
 	//Rotar
 	if (edificio_rotable[build_index] or edificio_size[build_index] mod 2 = 0) and not keyboard_check(vk_lcontrol){
-		if mouse_wheel_up() or keyboard_check_pressed(CONTROL_ROTAR){
+		if mouse_wheel_up() or (not keyboard_check(vk_lshift) and keyboard_check_pressed(CONTROL_ROTAR)){
 			keyboard_clear(CONTROL_ROTAR)
 			if not edificio_rotable[build_index] and edificio_size[build_index] mod 2 = 0
 				build_dir = 5 - build_dir
@@ -2550,7 +2643,8 @@ if build_index > 0 and win = 0{
 				build_dir = (build_dir + 1) mod 6
 			prev_change = true
 		}
-		if mouse_wheel_down(){
+		if mouse_wheel_down() or (keyboard_check(vk_lshift) and keyboard_check_pressed(CONTROL_ROTAR)){
+			keyboard_clear(CONTROL_ROTAR)
 			if not edificio_rotable[build_index] and edificio_size[build_index] mod 2 = 0
 				build_dir = 5 - build_dir
 			else
@@ -3257,7 +3351,7 @@ if build_index > 0 and win = 0{
 	last_my = my
 }
 else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
-	var len = array_length(blueprint), flip = (((blueprint_mod2 + my) mod 2) = 1)
+	var len = array_length(blueprint), flip = (((blueprint_mod2 + my) mod 2) = 1), _rotar = false
 	//Guardar
 	if not blueprint_safe{
 		draw_set_halign(fa_center)
@@ -3272,9 +3366,39 @@ else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
 				buffer_write(buffer, buffer_u8, temp_blueprint.b)
 				buffer_write(buffer, buffer_u8, temp_blueprint.index)
 				buffer_write(buffer, buffer_u8, temp_blueprint.dir)
+				buffer_write(buffer, buffer_u8, temp_blueprint.rot0)
+				buffer_write(buffer, buffer_u8, temp_blueprint.rot4)
+				buffer_write(buffer, buffer_u8, temp_blueprint.rot5)
 			}
-			buffer_save(buffer, "blueprint")
+			buffer_save(buffer, $"Blueprints/{day_format()}.txt")
 			buffer_delete(buffer)
+			var surf = surface_create(room_width, room_height)
+			surface_set_target(surf)
+			var color = draw_get_color()
+			draw_set_color(make_color_rgb(255, 0, 255))
+			draw_rectangle(0, 0, room_width, room_height, false)
+			draw_set_color(color)
+			var max_width = 0, max_height = 0, min_width = infinity, min_height = infinity
+			for(var a = 0; a < len; a++){
+				var temp_blueprint = blueprint[a], aaa = temp_blueprint.a + mx
+				if flip and (temp_blueprint.b & 1){
+					if blueprint_mod2
+						aaa--
+					else
+						aaa++
+				}
+				var temp_complex = abtoxy(aaa, temp_blueprint.b + my), aa = temp_complex[0], bb = temp_complex[1], index = temp_blueprint.index, dir = temp_blueprint.dir
+				draw_edificio(aa, bb, index, dir)
+				var size = edificio_size[index] + 1
+				min_width = min(min_width, aa - camx - 48 * floor(size / 2))
+				min_height = min(min_height, bb - camy - 14 * size)
+				max_width = max(max_width, aa - camx + 48 * ceil(size / 2))
+				max_height = max(max_height, bb - camy + 14 * size)
+			}
+			var sprite = sprite_create_from_surface(surf, min_width, min_height, max_width - min_width, max_height - min_height, true, false, 0, 0)
+			sprite_save(sprite, 0, $"Blueprints/{day_format()}.png")
+			surface_reset_target()
+			surface_free(surf)
 		}
 		draw_set_halign(fa_left)
 	}
@@ -3283,8 +3407,70 @@ else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
 		mouse_clear(mb_right)
 		build_index = 0
 	}
+	//Rotar
+	if keyboard_check_pressed(CONTROL_ROTAR) or mouse_wheel_up() or mouse_wheel_down(){
+		keyboard_clear(CONTROL_ROTAR)
+		_rotar = true
+		var temp_dir = true
+		if mouse_wheel_down()
+			temp_dir = true
+		else if mouse_wheel_up()
+			temp_dir = false
+		if keyboard_check(vk_lshift)
+			temp_dir = not temp_dir
+		blueprint_mina = infinity
+		blueprint_minb = infinity
+		for(var a = 0; a < len; a++){
+			if (my % 1) and false
+				blueprint[a].b--
+			var temp_blueprint = blueprint[a], size = edificio_size[temp_blueprint.index]
+			if (size & 1) = 0
+				blueprint[a].dir = 5 - temp_blueprint.dir
+			else if temp_dir
+				blueprint[a].dir = (temp_blueprint.dir + 5) mod 6
+			else
+				blueprint[a].dir = (temp_blueprint.dir + 1) mod 6
+			var b = temp_blueprint.rot0
+			if temp_dir{
+				blueprint[a].rot0 = -temp_blueprint.rot4
+				blueprint[a].rot4 = temp_blueprint.rot5
+				blueprint[a].rot5 = b
+			}
+			else{
+				blueprint[a].rot0 = temp_blueprint.rot5
+				blueprint[a].rot5 = temp_blueprint.rot4
+				blueprint[a].rot4 = -b
+			}
+			if (size & 1) = 0{
+				if temp_blueprint.dir = 0 and temp_dir
+					blueprint[a].rot5--
+				if temp_blueprint.dir = 5 and not temp_dir
+					blueprint[a].rot0++
+			}
+			temp_blueprint = blueprint[a]
+			var tempa = mx, tempb = my, temp_array_real = [temp_blueprint.rot0, temp_blueprint.rot4, temp_blueprint.rot5], temp_array_real_2 = [0, 4, 5]
+			for(var i = 0; i < 3; i++){
+				if temp_array_real[i] < 0
+					temp_array_real_2[i] = (temp_array_real_2[i] + 3) mod 6
+				repeat(abs(temp_array_real[i])){
+					var temp_complex = next_to(tempa, tempb, temp_array_real_2[i])
+					tempa = temp_complex[0]
+					tempb = temp_complex[1]
+				}
+			}
+			blueprint[a].a = tempa - mx
+			blueprint[a].b = tempb - my
+			blueprint_mina = min(blueprint_mina, blueprint[a].a)
+			blueprint_minb = min(blueprint_minb, blueprint[a].b)
+		}
+		for(var a = 0; a < len; a++){
+			blueprint[a].a -= blueprint_mina
+			blueprint[a].b -= blueprint_minb
+		}
+		blueprint_mod2 = (blueprint_minb & 1)
+	}
 	//Detectar colisiones
-	if not (last_mx = mx and last_my = my){
+	if not (last_mx = mx and last_my = my) or _rotar{
 		for(var a = 0; a < len; a++){
 			var temp_blueprint = blueprint[a], aaa = temp_blueprint.a + mx
 			if flip and (temp_blueprint.b mod 2) = 1{
@@ -3299,7 +3485,7 @@ else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
 	//Dibujar Blueprint
 	for(var a = 0; a < len; a++){
 		var temp_blueprint = blueprint[a], aaa = temp_blueprint.a + mx
-		if flip and (temp_blueprint.b mod 2) = 1{
+		if flip and (temp_blueprint.b & 1){
 			if blueprint_mod2
 				aaa--
 			else

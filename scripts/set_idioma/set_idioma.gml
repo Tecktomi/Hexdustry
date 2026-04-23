@@ -536,6 +536,7 @@ function set_idioma(){
 			variable_struct_set(L, "server_expulsado", "You have been kicked from the server")
 			variable_struct_set(L, "server_muerto", "The server has been closed")
 			variable_struct_set(L, "archivo_obsoleto", "Error\n\noutdated file")
+			variable_struct_set(L, "menu_sin_blueprints", "No blueprints yet")
 		}
 		//Español
 		else if idioma = 1{
@@ -1070,6 +1071,7 @@ function set_idioma(){
 			variable_struct_set(L, "server_expulsado", "Te han expulsado del servidor")
 			variable_struct_set(L, "server_muerto", "Se ha cerrado el servidor")
 			variable_struct_set(L, "archivo_obsoleto", "Error\n\narchivo obsoleto")
+			variable_struct_set(L, "menu_sin_blueprints", "Sin planos aún")
 		}
 		//Русский
 		else if idioma = 2{
@@ -1603,6 +1605,7 @@ function set_idioma(){
 			variable_struct_set(L, "server_expulsado", "Вы были исключены с сервера")
 			variable_struct_set(L, "server_muerto", "Сервер был закрыт")
 			variable_struct_set(L, "archivo_obsoleto", "Ошибка\n\nустаревший файл")
+			variable_struct_set(L, "menu_sin_blueprints", "Сценариев чертеж нет")
 		}
 		for(var a = 0; a < rss_max; a++)
 			recurso_descripcion[a] = string_trim(text_wrap(recurso_descripcion[a], 400))
