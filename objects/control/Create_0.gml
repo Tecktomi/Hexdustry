@@ -492,6 +492,8 @@ puerto_carga_bool = false
 puerto_carga_link = null_edificio
 puerto_carga_array = array_create(0, null_edificio)
 puerto_carga_atended = 0
+puerto_carga_array_enemigo = array_create(0, null_edificio)
+puerto_carga_atended_enemigo = 0
 #region GRIDS
 	edificio_bool = ds_grid_create(xsize, ysize)
 	ds_grid_clear(edificio_bool, false)
@@ -1269,6 +1271,15 @@ var flag_rss = array_create(rss_max, false)
 		tag_generadores_de_humo_combustion[id_planta_nuclear] = true
 		tag_generadores_de_humo_combustion[id_horno] = true
 	#endregion
+	#region drones_de_ataque
+		tag_drones_de_ataque = array_create(dron_max, false)
+		tag_drones_de_ataque[idd_arana] = true
+		tag_drones_de_ataque[idd_kamikaze] = true
+		tag_drones_de_ataque[idd_tanque] = true
+		tag_drones_de_ataque[idd_helicoptero] = true
+		tag_drones_de_ataque[idd_titan] = true
+		tag_drones_de_ataque[idd_bombardero] = true
+	#endregion
 #endregion
 //Inputs y outputs de fábrica de drones y planta de reciclaje
 for(var a = 0; a < dron_max; a++){
@@ -1330,6 +1341,7 @@ torres_de_tension = array_create(0, null_edificio)
 plantas_de_reciclaje = array_create(0, null_edificio)
 edificios_salida_drones = array_create(0, null_edificio)
 almacenes = array_create(0, null_edificio)
+almacenes_enemigos = array_create(0, null_edificio)
 edi_sort = array_create(edificio_max, 0)
 sort_edificios()
 #region Caminos

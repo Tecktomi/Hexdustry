@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"dron_logic",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"dron_logic",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -143,6 +143,7 @@
     {"id":{"name":"draw_vida","path":"scripts/draw_vida/draw_vida.yy",},},
     {"id":{"name":"dron_chunk_push","path":"scripts/dron_chunk_push/dron_chunk_push.yy",},},
     {"id":{"name":"dron_chunk_remove","path":"scripts/dron_chunk_remove/dron_chunk_remove.yy",},},
+    {"id":{"name":"dron_logic","path":"scripts/dron_logic/dron_logic.yy",},},
     {"id":{"name":"ds_list_in","path":"scripts/ds_list_in/ds_list_in.yy",},},
     {"id":{"name":"ds_list_remove","path":"scripts/ds_list_remove/ds_list_remove.yy",},},
     {"id":{"name":"edificio_curar","path":"scripts/edificio_curar/edificio_curar.yy",},},

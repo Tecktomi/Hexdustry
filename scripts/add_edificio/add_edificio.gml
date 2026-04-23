@@ -571,7 +571,10 @@ function add_edificio(index, dir, a, b, enemigo = false){
 				tuberia_arround(edificio)
 		}
 		if index = id_almacen
-			array_disorder_push(almacenes, edificio, 2)
+			if enemigo
+				array_disorder_push(almacenes_enemigos, edificio, 2)
+			else
+				array_disorder_push(almacenes, edificio, 2)
 		if index = id_laser
 			edificio.mode = true
 		if in(index, id_rifle, id_mortero, id_onda_de_choque)
