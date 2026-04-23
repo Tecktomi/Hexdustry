@@ -60,7 +60,7 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 						target_y = edificio.center_y
 					}
 					var dis = distance(aa, bb, target_x, target_y)
-					var municion = add_municion(aa, bb, vel * (target_x - aa) / dis, vel * (target_y - bb) / dis, 1, dis / vel, 25, 4900, target, edificio, dron.enemigo, true)
+					var municion = add_municion(aa, bb, vel * (target_x - aa) / dis, vel * (target_y - bb) / dis, 1, dis / vel, 25, 4900, target, edificio, dron.enemigo, true, true)
 					array_push(municiones, municion)
 				}
 			}

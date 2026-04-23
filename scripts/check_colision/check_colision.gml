@@ -3,7 +3,7 @@ function check_colision(a, b, index, dir){
 		var size = get_size(a, b, dir, edificio_size[index]), flag = true
 		var temp_es_camino = (tag_camino_o_tunel[index] or index = id_cruce)
 		var temp_sobre_hielo = (edificio_size[index] > 1 and index != id_extractor_atmosferico)
-		var temp_sobre_liquido = (not tag_construible_en_liquido[index])
+		var temp_sobre_liquido = tag_construible_en_liquido[index]
 		var es_taladro_pesado = in(index, id_taladro_electrico, id_taladro_de_explosion)
 		var es_taladro = ((index = id_taladro) or es_taladro_pesado)
 		if es_taladro or in(index, id_bomba_hidraulica, id_bomba_de_evaporacion, id_generador_geotermico)
