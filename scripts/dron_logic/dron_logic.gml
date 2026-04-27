@@ -226,7 +226,7 @@ function dron_logic(){
 								dron.modo = 0
 								var min_dis = infinity, min_puerto = null_edificio, temp_almacenes = enemigo ? almacenes_enemigos : almacenes
 								for(var b = 0; b < array_length(temp_almacenes); b++){
-									edificio = temp_almacenes[b]
+									var edificio = temp_almacenes[b]
 									if edificio.carga_total < edificio_carga_max[edificio.index]{
 										dis = distance_sqr(dron.x, dron.y, edificio.center_x, edificio.center_y)
 										if dis < min_dis{
@@ -275,7 +275,7 @@ function dron_logic(){
 				if dron.modo = 1{
 					if index = idd_bombardero{
 						if dron.step <= dron_step[index]{
-							var dir = point_direction(dron.x, dron.y, dron.move_xmove, dron.move_ymove)
+							dir = point_direction(dron.x, dron.y, dron.move_xmove, dron.move_ymove)
 							var diff = angle_difference(dir, dron.dir)
 							diff += random_range(-0.01, 0.01)
 							dron.dir += 0.02 * diff

@@ -17,7 +17,7 @@ function redo_pathfind(){
 		for(var a = array_length(edificios_targeteables) - 1; a >= 0; a--){
 			var edificio = edificios_targeteables[a]
 			ds_grid_clear(edificio.coordenadas_dis, infinity)
-			ds_list_clear(edificio.coordenadas_close)
+			array_resize(edificio.coordenadas_close, 0)
 			edificio_pathfind(edificio)
 		}
 	}
