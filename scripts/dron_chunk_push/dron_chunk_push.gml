@@ -11,5 +11,11 @@ function dron_chunk_push(dron = control.null_dron){
 			ds_grid_set(chunk_dron_enemigo, a, b, temp_array_dron)
 		else
 			ds_grid_set(chunk_dron_aliado, a, b, temp_array_dron)
+		#region DATA
+			var data = datas[_jugador], data_chunk = ds_grid_get(data.chunk_drones, dron.chunk_x, dron.chunk_y)
+			dron.punteros[4] = array_length(data_chunk)
+			array_push(data_chunk, dron)
+			ds_grid_set(data.chunk_drones, a, b, data_chunk)
+		#endregion
 	}
 }

@@ -434,7 +434,7 @@ null_edificio = {
 	energia_consumo_max : 0,
 	edificio_index : 0,
 	coordenadas_dis : ds_grid_create(xsize, ysize),
-	coordenadas_close : ds_list_create(),
+	coordenadas_close : array_create(0, [0, 0]),
 	vivo : false,
 	emisor : false,
 	receptor : false,
@@ -473,8 +473,6 @@ null_edificio.link = null_edificio
 null_edificio.energia_link = array_create(0, null_edificio)
 null_edificio.flujo_link = array_create(0, null_edificio)
 ds_grid_clear(null_edificio.coordenadas_dis, 0)
-ds_list_add(null_edificio.coordenadas_close, [0, 0])
-ds_list_clear(null_edificio.coordenadas_close)
 null_edificio.edificios_cercanos = array_create(0, null_edificio)
 null_edificio.edificios_cercanos_heridos = array_create(0, null_edificio)
 null_edificio.reparadores_cercanos = array_create(0, null_edificio)
@@ -1614,6 +1612,21 @@ betas = array_create(0, null_beta)
 explosion_queue = array_create(0, {x : 0, y : 0, edificio : null_edificio, enemigo : false, radio : 0, dmg : 0, incendiario : false})
 explosion_fx_queue = array_create(0, explosion_fx(0, 0, 0))
 set_idioma()
+#region DATA
+	data = {
+		edificios : array_create(0, null_edificio),
+		drones : array_create(0, null_dron),
+		chunk_edificios : ds_grid_create(chunk_xsize, chunk_ysize),
+		chunk_drones : ds_grid_create(chunk_xsize, chunk_ysize),
+		edificios_id : array_create(edificio_max, array_create(0, null_edificio))
+	}
+	ds_grid_clear(data.chunk_edificios, array_create(0, null_edificio))
+	ds_grid_clear(data.chunk_drones, array_create(0, null_dron))
+	for(var a = 0; a < edificio_max; a++)
+		data.edificios_id[a] = array_create(0, null_edificio)
+	datas = array_create(1, data)
+	jugador = 0
+#endregion
 biome_seed = 0
 seed = random_get_seed()
 generar_bioma(biome_seed)

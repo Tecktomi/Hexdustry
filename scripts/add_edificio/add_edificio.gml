@@ -1,8 +1,8 @@
-function add_edificio(index, dir, a, b, enemigo = false){
+function add_edificio(index, dir, a, b, enemigo = false, _jugador = 0){
 	with control{
 		if edificio_bool[# a, b]
 			exit
-		var temp_complex = abtoxy(a, b)
+		var temp_complex = abtoxy(a, b), chunk_x = clamp(floor(a / chunk_width), 0, chunk_xsize - 1), chunk_y = clamp(floor(b / chunk_height), 0, chunk_ysize - 1)
 		x = temp_complex[0]
 		y = temp_complex[1]
 		var edificio = {
@@ -48,7 +48,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			energia_consumo_max : edificio_energia_consumo[index],
 			edificio_index : real(edificio_count++),
 			coordenadas_dis : ds_grid_create(xsize, ysize),
-			coordenadas_close : ds_list_create(),
+			coordenadas_close : array_create(0, [0, 0]),
 			vivo : true,
 			emisor : edificio_emisor[index],
 			receptor : edificio_receptor[index],
@@ -58,8 +58,8 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			procesador_link : array_create(0, null_edificio),
 			eliminar : false,
 			agregar : false,
-			chunk_x : clamp(floor(a / chunk_width), 0, chunk_xsize - 1),
-			chunk_y : clamp(floor(b / chunk_height), 0, chunk_ysize - 1),
+			chunk_x : chunk_x,
+			chunk_y : chunk_y,
 			target_chunks : array_create(0, [0, 0]),
 			//caminos: 0 = [cos(), 1 = sin()], silo_de_misiles: [0 = petroleo, 1 = tiempo_max], farbicas_de_drones: [0 = salida_x, 1 = salida_y]
 			array_real : array_create(0, 0),
@@ -74,7 +74,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			sound : null_sound,
 			modulo : false,
 			// 0 = edificios, 1 = chunk_edificios, 2 = [torres_tension, plantas_reciclaje, torres_reparadoras, puertos_carga, target.torres, almacenes], 3 = luz, 4 = edificios_activos
-			// 5 = red, 6 = flujo, 7 = torres, 8 = edificios_index, 9 = edificio_dinamico/estatico, 10 = edificio_draw, 11 = edificios_totales
+			// 5 = red, 6 = flujo, 7 = torres, 8 = edificios_index, 9 = edificio_dinamico/estatico, 10 = edificio_draw, 11 = edificios_totales, 12 = data.edificios, 13 = data.edificios_id, 14 = data.chunk_edificios
 			punteros : array_create(12, 0),
 			enemigo : enemigo,
 			prioridad : edificio_prioridad[index],
@@ -121,8 +121,6 @@ function add_edificio(index, dir, a, b, enemigo = false){
 		array_disorder_push(edificios_totales, edificio, 12)
 		var center_x = edificio.center_x, center_y = edificio.center_y
 		ds_grid_clear(edificio.coordenadas_dis, infinity)
-		ds_list_add(edificio.coordenadas_close, [0, 0])
-		ds_list_clear(edificio.coordenadas_close)
 		if not enemigo{
 			edificios_construidos++
 			array_disorder_push(edificios_index[index], edificio, 8)
@@ -157,7 +155,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			clic_sound = true
 		set_camino_dir(edificio)
 		//Añadir coordenadas
-		var temp_list_size = get_size(a, b, dir, edificio_size[index]), chunk_mina = edificio.chunk_x, chunk_minb = edificio.chunk_y, chunk_maxa = edificio.chunk_x, chunk_maxb = edificio.chunk_y
+		var temp_list_size = get_size(a, b, dir, edificio_size[index]), chunk_mina = chunk_x, chunk_minb = chunk_y, chunk_maxa = chunk_x, chunk_maxb = chunk_y
 		if edificio_size[index] != 1
 			for(var c = array_length(temp_list_size) - 1; c >= 0; c--){
 				temp_complex = temp_list_size[c]
@@ -197,24 +195,24 @@ function add_edificio(index, dir, a, b, enemigo = false){
 		ds_grid_set(edificio_draw, a, b, true)
 		if enemigo{
 			array_disorder_push(edificios_enemigos, edificio, 0)
-			array_disorder_push(chunk_edificios_enemigo[# edificio.chunk_x, edificio.chunk_y], edificio, 1)
+			array_disorder_push(chunk_edificios_enemigo[# chunk_x, chunk_y], edificio, 1)
 		}
 		else{
 			array_disorder_push(edificios, edificio, 0)
-			array_disorder_push(chunk_edificios[# edificio.chunk_x, edificio.chunk_y], edificio, 1)
+			array_disorder_push(chunk_edificios[# chunk_x, chunk_y], edificio, 1)
 		}
 		edificios_counter[index]++
 		if edificio_armas[index]{
 			var dis = edificio_alcance_sqr[index], chunk_size_x = chunk_width * 48, chunk_size_y = chunk_height * 14
-			var mini = max(edificio.chunk_x - edificio_alcance_chunk_x[index], 0), minj = max(edificio.chunk_y - edificio_alcance_chunk_y[index], 0)
-			var maxi = min(edificio.chunk_x + edificio_alcance_chunk_x[index], chunk_xsize - 1), maxj = min(edificio.chunk_y + edificio_alcance_chunk_y[index], chunk_ysize - 1)
+			var mini = max(chunk_x - edificio_alcance_chunk_x[index], 0), minj = max(chunk_y - edificio_alcance_chunk_y[index], 0)
+			var maxi = min(chunk_x + edificio_alcance_chunk_x[index], chunk_xsize - 1), maxj = min(chunk_y + edificio_alcance_chunk_y[index], chunk_ysize - 1)
 			for(var i = mini; i <= maxi; i++)
 				for(var j = minj; j <= maxj; j++){
-					var chunk_x = i * chunk_size_x, chunk_y = j * chunk_size_y
-					if distance_sqr(center_x, center_y, chunk_x, chunk_y) < dis or
-						distance_sqr(center_x, center_y, chunk_x + chunk_size_x, chunk_y) < dis or
-						distance_sqr(center_x, center_y, chunk_x, chunk_y + chunk_size_y) < dis or
-						distance_sqr(center_x, center_y, chunk_x + chunk_size_x, chunk_y + chunk_size_y) < dis
+					var _chunk_x = i * chunk_size_x, _chunk_y = j * chunk_size_y
+					if distance_sqr(center_x, center_y, _chunk_x, _chunk_y) < dis or
+						distance_sqr(center_x, center_y, _chunk_x + chunk_size_x, _chunk_y) < dis or
+						distance_sqr(center_x, center_y, _chunk_x, _chunk_y + chunk_size_y) < dis or
+						distance_sqr(center_x, center_y, _chunk_x + chunk_size_x, _chunk_y + chunk_size_y) < dis
 						array_push(edificio.target_chunks, [i, j])
 				}
 			if index = id_lanzallamas{
@@ -325,7 +323,7 @@ function add_edificio(index, dir, a, b, enemigo = false){
 				ds_grid_set(edificio.coordenadas_dis, aa, bb, 0)
 				ds_grid_set(edificio_cercano_dis, aa, bb, 0)
 				ds_grid_set(edificio_cercano, aa, bb, edificio)
-				ds_list_add(edificio.coordenadas_close, [aa, bb])
+				array_push(edificio.coordenadas_close, [aa, bb])
 			}
 		}
 		calculate_in_out_2(edificio)
@@ -570,6 +568,13 @@ function add_edificio(index, dir, a, b, enemigo = false){
 			if index = id_tuberia
 				tuberia_arround(edificio)
 		}
+		#region DATA
+			var data = datas[_jugador], data_chunk = ds_grid_get(data.chunk_edificios, chunk_x, chunk_y)
+			array_disorder_push(data.edificios, edificio, 12)
+			array_disorder_push(data.edificios_id[index], edificio, 13)
+			array_disorder_push(data_chunk, edificio, 14)
+		#endregion
+		//Datos específicos
 		if index = id_almacen
 			if enemigo
 				array_disorder_push(almacenes_enemigos, edificio, 2)
