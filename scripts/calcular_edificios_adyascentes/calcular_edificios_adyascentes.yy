@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"calcular_edificios_adyascentes",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"calcular_edificios_adyascentes",
+  "parent":{
+    "name":"EDIFICIOS",
+    "path":"folders/SCRIPTS/EDIFICIOS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

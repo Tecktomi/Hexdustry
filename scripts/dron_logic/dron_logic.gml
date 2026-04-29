@@ -186,7 +186,7 @@ function dron_logic(){
 							comprable = check_reconstruible(b)
 						if comprable{
 							var temp_edificio = construir(b, repair_dir[# i, j], i, j)
-							if edificio_seteable[b]
+							if tag_edificio_seteable[b]
 								set_edificio(repair_mode[# i, j], repair_select[# i, j], temp_edificio)
 						}
 						dron.modo = 0

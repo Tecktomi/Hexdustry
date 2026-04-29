@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"file_write",
   "parent":{
-    "name":"SCRIPTS",
-    "path":"folders/SCRIPTS.yy",
+    "name":"FILE",
+    "path":"folders/SCRIPTS/FILE.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -1,4 +1,4 @@
-function calculate_in_out(edificio = control.null_edificio){
+function calcular_inputs_outputs(edificio = control.null_edificio){
 	var index = edificio.index
 	with control{
 		if edificio_input_all[index]{

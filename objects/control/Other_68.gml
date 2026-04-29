@@ -54,4 +54,7 @@ if type = network_type_data{
 		handle_timeout(buffer)
 	else if msg = 20 //Mensaje
 		handle_mensaje(buffer)
+	//Timeout jugadores
+	if not servidor
+		server_jugadores_timeout = [0]
 }

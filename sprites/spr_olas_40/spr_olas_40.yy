@@ -30,7 +30,7 @@
   "origin":4,
   "parent":{
     "name":"Olas",
-    "path":"folders/SPRITES/Terreno/Olas.yy",
+    "path":"folders/SPRITES/TERRENO/Olas.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

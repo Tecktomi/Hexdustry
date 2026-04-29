@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scan_files",
   "parent":{
-    "name":"Function",
-    "path":"folders/SCRIPTS/Function.yy",
+    "name":"FILE",
+    "path":"folders/SCRIPTS/FILE.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

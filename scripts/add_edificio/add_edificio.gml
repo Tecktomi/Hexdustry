@@ -134,7 +134,7 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 			if index = id_planta_quimica
 				edificio.proceso = -1
 		}
-		calculate_in_out(edificio)
+		calcular_inputs_outputs(edificio)
 		if not edificio_inerte[edificio.index]
 			array_disorder_push(edificios_activos, edificio, 4)
 		if index = id_procesador{
@@ -307,7 +307,7 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 						temp_edificio.carga_output[idr_electronicos] = false
 						temp_edificio.proceso = 0
 						temp_edificio.start = false
-						calculate_in_out_2(temp_edificio)
+						calcular_edificios_adyascentes(temp_edificio)
 						break
 					}
 				}
@@ -325,7 +325,7 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 				ds_grid_set(edificio_cercano, aa, bb, edificio)
 			}
 		}
-		calculate_in_out_2(edificio)
+		calcular_edificios_adyascentes(edificio)
 		//Añadir a la red electrica
 		if edificio_energia[index]{
 			if index = id_energia_infinita

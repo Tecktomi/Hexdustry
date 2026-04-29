@@ -1,4 +1,4 @@
-function calculate_in_out_2(edificio = control.null_edificio, set_receptor = true){
+function calcular_edificios_adyascentes(edificio = control.null_edificio, set_receptor = true){
 	var index = edificio.index, a = edificio.a, b = edificio.b, dir = edificio.dir, _jugador = edificio.jugador
 	with control{
 		for(var i = array_length(edificio.inputs) - 1; i >= 0; i--){
@@ -133,7 +133,7 @@ function calculate_in_out_2(edificio = control.null_edificio, set_receptor = tru
 					continue
 				var temp_a = temp_edificio.a, temp_b = temp_edificio.b, temp_index = temp_edificio.index
 				if temp_index = id_cruce{
-					calculate_in_out_2(temp_edificio)
+					calcular_edificios_adyascentes(temp_edificio)
 					continue
 				}
 				var temp_dir = temp_edificio.dir

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"tuberia_arround",
   "parent":{
-    "name":"SCRIPTS",
-    "path":"folders/SCRIPTS.yy",
+    "name":"EDIFICIOS",
+    "path":"folders/SCRIPTS/EDIFICIOS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

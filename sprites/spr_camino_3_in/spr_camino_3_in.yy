@@ -33,7 +33,7 @@
   "origin":4,
   "parent":{
     "name":"Camino_3",
-    "path":"folders/SPRITES/Edificios/Camino_3.yy",
+    "path":"folders/SPRITES/EDIFICIO/Camino_3.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

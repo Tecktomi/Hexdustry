@@ -68,7 +68,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				puerto_carga_atended = 0
 			edificio.link.receptor = false
 			edificio.link.emisor = false
-			calculate_in_out_2(edificio.link)
+			calcular_edificios_adyascentes(edificio.link)
 			edificio.link.link = null_edificio
 		}
 		desactivar_edificio(edificio)
@@ -113,7 +113,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			temp_edificio.carga_input[idr_bateria] = false
 			temp_edificio.carga_output[idr_modulos] = false
 			temp_edificio.carga_output[idr_electronicos] = true
-			calculate_in_out_2(temp_edificio)
+			calcular_edificios_adyascentes(temp_edificio)
 			temp_edificio.link = null_edificio
 		}
 		//Cancelar coordenadas
@@ -132,7 +132,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		if destruccion and not enemigo{
 			ds_grid_set(repair_id, aa, bb, index)
 			ds_grid_set(repair_dir, aa, bb, edificio.dir)
-			if edificio_seteable[index]{
+			if tag_edificio_seteable[index]{
 				ds_grid_set(repair_mode, aa, bb, edificio.mode)
 				ds_grid_set(repair_select, aa, bb, edificio.select)
 			}
@@ -414,7 +414,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 					continue
 				if edificio_bool[# aaa, bbb]{
 					var temp_edificio = edificio_id[# aaa, bbb]
-					calculate_in_out_2(temp_edificio)
+					calcular_edificios_adyascentes(temp_edificio)
 				}
 			}
 		//Cambiar target de torres

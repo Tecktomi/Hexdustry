@@ -8,5 +8,5 @@ function sound_change(){
 	}
 	else for(var a = 0; a < sonidos_max; a++)
 		audio_resume_sound(sonido_id[a])
-	set_setting("", "sonido", sonido)
+	save_setting("", "sonido", sonido)
 }

@@ -35,7 +35,7 @@ function set_edificio(mode, select, edificio = control.null_edificio, server = f
 				}
 				edificio.fuel = 0
 				edificio.proceso = -1
-				calculate_in_out_2(edificio, false)
+				calcular_edificios_adyascentes(edificio, false)
 			}
 			mover(edificio)
 		}
@@ -112,7 +112,7 @@ function set_edificio(mode, select, edificio = control.null_edificio, server = f
 				edificio.flujo_consumo_max = 40
 				edificio.energia_consumo_max = 80
 			}
-			calculate_in_out_2(edificio, false)
+			calcular_edificios_adyascentes(edificio, false)
 			mover_in(edificio)
 		}
 		//Fábrica de drones
@@ -135,7 +135,7 @@ function set_edificio(mode, select, edificio = control.null_edificio, server = f
 					edificio.carga_input[idr_uranio_empobrecido] = true
 				}
 			}
-			calculate_in_out_2(edificio)
+			calcular_edificios_adyascentes(edificio)
 			mover_in(edificio)
 		}
 		//Refinería de Petróleo

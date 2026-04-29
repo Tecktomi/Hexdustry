@@ -14,8 +14,8 @@
   "exportDir":"",
   "name":"snd_theme_5",
   "parent":{
-    "name":"SOUNDS",
-    "path":"folders/SOUNDS.yy",
+    "name":"MUSIC",
+    "path":"folders/SOUNDS/MUSIC.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

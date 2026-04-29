@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"handle_add_edificio",
   "parent":{
-    "name":"SERVER",
-    "path":"folders/SCRIPTS/SERVER.yy",
+    "name":"HANDLE",
+    "path":"folders/SCRIPTS/ONLINE/HANDLE.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
