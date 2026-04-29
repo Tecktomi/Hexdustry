@@ -1,5 +1,5 @@
 function calculate_in_out_2(edificio = control.null_edificio, set_receptor = true){
-	var index = edificio.index, a = edificio.a, b = edificio.b, dir = edificio.dir, enemigo = edificio.enemigo
+	var index = edificio.index, a = edificio.a, b = edificio.b, dir = edificio.dir, _jugador = edificio.jugador
 	with control{
 		for(var i = array_length(edificio.inputs) - 1; i >= 0; i--){
 			var temp_edificio = edificio.inputs[i]
@@ -129,7 +129,7 @@ function calculate_in_out_2(edificio = control.null_edificio, set_receptor = tru
 				if not edificio_bool[# aa, bb]
 					continue
 				var temp_edificio = edificio_id[# aa, bb]
-				if temp_edificio.enemigo != enemigo
+				if temp_edificio.jugador != _jugador
 					continue
 				var temp_a = temp_edificio.a, temp_b = temp_edificio.b, temp_index = temp_edificio.index
 				if temp_index = id_cruce{

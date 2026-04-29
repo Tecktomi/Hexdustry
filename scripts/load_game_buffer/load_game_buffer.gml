@@ -4,6 +4,8 @@ function load_game_buffer(buffer){
 		if _version != FILE_VERSION{
 			if _version = 2026_03_27
 				load_game_buffer_2026_03_27(buffer)
+			else if _version = 2026_04_01
+				load_game_buffer_2026_04_01(buffer)
 			return false
 		}
 		mapa = buffer_read(buffer, buffer_s8)
@@ -14,10 +16,10 @@ function load_game_buffer(buffer){
 		}
 		else if mapa < -1{
 			tutorial = -1 - mapa
-			cargar_escenario(tutorial_nombre[tutorial - 1], false, false)
+			load_escenario(tutorial_nombre[tutorial - 1], false, false)
 		}
 		else
-			cargar_escenario($"{default_maps[mapa]}.txt", false)
+			load_escenario($"{default_maps[mapa]}.txt", false)
 		game_start(false)
 		camx = buffer_read(buffer, buffer_f16)
 		camy = buffer_read(buffer, buffer_f16)
@@ -77,10 +79,11 @@ function load_game_buffer(buffer){
 			var a = real(buffer_read(buffer, buffer_u16))
 			var b = real(buffer_read(buffer, buffer_u16))
 			var enemigo = bool(buffer_read(buffer, buffer_bool))
+			var _jugador = real(buffer_read(buffer, buffer_u8))
 			if index = id_nucleo
-				var edificio = add_edificio(index, dir, a, b, enemigo)
+				var edificio = add_edificio(index, dir, a, b, enemigo, _jugador)
 			else
-				edificio = construir(index, dir, a, b, enemigo, true)
+				edificio = construir(index, dir, a, b, enemigo, true,, _jugador)
 			if index = id_procesador
 				load_procesador(buffer, edificio)
 		}

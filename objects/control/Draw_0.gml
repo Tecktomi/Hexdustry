@@ -10,6 +10,7 @@
 	if keyboard_check_pressed(vk_f4){
 		keyboard_clear(vk_f4)
 		window_set_fullscreen(not window_get_fullscreen())
+		set_setting("", "fullscreen", window_get_fullscreen())
 	}
 #endregion
 //Menú principal
@@ -75,6 +76,7 @@ if menu = 0{
 		if draw_boton(room_width / 2, ypos, L.multijugador){
 			input_layer = 1
 			get_file = 4
+			server_buscar_lan()
 		}
 		ypos += text_y * 2
 	}
@@ -98,7 +100,7 @@ if menu = 0{
 				var temp_text = string_delete(save_files[a], string_pos(".", save_files[a]), 4)
 				if draw_sprite_boton(save_files_png[a],, xpos, ypos, 96, 96, 1){
 					tecnologia = true
-					cargar_escenario("Scenarios/" + save_files[a])
+					load_escenario("Scenarios/" + save_files[a])
 					game_start()
 				}
 				if draw_sprite_boton(spr_basura,, xpos - 10, ypos - 30,,, 1){
@@ -266,7 +268,7 @@ if menu = 0{
 					}
 					if draw_sprite_boton(default_maps_image[a],, xpos, ypos, 96, 96, 1, function(data){
 						sprite_boton_text = data.a}, {a : a}) and mapa != a{
-						var file = cargar_escenario($"{default_maps[a]}.txt", false)
+						var file = load_escenario($"{default_maps[a]}.txt", false)
 						if file != ""
 							mapa = a
 					}
@@ -361,15 +363,17 @@ if menu = 0{
 			ypos += text_y * 1.2
 			var prev_online_nombre = online_nombre
 			online_nombre = draw_boton_text(room_width / 2, ypos, online_nombre, false,, true, 1)
-			if online_nombre != prev_online_nombre
+			if draw_sprite_boton(spr_random, 0, (room_width + text_x) / 2, ypos,,, 1){
+				online_nombre = $"jugador_{irandom(255)}"
+				ini_open("Settings.ini")
+				ini_key_delete("", "online_nombre")
+				ini_close()
+			}
+			else if online_nombre != prev_online_nombre
 				set_setting("", "online_nombre", online_nombre, false)
 			ypos += text_y * 1.2
-			if draw_boton(room_width / 2, ypos, L.buscar_servidores_en_LAN, ui_azul,,,, 1){
-				var buffer = buffer_create(256, buffer_grow, 1)
-				buffer_write(buffer, buffer_u8, 5)
-				network_send_broadcast(udp_socket, 6501, buffer, buffer_tell(buffer))
-				buffer_delete(buffer)
-			}
+			if draw_boton(room_width / 2, ypos, $"{L.buscar_servidores_en_LAN}{server_buscando_lan ? " ..." : ""}", ui_azul,,,, 1)
+				server_buscar_lan()
 			ypos += text_y * 1.2
 			if server_ip != "" and draw_boton(room_width / 2, ypos, $"{L.conectarse_a} {server_ip}", ui_verde,,,, 1){
 				server = network_connect(socket, server_ip, 6500)
@@ -380,6 +384,8 @@ if menu = 0{
 			server_ip = draw_boton_text(room_width / 2, ypos, server_ip, false,, true, 1)
 			input_layer = 1
 			get_file = 4
+			if --server_buscando_lan_step <= 0
+				server_buscando_lan = false
 		}
 	}
 	draw_set_valign(fa_bottom)
@@ -418,7 +424,7 @@ if in(menu, 1, 3){
 		for(var b = min_chunkb; b < max_chunkb; b++){
 			var chunk = chunk_edificios_draw[# a, b], len = array_length(chunk)
 			for(var c = 0; c < len; c++){
-				var edificio = chunk[c], index = edificio.index, aa = edificio.x, bb = edificio.y, aaa = aa * zoom - camx, bbb = bb * zoom - camy, center_x = edificio.center_x, center_y = edificio.center_y, alert_count = 0
+				var edificio = chunk[c], index = edificio.index, aa = edificio.x, bb = edificio.y, aaa = aa * zoom - camx, bbb = bb * zoom - camy, center_x = edificio.center_x, center_y = edificio.center_y, alert_count = 0, _jugador = edificio.jugador
 				//Recursos sobre caminos
 				if tag_camino_o_tunel[index] and edificio.carga_total > 0{
 					var proceso = edificio_proceso[index]
@@ -472,8 +478,8 @@ if in(menu, 1, 3){
 				}
 				draw_vida(aaa, bbb, edificio.vida, edificio_vida[index])
 				//Dibujo estados
-				if edificio.enemigo{
-					draw_set_color(c_red)
+				if _jugador != jugador{
+					draw_set_color((_jugador = -1) ? c_ltgray : equipo_color[_jugador])
 					draw_circle_off(aa + 8, bb, 4, false)
 				}
 				if info and edificio.waiting{
@@ -530,10 +536,10 @@ if in(menu, 1, 3){
 		}
 	var temp_text = "", b = 0
 	for(var a = 0; a < rss_max; a++)
-		if nucleo.carga[rss_sort[a]] > 0{
-			if ++b % 2
+		if jugador_recursos[0, rss_sort[a]] > 0{
+			if ++b mod 2
 				temp_text += "\n"
-			temp_text += $"/{recurso_keyword[rss_sort[a]]}{nucleo.carga[rss_sort[a]]} "
+			temp_text += $"/{recurso_keyword[rss_sort[a]]}{jugador_recursos[0, rss_sort[a]]} "
 		}
 	if temp_text != ""
 		draw_text_background(room_width / 2, 0, temp_text, true)
@@ -820,7 +826,7 @@ if in(menu, 1, 3){
 						for(var a = 0; a < array_length(edificio_tecnologia_precio[ei]); a++){
 							var temp_precio = edificio_tecnologia_precio[ei, a]
 							temp_text += $"\n{recurso_nombre[temp_precio.id]}: {temp_precio.num}"
-							if nucleo.carga[temp_precio.id] < temp_precio.num{
+							if jugador_recursos[0, temp_precio.id] < temp_precio.num{
 								flag = false
 								temp_text += " !!"
 							}
@@ -955,7 +961,7 @@ if pausa = 1{
 	if get_file = 0{
 		draw_text(room_width / 2, 150,	$"{L.pausa_continuar}\n\"{chr(CONTROL_REDES)}\" {L.pausa_red}\n\"{chr(CONTROL_FLUJO)}\" {L.pausa_liquido}\n\"{chr(CONTROL_ENCICLOPEDIA)}\" {L.pausa_enciclopedia}\n\"{chr(CONTROL_REPARAR)}\" {L.pausa_reparar}")
 		if draw_boton(xpos, ypos, L.controles, ui_azul)
-			get_file = 1
+			get_file = 2
 		ypos += text_y * 1.2
 		if draw_boton(xpos, ypos, (info ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_info}", info ? ui_verde : ui_rojo){
 			info = not info
@@ -999,7 +1005,7 @@ if pausa = 1{
 				if not mapa_editado{
 					if server = -1 and menu = 1{
 						if draw_boton(xpos, ypos, L.abrir_en_LAN, ui_azul)
-							open_server()
+							get_file = 1
 					}
 					else
 						draw_boton(xpos, ypos, $"{array_length(server_jugadores)} {L.jugadores}", ui_verde)
@@ -1024,6 +1030,8 @@ if pausa = 1{
 		ypos += 40
 		if draw_boton(xpos, ypos, L.salir, ui_rojo){
 			clear_edit()
+			pausa = 0
+			cheat = false
 			if menu = 1{
 				if tutorial = 0 and os_browser = browser_not_a_browser and not mapa_editado{
 					var buffer = buffer_create(1024, buffer_grow, 1)
@@ -1036,7 +1044,7 @@ if pausa = 1{
 					if servidor
 						server_break()
 					else
-						server_exit()
+						server_jugador_irse()
 				exit
 			}
 			else if menu = 3{
@@ -1047,10 +1055,22 @@ if pausa = 1{
 				draw_set_color(color)
 				exit
 			}
-			pausa = 0
-			cheat = false
+			jugador = 2
 			exit
 		}
+	}
+	//Ajustes ONLINE
+	else if get_file = 1{
+		draw_set_halign(fa_center)
+		if draw_boton(xpos, ypos, L.abrir_en_LAN, ui_azul){
+			open_server()
+			get_file = 0
+		}
+		ypos += text_y * 1.2
+		if draw_boton(xpos, ypos, server_pvp ? "PVP" : "COOP", server_pvp ? ui_rojo : ui_verde)
+			server_pvp = not server_pvp
+		if draw_boton(xpos, room_height - 200, L.volver, ui_rojo)
+			get_file = 0
 	}
 	//Controles
 	else{
@@ -1069,12 +1089,12 @@ if pausa = 1{
 				char = chr(key)
 			draw_set_halign((a & 1) ? fa_left : fa_right)
 			if draw_boton(xpos + 40 * (a & 1) - 20, ypos, $"{CONTROL_NOMBRE[a]} \"{char}\"")
-				get_file = 2 + a
+				get_file = 3 + a
 			if (a & 1)
 				ypos += text_y * 1.2
 		}
 		draw_set_halign(fa_center)
-		if get_file > 1{
+		if get_file > 2{
 			draw_set_color(c_black)
 			draw_set_alpha(0.5)
 			draw_rectangle(0, 0, room_width, room_height, false)
@@ -1082,6 +1102,7 @@ if pausa = 1{
 			draw_set_alpha(1)
 			draw_text(xpos, ypos, "PRESIONA CUALQUIER TECLA")
 			if keyboard_check_pressed(vk_anykey) and (keyboard_lastkey = CONTROL_USADAS[get_file - 2] or not array_contains(CONTROL_USADAS, keyboard_lastkey)){
+				get_file -= 1
 				if get_file = 2
 					CONTROL_LEFT = keyboard_lastkey
 				else if get_file = 3
@@ -2372,7 +2393,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			if info{
 				if edificio_proceso[index] > 1
 					temp_text += $"{L.almacen_proceso}: {floor(edificio.proceso)}/{edificio_proceso[index]}\n"
-				temp_text += $"select: {edificio.select}, mode: {edificio.mode}, fuel: {edificio.fuel}\n"
+				temp_text += $"select: {edificio.select}, mode: {edificio.mode}, fuel: {edificio.fuel}, jugador: {edificio.jugador}\n"
 			}
 		}
 	}
@@ -2735,7 +2756,7 @@ if build_index > 0 and win = 0{
 						if not cheat 
 							for(var a = array_length(modulo_precio_id[temp_modulo_tier]) - 1; a >= 0; a--){
 								temp_text += $"  {recurso_nombre[modulo_precio_id[temp_modulo_tier, a]]}: {modulo_precio_num[temp_modulo_tier, a]}\n"
-								if flag_2 and nucleo.carga[modulo_precio_id[temp_modulo_tier, a]] < modulo_precio_num[temp_modulo_tier, a]
+								if flag_2 and jugador_recursos[0, modulo_precio_id[temp_modulo_tier, a]] < modulo_precio_num[temp_modulo_tier, a]
 									flag_2 = false
 							}
 						if not flag_2
@@ -2756,9 +2777,9 @@ if build_index > 0 and win = 0{
 			//Detectar recursos y enemigos cerca
 			if not cheat{
 				for(var a = array_length(edificio_precio_id[build_index]) - 1; a >= 0; a--)
-					if nucleo.carga[edificio_precio_id[build_index, a]] < edificio_precio_num[build_index, a]{
+					if jugador_recursos[0, edificio_precio_id[build_index, a]] < edificio_precio_num[build_index, a]{
 						comprable = false
-						temp_text += $"  {recurso_nombre[edificio_precio_id[build_index, a]]} {nucleo.carga[edificio_precio_id[build_index, a]]}/{edificio_precio_num[build_index, a]}\n"
+						temp_text += $"  {recurso_nombre[edificio_precio_id[build_index, a]]} {jugador_recursos[0, edificio_precio_id[build_index, a]]}/{edificio_precio_num[build_index, a]}\n"
 					}
 				if not comprable
 					temp_text = $"{L.construir_recursos_insuficientes}\n" + temp_text
@@ -3022,7 +3043,7 @@ if build_index > 0 and win = 0{
 			//No se puede construir
 			if not comprable{
 				var temp_complex_2 = abtoxy(mx, my)
-				draw_edificio(temp_complex_2[0], temp_complex_2[1], build_index, build_dir, 0.5, build_enemigo)
+				draw_edificio(temp_complex_2[0], temp_complex_2[1], build_index, build_dir, 0.5)
 				for(var a = array_length(build_list) - 1; a >= 0; a--){
 					temp_complex_2 = build_list[a]
 					var temp_complex_3 = abtoxy(temp_complex_2[0], temp_complex_2[1])
@@ -3034,7 +3055,7 @@ if build_index > 0 and win = 0{
 			else{
 				temp_complex = abtoxy(mx, my)
 				if not (mouse_check_button(mb_left) and (edificio_camino[build_index] or build_index = id_tuberia))
-					draw_edificio(temp_complex[0], temp_complex[1], build_index, build_dir, 0.5, build_enemigo)
+					draw_edificio(temp_complex[0], temp_complex[1], build_index, build_dir, 0.5)
 				var temp_array, temp_array_2, flag_camino = true
 				//Vista previa caminos
 				if edificio_camino[build_index] or in(build_index, id_tuberia, id_muro){
@@ -3049,7 +3070,7 @@ if build_index > 0 and win = 0{
 						pre_build_list = [[mx_clic, my_clic]]
 						pre_build_list_cruce = [false]
 						var temp_complex_2 = abtoxy(mx_clic, my_clic), aa = temp_complex_2[0], bb = temp_complex_2[1]
-						draw_edificio(aa, bb, build_index, build_dir, 0.5, build_enemigo)
+						draw_edificio(aa, bb, build_index, build_dir, 0.5)
 						if mx_clic != mx or my_clic != my{
 							var angle = radtodeg((arctan2(bb * zoom - camy - mouse_y, mouse_x - aa * zoom + camx) + 2 * pi) mod (2 * pi))
 							if (last_mx != mx or last_my != my) and edificio_camino[build_index]
@@ -3065,11 +3086,11 @@ if build_index > 0 and win = 0{
 								aaa = temp_complex_3[0]
 								bbb = temp_complex_3[1]
 								if in(build_index, id_cinta_transportadora, id_cinta_magnetica) and (a != mx or b != my) and (a != mx_clic or b != my_clic) and edificio_bool[# a, b] and not in(edificio_id[# a, b].dir, build_dir, (build_dir + 3) mod 6) and in(edificio_id[# a, b].index, id_cinta_transportadora, id_cinta_magnetica){
-									draw_edificio(aaa, bbb, id_cruce, 0, 0.5, build_enemigo)
+									draw_edificio(aaa, bbb, id_cruce, 0, 0.5)
 									array_push(pre_build_list_cruce, true)
 								}
 								else{
-									draw_edificio(aaa, bbb, build_index, build_dir, 0.5, build_enemigo)
+									draw_edificio(aaa, bbb, build_index, build_dir, 0.5)
 									array_push(pre_build_list_cruce, false)
 								}
 							}
@@ -3142,7 +3163,7 @@ if build_index > 0 and win = 0{
 						aa = temp_complex_2[0]
 						bb = temp_complex_2[1]
 						var mxc = mx_clic, myc = my_clic
-						draw_edificio(aa, bb, build_index, build_dir, 0.5, build_enemigo)
+						draw_edificio(aa, bb, build_index, build_dir, 0.5)
 						if mx_clic != mx or my_clic != my{
 							var temp_complex_3 = abtoxy(mx, my), aaaa = temp_complex_3[0], bbbb = temp_complex_3[1]
 							var dir = (360 + point_direction(aa, bb, aaaa, bbbb)) mod 360, dis = point_distance(aa, bb, aaaa, bbbb), flag_2 = false
@@ -3173,7 +3194,7 @@ if build_index > 0 and win = 0{
 									break
 								array_push(pre_build_list, [mxc, myc])
 								temp_complex_3 = abtoxy(mxc, myc)
-								draw_edificio(temp_complex_3[0], temp_complex_3[1], build_index, 0, 0.5, build_enemigo)
+								draw_edificio(temp_complex_3[0], temp_complex_3[1], build_index, 0, 0.5)
 								if edificio_bool[# mxc, myc] or not terreno_caminable[terreno[# mxc, myc]]
 									draw_sprite_off(spr_rojo, 0, temp_complex_3[0], temp_complex_3[1],,,,, 0.5)
 								if flag_2
@@ -3236,7 +3257,7 @@ if build_index > 0 and win = 0{
 						}
 					}
 					else{
-						draw_edificio(temp_complex[0], temp_complex[1], build_index, build_dir, 0.5, build_enemigo)
+						draw_edificio(temp_complex[0], temp_complex[1], build_index, build_dir, 0.5)
 						//Torres de alta tensión
 						if build_index = id_torre_de_alta_tension{
 							draw_circle_off(temp_complex[0], temp_complex[1], 1_000, true)
@@ -3552,7 +3573,7 @@ if menu = 1{
 					if cambio.step <= timer{
 						array_delete(cambios, a, 1)
 						if cambio.tipo = 0
-							construir(cambio.data.index, cambio.data.dir, cambio.data.a, cambio.data.b, cambio.data.enemigo, true, cambio.data.cheat)
+							construir(cambio.data.index, cambio.data.dir, cambio.data.a, cambio.data.b, (cambio.data.jugador != jugador), true, cambio.data.cheat, cambio.data.jugador)
 						else if cambio.tipo = 1
 							delete_edificio(edificio_id[# cambio.data.a, cambio.data.b], cambio.data.destruccion, true, cambio.data.cheat)
 						else if cambio.tipo = 2
@@ -3788,7 +3809,7 @@ if menu = 1{
 					}
 				}
 				else if mision_objetivo[a] = 1{
-					mision_counter = nucleo.carga[mision_target_id[a]]
+					mision_counter = jugador_recursos[0, mision_target_id[a]]
 					if mision_counter >= mision_target_num[a]{
 						pasar_mision()
 						a++
@@ -3813,11 +3834,11 @@ if menu = 1{
 				draw_set_halign(fa_right)
 				if draw_boton(room_width - 20, string_height(temp_text_right) + 64, L.win_siguiente_mision, ui_verde){
 					if tutorial = 1
-						var file = cargar_escenario("mision_2.txt")
+						var file = load_escenario("mision_2.txt")
 					else if tutorial = 2
-						file = cargar_escenario("mision_3.txt")
+						file = load_escenario("mision_3.txt")
 					else if tutorial = 3
-						file = cargar_escenario("mision_4.txt")
+						file = load_escenario("mision_4.txt")
 					if file != ""
 						game_start()
 					tutorial++
@@ -4143,13 +4164,13 @@ if menu = 1{
 					descubrir_zona(4, 2)
 				if in(tutorial, 1, 2, 3, 4) and draw_boton(room_width / 2, room_height - 250, L.win_siguiente_mision, ui_verde){
 					if tutorial = 1
-						var file = cargar_escenario("mision_2.txt")
+						var file = load_escenario("mision_2.txt")
 					else if tutorial = 2
-						file = cargar_escenario("mision_3.txt")
+						file = load_escenario("mision_3.txt")
 					else if tutorial = 3
-						file = cargar_escenario("mision_4.txt")
+						file = load_escenario("mision_4.txt")
 					else if tutorial = 4
-						file = cargar_escenario("mision_5.txt")
+						file = load_escenario("mision_5.txt")
 					if file != ""
 						game_start()
 					tutorial++
@@ -4163,11 +4184,11 @@ if menu = 1{
 			//Derrota
 			if (win mod 10) = 2 and tutorial > 0 and draw_boton(room_width / 2, room_height - 250, L.win_reintentar, ui_azul){
 				if tutorial = 1
-					cargar_escenario("mision_1.txt")
+					load_escenario("mision_1.txt")
 				if tutorial = 2
-					cargar_escenario("mision_2.txt")
+					load_escenario("mision_2.txt")
 				if tutorial = 3
-					cargar_escenario("mision_3.txt")
+					load_escenario("mision_3.txt")
 				game_start()
 			}
 			if draw_boton(room_width / 2, room_height - 150, L.win_salir, ui_rojo) or keyboard_check_pressed(vk_escape){
@@ -4273,7 +4294,7 @@ if keyboard_check(CONTROL_TAB) and online{
 	if servidor{
 		for(var a = 0; a < array_length(server_jugadores_nombre); a++)
 			if draw_boton(room_width / 2, 160 + 40 * a, server_jugadores_nombre[a],,,, true) and a != 0
-				server_expulsar(a)
+				server_jugador_expulsar(a)
 	}
 	else
 		for(var a = 0; a < array_length(server_jugadores_nombre); a++)
@@ -4281,3 +4302,4 @@ if keyboard_check(CONTROL_TAB) and online{
 	draw_set_halign(fa_left)
 }
 draw_sprite(spr_vineta, 0, 0, 0)
+draw_text(0, 0, jugador)

@@ -1,4 +1,4 @@
-function server_expulsar(index, timeout = false){
+function server_jugador_expulsar(index, timeout = false){
 	with control{
 		var buffer = buffer_create(1, buffer_grow, 1)
 		buffer_write(buffer, buffer_u8, 17 + timeout)
@@ -12,7 +12,7 @@ function server_expulsar(index, timeout = false){
 			array_push(chat, string(L.server_jugador_expulsado, server_jugadores_nombre[index]))
 		array_push(chat_time, image_index)
 		array_delete(server_jugadores, index, 1)
-		array_delete(server_jugadores_nombre, index, 1)
 		array_delete(server_jugadores_timeout, index, 1)
+		eliminar_jugador(index)
 	}
 }

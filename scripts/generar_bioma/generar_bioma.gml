@@ -157,10 +157,10 @@ function generar_bioma(bioma){
 		//Crear núcleo
 		if array_length(nucleos) = 0{
 			nucleo = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
-			nucleo.carga[idr_cobre] = 100
+			jugador_recursos[0, idr_cobre] = 100
 			nucleo.carga_total = 100
 			carga_inicial = array_create(rss_max, 0)
-			array_copy(carga_inicial, 0, nucleo.carga, 0, rss_max)
+			array_copy(carga_inicial, 0, jugador_recursos[0], 0, rss_max)
 		}
 		//Menas de recursos
 		betas = array_create(0, null_beta)

@@ -6,7 +6,7 @@ function server_sync_timer(){
 		network_send_packet(server_jugadores[i], buffer, buffer_tell(buffer))
 		if server_jugadores_timeout[i]++ >= 18{
 			server_jugadores_timeout[i] = 0
-			server_expulsar(i, true)
+			server_jugador_expulsar(i, true)
 		}
 	}
 	buffer_delete(buffer)

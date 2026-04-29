@@ -717,7 +717,7 @@ function menu_editor(){
 					if draw_sprite_boton(save_files_png[a],, xpos, ypos, 96, 96, 1){
 						input_layer = 0
 						get_file = 0
-						save_file = cargar_escenario("Scenarios/" + save_files[a])
+						save_file = load_escenario("Scenarios/" + save_files[a])
 						if string_pos(".", save_file) > 0
 							save_file = string_delete(save_file, string_pos(".", save_file), 4)
 					}

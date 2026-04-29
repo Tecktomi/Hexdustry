@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"handle_exit",
+  "%Name":"far_from_nucleus",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"handle_exit",
+  "name":"far_from_nucleus",
   "parent":{
-    "name":"SERVER",
-    "path":"folders/SCRIPTS/SERVER.yy",
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

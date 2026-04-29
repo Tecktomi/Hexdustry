@@ -1,4 +1,4 @@
-function delete_edificio(edificio = control.null_edificio, destruccion = false, server = false, _cheat = control.cheat, _jugador = 0){
+function delete_edificio(edificio = control.null_edificio, destruccion = false, server = false, _cheat = control.cheat){
 	with control{
 		if not edificio_bool[# edificio.a, edificio.b]{
 			show_debug_message($"###ADVERTENCIA###\n  Intentando eliminar {edificio_nombre[edificio.index]} en {edificio.a}, {edificio.b}")
@@ -10,7 +10,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			if not servidor
 				exit
 		}
-		var chunk_x = chunk_x, chunk_y = chunk_y
+		var chunk_x = edificio.chunk_x, chunk_y = edificio.chunk_y, _jugador = edificio.jugador
 		edificio.vida = 0
 		if index = id_nucleo and not enemigo{
 			array_remove(nucleos, edificio)
@@ -352,7 +352,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			var b = pre_vida / edificio_vida[index]
 			for(var a = array_length(edificio_precio_id[index]) - 1; a >= 0; a--){
 				var c = floor(b * edificio_precio_num[index, a] / 2)
-				nucleo.carga[edificio_precio_id[index, a]] += c
+				jugador_recursos[0, edificio_precio_id[index, a]] += c
 				nucleo.carga_total += c
 			}
 		}
@@ -449,12 +449,6 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			show_menu = false
 			show_menu_build = null_edificio
 		}
-		#region DATA
-			var data = datas[_jugador], data_chunk = ds_grid_get(data.chunk_edificios, chunk_x, chunk_y)
-			array_disorder_remove(data.edificios, edificio, 12)
-			array_disorder_remove(data.edificios_id[index], edificio, 13)
-			array_disorder_remove(data_chunk, edificio, 14)
-		#endregion
 		delete(edificio)
 	}
 }

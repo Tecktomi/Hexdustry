@@ -10,7 +10,7 @@ function investigar(index, server = false, _cheat = control.cheat){
 		if not _cheat
 			for(var a = 0; a < array_length(edificio_tecnologia_precio[index]); a++){
 				var temp_precio = edificio_tecnologia_precio[index, a]
-				nucleo.carga[temp_precio.id] -= temp_precio.num
+				jugador_recursos[0, temp_precio.id] -= temp_precio.num
 			}
 		edificio_tecnologia_desbloqueable[index] = false
 		edificio_tecnologia[index] = true

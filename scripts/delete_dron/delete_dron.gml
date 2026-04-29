@@ -1,6 +1,6 @@
-function delete_dron(dron = control.null_dron, _jugador = 0){
+function delete_dron(dron = control.null_dron){
 	with control{
-		var enemigo = dron.enemigo, array_drones
+		var enemigo = dron.enemigo, array_drones, _jugador = enemigo.jugador
 		array_disorder_remove(drones, dron, 2)
 		dron_chunk_remove(dron)
 		//Dron enemigo
@@ -52,11 +52,6 @@ function delete_dron(dron = control.null_dron, _jugador = 0){
 		}
 		array_push(efectos, add_efecto(spr_arana_muerta, 0, dron.x, dron.y, 5, 1))
 		dron.vida = 0
-		#region DATA
-			var data = datas[_jugador], data_chunk = ds_grid_get(data.chunk_drones, dron.chunk_x, dron.chunk_y)
-			array_disorder_remove(data.drones, dron, 3)
-			array_disorder_remove(data_chunk, dron, 4)
-		#endregion
 		delete dron
 	}
 }

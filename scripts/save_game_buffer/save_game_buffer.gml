@@ -75,6 +75,7 @@ function save_game_buffer(buffer){
 			buffer_write(buffer, buffer_u16, real(edificio.a))
 			buffer_write(buffer, buffer_u16, real(edificio.b))
 			buffer_write(buffer, buffer_bool, real(edificio.enemigo))
+			buffer_write(buffer, buffer_u8, real(edificio.jugador))
 			if edificio.index = id_procesador
 				save_procesador(buffer, edificio)
 		}
