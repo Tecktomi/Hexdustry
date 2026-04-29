@@ -331,7 +331,7 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 			if index = id_energia_infinita
 				edificio.energia_consumo = edificio_energia_consumo[index]
 			//Buscar edificios electricos colindantes
-			var temp_list_redes = ds_list_create()
+			var temp_list_redes = array_create(0, null_red)
 			for(var c = array_length(temp_list_arround) - 1; c >= 0; c--){
 				temp_complex = temp_list_arround[c]
 				var aa = temp_complex[0], bb = temp_complex[1]
@@ -344,8 +344,8 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 							temp_edificio.jugador = _jugador{
 						array_push(edificio.energia_link, temp_edificio)
 						array_push(temp_edificio.energia_link, edificio)
-						if not ds_list_in(temp_list_redes, temp_edificio.red)
-							ds_list_add(temp_list_redes, temp_edificio.red)
+						if not array_contains(temp_list_redes, temp_edificio.red)
+							array_push(temp_list_redes, temp_edificio.red)
 					}
 				}
 			}
@@ -364,8 +364,8 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 							temp_edificio.jugador = _jugador{//90^2
 						array_push(edificio.energia_link, temp_edificio)
 						array_push(temp_edificio.energia_link, edificio)
-						if not ds_list_in(temp_list_redes, temp_edificio.red)
-							ds_list_add(temp_list_redes, temp_edificio.red)
+						if not array_contains(temp_list_redes, temp_edificio.red)
+							array_push(temp_list_redes, temp_edificio.red)
 					}
 				}
 			}
@@ -376,8 +376,8 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 					if distance_sqr(temp_edificio.center_x, temp_edificio.center_y, center_x, center_y) < 1_000_000 and temp_edificio.jugador = _jugador{//1000^2
 						array_push(edificio.energia_link, temp_edificio)
 						array_push(temp_edificio.energia_link, edificio)
-						if not ds_list_in(temp_list_redes, temp_edificio.red)
-							ds_list_add(temp_list_redes, temp_edificio.red)
+						if not array_contains(temp_list_redes, temp_edificio.red)
+							array_push(temp_list_redes, temp_edificio.red)
 					}
 				}
 				array_disorder_push(torres_de_tension, edificio, 2)
@@ -386,9 +386,9 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 			var temp_red = def_red()
 			array_disorder_push(redes, temp_red, 0)
 			//Combinar otras redes si las hay cerca
-			if not ds_list_empty(temp_list_redes){
-				for(var c = ds_list_size(temp_list_redes) - 1; c >= 0; c--){
-					var temp_red_2 = temp_list_redes[|c]
+			if array_length(temp_list_redes) > 0{
+				for(var c = array_length(temp_list_redes) - 1; c >= 0; c--){
+					var temp_red_2 = temp_list_redes[c]
 					for(var d = array_length(temp_red_2.edificios) - 1; d >= 0; d--){
 						var temp_edificio = temp_red_2.edificios[d]
 						temp_edificio.red = temp_red
@@ -403,7 +403,6 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 					delete(temp_red_2)
 				}
 			}
-			ds_list_destroy(temp_list_redes)
 			//Modificar valores de la red resultante
 			edificio.red = temp_red
 			if edificio_energia_consumo[index] > 0{
@@ -450,7 +449,7 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 					}
 				}
 			}
-			var temp_list_flujos = ds_list_create()
+			var temp_list_flujos = array_create(0, null_flujo)
 			for(var c = array_length(temp_list_arround) - 1; c >= 0; c--){
 				temp_complex = temp_list_arround[c]
 				var aa = temp_complex[0], bb = temp_complex[1]
@@ -462,8 +461,8 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 					in(temp_edificio.index, id_tuberia, id_deposito, id_liquido_infinito, id_tuberia_subterranea)) and temp_edificio.jugador = _jugador{
 						array_push(edificio.flujo_link, temp_edificio)
 						array_push(temp_edificio.flujo_link, edificio)
-						if not ds_list_in(temp_list_flujos, temp_edificio.flujo)
-							ds_list_add(temp_list_flujos, temp_edificio.flujo)
+						if not array_contains(temp_list_flujos, temp_edificio.flujo)
+							array_push(temp_list_flujos, temp_edificio.flujo)
 						if temp_edificio.index = id_tuberia
 							tuberia_arround(temp_edificio)
 					}
@@ -489,12 +488,12 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 					temp_edificio.link = edificio
 					array_push(edificio.flujo_link, temp_edificio)
 					array_push(temp_edificio.flujo_link, edificio)
-					if not ds_list_in(temp_list_flujos, temp_edificio.flujo)
-						ds_list_add(temp_list_flujos, temp_edificio.flujo)
+					if not array_contains(temp_list_flujos, temp_edificio.flujo)
+						array_push(temp_list_flujos, temp_edificio.flujo)
 				}
 				
 			}
-			if ds_list_empty(temp_list_flujos){
+			if array_length(temp_list_flujos) = 0{
 				var new_flujo = def_flujo()
 				array_disorder_push(flujos, new_flujo, 0)
 				edificio.flujo = new_flujo
@@ -502,8 +501,8 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 			}
 			else if in(index, id_tuberia, id_deposito, id_liquido_infinito, id_tuberia_subterranea){
 				var new_flujo = def_flujo()
-				for(var c = ds_list_size(temp_list_flujos) - 1; c >= 0; c--){
-					var temp_flujo = temp_list_flujos[|c]
+				for(var c = array_length(temp_list_flujos) - 1; c >= 0; c--){
+					var temp_flujo = temp_list_flujos[c]
 					if new_flujo.liquido = -1 or temp_flujo.liquido = -1 or new_flujo.liquido = temp_flujo.liquido{
 						for(var d = array_length(temp_flujo.edificios) - 1; d >= 0; d--){
 							var temp_edificio = temp_flujo.edificios[d]
@@ -525,11 +524,10 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 				array_disorder_push(new_flujo.edificios, edificio, 6)
 			}
 			else{
-				var temp_flujo = temp_list_flujos[|0]
+				var temp_flujo = temp_list_flujos[0]
 				edificio.flujo = temp_flujo
 				array_disorder_push(temp_flujo.edificios, edificio, 6)
 			}
-			ds_list_destroy(temp_list_flujos)
 			edificio.flujo.almacen_max += edificio_flujo_almacen[index]
 			if index = id_bomba_hidraulica and in(edificio.flujo.liquido, -1, edificio.fuel){
 				edificio.flujo.liquido = edificio.fuel

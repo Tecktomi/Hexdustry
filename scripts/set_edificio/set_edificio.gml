@@ -9,7 +9,7 @@ function set_edificio(mode, select, edificio = control.null_edificio, server = f
 				exit
 		}
 		//Cambiar modo
-		if in(index, id_selector, id_overflow, id_embotelladora) and edificio.mode != mode{
+		if in(index, id_selector, id_overflow, id_embotelladora, id_planta_de_reciclaje) and edificio.mode != mode{
 			edificio.mode = bool(mode)
 			if index = id_embotelladora{
 				var temp_array = [idr_barril_con_agua, idr_barril_con_acido, idr_barril_con_petroleo, idr_barril_con_lava, idr_barril_con_agua_salada]
@@ -40,7 +40,7 @@ function set_edificio(mode, select, edificio = control.null_edificio, server = f
 			mover(edificio)
 		}
 		//Seleccionar edificio
-		if in(index, id_selector, id_recurso_infinito) and edificio.select != select{
+		if in(index, id_selector, id_recurso_infinito, id_planta_de_reciclaje) and edificio.select != select{
 			if index = id_recurso_infinito and edificio.select >= 0
 				edificio.carga_output[edificio.select] = false
 			edificio.select = select

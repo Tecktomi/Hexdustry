@@ -47,13 +47,14 @@ function save_escenario(save_file = ""){
 			ini_write_real($"Objetivo {a}", "switch oleadas", real(mision_switch_oleadas[a]))
 		}
 		ini_section_delete("Edificios enemigos")
-		ini_write_real("Edificios enemigos", "total", array_length(edificios_enemigos))
-		for(var a = array_length(edificios_enemigos) - 1; a >= 0; a--){
-			var edificio = edificios_enemigos[a], index = edificio.index
+		ini_write_real("Edificios enemigos", "total", array_length(edificios_totales))
+		for(var a = array_length(edificios_totales) - 1; a >= 0; a--){
+			var edificio = edificios_totales[a], index = edificio.index
 			ini_write_real("Edificios enemigos", $"{a}.a", edificio.a)
 			ini_write_real("Edificios enemigos", $"{a}.b", edificio.b)
 			ini_write_real("Edificios enemigos", $"{a}.index", index)
 			ini_write_real("Edificios enemigos", $"{a}.dir", edificio.dir)
+			ini_write_real("Edificios enemigos", $"{a}.enemigo", edificio.enemigo)
 			ini_write_real("Edificios enemigos", $"{a}.jugador", edificio.jugador)
 			if tag_edificio_seteable[index]{
 				ini_write_real("Edificios enemigos", $"{a}.mode", edificio.mode)

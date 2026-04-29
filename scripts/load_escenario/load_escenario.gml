@@ -139,8 +139,9 @@ function load_escenario(file = "", config = true, _nucleo = true){
 				var b = ini_read_real("Edificios enemigos", $"{i}.b", 0)
 				var index = ini_read_real("Edificios enemigos", $"{i}.index", 0)
 				var dir = ini_read_real("Edificios enemigos", $"{i}.dir", 0)
+				var enemigo = bool(ini_read_real("Edificios enemigos", $"{i}.enemigo", 1))
 				var _jugador = ini_read_real("Edificios enemigos", $"{i}.jugador", 1)
-				var edificio = construir(index, dir, a, b, true,,, _jugador)
+				var edificio = construir(index, dir, a, b, enemigo,,, _jugador)
 				if tag_edificio_seteable[index]{
 					var mode = bool(ini_read_real("Edificios enemigos", $"{i}.mode", 0))
 					var select = ini_read_real("Edificios enemigos", $"{i}.select", 0)

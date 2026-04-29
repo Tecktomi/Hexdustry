@@ -600,6 +600,7 @@ chunk_dron_enemigo = ds_grid_create(chunk_xsize, chunk_ysize)
 chunk_dron_aliado = ds_grid_create(chunk_xsize, chunk_ysize)
 chunk_edificios = ds_grid_create(chunk_xsize, chunk_ysize)
 chunk_edificios_enemigo = ds_grid_create(chunk_xsize, chunk_ysize)
+chunk_edificios_abandonado = ds_grid_create(chunk_xsize, chunk_ysize)
 chunk_edificios_estatico = ds_grid_create(chunk_xsize, chunk_ysize)
 chunk_edificios_dinamico = ds_grid_create(chunk_xsize, chunk_ysize)
 chunk_edificios_draw = ds_grid_create(chunk_xsize, chunk_ysize)
@@ -614,6 +615,7 @@ for(var a = 0; a < chunk_xsize; a++)
 		ds_grid_set(chunk_dron_aliado, a, b, array_create(0, null_dron))
 		ds_grid_set(chunk_edificios, a, b, array_create(0, null_edificio))
 		ds_grid_set(chunk_edificios_enemigo, a, b, array_create(0, null_edificio))
+		ds_grid_set(chunk_edificios_abandonado, a, b, array_create(0, null_edificio))
 		ds_grid_set(chunk_edificios_estatico, a, b, array_create(0, null_edificio))
 		ds_grid_set(chunk_edificios_dinamico, a, b, array_create(0, null_edificio))
 		ds_grid_set(chunk_edificios_draw, a, b, array_create(0, null_edificio))
@@ -1090,7 +1092,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 	id_fabrica_de_concreto = def_edificio("Fábrica de Concreto", 3, spr_fabrica_de_concreto,, 300, 60, scr_fabrica_de_concreto, scr_draw_bomba_impar, false,, [idr_bronce, idr_acero, idr_silicio], [25, 5, 10], 60, true, false, [idr_arena, idr_piedra, idr_piedra_cuprica, idr_piedra_ferrica, idr_piedra_sulfatada], [10, 10, 10, 10, 10], true, false, [idr_concreto]); def_edificio_2(, 10, 30, idl_agua,,,, 1)
 	id_pantalla = def_edificio("Pantalla", 3, spr_pantalla,, 100,,, scr_draw_pantalla, false,, [idr_cobre, idr_silicio, idr_plastico, idr_electronicos], [40, 15, 10, 20]); def_edificio_2()
 	id_refineria_de_petroleo = def_edificio("Refinería de Petróleo", 4, spr_refineria_de_petroleo,, 400, 50, scr_refineria_petroleo,,,, [idr_cobre, idr_bronce, idr_acero, idr_concreto, idr_electronicos], [50, 30, 20, 40, 20], 40, true, false, [idr_sal], [10], true, false, [idr_piedra_sulfatada, idr_compuesto_incendiario, idr_plastico]); def_edificio_2(240, 10, 125, idl_petroleo,,,, 2)
-	id_planta_de_reciclaje = def_edificio("Planta de Reciclaje", 3, spr_planta_de_reciclaje,, 300,, scr_planta_de_reciclaje,,,, [idr_bronce, idr_hierro, idr_silicio, idr_concreto], [20, 50, 15, 15],,,,,, true, false); def_edificio_2(60, 10, 20, idl_acido,,,, 1)
+	id_planta_de_reciclaje = def_edificio("Planta de Reciclaje", 3, spr_planta_de_reciclaje,, 300,, scr_planta_de_reciclaje,,,, [idr_bronce, idr_hierro, idr_silicio, idr_concreto], [20, 50, 15, 15], 100,,,,, true, true); def_edificio_2(60, 10, 20, idl_acido,,,, 1)
 	id_planta_desalinizadora = def_edificio("Planta Desalinizadora", 2, spr_planta_desalinizadora,, 200, 60, scr_planta_desalinizadora, scr_draw_bomba_par, false,, [idr_cobre, idr_bronce, idr_silicio], [40, 15, 15], 20,,,,, true, false, [idr_sal, idr_barril_con_agua]); def_edificio_2(40, 10, 20, idl_agua_salada,,,, 1)
 	id_embotelladora = def_edificio("Embotelladora", 2, spr_embotelladora,, 120, 20, scr_embotelladora,,,, [idr_bronce, idr_hierro, idr_silicio], [15, 25, 15], 50, false, false, [idr_barril_con_agua, idr_barril_con_acido, idr_barril_con_petroleo, idr_barril_con_lava, idr_barril_con_agua_salada], [10, 10, 10, 10, 10], true, false, [idr_barril_con_agua, idr_barril_con_acido, idr_barril_con_petroleo, idr_barril_con_lava, idr_barril_con_agua_salada]); def_edificio_2(, 10, -250,,,,, 1)
 	id_extractor_atmosferico = def_edificio("Extractor Atmosférico", 2.5, spr_extractor_atmosferico,, 200,, scr_extractor_agua,,, false, [idr_cobre, idr_bronce, idr_silicio, idr_electronicos], [30, 15, 10, 5]); def_edificio_2(40, 10, -6, idl_agua,,,, 1)
@@ -1153,7 +1155,6 @@ edificio_energia[id_torre_de_alta_tension] = true
 edificio_key[id_energia_infinita] = "4z"
 edificio_key[id_liquido_infinito] = "5z"
 edificio_key[id_recurso_infinito] = "1z"
-var flag_rss = array_create(rss_max, false)
 #region Arreglos de optimización
 	#region camino_o_tunel
 		tag_camino_o_tunel = array_create(edificio_max, false)
@@ -1293,17 +1294,11 @@ var flag_rss = array_create(rss_max, false)
 //Inputs y outputs de fábrica de drones y planta de reciclaje
 for(var a = 0; a < dron_max; a++){
 	var c = 0
-	for(var b = array_length(dron_precio_id[a]) - 1; b >= 0; b--){
+	for(var b = array_length(dron_precio_id[a]) - 1; b >= 0; b--)
 		c += dron_precio_num[a, b]
-		flag_rss[dron_precio_id[a, b]] = true
-	}
 	edificio_carga_max[id_fabrica_de_drones] = max(edificio_carga_max[id_fabrica_de_drones], 2 * c)
 	edificio_carga_max[id_fabrica_de_drones_grande] = edificio_carga_max[id_fabrica_de_drones]
-}
-for(var a = 0; a < rss_max; a++){
-	if flag_rss[a]
-		array_push(edificio_output_id[id_planta_de_reciclaje], a)
-	edificio_carga_max[id_planta_de_reciclaje] += 10
+	edificio_carga_max[id_planta_de_reciclaje] = edificio_carga_max[id_fabrica_de_drones]
 }
 //Valor absoluto edificios
 for(var a = 0; a < edificio_max; a++){
@@ -1342,6 +1337,7 @@ for(var a = 0; a < array_length(categoria_nombre); a++)
 	edificios_construibles = array_concat(edificios_construibles, categoria_edificios[a])
 edificios = array_create(0, null_edificio)
 edificios_enemigos = array_create(0, null_edificio)
+edificios_abandonados = array_create(0, null_edificio)
 torres_reparadoras = array_create(0, null_edificio)
 edificios_counter = array_create(edificio_max, 0)
 edificios_targeteables = array_create(0, null_edificio)
