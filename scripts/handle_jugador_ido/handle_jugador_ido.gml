@@ -1,4 +1,4 @@
-function handle_exit(buffer){
+function handle_jugador_ido(buffer){
 	with control{
 		var player_name = buffer_read(buffer, buffer_string), pos = 0
 		var buffer_2 = buffer_create(2, buffer_grow, 1)
@@ -11,9 +11,9 @@ function handle_exit(buffer){
 			if player_name = server_jugadores_nombre[pos]
 				break
 		array_delete(server_jugadores, pos, 1)
-		array_delete(server_jugadores_nombre, pos, 1)
 		array_delete(server_jugadores_timeout, pos, 1)
 		array_push(chat, string(L.server_jugador_ido, player_name))
 		array_push(chat_time, image_index)
+		eliminar_jugador(pos)
 	}
 }

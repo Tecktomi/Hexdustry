@@ -10,7 +10,7 @@ else{
 	font_titulo = ft_titulo_android
 }
 draw_set_font(font_normal)
-FILE_VERSION = 2026_04_01
+FILE_VERSION = 2026_04_27
 PROCESADOR_VERSION = 2026_03_25
 size_size = [1, 3, 7, 12, 19, 27, 37]
 size_borde = [6, 9, 12, 15, 18, 21]
@@ -50,6 +50,7 @@ ini_open("settings.ini")
 	auto_guardado = bool(ini_read_real("", "auto_guardado", 1))
 	online_nombre = ini_read_string("", "online_nombre", $"jugador_{irandom(255)}")
 	idioma = ini_read_real("", "Idioma", 0)
+	window_set_fullscreen(bool(ini_read_real("", "fullscreen", 1)))
 	grafic_hideui = false
 #endregion
 medallas = array_create(6)
@@ -340,9 +341,12 @@ L = {}
 	}
 	cambios = array_create(0, null_cambio)
 	server_timer = 0
-	LAG = 20
+	LAG = 10
 	server_yendose = false
 	server_sync_counter = 0
+	server_pvp = false
+	server_buscando_lan = false
+	server_buscando_lan_step = 0
 #endregion
 #region UI
 	ui_fondo = #282828
@@ -434,7 +438,6 @@ null_edificio = {
 	energia_consumo_max : 0,
 	edificio_index : 0,
 	coordenadas_dis : ds_grid_create(xsize, ysize),
-	coordenadas_close : array_create(0, [0, 0]),
 	vivo : false,
 	emisor : false,
 	receptor : false,
@@ -467,7 +470,8 @@ null_edificio = {
 	chunk_mina : 0,
 	chunk_minb : 0,
 	chunk_maxa : 0,
-	chunk_maxb : 0
+	chunk_maxb : 0,
+	jugador : -1,
 }
 null_edificio.link = null_edificio
 null_edificio.energia_link = array_create(0, null_edificio)
@@ -1333,7 +1337,6 @@ edificios = array_create(0, null_edificio)
 edificios_enemigos = array_create(0, null_edificio)
 torres_reparadoras = array_create(0, null_edificio)
 edificios_counter = array_create(edificio_max, 0)
-nucleos = array_create(0, null_edificio)
 edificios_targeteables = array_create(0, null_edificio)
 torres_de_tension = array_create(0, null_edificio)
 plantas_de_reciclaje = array_create(0, null_edificio)
@@ -1341,6 +1344,7 @@ edificios_salida_drones = array_create(0, null_edificio)
 almacenes = array_create(0, null_edificio)
 almacenes_enemigos = array_create(0, null_edificio)
 edi_sort = array_create(edificio_max, 0)
+nucleos = array_create(0, null_edificio)
 sort_edificios()
 #region Caminos
 	#region Camino 0
@@ -1612,21 +1616,9 @@ betas = array_create(0, null_beta)
 explosion_queue = array_create(0, {x : 0, y : 0, edificio : null_edificio, enemigo : false, radio : 0, dmg : 0, incendiario : false})
 explosion_fx_queue = array_create(0, explosion_fx(0, 0, 0))
 set_idioma()
-#region DATA
-	data = {
-		edificios : array_create(0, null_edificio),
-		drones : array_create(0, null_dron),
-		chunk_edificios : ds_grid_create(chunk_xsize, chunk_ysize),
-		chunk_drones : ds_grid_create(chunk_xsize, chunk_ysize),
-		edificios_id : array_create(edificio_max, array_create(0, null_edificio))
-	}
-	ds_grid_clear(data.chunk_edificios, array_create(0, null_edificio))
-	ds_grid_clear(data.chunk_drones, array_create(0, null_dron))
-	for(var a = 0; a < edificio_max; a++)
-		data.edificios_id[a] = array_create(0, null_edificio)
-	datas = array_create(1, data)
-	jugador = 0
-#endregion
+equipo_color = [ #bfbfbf, #ff0000, #0000ff, #00ff00, #ffff00, #ff00ff, #00ffff, #ffffff, #000000, #7f0000, #007f00, #00007f, #7f7f00, #7f007f, #007f7f]
+jugador = 2
+jugador_recursos = [array_create(rss_max, 0)]
 biome_seed = 0
 seed = random_get_seed()
 generar_bioma(biome_seed)

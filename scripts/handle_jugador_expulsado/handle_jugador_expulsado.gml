@@ -18,7 +18,7 @@ function handle_jugador_expulsado(buffer, timeout = false){
 			else
 				array_push(chat, string(L.server_jugador_expulsado, player_name))
 			array_push(chat_time, image_index)
-			array_remove(server_jugadores_nombre, player_name)
+			eliminar_jugador(player_name)
 		}
 	}
 }

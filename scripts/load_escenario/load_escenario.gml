@@ -1,4 +1,4 @@
-function cargar_escenario(file = "", config = true, _nucleo = true){
+function load_escenario(file = "", config = true, _nucleo = true){
 	with control{
 		if file = ""
 			file = get_open_filename("*.txt", "save.txt")
@@ -132,14 +132,15 @@ function cargar_escenario(file = "", config = true, _nucleo = true){
 			}
 		if _nucleo{
 			nucleo = add_edificio(0, 0, ini_read_real("Global", "nucleo_x", floor(xsize / 2)), ini_read_real("Global", "nucleo_y", floor(ysize / 2)))
-			array_copy(nucleo.carga, 0, carga_inicial, 0, rss_max)
+			array_copy(jugador_recursos[0], 0, carga_inicial, 0, rss_max)
 			var edificios_enemigos_total = ini_read_real("Edificios enemigos", "total", 0)
 			for(var i = edificios_enemigos_total - 1; i >= 0; i--){
 				var a = ini_read_real("Edificios enemigos", $"{i}.a", 0)
 				var b = ini_read_real("Edificios enemigos", $"{i}.b", 0)
 				var index = ini_read_real("Edificios enemigos", $"{i}.index", 0)
 				var dir = ini_read_real("Edificios enemigos", $"{i}.dir", 0)
-				var edificio = construir(index, dir, a, b, true)
+				var _jugador = ini_read_real("Edificios enemigos", $"{i}.jugador", 1)
+				var edificio = construir(index, dir, a, b, true,,, _jugador)
 				if edificio_seteable[index]{
 					var mode = bool(ini_read_real("Edificios enemigos", $"{i}.mode", 0))
 					var select = ini_read_real("Edificios enemigos", $"{i}.select", 0)

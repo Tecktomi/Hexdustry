@@ -1,4 +1,4 @@
-function draw_edificio(x, y, index, dir, alpha = 1, enemigo = false){
+function draw_edificio(x, y, index, dir, alpha = 1, _jugador = jugador){
 	with control{
 		if tag_camino_o_tunel[index]{
 			if in(index, id_cinta_transportadora, id_enrutador, id_cinta_magnetica){
@@ -47,8 +47,8 @@ function draw_edificio(x, y, index, dir, alpha = 1, enemigo = false){
 		}
 		else
 			draw_sprite_off(edificio_sprite[index], 0, x, y,,, dir * 60,, alpha)
-		if enemigo{
-			draw_set_color(c_red)
+		if _jugador != jugador{
+			draw_set_color(equipo_color[_jugador])
 			draw_set_alpha(alpha)
 			draw_circle_off(x + 8, y, 4, false)
 			draw_set_alpha(1)

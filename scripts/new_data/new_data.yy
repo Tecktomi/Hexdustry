@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"server_expulsar",
+  "%Name":"new_data",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"server_expulsar",
+  "name":"new_data",
   "parent":{
-    "name":"SERVER",
-    "path":"folders/SCRIPTS/SERVER.yy",
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

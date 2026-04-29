@@ -22,8 +22,10 @@ if type = network_type_data{
 		network_send_udp(udp_socket, async_load[? "ip"], async_load[? "port"], reply, buffer_tell(reply))
 		buffer_delete(reply)
 	}
-	else if msg = 6 //Handle respuesta buscar servidor
+	else if msg = 6{ //Handle respuesta buscar servidor
 		server_ip = async_load[? "ip"]
+		server_buscando_lan = false
+	}
 	else if msg = 7 //Handle set edificio
 		handle_set_edificio(buffer)
 	else if msg = 8 //Handle timer
@@ -37,7 +39,7 @@ if type = network_type_data{
 	else if msg = 12 //Nuevo jugador unido
 		handle_nuevo_jugador(buffer)
 	else if msg = 13 //Handle jugador ido
-		handle_exit(buffer)
+		handle_jugador_ido(buffer)
 	else if msg = 14 //Jugador eliminado
 		handle_jugador_eliminado(buffer)
 	else if msg = 15 //Server break

@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"cargar_escenario",
+  "%Name":"eliminar_jugador",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"cargar_escenario",
+  "name":"eliminar_jugador",
   "parent":{
-    "name":"SCRIPTS",
-    "path":"folders/SCRIPTS.yy",
+    "name":"SERVER",
+    "path":"folders/SCRIPTS/SERVER.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

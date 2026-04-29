@@ -54,6 +54,7 @@ function save_escenario(save_file = ""){
 			ini_write_real("Edificios enemigos", $"{a}.b", edificio.b)
 			ini_write_real("Edificios enemigos", $"{a}.index", index)
 			ini_write_real("Edificios enemigos", $"{a}.dir", edificio.dir)
+			ini_write_real("Edificios enemigos", $"{a}.jugador", edificio.jugador)
 			if edificio_seteable[index]{
 				ini_write_real("Edificios enemigos", $"{a}.mode", edificio.mode)
 				ini_write_real("Edificios enemigos", $"{a}.select", edificio.select)

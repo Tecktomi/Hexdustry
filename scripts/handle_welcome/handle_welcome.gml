@@ -1,10 +1,26 @@
 function handle_welcome(buffer){
 	with control{
 		online = true
+		server_pvp = bool(buffer_read(buffer, buffer_bool))
+		var len = real(buffer_read(buffer, buffer_u8))
+		if server_pvp
+			jugador = len + 2
+		else
+			jugador = 2
 		if not load_game_buffer(buffer)
 			show_message(L.archivo_obsoleto)
-		var len = real(buffer_read(buffer, buffer_u8))
+		if server_pvp{
+			var a = real(buffer_read(buffer, buffer_u8)), b = real(buffer_read(buffer, buffer_u8))
+			nucleo = edificio_id[# a, b]
+			jugador_recursos = [array_create(rss_max, 0)]
+			for(a = 0; a < rss_max; a++)
+				array_set(jugador_recursos[0], a, carga_inicial[a])
+			camx = clamp(nucleo.a * 48 - room_width / 2, 0, xsize * 48 * zoom - room_width)
+			camy = clamp(nucleo.b * 14 - room_height / 2, 0, ysize * 14 * zoom - room_height)
+		}
+		server_jugadores_nombre = array_create(0, "")
 		repeat(len)
 			array_push(server_jugadores_nombre, string(buffer_read(buffer, buffer_string)))
+		array_push(server_jugadores_nombre, online_nombre)
 	}
 }

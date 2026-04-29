@@ -2,9 +2,9 @@ function check_reconstruible(index){
 	with control{
 		var comprable = true, temp_text = ""
 		for(var a = 0; a < array_length(edificio_precio_id[index]); a++)
-			if nucleo.carga[edificio_precio_id[index, a]] < edificio_precio_num[index, a]{
+			if jugador_recursos[0, edificio_precio_id[index, a]] < edificio_precio_num[index, a]{
 				comprable = false
-				temp_text += $"  {recurso_nombre[edificio_precio_id[index, a]]} {nucleo.carga[edificio_precio_id[index, a]]}/{edificio_precio_num[index, a]}\n"
+				temp_text += $"  {recurso_nombre[edificio_precio_id[index, a]]} {jugador_recursos[0, edificio_precio_id[index, a]]}/{edificio_precio_num[index, a]}\n"
 			}
 		if not comprable
 			temp_text = $"{L.construir_recursos_insuficientes}\n" + temp_text

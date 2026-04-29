@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"handle_nuevo_jugador",
+  "%Name":"load_escenario",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"handle_nuevo_jugador",
+  "name":"load_escenario",
   "parent":{
-    "name":"SERVER",
-    "path":"folders/SCRIPTS/SERVER.yy",
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

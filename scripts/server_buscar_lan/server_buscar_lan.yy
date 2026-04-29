@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"server_exit",
+  "%Name":"server_buscar_lan",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"server_exit",
+  "name":"server_buscar_lan",
   "parent":{
     "name":"SERVER",
     "path":"folders/SCRIPTS/SERVER.yy",

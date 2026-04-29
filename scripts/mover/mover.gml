@@ -95,14 +95,17 @@ function mover(edificio = control.null_edificio){
 		if flag{
 			edificio.carga[out]--
 			edificio.carga_total--
-			if mision_actual >= 0{
-				if mision_objetivo[mision_actual] = 0 and mision_target_id[mision_actual] = out and temp_edificio.index = id_nucleo and ++mision_counter >= mision_target_num[mision_actual]
-					pasar_mision()
-				else if mision_objetivo[mision_actual] = 7 and mision_target_id[mision_actual] = temp_edificio.index
+			if mision_actual >= 0 and mision_objetivo[mision_actual] = 7 and mision_target_id[mision_actual] = temp_edificio.index
+				pasar_mision()
+			if temp_edificio.index = id_nucleo{
+				recursos_obtenidos_time_temp[out]++
+				if online and server
+					jugador_recursos[edificio.jugador - 2, out]++
+				else if not (online and not server and edificio.jugador != jugador)
+					jugador_recursos[0, out]++
+				if mision_actual >= 0 and mision_objetivo[mision_actual] = 0 and mision_target_id[mision_actual] = out and temp_edificio.index = id_nucleo and ++mision_counter >= mision_target_num[mision_actual]
 					pasar_mision()
 			}
-			if temp_edificio.index = id_nucleo
-				recursos_obtenidos_time_temp[out]++
 			if in(out, idr_piedra_cuprica, idr_piedra_ferrica, idr_piedra_sulfatada) and in(temp_edificio.index, id_nucleo, id_triturador, id_fabrica_de_concreto)
 				out = idr_piedra
 			else if in(out, idr_uranio_enriquecido, idr_uranio_empobrecido) and in(temp_edificio.index, id_nucleo, id_rifle, id_mortero, id_fabrica_de_drones)
