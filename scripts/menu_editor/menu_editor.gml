@@ -2,6 +2,17 @@ function menu_editor(){
 	with control{
 		dibujar_fondo(1)
 		dibujar_edificios()
+		for(var a = min_chunka; a < max_chunka; a++)
+			for(var b = min_chunkb; b < max_chunkb; b++){
+				var chunk = chunk_edificios_draw[# a, b], len = array_length(chunk)
+				for(var c = 0; c < len; c++){
+					var edificio = chunk[c], aa = edificio.center_x, bb = edificio.center_y, _jugador = edificio.jugador
+					if _jugador != 2 or edificio.enemigo{
+						draw_set_color((_jugador = -1) ? c_ltgray : equipo_color[_jugador])
+						draw_circle_off(aa + 8, bb, 4, false)
+					}
+				}
+			}
 		var xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / zoom
 		var temp_complex_mouse = xytoab(xmouse, ymouse), mx = temp_complex_mouse[0], my = temp_complex_mouse[1], outside = false
 		if mx < 0 or my < 0 or mx >= xsize or my >= ysize{
@@ -773,6 +784,7 @@ function menu_editor(){
 		if draw_boton(10, room_height - 140, L.volver, ui_rojo) or keyboard_check_pressed(vk_escape){
 			menu = 0
 			camx = max(camx, 0)
+			build_enemigo = false
 		}
 		control_camara(-200)
 		update_cursor()

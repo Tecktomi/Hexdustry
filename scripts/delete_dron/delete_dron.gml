@@ -46,6 +46,7 @@ function delete_dron(dron = control.null_dron){
 		for(var a = array_length(plantas_de_reciclaje) - 1; a >= 0; a--){
 			var edificio = plantas_de_reciclaje[a]
 			if edificio.select = -1 and distance_sqr(dron.x, dron.y, edificio.center_x, edificio.center_y) < 62_500{ //250^2
+				edificio.mode = false
 				edificio.select = dron.index
 				break
 			}

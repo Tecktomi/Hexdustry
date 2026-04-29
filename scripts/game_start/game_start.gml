@@ -38,17 +38,11 @@ function game_start(_nucleo = true){
 		clic_sound = false
 		editor_enemigo = false
 		for(var a = 0; a < xsize; a++)
-			for(var b = 0; b < ysize; b++){
+			for(var b = 0; b < ysize; b++)
 				if terreno[# a, b] = idt_lava{
 					var temp_complex = abtoxy(a, b)
 					array_push(luces, {a : a, b : b, x : temp_complex[0], y : temp_complex[1], r : 10, source : null_edificio})
 				}
-				if edificio_bool[# a, b]{
-					var edificio = edificio_id[# a, b]
-					if edificio != nucleo and not edificio.enemigo
-						delete_edificio(edificio)
-				}
-			}
 		for(var a = array_length(enemigos) - 1; a >= 0; a--)
 			delete_dron(enemigos[a])
 		for(var a = array_length(drones_aliados) - 1; a >= 0; a--)

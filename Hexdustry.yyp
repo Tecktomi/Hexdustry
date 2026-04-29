@@ -106,6 +106,7 @@
     {"id":{"name":"check_colision","path":"scripts/check_colision/check_colision.yy",},},
     {"id":{"name":"check_reconstruible","path":"scripts/check_reconstruible/check_reconstruible.yy",},},
     {"id":{"name":"cinta_grande_check_output","path":"scripts/cinta_grande_check_output/cinta_grande_check_output.yy",},},
+    {"id":{"name":"clear_edificios","path":"scripts/clear_edificios/clear_edificios.yy",},},
     {"id":{"name":"clear_edit","path":"scripts/clear_edit/clear_edit.yy",},},
     {"id":{"name":"clear_silo_de_misiles","path":"scripts/clear_silo_de_misiles/clear_silo_de_misiles.yy",},},
     {"id":{"name":"complex_equal","path":"scripts/complex_equal/complex_equal.yy",},},

@@ -116,6 +116,17 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			calcular_edificios_adyascentes(temp_edificio)
 			temp_edificio.link = null_edificio
 		}
+		//Ser reciclado
+		if edificio_size[index] <= 3 and tag_edificio_construible[index]{
+			for(var a = array_length(plantas_de_reciclaje) - 1; a >= 0; a--){
+				var temp_edificio = plantas_de_reciclaje[a]
+				if temp_edificio.select = -1 and distance_sqr(edificio.center_x, edificio.center_y, temp_edificio.center_x, temp_edificio.center_y) < 62_500{ //250^2
+					temp_edificio.mode = true
+					temp_edificio.select = index
+					break
+				}
+			}
+		}
 		//Cancelar coordenadas
 		for(var i = array_length(edificio.coordenadas) - 1; i >= 0; i--){
 			var temp_coordenada_2 = edificio.coordenadas[i], a = temp_coordenada_2[0], b = temp_coordenada_2[1]
@@ -213,13 +224,13 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 					if temp_edificio.index = id_bateria
 						red_bateria++
 				}
-				var agregado = ds_list_create(), visited = array_create(edificio_count, false)
+				var agregado = array_create(0, null_edificio), visited = array_create(edificio_count, false)
 				while array_length(temp_red.edificios) > 0{
 					var nodo = temp_red.edificios[array_length(temp_red.edificios) - 1]
 					if not visited[nodo.edificio_index]{
 						var isla = array_create(0), isla_bateria = 0, pila = ds_stack_create()
 						ds_stack_push(pila, nodo)
-						ds_list_add(agregado, nodo)
+						array_push(agregado, nodo)
 						while not ds_stack_empty(pila){
 							nodo = ds_stack_pop(pila)
 							if nodo.index = id_bateria
@@ -230,9 +241,9 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 								visited[nodo.edificio_index] = true
 								for(var a = array_length(nodo.energia_link) - 1; a >= 0; a--){
 									var temp_edificio = nodo.energia_link[a]
-									if not visited[temp_edificio.edificio_index] and not ds_list_in(agregado, temp_edificio){
+									if not visited[temp_edificio.edificio_index] and not array_contains(agregado, temp_edificio){
 										ds_stack_push(pila, temp_edificio)
-										ds_list_add(agregado, temp_edificio)
+										array_push(agregado, temp_edificio)
 									}
 								}
 							}
@@ -284,13 +295,13 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 					var flujo_almacen = 0
 					for(var a = array_length(temp_flujo.edificios) - 1; a >= 0; a--)
 						flujo_almacen += edificio_flujo_almacen[temp_flujo.edificios[a].index]
-					var agregado = ds_list_create(), visited = array_create(edificio_count, false)
+					var agregado = array_create(0, null_edificio), visited = array_create(edificio_count, false)
 					while array_length(temp_flujo.edificios) > 0{
 						var nodo = temp_flujo.edificios[array_length(temp_flujo.edificios) - 1]
 						if not visited[nodo.edificio_index]{
 							var isla = array_create(0), isla_almacen = 0, pila = ds_stack_create()
 							ds_stack_push(pila, nodo)
-							ds_list_add(agregado, nodo)
+							array_push(agregado, nodo)
 							while not ds_stack_empty(pila){
 								nodo = ds_stack_pop(pila)
 								isla_almacen += edificio_flujo_almacen[nodo.index]
@@ -300,9 +311,9 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 									visited[nodo.edificio_index] = true
 									for(var a = array_length(nodo.flujo_link) - 1; a >= 0; a--){
 										var temp_edificio = nodo.flujo_link[a]
-										if not visited[temp_edificio.edificio_index] and not ds_list_in(agregado, temp_edificio){
+										if not visited[temp_edificio.edificio_index] and not array_contains(agregado, temp_edificio){
 											ds_stack_push(pila, temp_edificio)
-											ds_list_add(agregado, temp_edificio)
+											array_push(agregado, temp_edificio)
 										}
 									}
 								}

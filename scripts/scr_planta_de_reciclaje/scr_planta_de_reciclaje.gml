@@ -19,16 +19,28 @@ function scr_planta_de_reciclaje(edificio = control.null_edificio){
 				encender_luz(, edificio)
 			}
 			edificio.proceso += min(flujo_power, red_power) * (1 + 0.3 * edificio.modulo)
+			if edificio.mode
+				var time_max = max(5, edificio_precio[edificio.select] * 5)
+			else
+				time_max = dron_time[edificio.select]
 			//Producir / Apagar
-			if edificio.proceso >= dron_time[edificio.select]{
-				for(var a = array_length(dron_precio_id[edificio.select]) - 1; a >= 0; a--){
-					var b = round(dron_precio_num[edificio.select, a] / 2)
-					edificio.carga[dron_precio_id[edificio.select, a]] += b
-					edificio.carga_total += b
+			if edificio.proceso >= time_max{
+				if edificio.mode{
+					for(var a = array_length(edificio_precio_id[edificio.select]) - 1; a >= 0; a--){
+						var b = round(edificio_precio_num[edificio.select, a] / 2)
+						edificio.carga[edificio_precio_id[edificio.select, a]] += b
+						edificio.carga_total += b
+					}
 				}
+				else
+					for(var a = array_length(dron_precio_id[edificio.select]) - 1; a >= 0; a--){
+						var b = round(dron_precio_num[edificio.select, a] / 2)
+						edificio.carga[dron_precio_id[edificio.select, a]] += b
+						edificio.carga_total += b
+					}
 				change_flujo(0, edificio)
 				change_energia(0, edificio)
-				edificio.proceso -= dron_time[edificio.select]
+				edificio.proceso -= time_max
 				edificio.select = -1
 				edificio.start = false
 				edificio.waiting = not mover(edificio)

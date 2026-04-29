@@ -17,7 +17,8 @@ function dibujar_edificios(){
 						var edificio = chunk[c]
 						edificio_draw_function[edificio.index](edificio, -a * chunk_width * 48, -b * chunk_height * 14)
 					}
-					ds_grid_set(chunk_edificios_background, a, b, sprite_create_from_surface(temp_surf, 0, 0, (chunk_width + 1) * 48, (chunk_height + 1) * 14, false, false, 0, 0))
+					var sprite = sprite_create_from_surface(temp_surf, 0, 0, (chunk_width + 1) * 48, (chunk_height + 1) * 14, false, false, 0, 0)
+					ds_grid_set(chunk_edificios_background, a, b, sprite)
 					surface_reset_target()
 					surface_free(temp_surf)
 				}

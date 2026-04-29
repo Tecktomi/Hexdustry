@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"clear_silo_de_misiles",
+  "%Name":"clear_edificios",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"clear_silo_de_misiles",
+  "name":"clear_edificios",
   "parent":{
     "name":"EDIFICIOS",
     "path":"folders/SCRIPTS/EDIFICIOS.yy",

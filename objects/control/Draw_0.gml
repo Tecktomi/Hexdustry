@@ -52,6 +52,8 @@ if menu = 0{
 			flow = 4
 			dificultad = -1
 		}
+		if mapa >= 0 and load_escenario($"{default_maps[mapa]}.txt", false) = ""
+			mapa = -1
 	}
 	if os_browser = browser_not_a_browser and file_exists("last_save.save"){
 		ypos += text_y * 1.2
@@ -467,8 +469,12 @@ if in(menu, 1, 3){
 					draw_set_halign(fa_left)
 				}
 				//Planta de Reciclaje
-				else if tag_dron_encima[index] and edificio.select >= 0
-					draw_sprite_off(dron_sprite[edificio.select], 0, center_x, center_y,,,,, 0.5)
+				else if tag_dron_encima[index] and edificio.select >= 0{
+					if edificio.mode
+						draw_sprite_off(edificio_sprite[edificio.select], 0, center_x, center_y, 0.8, 0.8,,, 0.5)
+					else
+						draw_sprite_off(dron_sprite[edificio.select], 0, center_x, center_y,,,,, 0.5)
+				}
 				//Dibujo falta líquido
 				if tag_liquido_obligatorio[index]{
 					if edificio.flujo.liquido != edificio_flujo_liquido[index] and edificio.flujo_consumo_max > 0{
@@ -478,7 +484,7 @@ if in(menu, 1, 3){
 				}
 				draw_vida(aaa, bbb, edificio.vida, edificio_vida[index])
 				//Dibujo estados
-				if _jugador != jugador{
+				if _jugador != jugador or edificio.enemigo{
 					draw_set_color((_jugador = -1) ? c_ltgray : equipo_color[_jugador])
 					draw_circle_off(aa + 8, bb, 4, false)
 				}
@@ -938,6 +944,12 @@ if in(menu, 1, 3){
 	}
 	sprite_boton_text = ""
 	clic_sound = false
+	if menu = 3{
+		draw_set_halign(fa_right)
+		if draw_boton(room_width - 40, 20, build_enemigo ? "ENEMIGO" : "ALIADO", build_enemigo ? ui_rojo : ui_azul)
+			build_enemigo = not build_enemigo
+		draw_set_halign(fa_left)
+	}
 }
 //Pausa - Menú
 if pausa = 1{
@@ -1040,11 +1052,13 @@ if pausa = 1{
 					buffer_delete(buffer)
 				}
 				menu = 0
-				if server != -1
+				if online{
 					if servidor
 						server_break()
 					else
 						server_jugador_irse()
+				}
+				clear_edificios()
 				exit
 			}
 			else if menu = 3{
@@ -1603,8 +1617,9 @@ if show_menu{
 		draw_set_halign(fa_left)
 	}
 	else{
-		var aa = abtoxy(edificio.a, edificio.b)[0] * zoom - camx
-		var bb = abtoxy(edificio.a, edificio.b)[1] * zoom - camy
+		var temp_complex = abtoxy(edificio.a, edificio.b)
+		var width = 80 * zoom, height = 80 * zoom
+		var aa = clamp(temp_complex[0] * zoom - camx, width, room_width - width), bb = clamp(temp_complex[1] * zoom - camy, 0, room_height - height)
 		draw_set_color(c_gray)
 		draw_triangle(aa - 10 * zoom, bb + 20 * zoom, aa + 10 * zoom, bb + 20 * zoom, aa, bb + 10 * zoom, false)
 		draw_rectangle(aa - 80 * zoom, bb + 20 * zoom, aa + 80 * zoom, bb + 40 * zoom, false)
@@ -2277,8 +2292,12 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 				else if index = id_planta_de_reciclaje{
 					draw_set_color(c_lime)
 					draw_circle_off(edificio.center_x, edificio.center_y, 250, true)
-					if edificio.select >= 0
-						temp_text += $"{L.almacen_consumiendo} {dron_nombre[edificio.select]}: {floor(100 * edificio.proceso / dron_time[edificio.select])}%\n"
+					if edificio.select >= 0{
+						if edificio.mode
+							temp_text += $"{L.almacen_consumiendo} {edificio_nombre[edificio.select]}: {floor(100 * edificio.proceso / max(5, 5 * edificio_precio[edificio.select]))}%\n"
+						else
+							temp_text += $"{L.almacen_consumiendo} {dron_nombre[edificio.select]}: {floor(100 * edificio.proceso / dron_time[edificio.select])}%\n"
+					}
 				}
 				draw_set_color(c_blue)
 				for(var a = array_length(edificio.inputs_carga) - 1; a >= 0; a--){
@@ -3340,6 +3359,7 @@ if build_index > 0 and win = 0{
 							}
 						}
 					}
+					//Construir
 					if mouse_check_button_pressed(mb_left) and flag_camino and comprable and (not edificio_bool[# mx, my] or (build_index = id_cruce and edificio_camino[edificio_id[# mx, my].index])){
 						var temp_edificio = construir(build_index, build_dir, mx, my, build_enemigo)
 						if temp_edificio != null_edificio and tag_dron_encima[temp_edificio.index]{
@@ -3360,6 +3380,7 @@ if build_index > 0 and win = 0{
 						}
 					}
 				}
+				//Arcos eléctricos
 				if edificio_energia[build_index] and build_index != id_cable{
 					var temp_complex_2 = abtoxy(mx, my), temp_list_complex = get_size(mx, my, build_dir, 7)
 					for(var a = array_length(temp_list_complex) - 1; a >= 0; a--){
@@ -3971,7 +3992,6 @@ if menu = 1{
 			if string_ends_with(keyboard_string, "cheat"){
 				keyboard_string = ""
 				cheat = not cheat
-				clear_edit()
 			}
 			if cheat and keyboard_check_pressed(CONTROL_WAVES)
 				oleadas = not oleadas

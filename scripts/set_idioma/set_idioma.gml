@@ -537,6 +537,8 @@ function set_idioma(){
 			variable_struct_set(L, "server_muerto", "The server has been closed")
 			variable_struct_set(L, "archivo_obsoleto", "Error\n\noutdated file")
 			variable_struct_set(L, "menu_sin_blueprints", "No blueprints yet")
+			variable_struct_set(L, "enemigo", "Enemy")
+			variable_struct_set(L, "abandonado", "Abandoned")
 		}
 		//Español
 		else if idioma = 1{
@@ -1072,6 +1074,8 @@ function set_idioma(){
 			variable_struct_set(L, "server_muerto", "Se ha cerrado el servidor")
 			variable_struct_set(L, "archivo_obsoleto", "Error\n\narchivo obsoleto")
 			variable_struct_set(L, "menu_sin_blueprints", "Sin planos aún")
+			variable_struct_set(L, "enemigo", "Enemigo")
+			variable_struct_set(L, "abandonado", "Abandonado")
 		}
 		//Русский
 		else if idioma = 2{
@@ -1606,6 +1610,8 @@ function set_idioma(){
 			variable_struct_set(L, "server_muerto", "Сервер был закрыт")
 			variable_struct_set(L, "archivo_obsoleto", "Ошибка\n\nустаревший файл")
 			variable_struct_set(L, "menu_sin_blueprints", "Сценариев чертеж нет")
+			variable_struct_set(L, "enemigo", "Враг")
+			variable_struct_set(L, "abandonado", "Заброшенный")
 		}
 		sort_edificios()
 		sort_recursos()

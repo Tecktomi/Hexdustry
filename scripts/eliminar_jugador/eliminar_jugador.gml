@@ -23,6 +23,10 @@ function eliminar_jugador(index){
 					else{
 						edificio.jugador = 0
 						desactivar_edificio(edificio)
+						array_disorder_remove(edificios_enemigos, edificio, 0)
+						array_disorder_push(edificios_abandonados, edificio, 0)
+						array_disorder_remove(chunk_edificios_enemigo[# edificio.chunk_x, edificio.chunk_y], edificio, 1)
+						array_disorder_push(chunk_edificios_abandonado[# edificio.chunk_x, edificio.chunk_y], edificio, 1)
 					}
 				}
 			}
