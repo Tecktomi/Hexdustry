@@ -41,7 +41,7 @@ function load_edificio(buffer, edificio = control.null_edificio){
 		if mask & (1 << c++) edificio.agregar = true
 		if mask & (1 << c++) edificio.modulo = true
 		if mask & (1 << c++) edificio.outputs_carga_index = real(buffer_read(buffer, buffer_u8))
-		if flag and edificio_seteable[edificio.index]
+		if flag and tag_edificio_seteable[edificio.index]
 			set_edificio(edificio.mode, edificio.select, edificio)
 		return temp_target_dron
 	}

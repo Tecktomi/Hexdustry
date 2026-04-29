@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"herir_dron",
   "parent":{
-    "name":"SCRIPTS",
-    "path":"folders/SCRIPTS.yy",
+    "name":"DRONES",
+    "path":"folders/SCRIPTS/DRONES.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

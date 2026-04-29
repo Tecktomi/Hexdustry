@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"null_function",
   "parent":{
-    "name":"SCRIPTS",
-    "path":"folders/SCRIPTS.yy",
+    "name":"CORE",
+    "path":"folders/SCRIPTS/CORE.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -11,7 +11,7 @@ function construir(index, dir, mx, my, enemigo = false, server = false, _cheat =
 			if edificio_camino[temp_edificio.index] or temp_edificio.index = id_cruce{
 				if index = temp_edificio.index{
 					temp_edificio.dir = dir
-					calculate_in_out_2(temp_edificio)
+					calcular_edificios_adyascentes(temp_edificio)
 					mover(temp_edificio)
 					var d = temp_edificio.dir * pi / 3 + pi / 6
 					temp_edificio.array_real[0] = cos(d)

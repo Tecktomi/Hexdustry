@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"Items",
-    "path":"folders/SPRITES/Items.yy",
+    "name":"ITEM",
+    "path":"folders/SPRITES/ITEM.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

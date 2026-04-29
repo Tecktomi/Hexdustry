@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":9,
   "parent":{
-    "name":"Edificios",
-    "path":"folders/SPRITES/Edificios.yy",
+    "name":"EDIFICIO",
+    "path":"folders/SPRITES/EDIFICIO.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

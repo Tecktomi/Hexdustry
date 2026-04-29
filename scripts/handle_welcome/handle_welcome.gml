@@ -9,6 +9,7 @@ function handle_welcome(buffer){
 			jugador = 2
 		if not load_game_buffer(buffer)
 			show_message(L.archivo_obsoleto)
+		//Asignar núcleo y recursos
 		if server_pvp{
 			var a = real(buffer_read(buffer, buffer_u8)), b = real(buffer_read(buffer, buffer_u8))
 			nucleo = edificio_id[# a, b]
@@ -22,5 +23,6 @@ function handle_welcome(buffer){
 		repeat(len)
 			array_push(server_jugadores_nombre, string(buffer_read(buffer, buffer_string)))
 		array_push(server_jugadores_nombre, online_nombre)
+		server_jugadores_timeout = [-120]
 	}
 }

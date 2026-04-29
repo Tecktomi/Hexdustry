@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_draw_tuberia",
   "parent":{
-    "name":"draw_edificios",
-    "path":"folders/SCRIPTS/draw_edificios.yy",
+    "name":"DRAW",
+    "path":"folders/SCRIPTS/EDIFICIOS/DRAW.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

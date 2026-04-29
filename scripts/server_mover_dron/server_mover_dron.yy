@@ -6,7 +6,7 @@
   "name":"server_mover_dron",
   "parent":{
     "name":"SERVER",
-    "path":"folders/SCRIPTS/SERVER.yy",
+    "path":"folders/SCRIPTS/ONLINE/SERVER.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

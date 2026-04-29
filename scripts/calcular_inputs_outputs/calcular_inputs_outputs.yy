@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"ds_list_remove",
+  "%Name":"calcular_inputs_outputs",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"ds_list_remove",
+  "name":"calcular_inputs_outputs",
   "parent":{
-    "name":"SCRIPTS",
-    "path":"folders/SCRIPTS.yy",
+    "name":"EDIFICIOS",
+    "path":"folders/SCRIPTS/EDIFICIOS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

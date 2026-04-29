@@ -29,8 +29,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"Terreno",
-    "path":"folders/SPRITES/Terreno.yy",
+    "name":"TERRENO",
+    "path":"folders/SPRITES/TERRENO.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

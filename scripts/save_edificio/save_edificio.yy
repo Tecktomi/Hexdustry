@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"save_edificio",
   "parent":{
-    "name":"SCRIPTS",
-    "path":"folders/SCRIPTS.yy",
+    "name":"SAVE",
+    "path":"folders/SCRIPTS/FILE/SAVE.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

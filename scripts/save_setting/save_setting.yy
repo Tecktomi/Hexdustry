@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"new_data",
+  "%Name":"save_setting",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"new_data",
+  "name":"save_setting",
   "parent":{
-    "name":"SCRIPTS",
-    "path":"folders/SCRIPTS.yy",
+    "name":"SAVE",
+    "path":"folders/SCRIPTS/FILE/SAVE.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

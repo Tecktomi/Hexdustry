@@ -1607,6 +1607,8 @@ function set_idioma(){
 			variable_struct_set(L, "archivo_obsoleto", "Ошибка\n\nустаревший файл")
 			variable_struct_set(L, "menu_sin_blueprints", "Сценариев чертеж нет")
 		}
+		sort_edificios()
+		sort_recursos()
 		for(var a = 0; a < rss_max; a++)
 			recurso_descripcion[a] = string_trim(text_wrap(recurso_descripcion[a], 400))
 		for(var a = 0; a < dron_max; a++)

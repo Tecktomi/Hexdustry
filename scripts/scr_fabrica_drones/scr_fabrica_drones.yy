@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_fabrica_drones",
   "parent":{
-    "name":"Acciones",
-    "path":"folders/SCRIPTS/Acciones.yy",
+    "name":"ACCIONES",
+    "path":"folders/SCRIPTS/EDIFICIOS/ACCIONES.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

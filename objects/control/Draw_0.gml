@@ -10,7 +10,7 @@
 	if keyboard_check_pressed(vk_f4){
 		keyboard_clear(vk_f4)
 		window_set_fullscreen(not window_get_fullscreen())
-		set_setting("", "fullscreen", window_get_fullscreen())
+		save_setting("", "fullscreen", window_get_fullscreen())
 	}
 #endregion
 //Menú principal
@@ -370,7 +370,7 @@ if menu = 0{
 				ini_close()
 			}
 			else if online_nombre != prev_online_nombre
-				set_setting("", "online_nombre", online_nombre, false)
+				save_setting("", "online_nombre", online_nombre, false)
 			ypos += text_y * 1.2
 			if draw_boton(room_width / 2, ypos, $"{L.buscar_servidores_en_LAN}{server_buscando_lan ? " ..." : ""}", ui_azul,,,, 1)
 				server_buscar_lan()
@@ -398,7 +398,7 @@ if menu = 0{
 		for(var a = 0; a < idiomas; a++)
 			if draw_sprite_boton(spr_bandera, a, 20 + 80 * a, 20, 64, 48,, function(data){draw_text_background(0, 80, idioma_name[data.a])}, {a : a}){
 				idioma = a
-				set_setting("", "Idioma", idioma, true)
+				save_setting("", "Idioma", idioma, true)
 				set_idioma()
 			}
 	exit
@@ -965,22 +965,22 @@ if pausa = 1{
 		ypos += text_y * 1.2
 		if draw_boton(xpos, ypos, (info ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_info}", info ? ui_verde : ui_rojo){
 			info = not info
-			set_setting("", "info", info)
+			save_setting("", "info", info)
 		}
 		ypos += text_y * 1.2
 		if draw_boton(xpos, ypos, (grafic_tile_animation ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_animacion}", grafic_tile_animation ? ui_verde : ui_rojo){
 			grafic_tile_animation = not grafic_tile_animation
-			set_setting("", "grafic_tile_animation", grafic_tile_animation)
+			save_setting("", "grafic_tile_animation", grafic_tile_animation)
 		}
 		ypos += text_y * 1.2
 		if draw_boton(xpos, ypos, (grafic_luz ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_iluminacion}", grafic_luz ? ui_verde : ui_rojo){
 			grafic_luz = not grafic_luz
-			set_setting("", "grafic_luz", grafic_luz)
+			save_setting("", "grafic_luz", grafic_luz)
 		}
 		ypos += text_y * 1.2
 		if draw_boton(xpos, ypos, (grafic_humo ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_humo}", grafic_humo ? ui_verde : ui_rojo){
 			grafic_humo = not grafic_humo
-			set_setting("", "grafic_humo", grafic_humo)
+			save_setting("", "grafic_humo", grafic_humo)
 		}
 		ypos += text_y * 1.2
 		if draw_boton(xpos, ypos, (grafic_hideui ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_UI}", grafic_hideui ? ui_rojo : ui_verde)
@@ -991,12 +991,12 @@ if pausa = 1{
 		ypos += text_y * 1.2
 		if draw_boton(xpos, ypos, (grafic_energia ? L.pausa_desactivar : L.pausa_activar) + $" {L.red_energia}", grafic_energia ? ui_verde : ui_rojo){
 			grafic_energia = not grafic_energia
-			set_setting("", "grafic_energia", grafic_energia)
+			save_setting("", "grafic_energia", grafic_energia)
 		}
 		ypos += text_y * 1.2
 		if draw_boton(xpos, ypos, (auto_guardado ? L.pausa_desactivar : L.pausa_activar) + $" {L.autoguardado}", auto_guardado ? ui_verde : ui_rojo){
 			auto_guardado = not auto_guardado
-			set_setting("", "auto_guardado", auto_guardado)
+			save_setting("", "auto_guardado", auto_guardado)
 		}
 		//Guardar / Abrir en LAN
 		if menu = 1{
@@ -1140,7 +1140,7 @@ if pausa = 1{
 				else if get_file = 19
 					CONTROL_TAB = keyboard_lastkey
 				CONTROL_USADAS[get_file - 2] = keyboard_lastkey
-				set_setting("Controles", $"{get_file - 2}", keyboard_lastkey, false)
+				save_setting("Controles", $"{get_file - 2}", keyboard_lastkey, false)
 				keyboard_clear(keyboard_lastkey)
 				get_file = 1
 			}
@@ -1153,7 +1153,7 @@ if pausa = 1{
 		for(var a = 0; a < idiomas; a++)
 			if draw_sprite_boton(spr_bandera, a, 20 + 80 * a, 20, 64, 48,, function(data){draw_text_background(0, 80, idioma_name[data.a])}, {a : a}){
 				idioma = a
-				set_setting("", "Idioma", idioma, true)
+				save_setting("", "Idioma", idioma, true)
 				set_idioma()
 			}
 	draw_set_color(color)
@@ -1984,8 +1984,12 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 	if edificio_bool[# mx, my]{
 		var index = edificio.index
 		temp_text += $"{edificio_nombre[index]}\n"
-		if edificio.enemigo and menu = 1 and not cheat
-			temp_text += "ENEMIGO\n"
+		if edificio.enemigo and menu = 1 and not cheat{
+			if online and edificio.jugador > 1
+				temp_text += server_jugadores_nombre[edificio.jugador - 2]
+			else
+				temp_text += (edificio.jugador = 0) ? "SALVAJE\n" : "ENEMIGO\n"
+		}
 		else{
 			//Blueprint
 			if keyboard_check(CONTROL_BLUEPRINT) and mouse_check_button(mb_left){
@@ -2030,7 +2034,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 							procesador_select = null_edificio
 					}
 				}
-				else if edificio_seteable[index] or in(index, id_procesador, id_memoria, id_deposito){
+				else if tag_edificio_seteable[index] or in(index, id_procesador, id_memoria, id_deposito){
 					mouse_clear(mb_left)
 					deselect_drones()
 					if index = id_silo_de_misiles and edificio.mode{
@@ -2067,14 +2071,14 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 								puerto_carga_atended = 0
 							puerto_carga_link.link.receptor = false
 							puerto_carga_link.link.emisor = false
-							calculate_in_out_2(puerto_carga_link.link)
+							calcular_edificios_adyascentes(puerto_carga_link.link)
 							puerto_carga_link.link.link = null_edificio
 						}
 						puerto_carga_link.receptor = true
 						puerto_carga_link.emisor = false
 						puerto_carga_link.link = edificio
-						calculate_in_out(puerto_carga_link)
-						calculate_in_out_2(puerto_carga_link, false)
+						calcular_inputs_outputs(puerto_carga_link)
+						calcular_edificios_adyascentes(puerto_carga_link, false)
 						if edificio.link != null_edificio{
 							if edificio.receptor
 								array_disorder_remove(temp_puerto_carga, edificio, 2)
@@ -2084,14 +2088,14 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 								puerto_carga_atended = 0
 							edificio.link.receptor = false
 							edificio.link.emisor = false
-							calculate_in_out_2(edificio.link)
+							calcular_edificios_adyascentes(edificio.link)
 							edificio.link.link = null_edificio
 						}
 						edificio.receptor = false
 						edificio.emisor = true
 						edificio.link = puerto_carga_link
-						calculate_in_out(edificio)
-						calculate_in_out_2(edificio, false)
+						calcular_inputs_outputs(edificio)
+						calcular_edificios_adyascentes(edificio, false)
 						array_disorder_push(temp_puerto_carga, puerto_carga_link, 2)
 						puerto_carga_link = null_edificio
 						puerto_carga_bool = false
@@ -2239,20 +2243,20 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 					if edificio.index = 16{
 						edificio.index = 6
 						edificio.link.index = 16
-						calculate_in_out(edificio)
-						calculate_in_out(edificio.link)
-						calculate_in_out_2(edificio)
-						calculate_in_out_2(edificio.link)
+						calcular_inputs_outputs(edificio)
+						calcular_inputs_outputs(edificio.link)
+						calcular_edificios_adyascentes(edificio)
+						calcular_edificios_adyascentes(edificio.link)
 						array_push(edificio.outputs, edificio.link)
 						array_push(edificio.link.inputs, edificio)
 					}
 					else{
 						edificio.index = 16
 						edificio.link.index = 6
-						calculate_in_out(edificio)
-						calculate_in_out(edificio.link)
-						calculate_in_out_2(edificio)
-						calculate_in_out_2(edificio.link)
+						calcular_inputs_outputs(edificio)
+						calcular_inputs_outputs(edificio.link)
+						calcular_edificios_adyascentes(edificio)
+						calcular_edificios_adyascentes(edificio.link)
 						array_push(edificio.inputs, edificio.link)
 						array_push(edificio.link.outputs, edificio)
 					}
@@ -2411,7 +2415,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			}
 			else if mouse_check_button(mb_left){
 				var temp_edificio = construir(b, repair_dir[# mx, my], mx, my)
-				if edificio_seteable[b]
+				if tag_edificio_seteable[b]
 					set_edificio(repair_mode[# mx, my], repair_select[# mx, my], temp_edificio)
 			}
 			if mouse_check_button(mb_right)
@@ -3561,8 +3565,14 @@ if menu = 1{
 	if pausa = 0 or online{
 		var frame_time = min(delta_time / 1_000_000, 0.25)
 		acumulator += frame_time
-		if online and not servidor and timer + LAG < server_timer
-			acumulator++
+		if online and not servidor{
+			if timer + LAG < server_timer
+				acumulator++
+			if ++server_jugadores_timeout[0] = 599
+				server_jugador_irse()
+			else if server_jugadores_timeout[0] = 600
+				handle_server_break()
+		}
 		for(ticks = 0; (acumulator >= LOGIC_DT and ticks < 5) or ticks = 0; ticks++){
 			if online and not servidor and timer + LAG > server_timer //Detenerse por LAG
 				break
@@ -4215,7 +4225,7 @@ if menu = 1 or menu = 3{
 			sound_change()
 		if keyboard_check_pressed(CONTROL_INFO){
 			info = not info
-			set_setting("", "info", info)
+			save_setting("", "info", info)
 		}
 		if keyboard_check_pressed(CONTROL_FLOW)
 			flow = (flow + 1) mod 9
@@ -4302,4 +4312,3 @@ if keyboard_check(CONTROL_TAB) and online{
 	draw_set_halign(fa_left)
 }
 draw_sprite(spr_vineta, 0, 0, 0)
-draw_text(0, 0, jugador)

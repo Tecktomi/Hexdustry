@@ -277,7 +277,7 @@ function menu_editor(){
 				var ypos = 140
 				var b = 0
 				for(var a = 0; a < edificio_max; a++)
-					if edificio_construible[a]{
+					if tag_edificio_construible[a]{
 						if not mision_edificios[a]
 							draw_set_color(c_red)
 						else if edificio_tecnologia[a]

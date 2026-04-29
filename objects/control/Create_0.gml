@@ -347,6 +347,8 @@ L = {}
 	server_pvp = false
 	server_buscando_lan = false
 	server_buscando_lan_step = 0
+	equipo_color = [ #bfbfbf, #ff0000, #0000ff, #00ff00, #ffff00, #ff00ff, #00ffff, #ffffff, #000000, #7f0000, #007f00, #00007f, #7f7f00, #7f007f, #007f7f]
+	jugador = 2
 #endregion
 #region UI
 	ui_fondo = #282828
@@ -706,6 +708,7 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 rss_max = array_length(recurso_nombre)
 sort_recursos()
 usable_rss_bool = array_create(rss_max, false)
+jugador_recursos = [array_create(rss_max, 0)]
 //Disparos
 null_municion = add_municion()
 municiones = array_create(0, null_municion)
@@ -1135,7 +1138,6 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = -1,
 		planta_quimica_descripcion[a] = text_wrap(planta_quimica_descripcion[a], 300)
 #endregion
 edificio_max = array_length(edificio_nombre)
-edificio_construible = array_create(edificio_max, true)
 edificio_tecnologia = array_create(edificio_max, false)
 edificio_tecnologia_desbloqueable = array_create(edificio_max, false)
 mision_edificios = array_create(edificio_max, true)
@@ -1148,25 +1150,9 @@ edificio_energia[id_bateria] = true
 edificio_input_all[id_puerto_de_carga] = true
 edificio_output_all[id_puerto_de_carga] = true
 edificio_energia[id_torre_de_alta_tension] = true
-edificio_construible[id_nucleo] = false
-edificio_construible[id_tunel_salida] = false
-edificio_construible[id_energia_infinita] = false
-edificio_construible[id_liquido_infinito] = false
-edificio_construible[id_recurso_infinito] = false
 edificio_key[id_energia_infinita] = "4z"
 edificio_key[id_liquido_infinito] = "5z"
 edificio_key[id_recurso_infinito] = "1z"
-edificio_seteable = array_create(edificio_max, false)
-edificio_seteable[id_selector] = true
-edificio_seteable[id_overflow] = true
-edificio_seteable[id_recurso_infinito] = true
-edificio_seteable[id_liquido_infinito] = true
-edificio_seteable[id_planta_quimica] = true
-edificio_seteable[id_refineria_de_petroleo] = true
-edificio_seteable[id_embotelladora] = true
-edificio_seteable[id_fabrica_de_drones] = true
-edificio_seteable[id_silo_de_misiles] = true
-edificio_seteable[id_fabrica_de_drones_grande] = true
 var flag_rss = array_create(rss_max, false)
 #region Arreglos de optimización
 	#region camino_o_tunel
@@ -1282,6 +1268,27 @@ var flag_rss = array_create(rss_max, false)
 		tag_drones_de_ataque[idd_titan] = true
 		tag_drones_de_ataque[idd_bombardero] = true
 	#endregion
+	#region edificio_seteable
+		tag_edificio_seteable = array_create(edificio_max, false)
+		tag_edificio_seteable[id_selector] = true
+		tag_edificio_seteable[id_overflow] = true
+		tag_edificio_seteable[id_recurso_infinito] = true
+		tag_edificio_seteable[id_liquido_infinito] = true
+		tag_edificio_seteable[id_planta_quimica] = true
+		tag_edificio_seteable[id_refineria_de_petroleo] = true
+		tag_edificio_seteable[id_embotelladora] = true
+		tag_edificio_seteable[id_fabrica_de_drones] = true
+		tag_edificio_seteable[id_silo_de_misiles] = true
+		tag_edificio_seteable[id_fabrica_de_drones_grande] = true
+	#endregion
+	#region tag_edificio_construible
+		tag_edificio_construible = array_create(edificio_max, true)
+		tag_edificio_construible[id_nucleo] = false
+		tag_edificio_construible[id_tunel_salida] = false
+		tag_edificio_construible[id_energia_infinita] = false
+		tag_edificio_construible[id_liquido_infinito] = false
+		tag_edificio_construible[id_recurso_infinito] = false
+	#endregion
 #endregion
 //Inputs y outputs de fábrica de drones y planta de reciclaje
 for(var a = 0; a < dron_max; a++){
@@ -1301,7 +1308,7 @@ for(var a = 0; a < rss_max; a++){
 //Valor absoluto edificios
 for(var a = 0; a < edificio_max; a++){
 	edificio_precio[a] = 0
-	if edificio_construible[a]
+	if tag_edificio_construible[a]
 		for(var b = 0; b < array_length(edificio_precio_id[a]); b++)
 			edificio_precio[a] += edificio_precio_num[a, b] * (1 + recurso_tier[edificio_precio_id[a, b]])
 }
@@ -1550,7 +1557,7 @@ sort_edificios()
 	//Crear nivel mínimo tecnológico
 	var edi_count = 0
 	for(var a = 0; a < edificio_max; a++)
-		if edificio_construible[a]{
+		if tag_edificio_construible[a]{
 			if array_length(edificio_tecnologia_prev[a]) = 0{
 				edi_count++
 				edificio_tecnologia_nivel[a] = 0
@@ -1565,7 +1572,7 @@ sort_edificios()
 		var stable = true
 		array_push(tecnologia_nivel_edificios, array_create(0, 0))
 		for(var b = 0; b < edificio_max; b++)
-			if edificio_construible[b] and edificio_tecnologia_nivel[b] = -1{
+			if tag_edificio_construible[b] and edificio_tecnologia_nivel[b] = -1{
 				var flag = true
 				for(var c = 0; c < array_length(edificio_tecnologia_prev[b]); c++)
 					if edificio_tecnologia_nivel[edificio_tecnologia_prev[b, c]] = -1 or edificio_tecnologia_nivel[edificio_tecnologia_prev[b, c]] = array_length(tecnologia_nivel_edificios){
@@ -1616,9 +1623,6 @@ betas = array_create(0, null_beta)
 explosion_queue = array_create(0, {x : 0, y : 0, edificio : null_edificio, enemigo : false, radio : 0, dmg : 0, incendiario : false})
 explosion_fx_queue = array_create(0, explosion_fx(0, 0, 0))
 set_idioma()
-equipo_color = [ #bfbfbf, #ff0000, #0000ff, #00ff00, #ffff00, #ff00ff, #00ffff, #ffffff, #000000, #7f0000, #007f00, #00007f, #7f7f00, #7f007f, #007f7f]
-jugador = 2
-jugador_recursos = [array_create(rss_max, 0)]
 biome_seed = 0
 seed = random_get_seed()
 generar_bioma(biome_seed)

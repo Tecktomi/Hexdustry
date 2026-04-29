@@ -6,7 +6,7 @@
   "name":"server_jugador_irse",
   "parent":{
     "name":"SERVER",
-    "path":"folders/SCRIPTS/SERVER.yy",
+    "path":"folders/SCRIPTS/ONLINE/SERVER.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"eliminar_jugador",
   "parent":{
-    "name":"SERVER",
-    "path":"folders/SCRIPTS/SERVER.yy",
+    "name":"ONLINE",
+    "path":"folders/SCRIPTS/ONLINE.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

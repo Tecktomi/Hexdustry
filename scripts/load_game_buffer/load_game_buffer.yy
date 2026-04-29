@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"load_game_buffer",
   "parent":{
-    "name":"SCRIPTS",
-    "path":"folders/SCRIPTS.yy",
+    "name":"LOAD",
+    "path":"folders/SCRIPTS/FILE/LOAD.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"array_clone",
   "parent":{
-    "name":"Function",
-    "path":"folders/SCRIPTS/Function.yy",
+    "name":"GENERAL",
+    "path":"folders/SCRIPTS/CORE/GENERAL.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

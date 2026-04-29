@@ -1,4 +1,4 @@
-function set_setting(_section, _key, _valor, _isreal = true){
+function save_setting(_section, _key, _valor, _isreal = true){
 	ini_open("settings.ini")
 	if _isreal
 		ini_write_real(_section, _key, real(_valor))

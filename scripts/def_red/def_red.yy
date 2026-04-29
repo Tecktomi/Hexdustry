@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"def_red",
   "parent":{
-    "name":"SCRIPTS",
-    "path":"folders/SCRIPTS.yy",
+    "name":"CORE",
+    "path":"folders/SCRIPTS/CORE.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

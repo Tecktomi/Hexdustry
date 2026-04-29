@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"draw_circle_off",
   "parent":{
-    "name":"DRAW",
-    "path":"folders/SCRIPTS/DRAW.yy",
+    "name":"DRAW_OFF",
+    "path":"folders/SCRIPTS/DRAW/DRAW_OFF.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

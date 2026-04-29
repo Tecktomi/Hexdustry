@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":6,
   "parent":{
-    "name":"Drones",
-    "path":"folders/SPRITES/Drones.yy",
+    "name":"DRON",
+    "path":"folders/SPRITES/DRON.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

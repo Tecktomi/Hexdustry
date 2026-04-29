@@ -16,7 +16,7 @@ function add_mision(){
 			mision_objetivo = [2]
 			var c = irandom(min(array_length(tecnologia_nivel_edificios) - 1, floor((misiones_pasadas + 2) / 3)))
 			do var b = tecnologia_nivel_edificios[c, irandom(array_length(tecnologia_nivel_edificios[c]) - 1)]
-			until edificio_construible[b]
+			until tag_edificio_construible[b]
 			mision_target_id = [b]
 			mision_target_num = [irandom_range(max(1, 20 * (1 + misiones_pasadas) / edificio_precio[b]), min(1, 40 * (1 + misiones_pasadas) / edificio_precio[b]))]
 		}
