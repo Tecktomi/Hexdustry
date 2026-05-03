@@ -13,10 +13,10 @@ function save_edificio(buffer, edificio = control.null_edificio){
 		mask += (edificio.mode) << c++
 		mask += edificio.waiting << c++
 		mask += edificio.idle << c++
-		mask += (edificio.link != null_edificio) << c++
+		mask += (edificio.link != null_edificio and edificio.link.punteros[12] != -1) << c++
 		mask += (edificio.vida != edificio_vida[edificio.index]) << c++
-		mask += (edificio.target != null_dron) << c++
-		mask += (edificio.target_edificio != null_edificio) << c++
+		mask += (edificio.target != null_dron and edificio.target.punteros[2] != -1) << c++
+		mask += (edificio.target_edificio != null_edificio and edificio.target_edificio.punteros[12] != -1) << c++
 		mask += (edificio.flujo_consumo != 0) << c++
 		mask += (edificio.flujo_consumo_max != 0) << c++
 		mask += (edificio.energia_consumo != 0) << c++
@@ -54,9 +54,15 @@ function save_edificio(buffer, edificio = control.null_edificio){
 		if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(edificio.edificio_index))
 		c++
 		if mask & (1 << c++){
-			var len = array_length(edificio.procesador_link)
-			buffer_write(buffer, buffer_u16, real(len))
-			for(var a = 0; a < len; a++)
+			var len = array_length(edificio.procesador_link), len_2 = 0
+			for(var a = 0; a < len; a++){
+				if edificio.procesador_link[a] != null_edificio and edificio.procesador_link[a].punteros[12] != -1
+					len_2++
+				else
+					array_delete(edificio.procesador_link, a--, 1)
+			}
+			buffer_write(buffer, buffer_u16, real(len_2))
+			for(var a = 0; a < len_2; a++)
 				buffer_write(buffer, buffer_u16, real(edificio.procesador_link[a].punteros[12]))
 		}
 		c++

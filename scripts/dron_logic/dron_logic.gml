@@ -351,11 +351,33 @@ function dron_logic(){
 							if dron.step >= dron_step[index] + 75
 								dron.step = 0
 						}
-						else if index = idd_reparador or dis > 10_000{//100^2
+						else if index = idd_kamikaze or dis > 10_000{//100^2
 							var dis_2 = sqrt(dis)
 							dron.x += vel * (edificio.center_x - dron.x) / dis_2
 							dron.y += vel * (edificio.center_y - dron.y) / dis_2
 						}
+					}
+					else if tag_dron_marino[index] and dis > dron_alcance[index]{
+						var min_dis = grid_water_distance[# aaa, bbb]
+						for(var i = 0; i < 6; i++){
+							temp_complex = next_to(aaa, bbb, i)
+							var aaaa = temp_complex[0], bbbb = temp_complex[1]
+							if aaaa < 0 or bbbb < 0 or aaaa >= xsize or bbbb >= ysize
+								continue
+							var disi = grid_water_distance[# aaaa, bbbb]
+							if disi = infinity{
+								dron.x -= vel * cos_angle_dir[i] / 5
+								dron.y += vel * sin_angle_dir[i] / 5
+							}
+							else if disi < min_dis{
+								min_dis = disi
+								dir = i
+							}
+						}
+						if dir = -1
+							dir = 0
+						dron.x += vel * cos_angle_dir[dir]
+						dron.y -= vel * sin_angle_dir[dir]
 					}
 				}
 				if dis < dron_alcance[index]{

@@ -186,19 +186,27 @@ function save_game_buffer(buffer){
 			var municion = municiones[a]
 			buffer_write(buffer, buffer_f16, real(municion.x))
 			buffer_write(buffer, buffer_f16, real(municion.y))
-			buffer_write(buffer, buffer_f16, real(municion.origen_x))
-			buffer_write(buffer, buffer_f16, real(municion.origen_y))
 			buffer_write(buffer, buffer_f16, real(municion.hmove))
 			buffer_write(buffer, buffer_f16, real(municion.vmove))
-			buffer_write(buffer, buffer_u8, real(municion.tipo))
+			var mask = 0, c = 0
+			mask += (municion.tipo != 0) << c++
+			mask += (municion.radio != 2500) << c++
+			mask += (municion.humo) << c++
+			mask += (municion.rastreador) << c++
+			mask += (municion.jugador != 2) << c++
+			mask += (municion.target != null_dron) << c++
+			mask += (municion.target_build != null_edificio) << c++
+			buffer_write(buffer, buffer_u8, mask)
+			c = 0
+			if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(municion.tipo))
 			buffer_write(buffer, buffer_f16, real(municion.dis))
 			buffer_write(buffer, buffer_f16, real(municion.dmg))
-			buffer_write(buffer, buffer_f16, real(municion.radio))
-			buffer_write(buffer, buffer_bool, bool(municion.humo))
-			buffer_write(buffer, buffer_bool, bool(municion.rastreador))
-			buffer_write(buffer, buffer_u8, real(municion.jugador))
-			buffer_write(buffer, buffer_u16, real(municion.target.punteros[2]))
-			buffer_write(buffer, buffer_u16, real(municion.target_build.punteros[12]))
+			if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(municion.radio))
+			c++
+			c++
+			if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(municion.jugador))
+			if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(municion.target.punteros[2]))
+			if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(municion.target_build.punteros[12]))
 		}
 	}
 }

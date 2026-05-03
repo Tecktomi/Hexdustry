@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"check_water_target",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"check_water_target",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

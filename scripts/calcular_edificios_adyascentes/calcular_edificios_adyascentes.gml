@@ -71,11 +71,11 @@ function calcular_edificios_adyascentes(edificio = control.null_edificio, set_re
 							if flag{
 								if in(temp_edificio_2.index, id_cinta_transportadora, id_cinta_magnetica) and temp_edificio_2.dir != c
 									flag = false
-								if flag and in(temp_edificio_2.index, id_enrutador, id_selector, id_overflow, id_tunel_salida, id_tunel) and in(temp_edificio_2.dir, c + 2, c + 3, (c + 4) mod 6)
+								if flag and (tag_edificio_salida_triple[temp_edificio_2.index] or temp_edificio_2.index = id_tunel) and in(temp_edificio_2.dir, c + 2, c + 3, (c + 4) mod 6)
 									flag = false
 								if flag and in(temp_edificio.index, id_cinta_transportadora, id_cinta_magnetica) and temp_edificio.dir = c + 3
 									flag = false
-								if flag and in(temp_edificio.index, id_enrutador, id_selector, id_overflow, id_tunel_salida) and in(temp_edificio.dir, c + 2, c + 3, (c + 4) mod 6)
+								if flag and tag_edificio_salida_triple[temp_edificio.index] and in(temp_edificio.dir, c + 2, c + 3, (c + 4) mod 6)
 									flag = false
 								if flag{
 									array_push(temp_edificio.inputs, temp_edificio_2)
@@ -99,11 +99,11 @@ function calcular_edificios_adyascentes(edificio = control.null_edificio, set_re
 							if flag{
 								if in(temp_edificio.index, id_cinta_transportadora, id_cinta_magnetica) and temp_edificio.dir != c + 3
 									flag = false
-								if flag and in(temp_edificio.index, id_enrutador, id_selector, id_overflow, id_tunel_salida, id_tunel) and in(temp_edificio.dir, c, c + 1, (c + 5) mod 6)
+								if flag and (tag_edificio_salida_triple[temp_edificio.index] or temp_edificio.index = id_tunel) and in(temp_edificio.dir, c, c + 1, (c + 5) mod 6)
 									flag = false
 								if flag and in(temp_edificio_2.index, id_cinta_transportadora, id_cinta_magnetica) and temp_edificio_2.dir = c
 									flag = false
-								if flag and in(temp_edificio_2.index, id_enrutador, id_selector, id_overflow, id_tunel_salida) and in(temp_edificio_2.dir, c, c + 1, (c + 5) mod 6)
+								if flag and tag_edificio_salida_triple[temp_edificio_2.index] and in(temp_edificio_2.dir, c, c + 1, (c + 5) mod 6)
 									flag = false
 								if flag{
 									array_push(temp_edificio_2.inputs, temp_edificio)

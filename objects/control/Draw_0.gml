@@ -457,7 +457,7 @@ if in(menu, 1, 3){
 					draw_sprite_off(planta_quimica_sprite[edificio.select], 0, aa, bb)
 				//Humo
 				if show_humo and tag_generadores_de_humo[index]{
-					if ((tag_generadores_de_humo_combustion[index] and edificio.fuel > 0) or (index = id_generador_geotermico and in(edificio.flujo.liquido, 0, 4)) or (index = id_refineria_de_petroleo and edificio.flujo.liquido = 2 and edificio.red.eficiencia > 0)){
+					if ((tag_generadores_de_humo_combustion[index] and edificio.fuel > 0) or (index = id_generador_geotermico and in(edificio.flujo.liquido, 0, 4)) or (index = id_refineria_de_petroleo and edificio.flujo.liquido = 2 and edificio.red.eficiencia > 0)) and image_index & 1{
 						var dir = direccion_viento + random_range(-pi / 4, pi / 4)
 						array_push(humos, add_humo(aa, bb, edificio.a, edificio.b, cos(dir), sin(dir), irandom_range(70, 100)))
 					}
@@ -3984,7 +3984,7 @@ if menu = 1 or menu = 3{
 			save_setting("", "info", info)
 		}
 		if keyboard_check_pressed(CONTROL_FLOW)
-			flow = (flow + 1) mod 9
+			flow = (flow + 1) mod 10
 	}
 }
 update_cursor()
@@ -4070,3 +4070,5 @@ if keyboard_check(CONTROL_TAB) and online{
 draw_sprite(spr_vineta, 0, 0, 0)
 if keyboard_check(ord("V"))
 	draw_text(mouse_x + 20, mouse_y, $"{jugador}\n{server_jugadores_nombre}")
+if keyboard_check_pressed(ord("V"))
+	check_water_target()

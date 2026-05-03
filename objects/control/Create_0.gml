@@ -553,6 +553,8 @@ puerto_carga_atended_enemigo = 0
 	ds_grid_clear(background_bool, false)
 	usable_grid_bool = ds_grid_create(xsize, ysize)
 	ds_grid_clear(usable_grid_bool, false)
+	grid_water_distance = ds_grid_create(xsize, ysize)
+	ds_grid_clear(grid_water_distance, infinity)
 #endregion
 //Enemigos
 efectos_nombre = ["Shock", "Fuego"]
@@ -801,7 +803,8 @@ ore_max = array_length(ore_sprite)
 			"Unidad terrestre máxima, dispara una ráfaga de explosivos de largo alcance",
 			"Vuela sobre sus enemigos soltando devastadores explosivos en línea recta",
 			"Reconstruye edificios destruidos",
-			"Mina recursos en el mapa y los lleva a un Almacén cercano"
+			"Mina recursos en el mapa y los lleva a un Almacén cercano",
+			"Dispara artillería, solo puede desplazarse desde el agua"
 		]
 	for(var a = array_length(dron_descripcion) - 1; a >= 0; a--)
 		dron_descripcion[a] = text_wrap(dron_descripcion[a], 400)
@@ -851,6 +854,7 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 	idd_bombardero = def_dron("Bombardero", spr_bombardero,, 800, 900, 1_600, [idr_bronce, idr_acero, idr_uranio_bruto, idr_modulos], [30, 40, 50, 5], 6000, true, 3, 80)
 	idd_reconstructor = def_dron("Reconstructor", spr_reconstructor,, 100, 1_600, 1_600, [idr_plastico, idr_bateria, idr_modulos], [30, 20, 1], 100, true, 2)
 	idd_minero = def_dron("Minero", spr_tanque, spr_minero, 200, 1600, 90_000, [idr_hierro, idr_acero, idr_electronicos, idr_modulos], [50, 25, 10, 1], 1200,, 0.7, 60)
+	idd_barco = def_dron("Barco", spr_barco,, 250, 900, 160_000, [idr_acero, idr_silicio, idr_electronicos], [40, 60, 20], 1000,, 2, 120)
 #endregion
 dron_max = array_length(dron_nombre)
 //Liquidos
@@ -1334,6 +1338,17 @@ edificio_key[id_recurso_infinito] = "1z"
 		tag_edificio_tuberia[id_deposito] = true
 		tag_edificio_tuberia[id_liquido_infinito] = true
 		tag_edificio_tuberia[id_tuberia_subterranea] = true
+	#endregion
+	#region edificio_salida_triple
+		tag_edificio_salida_triple = array_create(edificio_max, false)
+		tag_edificio_salida_triple[id_enrutador] = true
+		tag_edificio_salida_triple[id_selector] = true
+		tag_edificio_salida_triple[id_overflow] = true
+		tag_edificio_salida_triple[id_tunel_salida] = true
+	#endregion
+	#region dron_marino
+		tag_dron_marino = array_create(dron_max, false)
+		tag_dron_marino[idd_barco] = true
 	#endregion
 #endregion
 //Inputs y outputs de fábrica de drones y planta de reciclaje

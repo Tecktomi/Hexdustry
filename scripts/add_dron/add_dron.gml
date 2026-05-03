@@ -76,6 +76,8 @@ function add_dron(a, b, index, enemigo = true, _jugador = 1){
 					dron.target = temp_edificio
 				}
 			}
+			else if tag_dron_marino[index]
+				dron.target = nucleos[0]
 		}
 		else{
 			array_disorder_push(drones_aliados, dron, 0)
