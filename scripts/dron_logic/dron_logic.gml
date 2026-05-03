@@ -348,8 +348,10 @@ function dron_logic(){
 								vel *= 1.2
 							dron.x += lengthdir_x(vel, dron.dir)
 							dron.y += lengthdir_y(vel, dron.dir)
+							if dron.step >= dron_step[index] + 75
+								dron.step = 0
 						}
-						else if index = 3 or dis > 10_000{//100^2
+						else if index = idd_reparador or dis > 10_000{//100^2
 							var dis_2 = sqrt(dis)
 							dron.x += vel * (edificio.center_x - dron.x) / dis_2
 							dron.y += vel * (edificio.center_y - dron.y) / dis_2

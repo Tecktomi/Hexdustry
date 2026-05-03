@@ -17,6 +17,7 @@ function save_game_buffer(buffer){
 		buffer_write(buffer, buffer_u32, oleadas_timer)
 		buffer_write(buffer, buffer_u32, oleadas_tiempo)
 		buffer_write(buffer, buffer_u32, oleadas_tiempo_primera)
+		buffer_write(buffer, buffer_u8, oleada_count)
 		buffer_write(buffer, buffer_bool, tecnologia)
 		buffer_write(buffer, buffer_f16, tecnologia_precio_multiplicador)
 		buffer_write(buffer, buffer_f16, multiplicador_vida_enemigos)
@@ -59,6 +60,15 @@ function save_game_buffer(buffer){
 		for(var a = 0; a < rss_max; a++)
 			buffer_write(buffer, buffer_u16, clamp(jugador_recursos[0, a], 0, 65535))
 		buffer_write(buffer, buffer_u32, image_index)
+		var mask_tecnologia = 0, mask_tecnologia_desbloqueable = 0
+		for(var a = 0; a < edificio_max; a++){
+			if edificio_tecnologia[a]
+				mask_tecnologia |= 1 << a
+			if edificio_tecnologia_desbloqueable[a]
+				mask_tecnologia_desbloqueable |= 1 << a
+		}
+		buffer_write(buffer, buffer_u64, mask_tecnologia)
+		buffer_write(buffer, buffer_u64, mask_tecnologia_desbloqueable)
 		//Filtrar Edificios
 		len = array_length(edificios_totales)
 		var b = 0

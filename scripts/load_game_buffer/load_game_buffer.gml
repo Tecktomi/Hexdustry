@@ -30,9 +30,10 @@ function load_game_buffer(buffer){
 		oleadas_timer = buffer_read(buffer, buffer_u32)
 		oleadas_tiempo = buffer_read(buffer, buffer_u32)
 		oleadas_tiempo_primera = buffer_read(buffer, buffer_u32)
+		oleada_count = buffer_read(buffer, buffer_u8)
 		tecnologia = buffer_read(buffer, buffer_bool)
 		tecnologia_precio_multiplicador = buffer_read(buffer, buffer_f16)
-		multiplicador_vida_enemigos = buffer_read(buffer, buffer_u16)
+		multiplicador_vida_enemigos = buffer_read(buffer, buffer_f16)
 		dificultad = buffer_read(buffer, buffer_s8)
 		modo_misiones = buffer_read(buffer, buffer_bool)
 		#region Misiones
@@ -75,6 +76,12 @@ function load_game_buffer(buffer){
 		for(var a = 0; a < rss_max; a++)
 			array_set(jugador_recursos[0], a, real(buffer_read(buffer, buffer_u16)))
 		image_index = buffer_read(buffer, buffer_u32)
+		var mask_tecnologia = buffer_read(buffer, buffer_u64)
+		var mask_tecnologia_desbloqueable = buffer_read(buffer, buffer_u64)
+		for(var a = 0; a < edificio_max; a++){
+			edificio_tecnologia[a] = bool(mask_tecnologia & (1 << a))
+			edificio_tecnologia_desbloqueable[a] = bool(mask_tecnologia_desbloqueable & (1 << a))
+		}
 		//Construir edificios
 		len = real(buffer_read(buffer, buffer_u16))
 		var temp_edificios_target = array_create(len, -1)
@@ -156,9 +163,9 @@ function load_game_buffer(buffer){
 			if temp_dron_target[i] != -1
 				drones[i].target_dron = drones[temp_dron_target[i]]
 		//Referencias cruzadas edificio-dron
-		len = array_length(edificios_totales)
+		len = array_length(temp_edificios_target)
 		for(var a = 0; a < len; a++)
-			if a < array_length(edificios_totales) and temp_edificios_target[a] != -1{
+			if temp_edificios_target[a] != -1{
 				var edificio = edificios_totales[a], dron = drones[temp_edificios_target[a]]
 				array_disorder_push(dron.torres, edificio, 2)
 				edificio.target = dron
