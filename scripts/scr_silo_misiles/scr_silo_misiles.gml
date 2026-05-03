@@ -52,6 +52,7 @@ function scr_silo_misiles(edificio = control.null_edificio){
 					explosion(edificio.array_real[2] + random_range(-10, 10), edificio.array_real[3] + random_range(-10, 10),, edificio.enemigo,,,, edificio.jugador)
 					clear_silo_de_misiles(edificio)
 				}
+				draw_circle_off(edificio.array_real[2], edificio.array_real[3], edificio.fuel, true)
 			}
 			//Misil de Racimo
 			else if edificio.select = 1 and edificio.array_real[2] != -1{
@@ -65,6 +66,7 @@ function scr_silo_misiles(edificio = control.null_edificio){
 					if edificio.fuel = 0
 						clear_silo_de_misiles(edificio)
 				}
+				draw_circle_off(edificio.array_real[2], edificio.array_real[3], edificio.fuel, true)
 			}
 			//Misil Nuclear
 			else if edificio.select = 2{

@@ -9,6 +9,7 @@ function clear_silo_de_misiles(edificio = control.null_edificio){
 		edificio.array_real[3] = -1
 		for(var b = 0; b < array_length(misiles_precio_id[edificio.select]); b++)
 			edificio.carga[misiles_precio_id[edificio.select, b]] = 0
+		edificio.carga_total = 0
 		edificio.select = -1
 	}
 }
