@@ -10,7 +10,7 @@ function save_edificio(buffer, edificio = control.null_edificio){
 		mask += (edificio.carga_id != 0) << c++
 		mask += (edificio.fuel != 0) << c++
 		mask += (edificio.select != -1) << c++
-		mask += (not edificio.mode) << c++
+		mask += (edificio.mode) << c++
 		mask += edificio.waiting << c++
 		mask += edificio.idle << c++
 		mask += (edificio.link != null_edificio) << c++
@@ -39,7 +39,7 @@ function save_edificio(buffer, edificio = control.null_edificio){
 			if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(edificio.carga[a]))
 		if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(edificio.carga_id))
 		if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(edificio.fuel))
-		if mask & (1 << c++) buffer_write(buffer, buffer_s8, real(edificio.select))
+		if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(edificio.select))
 		c++
 		c++
 		c++

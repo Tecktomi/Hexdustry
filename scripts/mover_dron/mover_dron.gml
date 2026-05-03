@@ -1,6 +1,6 @@
-function mover_dron(dron = control.null_dron, x, y, server = false){
+function mover_dron(dron = control.null_dron, x, y, _server = false){
 	with control{
-		if online and not server{
+		if online and not _server{
 			server_mover_dron(x, y, dron)
 			if not servidor
 				exit

@@ -1,5 +1,6 @@
 function server_hello(){
 	with control{
+		clear_edificios()
 		var buffer = buffer_create(2, buffer_grow, 1)
 		buffer_write(buffer, buffer_u8, 1) //Hello
 		buffer_write(buffer, buffer_string, online_nombre)

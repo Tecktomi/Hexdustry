@@ -48,7 +48,7 @@ function game_start(_nucleo = true){
 		for(var a = array_length(drones_aliados) - 1; a >= 0; a--)
 			delete_dron(drones_aliados[a])
 		for(var a = 0; a < rss_max; a++)
-			jugador_recursos[0, a] = carga_inicial[a]
+			array_set(jugador_recursos[0], a, carga_inicial[a])
 		for(var a = 0; a < chunk_xsize; a++)
 			for(var b = 0; b < chunk_ysize; b++)
 				update_background(a * chunk_width, b * chunk_height)

@@ -10,7 +10,7 @@ else{
 	font_titulo = ft_titulo_android
 }
 draw_set_font(font_normal)
-FILE_VERSION = 2026_04_27
+FILE_VERSION = 2026_04_30
 PROCESADOR_VERSION = 2026_03_25
 size_size = [1, 3, 7, 12, 19, 27, 37]
 size_borde = [6, 9, 12, 15, 18, 21]
@@ -587,6 +587,7 @@ null_dron = {
 	oleada : 0,
 	random_int : random(1),
 	selected : false,
+	jugador : 0,
 	punteros : array_create(2, 0)
 }
 enemigos = array_create(0, null_dron)
@@ -710,7 +711,7 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 rss_max = array_length(recurso_nombre)
 sort_recursos()
 usable_rss_bool = array_create(rss_max, false)
-jugador_recursos = [array_create(rss_max, 0)]
+jugador_recursos = array_create(1, array_create(rss_max, 0))
 //Disparos
 null_municion = add_municion()
 municiones = array_create(0, null_municion)
@@ -1282,13 +1283,57 @@ edificio_key[id_recurso_infinito] = "1z"
 		tag_edificio_seteable[id_silo_de_misiles] = true
 		tag_edificio_seteable[id_fabrica_de_drones_grande] = true
 	#endregion
-	#region tag_edificio_construible
+	#region edificio_construible
 		tag_edificio_construible = array_create(edificio_max, true)
 		tag_edificio_construible[id_nucleo] = false
 		tag_edificio_construible[id_tunel_salida] = false
 		tag_edificio_construible[id_energia_infinita] = false
 		tag_edificio_construible[id_liquido_infinito] = false
 		tag_edificio_construible[id_recurso_infinito] = false
+	#endregion
+	#region edificio_piedra
+		tag_edificio_piedra = array_create(edificio_max, false)
+		tag_edificio_piedra[id_nucleo] = true
+		tag_edificio_piedra[id_triturador] = true
+		tag_edificio_piedra[id_fabrica_de_concreto] = true
+	#endregion
+	#region edificio_uranio
+		tag_edificio_uranio = array_create(edificio_max, false)
+		tag_edificio_uranio[id_nucleo] = true
+		tag_edificio_uranio[id_rifle] = true
+		tag_edificio_uranio[id_mortero] = true
+		tag_edificio_uranio[id_fabrica_de_drones_grande] = true
+	#endregion
+	#region recurso_piedra
+		tag_recurso_piedra = array_create(rss_max, false)
+		tag_recurso_piedra[idr_piedra] = true
+		tag_recurso_piedra[idr_piedra_cuprica] = true
+		tag_recurso_piedra[idr_piedra_ferrica] = true
+		tag_recurso_piedra[idr_piedra_sulfatada] = true
+	#endregion
+	#region recurso_uranios
+		tag_recurso_uranio = array_create(rss_max, false)
+		tag_recurso_uranio[idr_uranio_bruto] = true
+		tag_recurso_uranio[idr_uranio_empobrecido] = true
+		tag_recurso_uranio[idr_uranio_enriquecido] = true
+	#endregion
+	#region edificio_generador
+		tag_edificio_generador = array_create(edificio_max, false)
+		tag_edificio_generador[id_generador] = true
+		tag_edificio_generador[id_bateria] = true
+		tag_edificio_generador[id_panel_solar] = true
+		tag_edificio_generador[id_energia_infinita] = true
+		tag_edificio_generador[id_turbina] = true
+		tag_edificio_generador[id_generador_geotermico] = true
+		tag_edificio_generador[id_planta_nuclear] = true
+		tag_edificio_generador[id_torre_de_alta_tension] = true
+	#endregion
+	#region edificio_tuberia
+		tag_edificio_tuberia = array_create(edificio_max, false)
+		tag_edificio_tuberia[id_tuberia] = true
+		tag_edificio_tuberia[id_deposito] = true
+		tag_edificio_tuberia[id_liquido_infinito] = true
+		tag_edificio_tuberia[id_tuberia_subterranea] = true
 	#endregion
 #endregion
 //Inputs y outputs de fábrica de drones y planta de reciclaje
@@ -1616,7 +1661,17 @@ null_beta = {
 beta = ds_grid_create(xsize, ysize)
 ds_grid_clear(beta, null_beta)
 betas = array_create(0, null_beta)
-explosion_queue = array_create(0, {x : 0, y : 0, edificio : null_edificio, enemigo : false, radio : 0, dmg : 0, incendiario : false})
+null_explosion = {
+	x : 0,
+	y : 0,
+	edificio : null_edificio,
+	enemigo : false,
+	radio : 0,
+	dmg : 0,
+	incendiario : false,
+	jugador : 0
+}
+explosion_queue = array_create(0, null_explosion)
 explosion_fx_queue = array_create(0, explosion_fx(0, 0, 0))
 set_idioma()
 biome_seed = 0

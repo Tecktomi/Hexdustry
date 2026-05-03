@@ -1,8 +1,8 @@
-function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
+function add_edificio(index, dir, a, b, _jugador = jugador){
 	with control{
 		if edificio_bool[# a, b]
 			exit
-		var temp_complex = abtoxy(a, b), chunk_x = clamp(floor(a / chunk_width), 0, chunk_xsize - 1), chunk_y = clamp(floor(b / chunk_height), 0, chunk_ysize - 1)
+		var temp_complex = abtoxy(a, b), chunk_x = clamp(floor(a / chunk_width), 0, chunk_xsize - 1), chunk_y = clamp(floor(b / chunk_height), 0, chunk_ysize - 1), enemigo = (jugador != _jugador)
 		x = temp_complex[0]
 		y = temp_complex[1]
 		var edificio = {
@@ -75,7 +75,7 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 			// 0 = edificios, 1 = chunk_edificios, 2 = [torres_tension, plantas_reciclaje, torres_reparadoras, puertos_carga, target.torres, almacenes], 3 = luz, 4 = edificios_activos
 			// 5 = red, 6 = flujo, 7 = torres, 8 = edificios_index, 9 = edificio_dinamico/estatico, 10 = edificio_draw, 11 = edificios_totales, 12 = data.edificios, 13 = data.edificios_id, 14 = data.chunk_edificios
 			punteros : array_create(12, 0),
-			enemigo : enemigo,
+			enemigo : (jugador != _jugador),
 			prioridad : edificio_prioridad[index],
 			inputs_carga : array_create(0, null_edificio),
 			outputs_carga : array_create(0, null_edificio),
@@ -265,50 +265,53 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 					temp_enemigo.target = edificio_cercano[# temp_complex[0], temp_complex[1]]
 			}
 		}
-		else if index = id_ensambladora and (edificio_tecnologia[id_modulo] or not tecnologia){
-			for(var c = array_length(temp_list_arround) - 1; c >= 0; c--){
-				temp_complex = temp_list_arround[c]
-				var aa = temp_complex[0], bb = temp_complex[1]
-				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
-					continue
-				if edificio_bool[# aa, bb]{
-					var temp_edificio = edificio_id[# aa, bb]
-					if temp_edificio.index = id_ensambladora and not temp_edificio.mode{
-						for(c = 0; c < rss_max; c++)
-							if c != idr_electronicos
-								temp_edificio.carga[c] = 0
-						edificio.mode = true
-						temp_edificio.mode = true
-						edificio.link = temp_edificio
-						temp_edificio.link = edificio
-						edificio.carga_max[idr_cobre] = 0
-						edificio.carga_input[idr_cobre] = false
-						edificio.carga_max[idr_silicio] = 0
-						edificio.carga_input[idr_silicio] = false
-						edificio.carga_max[idr_electronicos] = 10
-						edificio.carga_input[idr_electronicos] = true
-						edificio.carga_max[idr_plastico] = 10
-						edificio.carga_input[idr_plastico] = true
-						edificio.carga_max[idr_bateria] = 10
-						edificio.carga_input[idr_bateria] = true
-						edificio.carga_output[idr_modulos] = true
-						edificio.carga_output[idr_electronicos] = false
-						temp_edificio.carga_max[idr_cobre] = 0
-						temp_edificio.carga_input[idr_cobre] = false
-						temp_edificio.carga_max[idr_silicio] = 0
-						temp_edificio.carga_input[idr_silicio] = false
-						temp_edificio.carga_max[idr_electronicos] = 10
-						temp_edificio.carga_input[idr_electronicos] = true
-						temp_edificio.carga_max[idr_plastico] = 10
-						temp_edificio.carga_input[idr_plastico] = true
-						temp_edificio.carga_max[idr_bateria] = 10
-						temp_edificio.carga_input[idr_bateria] = true
-						temp_edificio.carga_output[idr_modulos] = true
-						temp_edificio.carga_output[idr_electronicos] = false
-						temp_edificio.proceso = 0
-						temp_edificio.start = false
-						calcular_edificios_adyascentes(temp_edificio)
-						break
+		else if index = id_ensambladora{
+			edificio.mode = false
+			if (edificio_tecnologia[id_modulo] or not tecnologia){
+				for(var c = array_length(temp_list_arround) - 1; c >= 0; c--){
+					temp_complex = temp_list_arround[c]
+					var aa = temp_complex[0], bb = temp_complex[1]
+					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+						continue
+					if edificio_bool[# aa, bb]{
+						var temp_edificio = edificio_id[# aa, bb]
+						if temp_edificio.index = id_ensambladora and not temp_edificio.mode{
+							for(c = 0; c < rss_max; c++)
+								if c != idr_electronicos
+									temp_edificio.carga[c] = 0
+							edificio.mode = true
+							temp_edificio.mode = true
+							edificio.link = temp_edificio
+							temp_edificio.link = edificio
+							edificio.carga_max[idr_cobre] = 0
+							edificio.carga_input[idr_cobre] = false
+							edificio.carga_max[idr_silicio] = 0
+							edificio.carga_input[idr_silicio] = false
+							edificio.carga_max[idr_electronicos] = 10
+							edificio.carga_input[idr_electronicos] = true
+							edificio.carga_max[idr_plastico] = 10
+							edificio.carga_input[idr_plastico] = true
+							edificio.carga_max[idr_bateria] = 10
+							edificio.carga_input[idr_bateria] = true
+							edificio.carga_output[idr_modulos] = true
+							edificio.carga_output[idr_electronicos] = false
+							temp_edificio.carga_max[idr_cobre] = 0
+							temp_edificio.carga_input[idr_cobre] = false
+							temp_edificio.carga_max[idr_silicio] = 0
+							temp_edificio.carga_input[idr_silicio] = false
+							temp_edificio.carga_max[idr_electronicos] = 10
+							temp_edificio.carga_input[idr_electronicos] = true
+							temp_edificio.carga_max[idr_plastico] = 10
+							temp_edificio.carga_input[idr_plastico] = true
+							temp_edificio.carga_max[idr_bateria] = 10
+							temp_edificio.carga_input[idr_bateria] = true
+							temp_edificio.carga_output[idr_modulos] = true
+							temp_edificio.carga_output[idr_electronicos] = false
+							temp_edificio.proceso = 0
+							temp_edificio.start = false
+							calcular_edificios_adyascentes(temp_edificio)
+							break
+						}
 					}
 				}
 			}
@@ -339,9 +342,7 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 					continue
 				if edificio_bool[# aa, bb]{
 					var temp_edificio = edificio_id[# aa, bb]
-					if ((edificio_energia[temp_edificio.index] and in(index, id_generador, id_bateria, id_panel_solar, id_energia_infinita, id_turbina, id_generador_geotermico, id_planta_nuclear, id_torre_de_alta_tension)) or
-							(edificio_energia[index] and in(temp_edificio.index, id_generador, id_bateria, id_panel_solar, id_energia_infinita, id_turbina, id_generador_geotermico, id_planta_nuclear, id_torre_de_alta_tension))) and
-							temp_edificio.jugador = _jugador{
+					if ((edificio_energia[temp_edificio.index] and tag_edificio_generador[index]) or (edificio_energia[index] and tag_edificio_generador[temp_edificio.index])) and temp_edificio.jugador = _jugador{
 						array_push(edificio.energia_link, temp_edificio)
 						array_push(temp_edificio.energia_link, edificio)
 						if not array_contains(temp_list_redes, temp_edificio.red)
@@ -358,10 +359,7 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 					continue
 				if (aa != a or bb != b) and edificio_bool[# aa, bb]{
 					var temp_edificio = edificio_id[# aa, bb]
-					if ((index = id_cable and edificio_energia[temp_edificio.index]) or temp_edificio.index = id_cable) and
-							distance_sqr(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y) <= 8100 and
-							not array_contains(edificio.energia_link, temp_edificio) and
-							temp_edificio.jugador = _jugador{//90^2
+					if ((index = id_cable and edificio_energia[temp_edificio.index]) or temp_edificio.index = id_cable) and distance_sqr(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y) <= 8100 and not array_contains(edificio.energia_link, temp_edificio) and temp_edificio.jugador = _jugador{//90^2
 						array_push(edificio.energia_link, temp_edificio)
 						array_push(temp_edificio.energia_link, edificio)
 						if not array_contains(temp_list_redes, temp_edificio.red)
@@ -457,8 +455,7 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 					continue
 				if edificio_bool[# aa, bb]{
 					var temp_edificio = edificio_id[# aa, bb]
-					if edificio_flujo[temp_edificio.index] and (in(index, id_tuberia, id_deposito, id_liquido_infinito, id_tuberia_subterranea) or
-					in(temp_edificio.index, id_tuberia, id_deposito, id_liquido_infinito, id_tuberia_subterranea)) and temp_edificio.jugador = _jugador{
+					if edificio_flujo[temp_edificio.index] and (tag_edificio_tuberia[index] or tag_edificio_tuberia[temp_edificio.index]) and temp_edificio.jugador = _jugador{
 						array_push(edificio.flujo_link, temp_edificio)
 						array_push(temp_edificio.flujo_link, edificio)
 						if not array_contains(temp_list_flujos, temp_edificio.flujo)
@@ -475,8 +472,8 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 					var aa = temp_complex[0], bb = temp_complex[1]
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 						continue
-					if edificio_bool[# temp_complex[0], temp_complex[1]] and not (temp_complex[0] = a and temp_complex[1] = b){
-						temp_edificio = edificio_id[# temp_complex[0], temp_complex[1]]
+					if edificio_bool[# aa, bb] and not (aa = a and bb = b){
+						temp_edificio = edificio_id[# aa, bb]
 						if temp_edificio.index = index and temp_edificio.link = null_edificio and temp_edificio.jugador = _jugador{
 							flag = true
 							break
@@ -499,7 +496,7 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 				edificio.flujo = new_flujo
 				array_disorder_push(new_flujo.edificios, edificio, 6)
 			}
-			else if in(index, id_tuberia, id_deposito, id_liquido_infinito, id_tuberia_subterranea){
+			else if tag_edificio_tuberia[index]{
 				var new_flujo = def_flujo()
 				for(var c = array_length(temp_list_flujos) - 1; c >= 0; c--){
 					var temp_flujo = temp_list_flujos[c]
@@ -567,10 +564,7 @@ function add_edificio(index, dir, a, b, enemigo = false, _jugador = jugador){
 		}
 		//Datos específicos
 		if index = id_almacen
-			if enemigo
-				array_disorder_push(almacenes_enemigos, edificio, 2)
-			else
-				array_disorder_push(almacenes, edificio, 2)
+			array_disorder_push(enemigo ? almacenes_enemigos : almacenes, edificio, 2)
 		if index = id_laser
 			edificio.mode = true
 		if in(index, id_rifle, id_mortero, id_onda_de_choque)

@@ -1,16 +1,16 @@
-function delete_edificio(edificio = control.null_edificio, destruccion = false, server = false, _cheat = control.cheat){
+function delete_edificio(edificio = control.null_edificio, destruccion = false, _server = false, _cheat = control.cheat){
 	with control{
 		if not edificio_bool[# edificio.a, edificio.b]{
 			show_debug_message($"###ADVERTENCIA###\n  Intentando eliminar {edificio_nombre[edificio.index]} en {edificio.a}, {edificio.b}")
 			exit
 		}
 		var index = edificio.index, pre_vida = edificio.vida, aa = edificio.a, bb = edificio.b, enemigo = edificio.enemigo
-		if online and not server and not destruccion{
+		if online and not _server and not destruccion{
 			server_delete_edificio(aa, bb)
 			if not servidor
 				exit
 		}
-		var chunk_x = edificio.chunk_x, chunk_y = edificio.chunk_y, _jugador = edificio.jugador
+		var chunk_x = edificio.chunk_x, chunk_y = edificio.chunk_y, _jugador = real(edificio.jugador)
 		edificio.vida = 0
 		if index = id_nucleo and not enemigo{
 			array_remove(nucleos, edificio)
@@ -359,13 +359,11 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			}
 		}
 		//Retorno de recursos
-		if not _cheat and not destruccion{
+		if not _cheat and not destruccion and ((_jugador = jugador) or (online and servidor)){
 			var b = pre_vida / edificio_vida[index]
-			for(var a = array_length(edificio_precio_id[index]) - 1; a >= 0; a--){
-				var c = floor(b * edificio_precio_num[index, a] / 2)
-				jugador_recursos[0, edificio_precio_id[index, a]] += c
-				nucleo.carga_total += c
-			}
+			var temp_jugador = (online and servidor) ? (_jugador - 2) : 0
+			for(var a = array_length(edificio_precio_id[index]) - 1; a >= 0; a--)
+				jugador_recursos[temp_jugador, edificio_precio_id[index, a]] += floor(b * edificio_precio_num[index, a] / 2)
 		}
 		//Camiar target de enemigos
 		if index != id_nucleo
@@ -416,7 +414,8 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				enemigo : not enemigo,
 				radio : 4900,
 				dmg : 200 + 30 * edificio.carga[idr_explosivo],
-				incendiario : false})
+				incendiario : false,
+				jugador : 0})
 		//Cruce de caminos
 		if index = id_cruce
 			for(var a = 0; a < 3; a++){
