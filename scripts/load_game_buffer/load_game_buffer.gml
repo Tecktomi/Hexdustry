@@ -173,25 +173,28 @@ function load_game_buffer(buffer){
 		//Municiones
 		len = real(buffer_read(buffer, buffer_u16))
 		repeat(len){
-			var a = buffer_read(buffer, buffer_f16), b = buffer_read(buffer, buffer_f16)
+			var a = buffer_read(buffer, buffer_f16)
+			var b = buffer_read(buffer, buffer_f16)
 			var hmove = real(buffer_read(buffer, buffer_f16))
 			var vmove = real(buffer_read(buffer, buffer_f16))
-			var tipo = real(buffer_read(buffer, buffer_u8))
+			var mask = real(buffer_read(buffer, buffer_u8)), c = 0
+			var tipo = 0, radio = 2500, humo = false, rastreador = false, _jugador = jugador, _target = -1, _target_build = -1
+			if mask & (1 << c++) tipo = real(buffer_read(buffer, buffer_u8))
 			var dis = real(buffer_read(buffer, buffer_f16))
 			var dmg = real(buffer_read(buffer, buffer_f16))
-			var radio = real(buffer_read(buffer, buffer_f16))
-			var humo = bool(buffer_read(buffer, buffer_bool))
-			var rastreador = bool(buffer_read(buffer, buffer_bool))
-			var _jugador = real(buffer_read(buffer, buffer_u8))
+			if mask & (1 << c++) radio = real(buffer_read(buffer, buffer_f16))
+			if mask & (1 << c++) humo = true
+			if mask & (1 << c++) rastreador = true
+			if mask & (1 << c++) _jugador = real(buffer_read(buffer, buffer_u8))
+			if mask & (1 << c++) _target = buffer_read(buffer, buffer_u16)
+			if mask & (1 << c++) _target_build = buffer_read(buffer, buffer_u16)
 			var municion = add_municion(a, b, hmove, vmove, tipo, dis, dmg, radio,,,, humo, rastreador, _jugador)
-			municion.x = a
-			municion.y = b
-			a = buffer_read(buffer, buffer_u16)
-			if a < 65535
-				municion.target = drones[a]
-			a = buffer_read(buffer, buffer_u16)
-			if a < 65535
-				municion.target_build = edificios_totales[a]
+			municion.origen_x = a
+			municion.origen_y = b
+			if _target != -1
+				municion.target = drones[_target]
+			if _target_build != -1
+				municion.target_build = edificios_totales[_target_build]
 		}
 		return true
 	}

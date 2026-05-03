@@ -73,6 +73,12 @@ function draw_path_find(){
 				}
 				break
 			}
+			case 9:{
+				for(var a = mina; a < maxa; a++) for(var b = minb; b < maxb; b++) if tag_agua[terreno[# a, b]]{
+					var temp_complex = abtoxy(a, b)
+					draw_text_off(temp_complex[0], temp_complex[1], grid_water_distance[# a, b])
+				}
+			}
 		}
 		draw_set_halign(h)
 		draw_set_valign(v)

@@ -210,7 +210,9 @@ function step(){
 				var temp_complex_list = get_size(spawn_x, spawn_y, 0, e)
 				for(var i = 0; i < min(array_length(temp_complex_list), d); i++){
 					var temp_complex = temp_complex_list[i], aa = clamp(temp_complex[0], 0, xsize - 1), bb = clamp(temp_complex[1], 0, ysize - 1), enemigo
-					if not terreno_caminable[terreno[# aa, bb]] or edificio_cercano[# aa, bb] = null_edificio or (tutorial = 0 and random(1) < 0.15){
+					if grid_water_distance[# aa, bb] < infinity
+						enemigo = add_dron(aa, bb, idd_barco, true, 1)
+					else if not terreno_caminable[terreno[# aa, bb]] or edificio_cercano[# aa, bb] = null_edificio or (tutorial = 0 and random(1) < 0.15){
 						if irandom(min(array_length(temp_complex_list), d)) > i + 11{
 							enemigo = add_dron(aa, bb, idd_bombardero, true, 1)
 							i += 10

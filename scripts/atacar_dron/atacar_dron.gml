@@ -100,6 +100,25 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 				dron.step = 0
 			return false
 		}
+		//Ataque barco
+		else if index = idd_barco{
+			if dron.step = dron_step[index]{
+				dron.step = 0
+				if target != null_dron or edificio != null_edificio{
+					var aa = dron.x, bb = dron.y, vel = 15
+					if target != null_dron
+						var target_x = target.x, target_y = target.y
+					else{
+						target_x = edificio.center_x
+						target_y = edificio.center_y
+					}
+					var dis = distance(aa, bb, target_x, target_y)
+					var municion = add_municion(aa, bb, vel * (target_x - aa) / dis, vel * (target_y - bb) / dis, 1, dis / vel, 20, 2500, target, edificio, dron.enemigo, true,, _jugador)
+					array_push(municiones, municion)
+				}
+			}
+			return false
+		}
 		return false
 	}
 }
