@@ -1,15 +1,14 @@
-function server_add_edificio(index, dir, a, b, enemigo, _cheat = control.cheat, _jugador = jugador){
+function server_add_edificio(index, dir, a, b, _cheat = control.cheat, _jugador = jugador){
 	with control{
 		var buffer = buffer_create(13, buffer_grow, 1)
 		buffer_write(buffer, buffer_u8, 3) //Add edificio
 		buffer_write(buffer, buffer_u32, real(timer))
-		buffer_write(buffer, buffer_u8, _jugador)
 		buffer_write(buffer, buffer_u8, real(index))
 		buffer_write(buffer, buffer_u8, real(dir))
 		buffer_write(buffer, buffer_u16, real(a))
 		buffer_write(buffer, buffer_u16, real(b))
-		buffer_write(buffer, buffer_bool, bool(enemigo))
 		buffer_write(buffer, buffer_bool, bool(_cheat))
+		buffer_write(buffer, buffer_u8, _jugador)
 		if servidor{
 			for(var i = 1; i < array_length(server_jugadores); i++)
 				network_send_packet(server_jugadores[i], buffer, buffer_tell(buffer))

@@ -1,9 +1,9 @@
-function set_edificio(mode, select, edificio = control.null_edificio, server = false){
+function set_edificio(mode, select, edificio = control.null_edificio, _server = false){
 	with control{
 		if edificio = null_edificio or edificio.vida <= 0
 			exit
 		var index = edificio.index
-		if online and not server{
+		if online and not _server{
 			server_set_edificio(mode, select, edificio)
 			if not servidor
 				exit

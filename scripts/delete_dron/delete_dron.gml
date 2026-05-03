@@ -1,6 +1,6 @@
 function delete_dron(dron = control.null_dron){
 	with control{
-		var enemigo = dron.enemigo, array_drones, _jugador = enemigo.jugador
+		var enemigo = dron.enemigo, array_drones, _jugador = dron.jugador
 		array_disorder_remove(drones, dron, 2)
 		dron_chunk_remove(dron)
 		//Dron enemigo

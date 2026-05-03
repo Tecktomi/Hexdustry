@@ -1,8 +1,8 @@
-function investigar(index, server = false, _cheat = control.cheat){
+function investigar(index, _server = false, _cheat = control.cheat){
 	with control{
 		if not edificio_tecnologia_desbloqueable[index]
 			exit
-		if online and not server{
+		if online and not _server{
 			server_investigar(index)
 			if not servidor
 				exit

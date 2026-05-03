@@ -1,15 +1,5 @@
-function load_game_buffer(buffer){
+function load_game_buffer_2026_04_27(buffer){
 	with control{
-		var _version = buffer_read(buffer, buffer_u32)
-		if _version != FILE_VERSION{
-			if _version = 2026_03_27
-				load_game_buffer_2026_03_27(buffer)
-			else if _version = 2026_04_01
-				load_game_buffer_2026_04_01(buffer)
-			else if _version = 2026_04_27
-				load_game_buffer_2026_04_27(buffer)
-			return false
-		}
 		mapa = buffer_read(buffer, buffer_s8)
 		if mapa = -1{
 			seed = buffer_read(buffer, buffer_u32)
@@ -72,9 +62,6 @@ function load_game_buffer(buffer){
 			mision_current_tiempo = buffer_read(buffer, buffer_s16)
 			mision_choosing_coord = buffer_read(buffer, buffer_bool)
 		#endregion
-		for(var a = 0; a < rss_max; a++)
-			array_set(jugador_recursos[0], a, real(buffer_read(buffer, buffer_u16)))
-		image_index = buffer_read(buffer, buffer_u32)
 		//Construir edificios
 		len = real(buffer_read(buffer, buffer_u16))
 		var temp_edificios_target = array_create(len, -1)
@@ -83,11 +70,12 @@ function load_game_buffer(buffer){
 			var dir = real(buffer_read(buffer, buffer_u8))
 			var a = real(buffer_read(buffer, buffer_u16))
 			var b = real(buffer_read(buffer, buffer_u16))
+			var enemigo = bool(buffer_read(buffer, buffer_bool))
 			var _jugador = real(buffer_read(buffer, buffer_u8))
 			if index = id_nucleo
 				var edificio = add_edificio(index, dir, a, b, _jugador)
 			else
-				edificio = construir(index, dir, a, b,, true, true, _jugador)
+				edificio = construir(index, dir, a, b, enemigo, true,, _jugador)
 			if index = id_procesador
 				load_procesador(buffer, edificio)
 		}
@@ -119,8 +107,7 @@ function load_game_buffer(buffer){
 			var b = real(buffer_read(buffer, buffer_u16))
 			var index = real(buffer_read(buffer, buffer_u8))
 			var enemigo = bool(buffer_read(buffer, buffer_bool))
-			var _jugador = real(buffer_read(buffer, buffer_u8))
-			var dron = add_dron(a, b, index, enemigo, _jugador)
+			var dron = add_dron(a, b, index, enemigo)
 		}
 		//Dron - estados
 		for(var i = 0; i < len; i++){
@@ -167,16 +154,17 @@ function load_game_buffer(buffer){
 		len = real(buffer_read(buffer, buffer_u16))
 		repeat(len){
 			var a = buffer_read(buffer, buffer_f16), b = buffer_read(buffer, buffer_f16)
-			var hmove = real(buffer_read(buffer, buffer_f16))
-			var vmove = real(buffer_read(buffer, buffer_f16))
-			var tipo = real(buffer_read(buffer, buffer_u8))
-			var dis = real(buffer_read(buffer, buffer_f16))
-			var dmg = real(buffer_read(buffer, buffer_f16))
-			var radio = real(buffer_read(buffer, buffer_f16))
-			var humo = bool(buffer_read(buffer, buffer_bool))
-			var rastreador = bool(buffer_read(buffer, buffer_bool))
-			var _jugador = real(buffer_read(buffer, buffer_u8))
-			var municion = add_municion(a, b, hmove, vmove, tipo, dis, dmg, radio,,,, humo, rastreador, _jugador)
+			var municion = add_municion(
+				buffer_read(buffer, buffer_f16),
+				buffer_read(buffer, buffer_f16),
+				buffer_read(buffer, buffer_f16),
+				buffer_read(buffer, buffer_f16),
+				buffer_read(buffer, buffer_u8),
+				buffer_read(buffer, buffer_f16),
+				buffer_read(buffer, buffer_f16),
+				buffer_read(buffer, buffer_f16),,,
+				buffer_read(buffer, buffer_bool),
+				buffer_read(buffer, buffer_bool))
 			municion.x = a
 			municion.y = b
 			a = buffer_read(buffer, buffer_u16)

@@ -1,11 +1,11 @@
-function add_modulo(edificio = control.null_edificio, server = false, _cheat = control.cheat){
+function add_modulo(edificio = control.null_edificio, _server = false, _cheat = control.cheat){
 	with control{
 		if edificio.modulo
 			exit
 		var b = edificio_modulo_tier[edificio.index]
 		if b = -1
 			exit
-		if online and not server{
+		if online and not _server{
 			server_add_modulo(edificio.a, edificio.b)
 			if not servidor
 				exit

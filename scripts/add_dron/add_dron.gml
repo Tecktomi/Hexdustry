@@ -1,4 +1,4 @@
-function add_dron(a, b, index, enemigo = true, _jugador = jugador){
+function add_dron(a, b, index, enemigo = true, _jugador = 1){
 	with control{
 		var temp_complex = abtoxy(a, b)
 		var dron = {
@@ -31,6 +31,7 @@ function add_dron(a, b, index, enemigo = true, _jugador = jugador){
 			oleada : 0,
 			random_int : random(1),
 			selected : false,
+			jugador : _jugador,
 			//0 = [enemigos, aliados], 1 = chunk_pointer, 2 = drones_totales, 3 = data.drones, 4 = data.chunk_drones
 			punteros : array_create(3, 0),
 		}

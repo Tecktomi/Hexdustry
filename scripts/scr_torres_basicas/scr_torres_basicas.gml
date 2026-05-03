@@ -112,22 +112,22 @@ function scr_torres_basicas(edificio = control.null_edificio){
 						edificio.carga[tiro_struct.recurso] -= tiro_struct.cantidad
 						edificio.carga_total -= tiro_struct.cantidad
 						dis = sqrt(dis)
-						var municion
+						var municion, _jugador = edificio.jugador
 						if index = id_lanzallamas
-							municion = add_municion(center_x, center_y, 20 * (target_x - center_x) / dis, 20 * (target_y - center_y) / dis, 2, dis / 20, tiro_struct.dmg * dmg_factor,, dron, target_edificio, enemigo)
+							municion = add_municion(center_x, center_y, 20 * (target_x - center_x) / dis, 20 * (target_y - center_y) / dis, 2, dis / 20, tiro_struct.dmg * dmg_factor,, dron, target_edificio, enemigo,,, _jugador)
 						else if index = id_mortero{
 							if edificio.carga[idr_compuesto_incendiario] > 0{
 								edificio.carga[idr_compuesto_incendiario]--
 								edificio.carga_total--
-								municion = add_municion(center_x, center_y, 20 * (target_x - center_x) / dis, 20 * (target_y - center_y) / dis, 3, dis / 20, tiro_struct.dmg * dmg_factor, 10_000, dron, target_edificio, enemigo)
+								municion = add_municion(center_x, center_y, 20 * (target_x - center_x) / dis, 20 * (target_y - center_y) / dis, 3, dis / 20, tiro_struct.dmg * dmg_factor, 10_000, dron, target_edificio, enemigo,,, _jugador)
 							}
 							else
-								municion = add_municion(center_x, center_y, 20 * (target_x - center_x) / dis, 20 * (target_y - center_y) / dis, 1, dis / 20, tiro_struct.dmg * dmg_factor, 4900, dron, target_edificio, enemigo)
+								municion = add_municion(center_x, center_y, 20 * (target_x - center_x) / dis, 20 * (target_y - center_y) / dis, 1, dis / 20, tiro_struct.dmg * dmg_factor, 4900, dron, target_edificio, enemigo,,, _jugador)
 						}
 						else if index = id_rifle
-							municion = add_municion(center_x, center_y, 30 * (target_x - center_x) / dis, 30 * (target_y - center_y) / dis, 4, dis / 30 + 2, tiro_struct.dmg * dmg_factor,, dron, target_edificio, enemigo)
+							municion = add_municion(center_x, center_y, 30 * (target_x - center_x) / dis, 30 * (target_y - center_y) / dis, 4, dis / 30 + 2, tiro_struct.dmg * dmg_factor,, dron, target_edificio, enemigo,,, _jugador)
 						else if index = id_torre_basica
-							municion = add_municion(center_x, center_y, 25 * (target_x - center_x) / dis, 25 * (target_y - center_y) / dis, 0, dis / 25, tiro_struct.dmg * dmg_factor,, dron, target_edificio, enemigo)
+							municion = add_municion(center_x, center_y, 25 * (target_x - center_x) / dis, 25 * (target_y - center_y) / dis, 0, dis / 25, tiro_struct.dmg * dmg_factor,, dron, target_edificio, enemigo,,, _jugador)
 						array_push(municiones, municion)
 						if index = id_lanzallamas{
 							angle = arctan2(center_y - target_y, center_x - target_x)

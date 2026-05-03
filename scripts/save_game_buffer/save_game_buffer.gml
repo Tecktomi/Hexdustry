@@ -56,6 +56,9 @@ function save_game_buffer(buffer){
 			buffer_write(buffer, buffer_s16, mision_current_tiempo)
 			buffer_write(buffer, buffer_bool, mision_choosing_coord)
 		#endregion
+		for(var a = 0; a < rss_max; a++)
+			buffer_write(buffer, buffer_u16, clamp(jugador_recursos[0, a], 0, 65535))
+		buffer_write(buffer, buffer_u32, image_index)
 		//Filtrar Edificios
 		len = array_length(edificios_totales)
 		var b = 0
@@ -74,7 +77,6 @@ function save_game_buffer(buffer){
 			buffer_write(buffer, buffer_u8, real(edificio.dir))
 			buffer_write(buffer, buffer_u16, real(edificio.a))
 			buffer_write(buffer, buffer_u16, real(edificio.b))
-			buffer_write(buffer, buffer_bool, real(edificio.enemigo))
 			buffer_write(buffer, buffer_u8, real(edificio.jugador))
 			if edificio.index = id_procesador
 				save_procesador(buffer, edificio)
@@ -118,6 +120,7 @@ function save_game_buffer(buffer){
 			buffer_write(buffer, buffer_u16, real(dron.b))
 			buffer_write(buffer, buffer_u8, real(dron.index))
 			buffer_write(buffer, buffer_bool, bool(dron.enemigo))
+			buffer_write(buffer, buffer_u8, real(dron.jugador))
 		}
 		//Estado drones
 		for(var a = 0; a < len; a++){
@@ -171,20 +174,21 @@ function save_game_buffer(buffer){
 		buffer_write(buffer, buffer_u16, len)
 		for(var a = 0; a < len; a++){
 			var municion = municiones[a]
-			buffer_write(buffer, buffer_f16, municion.x)
-			buffer_write(buffer, buffer_f16, municion.y)
-			buffer_write(buffer, buffer_f16, municion.origen_x)
-			buffer_write(buffer, buffer_f16, municion.origen_y)
-			buffer_write(buffer, buffer_f16, municion.hmove)
-			buffer_write(buffer, buffer_f16, municion.vmove)
-			buffer_write(buffer, buffer_u8, municion.tipo)
-			buffer_write(buffer, buffer_f16, municion.dis)
-			buffer_write(buffer, buffer_f16, municion.dmg)
-			buffer_write(buffer, buffer_f16, municion.radio)
-			buffer_write(buffer, buffer_bool, municion.enemigo)
-			buffer_write(buffer, buffer_bool, municion.humo)
-			buffer_write(buffer, buffer_u16, municion.target.punteros[2])
-			buffer_write(buffer, buffer_u16, municion.target_build.punteros[12])
+			buffer_write(buffer, buffer_f16, real(municion.x))
+			buffer_write(buffer, buffer_f16, real(municion.y))
+			buffer_write(buffer, buffer_f16, real(municion.origen_x))
+			buffer_write(buffer, buffer_f16, real(municion.origen_y))
+			buffer_write(buffer, buffer_f16, real(municion.hmove))
+			buffer_write(buffer, buffer_f16, real(municion.vmove))
+			buffer_write(buffer, buffer_u8, real(municion.tipo))
+			buffer_write(buffer, buffer_f16, real(municion.dis))
+			buffer_write(buffer, buffer_f16, real(municion.dmg))
+			buffer_write(buffer, buffer_f16, real(municion.radio))
+			buffer_write(buffer, buffer_bool, bool(municion.humo))
+			buffer_write(buffer, buffer_bool, bool(municion.rastreador))
+			buffer_write(buffer, buffer_u8, real(municion.jugador))
+			buffer_write(buffer, buffer_u16, real(municion.target.punteros[2]))
+			buffer_write(buffer, buffer_u16, real(municion.target_build.punteros[12]))
 		}
 	}
 }

@@ -49,7 +49,7 @@ function scr_silo_misiles(edificio = control.null_edificio){
 						array_push(humos, add_humo(edificio.center_x, edificio.center_y, edificio.a, edificio.b, cos(dir), sin(dir), irandom_range(120, 180)))
 					}
 				if edificio.fuel = 0{
-					explosion(edificio.array_real[2] + random_range(-10, 10), edificio.array_real[3] + random_range(-10, 10),, edificio.enemigo)
+					explosion(edificio.array_real[2] + random_range(-10, 10), edificio.array_real[3] + random_range(-10, 10),, edificio.enemigo,,,, edificio.jugador)
 					clear_silo_de_misiles(edificio)
 				}
 			}
@@ -61,7 +61,7 @@ function scr_silo_misiles(edificio = control.null_edificio){
 						array_push(humos, add_humo(edificio.center_x, edificio.center_y, edificio.a, edificio.b, cos(dir), sin(dir), irandom_range(120, 180)))
 					}
 				if edificio.fuel < 50 and edificio.fuel mod 10 = 0{
-					explosion(edificio.array_real[2] + random_range(-50, 50), edificio.array_real[3] + random_range(-50, 50),, edificio.enemigo)
+					explosion(edificio.array_real[2] + random_range(-50, 50), edificio.array_real[3] + random_range(-50, 50),, edificio.enemigo,,,, edificio.jugador)
 					if edificio.fuel = 0
 						clear_silo_de_misiles(edificio)
 				}

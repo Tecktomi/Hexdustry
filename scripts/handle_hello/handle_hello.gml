@@ -11,11 +11,11 @@ function handle_hello(socket, buffer){
 			break
 		}
 		#region Crear núcleo PvP
-			var new_nucleo_x = 10, new_nucleo_y = 10, tries = 0
+			var new_nucleo_x, new_nucleo_y, tries = 0
 			if server_pvp{
 				do{
-					new_nucleo_x = irandom(xsize - 1)
-					new_nucleo_y = irandom(ysize - 1)
+					new_nucleo_x = irandom_range(10, xsize - 11)
+					new_nucleo_y = irandom_range(10, ysize - 11)
 				}
 				until (far_from_nucleus(new_nucleo_x, new_nucleo_y) and check_colision(new_nucleo_x, new_nucleo_y, id_nucleo, 0)) or tries++ = 100
 				if tries = 100{

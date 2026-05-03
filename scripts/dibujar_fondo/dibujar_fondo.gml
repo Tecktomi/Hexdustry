@@ -1,7 +1,7 @@
 function dibujar_fondo(editor = 0){
 	with control{
 		if editor = 1{
-			var step = image_index / 10
+			var temp_step = image_index / 10
 			for(var a = mina; a < maxa; a++)
 				for(var b = minb; b < maxb; b++){
 					var temp_complex = abtoxy(a, b), aa = temp_complex[0], bb = temp_complex[1], d = terreno[# a, b], e = ore[# a, b]
@@ -12,25 +12,25 @@ function dibujar_fondo(editor = 0){
 					if e >= 0
 						draw_sprite_off(ore_sprite[e], round(ore_random[# a, b]) + 2 * (ore_amount[# a, b] < 50), aa, bb)
 					if d = 14
-						draw_sprite_off(spr_lava_animacion, step + 16 * ore_random[# a, b], aa, bb)
+						draw_sprite_off(spr_lava_animacion, temp_step + 16 * ore_random[# a, b], aa, bb)
 					else if d = 18
-						draw_sprite_off(olas[terreno_pared_index[# a, b]], step + 16 * ore_random[# a, b], aa, bb)
+						draw_sprite_off(olas[terreno_pared_index[# a, b]], temp_step + 16 * ore_random[# a, b], aa, bb)
 				}
 			break
 		}
 		//Fondos animados
 		if editor = 2{
-			var step = image_index / 10
+			var temp_step = image_index / 10
 			for(var a = mina; a < maxa; a++)
 				for(var b = minb; b < maxb; b++){
 					var c = terreno[# a, b]
 					if c = 14{
 						var temp_complex = abtoxy(a, b), aa = temp_complex[0], bb = temp_complex[1]
-						draw_sprite_off(spr_lava_animacion, step + 16 * ore_random[# a, b], aa, bb)
+						draw_sprite_off(spr_lava_animacion, temp_step + 16 * ore_random[# a, b], aa, bb)
 					}
 					else if c = 18{
 						var temp_complex = abtoxy(a, b), aa = temp_complex[0], bb = temp_complex[1]
-						draw_sprite_off(olas[terreno_pared_index[# a, b]], step + 16 * ore_random[# a, b], aa, bb)
+						draw_sprite_off(olas[terreno_pared_index[# a, b]], temp_step + 16 * ore_random[# a, b], aa, bb)
 					}
 				}
 			break

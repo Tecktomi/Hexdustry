@@ -56,7 +56,7 @@ function dron_logic(){
 				if edificio_bool[# dron.a, dron.b]{
 					var temp_edificio = edificio_id[# dron.a, dron.b]
 					if temp_edificio.index = id_mina{
-						explosion(temp_edificio.center_x, temp_edificio.center_y,, temp_edificio.enemigo, 10_000, 1000)
+						explosion(temp_edificio.center_x, temp_edificio.center_y,, temp_edificio.enemigo, 10_000, 1000,, dron.jugador)
 						delete_edificio(temp_edificio)
 						if dron.vida <= 0
 							continue

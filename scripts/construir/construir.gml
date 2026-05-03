@@ -1,9 +1,7 @@
-function construir(index, dir, mx, my, enemigo = false, server = false, _cheat = control.cheat, _jugador = jugador){
+function construir(index, dir, mx, my, enemigo = false, _server = false, _cheat = control.cheat, _jugador = jugador){
 	with control{
 		if enemigo
 			_jugador = 1
-		else if jugador != _jugador
-			enemigo = true
 		var edificio = control.null_edificio, temp_complex = abtoxy(mx, my), flag = check_colision(mx, my, index, dir)
 		//Reemplazar caminos
 		if flag and (tag_camino_o_tunel[index] or index = id_cruce) and edificio_bool[# mx, my]{
@@ -47,12 +45,14 @@ function construir(index, dir, mx, my, enemigo = false, server = false, _cheat =
 			return null_edificio
 		if in(index, id_tunel, id_tunel_salida) and build_able and build_target.index = id_tunel
 			index = id_tunel_salida
-		if online and not server{
-			server_add_edificio(real(index), real(dir), real(mx), real(my), enemigo, _cheat)
+		if online and not _server{
+			server_add_edificio(real(index), real(dir), real(mx), real(my), _cheat)
 			if not servidor
 				return null_edificio
 		}
-		edificio = add_edificio(index, dir, mx, my, enemigo, _jugador)
+		if jugador != _jugador
+			enemigo = true
+		edificio = add_edificio(index, dir, mx, my, _jugador)
 		//Algoritmo link de tuneles
 		if in(index, id_tunel, id_tunel_salida){
 			build_able = false
@@ -111,7 +111,7 @@ function construir(index, dir, mx, my, enemigo = false, server = false, _cheat =
 				for(var a = 0; a < array_length(edificio_precio_id[index]); a++)
 					jugador_recursos[temp_jugador, edificio_precio_id[index, a]] -= edificio_precio_num[index, a]
 			}
-			if not server and in(index, id_planta_quimica, id_fabrica_de_drones, id_silo_de_misiles, id_fabrica_de_drones_grande){
+			if not _server and in(index, id_planta_quimica, id_fabrica_de_drones, id_silo_de_misiles, id_fabrica_de_drones_grande){
 				clear_edit()
 				show_menu = true
 				show_menu_build = edificio

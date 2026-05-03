@@ -1,4 +1,4 @@
-function explosion(aa = 0, bb = 0, edificio = control.null_edificio, enemigo = true, radio = 14_400, dmg = 1000, incendiario = false){
+function explosion(aa = 0, bb = 0, edificio = control.null_edificio, enemigo = true, radio = 14_400, dmg = 1000, incendiario = false, _jugador = jugador){
 	with control{
 		sound_play(snd_explosion, aa, bb)
 		array_push(efectos, add_efecto(spr_explosion, 0, aa, bb, 24, 1 / 3))

@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"check_colision",
+  "%Name":"step",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"check_colision",
+  "name":"step",
   "parent":{
-    "name":"EDIFICIOS",
-    "path":"folders/SCRIPTS/EDIFICIOS.yy",
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
