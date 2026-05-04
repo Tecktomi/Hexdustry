@@ -7,7 +7,7 @@ function load_game_buffer_2026_03_27(buffer){
 			generar_bioma(biome_seed)
 		}
 		else
-			var file = load_escenario($"{default_maps[mapa]}.txt", false)
+			var file = load_escenario_buffer($"{default_maps[mapa]}.txt", false)
 		game_start()
 		timer = buffer_read(buffer, buffer_u32)
 		oleadas_timer = buffer_read(buffer, buffer_u32)

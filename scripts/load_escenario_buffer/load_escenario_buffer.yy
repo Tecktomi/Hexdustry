@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"load_escenario_buffer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"load_escenario_buffer",
+  "parent":{
+    "name":"LOAD",
+    "path":"folders/SCRIPTS/FILE/LOAD.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

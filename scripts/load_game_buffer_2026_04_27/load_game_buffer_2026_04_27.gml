@@ -8,10 +8,10 @@ function load_game_buffer_2026_04_27(buffer){
 		}
 		else if mapa < -1{
 			tutorial = -1 - mapa
-			load_escenario(tutorial_nombre[tutorial - 1], false, false)
+			load_escenario_buffer(tutorial_nombre[tutorial - 1], false, false)
 		}
 		else
-			load_escenario($"{default_maps[mapa]}.txt", false)
+			load_escenario_buffer($"{default_maps[mapa]}.txt", false)
 		game_start(false)
 		camx = buffer_read(buffer, buffer_f16)
 		camy = buffer_read(buffer, buffer_f16)

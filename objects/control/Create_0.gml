@@ -293,6 +293,7 @@ L = {}
 #endregion
 #region Misiones
 	mision_nombre = array_create(0, "")
+	mision_nombre_idioma = array_create(idiomas, array_create(0, ""))
 	mision_objetivo = array_create(0, 0)
 	mision_target_id = array_create(0, 0)
 	mision_target_num = array_create(0, 0)
@@ -300,7 +301,7 @@ L = {}
 	mision_tiempo_edit = array_create(0, false)
 	mision_tiempo_victoria = array_create(0, false)
 	mision_tiempo_show = array_create(0, true)
-	mision_texto = array_create(0, array_create(0, {x : 0, y : 0, texto : ""}))
+	mision_texto = array_create(0, array_create(0, {x : 0, y : 0, texto : "", texto_idioma : array_create(idiomas, "")}))
 	mision_camara_move = array_create(0, false)
 	mision_camara_x = array_create(0, 0)
 	mision_camara_y = array_create(0, 0)
@@ -309,6 +310,7 @@ L = {}
 	mision_camara_x_start = 0
 	mision_camara_y_start = 0
 	mision_texto_victoria = "Todos los objetivos cumplidos"
+	mision_texto_victoria_idioma = array_create(idiomas, "")
 	mision_actual = -1
 	mision_counter = 0
 	mision_current_tiempo = 0

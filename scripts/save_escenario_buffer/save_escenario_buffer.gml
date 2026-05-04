@@ -1,0 +1,86 @@
+function save_escenario_buffer(filename){
+	with control{
+		show_debug_message(mision_nombre_idioma)
+		var len_edi = array_length(edificios_totales), len_mis = array_length(mision_nombre)
+		var buffer = buffer_create(2 * xsize * ysize + 5 * len_edi + 2 * rss_max + 12 * len_mis + 11, buffer_grow, 1)
+		//Variables globales
+		buffer_write(buffer, buffer_u8, xsize)
+		buffer_write(buffer, buffer_u8, ysize)
+		buffer_write(buffer, buffer_u8, spawn_x)
+		buffer_write(buffer, buffer_u8, spawn_y)
+		//Config
+		var seek_config = buffer_tell(buffer)
+		buffer_write(buffer, buffer_u16, 0) //Placeholder
+		for(var a = 0; a < rss_max; a++)
+			buffer_write(buffer, buffer_u16, carga_inicial[a])
+		buffer_write(buffer, buffer_bool, oleadas)
+		buffer_write(buffer, buffer_u8, oleadas_tiempo)
+		buffer_write(buffer, buffer_u8, oleadas_tiempo_primera)
+		buffer_write(buffer, buffer_u8, multiplicador_vida_enemigos)
+		//Misiones
+		buffer_write(buffer, buffer_u8, len_mis)
+		if len_mis > 0
+			buffer_write(buffer, buffer_string, mision_texto_victoria)
+		for(var a = 0; a < len_mis; a++){
+			for(var b = 0; b < idiomas; b++)
+				buffer_write(buffer, buffer_string, mision_nombre_idioma[a, b])
+			buffer_write(buffer, buffer_u8, mision_objetivo[a])
+			buffer_write(buffer, buffer_u8, mision_target_id[a])
+			buffer_write(buffer, buffer_u16, mision_target_num[a])
+			buffer_write(buffer, buffer_u16, mision_tiempo[a])
+			buffer_write(buffer, buffer_bool, mision_tiempo_victoria[a])
+			buffer_write(buffer, buffer_bool, mision_tiempo_show[a])
+			buffer_write(buffer, buffer_bool, mision_camara_move[a])
+			if mision_camara_move[a]{
+				buffer_write(buffer, buffer_u16, mision_camara_x[a])
+				buffer_write(buffer, buffer_u16, mision_camara_y[a])
+			}
+			buffer_write(buffer, buffer_bool, mision_switch_oleadas[a])
+			var len_text = array_length(mision_texto[a])
+			buffer_write(buffer, buffer_u8, len_text)
+			for(var b = 0; b < len_text; b++){
+				var temp_text = mision_texto[a, b]
+				for(var c = 0; c < idiomas; c++)
+					buffer_write(buffer, buffer_string, temp_text.texto_idioma[c])
+				buffer_write(buffer, buffer_u16, temp_text.x)
+				buffer_write(buffer, buffer_u16, temp_text.y)
+			}
+		}
+		var seek_config_end = buffer_tell(buffer)
+		buffer_seek(buffer, buffer_seek_start, seek_config)
+		buffer_write(buffer, buffer_u16, seek_config_end)
+		buffer_seek(buffer, buffer_seek_start, seek_config_end)
+		//Terreno
+		for(var a = 0; a < xsize; a++)
+			for(var b = 0; b < ysize; b++){
+				buffer_write(buffer, buffer_u8, terreno[# a, b])
+				buffer_write(buffer, buffer_s8, ore[# a, b])
+				if ore[# a, b] >= 0
+					buffer_write(buffer, buffer_u16, ore_amount[# a, b])
+			}
+		//Edificios
+		buffer_write(buffer, buffer_u16, len_edi)
+		for(var a = 0; a < len_edi; a++){
+			var edificio = edificios_totales[a]
+			buffer_write(buffer, buffer_u8, edificio.index)
+			buffer_write(buffer, buffer_u8, edificio.dir)
+			buffer_write(buffer, buffer_u8, edificio.a)
+			buffer_write(buffer, buffer_u8, edificio.b)
+			buffer_write(buffer, buffer_u8, edificio.jugador)
+			if tag_edificio_seteable[edificio.index]{
+				buffer_write(buffer, buffer_bool, edificio.mode)
+				buffer_write(buffer, buffer_f16, edificio.select)
+			}
+		}
+		buffer_write(buffer, buffer_u16, seek_config)
+		buffer_save(buffer, filename)
+		buffer_delete(buffer)
+		//Minimapa
+		var b = array_get_index(save_files, filename), temp_text = string_delete(filename, string_pos(".", filename), 4)
+		filename = temp_text
+		var temp_sprite = minimapa()
+		sprite_save(temp_sprite, 0, temp_text + ".png")
+		if b = -1
+			array_push(save_files_png, temp_sprite)
+	}
+}
