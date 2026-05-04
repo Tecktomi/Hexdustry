@@ -1,5 +1,7 @@
 function resize_grid(minx = 0, miny = 0){
 	with control{
+		chunk_xsize = ceil(xsize / chunk_width)
+		chunk_ysize = ceil(ysize / chunk_height)
 		ds_grid_resize(background, chunk_xsize, chunk_ysize)
 		ds_grid_resize(background_bool, chunk_xsize, chunk_ysize)
 		for(var a = floor(minx / chunk_width); a < chunk_xsize; a++)

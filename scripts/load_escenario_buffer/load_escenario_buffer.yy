@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"save_escenario",
+  "%Name":"load_escenario_buffer",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"save_escenario",
+  "name":"load_escenario_buffer",
   "parent":{
-    "name":"SAVE",
-    "path":"folders/SCRIPTS/FILE/SAVE.yy",
+    "name":"LOAD",
+    "path":"folders/SCRIPTS/FILE/LOAD.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

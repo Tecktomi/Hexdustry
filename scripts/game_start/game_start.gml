@@ -53,5 +53,6 @@ function game_start(_nucleo = true){
 			for(var b = 0; b < chunk_ysize; b++)
 				update_background(a * chunk_width, b * chunk_height)
 		grafic_hideui = false
+		check_water_target()
 	}
 }

@@ -280,14 +280,7 @@ function step(){
 		if mision_actual = -1 and in(tutorial, 1, 2, 3, 4) and win = 0{
 			draw_set_halign(fa_right)
 			if draw_boton(room_width - 20, string_height(temp_text_right) + 64, L.win_siguiente_mision, ui_verde){
-				if tutorial = 1
-					var file = load_escenario("mision_2.txt")
-				else if tutorial = 2
-					file = load_escenario("mision_3.txt")
-				else if tutorial = 3
-					file = load_escenario("mision_4.txt")
-				else if tutorial = 4
-					file = load_escenario("mision_5.txt")
+				var file = load_escenario_buffer($"mision_{tutorial + 1}.txt")
 				if file != ""
 					game_start()
 				tutorial++

@@ -52,7 +52,7 @@ if menu = 0{
 			flow = 4
 			dificultad = -1
 		}
-		if mapa >= 0 and load_escenario($"{default_maps[mapa]}.txt", false) = ""
+		if mapa >= 0 and load_escenario_buffer($"{default_maps[mapa]}.txt", false) = ""
 			mapa = -1
 	}
 	if os_browser = browser_not_a_browser and file_exists("last_save.save"){
@@ -102,7 +102,7 @@ if menu = 0{
 				var temp_text = string_delete(save_files[a], string_pos(".", save_files[a]), 4)
 				if draw_sprite_boton(save_files_png[a],, xpos, ypos, 96, 96, 1){
 					tecnologia = true
-					load_escenario("Scenarios/" + save_files[a])
+					load_escenario_buffer("Scenarios/" + save_files[a])
 					game_start()
 				}
 				if draw_sprite_boton(spr_basura,, xpos - 10, ypos - 30,,, 1){
@@ -270,7 +270,7 @@ if menu = 0{
 					}
 					if draw_sprite_boton(default_maps_image[a],, xpos, ypos, 96, 96, 1, function(data){
 						sprite_boton_text = data.a}, {a : a}) and mapa != a{
-						var file = load_escenario($"{default_maps[a]}.txt", false)
+						var file = load_escenario_buffer($"{default_maps[a]}.txt", false)
 						if file != ""
 							mapa = a
 					}
@@ -1035,7 +1035,7 @@ if pausa = 1{
 						var temp_text = $"Saves/{day_format()}"
 						buffer_save(buffer, $"{temp_text}.save")
 						buffer_delete(buffer)
-						var temp_sprite = minimapa(terreno)
+						var temp_sprite = minimapa()
 						sprite_save(temp_sprite, 0, $"{temp_text}.png")
 					}
 				}
@@ -3929,14 +3929,7 @@ if menu = 1{
 				else if tutorial = 4
 					descubrir_zona(4, 2)
 				if in(tutorial, 1, 2, 3, 4) and draw_boton(room_width / 2, room_height - 250, L.win_siguiente_mision, ui_verde){
-					if tutorial = 1
-						var file = load_escenario("mision_2.txt")
-					else if tutorial = 2
-						file = load_escenario("mision_3.txt")
-					else if tutorial = 3
-						file = load_escenario("mision_4.txt")
-					else if tutorial = 4
-						file = load_escenario("mision_5.txt")
+					var file = load_escenario_buffer($"mision_{tutorial + 1}.txt")
 					if file != ""
 						game_start()
 					tutorial++
@@ -3949,12 +3942,7 @@ if menu = 1{
 			}
 			//Derrota
 			if (win mod 10) = 2 and tutorial > 0 and draw_boton(room_width / 2, room_height - 250, L.win_reintentar, ui_azul){
-				if tutorial = 1
-					load_escenario("mision_1.txt")
-				if tutorial = 2
-					load_escenario("mision_2.txt")
-				if tutorial = 3
-					load_escenario("mision_3.txt")
+				load_escenario_buffer($"mision_{tutorial}.txt")
 				game_start()
 			}
 			if draw_boton(room_width / 2, room_height - 150, L.win_salir, ui_rojo) or keyboard_check_pressed(vk_escape){

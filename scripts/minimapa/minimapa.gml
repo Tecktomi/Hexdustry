@@ -1,4 +1,4 @@
-function minimapa(terreno = control.terreno){
+function minimapa(){
 	with control{
 		var width = ds_grid_width(terreno), height = ds_grid_height(terreno), temp_surf = surface_create(width * 2, height), temp_array_color = array_create(0, c_black)
 		for(var a = 0; a < ore_max; a++)

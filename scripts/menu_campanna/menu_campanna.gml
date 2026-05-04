@@ -22,7 +22,7 @@ function menu_campanna(){
 						view = 2{
 						var escenario = world_escenario[# a, b]
 						if escenario != ""{
-							var file = load_escenario(escenario)
+							var file = load_escenario_buffer(escenario)
 							if file != ""
 								game_start()
 							tutorial = world_tutorial[# a, b]

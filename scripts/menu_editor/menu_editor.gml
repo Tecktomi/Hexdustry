@@ -113,7 +113,7 @@ function menu_editor(){
 				array_push(mision_switch_oleadas, false)
 				mision_actual = size
 				if save_file != ""
-					save_escenario(save_file + ".txt")
+					save_escenario_buffer(save_file + ".txt")
 			}
 			draw_set_color(c_ltgray)
 			draw_rectangle(room_width / 2, 110, room_width - 110, room_height - 110, false)
@@ -728,7 +728,7 @@ function menu_editor(){
 					if draw_sprite_boton(save_files_png[a],, xpos, ypos, 96, 96, 1){
 						input_layer = 0
 						get_file = 0
-						save_file = load_escenario("Scenarios/" + save_files[a])
+						save_file = load_escenario_buffer("Scenarios/" + save_files[a])
 						if string_pos(".", save_file) > 0
 							save_file = string_delete(save_file, string_pos(".", save_file), 4)
 					}
@@ -773,7 +773,7 @@ function menu_editor(){
 					}
 				}
 				if flag
-					save_escenario("Scenarios/" + save_file)
+					save_escenario_buffer("Scenarios/" + save_file)
 			}
 			if draw_boton(120, 120, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape){
 				keyboard_clear(vk_escape)

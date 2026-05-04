@@ -32,8 +32,8 @@ function check_water_target(){
 		}
 		show_debug_message(current_time - _time)
 		_time = current_time
-		while array_length(next_queue) > 0{
-			var bb = array_pop(next_queue), aa = array_pop(next_queue), val = real(grid_water_distance[# aa, bb] + 1)
+		for(var pointer = 0; pointer < array_length(next_queue); pointer++){
+			var aa = next_queue[pointer++], bb = next_queue[pointer], val = real(grid_water_distance[# aa, bb] + 1)
 			ds_grid_set(visited, aa, bb, false)
 			for(var i = 0; i < 6; i++){
 				var temp_complex = next_to(aa, bb, i), aaa = temp_complex[0], bbb = temp_complex[1]
