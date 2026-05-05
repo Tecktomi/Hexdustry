@@ -4058,5 +4058,3 @@ if keyboard_check(CONTROL_TAB) and online{
 draw_sprite(spr_vineta, 0, 0, 0)
 if keyboard_check(ord("V"))
 	draw_text(mouse_x + 20, mouse_y, $"{jugador}\n{server_jugadores_nombre}")
-if keyboard_check_pressed(ord("V"))
-	check_water_target()

@@ -4,10 +4,10 @@ function redo_pathfind(){
 			for(var b = 0; b < ysize; b++){
 				var temp_priority = ds_grid_get(edificio_cercano_priority, a, b)
 				ds_priority_clear(temp_priority)
-				ds_grid_clear(edificio_cercano, null_edificio)
-				ds_grid_clear(edificio_cercano_dis, infinity)
-				ds_grid_clear(edificio_cercano_dir, -1)
 			}
+		ds_grid_clear(edificio_cercano, null_edificio)
+		ds_grid_clear(edificio_cercano_dis, infinity)
+		ds_grid_clear(edificio_cercano_dir, -1)
 		edificios_targeteables = array_create(0, null_edificio)
 		for(var a = array_length(edificios) - 1; a >= 0; a--){
 			var temp_edificio = edificios[a]
