@@ -525,6 +525,8 @@ function set_idioma(){
 			dron_descripcion[idd_reconstructor] = "Rebuilds destroyed buildings"
 			dron_descripcion[idd_kamikaze] = "Approaches its target and explodes, dealing damage"
 			dron_descripcion[idd_helicoptero] = "Advanced aerial unit, attacks from a distance"
+			dron_nombre[idd_barco] = "Boat"
+			dron_descripcion[idd_barco] = "Fires artillery and can only move on water"
 			variable_struct_set(L, "guardar_plano", "Save Blueprint")
 			variable_struct_set(L, "cargar_plano", "Load Blueprint")
 			variable_struct_set(L, "server_error_nombre", "Error\n\nYour name: \"{0}\" is already in use on this server")
@@ -1062,6 +1064,8 @@ function set_idioma(){
 			dron_descripcion[idd_reconstructor] = "Reconstruye edificios destruidos"
 			dron_descripcion[idd_kamikaze] = "Se acerca a su objetivo y explota infilgiendo daño"
 			dron_descripcion[idd_helicoptero] = "Unidad aerea superior, dispara a distancia"
+			dron_nombre[idd_barco] = "Barco"
+			dron_descripcion[idd_barco] = "Dispara artillería, solo puede desplazarse desde el agua"
 			variable_struct_set(L, "guardar_plano", "Guardar Plano")
 			variable_struct_set(L, "cargar_plano", "Cargar Plano")
 			variable_struct_set(L, "server_error_nombre", "Error\n\nTu nombre: \"{0}\" ya está utilizado en ese servidor")
@@ -1598,6 +1602,8 @@ function set_idioma(){
 			dron_descripcion[idd_reconstructor] = "Восстанавливает разрушенные здания"
 			dron_descripcion[idd_kamikaze] = "Приближается к цели и взрывается, нанося урон"
 			dron_descripcion[idd_helicoptero] = "Продвинутая воздушная единица, атакует на расстоянии"
+			dron_nombre[idd_barco] = "Катер"
+			dron_descripcion[idd_barco] = "Ведёт артиллерийский огонь и может передвигаться только по воде"
 			variable_struct_set(L, "guardar_plano", "Сохранить чертеж")
 			variable_struct_set(L, "cargar_plano", "Загрузить чертеж")
 			variable_struct_set(L, "server_error_nombre", "Ошибка\n\nВаше имя: \"{0}\" уже используется на этом сервере")
