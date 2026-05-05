@@ -1,6 +1,5 @@
 function check_water_target(){
 	with control{
-		var _time = current_time
 		var visited = ds_grid_create(xsize, ysize)
 		ds_grid_clear(visited, false)
 		var next_queue = array_create(0, 0)
@@ -30,8 +29,6 @@ function check_water_target(){
 					}
 			}
 		}
-		show_debug_message(current_time - _time)
-		_time = current_time
 		for(var pointer = 0; pointer < array_length(next_queue); pointer++){
 			var aa = next_queue[pointer++], bb = next_queue[pointer], val = real(grid_water_distance[# aa, bb] + 1)
 			ds_grid_set(visited, aa, bb, false)
@@ -47,6 +44,5 @@ function check_water_target(){
 				}
 			}
 		}
-		show_debug_message(current_time - _time)
 	}
 }
