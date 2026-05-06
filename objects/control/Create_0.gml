@@ -8,7 +8,6 @@ if devise{
 else{
 	font_normal = ft_letra_android
 	font_titulo = ft_titulo_android
-	os_set_orientation_lock(true, false)
 }
 draw_set_font(font_normal)
 FILE_VERSION = 2026_04_30
@@ -402,8 +401,10 @@ L = {}
 #region Android
 	android_mouse_x = -1
 	android_mouse_y = -1
-	android_camx = -1
-	android_camy = -1
+	android_camx = camx
+	android_camy = camy
+	android_zoom = zoom
+	android_mouse_dis = 0
 #endregion
 null_sound = sound_play(snd_explosion, 0, 0, 0)
 null_edificio = {
