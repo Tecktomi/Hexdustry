@@ -781,7 +781,9 @@ function menu_editor(){
 				get_file = 0
 			}
 		}
-		if draw_boton(10, room_height - 140, L.volver, ui_rojo) or keyboard_check_pressed(vk_escape){
+		if draw_boton(10, room_height - 140, L.volver, ui_rojo) or keyboard_check_pressed(vk_escape) or (not devise and keyboard_check(vk_backspace)){
+			if not devise
+				keyboard_clear(vk_backspace)
 			menu = 0
 			camx = max(camx, 0)
 			build_enemigo = false

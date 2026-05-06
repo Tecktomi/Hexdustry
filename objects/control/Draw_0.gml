@@ -55,7 +55,7 @@ if menu = 0{
 		if mapa >= 0 and load_escenario_buffer($"{default_maps[mapa]}.txt", false) = ""
 			mapa = -1
 	}
-	if os_browser = browser_not_a_browser and file_exists("last_save.save"){
+	if os_browser = browser_not_a_browser and devise and file_exists("last_save.save"){
 		ypos += text_y * 1.2
 		if draw_boton(room_width / 2, ypos, L.continuar, ui_verde){
 			var buffer = buffer_create(128, buffer_grow, 1)
@@ -125,7 +125,9 @@ if menu = 0{
 				draw_text(room_width / 2, 200, L.menu_sin_archivos)
 				draw_set_halign(fa_left)
 			}
-			if draw_boton(120, 120, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape){
+			if draw_boton(120, 120, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape) or (not devise and keyboard_check(vk_backspace)){
+				if not devise
+					keyboard_clear(vk_backspace)
 				keyboard_clear(vk_escape)
 				get_file = 2
 			}
@@ -133,7 +135,9 @@ if menu = 0{
 		//Partida Nueva
 		else if get_file = 2{
 			ypos = 110
-			if draw_boton(120, ypos, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape){
+			if draw_boton(120, ypos, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape) or (not devise and keyboard_check(vk_backspace)){
+				if not devise
+					keyboard_clear(vk_backspace)
 				keyboard_clear(vk_escape)
 				get_file = 0
 				input_layer = 0
@@ -346,7 +350,9 @@ if menu = 0{
 				draw_text(room_width / 2, 200, L.menu_sin_archivos)
 				draw_set_halign(fa_left)
 			}
-			if draw_boton(120, 120, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape){
+			if draw_boton(120, 120, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape) or (not devise and keyboard_check(vk_backspace)){
+				if not devise
+					keyboard_clear(vk_backspace)
 				keyboard_clear(vk_escape)
 				get_file = 2
 			}
@@ -354,7 +360,9 @@ if menu = 0{
 		//Multijugador
 		else if get_file = 4{
 			ypos = 110
-			if draw_boton(120, ypos, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape){
+			if draw_boton(120, ypos, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape) or (not devise and keyboard_check(vk_backspace)){
+				if not devise
+					keyboard_clear(vk_backspace)
 				keyboard_clear(vk_escape)
 				get_file = 0
 				input_layer = 0
@@ -390,6 +398,8 @@ if menu = 0{
 				server_buscando_lan = false
 		}
 	}
+	else if not devise and keyboard_check(vk_backspace)
+		game_end()
 	draw_set_valign(fa_bottom)
 	draw_text(10, room_height - 10, "Tomás Ramdohr")
 	draw_set_valign(fa_top)
@@ -1044,7 +1054,9 @@ if pausa = 1{
 				draw_boton(xpos, ypos, L.descargar_para_jugar_en_LAN, ui_gris)
 		}
 		ypos += 40
-		if draw_boton(xpos, ypos, L.salir, ui_rojo){
+		if draw_boton(xpos, ypos, L.salir, ui_rojo) or (not devise and keyboard_check_pressed(vk_backspace)){
+			if not devise
+				keyboard_clear(vk_backspace)
 			clear_edit()
 			pausa = 0
 			cheat = false
@@ -1087,8 +1099,11 @@ if pausa = 1{
 		ypos += text_y * 1.2
 		if draw_boton(xpos, ypos, server_pvp ? "PVP" : "COOP", server_pvp ? ui_rojo : ui_verde)
 			server_pvp = not server_pvp
-		if draw_boton(xpos, room_height - 200, L.volver, ui_rojo)
+		if draw_boton(xpos, room_height - 200, L.volver, ui_rojo) or (not devise and keyboard_check_pressed(vk_backspace)){
+			if not devise
+				keyboard_clear(vk_backspace)
 			get_file = 0
+		}
 	}
 	//Controles
 	else{
@@ -1163,8 +1178,11 @@ if pausa = 1{
 				get_file = 1
 			}
 		}
-		if draw_boton(xpos, room_height - 200, L.volver, ui_rojo)
+		if draw_boton(xpos, room_height - 200, L.volver, ui_rojo) or (not devise and keyboard_check_pressed(vk_backspace)){
+			if not devise
+				keyboard_clear(vk_backspace)
 			get_file = 0
+		}
 	}
 	draw_set_halign(fa_left)
 	if os_type == os_windows
@@ -1198,10 +1216,6 @@ if pausa = 2{
 	draw_text(room_width / 2, 100, L.pausa)
 	draw_set_halign(fa_left)
 	draw_set_font(font_normal)
-	if keyboard_check_pressed(CONTROL_MENU){
-		keyboard_clear(CONTROL_MENU)
-		pausa = 1
-	}
 }
 var xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / zoom
 //Editar edificio
@@ -2463,12 +2477,12 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		}
 	}
 	//Seleccionar drones
-	else if mouse_check_button_pressed(mb_left) and build_index = 0{
+	else if devise and mouse_check_button_pressed(mb_left) and build_index = 0{
 		mx_clic = xmouse
 		my_clic = ymouse
 		clicked = true
 	}
-	if mouse_check_button(mb_left) and clicked and build_index = 0 and not keyboard_check(CONTROL_REPARAR){
+	if devise and mouse_check_button(mb_left) and clicked and build_index = 0 and not keyboard_check(CONTROL_REPARAR){
 		draw_set_alpha(0.5)
 		draw_set_color(c_black)
 		draw_rectangle_off(mx_clic, my_clic, xmouse, ymouse, false)
@@ -2484,7 +2498,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		}
 		draw_set_alpha(1)
 	}
-	if mouse_check_button_released(mb_left) and clicked and build_index = 0{
+	if devise and mouse_check_button_released(mb_left) and clicked and build_index = 0{
 		deselect_drones()
 		var minx = min(mx_clic, xmouse), miny = min(my_clic, ymouse), maxx = max(mx_clic, xmouse), maxy = max(my_clic, ymouse)
 		for(var a = array_length(drones_aliados) - 1; a >= 0; a--){
@@ -2623,8 +2637,14 @@ if sonido
 	for(var a = 0; a < sonidos_max; a++)
 		volumen[a] = 0
 #region Menú de edificios
-	var just_pressed = false
-	if mouse_check_button_pressed(mb_right) and build_index = 0 and not edificio_bool[# mx, my] and not keyboard_check(CONTROL_REPARAR) and pausa != 1{
+	//ANDROID
+	if not devise and build_menu = 0 and draw_sprite_boton(spr_construir,, room_width - 80, room_height - 80, 68, 68){
+		build_menu = 1
+		menu_x = clamp(mouse_x, 220, room_width - 220)
+		menu_y = clamp(mouse_y, 220, room_height - 220)
+	}
+	var just_pressed = false, _size = devise ? 100 : 200, _size_sqr = devise ? 10_000 : 40_000, _size_sqrx = devise ? 32 : 64, _size_sqry = devise ? 28 : 56
+	if devise and mouse_check_button_pressed(mb_right) and build_index = 0 and not edificio_bool[# mx, my] and not keyboard_check(CONTROL_REPARAR) and pausa != 1{
 		mouse_clear(mb_right)
 		if build_menu = 0{
 			build_menu = 1
@@ -2639,20 +2659,20 @@ if sonido
 	if build_menu = 1{
 		var b = 2 * pi / array_length(categoria_nombre_disponible)
 		draw_set_color(c_white)
-		draw_circle(menu_x, menu_y, 100, true)
-		draw_circle(menu_x, menu_y, 10, false)
+		draw_circle(menu_x, menu_y, _size, true)
+		draw_circle(menu_x, menu_y, _size / 10, false)
 		for(var a = 0; a < array_length(categoria_nombre_disponible); a++){
 			var angle = a * b
-			draw_sprite(spr_items, categoria_index_disponible[a], menu_x - 15 + 100 * cos(angle + b / 2), menu_y - 15 - 100 * sin(angle + b / 2))
-			draw_line(menu_x, menu_y, menu_x + 100 * cos(angle), menu_y - 100 * sin(angle))
+			draw_sprite_stretched(spr_items, categoria_index_disponible[a], menu_x - 15 + _size * cos(angle + b / 2), menu_y - 15 - _size * sin(angle + b / 2), _size_sqrx, _size_sqry)
+			draw_line(menu_x, menu_y, menu_x + _size * cos(angle), menu_y - _size * sin(angle))
 		}
-		if distance_sqr(mouse_x, mouse_y, menu_x, menu_y) < 10000{//100^2
+		if distance_sqr(mouse_x, mouse_y, menu_x, menu_y) < _size_sqr{//100^2
 			var temp_text = ""
 			var a = floor((array_length(categoria_nombre_disponible) - arctan2(mouse_y - menu_y, mouse_x - menu_x) / b) mod array_length(categoria_nombre_disponible))
 			draw_set_alpha(0.5)
-			draw_arco(menu_x, menu_y, 100, a * b, (a + 1) * b)
+			draw_arco(menu_x, menu_y, _size, a * b, (a + 1) * b)
 			draw_set_alpha(1)
-			draw_sprite(spr_items, categoria_index_disponible[a], menu_x - 15 + 100 * cos((a + 0.5) * b), menu_y - 15 - 100 * sin((a + 0.5) * b))
+			draw_sprite(spr_items, categoria_index_disponible[a], menu_x - 15 + _size * cos((a + 0.5) * b), menu_y - 15 - _size * sin((a + 0.5) * b))
 			temp_text = categoria_nombre[categoria_index_disponible[a]]
 			draw_text_background(min(room_width - string_width(temp_text), mouse_x + 20), min(room_height - string_height(temp_text), mouse_y), temp_text)
 			if mouse_check_button_pressed(mb_left){
@@ -2669,10 +2689,10 @@ if sonido
 	else if build_menu = 2{
 		var b = 2 * pi / array_length(menu_array)
 		draw_set_color(c_white)
-		draw_circle(menu_x, menu_y, 100, true)
+		draw_circle(menu_x, menu_y, _size, true)
 		for(var a = 0; a < array_length(menu_array); a++){
 			var angle = a * b, comprable = true, index = menu_array[a]
-			draw_line(menu_x, menu_y, menu_x + 100 * cos(angle), menu_y - 100 * sin(angle))
+			draw_line(menu_x, menu_y, menu_x + _size * cos(angle), menu_y - _size * sin(angle))
 			if not cheat{
 				comprable = edificio_tecnologia[index] or not tecnologia
 				if comprable
@@ -2680,20 +2700,20 @@ if sonido
 				if not comprable{
 					draw_set_alpha(0.5)
 					draw_set_color(c_red)
-					draw_arco(menu_x, menu_y, 100, angle, angle + b)
+					draw_arco(menu_x, menu_y, _size, angle, angle + b)
 					draw_set_alpha(1)
 					draw_set_color(c_white)
 				}
 			}
-			draw_sprite_stretched(edificio_sprite[index], 0, menu_x - 15 + 100 * cos(angle + b / 2), menu_y - 15 - 100 * sin(angle + b / 2), 30, 30)
+			draw_sprite_stretched(edificio_sprite[index], 0, menu_x - 15 + _size * cos(angle + b / 2), menu_y - 15 - _size * sin(angle + b / 2), _size_sqrx, _size_sqry)
 		}
 		draw_circle(menu_x, menu_y, 10, false)
-		if distance_sqr(mouse_x, mouse_y, menu_x, menu_y) < 10000{//100^2
+		if distance_sqr(mouse_x, mouse_y, menu_x, menu_y) < _size_sqr{//100^2
 			var a = floor((array_length(menu_array) - arctan2(mouse_y - menu_y, mouse_x - menu_x) / b) mod array_length(menu_array))
 			draw_set_alpha(0.5)
-			draw_arco(menu_x, menu_y, 100, a * b, (a + 1) * b)
+			draw_arco(menu_x, menu_y, _size, a * b, (a + 1) * b)
 			draw_set_alpha(1)
-			draw_sprite_stretched(edificio_sprite[menu_array[a]], 0, menu_x - 15 + 100 * cos((a + 0.5) * b), menu_y - 15 - 100 * sin((a + 0.5) * b), 30, 30)
+			draw_sprite_stretched(edificio_sprite[menu_array[a]], 0, menu_x - 15 + _size * cos((a + 0.5) * b), menu_y - 15 - _size * sin((a + 0.5) * b), 30, 30)
 			a = menu_array[a]
 			var temp_text = $"{edificio_nombre[a]} (hotkey: {edificio_key[a]})\n"
 			if not cheat{
@@ -3957,7 +3977,9 @@ else if not chat_input
 	control_camara()
 if menu = 1 or menu = 3{
 	if win = 0 and not show_menu and (not chat_input and keyboard_check_pressed(vk_anykey)){
-		if keyboard_check_pressed(CONTROL_MENU) and pausa = 0{
+		if (keyboard_check_pressed(CONTROL_MENU) or (not devise and keyboard_check_pressed(vk_backspace))) and pausa != 1{
+			if not devise
+				keyboard_clear(vk_backspace)
 			pausa = 1
 			clear_edit()
 			mouse_clear(mb_any)
