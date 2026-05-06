@@ -2638,10 +2638,14 @@ if sonido
 		volumen[a] = 0
 #region Menú de edificios
 	//ANDROID
-	if not devise and build_menu = 0 and draw_sprite_boton(spr_construir,, room_width - 80, room_height - 80, 68, 68){
-		build_menu = 1
-		menu_x = clamp(mouse_x, 220, room_width - 220)
-		menu_y = clamp(mouse_y, 220, room_height - 220)
+	if not devise and build_menu = 0{
+		if build_index = 0 and draw_sprite_boton(spr_construir,, room_width - 80, room_height - 80, 68, 68){
+			build_menu = 1
+			menu_x = room_width / 2
+			menu_y = room_height / 2
+		}
+		if build_index != 0 and draw_sprite_boton(spr_equis,, room_width - 80, room_height - 80, 64, 56)
+			build_index = 0
 	}
 	var just_pressed = false, _size = devise ? 100 : 200, _size_sqr = devise ? 10_000 : 40_000, _size_sqrx = devise ? 32 : 64, _size_sqry = devise ? 28 : 56
 	if devise and mouse_check_button_pressed(mb_right) and build_index = 0 and not edificio_bool[# mx, my] and not keyboard_check(CONTROL_REPARAR) and pausa != 1{
@@ -2673,8 +2677,10 @@ if sonido
 			draw_arco(menu_x, menu_y, _size, a * b, (a + 1) * b)
 			draw_set_alpha(1)
 			draw_sprite(spr_items, categoria_index_disponible[a], menu_x - 15 + _size * cos((a + 0.5) * b), menu_y - 15 - _size * sin((a + 0.5) * b))
-			temp_text = categoria_nombre[categoria_index_disponible[a]]
-			draw_text_background(min(room_width - string_width(temp_text), mouse_x + 20), min(room_height - string_height(temp_text), mouse_y), temp_text)
+			if devise{
+				temp_text = categoria_nombre[categoria_index_disponible[a]]
+				draw_text_background(min(room_width - string_width(temp_text), mouse_x + 20), min(room_height - string_height(temp_text), mouse_y), temp_text)
+			}
 			if mouse_check_button_pressed(mb_left){
 				mouse_clear(mb_left)
 				build_menu = 2
@@ -2715,15 +2721,17 @@ if sonido
 			draw_set_alpha(1)
 			draw_sprite_stretched(edificio_sprite[menu_array[a]], 0, menu_x - 15 + _size * cos((a + 0.5) * b), menu_y - 15 - _size * sin((a + 0.5) * b), 30, 30)
 			a = menu_array[a]
-			var temp_text = $"{edificio_nombre[a]} (hotkey: {edificio_key[a]})\n"
-			if not cheat{
-				if tecnologia and not edificio_tecnologia[a]
-					temp_text += "  Falta Tecnología\n"
-				for(var c = 0; c < array_length(edificio_precio_id[a]); c++)
-					temp_text += $"  {recurso_nombre[edificio_precio_id[a, c]]}: {edificio_precio_num[a, c]}\n"
+			if devise{
+				var temp_text = $"{edificio_nombre[a]} (hotkey: {edificio_key[a]})\n"
+				if not cheat{
+					if tecnologia and not edificio_tecnologia[a]
+						temp_text += "  Falta Tecnología\n"
+					for(var c = 0; c < array_length(edificio_precio_id[a]); c++)
+						temp_text += $"  {recurso_nombre[edificio_precio_id[a, c]]}: {edificio_precio_num[a, c]}\n"
+				}
+				temp_text += $"{edificio_descripcion[a]}\n"
+				draw_text_background(min(room_width - string_width(temp_text), mouse_x + 20), min(room_height - string_height(temp_text), mouse_y), temp_text)
 			}
-			temp_text += $"{edificio_descripcion[a]}\n"
-			draw_text_background(min(room_width - string_width(temp_text), mouse_x + 20), min(room_height - string_height(temp_text), mouse_y), temp_text)
 			if mouse_check_button_pressed(mb_left){
 				mouse_clear(mb_left)
 				build_menu = 0
@@ -2763,7 +2771,7 @@ if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastchar, CONTROL_LEFT
 if keyboard_step-- = 0 and not show_menu
 	keyboard_string = ""
 //Cancelar construcción o cerrar menú del selector
-if (mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape)) and (build_index > 0 or show_menu) and selected_dron = null_dron{
+if devise and (mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape)) and (build_index > 0 or show_menu) and selected_dron = null_dron{
 	mouse_clear(mb_right)
 	keyboard_clear(vk_escape)
 	clear_edit()
@@ -3197,7 +3205,7 @@ if build_index > 0 and win = 0{
 							if (last_mx != mx or last_my != my) and edificio_camino[build_index]
 								build_dir = floor(angle / 60)
 							build_dir_camino = floor(angle / 60)
-							var a = mx_clic, b = my_clic, temp_complex_3
+							var a = mx_clic, b = my_clic, temp_complex_3, _mina = max(xmouse, aa, 0), _minb = max(ymouse, bb, 0), _maxa = min(xmouse, aa, 48 * xsize), _maxb = min(ymouse, bb, 14 * ysize)
 							do{
 								temp_complex_3 = next_to(a, b, build_dir_camino)
 								array_push(pre_build_list, temp_complex_3)
@@ -3215,7 +3223,7 @@ if build_index > 0 and win = 0{
 									array_push(pre_build_list_cruce, false)
 								}
 							}
-							until(temp_complex_3[0] < min(xmouse, aa) or temp_complex_3[0] > max(xmouse, aa) or temp_complex_3[1] < min(ymouse, bb) or temp_complex_3[1] > max(ymouse, bb))
+							until(temp_complex_3[0] < _maxa or temp_complex_3[0] > _mina or temp_complex_3[1] < _maxb or temp_complex_3[1] > _minb)
 						}
 					}
 					//Mostrar caminos solos

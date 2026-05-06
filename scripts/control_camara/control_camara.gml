@@ -26,16 +26,31 @@ function control_camara(min_camx = 0){
 				camy = max(camy - cam_vel * (1 + 1.5 * keyboard_check(vk_lshift)), 0)
 		}
 		//ANDROID
-		else if build_menu = 0{
-			if mouse_check_button_pressed(mb_left){
-				android_mouse_x = mouse_x
-				android_mouse_y = mouse_y
-				android_camx = camx
-				android_camy = camy
+		else if build_menu = 0 and build_index = 0{
+			//ZOOM
+			if (device_mouse_check_button(0, mb_left) and device_mouse_check_button(1, mb_left)){
+				if (device_mouse_check_button(0, mb_left) and device_mouse_check_button_pressed(1, mb_left)){
+					android_mouse_dis = distance(device_mouse_x(0), device_mouse_y(0), device_mouse_x(1), device_mouse_y(1))
+					android_zoom = zoom
+				}
+				camx -= xsize * 48 * zoom / 2
+				camy -= ysize * 14 * zoom / 2
+				zoom = clamp(android_zoom + 0.01 * (distance(device_mouse_x(0), device_mouse_y(0), device_mouse_x(1), device_mouse_y(1)) - android_mouse_dis), 1, 4)
+				camx = clamp(camx + xsize * 48 * zoom / 2, min_camx, xsize * 48 * zoom - room_width)
+				camy = clamp(camy + ysize * 14 * zoom/ 2, min_camx, ysize * 14 * zoom - room_height)
 			}
-			if mouse_check_button(mb_left){
-				camx = clamp(android_camx - mouse_x + android_mouse_x, min_camx, xsize * 40 * zoom - room_width)
-				camy = clamp(android_camy - mouse_y + android_mouse_y, 0, ysize * 14 * zoom - room_height)
+			//Movimiento
+			else{
+				if mouse_check_button_pressed(mb_left){
+					android_mouse_x = mouse_x
+					android_mouse_y = mouse_y
+					android_camx = camx
+					android_camy = camy
+				}
+				if mouse_check_button(mb_left){
+					camx = clamp(android_camx - mouse_x + android_mouse_x, min_camx, xsize * 40 * zoom - room_width)
+					camy = clamp(android_camy - mouse_y + android_mouse_y, 0, ysize * 14 * zoom - room_height)
+				}
 			}
 		}
 	}
