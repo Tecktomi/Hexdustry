@@ -1,9 +1,9 @@
-function draw_panel(x, y, w, h, deslizante_x = 0, deslizante_y = 0, this_input_data = 0, funcion = function(xpos = 0, ypos = 0, data = {}){}, data = {}){
+function draw_panel(x, y, w, h, deslizante_x = 0, deslizante_y = 0, this_input_data = 0, funcion = null_function_panel, param = {}){
 	with control{
 		gpu_set_scissor(x + 1, y + 1, w - 2, h - 2)
-		var temp_complex = funcion(x - deslizante[deslizante_x], y - deslizante[deslizante_y], data)
-		var ancho = temp_complex.a - (x - deslizante[deslizante_x])
-		var alto = temp_complex.b - (y - deslizante[deslizante_y])
+		var temp_complex = funcion(x - deslizante[deslizante_x], y - deslizante[deslizante_y], param)
+		var ancho = temp_complex[0] - (x - deslizante[deslizante_x])
+		var alto = temp_complex[1] - (y - deslizante[deslizante_y])
 		gpu_set_scissor(0, 0, room_width, room_height)
 		if ancho > w{
 			draw_rectangle(x, y, x + w, y + h, true)

@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"draw_deslizante_vertical",
+  "%Name":"scroll_draw_boton_text_list",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"draw_deslizante_vertical",
+  "name":"scroll_draw_boton_text_list",
   "parent":{
     "name":"SCROLL",
     "path":"folders/SCRIPTS/CORE/SCROLL.yy",

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"draw_panel",
   "parent":{
-    "name":"DRAW",
-    "path":"folders/SCRIPTS/DRAW.yy",
+    "name":"PANEL",
+    "path":"folders/SCRIPTS/CORE/PANEL.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

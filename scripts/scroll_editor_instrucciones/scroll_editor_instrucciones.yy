@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"draw_deslizante_vertical",
+  "%Name":"scroll_editor_instrucciones",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"draw_deslizante_vertical",
+  "name":"scroll_editor_instrucciones",
   "parent":{
     "name":"SCROLL",
     "path":"folders/SCRIPTS/CORE/SCROLL.yy",

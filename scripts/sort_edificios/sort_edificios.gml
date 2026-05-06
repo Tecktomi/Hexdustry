@@ -7,7 +7,7 @@ function sort_edificios(){
 				index : a
 			}
 		}
-		array_sort(temp_edi_sort, function(elm1, elm2){return elm1.name < elm2.name ? -1 : 1})
+		array_sort(temp_edi_sort, sort_order)
 		for(var a = 0; a < edificio_max; a++)
 			edi_sort[a] = temp_edi_sort[a].index
 	}

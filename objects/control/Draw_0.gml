@@ -143,150 +143,7 @@ if menu = 0{
 				input_layer = 0
 			}
 			ypos += text_y * 1.2
-			draw_panel(110, ypos, room_width - 220, room_height - 200 - ypos, 0, 1, 1, function(xpos, ypos){
-				var des_count = 0
-				draw_boton_text_counter = 0
-				ypos = draw_text_ypos(xpos, ypos, L.dificultad)
-				if draw_boton(xpos, ypos, L.facil, flow = 0 ? ui_azul : ui_gris,,,, 1){
-					tecnologia = false
-					oleadas_tiempo_primera = 240
-					oleadas_tiempo = 90
-					multiplicador_vida_enemigos = 50
-					cheat = false
-					default_mision()
-					mision_objetivo = [4]
-					mision_target_num = [15]
-					flow = 0
-					dificultad = 0
-				}
-				xpos += text_x + 20
-				if draw_boton(xpos, ypos, L.medio, flow = 1 ? ui_azul : ui_gris,,,, 1){
-					tecnologia = true
-					tecnologia_precio_multiplicador = 1 
-					oleadas_tiempo_primera = 180
-					oleadas_tiempo = 75
-					multiplicador_vida_enemigos = 100
-					cheat = false
-					default_mision()
-					mision_objetivo = [4]
-					mision_target_num = [22]
-					flow = 1
-					dificultad = 1
-				}
-				xpos += text_x + 20
-				if draw_boton(xpos, ypos, L.dificil, flow = 2 ? ui_azul : ui_gris,,,, 1){
-					tecnologia = true
-					tecnologia_precio_multiplicador = 1.5 
-					oleadas_tiempo_primera = 150
-					oleadas_tiempo = 60
-					multiplicador_vida_enemigos = 160
-					cheat = false
-					default_mision()
-					mision_objetivo = [4]
-					mision_target_num = [35]
-					flow = 2
-					dificultad = 2
-				}
-				xpos += text_x + 20
-				if draw_boton(xpos, ypos, L.personalizado, flow > 2 ? ui_azul : ui_gris,,,, 1){
-					flow = 4
-					dificultad = -1
-				}
-				//Personalizado
-				if flow > 2{
-					xpos = 140
-					ypos += text_y * 1.25
-					//Tecnología
-					draw_text_xpos(xpos, ypos, $"{L.enciclopedia_tecnologia}: {tecnologia ? L.activado : L.desactivado}")
-					xpos += max(string_width($"{L.enciclopedia_tecnologia}: {L.activado}"), string_width($"{L.enciclopedia_tecnologia}: {L.desactivado}"))
-					tecnologia = draw_toggle(xpos + 10, ypos - 5, tecnologia, 1)
-					ypos += text_y * 1.2
-					if tecnologia{
-						xpos = draw_text_xpos(160, ypos, $"{L.menu_precio_tecnologia}")
-						tecnologia_precio_multiplicador = draw_deslizante(xpos + 10, xpos + 135, ypos + 10, tecnologia_precio_multiplicador, 0.5, 3, des_count++, 1)
-						ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{floor(100 * tecnologia_precio_multiplicador)}%")
-					}
-					//Primera oleada
-					ypos = draw_text_ypos(140, ypos, L.tiempo)
-					xpos = draw_text_xpos(160, ypos, $"{L.editor_primera_ronda}")
-					oleadas_tiempo_primera = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, oleadas_tiempo_primera, 60, 300, des_count++, 1))
-					ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{oleadas_tiempo_primera >= 60 ? string(floor(oleadas_tiempo_primera / 60)) + "m " : ""}{oleadas_tiempo_primera mod 60}s")
-					//Siguientes oleadas
-					xpos = draw_text_xpos(160, ypos, $"{L.editor_siguiente_ronda}")
-					oleadas_tiempo = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, oleadas_tiempo, 30, 120, des_count++, 1))
-					ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{oleadas_tiempo >= 60 ? string(floor(oleadas_tiempo / 60)) + "m " : ""}{oleadas_tiempo mod 60}s")
-					//Multiplicador de vida
-					xpos = draw_text_xpos(140, ypos, $"{L.editor_multiplicador_vida}")
-					multiplicador_vida_enemigos = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, multiplicador_vida_enemigos, 20, 200, des_count++, 1))
-					ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{multiplicador_vida_enemigos}%")
-					//Modo creativo
-					xpos = 140
-					draw_text_xpos(xpos, ypos, $"{L.menu_claves}: {cheat ? L.activado : L.desactivado}")
-					xpos += max(string_width($"{L.menu_claves}: {L.activado}"), string_width($"{L.menu_claves}: {L.desactivado}"))
-					cheat = draw_toggle(xpos + 10, ypos - 5, cheat, 1)
-					oleadas = not cheat
-					ypos += text_y + 20
-					//Modos de Juego
-					xpos = 200
-					if draw_boton(xpos, ypos, L.menu_modo_infinito, flow = 3 ? ui_azul : ui_gris,,,, 1){
-						default_mision(0)
-						flow = 3
-					}
-					xpos += text_x + 20
-					if draw_boton(xpos, ypos, L.menu_modo_oleadas, flow = 4 ? ui_azul : ui_gris,,,, 1){
-						default_mision()
-						mision_objetivo = [4]
-						mision_target_num = [20]
-						flow = 4
-					}
-					xpos += text_x + 20
-					if draw_boton(xpos, ypos, L.menu_modo_misiones, flow = 5 ? ui_azul : ui_gris,,,, 1){
-						modo_misiones = true
-						add_mision()
-						flow = 5
-					}
-					if flow = 4{
-						ypos += text_y + 10
-						xpos = draw_text_xpos(160, ypos, L.menu_numero_oleadas)
-						mision_target_num[0] = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, mision_target_num[0], 10, 50, des_count++, 1))
-						draw_text_ypos(xpos + 145, ypos, mision_target_num[0])
-					}
-				}
-				ypos += text_y * 1.25
-				//Mapas
-				xpos = 200
-				if mapa = -1{
-					draw_set_color(c_blue)
-					draw_rectangle(xpos - 2, ypos - 2, xpos + 97, ypos + 97, false)
-				}
-				if draw_sprite_boton(spr_random_map,, xpos, ypos, 96, 96, 1){
-					biome_seed = irandom(2)
-					seed = random_get_seed()
-					generar_bioma(biome_seed)
-					randomize()
-					mapa = -1
-				}
-				xpos += 120
-				for(var a = 0; a < array_length(default_maps); a++){
-					if mapa = a{
-						draw_set_color(c_blue)
-						draw_rectangle(xpos - 2, ypos - 2, xpos + 97, ypos + 97, false)
-					}
-					if draw_sprite_boton(default_maps_image[a],, xpos, ypos, 96, 96, 1, function(data){
-						sprite_boton_text = data.a}, {a : a}) and mapa != a{
-						var file = load_escenario_buffer($"{default_maps[a]}.txt", false)
-						if file != ""
-							mapa = a
-					}
-					for(var b = 0; b < 3; b++)
-						if medallas[a, b]
-							draw_sprite(spr_medallas, b, xpos + 32 * b + 16, ypos + 110)
-					xpos += 120
-				}
-				draw_set_color(c_white)
-				ypos += 140
-				return {a : xpos, b : ypos}
-			})
+			draw_panel(110, ypos, room_width - 220, room_height - 200 - ypos, 0, 1, 1, panel_partida_nueva)
 			ypos = room_height - 180
 			draw_set_halign(fa_right)
 			//Cargar esenarios / partidas
@@ -406,13 +263,12 @@ if menu = 0{
 	update_cursor()
 	if keyboard_check_pressed(vk_escape)
 		game_end()
-	if os_type == os_windows
-		for(var a = 0; a < idiomas; a++)
-			if draw_sprite_boton(spr_bandera, a, 20 + 80 * a, 20, 64, 48,, function(data){draw_text_background(0, 80, idioma_name[data.a])}, {a : a}){
-				idioma = a
-				save_setting("", "Idioma", idioma, true)
-				set_idioma()
-			}
+	for(var a = 0; a < idiomas; a++)
+		if draw_sprite_boton(spr_bandera, a, 20 + 80 * a, 20, 64, 48,, function(data){draw_text_background(0, 80, idioma_name[data.a])}, {a : a}){
+			idioma = a
+			save_setting("", "Idioma", idioma, true)
+			set_idioma()
+		}
 	exit
 }
 //Editor
@@ -591,41 +447,11 @@ if in(menu, 1, 3){
 			enciclopedia = 7
 		}
 		//Menú Recursos
-		if enciclopedia = 1{
-			var pos = 140
-			if rss_max > 25
-				deslizante[0] = floor(draw_deslizante_vertical(110, pos, pos + 25 * 20, deslizante[0], 0, rss_max - 25, 0))
-			for(var a = deslizante[0]; a < min(deslizante[0] + 25, rss_max); a++){
-				draw_sprite(recurso_sprite[rss_sort[a]], 0, 120, pos + 10)
-				if draw_boton(140, pos, recurso_nombre[rss_sort[a]],,,, false){
-					enciclopedia_item = rss_sort[a]
-					enciclopedia = 3
-				}
-				pos += 20
-			}
-			if deslizante[0] + 25 < rss_max and mouse_wheel_down()
-				deslizante[0]++
-			if deslizante[0] > 0 and mouse_wheel_up()
-				deslizante[0]--
-		}
+		if enciclopedia = 1
+			scroll(110, 140, rss_max, 25, 20, scroll_enciclopedia_recursos, {xpos : 140, ypos : 140}, 0)
 		//Menú Edificios
-		else if enciclopedia = 2{
-			var pos = 140
-			if edificio_max > 25
-				deslizante[0] = floor(draw_deslizante_vertical(110, pos, pos + 25 * 20, deslizante[0], 0, edificio_max - 25, 0))
-			for(var a = deslizante[0]; a < min(deslizante[0] + 25, edificio_max); a++){
-				draw_sprite_stretched(edificio_sprite[edi_sort[a]], 0, 120, pos, 18, 18)
-				if draw_boton(150, pos, edificio_nombre[edi_sort[a]],,,, false){
-					enciclopedia_item = edi_sort[a]
-					enciclopedia = 4
-				}
-				pos += 20
-			}
-			if deslizante[0] + 25 < edificio_max and mouse_wheel_down()
-				deslizante[0]++
-			if deslizante[0] > 0 and mouse_wheel_up()
-				deslizante[0]--
-		}
+		else if enciclopedia = 2
+			scroll(140, 140, edificio_max, 25, 20, scroll_enciclopedia_edificios, {xpos : 140, ypos : 140})
 		//Detalles Recurso
 		else if enciclopedia = 3{
 			var pos = 140
@@ -808,8 +634,7 @@ if in(menu, 1, 3){
 					draw_circle(xpos + 50 * a - 25 * (size - 1), ypos, 25, false)
 					draw_set_color(c_black)
 					draw_circle(xpos + 50 * a - 25 * (size - 1), ypos, 25, true)
-					if draw_sprite_boton(edificio_sprite[b],, xpos - 20 + 50 * a - 25 * (size - 1), ypos - 20, 40, 40,, function(data){
-						sprite_boton_text = edificio_nombre[data.b]}, {b : b}){
+					if draw_sprite_boton(edificio_sprite[b],, xpos - 20 + 50 * a - 25 * (size - 1), ypos - 20, 40, 40,, hover_sprite_boton_text, {a : edificio_nombre[b]}){
 						enciclopedia_item = b
 						enciclopedia = 4
 						exit
@@ -829,8 +654,7 @@ if in(menu, 1, 3){
 					draw_circle(xpos + 50 * a - 25 * (size - 1), ypos + 200, 25, false)
 					draw_set_color(c_black)
 					draw_circle(xpos + 50 * a - 25 * (size - 1), ypos + 200, 25, true)
-					if draw_sprite_boton(edificio_sprite[b],, xpos - 20 + 50 * a - 25 * (size - 1), ypos + 180, 40, 40,, function(data){
-						sprite_boton_text = edificio_nombre[data.b]}, {b : b}){
+					if draw_sprite_boton(edificio_sprite[b],, xpos - 20 + 50 * a - 25 * (size - 1), ypos + 180, 40, 40,, hover_sprite_boton_text, {a : edificio_nombre[b]}){
 						enciclopedia_item = b
 						enciclopedia = 4
 						exit
@@ -866,22 +690,8 @@ if in(menu, 1, 3){
 			}
 		}
 		//Menú Unidades
-		else if enciclopedia = 5{
-			var pos = 140
-			if dron_max > 25
-				deslizante[0] = floor(draw_deslizante_vertical(110, pos, pos + 25 * 20, deslizante[0], 0, dron_max - 25, 0))
-			for(var a = deslizante[0]; a < min(deslizante[0] + 25, dron_max); a++){
-				if draw_boton(120, pos, dron_nombre[a],,,, false){
-					enciclopedia_item = a
-					enciclopedia = 6
-				}
-				pos += 20
-			}
-			if deslizante[0] + 25 < dron_max and mouse_wheel_down()
-				deslizante[0]++
-			if deslizante[0] > 0 and mouse_wheel_up()
-				deslizante[0]--
-		}
+		else if enciclopedia = 5
+			scroll(140, 140, dron_max, 25, 20, scroll_enciclopedia_drones, {xpos : 140, ypos : 140})
 		//Detalles Dron
 		else if enciclopedia = 6{
 			var pos = 140
@@ -929,8 +739,7 @@ if in(menu, 1, 3){
 					draw_circle(xpos + 60 * b - 30 * (width - 1), pos, 25, false)
 					draw_set_color(c_black)
 					draw_circle(xpos + 60 * b - 30 * (width - 1), pos, 25, true)
-					if draw_sprite_boton(edificio_sprite[c],, xpos - 20 + 60 * b - 30 * (width - 1), pos - 20, 40, 40,, function(data){
-						sprite_boton_text = edificio_nombre[data.c]}, {c : c}){
+					if draw_sprite_boton(edificio_sprite[c],, xpos - 20 + 60 * b - 30 * (width - 1), pos - 20, 40, 40,, hover_sprite_boton_text, {a : edificio_nombre[c]}){
 						enciclopedia_item = c
 						enciclopedia = 4
 						exit
@@ -1185,13 +994,12 @@ if pausa = 1{
 		}
 	}
 	draw_set_halign(fa_left)
-	if os_type == os_windows
-		for(var a = 0; a < idiomas; a++)
-			if draw_sprite_boton(spr_bandera, a, 20 + 80 * a, 20, 64, 48,, function(data){draw_text_background(0, 80, idioma_name[data.a])}, {a : a}){
-				idioma = a
-				save_setting("", "Idioma", idioma, true)
-				set_idioma()
-			}
+	for(var a = 0; a < idiomas; a++)
+		if draw_sprite_boton(spr_bandera, a, 20 + 80 * a, 20, 64, 48,, function(data){draw_text_background(0, 80, idioma_name[data.a])}, {a : a}){
+			idioma = a
+			save_setting("", "Idioma", idioma, true)
+			set_idioma()
+		}
 	draw_set_color(color)
 	if keyboard_check_pressed(CONTROL_MENU){
 		keyboard_clear(CONTROL_MENU)
@@ -1236,269 +1044,9 @@ if show_menu{
 		}
 		draw_set_halign(fa_left)
 		var xpos, ypos = 150, size = array_length(edificio.instruccion)
-		if size > 25
-			deslizante[0] = floor(draw_deslizante_vertical(110, ypos, ypos + 25 * 20, deslizante[0], 0, size - 25, 0))
-		for(var a = deslizante[0]; a < min(deslizante[0] + 25, size); a++){
-			var pc = edificio.instruccion[a], pc0 = pc[0]
-			xpos = 150
-			draw_set_halign(fa_right)
-			draw_text_xpos(xpos, ypos, ((edificio.select + 1) mod size = a ? ">" : "") + $"{a}|")
-			draw_set_halign(fa_left)
-			if draw_sprite_boton(spr_basura,, xpos, ypos, 20, 20,, function(){
-				sprite_boton_text = L.procesador_borrar}){
-				array_delete(edificio.instruccion, a, 1)
-				size--
-			}
-			xpos += 20
-			if draw_sprite_boton(spr_clonar,, xpos, ypos, 20, 20,, function(){
-				sprite_boton_text = L.procesador_clonar}){
-				var temp_array = []
-				for(var c = 0; c < array_length(pc); c++)
-					array_push(temp_array, pc[c])
-				array_insert(edificio.instruccion, a + 1, temp_array)
-			}
-			xpos += 20
-			if draw_sprite_boton(spr_flecha,, xpos, ypos, 20, 20,, function(){
-				sprite_boton_text = L.procesador_subir})
-				procesador_move = a
-			xpos += 20
-			if procesador_move >= 0 and mouse_y > ypos and mouse_y < ypos + text_y{
-				draw_set_alpha(0.3)
-				draw_rectangle(150, ypos, xpos, ypos + text_y, false)
-				draw_set_alpha(1)
-				if mouse_check_button_released(mb_left) and a != procesador_move{
-					array_insert(edificio.instruccion, a, edificio.instruccion[procesador_move])
-					array_delete(edificio.instruccion, procesador_move + 1, 1)
-					procesador_move = -1
-				}
-			}
-			//Continue
-			if pc0 = 0
-				draw_text(xpos, ypos, L.procesador_continue)
-			//Set {A} to [VAR]{B}
-			else if pc0 = 1{
-				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_set} VAR_")
-				pc[1] = procesador_var(xpos, ypos, pc, 1)
-				xpos = draw_text_xpos(xpos + text_x, ypos, " to ")
-				procesador_valor(xpos, ypos, pc, 2, 3, false)
-			}
-			//Set {A} to [sin, cos, tan, random, floor, round, ceil, sqr, sqrt, pi] [VAR]{B}
-			else if pc0 = 2{
-				var signs = procesador_nombres_1var
-				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_set} VAR_")
-				pc[1] = procesador_var(xpos, ypos, pc, 1)
-				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to} ")
-				pc[2] = draw_boton_text_list(xpos, ypos, pc[2], signs,, 10)
-				if not in(signs[pc[2]], "pi"){
-					xpos = draw_text_xpos(xpos + text_x, ypos, $" ")
-					procesador_valor(xpos, ypos, pc, 3, 4)
-				}
-			}
-			//Set {A} to [VAR]{B} [+, -, *, /, div, mod, or, and, xor, <<, >>, power] [VAR]{C}
-			else if pc0 = 3{
-				var signs = procesador_nombres_2var
-				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_set} VAR_")
-				pc[1] = procesador_var(xpos, ypos, pc, 1)
-				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to} ")
-				procesador_valor(xpos, ypos, pc, 2, 3)
-				xpos += text_x
-				pc[4] = draw_boton_text_list(xpos, ypos, pc[4], signs,, 10)
-				procesador_valor(xpos + text_x, ypos, pc, 5, 6)
-			}
-			//If [VAR]{A} [yes, no][<, >, =] [VAR]{B}, jump to [VAR]{C}
-			else if pc0 = 4{
-				var signs = [" < ", " <= ", " = ", " >= ", " > ", " != "]
-				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_if} ")
-				procesador_valor(xpos, ypos, pc, 1, 2, false)
-				xpos += text_x
-				pc[3] = draw_boton_text_list(xpos, ypos, pc[3], signs,, 10)
-				xpos += text_x
-				procesador_valor(xpos, ypos, pc, 4, 5, false)
-				xpos = draw_text_xpos(xpos + text_x, ypos, $", {L.procesador_jump} ")
-				procesador_valor(xpos, ypos, pc, 6, 7, true)
-				if not pc[6]
-					pc[7] = clamp(pc[7], 0, size)
-				xpos += text_x
-				var val = 0, flag = true
-				if pc[6] = 0{
-					if is_real(edificio.variables[pc[7]])
-						val = real(edificio.variables[pc[7]])
-					else
-						flag = false
-				}
-				else
-					val = real(pc[7])
-				if draw_sprite_boton(spr_siguiente,, xpos, ypos, 20, 20)
-					procesador_link_handle = a
-				xpos += 20
-				if procesador_link_handle = a{
-					draw_set_color(c_white)
-					draw_rectangle(xpos, ypos + 8, mouse_x, ypos + 10, false)
-					draw_rectangle(mouse_x - 2, ypos + 8, mouse_x, mouse_y, false)
-				}
-				if flag and a != val{
-					draw_set_color(make_color_hsv((49 * b) mod 255, 127, 127))
-					draw_rectangle(xpos, ypos + 8, xpos + 10 + 10 * ++b, ypos + 12, false)
-					draw_rectangle(xpos + 8 + 10 * b, ypos + 12, xpos + 10 + 10 * b, 150 + val * 20, false)
-					draw_rectangle(xpos, 148 + val * 20, xpos + 10 + 10 * b, 152 + val * 20, false)
-					draw_set_color(c_white)
-				}
-			}
-			//Set VAR_{A} to [eneabled, carga, etc...][VAR]{B} from LINK[VAR]{C}
-			else if pc0 = 5{
-				var signs = procesador_nombres_read_data
-				var signs_subindex = [false, true, false, false, false, false, false, false, false, false, false]
-				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_set} VAR_")
-				pc[1] = procesador_var(xpos, ypos, pc, 1)
-				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to} ")
-				pc[2] = draw_boton_text_list(xpos, ypos, pc[2], signs,, 10)
-				xpos += text_x
-				if signs_subindex[pc[2]]{
-					xpos = draw_text_xpos(xpos, ypos, "[")
-					procesador_valor(xpos, ypos, pc, 3, 4, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, "]")
-				}
-				xpos = draw_text_xpos(xpos, ypos, $" {L.procesador_from} LINK_")
-				procesador_valor(xpos, ypos, pc, 5, 6, true)
-			}
-			//Control LINK[VAR]{A} to set [Eneable] to [VAR]{B}
-			else if pc0 = 6{
-				var signs = ["Eneabled"]
-				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_control} LINK_")
-				procesador_valor(xpos, ypos, pc, 1, 2, true)
-				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to_set} ")
-				if draw_boton(xpos, ypos, signs[pc[3]],,,, false)
-					pc[3] = (pc[3] + 1) mod array_length(signs)
-				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to} ")
-				procesador_valor(xpos, ypos, pc, 4, 5, false)
-			}
-			//Set VAR_{A} to value of cell [VAR]{B} of LINK[VAR]{C}
-			else if pc0 = 7{
-				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_set} VAR_")
-				pc[1] = procesador_var(xpos, ypos, pc, 1)
-				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to_value_of_cell} ")
-				procesador_valor(xpos, ypos, pc, 2, 3, true)
-				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_from} LINK_")
-				procesador_valor(xpos, ypos, pc, 4, 5, true)
-			}
-			//Write [VAR]{A} into value of cell [VAR]{B} of LINK[VAR]{c}
-			else if pc0 = 8{
-				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_write} ")
-				procesador_valor(xpos, ypos, pc, 1, 2, false)
-				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_into_value_of_cell} ")
-				procesador_valor(xpos, ypos, pc, 3, 4, true)
-				xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_of} LINK_")
-				procesador_valor(xpos, ypos, pc, 5, 6, true)
-			}
-			//Draw to LINK[VAR]{B} [clear(), color(r, g, b), color(h, s, v), rectangle(x, y, w, h), line(x1, y1, x2, y2), triangle(x1, y1, x2, y2, x3, y3), circle(x, y, radio), draw_flush()]
-			else if pc0 = 9{
-				var signs = procesador_nombres_draw
-				xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_write} {L.procesador_to} LINK_")
-				procesador_valor(xpos, ypos, pc, 1, 2, true)
-				xpos += text_x
-				xpos = draw_text_xpos(xpos, ypos, " ")
-				var prev_pc3 = pc[3]
-				pc[3] = draw_boton_text_list(xpos, ypos, pc[3], signs,, 10)
-				if pc[3] = 7 and prev_pc3 != 7{
-					pc[8] = 0
-					pc[9] = 0
-				}
-				if pc[3] = 0
-					xpos = draw_text_xpos(xpos + text_x, ypos, "()")
-				else if pc[3] = 1{
-					xpos = draw_text_xpos(xpos + text_x, ypos, "(R:")
-					procesador_valor(xpos, ypos, pc, 4, 5, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ", G:")
-					procesador_valor(xpos, ypos, pc, 6, 7, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ", B:")
-					procesador_valor(xpos, ypos, pc, 8, 9, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ")")
-				}
-				else if pc[3] = 2{
-					xpos = draw_text_xpos(xpos + text_x, ypos, "(H:")
-					procesador_valor(xpos, ypos, pc, 4, 5, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ", S:")
-					procesador_valor(xpos, ypos, pc, 6, 7, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ", V:")
-					procesador_valor(xpos, ypos, pc, 8, 9, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ")")
-				}
-				else if pc[3] = 3{
-					xpos = draw_text_xpos(xpos + text_x, ypos, "(X:")
-					procesador_valor(xpos, ypos, pc, 4, 5, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ", Y:")
-					procesador_valor(xpos, ypos, pc, 6, 7, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ", width:")
-					procesador_valor(xpos, ypos, pc, 8, 9, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ", height:")
-					procesador_valor(xpos, ypos, pc, 10, 11, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ")")
-				}
-				else if pc[3] = 4{
-					xpos = draw_text_xpos(xpos + text_x, ypos, "(X1:")
-					procesador_valor(xpos, ypos, pc, 4, 5, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ", Y1:")
-					procesador_valor(xpos, ypos, pc, 6, 7, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ", X2:")
-					procesador_valor(xpos, ypos, pc, 8, 9, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ", Y2:")
-					procesador_valor(xpos, ypos, pc, 10, 11, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ")")
-				}
-				else if pc[3] = 5{
-					xpos = draw_text_xpos(xpos + text_x, ypos, "(X1:")
-					procesador_valor(xpos, ypos, pc, 4, 5, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ", Y1:")
-					procesador_valor(xpos, ypos, pc, 6, 7, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ", X2:")
-					procesador_valor(xpos, ypos, pc, 8, 9, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ", Y2:")
-					procesador_valor(xpos, ypos, pc, 10, 11, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ", X3:")
-					procesador_valor(xpos, ypos, pc, 12, 13, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ", Y3:")
-					procesador_valor(xpos, ypos, pc, 14, 15, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ")")
-				}
-				else if pc[3] = 6{
-					xpos = draw_text_xpos(xpos + text_x, ypos, "(X:")
-					procesador_valor(xpos, ypos, pc, 4, 5, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ", Y:")
-					procesador_valor(xpos, ypos, pc, 6, 7, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ", radio:")
-					procesador_valor(xpos, ypos, pc, 8, 9, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ")")
-				}
-				else if pc[3] = 7{
-					xpos = draw_text_xpos(xpos + text_x, ypos, "(X:")
-					procesador_valor(xpos, ypos, pc, 4, 5, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ", Y:")
-					procesador_valor(xpos, ypos, pc, 6, 7, true)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ", text:")
-					procesador_valor(xpos, ypos, pc, 8, 9, false)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ")")
-				}
-				else if pc[3] = 8
-					xpos = draw_text_xpos(xpos + text_x, ypos, "()")
-			}
-			if procesador_link_handle != -1 and mouse_y > ypos and mouse_y < ypos + text_y{
-				draw_set_alpha(0.5)
-				draw_rectangle(150, ypos, xpos, ypos + text_y, false)
-				draw_set_alpha(1)
-				if mouse_check_button_released(mb_left){
-					array_set(edificio.instruccion[procesador_link_handle], 6, 1)
-					array_set(edificio.instruccion[procesador_link_handle], 7, a)
-					procesador_link_handle = -1
-				}
-			}
-			ypos += 20
-		}
-		draw_boton_text_list_end()
-		if deslizante[0] + 25 < size and mouse_wheel_down()
-			deslizante[0]++
-		if deslizante[0] > 0 and mouse_wheel_up()
-			deslizante[0]--
+		scroll(110, ypos, size, 25, 20, scroll_procesador, {xpos : 150, ypos : ypos, edificio : edificio, size : size, b : 0})
 		xpos = 150
+		ypos += min(size, 25) * 20
 		if draw_boton(xpos, ypos, L.procesador_add, ui_azul,,, false) or keyboard_check_pressed(vk_enter){
 			keyboard_clear(vk_enter)
 			procesador_add = true
@@ -2644,7 +2192,7 @@ if sonido
 			menu_x = room_width / 2
 			menu_y = room_height / 2
 		}
-		if build_index != 0 and draw_sprite_boton(spr_equis,, room_width - 80, room_height - 80, 64, 56)
+		if build_index != 0 and draw_sprite_boton(spr_equis, 1, room_width - 80, room_height - 80, 64, 56)
 			build_index = 0
 	}
 	var just_pressed = false, _size = devise ? 100 : 200, _size_sqr = devise ? 10_000 : 40_000, _size_sqrx = devise ? 32 : 64, _size_sqry = devise ? 28 : 56
@@ -3740,8 +3288,7 @@ if menu = 1{
 		draw_text_background(room_width, 0, temp_text_right)
 		draw_set_halign(fa_left)
 	}
-	if draw_sprite_boton(spr_manual,, room_width - 64, string_height(temp_text_right), 64, 64,, function(){
-		sprite_boton_text = $"{L.game_enciclopedia} (Y)"})
+	if draw_sprite_boton(spr_manual,, room_width - 64, string_height(temp_text_right), 64, 64,, hover_sprite_boton_text, {a : $"{L.game_enciclopedia} (Y)"})
 		enciclopedia = true
 	//Input
 	if win = 0 and not show_menu and not chat_input{

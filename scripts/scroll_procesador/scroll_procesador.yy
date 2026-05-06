@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"null_function",
+  "%Name":"scroll_procesador",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"null_function",
+  "name":"scroll_procesador",
   "parent":{
-    "name":"HOVER",
-    "path":"folders/SCRIPTS/CORE/HOVER.yy",
+    "name":"SCROLL",
+    "path":"folders/SCRIPTS/CORE/SCROLL.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

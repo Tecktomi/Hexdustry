@@ -45,58 +45,7 @@ function menu_editor(){
 				get_keyboard_string = -1
 			}
 			var size = array_length(mision_nombre), pos = 150
-			if size > 15
-				deslizante[0] = floor(draw_deslizante_vertical(120, pos, pos + 15 * 30, deslizante[0], 0, size - 15, 0))
-			for(var i = deslizante[0]; i < min(deslizante[0] + 15, size); i++){
-				if i > 0 and draw_sprite_boton(spr_flecha,, 140, pos){
-					var	temp_string = mision_nombre[i - 1]
-					mision_nombre[i - 1] = mision_nombre[i]
-					mision_nombre[i] = temp_string
-					var	temp_real = mision_objetivo[i - 1]
-					mision_objetivo[i - 1] = mision_objetivo[i]
-					mision_objetivo[i] = temp_real
-					temp_real = mision_target_id[i - 1]
-					mision_target_id[i - 1] = mision_target_id[i]
-					mision_target_id[i] = temp_real
-					temp_real = mision_target_num[i - 1]
-					mision_target_num[i - 1] = mision_target_num[i]
-					mision_target_num[i] = temp_real
-					temp_real = mision_tiempo[i - 1]
-					mision_tiempo[i - 1] = mision_tiempo[i]
-					mision_tiempo[i] = temp_real
-					var temp_bool = mision_tiempo_edit[i - 1]
-					mision_tiempo_edit[i - 1] = mision_tiempo_edit[i]
-					mision_tiempo_edit[i] = temp_real
-					temp_real = mision_tiempo_victoria[i - 1]
-					mision_tiempo_victoria[i - 1] = mision_tiempo_victoria[i]
-					mision_tiempo_victoria[i] = temp_real
-					temp_real = mision_tiempo_show[i - 1]
-					mision_tiempo_show[i - 1] = mision_tiempo_show[i]
-					mision_tiempo_show[i] = temp_real
-					temp_bool = mision_camara_move[i - 1]
-					mision_camara_move[i - 1] = mision_camara_move[i]
-					mision_camara_move[i] = temp_bool
-					temp_real = mision_camara_x[i - 1]
-					mision_camara_x[i - 1] = mision_camara_x[i]
-					mision_camara_x[i] = temp_real
-					temp_real = mision_camara_y[i - 1]
-					mision_camara_y[i - 1] = mision_camara_y[i]
-					mision_camara_y[i] = temp_real
-					var temp_array = mision_texto[i - 1]
-					mision_texto[i - 1] = mision_texto[i]
-					mision_texto[i] = temp_array
-					temp_bool = mision_switch_oleadas[i - 1]
-					mision_switch_oleadas[i - 1] = mision_switch_oleadas[i]
-					mision_switch_oleadas[i] = temp_bool
-				}
-				if draw_boton(160, pos, $"'{mision_nombre[i]}'")
-					mision_actual = i
-				pos += 30
-			}
-			if deslizante[0] + 15 < size and mouse_wheel_down()
-				deslizante[0]++
-			if deslizante[0] > 0 and mouse_wheel_up()
-				deslizante[0]--
+			scroll(120, pos, size, 15, 30, scroll_editor_misiones, {xpos : 140, ypos : pos})
 			if draw_boton(140, 600, L.editor_nuevo_objetivo, ui_verde){
 				array_push(mision_nombre, $"{L.editor_objetivo} {size}")
 				array_push(mision_objetivo, 0)
@@ -355,97 +304,9 @@ function menu_editor(){
 			var ore_names = [], size = array_length(editor_instrucciones)
 			for(var j = 0; j < ore_max; j++)
 				array_push(ore_names, recurso_nombre[ore_recurso[j]])
-			if size > 18
-				deslizante[0] = floor(draw_deslizante_vertical(110, ypos, ypos + 20 * 18, deslizante[0], 0, size - 18, 0))
-			for(var i = deslizante[0]; i < min(deslizante[0] + 18, size); i++){
-				var instruccion = editor_instrucciones[i], tipo = instruccion[0], dat1 = instruccion[1], dat2 = instruccion[2], dat3 = instruccion[3]
-				xpos = 140
-				if draw_sprite_boton(spr_basura,, xpos, ypos, 20, 20){
-					array_delete(editor_instrucciones, i, 1)
-					size--
-					i--
-					continue
-				}
-				xpos += 20
-				if draw_sprite_boton(spr_flecha,, xpos, ypos, 20, 20)
-					procesador_move = i
-				if procesador_move >= 0 and mouse_y > ypos and mouse_y < ypos + text_y{
-					draw_set_alpha(0.3)
-					draw_rectangle(140, ypos, xpos + text_x, ypos + text_y, false)
-					draw_set_alpha(1)
-					if mouse_check_button_released(mb_left) and i != procesador_move{
-						array_insert(editor_instrucciones, i, editor_instrucciones[procesador_move])
-						array_delete(editor_instrucciones, procesador_move + 1, 1)
-						procesador_move = -1
-						continue
-					}
-				}
-				xpos += 20
-				//Bloques de Terreno
-				if tipo = 0{
-					xpos = draw_text_xpos(xpos, ypos, $"{L.editor_add} ")
-					instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
-					xpos += text_x
-					xpos = draw_text_xpos(xpos, ypos, $" {L.editor_size} ")
-					instruccion[2] = draw_boton_text(xpos, ypos, dat2)
-					xpos += text_x
-					xpos = draw_text_xpos(xpos, ypos, ", ")
-					instruccion[3] = draw_boton_text(xpos, ypos, dat3)
-					xpos += text_x
-					xpos = draw_text_xpos(xpos, ypos, $" {L.editor_veces}")
-				}
-				//Bordes de Terreno
-				else if tipo = 1{
-					var temp_text
-					xpos = draw_text_xpos(xpos, ypos, $"{L.editor_al_rededor} ")
-					instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
-					xpos += text_x
-					xpos = draw_text_xpos(xpos, ypos, $" {L.editor_reemplazar} ")
-					if dat1 = dat2{
-						temp_text = terreno_nombre[dat1]
-						terreno_nombre[dat1] = L.editor_cualquiera
-					}
-					instruccion[2] = draw_boton_text_list(xpos, ypos, dat2, terreno_nombre,, 10)
-					if dat1 = dat2
-						terreno_nombre[dat1] = temp_text
-					xpos += text_x
-					xpos = draw_text_xpos(xpos, ypos, $" {L.editor_con} ")
-					instruccion[3] = draw_boton_text_list(xpos, ypos, dat3, terreno_nombre,, 10)
-				}
-				//Ruido Aleatorio
-				else if tipo = 2{
-					xpos = draw_text_xpos(xpos, ypos, $"{L.editor_Reemplazar} ")
-					instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
-					xpos += text_x
-					xpos = draw_text_xpos(xpos, ypos, $" {L.editor_con} ")
-					instruccion[2] = draw_boton_text_list(xpos, ypos, dat2, terreno_nombre,, 10)
-					xpos += text_x
-					xpos = draw_text_xpos(xpos, ypos, $" {L.editor_el} ")
-					instruccion[3] = draw_boton_text(xpos, ypos, dat3)
-					xpos += text_x
-					xpos = draw_text_xpos(xpos, ypos, $"% {L.editor_del_tiempo}")
-				}
-				//Menas de Recursos
-				else if tipo = 3{
-					xpos = draw_text_xpos(xpos, ypos, $"{L.editor_add} ")
-					instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, ore_names,, 10)
-					xpos += text_x
-					xpos = draw_text_xpos(xpos, ypos, $" {L.editor_size} ")
-					instruccion[2] = draw_boton_text(xpos, ypos, dat2)
-					xpos += text_x
-					xpos = draw_text_xpos(xpos, ypos, ", ")
-					instruccion[3] = draw_boton_text(xpos, ypos, dat3)
-					xpos += text_x
-					xpos = draw_text_xpos(xpos, ypos, $" {L.editor_veces}")
-				}
-				ypos += text_y
-			}
-			if deslizante[0] + 18 < size and mouse_wheel_down()
-				deslizante[0]++
-			if deslizante[0] > 0 and mouse_wheel_up()
-				deslizante[0]--
+			scroll(110, ypos, size, 18, 20, scroll_editor_instrucciones, {xpos : xpos, ypos : ypos, ore_names : ore_names})
 			xpos = 120
-			ypos += text_y
+			ypos += 20 * min(18, size)
 			xpos = draw_text_xpos(xpos, ypos, $"{L.editor_add} ")
 			var a = draw_boton_text_list(xpos, ypos, 0, ["...", L.editor_manchas, L.editor_borde, L.editor_ruido, L.editor_menas])
 			if a > 0{
@@ -655,23 +516,19 @@ function menu_editor(){
 			deslizante[0] = 5 * floor(draw_deslizante_vertical(5, 10, 290, deslizante[0], 0, size - 40, 0) / 5)
 		for(var a = deslizante[0]; a < min(deslizante[0] + 40, size); a++){
 			var b = 0
-			if a < terreno_max and draw_sprite_boton(terreno_sprite[a],, 10 + (a mod 5) * 36, ypos,,,, function(data){
-				sprite_boton_text = terreno_nombre[data.a]}, {a : a}){
+			if a < terreno_max and draw_sprite_boton(terreno_sprite[a],, 10 + (a mod 5) * 36, ypos,,,, hover_sprite_boton_text, {a : terreno_nombre[a]}){
 				build_index = a
 				editor_herramienta = 0
 			}
 			b += terreno_max
-			if a >= b and a - b < ore_max and draw_sprite_boton(ore_sprite[a - b],, 10 + (a mod 5) * 36, ypos,,,, function(data){
-				sprite_boton_text = recurso_nombre[ore_recurso[data.a]]}, {a : a - b}){
+			if a >= b and a - b < ore_max and draw_sprite_boton(ore_sprite[a - b],, 10 + (a mod 5) * 36, ypos,,,, hover_sprite_boton_text, {a : recurso_nombre[ore_recurso[a - b]]}){
 				build_index = a
 				editor_herramienta = 0
 			}
 			b += ore_max
-			if a = b++ and draw_sprite_boton(dron_sprite[idd_arana],, 10 + (a mod 5) * 36, ypos,,,, function(){
-				sprite_boton_text = L.editor_cambiar_zona})
+			if a = b++ and draw_sprite_boton(dron_sprite[idd_arana],, 10 + (a mod 5) * 36, ypos,,,, hover_sprite_boton_text, {a : L.editor_cambiar_zona})
 				editor_herramienta = 1
-			if a = b++ and draw_sprite_boton(edificio_sprite[id_nucleo],, 10 + (a mod 5) * 36, ypos,,,, function(){
-				sprite_boton_text = L.editor_cambiar_base})
+			if a = b++ and draw_sprite_boton(edificio_sprite[id_nucleo],, 10 + (a mod 5) * 36, ypos,,,, hover_sprite_boton_text, {a : L.editor_cambiar_base})
 				editor_herramienta = 2
 			if (a mod 5) = 4
 				ypos += 36
