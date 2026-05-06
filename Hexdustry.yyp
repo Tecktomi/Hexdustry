@@ -475,6 +475,7 @@
     {"id":{"name":"spr_clonar","path":"sprites/spr_clonar/spr_clonar.yy",},},
     {"id":{"name":"spr_cobre","path":"sprites/spr_cobre/spr_cobre.yy",},},
     {"id":{"name":"spr_computador","path":"sprites/spr_computador/spr_computador.yy",},},
+    {"id":{"name":"spr_construir","path":"sprites/spr_construir/spr_construir.yy",},},
     {"id":{"name":"spr_cruce","path":"sprites/spr_cruce/spr_cruce.yy",},},
     {"id":{"name":"spr_deposito_color","path":"sprites/spr_deposito_color/spr_deposito_color.yy",},},
     {"id":{"name":"spr_deposito","path":"sprites/spr_deposito/spr_deposito.yy",},},
