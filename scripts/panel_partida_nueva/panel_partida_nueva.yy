@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"null_function",
+  "%Name":"panel_partida_nueva",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"null_function",
+  "name":"panel_partida_nueva",
   "parent":{
-    "name":"HOVER",
-    "path":"folders/SCRIPTS/CORE/HOVER.yy",
+    "name":"PANEL",
+    "path":"folders/SCRIPTS/CORE/PANEL.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

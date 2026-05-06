@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"null_function",
+  "%Name":"hover_sprite_boton_text",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"null_function",
+  "name":"hover_sprite_boton_text",
   "parent":{
     "name":"HOVER",
     "path":"folders/SCRIPTS/CORE/HOVER.yy",

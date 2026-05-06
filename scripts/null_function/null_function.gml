@@ -1,2 +1,2 @@
-function null_function(data = {}){
+function null_function(param = {}){
 }

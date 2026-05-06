@@ -1,6 +1,5 @@
 function draw_boton_text_list_end(){
 	with control{
-		var color = draw_get_color()
 		if not editor_list
 			exit
 		if get_keyboard_string >= 0{
@@ -12,23 +11,14 @@ function draw_boton_text_list_end(){
 			}
 			for(var b = 0; b < min(editor_max_height, size); b++)
 				max_width = max(max_width, string_width(editor_array_name[deslizante[get_keyboard_string] + b]))
+			var color = draw_get_color()
 			draw_set_color(c_ltgray)
 			draw_rectangle(editor_xpos, editor_ypos + 20, editor_xpos + max_width + 20, editor_ypos + 20 * (min(editor_max_height, size) + 1), false)
 			draw_set_color(c_black)
 			draw_rectangle(editor_xpos, editor_ypos + 20, editor_xpos + max_width + 20, editor_ypos + 20 * (min(editor_max_height, size) + 1), true)
+			draw_set_color(color)
 			editor_ypos += 20
-			if size > editor_max_height
-				deslizante[get_keyboard_string] = floor(draw_deslizante_vertical(editor_xpos + 10, editor_ypos, editor_ypos + 20 * min(editor_max_height, size), deslizante[get_keyboard_string], 0, size - editor_max_height, 0, 1))
-			if deslizante[get_keyboard_string] + editor_max_height < size and mouse_wheel_down()
-				deslizante[get_keyboard_string]++
-			if deslizante[get_keyboard_string] > 0 and mouse_wheel_up()
-				deslizante[get_keyboard_string]--
-			for(var i = deslizante[get_keyboard_string]; i < min(deslizante[get_keyboard_string] + editor_max_height, size); i++){
-				var j = editor_array[i]
-				draw_boton(editor_xpos + 20, editor_ypos, editor_array_name[j],,,, false, 1)
-				editor_ypos += text_y
-			}
+			scroll(editor_xpos + 10, editor_ypos, size, editor_max_height, 20, scroll_draw_boton_text_list_end, {xpos : editor_xpos + 20, ypos : editor_ypos}, get_keyboard_string)
 		}
-		draw_set_color(color)
 	}
 }

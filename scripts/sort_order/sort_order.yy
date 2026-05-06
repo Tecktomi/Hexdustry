@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"null_function",
+  "%Name":"sort_order",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"null_function",
+  "name":"sort_order",
   "parent":{
-    "name":"HOVER",
-    "path":"folders/SCRIPTS/CORE/HOVER.yy",
+    "name":"CORE",
+    "path":"folders/SCRIPTS/CORE.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

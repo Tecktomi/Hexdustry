@@ -8,5 +8,6 @@ function clear_edit(){
 		selected_dron = null_dron
 		show_menu = false
 		flow = 0
+		android_hovering = false
 	}
 }

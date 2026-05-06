@@ -405,6 +405,7 @@ L = {}
 	android_camy = camy
 	android_zoom = zoom
 	android_mouse_dis = 0
+	android_hovering = false
 #endregion
 null_sound = sound_play(snd_explosion, 0, 0, 0)
 null_edificio = {

@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"null_function",
+  "%Name":"null_function_panel",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"null_function",
+  "name":"null_function_panel",
   "parent":{
-    "name":"HOVER",
-    "path":"folders/SCRIPTS/CORE/HOVER.yy",
+    "name":"PANEL",
+    "path":"folders/SCRIPTS/CORE/PANEL.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

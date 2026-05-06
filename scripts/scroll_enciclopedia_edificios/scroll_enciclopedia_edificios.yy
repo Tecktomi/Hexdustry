@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"draw_deslizante_vertical",
+  "%Name":"scroll_enciclopedia_edificios",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"draw_deslizante_vertical",
+  "name":"scroll_enciclopedia_edificios",
   "parent":{
     "name":"SCROLL",
     "path":"folders/SCRIPTS/CORE/SCROLL.yy",

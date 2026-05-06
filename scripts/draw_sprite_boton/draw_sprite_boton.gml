@@ -1,4 +1,4 @@
-function draw_sprite_boton(sprite, subindex = 0, x, y, width = -1, height = -1, this_input_layer = 0, hover_function = null_function, data = {}){
+function draw_sprite_boton(sprite, subindex = 0, x, y, width = -1, height = -1, this_input_layer = 0, hover_function = null_function, param = {}){
 	with control{
 		if width = -1
 			width = sprite_get_width(sprite)
@@ -8,7 +8,7 @@ function draw_sprite_boton(sprite, subindex = 0, x, y, width = -1, height = -1, 
 		text_x = width
 		text_y = height
 		if input_layer = this_input_layer and mouse_x > x and mouse_y > y and mouse_x < x + width and mouse_y < y + height{
-			hover_function(data)
+			hover_function(param)
 			cursor = cr_handpoint
 			if mouse_check_button_pressed(mb_any){
 				mouse_clear(mb_any)
