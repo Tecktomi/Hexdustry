@@ -240,7 +240,8 @@ L = {}
 	editor_ypos = 0
 	editor_array_name = array_create(0, "")
 	editor_array = array_create(0, 0)
-	editor_max_height = 25
+	editor_max_height = devise ? 25 : 12
+	editor_item_size = devise ? 20 : 40
 	editor_list = false
 	nuclear_x = 0
 	nuclear_y = 0
@@ -406,6 +407,8 @@ L = {}
 	android_zoom = zoom
 	android_mouse_dis = 0
 	android_hovering = false
+	android_mx = 0
+	android_my = 0
 #endregion
 null_sound = sound_play(snd_explosion, 0, 0, 0)
 null_edificio = {
@@ -815,7 +818,8 @@ ore_max = array_length(ore_sprite)
 			"Vuela sobre sus enemigos soltando devastadores explosivos en línea recta",
 			"Reconstruye edificios destruidos",
 			"Mina recursos en el mapa y los lleva a un Almacén cercano",
-			"Dispara artillería, solo puede desplazarse desde el agua"
+			"Dispara artillería, solo puede desplazarse desde el agua",
+			"Básicamente es una batería de artillería pesada que ataca desde el mar"
 		]
 	for(var a = array_length(dron_descripcion) - 1; a >= 0; a--)
 		dron_descripcion[a] = text_wrap(dron_descripcion[a], 400)
@@ -859,13 +863,14 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 	idd_mula = def_dron("Mula", spr_dron,, 40, 400, 100, [idr_bronce, idr_hierro, idr_electronicos], [10, 20, 3], 900, true, 2)
 	idd_reparador = def_dron("Reparador", spr_reparador,, 120, 900, 3600, [idr_silicio, idr_bateria, idr_electronicos], [10, 5, 5], 1200, true, 2)
 	idd_kamikaze = def_dron("Kamikaze", spr_dron_explosivo,, 50, 400, 400, [idr_hierro, idr_explosivo, idr_electronicos], [15, 2, 2], 450, true, 2.5)
-	idd_tanque = def_dron("Tanque", spr_tanque, spr_tanque_2, 750, 1600, 90_000, [idr_hierro, idr_acero, idr_electronicos], [60, 25, 10], 1800,, 0.9, 120)
+	idd_tanque = def_dron("Tanque", spr_tanque, spr_tanque_2, 1500, 1600, 90_000, [idr_hierro, idr_acero, idr_electronicos], [60, 25, 10], 1800,, 0.8, 150)
 	idd_helicoptero = def_dron("Helicóptero", spr_helicoptero, spr_helicoptero_2, 400, 900, 40_000, [idr_acero, idr_electronicos, idr_plastico], [15, 15, 40], 1800, true, 2, 110)
 	idd_titan = def_dron("Titán", spr_titan, spr_titan_leg, 1500, 2500, 160_000, [idr_bronce, idr_acero, idr_uranio_bruto, idr_modulos], [30, 40, 75, 5], 3000,, 1.1, 75)
 	idd_bombardero = def_dron("Bombardero", spr_bombardero,, 800, 900, 1_600, [idr_bronce, idr_acero, idr_uranio_bruto, idr_modulos], [30, 40, 50, 5], 6000, true, 3, 80)
 	idd_reconstructor = def_dron("Reconstructor", spr_reconstructor,, 100, 1_600, 1_600, [idr_plastico, idr_bateria, idr_modulos], [30, 20, 1], 100, true, 2)
 	idd_minero = def_dron("Minero", spr_tanque, spr_minero, 200, 1600, 90_000, [idr_hierro, idr_acero, idr_electronicos, idr_modulos], [50, 25, 10, 1], 1200,, 0.7, 60)
-	idd_barco = def_dron("Barco", spr_barco,, 250, 900, 160_000, [idr_acero, idr_silicio, idr_electronicos], [40, 60, 20], 1000,, 1.8, 120)
+	idd_barco = def_dron("Barco", spr_barco,, 400, 900, 160_000, [idr_acero, idr_silicio, idr_electronicos], [40, 60, 20], 800,, 1.8, 15)
+	idd_destructor = def_dron("Destructuor", spr_destructor,, 1500, 1_600, 202_500, [idr_acero, idr_silicio, idr_electronicos, idr_uranio_bruto], [150, 100, 50, 50], 1600,, 1.2, 200)
 #endregion
 dron_max = array_length(dron_nombre)
 //Liquidos
@@ -1360,6 +1365,7 @@ edificio_key[id_recurso_infinito] = "1z"
 	#region dron_marino
 		tag_dron_marino = array_create(dron_max, false)
 		tag_dron_marino[idd_barco] = true
+		tag_dron_marino[idd_destructor] = true
 	#endregion
 #endregion
 //Inputs y outputs de fábrica de drones y planta de reciclaje
@@ -1420,6 +1426,7 @@ almacenes_enemigos = array_create(0, null_edificio)
 edi_sort = array_create(edificio_max, 0)
 nucleos = array_create(0, null_edificio)
 sort_edificios()
+sort_drones()
 #region Caminos
 	#region Camino 0
 		camino_0 = array_create(64, spr_camino_0_in)

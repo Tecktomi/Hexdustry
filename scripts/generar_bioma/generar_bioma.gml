@@ -26,8 +26,9 @@ function generar_bioma(bioma){
 		var size = array_length(temp_peso_data)
 		for(var i = 0; i < size; i++){
 			var temp_terreno = temp_peso_data[i, 0], cantidad = temp_peso_data[i, 1], magnitud = temp_peso_data[i, 2]
+			var temp_j = xsize / cantidad + irandom(floor(xsize / cantidad))
 			for(var j = 0; j < cantidad; j++){
-				var a = j * xsize / cantidad + irandom(floor(xsize / cantidad)), b = irandom(ysize - 1)
+				var a = j * temp_j, b = irandom(ysize - 1)
 				repeat(magnitud){
 					var temp_list = get_size(a, b, 0, 3)
 					for(var k = 0; k < 7; k++){
@@ -38,19 +39,19 @@ function generar_bioma(bioma){
 							set_terreno(aa, bb, temp_terreno)
 							if temp_terreno = idt_piedra{
 								var c = random(1)
-								if c < 0.1
-									set_terreno(aa, bb, idt_piedra_cuprica)
-								else if c < 0.2
-									set_terreno(aa, bb, idt_piedra_ferrica)
+								if c < 0.2
+									set_terreno(aa, bb, c < 0.1 ? idt_piedra_cuprica : idt_piedra_ferrica)
 							}
 						}
 					}
+					var d = irandom(5)
 					repeat(2){
-						var d = irandom(5)
 						var temp_complex = next_to(a, b, d)
-						a = clamp(temp_complex[0], 0, xsize - 1)
-						b = clamp(temp_complex[1], 0, ysize - 1)
+						a = temp_complex[0]
+						b = temp_complex[1]
 					}
+					a = clamp(a, 0, xsize - 1)
+					b = clamp(b, 0, ysize - 1)
 				}
 			}
 		}
@@ -135,24 +136,24 @@ function generar_bioma(bioma){
 			}
 		//Limpiar zona del núcleo
 		var temp_list_nucleo = get_size(floor(xsize / 2), floor(ysize / 2), 0, 7)
+		var temp_terreno_change = array_create(terreno_max, idt_pasto)
+		temp_terreno_change[idt_pared_de_arena] = idt_arena
+		temp_terreno_change[idt_agua] = idt_arena
+		temp_terreno_change[idt_agua_salada] = idt_arena
+		temp_terreno_change[idt_pared_de_piedra] = idt_piedra
+		temp_terreno_change[idt_agua_profunda] = idt_piedra
+		temp_terreno_change[idt_agua_salada_profunda] = idt_piedra
+		temp_terreno_change[idt_petroleo] = idt_piedra
+		temp_terreno_change[idt_pared_de_nieve] = idt_nieve
+		temp_terreno_change[idt_hielo] = idt_nieve
+		temp_terreno_change[idt_pared_de_pasto] = idt_pasto
+		temp_terreno_change[idt_lava] = idt_basalto
 		for(var a = array_length(temp_list_nucleo) - 1; a >= 0; a--){
 			var temp_complex = temp_list_nucleo[a], aa = temp_complex[0], bb = temp_complex[1]
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 				continue
-			if not terreno_caminable[terreno[# aa, bb]]{
-				if in(terreno[# aa, bb], idt_pared_de_arena, idt_agua, idt_agua_salada)
-					set_terreno(aa, bb, idt_arena)
-				else if in(terreno[# aa, bb], idt_pared_de_piedra, idt_agua_profunda, idt_agua_salada_profunda, idt_petroleo)
-					set_terreno(aa, bb, idt_piedra)
-				else if in(terreno[# aa, bb], idt_pared_de_nieve, idt_hielo)
-					set_terreno(aa, bb, idt_nieve)
-				else if terreno[# aa, bb] = idt_pared_de_pasto
-					set_terreno(aa, bb, idt_pasto)
-				else if terreno[# aa, bb] = idt_lava
-					set_terreno(aa, bb, idt_basalto)
-				else
-					set_terreno(aa, bb, idt_pasto)
-			}
+			if not terreno_caminable[terreno[# aa, bb]]
+				set_terreno(aa, bb, temp_terreno_change[terreno[# aa, bb]])
 		}
 		//Crear núcleo
 		if array_length(nucleos) = 0{

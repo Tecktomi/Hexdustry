@@ -45,7 +45,7 @@ function menu_editor(){
 				get_keyboard_string = -1
 			}
 			var size = array_length(mision_nombre), pos = 150
-			scroll(120, pos, size, 15, 30, scroll_editor_misiones, {xpos : 140, ypos : pos})
+			scroll(120, pos, size, devise ? 15 : 7, devise ? 30 : 50, scroll_editor_misiones, {xpos : 140, ypos : pos})
 			if draw_boton(140, 600, L.editor_nuevo_objetivo, ui_verde){
 				array_push(mision_nombre, $"{L.editor_objetivo} {size}")
 				array_push(mision_objetivo, 0)
@@ -304,7 +304,7 @@ function menu_editor(){
 			var ore_names = [], size = array_length(editor_instrucciones)
 			for(var j = 0; j < ore_max; j++)
 				array_push(ore_names, recurso_nombre[ore_recurso[j]])
-			scroll(110, ypos, size, 18, 20, scroll_editor_instrucciones, {xpos : xpos, ypos : ypos, ore_names : ore_names})
+			scroll(110, ypos, size, devise ? 18 : 9, devise ? 20 : 40, scroll_editor_instrucciones, {xpos : xpos, ypos : ypos, ore_names : ore_names})
 			xpos = 120
 			ypos += 20 * min(18, size)
 			xpos = draw_text_xpos(xpos, ypos, $"{L.editor_add} ")

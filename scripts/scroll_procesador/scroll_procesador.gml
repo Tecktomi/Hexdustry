@@ -250,7 +250,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 				procesador_link_handle = -1
 			}
 		}
-		param.ypos += 20
+		param.ypos += editor_item_size
 	}
 	return - 1
 }
