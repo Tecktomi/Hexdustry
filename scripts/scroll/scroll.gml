@@ -12,7 +12,7 @@ function scroll(xpos, ypos, variable, cantidad_elementos, altura, funcion = null
 		for(var a = deslizante[_deslizante]; a < min(deslizante[_deslizante] + cantidad_elementos, variable); a++)
 			out = max(out, funcion(a, param))
 		//Android
-		if not devise and mouse_x > xpos and mouse_y > ypos and mouse_y < ypos + cantidad_elementos * altura{
+		if not devise and mouse_x > xpos and mouse_y > ypos and mouse_y < ypos + cantidad_elementos * altura and variable > cantidad_elementos{
 			if mouse_check_button_pressed(mb_left){
 				android_mouse_y = mouse_y
 				android_camy = real(deslizante[_deslizante])

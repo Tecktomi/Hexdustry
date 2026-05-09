@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"sort_drones",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"sort_drones",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,4 +1,4 @@
-function draw_boton_text_list(xpos, ypos, variable = 0, array_name = array_create(0, ""), array = array_create(0, 0), max_height = 25){
+function draw_boton_text_list(xpos, ypos, variable = 0, array_name = array_create(0, ""), array = array_create(0, 0), max_height = devise ? 25 : 15){
 	with control{
 		if draw_boton(xpos, ypos, array_name[variable],,,, false){
 			get_keyboard_string = draw_boton_text_counter
@@ -22,14 +22,14 @@ function draw_boton_text_list(xpos, ypos, variable = 0, array_name = array_creat
 			editor_list = true
 			for(var b = 0; b < min(max_height, size); b++)
 				max_width = max(max_width, string_width(array_name[deslizante[des_index] + b]))
-			var color = draw_get_color()
+			var color = draw_get_color(), item_height = devise ? 20 : 40
 			draw_set_color(c_ltgray)
-			draw_rectangle(xpos, ypos + 20, xpos + max_width + 20, ypos + 20 * (min(max_height, size) + 1), false)
+			draw_rectangle(xpos, ypos + item_height, xpos + max_width + item_height, ypos + item_height * (min(max_height, size) + 1), false)
 			draw_set_color(c_black)
-			draw_rectangle(xpos, ypos + 20, xpos + max_width + 20, ypos + 20 * (min(max_height, size) + 1), true)
+			draw_rectangle(xpos, ypos + item_height, xpos + max_width + item_height, ypos + item_height * (min(max_height, size) + 1), true)
 			draw_set_color(color)
-			ypos += 20
-			var out = scroll(xpos + 10, ypos, size, max_height, 20, scroll_draw_boton_text_list, {xpos : xpos + 20, ypos : ypos, array : array, array_name : array_name, a : a, color : color}, des_index)
+			ypos += item_height
+			var out = scroll(xpos + 10, ypos, size, max_height, item_height, scroll_draw_boton_text_list, {xpos : xpos + item_height, ypos : ypos, array : array, array_name : array_name, a : a, color : color}, des_index)
 			if out != -1
 				return out
 			text_x = real(a)

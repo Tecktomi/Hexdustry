@@ -40,7 +40,7 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 						target_y = edificio.center_y
 					}
 					var dis = distance(aa, bb, target_x, target_y)
-					var municion = add_municion(aa, bb, vel * (target_x - aa) / dis, vel * (target_y - bb) / dis, 1, dis / vel, 30, 4900, target, edificio, dron.enemigo,,, _jugador)
+					var municion = add_municion(aa, bb, vel * (target_x - aa) / dis, vel * (target_y - bb) / dis, 1, dis / vel, 30, 3600, target, edificio, dron.enemigo,,, _jugador)
 					array_push(municiones, municion)
 				}
 			}
@@ -105,7 +105,7 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 			if dron.step = dron_step[index]{
 				dron.step = 0
 				if target != null_dron or edificio != null_edificio{
-					var aa = dron.x, bb = dron.y, vel = 15
+					var aa = dron.x, bb = dron.y, vel = 20
 					if target != null_dron
 						var target_x = target.x, target_y = target.y
 					else{
@@ -113,10 +113,32 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 						target_y = edificio.center_y
 					}
 					var dis = distance(aa, bb, target_x, target_y)
-					var municion = add_municion(aa, bb, vel * (target_x - aa) / dis, vel * (target_y - bb) / dis, 1, dis / vel, 20, 2500, target, edificio, dron.enemigo, true,, _jugador)
+					var municion = add_municion(aa, bb, vel * (target_x - aa) / dis, vel * (target_y - bb) / dis, 4, dis / vel, 20,, target, edificio, dron.enemigo,,, _jugador)
 					array_push(municiones, municion)
 				}
 			}
+			return false
+		}
+		//Ataque Destructor
+		else if index = idd_destructor{
+			if in(dron.step - dron_step[index], 0, 20, 40, 60, 80){
+				if dron.step++ >= dron_step[index] + 80
+					dron.step = 0
+				if target != null_dron or edificio != null_edificio{
+					var aa = dron.x, bb = dron.y, vel = 20
+					if target != null_dron
+						var target_x = target.x, target_y = target.y
+					else{
+						target_x = edificio.center_x
+						target_y = edificio.center_y
+					}
+					var dis = distance(aa, bb, target_x, target_y)
+					var municion = add_municion(aa, bb, vel * (target_x + random_range(-25, 25) - aa) / dis, vel * (target_y + random_range(-25, 25) - bb) / dis, 1, dis / vel, 10_000, 50, target, edificio, dron.enemigo,,, _jugador)
+					array_push(municiones, municion)
+				}
+			}
+			if dron.step > dron_step[index] + 80
+				dron.step = 0
 			return false
 		}
 		return false

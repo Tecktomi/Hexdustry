@@ -1,10 +1,11 @@
 function scroll_enciclopedia_drones(a = 0, param = {xpos : 140, ypos : 0}){
 	with control{
-		if draw_boton(param.xpos, param.ypos, dron_nombre[a],,,, false){
+		draw_sprite_stretched(dron_sprite[dron_sort[a]], 0, param.xpos - 20, param.ypos, devise ? 18 : 36, devise ? 18 : 36)
+		if draw_boton(param.xpos, param.ypos, dron_nombre[dron_sort[a]],,,, false){
 			enciclopedia_item = a
 			enciclopedia = 6
 		}
-		param.ypos += 20
+		param.ypos += editor_item_size
 	}
 	return -1
 }

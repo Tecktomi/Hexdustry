@@ -2,8 +2,6 @@ function explosion(aa = 0, bb = 0, edificio = control.null_edificio, enemigo = t
 	with control{
 		sound_play(snd_explosion, aa, bb)
 		array_push(efectos, add_efecto(spr_explosion, 0, aa, bb, 24, 1 / 3))
-		if edificio != null_edificio
-			herir_edificio(dmg / 10, edificio)
 		var temp_complex = xytoab(aa, bb)
 		if temp_complex[0] < 0
 			exit

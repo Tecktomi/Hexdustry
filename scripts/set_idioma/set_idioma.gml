@@ -2,35 +2,7 @@ function set_idioma(){
 	with control{
 		//English
 		if idioma = 0{
-			//Recursos
-			recurso_nombre[idr_acero] = "Steel"
-			recurso_nombre[idr_arena] = "Sand"
-			recurso_nombre[idr_bateria] = "Batery"
-			recurso_nombre[idr_barril_con_agua] = "Barrel with Water"
-			recurso_nombre[idr_barril_con_agua_salada] = "Barrel with Salt Water"
-			recurso_nombre[idr_barril_con_lava] = "Barrel with Lava"
-			recurso_nombre[idr_barril_con_petroleo] = "Barrel with Oil"
-			recurso_nombre[idr_barril_con_acido] = "Barrel with Acid"
-			recurso_nombre[idr_bronce] = "Bronze"
-			recurso_nombre[idr_carbon] = "Coal"
-			recurso_nombre[idr_cobre] = "Copper"
-			recurso_nombre[idr_compuesto_incendiario] = "Incendiary Compound"
-			recurso_nombre[idr_concreto] = "Concrete"
-			recurso_nombre[idr_electronicos] = "Electronics"
-			recurso_nombre[idr_explosivo] = "Explosive"
-			recurso_nombre[idr_hierro] = "Iron"
-			recurso_nombre[idr_modulos] = "Modules"
-			recurso_nombre[idr_piedra] = "Stone"
-			recurso_nombre[idr_piedra_cuprica] = "Cupric Stone"
-			recurso_nombre[idr_piedra_ferrica] = "Ferric Stone"
-			recurso_nombre[idr_piedra_sulfatada] = "Sulfated Stone"
-			recurso_nombre[idr_plastico] = "Plastic"
-			recurso_nombre[idr_sal] = "Salt"
-			recurso_nombre[idr_silicio] = "Silicon"
-			recurso_nombre[idr_uranio_bruto] = "Raw Uranium"
-			recurso_nombre[idr_uranio_empobrecido] = "Depleted Uranium"
-			recurso_nombre[idr_uranio_enriquecido] = "Enriched Uranium"
-			//Categorias
+			CONTROL_NOMBRE = ["Left", "Right", "Up", "Down", "Pause", "Menu", "Toggle Sound", "Toggle Waves", "Hide Interface", "Show Information", "Show Vectors", "Encyclopedia", "Rotate Building", "Rebuild Buildings", "Show Networks", "Show Flows", "Create Blueprint", "See Players"]
 			categoria_nombre[0] = "Transport"
 			categoria_nombre[1] = "Extraction"
 			categoria_nombre[2] = "Production"
@@ -39,42 +11,96 @@ function set_idioma(){
 			categoria_nombre[5] = "Defense"
 			categoria_nombre[6] = "Logic"
 			categoria_nombre[7] = "Drons"
-			//Terrenos
-			terreno_nombre[idt_agua] = "Water"
-			terreno_nombre[idt_agua_profunda] = "Deep Water"
-			terreno_nombre[idt_agua_salada] = "Salt Water"
-			terreno_nombre[idt_agua_salada_profunda] = "Deep Salt Water"
-			terreno_nombre[idt_arena] = "Sand"
-			terreno_nombre[idt_basalto] = "Basalt"
-			terreno_nombre[idt_basalto_sulfatado] = "Sulfated Basalt"
-			terreno_nombre[idt_ceniza] = "Ash"
-			terreno_nombre[idt_hielo] = "Ice"
-			terreno_nombre[idt_lava] = "Lava"
-			terreno_nombre[idt_nieve] = "Snow"
-			terreno_nombre[idt_pared_de_arena] = "Sand Wall"
-			terreno_nombre[idt_pared_de_nieve] = "Snow Wall"
-			terreno_nombre[idt_pared_de_pasto] = "Grass Wall"
-			terreno_nombre[idt_pared_de_piedra] = "Stone Wall"
-			terreno_nombre[idt_pasto] = "Grass"
-			terreno_nombre[idt_petroleo] = "Oil"
-			terreno_nombre[idt_piedra] = "Stone"
-			terreno_nombre[idt_piedra_cuprica] = "Cupric stone"
-			terreno_nombre[idt_piedra_ferrica] = "Ferric stone"
-			terreno_nombre[idt_salar] = "Salt flat"
-			//Drones
+			dron_descripcion[idd_arana] = "Fires a laser at nearby enemies"
+			dron_descripcion[idd_barco] = "Fires artillery and can only move on water"
+			dron_descripcion[idd_bombardero] = "Flies over its enemies, dropping devastating explosives in a straight line"
+			dron_descripcion[idd_destructor] = "Basically a heavy artillery battery that attacks from the sea"
+			dron_descripcion[idd_helicoptero] = "Advanced aerial unit, attacks from a distance"
+			dron_descripcion[idd_kamikaze] = "Approaches its target and explodes, dealing damage"
+			dron_descripcion[idd_minero] = "Mines resources on the map and delivers them to a nearby Storage"
+			dron_descripcion[idd_mula] = "Transports resources between Cargo Ports"
+			dron_descripcion[idd_reconstructor] = "Rebuilds destroyed buildings"
+			dron_descripcion[idd_reparador] = "Repairs damaged buildings"
+			dron_descripcion[idd_tanque] = "Heavy siege unit that fires explosives, damaging everything around it"
+			dron_descripcion[idd_titan] = "Ultimate ground unit that fires a long-range explosive barrage"
 			dron_nombre[idd_arana] = "Spider"
+			dron_nombre[idd_barco] = "Boat"
 			dron_nombre[idd_bombardero] = "Bomber"
-			dron_nombre[idd_mula] = "Mule"
-			dron_nombre[idd_kamikaze] = "Kamikaze"
+			dron_nombre[idd_destructor] = "Destroyer"
 			dron_nombre[idd_helicoptero] = "Helicopter"
+			dron_nombre[idd_kamikaze] = "Kamikaze"
+			dron_nombre[idd_minero] = "Miner"
+			dron_nombre[idd_mula] = "Mule"
+			dron_nombre[idd_reconstructor] = "Reconstructor"
 			dron_nombre[idd_reparador] = "Repair Unit"
 			dron_nombre[idd_tanque] = "Tank"
 			dron_nombre[idd_titan] = "Titan"
-			//Edificios
+			edificio_descripcion[id_almacen] = "Stores resources for later use"
+			edificio_descripcion[id_bateria] = "Resource required for producing all types of Drones"
+			edificio_descripcion[id_bomba_de_evaporacion] = "Slowly extracts Water through evaporation."
+			edificio_descripcion[id_bomba_hidraulica] = "Extracts liquids from the ground using energy."
+			edificio_descripcion[id_cable] = "Connects nearby buildings to the power grid."
+			edificio_descripcion[id_cinta_grande] = "Transports drones between factories"
+			edificio_descripcion[id_cinta_magnetica] = "Improved version of the Conveyor Belt that transports more items."
+			edificio_descripcion[id_cinta_transportadora] = "Moves resources from one place to another."
+			edificio_descripcion[id_cruce] = "Allows conveyor belt connections to cross"
+			edificio_descripcion[id_deposito] = "Stores large amounts of liquid."
+			edificio_descripcion[id_embotelladora] = "Fills and empties barrels with liquids"
+			edificio_descripcion[id_energia_infinita] = "Generates energy using magic."
+			edificio_descripcion[id_enrutador] = "Distributes resources in a chosen direction."
+			edificio_descripcion[id_ensambladora] = "Uses Copper and Silicon to produce components."
+			edificio_descripcion[id_extractor_atmosferico] = "Extracts water from the atmosphere, ideal for terrains where it is difficult to obtain"
+			edificio_descripcion[id_fabrica_de_concreto] = "Produces concrete from Sand, Stone, and Water"
+			edificio_descripcion[id_fabrica_de_drones] = "Produces transport drones using Silicon, Batteries, and a large amount of energy."
+			edificio_descripcion[id_fabrica_de_drones_grande] = "Allows the production of larger drones using Acid"
+			edificio_descripcion[id_generador] = "Generates energy using fuel."
+			edificio_descripcion[id_generador_geotermico] = "Generates energy by evaporating Water; must be built on lava."
+			edificio_descripcion[id_horno] = "Uses fuel to smelt Bronze, Steel, and Silicon."
+			edificio_descripcion[id_horno_de_lava] = "Similar to a normal furnace but uses the heat of lava to smelt faster."
+			edificio_descripcion[id_lanzallamas] = "Uses combustible resources to burn enemies. Can be boosted with Oil."
+			edificio_descripcion[id_laser] = "Fires a constant laser whose damage depends on available energy."
+			edificio_descripcion[id_liquido_infinito] = "Generates any liquid of choice using magic."
+			edificio_descripcion[id_memoria] = "Stores up to 128 data values."
+			edificio_descripcion[id_mensaje] = "Allows writing messages."
+			edificio_descripcion[id_modulo] = "Improves the characteristics of a building"
+			edificio_descripcion[id_mortero] = "Fires long-range explosives, devastating groups of enemies."
+			edificio_descripcion[id_muro] = "Distracts enemies while your defenses deal with them."
+			edificio_descripcion[id_muro_reforzado] = "An improved version of the wall, harder and better"
+			edificio_descripcion[id_nucleo] = "It is the command center. All resources are stored here, and you must protect it at all costs."
+			edificio_descripcion[id_onda_de_choque] = "Charges and releases a powerful shockwave that damages and slows all enemies within its range."
+			edificio_descripcion[id_overflow] = "Diverts resources once the line becomes saturated."
+			edificio_descripcion[id_panel_solar] = "Generates clean energy from sunlight."
+			edificio_descripcion[id_pantalla] = "Allows drawing images sent from a processor"
+			edificio_descripcion[id_perforadora_de_petroleo] = "Produces oil at high cost anywhere on the map."
+			edificio_descripcion[id_planta_de_enriquecimiento] = "Allows recycling uranium by consuming large amounts of water and energy continuously"
+			edificio_descripcion[id_planta_de_reciclaje] = "Allows recycling part of the resources from nearby destroyed enemies"
+			edificio_descripcion[id_planta_desalinizadora] = "Purifies salt water to extract Salt and fresh Water"
+			edificio_descripcion[id_planta_nuclear] = "Consumes 1 part Enriched Uranium and 20 parts Depleted Uranium along with large amounts of Water to generate massive energy."
+			edificio_descripcion[id_planta_quimica] = "Allows selecting a recipe to produce chemical compounds."
+			edificio_descripcion[id_procesador] = "Processes logical instructions."
+			edificio_descripcion[id_puerto_de_carga] = "Connects Cargo Ports so your drones can move resources between them."
+			edificio_descripcion[id_recurso_infinito] = "Generates resources using magic."
+			edificio_descripcion[id_refineria_de_metales] = "Refines Copper Stone or Iron Stone into Copper or Iron using Acid."
+			edificio_descripcion[id_refineria_de_petroleo] = "Uses fractional distillation to extract Plastic, Fuel, and Sulfur from Oil"
+			edificio_descripcion[id_rifle] = "Long-range defense turret that fires Bronze, Steel, or Uranium."
+			edificio_descripcion[id_selector] = "Allows only one specific resource to pass while diverting the rest."
+			edificio_descripcion[id_silo_de_misiles] = "Here you can build a nuclear missile using steel, explosives, oil, and enriched uranium."
+			edificio_descripcion[id_taladro] = "Mines copper, iron, and coal at no cost. Can be boosted with Water."
+			edificio_descripcion[id_taladro_de_explosion] = "Uses explosives to extract one resource from every minable tile in its area."
+			edificio_descripcion[id_taladro_electrico] = "Improved drill that also extracts stone and sand from the ground but consumes energy. Can be boosted with Water"
+			edificio_descripcion[id_torre_basica] = "Simple defense turret; can shoot Copper or Iron."
+			edificio_descripcion[id_torre_de_alta_tension] = "Connects power grids across long distances."
+			edificio_descripcion[id_torre_reparadora] = "Projects a repair laser onto nearby buildings using energy."
+			edificio_descripcion[id_triturador] = "Crushes stone into sand."
+			edificio_descripcion[id_tuberia] = "Connects structures to transport liquids."
+			edificio_descripcion[id_tuberia_subterranea] = "Connects liquid pipelines underground."
+			edificio_descripcion[id_tunel] = "Sends resources underground so other structures can be built above."
+			edificio_descripcion[id_tunel_salida] = "Sends resources underground so other structures can be built above."
+			edificio_descripcion[id_turbina] = "Generates energy using a fuel and Water."
 			edificio_nombre[id_almacen] = "Warehouse"
 			edificio_nombre[id_bateria] = "Battery"
-			edificio_nombre[id_bomba_hidraulica] = "Hydraulic Pump"
 			edificio_nombre[id_bomba_de_evaporacion] = "Evaporation Pump"
+			edificio_nombre[id_bomba_hidraulica] = "Hydraulic Pump"
 			edificio_nombre[id_cable] = "Cable"
 			edificio_nombre[id_cinta_grande] = "Large Conveyor"
 			edificio_nombre[id_cinta_magnetica] = "Magnetic Belt"
@@ -98,21 +124,21 @@ function set_idioma(){
 			edificio_nombre[id_liquido_infinito] = "Infinite Liquid"
 			edificio_nombre[id_memoria] = "Memory"
 			edificio_nombre[id_mensaje] = "Message"
+			edificio_nombre[id_modulo] = "Module"
 			edificio_nombre[id_mortero] = "Mortar"
 			edificio_nombre[id_muro] = "Wall"
 			edificio_nombre[id_muro_reforzado] = "Reinforced Wall"
-			edificio_nombre[id_modulo] = "Module"
 			edificio_nombre[id_nucleo] = "Nucleus"
 			edificio_nombre[id_onda_de_choque] = "Shockwave"
 			edificio_nombre[id_overflow] = "Overflow"
 			edificio_nombre[id_panel_solar] = "Solar Panel"
 			edificio_nombre[id_pantalla] = "Display"
 			edificio_nombre[id_perforadora_de_petroleo] = "Oil Driller"
+			edificio_nombre[id_planta_de_enriquecimiento] = "Enrichment Plant"
+			edificio_nombre[id_planta_de_reciclaje] = "Recycling Plant"
 			edificio_nombre[id_planta_desalinizadora] = "Desalination Plant"
 			edificio_nombre[id_planta_nuclear] = "Nuclear Plant"
 			edificio_nombre[id_planta_quimica] = "Chemical Plant"
-			edificio_nombre[id_planta_de_enriquecimiento] = "Enrichment Plant"
-			edificio_nombre[id_planta_de_reciclaje] = "Recycling Plant"
 			edificio_nombre[id_procesador] = "Processor"
 			edificio_nombre[id_puerto_de_carga] = "Charging Port"
 			edificio_nombre[id_recurso_infinito] = "Infinite Resource"
@@ -122,17 +148,126 @@ function set_idioma(){
 			edificio_nombre[id_selector] = "Sorter"
 			edificio_nombre[id_silo_de_misiles] = "Missile Silo"
 			edificio_nombre[id_taladro] = "Drill"
-			edificio_nombre[id_taladro_electrico] = "Electric Drill"
 			edificio_nombre[id_taladro_de_explosion] = "Explosion Drill"
-			edificio_nombre[id_torre_reparadora] = "Repair Tower"
+			edificio_nombre[id_taladro_electrico] = "Electric Drill"
 			edificio_nombre[id_torre_basica] = "Basic Tower"
 			edificio_nombre[id_torre_de_alta_tension] = "High Voltage Tower"
+			edificio_nombre[id_torre_reparadora] = "Repair Tower"
 			edificio_nombre[id_triturador] = "Crusher"
 			edificio_nombre[id_tuberia] = "Pipe"
 			edificio_nombre[id_tuberia_subterranea] = "Underground Pipe"
-			edificio_nombre[id_turbina] = "Turbine"
 			edificio_nombre[id_tunel] = "Tunnel"
 			edificio_nombre[id_tunel_salida] = "Tunnel Exit"
+			edificio_nombre[id_turbina] = "Turbine"
+			misiles_descripcion[0] = "A simple guided missile"
+			misiles_descripcion[1] = "Destroys an area with multiple explosions"
+			misiles_descripcion[2] = "Destroys the enemy base and instantly wins the match"
+			misiles_nombre[0] = "Cruise Missile"
+			misiles_nombre[1] = "Cluster Missile"
+			misiles_nombre[2] = "Nuclear Missile"
+			objetivos_nombre[0] = "obtain"
+			objetivos_nombre[1] = "have stored"
+			objetivos_nombre[2] = "build"
+			objetivos_nombre[3] = "have built"
+			objetivos_nombre[4] = "survive waves"
+			objetivos_nombre[5] = "no objective"
+			objetivos_nombre[6] = "press ADWS"
+			objetivos_nombre[7] = "load building"
+			objetivos_nombre[8] = "destroy building"
+			planta_quimica_descripcion[0] = "Consumes Sulfated Stone and energy to produce Acid"
+			planta_quimica_descripcion[1] = "Uses Incendiary Compound and Acid to produce Explosives"
+			planta_quimica_descripcion[2] = "Uses Acid, Copper, and energy to produce Batteries"
+			planta_quimica_receta[0] = "Acid"
+			planta_quimica_receta[1] = "Explosives"
+			planta_quimica_receta[2] = "Batteries"
+			procesador_instrucciones_nombre[0] = "Continue"
+			procesador_instrucciones_nombre[1] = "Assign variable"
+			procesador_instrucciones_nombre[2] = "Single-variable operations"
+			procesador_instrucciones_nombre[3] = "Two-variable operations"
+			procesador_instrucciones_nombre[4] = "Jump to line"
+			procesador_instrucciones_nombre[5] = "Read building information"
+			procesador_instrucciones_nombre[6] = "Control building"
+			procesador_instrucciones_nombre[7] = "Read memory data"
+			procesador_instrucciones_nombre[8] = "Write memory data"
+			procesador_instrucciones_nombre[9] = "Draw to screen"
+			procesador_nombres_1var = ["sine", "cosine", "tangent", "random", "floor", "round", "ceil", "square", "square root", "pi"]
+			procesador_nombres_2var = [" + ", " - ", " * ", " / ", " integer division ", " modulo ", " or ", " and ", " xor ", " << ", " >> ", " power "]
+			procesador_nombres_draw = ["Clear", "Color grb", "Color hsv", "Rectangle", "Line", "Triangle", "Circle", "Text", "Draw flush"]
+			procesador_nombres_read_data = ["eneabled", "load", "liquid type", "liquid storage", "liquid capacity", "liquido production", "liquid consume", "energy storage", "energy capacity", "energy production", "energy consume"]
+			recurso_descripcion[idr_acero] = "Useful resource for constructing mid-tier infrastructure"
+			recurso_descripcion[idr_arena] = "Resource required for producing refined goods such as Silicon or Concrete"
+			recurso_descripcion[idr_barril_con_acido] = "Barrel with Acid, useful for storing and distributing it"
+			recurso_descripcion[idr_barril_con_agua] = "Barrel with Water, useful for storing and distributing water"
+			recurso_descripcion[idr_barril_con_agua_salada] = "Barrel with Salt Water, useful for storing and distributing it"
+			recurso_descripcion[idr_barril_con_lava] = "Barrel with Lava, useful for storing and distributing it"
+			recurso_descripcion[idr_barril_con_petroleo] = "Barrel with Oil, useful for storing and distributing it"
+			recurso_descripcion[idr_bronce] = "Useful resource for constructing mid-tier infrastructure"
+			recurso_descripcion[idr_carbon] = "Basic fuel, useful for operating Furnaces and Generators"
+			recurso_descripcion[idr_cobre] = "Basic resource, essential for early buildings. Can be refined to obtain Bronze"
+			recurso_descripcion[idr_compuesto_incendiario] = "Advanced fuel, more efficient and durable than Coal"
+			recurso_descripcion[idr_concreto] = "Resource used for building mid-tier infrastructure"
+			recurso_descripcion[idr_explosivo] = "Approaches its target and explodes, dealing damage"
+			recurso_descripcion[idr_hierro] = "Basic resource, essential for early buildings"
+			recurso_descripcion[idr_modulos] = "Research Modules and build two Assemblers next to each other to start producing them"
+			recurso_descripcion[idr_piedra] = "Resource required for producing Concrete. Can be transformed into Sand in a Crusher"
+			recurso_descripcion[idr_piedra_cuprica] = "Can be used as normal Stone or purified to obtain Copper"
+			recurso_descripcion[idr_piedra_ferrica] = "Can be used as normal Stone or purified to obtain Iron"
+			recurso_descripcion[idr_piedra_sulfatada] = "Can be used as normal Stone, but is essential for producing more refined goods"
+			recurso_descripcion[idr_plastico] = "Lightweight material, useful for Drone production"
+			recurso_descripcion[idr_sal] = "Useful resource for improving other industrial processes such as the chemical plant, oil refinery, and silicon production"
+			recurso_descripcion[idr_silicio] = "Resource useful for producing Solar Panels, Drones, and Circuits"
+			recurso_descripcion[idr_uranio_bruto] = "Unrefined uranium, useful as ammunition. Can be refined to separate Depleted Uranium from Enriched Uranium"
+			recurso_descripcion[idr_uranio_empobrecido] = "Uranium-238, required to support energy production in Nuclear Plants and useful as ammunition"
+			recurso_descripcion[idr_uranio_enriquecido] = "Uranium-235, useful for power generation in Nuclear Plants"
+			recurso_nombre[idr_acero] = "Steel"
+			recurso_nombre[idr_arena] = "Sand"
+			recurso_nombre[idr_barril_con_acido] = "Barrel with Acid"
+			recurso_nombre[idr_barril_con_agua] = "Barrel with Water"
+			recurso_nombre[idr_barril_con_agua_salada] = "Barrel with Salt Water"
+			recurso_nombre[idr_barril_con_lava] = "Barrel with Lava"
+			recurso_nombre[idr_barril_con_petroleo] = "Barrel with Oil"
+			recurso_nombre[idr_bateria] = "Batery"
+			recurso_nombre[idr_bronce] = "Bronze"
+			recurso_nombre[idr_carbon] = "Coal"
+			recurso_nombre[idr_cobre] = "Copper"
+			recurso_nombre[idr_compuesto_incendiario] = "Incendiary Compound"
+			recurso_nombre[idr_concreto] = "Concrete"
+			recurso_nombre[idr_electronicos] = "Electronics"
+			recurso_nombre[idr_explosivo] = "Explosive"
+			recurso_nombre[idr_hierro] = "Iron"
+			recurso_nombre[idr_modulos] = "Modules"
+			recurso_nombre[idr_piedra] = "Stone"
+			recurso_nombre[idr_piedra_cuprica] = "Cupric Stone"
+			recurso_nombre[idr_piedra_ferrica] = "Ferric Stone"
+			recurso_nombre[idr_piedra_sulfatada] = "Sulfated Stone"
+			recurso_nombre[idr_plastico] = "Plastic"
+			recurso_nombre[idr_sal] = "Salt"
+			recurso_nombre[idr_silicio] = "Silicon"
+			recurso_nombre[idr_uranio_bruto] = "Raw Uranium"
+			recurso_nombre[idr_uranio_empobrecido] = "Depleted Uranium"
+			recurso_nombre[idr_uranio_enriquecido] = "Enriched Uranium"
+			terreno_nombre[idt_agua] = "Water"
+			terreno_nombre[idt_agua_profunda] = "Deep Water"
+			terreno_nombre[idt_agua_salada] = "Salt Water"
+			terreno_nombre[idt_agua_salada_profunda] = "Deep Salt Water"
+			terreno_nombre[idt_arena] = "Sand"
+			terreno_nombre[idt_basalto] = "Basalt"
+			terreno_nombre[idt_basalto_sulfatado] = "Sulfated Basalt"
+			terreno_nombre[idt_ceniza] = "Ash"
+			terreno_nombre[idt_hielo] = "Ice"
+			terreno_nombre[idt_lava] = "Lava"
+			terreno_nombre[idt_nieve] = "Snow"
+			terreno_nombre[idt_pared_de_arena] = "Sand Wall"
+			terreno_nombre[idt_pared_de_nieve] = "Snow Wall"
+			terreno_nombre[idt_pared_de_pasto] = "Grass Wall"
+			terreno_nombre[idt_pared_de_piedra] = "Stone Wall"
+			terreno_nombre[idt_pasto] = "Grass"
+			terreno_nombre[idt_petroleo] = "Oil"
+			terreno_nombre[idt_piedra] = "Stone"
+			terreno_nombre[idt_piedra_cuprica] = "Cupric stone"
+			terreno_nombre[idt_piedra_ferrica] = "Ferric stone"
+			terreno_nombre[idt_salar] = "Salt flat"	
+			variable_struct_set(L, "abandonado", "Abandoned")variable_struct_set(L, "abrir_en_LAN", "Open in LAN")
 			variable_struct_set(L, "activado", "Enabled")
 			variable_struct_set(L, "activar", "Activate")
 			variable_struct_set(L, "almacen_acepta", "Accepts")
@@ -150,7 +285,14 @@ function set_idioma(){
 			variable_struct_set(L, "almacen_sin_receta", "No Recipe")
 			variable_struct_set(L, "almacen_sin_recursos", "No resources")
 			variable_struct_set(L, "almacen_total", "Total")
+			variable_struct_set(L, "archivo_obsoleto", "Error\n\noutdated file")
+			variable_struct_set(L, "autoguardado", "Auto Save")
+			variable_struct_set(L, "buscar_servidores_en_LAN", "Search for LAN servers")
 			variable_struct_set(L, "cancelar", "Cancel")
+			variable_struct_set(L, "cargar_partida", "Load Game")
+			variable_struct_set(L, "cargar_plano", "Load Blueprint")
+			variable_struct_set(L, "conectarse_a", "Connect to")
+			variable_struct_set(L, "conexion_directa", "Direct Connection")
 			variable_struct_set(L, "construir_combinar_liquidos", "Cannot mix liquids")
 			variable_struct_set(L, "construir_enemigos_cerca", "Enemies too close!")
 			variable_struct_set(L, "construir_ocupado", "Occupied terrain")
@@ -164,105 +306,17 @@ function set_idioma(){
 			variable_struct_set(L, "construir_terreno_hielo", "Terrain is too unstable")
 			variable_struct_set(L, "construir_terreno_invalido", "Invalid terrain")
 			variable_struct_set(L, "construir_zona_enemigos", "Enemy spawn zone")
+			variable_struct_set(L, "continuar", "Continue")
+			variable_struct_set(L, "controles", "Controls")
 			variable_struct_set(L, "cuevas", "Caves")
 			variable_struct_set(L, "desactivado", "Disabled")
 			variable_struct_set(L, "desactivar", "Deactivate")
-			recurso_descripcion[idr_acero] = "Useful resource for constructing mid-tier infrastructure"
-			edificio_descripcion[id_almacen] = "Stores resources for later use"
-			dron_descripcion[idd_arana] = "Fires a laser at nearby enemies"
-			recurso_descripcion[idr_arena] = "Resource required for producing refined goods such as Silicon or Concrete"
-			recurso_descripcion[idr_barril_con_agua] = "Barrel with Water, useful for storing and distributing water"
-			recurso_descripcion[idr_barril_con_agua_salada] = "Barrel with Salt Water, useful for storing and distributing it"
-			recurso_descripcion[idr_barril_con_lava] = "Barrel with Lava, useful for storing and distributing it"
-			recurso_descripcion[idr_barril_con_petroleo] = "Barrel with Oil, useful for storing and distributing it"
-			recurso_descripcion[idr_barril_con_acido] = "Barrel with Acid, useful for storing and distributing it"
-			edificio_descripcion[id_bateria] = "Resource required for producing all types of Drones"
-			edificio_descripcion[id_bomba_hidraulica] = "Extracts liquids from the ground using energy."
-			edificio_descripcion[id_bomba_de_evaporacion] = "Slowly extracts Water through evaporation."
-			dron_descripcion[idd_bombardero] = "Flies over its enemies, dropping devastating explosives in a straight line"
-			recurso_descripcion[idr_bronce] = "Useful resource for constructing mid-tier infrastructure"
-			edificio_descripcion[id_cable] = "Connects nearby buildings to the power grid."
-			recurso_descripcion[idr_carbon] = "Basic fuel, useful for operating Furnaces and Generators"
-			edificio_descripcion[id_cinta_grande] = "Transports drones between factories"
-			edificio_descripcion[id_cinta_magnetica] = "Improved version of the Conveyor Belt that transports more items."
-			edificio_descripcion[id_cinta_transportadora] = "Moves resources from one place to another."
-			recurso_descripcion[idr_cobre] = "Basic resource, essential for early buildings. Can be refined to obtain Bronze"
-			recurso_descripcion[idr_compuesto_incendiario] = "Advanced fuel, more efficient and durable than Coal"
-			recurso_descripcion[idr_concreto] = "Resource used for building mid-tier infrastructure"
-			edificio_descripcion[id_cruce] = "Allows conveyor belt connections to cross"
-			edificio_descripcion[id_deposito] = "Stores large amounts of liquid."
-			dron_descripcion[idd_mula] = "Transports resources between Cargo Ports"
-			edificio_descripcion[id_embotelladora] = "Fills and empties barrels with liquids"
-			edificio_descripcion[id_energia_infinita] = "Generates energy using magic."
-			edificio_descripcion[id_enrutador] = "Distributes resources in a chosen direction."
-			edificio_descripcion[id_ensambladora] = "Uses Copper and Silicon to produce components."
-			recurso_descripcion[idr_explosivo] = "Approaches its target and explodes, dealing damage"
-			edificio_descripcion[id_extractor_atmosferico] = "Extracts water from the atmosphere, ideal for terrains where it is difficult to obtain"
-			edificio_descripcion[id_fabrica_de_concreto] = "Produces concrete from Sand, Stone, and Water"
-			edificio_descripcion[id_fabrica_de_drones] = "Produces transport drones using Silicon, Batteries, and a large amount of energy."
-			edificio_descripcion[id_fabrica_de_drones_grande] = "Allows the production of larger drones using Acid"
-			edificio_descripcion[id_generador] = "Generates energy using fuel."
-			edificio_descripcion[id_generador_geotermico] = "Generates energy by evaporating Water; must be built on lava."
-			recurso_descripcion[idr_hierro] = "Basic resource, essential for early buildings"
-			edificio_descripcion[id_horno] = "Uses fuel to smelt Bronze, Steel, and Silicon."
-			edificio_descripcion[id_horno_de_lava] = "Similar to a normal furnace but uses the heat of lava to smelt faster."
-			edificio_descripcion[id_lanzallamas] = "Uses combustible resources to burn enemies. Can be boosted with Oil."
-			edificio_descripcion[id_laser] = "Fires a constant laser whose damage depends on available energy."
-			edificio_descripcion[id_liquido_infinito] = "Generates any liquid of choice using magic."
-			edificio_descripcion[id_memoria] = "Stores up to 128 data values."
-			edificio_descripcion[id_mensaje] = "Allows writing messages."
-			edificio_descripcion[id_mortero] = "Fires long-range explosives, devastating groups of enemies."
-			edificio_descripcion[id_muro] = "Distracts enemies while your defenses deal with them."
-			edificio_descripcion[id_muro_reforzado] = "An improved version of the wall, harder and better"
-			edificio_descripcion[id_modulo] = "Improves the characteristics of a building"
-			recurso_descripcion[idr_modulos] = "Research Modules and build two Assemblers next to each other to start producing them"
-			edificio_descripcion[id_nucleo] = "It is the command center. All resources are stored here, and you must protect it at all costs."
-			edificio_descripcion[id_onda_de_choque] = "Charges and releases a powerful shockwave that damages and slows all enemies within its range."
-			edificio_descripcion[id_overflow] = "Diverts resources once the line becomes saturated."
-			edificio_descripcion[id_panel_solar] = "Generates clean energy from sunlight."
-			edificio_descripcion[id_pantalla] = "Allows drawing images sent from a processor"
-			edificio_descripcion[id_perforadora_de_petroleo] = "Produces oil at high cost anywhere on the map."
-			recurso_descripcion[idr_piedra] = "Resource required for producing Concrete. Can be transformed into Sand in a Crusher"
-			recurso_descripcion[idr_piedra_cuprica] = "Can be used as normal Stone or purified to obtain Copper"
-			recurso_descripcion[idr_piedra_ferrica] = "Can be used as normal Stone or purified to obtain Iron"
-			recurso_descripcion[idr_piedra_sulfatada] = "Can be used as normal Stone, but is essential for producing more refined goods"
-			edificio_descripcion[id_planta_desalinizadora] = "Purifies salt water to extract Salt and fresh Water"
-			edificio_descripcion[id_planta_nuclear] = "Consumes 1 part Enriched Uranium and 20 parts Depleted Uranium along with large amounts of Water to generate massive energy."
-			edificio_descripcion[id_planta_quimica] = "Allows selecting a recipe to produce chemical compounds."
-			edificio_descripcion[id_planta_de_enriquecimiento] = "Allows recycling uranium by consuming large amounts of water and energy continuously"
-			edificio_descripcion[id_planta_de_reciclaje] = "Allows recycling part of the resources from nearby destroyed enemies"
-			recurso_descripcion[idr_plastico] = "Lightweight material, useful for Drone production"
-			edificio_descripcion[id_procesador] = "Processes logical instructions."
-			edificio_descripcion[id_puerto_de_carga] = "Connects Cargo Ports so your drones can move resources between them."
-			edificio_descripcion[id_recurso_infinito] = "Generates resources using magic."
-			edificio_descripcion[id_refineria_de_metales] = "Refines Copper Stone or Iron Stone into Copper or Iron using Acid."
-			edificio_descripcion[id_refineria_de_petroleo] = "Uses fractional distillation to extract Plastic, Fuel, and Sulfur from Oil"
-			dron_descripcion[idd_reparador] = "Repairs damaged buildings"
-			edificio_descripcion[id_rifle] = "Long-range defense turret that fires Bronze, Steel, or Uranium."
-			recurso_descripcion[idr_sal] = "Useful resource for improving other industrial processes such as the chemical plant, oil refinery, and silicon production"
-			edificio_descripcion[id_selector] = "Allows only one specific resource to pass while diverting the rest."
-			recurso_descripcion[idr_silicio] = "Resource useful for producing Solar Panels, Drones, and Circuits"
-			edificio_descripcion[id_silo_de_misiles] = "Here you can build a nuclear missile using steel, explosives, oil, and enriched uranium."
-			edificio_descripcion[id_taladro] = "Mines copper, iron, and coal at no cost. Can be boosted with Water."
-			edificio_descripcion[id_taladro_electrico] = "Improved drill that also extracts stone and sand from the ground but consumes energy. Can be boosted with Water"
-			edificio_descripcion[id_taladro_de_explosion] = "Uses explosives to extract one resource from every minable tile in its area."
-			dron_descripcion[idd_tanque] = "Heavy siege unit that fires explosives, damaging everything around it"
-			dron_descripcion[idd_titan] = "Ultimate ground unit that fires a long-range explosive barrage"
-			edificio_descripcion[id_torre_reparadora] = "Projects a repair laser onto nearby buildings using energy."
-			edificio_descripcion[id_torre_basica] = "Simple defense turret; can shoot Copper or Iron."
-			edificio_descripcion[id_torre_de_alta_tension] = "Connects power grids across long distances."
-			edificio_descripcion[id_triturador] = "Crushes stone into sand."
-			edificio_descripcion[id_tuberia] = "Connects structures to transport liquids."
-			edificio_descripcion[id_tuberia_subterranea] = "Connects liquid pipelines underground."
-			edificio_descripcion[id_turbina] = "Generates energy using a fuel and Water."
-			edificio_descripcion[id_tunel] = "Sends resources underground so other structures can be built above."
-			edificio_descripcion[id_tunel_salida] = "Sends resources underground so other structures can be built above."
-			recurso_descripcion[idr_uranio_bruto] = "Unrefined uranium, useful as ammunition. Can be refined to separate Depleted Uranium from Enriched Uranium"
-			recurso_descripcion[idr_uranio_empobrecido] = "Uranium-238, required to support energy production in Nuclear Plants and useful as ammunition"
-			recurso_descripcion[idr_uranio_enriquecido] = "Uranium-235, useful for power generation in Nuclear Plants"
+			variable_struct_set(L, "descargar_para_jugar_en_LAN", "Download to play on LAN")
 			variable_struct_set(L, "desierto", "Desert")
 			variable_struct_set(L, "dificil", "Hard")
 			variable_struct_set(L, "dificultad", "Difficulty")
+			variable_struct_set(L, "direccion_IP", "IP Address")
+			variable_struct_set(L, "editar_desde_adentro", "Edit from inside")
 			variable_struct_set(L, "editor_Reemplazar", "Replace")
 			variable_struct_set(L, "editor_activar_oleadas", "Activate waves")
 			variable_struct_set(L, "editor_add", "Add")
@@ -334,6 +388,7 @@ function set_idioma(){
 			variable_struct_set(L, "enciclopedia_unidades", "Units")
 			variable_struct_set(L, "enciclopedia_usado_en", "Used in")
 			variable_struct_set(L, "enciclopedia_vida", "Max health")
+			variable_struct_set(L, "enemigo", "Enemy")
 			variable_struct_set(L, "energia_consumida", "Energy consumed")
 			variable_struct_set(L, "energia_perdida", "Energy lost")
 			variable_struct_set(L, "energia_producida", "Energy produced")
@@ -342,7 +397,7 @@ function set_idioma(){
 			variable_struct_set(L, "flujo_consumo", "Consumption")
 			variable_struct_set(L, "flujo_flujo", "Pipeline")
 			variable_struct_set(L, "flujo_generacion", "Generation")
-			variable_struct_set(L, "flujo_liquido", "líquid")
+			variable_struct_set(L, "flujo_liquido", "lÃ­quid")
 			variable_struct_set(L, "flujo_sin_liquido", "No liquids")
 			variable_struct_set(L, "game_activar", "Activate")
 			variable_struct_set(L, "game_creando_dron", "Creating")
@@ -353,12 +408,15 @@ function set_idioma(){
 			variable_struct_set(L, "game_producira", "Will produce")
 			variable_struct_set(L, "game_puerto_carga", "Connects to another Cargo Port")
 			variable_struct_set(L, "game_vincular_procesador", "Links with any building")
+			variable_struct_set(L, "guardar", "Save")
+			variable_struct_set(L, "guardar_plano", "Save Blueprint")
 			variable_struct_set(L, "islas", "Islands")
-			variable_struct_set(L, "liquido_Agua", "Water")
+			variable_struct_set(L, "jugadores", "Players")
 			variable_struct_set(L, "liquido_Agua salada", "Salt Water")
+			variable_struct_set(L, "liquido_Agua", "Water")
 			variable_struct_set(L, "liquido_Lava", "Lava")
-			variable_struct_set(L, "liquido_Petróleo", "Oil")
-			variable_struct_set(L, "liquido_Ácido", "Acid")
+			variable_struct_set(L, "liquido_PetrÃ³leo", "Oil")
+			variable_struct_set(L, "liquido_Ãcido", "Acid")
 			variable_struct_set(L, "marcar_objetivo", "Set objetive")
 			variable_struct_set(L, "medio", "Medium")
 			variable_struct_set(L, "menu_cargar_escenario", "Load Map")
@@ -373,6 +431,7 @@ function set_idioma(){
 			variable_struct_set(L, "menu_numero_oleadas", "Number of waves")
 			variable_struct_set(L, "menu_precio_tecnologia", "Technology Price")
 			variable_struct_set(L, "menu_sin_archivos", "No scenarios yet")
+			variable_struct_set(L, "menu_sin_blueprints", "No blueprints yet")
 			variable_struct_set(L, "menu_tutorial", "Tutorial")
 			variable_struct_set(L, "mision_enemigos", "enemies")
 			variable_struct_set(L, "mision_tiempo", "Time remaining")
@@ -392,17 +451,9 @@ function set_idioma(){
 			variable_struct_set(L, "modulo_reparadora", "Repairs 20% faster")
 			variable_struct_set(L, "modulo_sal", "Extracts 50% more")
 			variable_struct_set(L, "modulo_sin_edificio", "Requires a building")
+			variable_struct_set(L, "multijugador", "Multiplayer")
 			variable_struct_set(L, "nieve", "Snow")
 			variable_struct_set(L, "nuevo_archivo", "New file")
-			objetivos_nombre[0] = "obtain"
-			objetivos_nombre[1] = "have stored"
-			objetivos_nombre[2] = "build"
-			objetivos_nombre[3] = "have built"
-			objetivos_nombre[4] = "survive waves"
-			objetivos_nombre[5] = "no objective"
-			objetivos_nombre[6] = "press ADWS"
-			objetivos_nombre[7] = "load building"
-			objetivos_nombre[8] = "destroy building"
 			variable_struct_set(L, "pausa", "P A U S E")
 			variable_struct_set(L, "pausa_UI", "UI")
 			variable_struct_set(L, "pausa_activar", "Enable")
@@ -419,46 +470,30 @@ function set_idioma(){
 			variable_struct_set(L, "pausa_reparar", "rebuild structures")
 			variable_struct_set(L, "pausa_sonido", "sound")
 			variable_struct_set(L, "personalizado", "Custom")
-			planta_quimica_descripcion[0] = "Consumes Sulfated Stone and energy to produce Acid"
-			planta_quimica_descripcion[1] = "Uses Incendiary Compound and Acid to produce Explosives"
-			planta_quimica_descripcion[2] = "Uses Acid, Copper, and energy to produce Batteries"
-			planta_quimica_receta[0] = "Acid"
-			planta_quimica_receta[1] = "Explosives"
-			planta_quimica_receta[2] = "Batteries"
 			variable_struct_set(L, "praderas", "Grasslands")
-			variable_struct_set(L, "procesador_cargar", "Load code")
-			variable_struct_set(L, "procesador_guardar", "Save code")
-			variable_struct_set(L, "procesador_next_step", "Next instruction")
 			variable_struct_set(L, "procesador_add", "Add")
-			variable_struct_set(L, "procesador_subir", "Move up")
-			variable_struct_set(L, "procesador_clonar", "Clone")
 			variable_struct_set(L, "procesador_borrar", "Delete")
-			variable_struct_set(L, "procesador_vincular", "Link buildings")
+			variable_struct_set(L, "procesador_cargar", "Load code")
+			variable_struct_set(L, "procesador_clonar", "Clone")
 			variable_struct_set(L, "procesador_continue", "Continue")
-			variable_struct_set(L, "procesador_set", "Set")
-			variable_struct_set(L, "procesador_random", "Randomize")
-			variable_struct_set(L, "procesador_to", "to")
+			variable_struct_set(L, "procesador_control", "Control")
+			variable_struct_set(L, "procesador_from", "from")
+			variable_struct_set(L, "procesador_guardar", "Save code")
 			variable_struct_set(L, "procesador_if", "If")
+			variable_struct_set(L, "procesador_into_value_of_cell", "into the value in the cell")
 			variable_struct_set(L, "procesador_is", "is")
 			variable_struct_set(L, "procesador_is_not", "is not")
 			variable_struct_set(L, "procesador_jump", "jump to line")
-			variable_struct_set(L, "procesador_control", "Control")
-			variable_struct_set(L, "procesador_to_set", "to set")
-			variable_struct_set(L, "procesador_from", "from")
-			variable_struct_set(L, "procesador_write", "Write")
-			variable_struct_set(L, "procesador_to_value_of_cell", "to the value in the cell")
-			variable_struct_set(L, "procesador_into_value_of_cell", "into the value in the cell")
+			variable_struct_set(L, "procesador_next_step", "Next instruction")
 			variable_struct_set(L, "procesador_of", "of")
-			procesador_instrucciones_nombre[0] = "Continue"
-			procesador_instrucciones_nombre[1] = "Assign variable"
-			procesador_instrucciones_nombre[2] = "Single-variable operations"
-			procesador_instrucciones_nombre[3] = "Two-variable operations"
-			procesador_instrucciones_nombre[4] = "Jump to line"
-			procesador_instrucciones_nombre[5] = "Read building information"
-			procesador_instrucciones_nombre[6] = "Control building"
-			procesador_instrucciones_nombre[7] = "Read memory data"
-			procesador_instrucciones_nombre[8] = "Write memory data"
-			procesador_instrucciones_nombre[9] = "Draw to screen"
+			variable_struct_set(L, "procesador_random", "Randomize")
+			variable_struct_set(L, "procesador_set", "Set")
+			variable_struct_set(L, "procesador_subir", "Move up")
+			variable_struct_set(L, "procesador_to", "to")
+			variable_struct_set(L, "procesador_to_set", "to set")
+			variable_struct_set(L, "procesador_to_value_of_cell", "to the value in the cell")
+			variable_struct_set(L, "procesador_vincular", "Link buildings")
+			variable_struct_set(L, "procesador_write", "Write")
 			variable_struct_set(L, "recursos_obtenidos", "Resources obtained")
 			variable_struct_set(L, "red_bateria", "Battery")
 			variable_struct_set(L, "red_consumo", "Consumption")
@@ -466,6 +501,14 @@ function set_idioma(){
 			variable_struct_set(L, "red_generacion", "Generation")
 			variable_struct_set(L, "red_red", "Grid")
 			variable_struct_set(L, "salir", "Exit")
+			variable_struct_set(L, "server_desconectado", "Connection to the server has been lost")
+			variable_struct_set(L, "server_error_nombre", "Error\n\nYour name: \"{0}\" is already in use on this server")
+			variable_struct_set(L, "server_expulsado", "You have been kicked from the server")
+			variable_struct_set(L, "server_jugador_desconectado", "{0} has disconnected")
+			variable_struct_set(L, "server_jugador_expulsado", "{0} has been kicked")
+			variable_struct_set(L, "server_jugador_ido", "{0} has left")
+			variable_struct_set(L, "server_jugador_unido", "{0} has joined")
+			variable_struct_set(L, "server_muerto", "The server has been closed")
 			variable_struct_set(L, "show_menu_invertir", "Invert")
 			variable_struct_set(L, "show_menu_ningun_liquido", "No liquid")
 			variable_struct_set(L, "show_menu_no_disponible", "Not available yet")
@@ -492,185 +535,276 @@ function set_idioma(){
 			variable_struct_set(L, "win_tecnologias", "Technologies researched")
 			variable_struct_set(L, "win_tiempo", "Time")
 			variable_struct_set(L, "win_victoria", "Victory")
-			
-			variable_struct_set(L, "editar_desde_adentro", "Edit from inside")
-			variable_struct_set(L, "buscar_servidores_en_LAN", "Search for LAN servers")
-			variable_struct_set(L, "conectarse_a", "Connect to")
-			variable_struct_set(L, "conexion_directa", "Direct Connection")
-			variable_struct_set(L, "direccion_IP", "IP Address")
-			variable_struct_set(L, "descargar_para_jugar_en_LAN", "Download to play on LAN")
-			variable_struct_set(L, "abrir_en_LAN", "Open in LAN")
-			misiles_descripcion[0] = "A simple guided missile"
-			misiles_descripcion[1] = "Destroys an area with multiple explosions"
-			misiles_descripcion[2] = "Destroys the enemy base and instantly wins the match"
-			misiles_nombre[0] = "Cruise Missile"
-			misiles_nombre[1] = "Cluster Missile"
-			misiles_nombre[2] = "Nuclear Missile"
-			procesador_nombres_1var = ["sine", "cosine", "tangent", "random", "floor", "round", "ceil", "square", "square root", "pi"]
-			procesador_nombres_2var = [" + ", " - ", " * ", " / ", " integer division ", " modulo ", " or ", " and ", " xor ", " << ", " >> ", " power "]
-			procesador_nombres_read_data = ["eneabled", "load", "liquid type", "liquid storage", "liquid capacity", "liquido production", "liquid consume", "energy storage", "energy capacity", "energy production", "energy consume"]
-			procesador_nombres_draw = ["Clear", "Color grb", "Color hsv", "Rectangle", "Line", "Triangle", "Circle", "Text", "Draw flush"]
-			variable_struct_set(L, "continuar", "Continue")
-			variable_struct_set(L, "multijugador", "Multiplayer")
-			variable_struct_set(L, "cargar_partida", "Load Game")
-			variable_struct_set(L, "guardar", "Save")
-			variable_struct_set(L, "jugadores", "Players")
-			variable_struct_set(L, "controles", "Controls")
-			CONTROL_NOMBRE = ["Left", "Right", "Up", "Down", "Pause", "Menu", "Toggle Sound", "Toggle Waves", "Hide Interface", "Show Information", "Show Vectors",
-				"Encyclopedia", "Rotate Building", "Rebuild Buildings", "Show Networks", "Show Flows", "Create Blueprint", "See Players"]
-			variable_struct_set(L, "autoguardado", "Auto Save")
-			dron_nombre[idd_minero] = "Miner"
-			dron_descripcion[idd_minero] = "Mines resources on the map and delivers them to a nearby Storage"
-			dron_nombre[idd_reconstructor] = "Reconstructor"
-			dron_descripcion[idd_reconstructor] = "Rebuilds destroyed buildings"
-			dron_descripcion[idd_kamikaze] = "Approaches its target and explodes, dealing damage"
-			dron_descripcion[idd_helicoptero] = "Advanced aerial unit, attacks from a distance"
-			dron_nombre[idd_barco] = "Boat"
-			dron_descripcion[idd_barco] = "Fires artillery and can only move on water"
-			variable_struct_set(L, "guardar_plano", "Save Blueprint")
-			variable_struct_set(L, "cargar_plano", "Load Blueprint")
-			variable_struct_set(L, "server_error_nombre", "Error\n\nYour name: \"{0}\" is already in use on this server")
-			variable_struct_set(L, "server_jugador_desconectado", "{0} has disconnected")
-			variable_struct_set(L, "server_jugador_expulsado", "{0} has been kicked")
-			variable_struct_set(L, "server_jugador_ido", "{0} has left")
-			variable_struct_set(L, "server_jugador_unido", "{0} has joined")
-			variable_struct_set(L, "server_desconectado", "Connection to the server has been lost")
-			variable_struct_set(L, "server_expulsado", "You have been kicked from the server")
-			variable_struct_set(L, "server_muerto", "The server has been closed")
-			variable_struct_set(L, "archivo_obsoleto", "Error\n\noutdated file")
-			variable_struct_set(L, "menu_sin_blueprints", "No blueprints yet")
-			variable_struct_set(L, "enemigo", "Enemy")
-			variable_struct_set(L, "abandonado", "Abandoned")
 		}
 		//Español
 		else if idioma = 1{
-			terreno_nombre[idt_arena] = "Arena"
-			terreno_nombre[idt_piedra] = "Piedra"
-			terreno_nombre[idt_piedra_cuprica] = "Piedra Cúprica"
-			terreno_nombre[idt_piedra_ferrica] = "Piedra Férrica"
-			terreno_nombre[idt_salar] = "Salar"
-			
-			recurso_nombre[idr_acero] = "Acero"
-			terreno_nombre[idt_agua] = "Agua"
-			recurso_nombre[idr_bateria] = "Batería"
-			terreno_nombre[idt_agua_profunda] = "Agua Profunda"
-			terreno_nombre[idt_agua_salada] = "Agua Salada"
-			terreno_nombre[idt_agua_salada_profunda] = "Agua Salada Profunda"
-			edificio_nombre[id_almacen] = "Almacén"
+			CONTROL_NOMBRE = ["Izquierda", "Derecha", "Arriba", "Abajo", "Pausa", "Menú", "Activar Sonido", "Activar Oleadas", "Esconder Interfaz", "Mostrar Información", "Mostrar vectores", "Enciclopedia", "Rotar edificio", "Reconstruir edificios", "Mostrar Redes", "Mostrar Flujos", "Crear Planos", "Ver Jugadores"]
+			categoria_nombre[0] = "Transporte"
+			categoria_nombre[1] = "Extracción"
+			categoria_nombre[2] = "Producción"
+			categoria_nombre[3] = "Electricidad"
+			categoria_nombre[4] = "Líquidos"
+			categoria_nombre[5] = "Defensa"
+			categoria_nombre[6] = "Lógica"
+			categoria_nombre[7] = "Drones"
+			dron_descripcion[idd_arana] = "Dispara un láser a los enemigos cercanos"
+			dron_descripcion[idd_barco] = "Dispara artillería, solo puede desplazarse desde el agua"
+			dron_descripcion[idd_bombardero] = "Vuela sobre sus enemigos soltando devastadores explosivos en línea recta"
+			dron_descripcion[idd_destructor] = "Básicamente es una batería de artillería pesada que ataca desde el mar"
+			dron_descripcion[idd_helicoptero] = "Unidad aerea superior, dispara a distancia"
+			dron_descripcion[idd_helicoptero] = "Unidad aerea superior, dispara a distancia"
+			dron_descripcion[idd_kamikaze] = "Se acerca a su objetivo y explota infilgiendo daño"
+			dron_descripcion[idd_minero] = "Mina recursos en el mapa y los lleva a un Almacén cercano"
+			dron_descripcion[idd_mula] = "Transporta recursos entre Puertos de Carga"
+			dron_descripcion[idd_reconstructor] = "Reconstruye edificios destruidos"
+			dron_descripcion[idd_reparador] = "Repara los edificios dañados"
+			dron_descripcion[idd_tanque] = "Unidad de asedio superior, dispara explosivos dañando todo a su alrededor"
+			dron_descripcion[idd_titan] = "Unidad terrestre máxima, dispara una ráfaga de explosivos de largo alcance"
 			dron_nombre[idd_arana] = "Araña"
-			recurso_nombre[idr_arena] = "Arena"
-			recurso_nombre[idr_barril_con_agua] = "Barril con Agua"
-			recurso_nombre[idr_barril_con_agua_salada] = "Barril con Agua salada"
-			recurso_nombre[idr_barril_con_lava] = "Barril con Lava"
-			recurso_nombre[idr_barril_con_petroleo] = "Barril con Petróleo"
-			recurso_nombre[idr_barril_con_acido] = "Barril con Ácido"
-			terreno_nombre[idt_basalto] = "Basalto"
-			terreno_nombre[idt_basalto_sulfatado] = "Basalto Sulfatado"
-			edificio_nombre[id_bateria] = "Batería"
-			edificio_nombre[id_bomba_hidraulica] = "Bomba Hidráulica"
-			edificio_nombre[id_bomba_de_evaporacion] = "Bomba de Evaporación"
+			dron_nombre[idd_barco] = "Barco"
 			dron_nombre[idd_bombardero] = "Bombardero"
-			recurso_nombre[idr_bronce] = "Bronce"
+			dron_descripcion[idd_destructor] = "Destructor"
+			dron_nombre[idd_helicoptero] = "Helicóptero"
+			dron_nombre[idd_kamikaze] = "Kamikaze"
+			dron_nombre[idd_minero] = "Minero"
+			dron_nombre[idd_mula] = "Mula"
+			dron_nombre[idd_reconstructor] = "Reconstructor"
+			dron_nombre[idd_reparador] = "Reparador"
+			dron_nombre[idd_tanque] = "Tanque"
+			dron_nombre[idd_titan] = "Titán"
+			edificio_descripcion[id_almacen] = "Almacena recursos para usarlos más tarde"
+			edificio_descripcion[id_bateria] = "Recurso necesario para la producción de todo tipo de Drones"
+			edificio_descripcion[id_bomba_de_evaporacion] = "Extrae lentamente Agua por evaporación"
+			edificio_descripcion[id_bomba_hidraulica] = "Extrae líquidos del terreno usando energía"
+			edificio_descripcion[id_cable] = "Conecta edificios cercanos a la red de energía"
+			edificio_descripcion[id_cinta_grande] = "Transporta drones entre fábricas"
+			edificio_descripcion[id_cinta_magnetica] = "Versión mejorada de la Cinta Transportadora que permite transportar más cosas"
+			edificio_descripcion[id_cinta_transportadora] = "Mueve recursos de un lugar a otro"
+			edificio_descripcion[id_cruce] = "Permite realizar conexiones de cintas transportadoras que se curcen"
+			edificio_descripcion[id_deposito] = "Almacena grandes cantidades de líquidos"
+			edificio_descripcion[id_embotelladora] = "Llena y vacía barriles con líquidos"
+			edificio_descripcion[id_energia_infinita] = "Genera energía a partir de magia"
+			edificio_descripcion[id_enrutador] = "Distribuye recursos en una dirección"
+			edificio_descripcion[id_ensambladora] = "Utiliza Cobre y Silicio para producir componentes"
+			edificio_descripcion[id_extractor_atmosferico] = "Extrae agua de la atmósfera, ideal para terrenos donde no es fácil obtenerla"
+			edificio_descripcion[id_fabrica_de_concreto] = "Fabrica concreto a partir de Arena, Piedra y Agua"
+			edificio_descripcion[id_fabrica_de_drones] = "Fabrica drones de transporte utilizando Silicio, Baterías y bastante energía"
+			edificio_descripcion[id_fabrica_de_drones_grande] = "Permite fabricar drones más grandes usando Ácido"
+			edificio_descripcion[id_generador] = "Genera energía utlizando combustible"
+			edificio_descripcion[id_generador_geotermico] = "Genera energía a partir de evaporar Agua, debe ser construido sobre lava"
+			edificio_descripcion[id_horno] = "Utiliza combustible para fundir Bronce, Acero y Silicio"
+			edificio_descripcion[id_horno_de_lava] = "Similar al horno normal, pero utiliza el calor de la lava para cocinar más rápido"
+			edificio_descripcion[id_lanzallamas] = "Utiliza recursos combustibles para quemar a los enemigos. Puede ser potenciado con Petróleo"
+			edificio_descripcion[id_laser] = "Dispara un láser constante cuyo daño depende de la cantidad de energía disponible"
+			edificio_descripcion[id_liquido_infinito] = "Genera el líquido a elección a partir de magia"
+			edificio_descripcion[id_memoria] = "Permite almacenar hasta 128 datos"
+			edificio_descripcion[id_mensaje] = "Permite escribir mensajes"
+			edificio_descripcion[id_modulo] = "Mejora las características de algún edificio"
+			edificio_descripcion[id_mortero] = "Dispara explosivos a largo alcance, devastando un área de enemigos"
+			edificio_descripcion[id_muro] = "Distrae a los enemigos mientras tus defensas se encargan de ellos"
+			edificio_descripcion[id_muro_reforzado] = "Versión mejorada del muro, más duro y mejor"
+			edificio_descripcion[id_nucleo] = "Es el centro de mando, aquí se almacenan todos los recursos y debes protegerlo a toda costa"
+			edificio_descripcion[id_onda_de_choque] = "Carga y libera una gran onda de choque que daña y ralentiza a todos los enemigos en su rango"
+			edificio_descripcion[id_overflow] = "Desvía los recursos una vez que la línea esté saturada"
+			edificio_descripcion[id_panel_solar] = "Genera energía limpia del sol"
+			edificio_descripcion[id_pantalla] = "Permite dibujar imágenes enviadas desde un procesador"
+			edificio_descripcion[id_perforadora_de_petroleo] = "Produce petróleo a alto coste en cualquier lugar"
+			edificio_descripcion[id_planta_de_enriquecimiento] = "Permite reciclar el uranio consumiendo grandes cantidades de agua y energía de manera constante"
+			edificio_descripcion[id_planta_de_reciclaje] = "Permite reciclar parte de los recursos de los enemigos destruidos cercanos"
+			edificio_descripcion[id_planta_desalinizadora] = "Purifica el Agua Salada para extraer la Sal y el Agua dulce"
+			edificio_descripcion[id_planta_nuclear] = "Consume 1 parte de Uranio Enriquecido por 20 partes de Uranio Empobrecido y mucha Agua para generar mucha energía"
+			edificio_descripcion[id_planta_quimica] = "Escoge una receta para producir compuestos químicos"
+			edificio_descripcion[id_procesador] = "Procesa instrucciones lógicas"
+			edificio_descripcion[id_puerto_de_carga] = "Conceta Puertos de Carga para que tus drones muevan recursos entre ellos"
+			edificio_descripcion[id_recurso_infinito] = "Genera recursos a partir de magia"
+			edificio_descripcion[id_refineria_de_metales] = "Refina la Piedra Cúprica o Férrica en Cobre o Hierro usando Ácido"
+			edificio_descripcion[id_refineria_de_petroleo] = "Mediante la destilación fraccionada permite extraer Plástico, Combustible y Azufre del Petróleo"
+			edificio_descripcion[id_rifle] = "Defensa de largo alcance que dispara Bronce, Acero o Uranio"
+			edificio_descripcion[id_selector] = "Permite el paso de un recurso específico mientras desvía al resto"
+			edificio_descripcion[id_silo_de_misiles] = "Aquí se puede construir un misíl nuclear usándo acero, explosivos, petróleo y uranio enriquecido"
+			edificio_descripcion[id_taladro] = "Permite minar cobre, hierro y carbón sin coste alguno.    Puede potenciarse con Agua"
+			edificio_descripcion[id_taladro_de_explosion] = "Utiliza explosivos para extraer un recurso de cada terreno minable en su área"
+			edificio_descripcion[id_taladro_electrico] = "Taladro mejorado que también extrae piedra y arena del suelo pero consume energía. Puede potenciarse con Agua"
+			edificio_descripcion[id_torre_basica] = "Defensa simple, puede disparar Cobre o Hierro"
+			edificio_descripcion[id_torre_de_alta_tension] = "Conecta redes eléctricas a través de largas distancias"
+			edificio_descripcion[id_torre_reparadora] = "Proyecta un láser de reparación a los edificios cercanos usando energía"
+			edificio_descripcion[id_triturador] = "Tritura la piedra para hacerla arena"
+			edificio_descripcion[id_tuberia] = "Conecta estructuras para llevar líquidos"
+			edificio_descripcion[id_tuberia_subterranea] = "Conecta líneas de líquidos por debajo tierra"
+			edificio_descripcion[id_tunel] = "Pasa recursos bajo tierra permitiendo construir encima"
+			edificio_descripcion[id_tunel_salida] = "Pasa recursos bajo tierra permitiendo construir encima"
+			edificio_descripcion[id_turbina] = "Genera energía a partir de un combustible y Agua"
+			edificio_nombre[id_almacen] = "Almacén"
+			edificio_nombre[id_bateria] = "Batería"
+			edificio_nombre[id_bomba_de_evaporacion] = "Bomba de Evaporación"
+			edificio_nombre[id_bomba_hidraulica] = "Bomba Hidráulica"
 			edificio_nombre[id_cable] = "Cable"
-			recurso_nombre[idr_carbon] = "Carbón"
-			terreno_nombre[idt_ceniza] = "Ceniza"
 			edificio_nombre[id_cinta_grande] = "Cinta Grande"
 			edificio_nombre[id_cinta_magnetica] = "Cinta Magnética"
 			edificio_nombre[id_cinta_transportadora] = "Cinta Transportadora"
-			recurso_nombre[idr_cobre] = "Cobre"
-			recurso_nombre[idr_compuesto_incendiario] = "Compuesto Incendiario"
-			recurso_nombre[idr_concreto] = "Concreto"
 			edificio_nombre[id_cruce] = "Cruce"
-			categoria_nombre[5] = "Defensa"
 			edificio_nombre[id_deposito] = "Depósito"
-			dron_nombre[idd_mula] = "Mula"
-			categoria_nombre[7] = "Drones"
-			categoria_nombre[3] = "Electricidad"
-			recurso_nombre[idr_electronicos] = "Electrónicos"
 			edificio_nombre[id_embotelladora] = "Embotelladora"
 			edificio_nombre[id_energia_infinita] = "Energía Infinita"
 			edificio_nombre[id_enrutador] = "Enrutador"
 			edificio_nombre[id_ensambladora] = "Ensambladora"
-			recurso_nombre[idr_explosivo] = "Explosivo"
-			dron_nombre[idd_kamikaze] = "Kamikaze"
-			categoria_nombre[1] = "Extracción"
 			edificio_nombre[id_extractor_atmosferico] = "Extractor Atmosférico"
 			edificio_nombre[id_fabrica_de_concreto] = "Fábrica de Concreto"
 			edificio_nombre[id_fabrica_de_drones] = "Fábrica de Drones"
 			edificio_nombre[id_fabrica_de_drones_grande] = "Fábrica de Drones Grande"
 			edificio_nombre[id_generador] = "Generador"
 			edificio_nombre[id_generador_geotermico] = "Generador Geotérmico"
-			dron_nombre[idd_helicoptero] = "Helicóptero"
-			terreno_nombre[idt_hielo] = "Hielo"
-			recurso_nombre[idr_hierro] = "Hierro"
 			edificio_nombre[id_horno] = "Horno"
 			edificio_nombre[id_horno_de_lava] = "Horno de Lava"
 			edificio_nombre[id_lanzallamas] = "Lanzallamas"
-			terreno_nombre[idt_lava] = "Lava"
 			edificio_nombre[id_laser] = "Láser"
 			edificio_nombre[id_liquido_infinito] = "Líquido Infinito"
-			categoria_nombre[4] = "Líquidos"
-			categoria_nombre[6] = "Lógica"
 			edificio_nombre[id_memoria] = "Memoria"
 			edificio_nombre[id_mensaje] = "Mensaje"
+			edificio_nombre[id_modulo] = "Módulo"
 			edificio_nombre[id_mortero] = "Mortero"
 			edificio_nombre[id_muro] = "Muro"
 			edificio_nombre[id_muro_reforzado] = "Muro Reforzado"
-			edificio_nombre[id_modulo] = "Módulo"
-			recurso_nombre[idr_modulos] = "Módulos"
-			terreno_nombre[idt_nieve] = "Nieve"
 			edificio_nombre[id_nucleo] = "Núcleo"
 			edificio_nombre[id_onda_de_choque] = "Onda de Choque"
 			edificio_nombre[id_overflow] = "Overflow"
 			edificio_nombre[id_panel_solar] = "Panel Solar"
 			edificio_nombre[id_pantalla] = "Pantalla"
+			edificio_nombre[id_perforadora_de_petroleo] = "Perforadora de Petróleo"
+			edificio_nombre[id_planta_de_enriquecimiento] = "Planta de Enriquecimiento"
+			edificio_nombre[id_planta_de_reciclaje] = "Planta de Reciclaje"
+			edificio_nombre[id_planta_desalinizadora] = "Planta Desalinizadora"
+			edificio_nombre[id_planta_nuclear] = "Planta Nuclear"
+			edificio_nombre[id_planta_quimica] = "Planta Química"
+			edificio_nombre[id_procesador] = "Procesador"
+			edificio_nombre[id_puerto_de_carga] = "Puerto de Carga"
+			edificio_nombre[id_recurso_infinito] = "Recurso Infinito"
+			edificio_nombre[id_refineria_de_metales] = "Refinería de Metales"
+			edificio_nombre[id_refineria_de_petroleo] = "Refinería de Petróleo"
+			edificio_nombre[id_rifle] = "Rifle"
+			edificio_nombre[id_selector] = "Selector"
+			edificio_nombre[id_silo_de_misiles] = "Silo de Misiles"
+			edificio_nombre[id_taladro] = "Taladro"
+			edificio_nombre[id_taladro_de_explosion] = "Taladro de Explosión"
+			edificio_nombre[id_taladro_electrico] = "Taladro Eléctrico"
+			edificio_nombre[id_torre_basica] = "Torre básica"
+			edificio_nombre[id_torre_de_alta_tension] = "Torre de Alta Tensión"
+			edificio_nombre[id_torre_reparadora] = "Torre Reparadora"
+			edificio_nombre[id_triturador] = "Triturador"
+			edificio_nombre[id_tuberia] = "Tubería"
+			edificio_nombre[id_tuberia_subterranea] = "Tubería Subterránea"
+			edificio_nombre[id_tunel] = "Túnel"
+			edificio_nombre[id_tunel_salida] = "Túnel salida"
+			edificio_nombre[id_turbina] = "Turbina"
+			misiles_descripcion[0] = "Un simple misil teledirigido"
+			misiles_descripcion[1] = "Destruye un área con múltiples explosiones"
+			misiles_descripcion[2] = "Destruye la base enemiga y gana la partida instantánemanetes"
+			misiles_nombre[0] = "Misil de Crucero"
+			misiles_nombre[1] = "Misil de Racimo"
+			misiles_nombre[2] = "Misil Nuclear"
+			objetivos_nombre[0] = "conseguir"
+			objetivos_nombre[1] = "tener almacenado"
+			objetivos_nombre[2] = "construir"
+			objetivos_nombre[3] = "tener construido"
+			objetivos_nombre[4] = "sobrevivir oleadas"
+			objetivos_nombre[5] = "sin objetivo"
+			objetivos_nombre[6] = "apretar ADWS"
+			objetivos_nombre[7] = "cargar edificio"
+			objetivos_nombre[8] = "destruir edificio"
+			planta_quimica_descripcion[0] = "Consume Piedra Sulfatada y energía para producir Ácido"
+			planta_quimica_descripcion[1] = "Utiliza Compuesto Incendiario y Ácido para producir Explosivos"
+			planta_quimica_descripcion[2] = "Utiliza Ácido, Cobre y energía para producir Baterías"
+			planta_quimica_receta[0] = "Ácido"
+			planta_quimica_receta[1] = "Explosivos"
+			planta_quimica_receta[2] = "Baterías"
+			procesador_instrucciones_nombre[0] = "Continuar"
+			procesador_instrucciones_nombre[1] = "Asignar variable"
+			procesador_instrucciones_nombre[2] = "Operaciones de una variable"
+			procesador_instrucciones_nombre[3] = "Operaciones de dos variables"
+			procesador_instrucciones_nombre[4] = "Saltar a línea"
+			procesador_instrucciones_nombre[5] = "Leer información de edificio"
+			procesador_instrucciones_nombre[6] = "Controlar edificio"
+			procesador_instrucciones_nombre[7] = "Leer datos de Memoria"
+			procesador_instrucciones_nombre[8] = "Escribir datos a Memoria"
+			procesador_instrucciones_nombre[9] = "Dibujar a Pantalla"
+			procesador_nombres_1var = ["seno", "coseno", "tangente", "aleatorio", "piso", "redondeo", "cielo", "cuadrado", "raíz", "pi"]
+			procesador_nombres_2var = [" + ", " - ", " * ", " / ", " división entera ", " módulo ", " o ", " y ", " o exclusivo ", " << ", " >> ", " elevado "]
+			procesador_nombres_draw = ["Limpiar", "Color grb", "Color hsv", "Rectángulo", "Línea", "Triángulo", "Círculo", "Texto", "Imprimir"]
+			procesador_nombres_read_data = ["activado", "carga", "líquido tipo", "líquido almacen", "líquido capacidad", "líquido produccion", "líquido consumo", "energía almacenada", "energía capacidad", "energía producida", "energía consumida"]
+			recurso_descripcion[idr_acero] = "Recurso útil para la construcción de infrastructura intermedia"
+			recurso_descripcion[idr_arena] = "Recurso necesario para la producción de bienes refinados como Silicio o Concreto"
+			recurso_descripcion[idr_barril_con_acido] = "Barril con Ácido, útil para almacenarlo y distribuirlo"
+			recurso_descripcion[idr_barril_con_agua] = "Barril con Agua, útil para almacenarla y distribuirla"
+			recurso_descripcion[idr_barril_con_agua_salada] = "Barril con Agua salada, útil para almacenarla y distribuirla"
+			recurso_descripcion[idr_barril_con_lava] = "Barril con Lava, útil para almacenarla y distribuirla"
+			recurso_descripcion[idr_barril_con_petroleo] = "Barril con Petróleo, útil para almacenarlo y distribuirlo"
+			recurso_descripcion[idr_bronce] = "Recurso útil para la construcción de infrastructura intermedia"
+			recurso_descripcion[idr_carbon] = "Combustible básico, útil para el funcionamiento de Hornos y Generadores"
+			recurso_descripcion[idr_cobre] = "Recurso básico, escencial para los primeros edificios. Puede ser refinado para obtener Bronce"
+			recurso_descripcion[idr_compuesto_incendiario] = "Combustible avanzado, más eficiente y dduradero que el Carbón"
+			recurso_descripcion[idr_concreto] = "Recurso útil para la construcción de infrastructura intermedia"
+			recurso_descripcion[idr_explosivo] = "Se acerca a su objetivo y explota infilgiendo daño"
+			recurso_descripcion[idr_hierro] = "Recurso básico, escencial para los primeros edificios"
+			recurso_descripcion[idr_modulos] = "Investiga los Módulos y construye dos Ensambladores juntos para empezar a producirlos"
+			recurso_descripcion[idr_piedra] = "Recurso necesario para la producción de Concreto. Puede ser transformado en Arena en un Triturador"
+			recurso_descripcion[idr_piedra_cuprica] = "Puede ser utilizada como Piedra normal o purificada para obtener Cobre"
+			recurso_descripcion[idr_piedra_ferrica] = "Puede ser utilizada como Piedra normal o porificada para obtener Hierro"
+			recurso_descripcion[idr_piedra_sulfatada] = "Puede ser utilizada como Piedra normal. Pero es escencial en la producción de bienes más refinados"
+			recurso_descripcion[idr_plastico] = "Material ligero, útil en la producción de Drones"
+			recurso_descripcion[idr_sal] = "Recurso útil para mejorar otros procesos industriales como la planta química, refinería de petróleo y producción de Silicio"
+			recurso_descripcion[idr_silicio] = "Recurso útil en la producción de Paneles Solares, Drones y Circuitos"
+			recurso_descripcion[idr_uranio_bruto] = "Uranio sin refinar, útil como munición. Puede ser refinado para dividir el Uranio Empobrecido del Enriquecido"
+			recurso_descripcion[idr_uranio_empobrecido] = "Uranio 238, necesario para acompañar la producción de energía en Plantas Nucleares. Y útil como munición"
+			recurso_descripcion[idr_uranio_enriquecido] = "Uranio 235, útil para la generación de energía en Plantas Nucleares"
+			recurso_nombre[idr_acero] = "Acero"
+			recurso_nombre[idr_arena] = "Arena"
+			recurso_nombre[idr_barril_con_acido] = "Barril con Ácido"
+			recurso_nombre[idr_barril_con_agua] = "Barril con Agua"
+			recurso_nombre[idr_barril_con_agua_salada] = "Barril con Agua salada"
+			recurso_nombre[idr_barril_con_lava] = "Barril con Lava"
+			recurso_nombre[idr_barril_con_petroleo] = "Barril con Petróleo"
+			recurso_nombre[idr_bateria] = "Batería"
+			recurso_nombre[idr_bronce] = "Bronce"
+			recurso_nombre[idr_carbon] = "Carbón"
+			recurso_nombre[idr_cobre] = "Cobre"
+			recurso_nombre[idr_compuesto_incendiario] = "Compuesto Incendiario"
+			recurso_nombre[idr_concreto] = "Concreto"
+			recurso_nombre[idr_electronicos] = "Electrónicos"
+			recurso_nombre[idr_explosivo] = "Explosivo"
+			recurso_nombre[idr_hierro] = "Hierro"
+			recurso_nombre[idr_modulos] = "Módulos"
+			recurso_nombre[idr_piedra] = "Piedra"
+			recurso_nombre[idr_piedra_cuprica] = "Piedra Cúprica"
+			recurso_nombre[idr_piedra_ferrica] = "Piedra Férrica"
+			recurso_nombre[idr_piedra_sulfatada] = "Piedra Sulfatada"
+			recurso_nombre[idr_plastico] = "Plástico"
+			recurso_nombre[idr_sal] = "Sal"
+			recurso_nombre[idr_silicio] = "Silicio"
+			recurso_nombre[idr_uranio_bruto] = "Uranio Bruto"
+			recurso_nombre[idr_uranio_empobrecido] = "Uranio Empobrecido"
+			recurso_nombre[idr_uranio_enriquecido] = "Uranio Enriquecido"
+			terreno_nombre[idt_agua] = "Agua"
+			terreno_nombre[idt_agua_profunda] = "Agua Profunda"
+			terreno_nombre[idt_agua_salada] = "Agua Salada"
+			terreno_nombre[idt_agua_salada_profunda] = "Agua Salada Profunda"
+			terreno_nombre[idt_arena] = "Arena"
+			terreno_nombre[idt_basalto] = "Basalto"
+			terreno_nombre[idt_basalto_sulfatado] = "Basalto Sulfatado"
+			terreno_nombre[idt_ceniza] = "Ceniza"
+			terreno_nombre[idt_hielo] = "Hielo"
+			terreno_nombre[idt_lava] = "Lava"
+			terreno_nombre[idt_nieve] = "Nieve"
 			terreno_nombre[idt_pared_de_arena] = "Pared de Arena"
 			terreno_nombre[idt_pared_de_nieve] = "Pared de Nieve"
 			terreno_nombre[idt_pared_de_pasto] = "Pared de Pasto"
 			terreno_nombre[idt_pared_de_piedra] = "Pared de Piedra"
 			terreno_nombre[idt_pasto] = "Pasto"
-			edificio_nombre[id_perforadora_de_petroleo] = "Perforadora de Petróleo"
 			terreno_nombre[idt_petroleo] = "Petróleo"
-			recurso_nombre[idr_piedra] = "Piedra"
-			recurso_nombre[idr_piedra_cuprica] = "Piedra Cúprica"
-			recurso_nombre[idr_piedra_ferrica] = "Piedra Férrica"
-			recurso_nombre[idr_piedra_sulfatada] = "Piedra Sulfatada"
-			edificio_nombre[id_planta_desalinizadora] = "Planta Desalinizadora"
-			edificio_nombre[id_planta_nuclear] = "Planta Nuclear"
-			edificio_nombre[id_planta_quimica] = "Planta Química"
-			edificio_nombre[id_planta_de_enriquecimiento] = "Planta de Enriquecimiento"
-			edificio_nombre[id_planta_de_reciclaje] = "Planta de Reciclaje"
-			recurso_nombre[idr_plastico] = "Plástico"
-			edificio_nombre[id_procesador] = "Procesador"
-			categoria_nombre[2] = "Producción"
-			edificio_nombre[id_puerto_de_carga] = "Puerto de Carga"
-			edificio_nombre[id_recurso_infinito] = "Recurso Infinito"
-			edificio_nombre[id_refineria_de_metales] = "Refinería de Metales"
-			edificio_nombre[id_refineria_de_petroleo] = "Refinería de Petróleo"
-			dron_nombre[idd_reparador] = "Reparador"
-			edificio_nombre[id_rifle] = "Rifle"
-			recurso_nombre[idr_sal] = "Sal"
-			edificio_nombre[id_selector] = "Selector"
-			recurso_nombre[idr_silicio] = "Silicio"
-			edificio_nombre[id_silo_de_misiles] = "Silo de Misiles"
-			edificio_nombre[id_taladro] = "Taladro"
-			edificio_nombre[id_taladro_electrico] = "Taladro Eléctrico"
-			edificio_nombre[id_taladro_de_explosion] = "Taladro de Explosión"
-			dron_nombre[idd_tanque] = "Tanque"
-			dron_nombre[idd_titan] = "Titán"
-			edificio_nombre[id_torre_reparadora] = "Torre Reparadora"
-			edificio_nombre[id_torre_basica] = "Torre básica"
-			edificio_nombre[id_torre_de_alta_tension] = "Torre de Alta Tensión"
-			categoria_nombre[0] = "Transporte"
-			edificio_nombre[id_triturador] = "Triturador"
-			edificio_nombre[id_tuberia] = "Tubería"
-			edificio_nombre[id_tuberia_subterranea] = "Tubería Subterránea"
-			edificio_nombre[id_turbina] = "Turbina"
-			edificio_nombre[id_tunel] = "Túnel"
-			edificio_nombre[id_tunel_salida] = "Túnel salida"
-			recurso_nombre[idr_uranio_bruto] = "Uranio Bruto"
-			recurso_nombre[idr_uranio_empobrecido] = "Uranio Empobrecido"
-			recurso_nombre[idr_uranio_enriquecido] = "Uranio Enriquecido"
+			terreno_nombre[idt_piedra] = "Piedra"
+			terreno_nombre[idt_piedra_cuprica] = "Piedra Cúprica"
+			terreno_nombre[idt_piedra_ferrica] = "Piedra Férrica"
+			terreno_nombre[idt_salar] = "Salar"
+			variable_struct_set(L, "abandonado", "Abandonado")			variable_struct_set(L, "abrir_en_LAN", "Abrir en LAN")
 			variable_struct_set(L, "activado", "Activado")
 			variable_struct_set(L, "activar", "Activar")
 			variable_struct_set(L, "almacen_acepta", "Acepta")
@@ -688,7 +822,14 @@ function set_idioma(){
 			variable_struct_set(L, "almacen_sin_receta", "Sin Receta")
 			variable_struct_set(L, "almacen_sin_recursos", "Sin recursos")
 			variable_struct_set(L, "almacen_total", "Total")
+			variable_struct_set(L, "archivo_obsoleto", "Error\n\narchivo obsoleto")
+			variable_struct_set(L, "autoguardado", "Guardado Automático")
+			variable_struct_set(L, "buscar_servidores_en_LAN", "Buscar servidores en LAN")
 			variable_struct_set(L, "cancelar", "Cancelar")
+			variable_struct_set(L, "cargar_partida", "Cargar Partida")
+			variable_struct_set(L, "cargar_plano", "Cargar Plano")
+			variable_struct_set(L, "conectarse_a", "Conectarse a")
+			variable_struct_set(L, "conexion_directa", "Conexión Directa")
 			variable_struct_set(L, "construir_combinar_liquidos", "No se puede combinar líquidos")
 			variable_struct_set(L, "construir_enemigos_cerca", "¡Hay enemigos demasiado cerca!")
 			variable_struct_set(L, "construir_ocupado", "Terreno ocupado")
@@ -702,106 +843,17 @@ function set_idioma(){
 			variable_struct_set(L, "construir_terreno_hielo", "Terreno demasiado inestable")
 			variable_struct_set(L, "construir_terreno_invalido", "Terreno inválido")
 			variable_struct_set(L, "construir_zona_enemigos", "Zona de generación de enemigos")
+			variable_struct_set(L, "continuar", "Continuar")
+			variable_struct_set(L, "controles", "Controles")
 			variable_struct_set(L, "cuevas", "Cuevas")
 			variable_struct_set(L, "desactivado", "Desactivado")
 			variable_struct_set(L, "desactivar", "Desactivar")
-			recurso_descripcion[idr_acero] = "Recurso útil para la construcción de infrastructura intermedia"
-			edificio_descripcion[id_almacen] = "Almacena recursos para usarlos más tarde"
-			dron_descripcion[idd_arana] = "Dispara un láser a los enemigos cercanos"
-			recurso_descripcion[idr_arena] = "Recurso necesario para la producción de bienes refinados como Silicio o Concreto"
-			recurso_descripcion[idr_barril_con_agua] = "Barril con Agua, útil para almacenarla y distribuirla"
-			recurso_descripcion[idr_barril_con_agua_salada] = "Barril con Agua salada, útil para almacenarla y distribuirla"
-			recurso_descripcion[idr_barril_con_lava] = "Barril con Lava, útil para almacenarla y distribuirla"
-			recurso_descripcion[idr_barril_con_petroleo] = "Barril con Petróleo, útil para almacenarlo y distribuirlo"
-			recurso_descripcion[idr_barril_con_acido] = "Barril con Ácido, útil para almacenarlo y distribuirlo"
-			edificio_descripcion[id_bateria] = "Recurso necesario para la producción de todo tipo de Drones"
-			edificio_descripcion[id_bomba_hidraulica] = "Extrae líquidos del terreno usando energía"
-			edificio_descripcion[id_bomba_de_evaporacion] = "Extrae lentamente Agua por evaporación"
-			dron_descripcion[idd_bombardero] = "Vuela sobre sus enemigos soltando devastadores explosivos en línea recta"
-			recurso_descripcion[idr_bronce] = "Recurso útil para la construcción de infrastructura intermedia"
-			edificio_descripcion[id_cable] = "Conecta edificios cercanos a la red de energía"
-			recurso_descripcion[idr_carbon] = "Combustible básico, útil para el funcionamiento de Hornos y Generadores"
-			edificio_descripcion[id_cinta_grande] = "Transporta drones entre fábricas"
-			edificio_descripcion[id_cinta_magnetica] = "Versión mejorada de la Cinta Transportadora que permite transportar más cosas"
-			edificio_descripcion[id_cinta_transportadora] = "Mueve recursos de un lugar a otro"
-			recurso_descripcion[idr_cobre] = "Recurso básico, escencial para los primeros edificios. Puede ser refinado para obtener Bronce"
-			recurso_descripcion[idr_compuesto_incendiario] = "Combustible avanzado, más eficiente y dduradero que el Carbón"
-			recurso_descripcion[idr_concreto] = "Recurso útil para la construcción de infrastructura intermedia"
-			edificio_descripcion[id_cruce] = "Permite realizar conexiones de cintas transportadoras que se curcen"
-			edificio_descripcion[id_deposito] = "Almacena grandes cantidades de líquidos"
-			dron_descripcion[idd_mula] = "Transporta recursos entre Puertos de Carga"
-			edificio_descripcion[id_embotelladora] = "Llena y vacía barriles con líquidos"
-			edificio_descripcion[id_energia_infinita] = "Genera energía a partir de magia"
-			edificio_descripcion[id_enrutador] = "Distribuye recursos en una dirección"
-			edificio_descripcion[id_ensambladora] = "Utiliza Cobre y Silicio para producir componentes"
-			recurso_descripcion[idr_explosivo] = "Se acerca a su objetivo y explota infilgiendo daño"
-			edificio_descripcion[id_extractor_atmosferico] = "Extrae agua de la atmósfera, ideal para terrenos donde no es fácil obtenerla"
-			edificio_descripcion[id_fabrica_de_concreto] = "Fabrica concreto a partir de Arena, Piedra y Agua"
-			edificio_descripcion[id_fabrica_de_drones] = "Fabrica drones de transporte utilizando Silicio, Baterías y bastante energía"
-			edificio_descripcion[id_fabrica_de_drones_grande] = "Permite fabricar drones más grandes usando Ácido"
-			edificio_descripcion[id_generador] = "Genera energía utlizando combustible"
-			edificio_descripcion[id_generador_geotermico] = "Genera energía a partir de evaporar Agua, debe ser construido sobre lava"
-			dron_descripcion[idd_helicoptero] = "Unidad aerea superior, dispara a distancia"
-			recurso_descripcion[idr_hierro] = "Recurso básico, escencial para los primeros edificios"
-			edificio_descripcion[id_horno] = "Utiliza combustible para fundir Bronce, Acero y Silicio"
-			edificio_descripcion[id_horno_de_lava] = "Similar al horno normal, pero utiliza el calor de la lava para cocinar más rápido"
-			edificio_descripcion[id_lanzallamas] = "Utiliza recursos combustibles para quemar a los enemigos. Puede ser potenciado con Petróleo"
-			edificio_descripcion[id_laser] = "Dispara un láser constante cuyo daño depende de la cantidad de energía disponible"
-			edificio_descripcion[id_liquido_infinito] = "Genera el líquido a elección a partir de magia"
-			edificio_descripcion[id_memoria] = "Permite almacenar hasta 128 datos"
-			edificio_descripcion[id_mensaje] = "Permite escribir mensajes"
-			edificio_descripcion[id_mortero] = "Dispara explosivos a largo alcance, devastando un área de enemigos"
-			edificio_descripcion[id_muro] = "Distrae a los enemigos mientras tus defensas se encargan de ellos"
-			edificio_descripcion[id_muro_reforzado] = "Versión mejorada del muro, más duro y mejor"
-			edificio_descripcion[id_modulo] = "Mejora las características de algún edificio"
-			recurso_descripcion[idr_modulos] = "Investiga los Módulos y construye dos Ensambladores juntos para empezar a producirlos"
-			edificio_descripcion[id_nucleo] = "Es el centro de mando, aquí se almacenan todos los recursos y debes protegerlo a toda costa"
-			edificio_descripcion[id_onda_de_choque] = "Carga y libera una gran onda de choque que daña y ralentiza a todos los enemigos en su rango"
-			edificio_descripcion[id_overflow] = "Desvía los recursos una vez que la línea esté saturada"
-			edificio_descripcion[id_panel_solar] = "Genera energía limpia del sol"
-			edificio_descripcion[id_pantalla] = "Permite dibujar imágenes enviadas desde un procesador"
-			edificio_descripcion[id_perforadora_de_petroleo] = "Produce petróleo a alto coste en cualquier lugar"
-			recurso_descripcion[idr_piedra] = "Recurso necesario para la producción de Concreto. Puede ser transformado en Arena en un Triturador"
-			recurso_descripcion[idr_piedra_cuprica] = "Puede ser utilizada como Piedra normal o purificada para obtener Cobre"
-			recurso_descripcion[idr_piedra_ferrica] = "Puede ser utilizada como Piedra normal o porificada para obtener Hierro"
-			recurso_descripcion[idr_piedra_sulfatada] = "Puede ser utilizada como Piedra normal. Pero es escencial en la producción de bienes más refinados"
-			edificio_descripcion[id_planta_desalinizadora] = "Purifica el Agua Salada para extraer la Sal y el Agua dulce"
-			edificio_descripcion[id_planta_nuclear] = "Consume 1 parte de Uranio Enriquecido por 20 partes de Uranio Empobrecido y mucha Agua para generar mucha energía"
-			edificio_descripcion[id_planta_quimica] = "Escoge una receta para producir compuestos químicos"
-			edificio_descripcion[id_planta_de_enriquecimiento] = "Permite reciclar el uranio consumiendo grandes cantidades de agua y energía de manera constante"
-			edificio_descripcion[id_planta_de_reciclaje] = "Permite reciclar parte de los recursos de los enemigos destruidos cercanos"
-			recurso_descripcion[idr_plastico] = "Material ligero, útil en la producción de Drones"
-			edificio_descripcion[id_procesador] = "Procesa instrucciones lógicas"
-			edificio_descripcion[id_puerto_de_carga] = "Conceta Puertos de Carga para que tus drones muevan recursos entre ellos"
-			edificio_descripcion[id_recurso_infinito] = "Genera recursos a partir de magia"
-			edificio_descripcion[id_refineria_de_metales] = "Refina la Piedra Cúprica o Férrica en Cobre o Hierro usando Ácido"
-			edificio_descripcion[id_refineria_de_petroleo] = "Mediante la destilación fraccionada permite extraer Plástico, Combustible y Azufre del Petróleo"
-			dron_descripcion[idd_reparador] = "Repara los edificios dañados"
-			edificio_descripcion[id_rifle] = "Defensa de largo alcance que dispara Bronce, Acero o Uranio"
-			recurso_descripcion[idr_sal] = "Recurso útil para mejorar otros procesos industriales como la planta química, refinería de petróleo y producción de Silicio"
-			edificio_descripcion[id_selector] = "Permite el paso de un recurso específico mientras desvía al resto"
-			recurso_descripcion[idr_silicio] = "Recurso útil en la producción de Paneles Solares, Drones y Circuitos"
-			edificio_descripcion[id_silo_de_misiles] = "Aquí se puede construir un misíl nuclear usándo acero, explosivos, petróleo y uranio enriquecido"
-			edificio_descripcion[id_taladro] = "Permite minar cobre, hierro y carbón sin coste alguno.    Puede potenciarse con Agua"
-			edificio_descripcion[id_taladro_electrico] = "Taladro mejorado que también extrae piedra y arena del suelo pero consume energía. Puede potenciarse con Agua"
-			edificio_descripcion[id_taladro_de_explosion] = "Utiliza explosivos para extraer un recurso de cada terreno minable en su área"
-			dron_descripcion[idd_tanque] = "Unidad de asedio superior, dispara explosivos dañando todo a su alrededor"
-			dron_descripcion[idd_titan] = "Unidad terrestre máxima, dispara una ráfaga de explosivos de largo alcance"
-			edificio_descripcion[id_torre_reparadora] = "Proyecta un láser de reparación a los edificios cercanos usando energía"
-			edificio_descripcion[id_torre_basica] = "Defensa simple, puede disparar Cobre o Hierro"
-			edificio_descripcion[id_torre_de_alta_tension] = "Conecta redes eléctricas a través de largas distancias"
-			edificio_descripcion[id_triturador] = "Tritura la piedra para hacerla arena"
-			edificio_descripcion[id_tuberia] = "Conecta estructuras para llevar líquidos"
-			edificio_descripcion[id_tuberia_subterranea] = "Conecta líneas de líquidos por debajo tierra"
-			edificio_descripcion[id_turbina] = "Genera energía a partir de un combustible y Agua"
-			edificio_descripcion[id_tunel] = "Pasa recursos bajo tierra permitiendo construir encima"
-			edificio_descripcion[id_tunel_salida] = "Pasa recursos bajo tierra permitiendo construir encima"
-			recurso_descripcion[idr_uranio_bruto] = "Uranio sin refinar, útil como munición. Puede ser refinado para dividir el Uranio Empobrecido del Enriquecido"
-			recurso_descripcion[idr_uranio_empobrecido] = "Uranio 238, necesario para acompañar la producción de energía en Plantas Nucleares. Y útil como munición"
-			recurso_descripcion[idr_uranio_enriquecido] = "Uranio 235, útil para la generación de energía en Plantas Nucleares"
+			variable_struct_set(L, "descargar_para_jugar_en_LAN", "Descargar para jugar en LAN")
 			variable_struct_set(L, "desierto", "Desierto")
 			variable_struct_set(L, "dificil", "Difícil")
 			variable_struct_set(L, "dificultad", "Dificultad")
+			variable_struct_set(L, "direccion_IP", "Dirección IP")
+			variable_struct_set(L, "editar_desde_adentro", "Editar desde adentro")
 			variable_struct_set(L, "editor_Reemplazar", "Reemplazar")
 			variable_struct_set(L, "editor_activar_oleadas", "Activar oleadas")
 			variable_struct_set(L, "editor_add", "Añadir")
@@ -873,6 +925,7 @@ function set_idioma(){
 			variable_struct_set(L, "enciclopedia_unidades", "Unidades")
 			variable_struct_set(L, "enciclopedia_usado_en", "Usado en")
 			variable_struct_set(L, "enciclopedia_vida", "Vida máxima")
+			variable_struct_set(L, "enemigo", "Enemigo")
 			variable_struct_set(L, "energia_consumida", "Energía consumida")
 			variable_struct_set(L, "energia_perdida", "Energía perdida")
 			variable_struct_set(L, "energia_producida", "Energía producida")
@@ -892,9 +945,12 @@ function set_idioma(){
 			variable_struct_set(L, "game_producira", "Producirá")
 			variable_struct_set(L, "game_puerto_carga", "Conecta con otro Puerto de Carga")
 			variable_struct_set(L, "game_vincular_procesador", "Vincula con cualquier edificio")
+			variable_struct_set(L, "guardar", "Guardar")
+			variable_struct_set(L, "guardar_plano", "Guardar Plano")
 			variable_struct_set(L, "islas", "Islas")
-			variable_struct_set(L, "liquido_Agua", "Agua")
+			variable_struct_set(L, "jugadores", "Jugadores")
 			variable_struct_set(L, "liquido_Agua salada", "Agua salada")
+			variable_struct_set(L, "liquido_Agua", "Agua")
 			variable_struct_set(L, "liquido_Lava", "Lava")
 			variable_struct_set(L, "liquido_Petróleo", "Petróleo")
 			variable_struct_set(L, "liquido_Ácido", "Ácido")
@@ -912,6 +968,7 @@ function set_idioma(){
 			variable_struct_set(L, "menu_numero_oleadas", "Número de oleadas")
 			variable_struct_set(L, "menu_precio_tecnologia", "Precio Tecnología")
 			variable_struct_set(L, "menu_sin_archivos", "Sin escenarios aún")
+			variable_struct_set(L, "menu_sin_blueprints", "Sin planos aún")
 			variable_struct_set(L, "menu_tutorial", "Tutorial")
 			variable_struct_set(L, "mision_enemigos", "enemigos")
 			variable_struct_set(L, "mision_tiempo", "Tiempo restante")
@@ -931,17 +988,9 @@ function set_idioma(){
 			variable_struct_set(L, "modulo_reparadora", "Repara 20% más rápido")
 			variable_struct_set(L, "modulo_sal", "Extrae 50% más")
 			variable_struct_set(L, "modulo_sin_edificio", "Necesita un edificio")
+			variable_struct_set(L, "multijugador", "Multijugador")
 			variable_struct_set(L, "nieve", "Nieve")
 			variable_struct_set(L, "nuevo_archivo", "Nuevo archivo")
-			objetivos_nombre[0] = "conseguir"
-			objetivos_nombre[1] = "tener almacenado"
-			objetivos_nombre[2] = "construir"
-			objetivos_nombre[3] = "tener construido"
-			objetivos_nombre[4] = "sobrevivir oleadas"
-			objetivos_nombre[5] = "sin objetivo"
-			objetivos_nombre[6] = "apretar ADWS"
-			objetivos_nombre[7] = "cargar edificio"
-			objetivos_nombre[8] = "destruir edificio"
 			variable_struct_set(L, "pausa", "P A U S A")
 			variable_struct_set(L, "pausa_UI", "UI")
 			variable_struct_set(L, "pausa_activar", "Activar")
@@ -958,46 +1007,30 @@ function set_idioma(){
 			variable_struct_set(L, "pausa_reparar", "para reconstruir edificios")
 			variable_struct_set(L, "pausa_sonido", "sonido")
 			variable_struct_set(L, "personalizado", "Personalizado")
-			planta_quimica_descripcion[0] = "Consume Piedra Sulfatada y energía para producir Ácido"
-			planta_quimica_descripcion[1] = "Utiliza Compuesto Incendiario y Ácido para producir Explosivos"
-			planta_quimica_descripcion[2] = "Utiliza Ácido, Cobre y energía para producir Baterías"
-			planta_quimica_receta[0] = "Ácido"
-			planta_quimica_receta[1] = "Explosivos"
-			planta_quimica_receta[2] = "Baterías"
 			variable_struct_set(L, "praderas", "Praderas")
-			variable_struct_set(L, "procesador_cargar", "Cargar código")
-			variable_struct_set(L, "procesador_guardar", "Guardar código")
-			variable_struct_set(L, "procesador_next_step", "Siguiente instrucción")
 			variable_struct_set(L, "procesador_add", "Añadir")
-			variable_struct_set(L, "procesador_subir", "Subir")
-			variable_struct_set(L, "procesador_clonar", "Clonar")
 			variable_struct_set(L, "procesador_borrar", "Borrar")
-			variable_struct_set(L, "procesador_vincular", "Vincular edificios")
+			variable_struct_set(L, "procesador_cargar", "Cargar código")
+			variable_struct_set(L, "procesador_clonar", "Clonar")
 			variable_struct_set(L, "procesador_continue", "Continuar")
-			variable_struct_set(L, "procesador_set", "Asignar")
-			variable_struct_set(L, "procesador_random", "Aleatorizar")
-			variable_struct_set(L, "procesador_to", "a")
+			variable_struct_set(L, "procesador_control", "Controlar")
+			variable_struct_set(L, "procesador_from", "desde")
+			variable_struct_set(L, "procesador_guardar", "Guardar código")
 			variable_struct_set(L, "procesador_if", "si")
+			variable_struct_set(L, "procesador_into_value_of_cell", "al valor en la celda")
 			variable_struct_set(L, "procesador_is", "es")
 			variable_struct_set(L, "procesador_is_not", "no es")
 			variable_struct_set(L, "procesador_jump", "salta a la línea")
-			variable_struct_set(L, "procesador_control", "Controlar")
-			variable_struct_set(L, "procesador_to_set", "para asignar")
-			variable_struct_set(L, "procesador_from", "desde")
-			variable_struct_set(L, "procesador_write", "Write")
-			variable_struct_set(L, "procesador_to_value_of_cell", "al valor en la celda")
-			variable_struct_set(L, "procesador_into_value_of_cell", "al valor en la celda")
+			variable_struct_set(L, "procesador_next_step", "Siguiente instrucción")
 			variable_struct_set(L, "procesador_of", "de")
-			procesador_instrucciones_nombre[0] = "Continuar"
-			procesador_instrucciones_nombre[1] = "Asignar variable"
-			procesador_instrucciones_nombre[2] = "Operaciones de una variable"
-			procesador_instrucciones_nombre[3] = "Operaciones de dos variables"
-			procesador_instrucciones_nombre[4] = "Saltar a línea"
-			procesador_instrucciones_nombre[5] = "Leer información de edificio"
-			procesador_instrucciones_nombre[6] = "Controlar edificio"
-			procesador_instrucciones_nombre[7] = "Leer datos de Memoria"
-			procesador_instrucciones_nombre[8] = "Escribir datos a Memoria"
-			procesador_instrucciones_nombre[9] = "Dibujar a Pantalla"
+			variable_struct_set(L, "procesador_random", "Aleatorizar")
+			variable_struct_set(L, "procesador_set", "Asignar")
+			variable_struct_set(L, "procesador_subir", "Subir")
+			variable_struct_set(L, "procesador_to", "a")
+			variable_struct_set(L, "procesador_to_set", "para asignar")
+			variable_struct_set(L, "procesador_to_value_of_cell", "al valor en la celda")
+			variable_struct_set(L, "procesador_vincular", "Vincular edificios")
+			variable_struct_set(L, "procesador_write", "Write")
 			variable_struct_set(L, "recursos_obtenidos", "Recursos obtenidos")
 			variable_struct_set(L, "red_bateria", "Batería")
 			variable_struct_set(L, "red_consumo", "Consumo")
@@ -1005,6 +1038,14 @@ function set_idioma(){
 			variable_struct_set(L, "red_generacion", "Generación")
 			variable_struct_set(L, "red_red", "Red")
 			variable_struct_set(L, "salir", "Salir")
+			variable_struct_set(L, "server_desconectado", "Se ha perdido la conexión con el servidor")
+			variable_struct_set(L, "server_error_nombre", "Error\n\nTu nombre: \"{0}\" ya está utilizado en ese servidor")
+			variable_struct_set(L, "server_expulsado", "Te han expulsado del servidor")
+			variable_struct_set(L, "server_jugador_desconectado", "{0} se ha desconectado")
+			variable_struct_set(L, "server_jugador_expulsado", "{0} ha sido expulsado")
+			variable_struct_set(L, "server_jugador_ido", "{0} se ha ido")
+			variable_struct_set(L, "server_jugador_unido", "{0} se ha unido")
+			variable_struct_set(L, "server_muerto", "Se ha cerrado el servidor")
 			variable_struct_set(L, "show_menu_invertir", "Invertir")
 			variable_struct_set(L, "show_menu_ningun_liquido", "Ningún líquido")
 			variable_struct_set(L, "show_menu_no_disponible", "No disponible de momento")
@@ -1031,185 +1072,284 @@ function set_idioma(){
 			variable_struct_set(L, "win_tecnologias", "Tecnologías estudiadas")
 			variable_struct_set(L, "win_tiempo", "Tiempo")
 			variable_struct_set(L, "win_victoria", "Victoria")
-			variable_struct_set(L, "editar_desde_adentro", "Editar desde adentro")
-			
-			variable_struct_set(L, "buscar_servidores_en_LAN", "Buscar servidores en LAN")
-			variable_struct_set(L, "conectarse_a", "Conectarse a")
-			variable_struct_set(L, "conexion_directa", "Conexión Directa")
-			variable_struct_set(L, "direccion_IP", "Dirección IP")
-			variable_struct_set(L, "descargar_para_jugar_en_LAN", "Descargar para jugar en LAN")
-			variable_struct_set(L, "abrir_en_LAN", "Abrir en LAN")
-			misiles_descripcion[0] = "Un simple misil teledirigido"
-			misiles_descripcion[1] = "Destruye un área con múltiples explosiones"
-			misiles_descripcion[2] = "Destruye la base enemiga y gana la partida instantánemanetes"
-			misiles_nombre[0] = "Misil de Crucero"
-			misiles_nombre[1] = "Misil de Racimo"
-			misiles_nombre[2] = "Misil Nuclear"
-			procesador_nombres_1var = ["seno", "coseno", "tangente", "aleatorio", "piso", "redondeo", "cielo", "cuadrado", "raíz", "pi"]
-			procesador_nombres_2var = [" + ", " - ", " * ", " / ", " división entera ", " módulo ", " o ", " y ", " o exclusivo ", " << ", " >> ", " elevado "]
-			procesador_nombres_read_data = ["activado", "carga", "líquido tipo", "líquido almacen", "líquido capacidad", "líquido produccion", "líquido consumo", "energía almacenada", "energía capacidad", "energía producida", "energía consumida"]
-			procesador_nombres_draw = ["Limpiar", "Color grb", "Color hsv", "Rectángulo", "Línea", "Triángulo", "Círculo", "Texto", "Imprimir"]
-			variable_struct_set(L, "continuar", "Continuar")
-			variable_struct_set(L, "multijugador", "Multijugador")
-			variable_struct_set(L, "cargar_partida", "Cargar Partida")
-			variable_struct_set(L, "guardar", "Guardar")
-			variable_struct_set(L, "jugadores", "Jugadores")
-			variable_struct_set(L, "controles", "Controles")
-			CONTROL_NOMBRE = ["Izquierda", "Derecha", "Arriba", "Abajo", "Pausa", "Menú", "Activar Sonido", "Activar Oleadas", "Esconder Interfaz", "Mostrar Información", "Mostrar vectores",
-				"Enciclopedia", "Rotar edificio", "Reconstruir edificios", "Mostrar Redes", "Mostrar Flujos", "Crear Planos", "Ver Jugadores"]
-			variable_struct_set(L, "autoguardado", "Guardado Automático")
-			dron_nombre[idd_minero] = "Minero"
-			dron_descripcion[idd_minero] = "Mina recursos en el mapa y los lleva a un Almacén cercano"
-			dron_nombre[idd_reconstructor] = "Reconstructor"
-			dron_descripcion[idd_reconstructor] = "Reconstruye edificios destruidos"
-			dron_descripcion[idd_kamikaze] = "Se acerca a su objetivo y explota infilgiendo daño"
-			dron_descripcion[idd_helicoptero] = "Unidad aerea superior, dispara a distancia"
-			dron_nombre[idd_barco] = "Barco"
-			dron_descripcion[idd_barco] = "Dispara artillería, solo puede desplazarse desde el agua"
-			variable_struct_set(L, "guardar_plano", "Guardar Plano")
-			variable_struct_set(L, "cargar_plano", "Cargar Plano")
-			variable_struct_set(L, "server_error_nombre", "Error\n\nTu nombre: \"{0}\" ya está utilizado en ese servidor")
-			variable_struct_set(L, "server_jugador_desconectado", "{0} se ha desconectado")
-			variable_struct_set(L, "server_jugador_expulsado", "{0} ha sido expulsado")
-			variable_struct_set(L, "server_jugador_ido", "{0} se ha ido")
-			variable_struct_set(L, "server_jugador_unido", "{0} se ha unido")
-			variable_struct_set(L, "server_desconectado", "Se ha perdido la conexión con el servidor")
-			variable_struct_set(L, "server_expulsado", "Te han expulsado del servidor")
-			variable_struct_set(L, "server_muerto", "Se ha cerrado el servidor")
-			variable_struct_set(L, "archivo_obsoleto", "Error\n\narchivo obsoleto")
-			variable_struct_set(L, "menu_sin_blueprints", "Sin planos aún")
-			variable_struct_set(L, "enemigo", "Enemigo")
-			variable_struct_set(L, "abandonado", "Abandonado")
 		}
 		//Русский
 		else if idioma = 2{
-			terreno_nombre[idt_arena] = "Паук"
-			terreno_nombre[idt_piedra] = "Камень"
-			terreno_nombre[idt_piedra_cuprica] = "Медная порода"
-			terreno_nombre[idt_piedra_ferrica] = "Железный камень"
-			terreno_nombre[idt_salar] = "Солончак"
-			
-			recurso_nombre[idr_acero] = "Сталь"
-			terreno_nombre[idt_agua] = "Вода"
-			recurso_nombre[idr_bateria] = "Батарея"
-			terreno_nombre[idt_agua_profunda] = "Глубокая вода"
-			terreno_nombre[idt_agua_salada] = "Солёная вода"
-			terreno_nombre[idt_agua_salada_profunda] = "Глубокая солёная вода"
-			edificio_nombre[id_almacen] = "Склад"
-			dron_nombre[idd_arana] = "Паук"
-			recurso_nombre[idr_arena] = "Песок"
-			recurso_nombre[idr_barril_con_agua] = "Бочка с водой"
-			recurso_nombre[idr_barril_con_agua_salada] = "Бочка с солёной водой"
-			recurso_nombre[idr_barril_con_lava] = "Бочка с лавой"
-			recurso_nombre[idr_barril_con_petroleo] = "Бочка с нефтью"
-			recurso_nombre[idr_barril_con_acido] = "Бочка с кислотой"
-			terreno_nombre[idt_basalto] = "Базальт"
-			terreno_nombre[idt_basalto_sulfatado] = "Сульфатный базальт"
-			edificio_nombre[id_bateria] = "Батарея"
-			edificio_nombre[id_bomba_hidraulica] = "Гидравлический насос"
-			edificio_nombre[id_bomba_de_evaporacion] = "Испаряющий насос"
-			dron_nombre[idd_bombardero] = "Бомбардировщик"
-			recurso_nombre[idr_bronce] = "Бронза"
-			edificio_nombre[id_cable] = "Кабель"
-			recurso_nombre[idr_carbon] = "Уголь"
-			terreno_nombre[idt_ceniza] = "Пепел"
-			edificio_nombre[id_cinta_grande] = "Крупный конвейер"
-			edificio_nombre[id_cinta_magnetica] = "Магнитный конвейер"
-			edificio_nombre[id_cinta_transportadora] = "Конвейер"
-			recurso_nombre[idr_cobre] = "Медь"
-			recurso_nombre[idr_compuesto_incendiario] = "Зажигательная смесь"
-			recurso_nombre[idr_concreto] = "Бетон"
-			edificio_nombre[id_cruce] = "Перекрёсток"
-			categoria_nombre[5] = "Оборона"
-			edificio_nombre[id_deposito] = "Хранилище"
-			dron_nombre[idd_mula] = "Мул"
-			categoria_nombre[7] = "Дронов"
-			categoria_nombre[3] = "Энергия"
-			recurso_nombre[idr_electronicos] = "Компонент"
-			edificio_nombre[id_embotelladora] = "Линия розлива"
-			edificio_nombre[id_energia_infinita] = "Бесконечная энергия"
-			edificio_nombre[id_enrutador] = "Распределитель"
-			edificio_nombre[id_ensambladora] = "Сборщик"
-			recurso_nombre[idr_explosivo] = "Взрывник"
-			dron_nombre[idd_kamikaze] = "Камикадзе"
-			categoria_nombre[1] = "Добыча"
-			edificio_nombre[id_extractor_atmosferico] = "Атмосферный экстрактор"
-			edificio_nombre[id_fabrica_de_concreto] = "Бетонный завод"
-			edificio_nombre[id_fabrica_de_drones] = "Фабрика дронов"
-			edificio_nombre[id_fabrica_de_drones_grande] = "Крупный завод дронов"
-			edificio_nombre[id_generador] = "Генератор"
-			edificio_nombre[id_generador_geotermico] = "Геотермальный генератор"
-			dron_nombre[idd_helicoptero] = "Вертолёт"
-			terreno_nombre[idt_hielo] = "Лёд"
-			recurso_nombre[idr_hierro] = "Железо"
-			edificio_nombre[id_horno] = "Печь"
-			edificio_nombre[id_horno_de_lava] = "Лавовая печь"
-			edificio_nombre[id_lanzallamas] = "Огнемёт"
-			terreno_nombre[idt_lava] = "Лава"
-			edificio_nombre[id_laser] = "Лазер"
-			edificio_nombre[id_liquido_infinito] = "Бесконечная жидкость"
-			categoria_nombre[4] = "Жидкости"
-			categoria_nombre[6] = "Логика"
-			edificio_nombre[id_memoria] = "Память"
-			edificio_nombre[id_mensaje] = "Сообщение"
-			edificio_nombre[id_mortero] = "Миномёт"
-			edificio_nombre[id_muro] = "Стена"
-			edificio_nombre[id_muro_reforzado] = "Укреплённая стена"
-			edificio_nombre[id_modulo] = "Модуль"
-			recurso_nombre[idr_modulos] = "Модули"
-			terreno_nombre[idt_nieve] = "Снег"
-			edificio_nombre[id_nucleo] = "Ядро"
-			edificio_nombre[id_onda_de_choque] = "Ударная волна"
-			edificio_nombre[id_overflow] = "Переполнение"
-			edificio_nombre[id_panel_solar] = "Солнечная панель"
-			edificio_nombre[id_pantalla] = "Экран"
-			terreno_nombre[idt_pared_de_arena] = "Песчаная стена"
-			terreno_nombre[idt_pared_de_nieve] = "Снежная стена"
-			terreno_nombre[idt_pared_de_pasto] = "Травяная стена"
-			terreno_nombre[idt_pared_de_piedra] = "Каменная стена"
-			terreno_nombre[idt_pasto] = "Трава"
-			edificio_nombre[id_perforadora_de_petroleo] = "Нефтяная буровая"
-			terreno_nombre[idt_petroleo] = "Нефть"
-			recurso_nombre[idr_piedra] = "Камень"
-			recurso_nombre[idr_piedra_cuprica] = "Медная порода"
-			recurso_nombre[idr_piedra_ferrica] = "Железная порода"
-			recurso_nombre[idr_piedra_sulfatada] = "Сульфатная порода"
-			edificio_nombre[id_planta_desalinizadora] = "Опреснительная установка"
-			edificio_nombre[id_planta_nuclear] = "Атомная станция"
-			edificio_nombre[id_planta_quimica] = "Химический завод"
-			edificio_nombre[id_planta_de_enriquecimiento] = "Завод Обогащения"
-			edificio_nombre[id_planta_de_reciclaje] = "Перерабатывающий завод"
-			recurso_nombre[idr_plastico] = "Пластик"
-			edificio_nombre[id_procesador] = "Процессор"
-			categoria_nombre[2] = "Производство"
-			edificio_nombre[id_puerto_de_carga] = "Порт погрузки"
-			edificio_nombre[id_recurso_infinito] = "Бесконечный ресурс"
-			edificio_nombre[id_refineria_de_metales] = "Металлургический завод"
-			edificio_nombre[id_refineria_de_petroleo] = "Нефтеперерабатывающий завод"
-			dron_nombre[idd_reparador] = "Ремонтный дрон"
-			edificio_nombre[id_rifle] = "Винтовка"
-			recurso_nombre[idr_sal] = "Соль"
-			edificio_nombre[id_selector] = "Селектор"
-			recurso_nombre[idr_silicio] = "Кремний"
-			edificio_nombre[id_silo_de_misiles] = "Ракетный Силос"
-			edificio_nombre[id_taladro] = "Бур"
-			edificio_nombre[id_taladro_electrico] = "Электрический бур"
-			edificio_nombre[id_taladro_de_explosion] = "Взрывной бур"
-			dron_nombre[idd_tanque] = "Танк"
-			dron_nombre[idd_titan] = "Титан"
-			edificio_nombre[id_torre_reparadora] = "Ремонтная башня"
-			edificio_nombre[id_torre_basica] = "Базовая турель"
-			edificio_nombre[id_torre_de_alta_tension] = "Высоковольтная башня"
+			CONTROL_NOMBRE = ["Влево", "Вправо", "Вверх", "Вниз", "Пауза", "Меню", "Вкл/выкл звук", "Вкл/выкл волны", "Скрыть интерфейс", "Показать информацию", "Показать векторы", "Энциклопедия", "Повернуть здание", "Перестроить здания", "Показать сети", "Показать потоки", "Создать проект", "Просмотреть Игроков"]
 			categoria_nombre[0] = "Транспорт"
-			edificio_nombre[id_triturador] = "Дробитель"
-			edificio_nombre[id_tuberia] = "Труба"
-			edificio_nombre[id_tuberia_subterranea] = "Подземная труба"
-			edificio_nombre[id_turbina] = "Турбина"
-			edificio_nombre[id_tunel] = "Тоннель"
-			edificio_nombre[id_tunel_salida] = "Выход тоннеля"
-			recurso_nombre[idr_uranio_bruto] = "Необработанный уран"
-			recurso_nombre[idr_uranio_empobrecido] = "Обеднённый уран"
-			recurso_nombre[idr_uranio_enriquecido] = "Обогащённый уран"
+			categoria_nombre[1] = "Добыча"
+			categoria_nombre[2] = "Производство"
+			categoria_nombre[3] = "Энергия"
+			categoria_nombre[4] = "Жидкости"
+			categoria_nombre[5] = "Оборона"
+			categoria_nombre[6] = "Логика"
+			categoria_nombre[7] = "Дронов"
+			#region DRON
+				dron_descripcion[idd_arana] = "Стреляет лазером по ближайшим врагам"
+				dron_descripcion[idd_barco] = "Ведёт артиллерийский огонь и может передвигаться только по воде"
+				dron_descripcion[idd_bombardero] = "Пролетает над врагами, сбрасывая разрушительные взрывчатые вещества по прямой линии"
+				dron_descripcion[idd_destructor] = "По сути это тяжёлая артиллерийская батарея, атакующая с моря"
+				dron_descripcion[idd_helicoptero] = "Продвинутая воздушная единица, атакует на расстоянии"
+				dron_descripcion[idd_kamikaze] = "Приближается к цели и взрывается, нанося урон"
+				dron_descripcion[idd_minero] = "Добывает ресурсы на карте и доставляет их на ближайший склад"
+				dron_descripcion[idd_mula] = "Перевозит ресурсы между грузовыми портами"
+				dron_descripcion[idd_reconstructor] = "Восстанавливает разрушенные здания"
+				dron_descripcion[idd_reparador] = "Ремонтирует повреждённые здания"
+				dron_descripcion[idd_tanque] = "Тяжёлая осадная единица, стреляющая взрывчаткой и наносящая урон вокруг себя"
+				dron_descripcion[idd_titan] = "Максимальная наземная единица, ведущая дальнобойный взрывной обстрел"
+				dron_nombre[idd_arana] = "Паук"
+				dron_nombre[idd_barco] = "Катер"
+				dron_nombre[idd_bombardero] = "Бомбардировщик"
+				dron_nombre[idd_destructor] = "Эсминец"
+				dron_nombre[idd_helicoptero] = "Вертолёт"
+				dron_nombre[idd_kamikaze] = "Камикадзе"
+				dron_nombre[idd_minero] = "Шахтёр"
+				dron_nombre[idd_mula] = "Мул"
+				dron_nombre[idd_reconstructor] = "Реконструктор"
+				dron_nombre[idd_reparador] = "Ремонтный дрон"
+				dron_nombre[idd_tanque] = "Танк"
+				dron_nombre[idd_titan] = "Титан"
+			#endregion
+			#region EDIFICIO
+				edificio_descripcion[id_almacen] = "Хранит ресурсы для последующего использования"
+				edificio_descripcion[id_bateria] = "Необходима для производства всех типов дронов."
+				edificio_descripcion[id_bomba_de_evaporacion] = "Медленно добывает воду через испарение."
+				edificio_descripcion[id_bomba_hidraulica] = "Добывает жидкости из-под земли, используя энергию."
+				edificio_descripcion[id_cable] = "Соединяет здания с энергосетью."
+				edificio_descripcion[id_cinta_grande] = "Перевозит дроны между заводами"
+				edificio_descripcion[id_cinta_magnetica] = "Улучшенный конвейер, перевозящий больше предметов."
+				edificio_descripcion[id_cinta_transportadora] = "Перемещает ресурсы из одного места в другое."
+				edificio_descripcion[id_cruce] = "Позволяет конвейерным лентам пересекаться"
+				edificio_descripcion[id_deposito] = "Хранит большое количество жидкости."
+				edificio_descripcion[id_embotelladora] = "Наполняет и опустошает бочки с жидкостями"
+				edificio_descripcion[id_energia_infinita] = "Производит энергию с помощью магии."
+				edificio_descripcion[id_enrutador] = "Распределяет ресурсы в выбранном направлении."
+				edificio_descripcion[id_ensambladora] = "Использует медь и кремний для производства компонентов."
+				edificio_descripcion[id_extractor_atmosferico] = "Извлекает воду из атмосферы, идеально подходит для мест, где её сложно получить"
+				edificio_descripcion[id_fabrica_de_concreto] = "Производит бетон из песка, камня и воды"
+				edificio_descripcion[id_fabrica_de_drones] = "Производит транспортные дроны. Нужно много энергии, кремния и батарей."
+				edificio_descripcion[id_fabrica_de_drones_grande] = "Позволяет производить более крупные дроны с использованием кислоты"
+				edificio_descripcion[id_generador] = "Производит энергию, используя топливо."
+				edificio_descripcion[id_generador_geotermico] = "Производит энергию, испаряя воду. Должен стоять на лаве."
+				edificio_descripcion[id_horno] = "Использует топливо для выплавки бронзы, стали и кремния."
+				edificio_descripcion[id_horno_de_lava] = "Плавит быстрее, используя тепло лавы."
+				edificio_descripcion[id_lanzallamas] = "Использует горючие ресурсы, чтобы поджигать врагов. Может быть усилен нефтью."
+				edificio_descripcion[id_laser] = "Испускает постоянный лазер. Урон зависит от доступной энергии."
+				edificio_descripcion[id_liquido_infinito] = "Создаёт выбранную жидкость с помощью магии."
+				edificio_descripcion[id_memoria] = "Хранит до 128 значений."
+				edificio_descripcion[id_mensaje] = "Позволяет писать сообщения."
+				edificio_descripcion[id_modulo] = "Улучшает характеристики здания"
+				edificio_descripcion[id_mortero] = "Стреляет взрывными снарядами по дальним целям."
+				edificio_descripcion[id_muro] = "Отвлекает врагов, пока оборона уничтожает их."
+				edificio_descripcion[id_muro_reforzado] = "Улучшенная версия стены — прочнее и лучше"
+				edificio_descripcion[id_nucleo] = "Командный центр. Все ресурсы хранятся здесь. Его необходимо защищать любой ценой."
+				edificio_descripcion[id_onda_de_choque] = "Заряжает и выпускает мощную ударную волну, которая наносит урон и замедляет всех врагов в радиусе действия."
+				edificio_descripcion[id_overflow] = "Перенаправляет ресурсы, когда линия переполнена."
+				edificio_descripcion[id_panel_solar] = "Производит чистую энергию от солнца."
+				edificio_descripcion[id_pantalla] = "Позволяет отображать изображения, переданные процессором"
+				edificio_descripcion[id_perforadora_de_petroleo] = "Производит нефть в любом месте карты за высокую цену."
+				edificio_descripcion[id_planta_de_enriquecimiento] = "Позволяет перерабатывать уран, постоянно потребляя большие объёмы воды и энергии"
+				edificio_descripcion[id_planta_de_reciclaje] = "Позволяет перерабатывать часть ресурсов от уничтоженных поблизости врагов"
+				edificio_descripcion[id_planta_desalinizadora] = "Очищает солёную воду, извлекая соль и пресную воду"
+				edificio_descripcion[id_planta_nuclear] = "Потребляет 1 часть обогащённого и 20 частей обеднённого урана, а также воду, создавая огромную энергию."
+				edificio_descripcion[id_planta_quimica] = "Позволяет выбирать рецепты для производства химических материалов."
+				edificio_descripcion[id_procesador] = "Обрабатывает логические инструкции."
+				edificio_descripcion[id_puerto_de_carga] = "Соединяет порты, позволяя дронам переносить ресурсы."
+				edificio_descripcion[id_recurso_infinito] = "Создаёт ресурсы с помощью магии."
+				edificio_descripcion[id_refineria_de_metales] = "Очищает медную или железную руду с помощью кислоты."
+				edificio_descripcion[id_refineria_de_petroleo] = "С помощью фракционной перегонки извлекает пластик, топливо и серу из нефти"
+				edificio_descripcion[id_rifle] = "Дальнобойная турель. Стреляет бронзой, сталью или ураном."
+				edificio_descripcion[id_selector] = "Пропускает только один выбранный ресурс, перенаправляя остальные."
+				edificio_descripcion[id_silo_de_misiles] = "Здесь можно создать ядерную ракету, используя сталь, взрывчатку, нефть и уран, обогащённый"
+				edificio_descripcion[id_taladro] = "Добывает медь, железо и уголь бесплатно. Может быть усилен водой."
+				edificio_descripcion[id_taladro_de_explosion] = "Использует взрывчатку для добычи одного ресурса с каждой клетки в области."
+				edificio_descripcion[id_taladro_electrico] = "Улучшенный бур, который также добывает камень и песок из земли, но потребляет энергию. Может быть усилен водой"
+				edificio_descripcion[id_torre_basica] = "Простая оборонная турель; стреляет медью или железом."
+				edificio_descripcion[id_torre_de_alta_tension] = "Передаёт энергию на большие расстояния."
+				edificio_descripcion[id_torre_reparadora] = "Использует энергию для ремонта зданий лазером."
+				edificio_descripcion[id_triturador] = "Дробит камень в песок."
+				edificio_descripcion[id_tuberia] = "Перемещает жидкости между зданиями."
+				edificio_descripcion[id_tuberia_subterranea] = "Проводит жидкости под землёй."
+				edificio_descripcion[id_tunel] = "Пропускает ресурсы под землёй, позволяя строить сверху."
+				edificio_descripcion[id_tunel_salida] = "Пропускает ресурсы под землёй, позволяя строить сверху."
+				edificio_descripcion[id_turbina] = "Производит энергию, используя топливо и воду."
+				edificio_nombre[id_almacen] = "Склад"
+				edificio_nombre[id_bateria] = "Батарея"
+				edificio_nombre[id_bomba_de_evaporacion] = "Испаряющий насос"
+				edificio_nombre[id_bomba_hidraulica] = "Гидравлический насос"
+				edificio_nombre[id_cable] = "Кабель"
+				edificio_nombre[id_cinta_grande] = "Крупный конвейер"
+				edificio_nombre[id_cinta_magnetica] = "Магнитный конвейер"
+				edificio_nombre[id_cinta_transportadora] = "Конвейер"
+				edificio_nombre[id_cruce] = "Перекрёсток"
+				edificio_nombre[id_deposito] = "Хранилище"
+				edificio_nombre[id_embotelladora] = "Линия розлива"
+				edificio_nombre[id_energia_infinita] = "Бесконечная энергия"
+				edificio_nombre[id_enrutador] = "Распределитель"
+				edificio_nombre[id_ensambladora] = "Сборщик"
+				edificio_nombre[id_extractor_atmosferico] = "Атмосферный экстрактор"
+				edificio_nombre[id_fabrica_de_concreto] = "Бетонный завод"
+				edificio_nombre[id_fabrica_de_drones] = "Фабрика дронов"
+				edificio_nombre[id_fabrica_de_drones_grande] = "Крупный завод дронов"
+				edificio_nombre[id_generador] = "Генератор"
+				edificio_nombre[id_generador_geotermico] = "Геотермальный генератор"
+				edificio_nombre[id_horno] = "Печь"
+				edificio_nombre[id_horno_de_lava] = "Лавовая печь"
+				edificio_nombre[id_lanzallamas] = "Огнемёт"
+				edificio_nombre[id_laser] = "Лазер"
+				edificio_nombre[id_liquido_infinito] = "Бесконечная жидкость"
+				edificio_nombre[id_memoria] = "Память"
+				edificio_nombre[id_mensaje] = "Сообщение"
+				edificio_nombre[id_modulo] = "Модуль"
+				edificio_nombre[id_mortero] = "Миномёт"
+				edificio_nombre[id_muro] = "Стена"
+				edificio_nombre[id_muro_reforzado] = "Укреплённая стена"
+				edificio_nombre[id_nucleo] = "Ядро"
+				edificio_nombre[id_onda_de_choque] = "Ударная волна"
+				edificio_nombre[id_overflow] = "Переполнение"
+				edificio_nombre[id_panel_solar] = "Солнечная панель"
+				edificio_nombre[id_pantalla] = "Экран"
+				edificio_nombre[id_perforadora_de_petroleo] = "Нефтяная буровая"
+				edificio_nombre[id_planta_de_enriquecimiento] = "Завод Обогащения"
+				edificio_nombre[id_planta_de_reciclaje] = "Перерабатывающий завод"
+				edificio_nombre[id_planta_desalinizadora] = "Опреснительная установка"
+				edificio_nombre[id_planta_nuclear] = "Атомная станция"
+				edificio_nombre[id_planta_quimica] = "Химический завод"
+				edificio_nombre[id_procesador] = "Процессор"
+				edificio_nombre[id_puerto_de_carga] = "Порт погрузки"
+				edificio_nombre[id_recurso_infinito] = "Бесконечный ресурс"
+				edificio_nombre[id_refineria_de_metales] = "Металлургический завод"
+				edificio_nombre[id_refineria_de_petroleo] = "Нефтеперерабатывающий завод"
+				edificio_nombre[id_rifle] = "Винтовка"
+				edificio_nombre[id_selector] = "Селектор"
+				edificio_nombre[id_silo_de_misiles] = "Ракетный Силос"
+				edificio_nombre[id_taladro] = "Бур"
+				edificio_nombre[id_taladro_de_explosion] = "Взрывной бур"
+				edificio_nombre[id_taladro_electrico] = "Электрический бур"
+				edificio_nombre[id_torre_basica] = "Базовая турель"
+				edificio_nombre[id_torre_de_alta_tension] = "Высоковольтная башня"
+				edificio_nombre[id_torre_reparadora] = "Ремонтная башня"
+				edificio_nombre[id_triturador] = "Дробитель"
+				edificio_nombre[id_tuberia] = "Труба"
+				edificio_nombre[id_tuberia_subterranea] = "Подземная труба"
+				edificio_nombre[id_tunel] = "Тоннель"
+				edificio_nombre[id_tunel_salida] = "Выход тоннеля"
+				edificio_nombre[id_turbina] = "Турбина"
+			#endregion
+			misiles_descripcion[0] = "Простая управляемая ракета"
+			misiles_descripcion[1] = "Уничтожает область множественными взрывами"
+			misiles_descripcion[2] = "Уничтожает вражескую базу и мгновенно выигрывает матч"
+			misiles_nombre[0] = "Крылатая ракета"
+			misiles_nombre[1] = "Кассетная ракета"
+			misiles_nombre[2] = "Ядерная ракета"
+			objetivos_nombre[0] = "получить"
+			objetivos_nombre[1] = "иметь на складе"
+			objetivos_nombre[2] = "построить"
+			objetivos_nombre[3] = "иметь построенным"
+			objetivos_nombre[4] = "убить"
+			objetivos_nombre[5] = "без цели"
+			objetivos_nombre[6] = "нажать ADWS"
+			objetivos_nombre[7] = "загрузить здание"
+			objetivos_nombre[8] = "уничтожить здание"
+			planta_quimica_descripcion[0] = "Потребляет сульфатированный камень и энергию для производства кислоты"
+			planta_quimica_descripcion[1] = "Использует зажигательный состав и кислоту для производства взрывчатки"
+			planta_quimica_descripcion[2] = "Использует кислоту, медь и энергию для производства батарей"
+			planta_quimica_receta[0] = "Кислота"
+			planta_quimica_receta[1] = "Взрывчатка"
+			planta_quimica_receta[2] = "Батареи"
+			procesador_instrucciones_nombre[0] = "Продолжить"
+			procesador_instrucciones_nombre[1] = "Назначить переменную"
+			procesador_instrucciones_nombre[2] = "Операции с одной переменной"
+			procesador_instrucciones_nombre[3] = "Операции с двумя переменными"
+			procesador_instrucciones_nombre[4] = "Перейти к строке"
+			procesador_instrucciones_nombre[5] = "Чтение информации о здании"
+			procesador_instrucciones_nombre[6] = "Управление зданием"
+			procesador_instrucciones_nombre[7] = "Чтение данных из памяти"
+			procesador_instrucciones_nombre[8] = "Запись данных в память"
+			procesador_instrucciones_nombre[9] = "Отрисовка на экран"
+			procesador_nombres_1var = ["синус", "косинус", "тангенс", "случайное", "пол", "округлить", "потолок", "квадрат", "квадратный корень", "пи"]
+			procesador_nombres_2var = [" + ", " - ", " * ", " / ", " целочисленное деление ", " модуль ", " или ", " и ", " исключающее или ", " << ", " >> ", " степень "]
+			procesador_nombres_draw = ["Очистить", "Цвет RGB", "Цвет HSV", "Прямоугольник", "Линия", "Треугольник", "Круг", "Текст", "Печать"]
+			procesador_nombres_read_data = ["включено", "заряд", "тип жидкости", "жидкости хранится", "ёмкость жидкости", "производство жидкости", "потребление жидкости", "энергии хранится", "ёмкость энергии", "энергии произведено", "энергии потреблено"]
+			#region RECURSOS
+				recurso_descripcion[idr_acero] = "Полезный ресурс для строительства средней инфраструктуры."
+				recurso_descripcion[idr_arena] = "Необходима для производства кремния и бетона."
+				recurso_descripcion[idr_barril_con_acido] = "Бочка с кислотой, полезна для хранения и распределения"
+				recurso_descripcion[idr_barril_con_agua] = "Бочка с водой, полезна для хранения и распределения воды"
+				recurso_descripcion[idr_barril_con_agua_salada] = "Бочка с солёной водой, полезна для хранения y распределения"
+				recurso_descripcion[idr_barril_con_lava] = "Бочка с лавой, полезна для хранения и распределения"
+				recurso_descripcion[idr_barril_con_petroleo] = "Бочка с нефтью, полезна для хранения и распределения"
+				recurso_descripcion[idr_bronce] = "Полезный ресурс для строительства средней инфраструктуры."
+				recurso_descripcion[idr_carbon] = "Базовое топливо. Используется в печах и генераторах."
+				recurso_descripcion[idr_cobre] = "Базовый ресурс, необходимый для первых зданий. Может быть переработан в бронзу."
+				recurso_descripcion[idr_compuesto_incendiario] = "Продвинутое топливо, эффективнее и долговечнее угля."
+				recurso_descripcion[idr_concreto] = "Используется для строительства средней инфраструктуры."
+				recurso_descripcion[idr_explosivo] = "Приближается к цели и взрывается, нанося урон"
+				recurso_descripcion[idr_hierro] = "Базовый ресурс, необходимый для ранних зданий."
+				recurso_descripcion[idr_modulos] = "Исследуйте модули и постройте два сборщика рядом, чтобы начать их производство"
+				recurso_descripcion[idr_piedra] = "Необходима для производства бетона. Может быть измельчена в песок."
+				recurso_descripcion[idr_piedra_cuprica] = "Можно использовать как обычный камень или очистить для получения меди."
+				recurso_descripcion[idr_piedra_ferrica] = "Можно использовать как камень или очистить для получения железа."
+				recurso_descripcion[idr_piedra_sulfatada] = "Можно использовать как камень, но незаменима в продвинутом производстве."
+				recurso_descripcion[idr_plastico] = "Лёгкий материал, используется в производстве дронов."
+				recurso_descripcion[idr_sal] = "Полезный ресурс для улучшения других промышленных процессов, таких как химический завод, нефтепереработка и производство кремния"
+				recurso_descripcion[idr_silicio] = "Используется для солнечных панелей, дронов и микросхем."
+				recurso_descripcion[idr_uranio_bruto] = "Необработанный уран. Можно переработать на обогащённый и обеднённый."
+				recurso_descripcion[idr_uranio_empobrecido] = "Уран-238. Используется на АЭС и как боеприпас."
+				recurso_descripcion[idr_uranio_enriquecido] = "Уран-235. Используется для производства энергии на АЭС."
+				recurso_nombre[idr_acero] = "Сталь"
+				recurso_nombre[idr_arena] = "Песок"
+				recurso_nombre[idr_barril_con_acido] = "Бочка с кислотой"
+				recurso_nombre[idr_barril_con_agua] = "Бочка с водой"
+				recurso_nombre[idr_barril_con_agua_salada] = "Бочка с солёной водой"
+				recurso_nombre[idr_barril_con_lava] = "Бочка с лавой"
+				recurso_nombre[idr_barril_con_petroleo] = "Бочка с нефтью"
+				recurso_nombre[idr_bateria] = "Батарея"
+				recurso_nombre[idr_bronce] = "Бронза"
+				recurso_nombre[idr_carbon] = "Уголь"
+				recurso_nombre[idr_cobre] = "Медь"
+				recurso_nombre[idr_compuesto_incendiario] = "Зажигательная смесь"
+				recurso_nombre[idr_concreto] = "Бетон"
+				recurso_nombre[idr_electronicos] = "Компонент"
+				recurso_nombre[idr_explosivo] = "Взрывник"
+				recurso_nombre[idr_hierro] = "Железо"
+				recurso_nombre[idr_modulos] = "Модули"
+				recurso_nombre[idr_piedra] = "Камень"
+				recurso_nombre[idr_piedra_cuprica] = "Медная порода"
+				recurso_nombre[idr_piedra_ferrica] = "Железная порода"
+				recurso_nombre[idr_piedra_sulfatada] = "Сульфатная порода"
+				recurso_nombre[idr_plastico] = "Пластик"
+				recurso_nombre[idr_sal] = "Соль"
+				recurso_nombre[idr_silicio] = "Кремний"
+				recurso_nombre[idr_uranio_bruto] = "Необработанный уран"
+				recurso_nombre[idr_uranio_empobrecido] = "Обеднённый уран"
+				recurso_nombre[idr_uranio_enriquecido] = "Обогащённый уран"
+			#endregion
+			#region TERRENO
+				terreno_nombre[idt_agua] = "Вода"
+				terreno_nombre[idt_agua_profunda] = "Глубокая вода"
+				terreno_nombre[idt_agua_salada] = "Солёная вода"
+				terreno_nombre[idt_agua_salada_profunda] = "Глубокая солёная вода"
+				terreno_nombre[idt_arena] = "Паук"
+				terreno_nombre[idt_basalto] = "Базальт"
+				terreno_nombre[idt_basalto_sulfatado] = "Сульфатный базальт"
+				terreno_nombre[idt_ceniza] = "Пепел"
+				terreno_nombre[idt_hielo] = "Лёд"
+				terreno_nombre[idt_lava] = "Лава"
+				terreno_nombre[idt_nieve] = "Снег"
+				terreno_nombre[idt_pared_de_arena] = "Песчаная стена"
+				terreno_nombre[idt_pared_de_nieve] = "Снежная стена"
+				terreno_nombre[idt_pared_de_pasto] = "Травяная стена"
+				terreno_nombre[idt_pared_de_piedra] = "Каменная стена"
+				terreno_nombre[idt_pasto] = "Трава"
+				terreno_nombre[idt_petroleo] = "Нефть"
+				terreno_nombre[idt_piedra] = "Камень"
+				terreno_nombre[idt_piedra_cuprica] = "Медная порода"
+				terreno_nombre[idt_piedra_ferrica] = "Железный камень"
+				terreno_nombre[idt_salar] = "Солончак"
+			#endregion
+			variable_struct_set(L, "abandonado", "Заброшенный")
+			variable_struct_set(L, "abrir_en_LAN", "Открыть в LAN")
 			variable_struct_set(L, "activado", "Включено")
 			variable_struct_set(L, "activar", "Активировать")
 			variable_struct_set(L, "almacen_acepta", "Принимает")
@@ -1227,7 +1367,14 @@ function set_idioma(){
 			variable_struct_set(L, "almacen_sin_receta", "Нет рецепта")
 			variable_struct_set(L, "almacen_sin_recursos", "Нет ресурсов")
 			variable_struct_set(L, "almacen_total", "Всего")
+			variable_struct_set(L, "archivo_obsoleto", "Ошибка\n\nустаревший файл")
+			variable_struct_set(L, "autoguardado", "Автоматическое сохранение")
+			variable_struct_set(L, "buscar_servidores_en_LAN", "Поиск серверов в LAN")
 			variable_struct_set(L, "cancelar", "Отмена")
+			variable_struct_set(L, "cargar_partida", "Загрузить игру")
+			variable_struct_set(L, "cargar_plano", "Загрузить чертеж")
+			variable_struct_set(L, "conectarse_a", "Подключиться к")
+			variable_struct_set(L, "conexion_directa", "Прямое подключение")
 			variable_struct_set(L, "construir_combinar_liquidos", "Нельзя смешивать жидкости")
 			variable_struct_set(L, "construir_enemigos_cerca", "Слишком близко враги!")
 			variable_struct_set(L, "construir_ocupado", "Участок занят")
@@ -1241,105 +1388,17 @@ function set_idioma(){
 			variable_struct_set(L, "construir_terreno_hielo", "Слишком нестабильная поверхность")
 			variable_struct_set(L, "construir_terreno_invalido", "Непригодный участок")
 			variable_struct_set(L, "construir_zona_enemigos", "Зона появления врагов")
+			variable_struct_set(L, "continuar", "Продолжать")
+			variable_struct_set(L, "controles", "Элементы управления")
 			variable_struct_set(L, "cuevas", "Пещеры")
 			variable_struct_set(L, "desactivado", "Выключено")
 			variable_struct_set(L, "desactivar", "Деактивировать")
-			recurso_descripcion[idr_acero] = "Полезный ресурс для строительства средней инфраструктуры."
-			edificio_descripcion[id_almacen] = "Хранит ресурсы для последующего использования"
-			dron_descripcion[idd_arana] = "Стреляет лазером по ближайшим врагам"
-			recurso_descripcion[idr_arena] = "Необходима для производства кремния и бетона."
-			recurso_descripcion[idr_barril_con_agua] = "Бочка с водой, полезна для хранения и распределения воды"
-			recurso_descripcion[idr_barril_con_agua_salada] = "Бочка с солёной водой, полезна для хранения y распределения"
-			recurso_descripcion[idr_barril_con_lava] = "Бочка с лавой, полезна для хранения и распределения"
-			recurso_descripcion[idr_barril_con_petroleo] = "Бочка с нефтью, полезна для хранения и распределения"
-			recurso_descripcion[idr_barril_con_acido] = "Бочка с кислотой, полезна для хранения и распределения"
-			edificio_descripcion[id_bateria] = "Необходима для производства всех типов дронов."
-			edificio_descripcion[id_bomba_hidraulica] = "Добывает жидкости из-под земли, используя энергию."
-			edificio_descripcion[id_bomba_de_evaporacion] = "Медленно добывает воду через испарение."
-			dron_descripcion[idd_bombardero] = "Пролетает над врагами, сбрасывая разрушительные взрывчатые вещества по прямой линии"
-			recurso_descripcion[idr_bronce] = "Полезный ресурс для строительства средней инфраструктуры."
-			edificio_descripcion[id_cable] = "Соединяет здания с энергосетью."
-			recurso_descripcion[idr_carbon] = "Базовое топливо. Используется в печах и генераторах."
-			edificio_descripcion[id_cinta_grande] = "Перевозит дроны между заводами"
-			edificio_descripcion[id_cinta_magnetica] = "Улучшенный конвейер, перевозящий больше предметов."
-			edificio_descripcion[id_cinta_transportadora] = "Перемещает ресурсы из одного места в другое."
-			recurso_descripcion[idr_cobre] = "Базовый ресурс, необходимый для первых зданий. Может быть переработан в бронзу."
-			recurso_descripcion[idr_compuesto_incendiario] = "Продвинутое топливо, эффективнее и долговечнее угля."
-			recurso_descripcion[idr_concreto] = "Используется для строительства средней инфраструктуры."
-			edificio_descripcion[id_cruce] = "Позволяет конвейерным лентам пересекаться"
-			edificio_descripcion[id_deposito] = "Хранит большое количество жидкости."
-			dron_descripcion[idd_mula] = "Перевозит ресурсы между грузовыми портами"
-			edificio_descripcion[id_embotelladora] = "Наполняет и опустошает бочки с жидкостями"
-			edificio_descripcion[id_energia_infinita] = "Производит энергию с помощью магии."
-			edificio_descripcion[id_enrutador] = "Распределяет ресурсы в выбранном направлении."
-			edificio_descripcion[id_ensambladora] = "Использует медь и кремний для производства компонентов."
-			recurso_descripcion[idr_explosivo] = "Приближается к цели и взрывается, нанося урон"
-			edificio_descripcion[id_extractor_atmosferico] = "Извлекает воду из атмосферы, идеально подходит для мест, где её сложно получить"
-			edificio_descripcion[id_fabrica_de_concreto] = "Производит бетон из песка, камня и воды"
-			edificio_descripcion[id_fabrica_de_drones] = "Производит транспортные дроны. Нужно много энергии, кремния и батарей."
-			edificio_descripcion[id_fabrica_de_drones_grande] = "Позволяет производить более крупные дроны с использованием кислоты"
-			edificio_descripcion[id_generador] = "Производит энергию, используя топливо."
-			edificio_descripcion[id_generador_geotermico] = "Производит энергию, испаряя воду. Должен стоять на лаве."
-			recurso_descripcion[idr_hierro] = "Базовый ресурс, необходимый для ранних зданий."
-			edificio_descripcion[id_horno] = "Использует топливо для выплавки бронзы, стали и кремния."
-			edificio_descripcion[id_horno_de_lava] = "Плавит быстрее, используя тепло лавы."
-			edificio_descripcion[id_lanzallamas] = "Использует горючие ресурсы, чтобы поджигать врагов. Может быть усилен нефтью."
-			edificio_descripcion[id_laser] = "Испускает постоянный лазер. Урон зависит от доступной энергии."
-			edificio_descripcion[id_liquido_infinito] = "Создаёт выбранную жидкость с помощью магии."
-			edificio_descripcion[id_memoria] = "Хранит до 128 значений."
-			edificio_descripcion[id_mensaje] = "Позволяет писать сообщения."
-			edificio_descripcion[id_mortero] = "Стреляет взрывными снарядами по дальним целям."
-			edificio_descripcion[id_muro] = "Отвлекает врагов, пока оборона уничтожает их."
-			edificio_descripcion[id_muro_reforzado] = "Улучшенная версия стены — прочнее и лучше"
-			edificio_descripcion[id_modulo] = "Улучшает характеристики здания"
-			recurso_descripcion[idr_modulos] = "Исследуйте модули и постройте два сборщика рядом, чтобы начать их производство"
-			edificio_descripcion[id_nucleo] = "Командный центр. Все ресурсы хранятся здесь. Его необходимо защищать любой ценой."
-			edificio_descripcion[id_onda_de_choque] = "Заряжает и выпускает мощную ударную волну, которая наносит урон и замедляет всех врагов в радиусе действия."
-			edificio_descripcion[id_overflow] = "Перенаправляет ресурсы, когда линия переполнена."
-			edificio_descripcion[id_panel_solar] = "Производит чистую энергию от солнца."
-			edificio_descripcion[id_pantalla] = "Позволяет отображать изображения, переданные процессором"
-			edificio_descripcion[id_perforadora_de_petroleo] = "Производит нефть в любом месте карты за высокую цену."
-			recurso_descripcion[idr_piedra] = "Необходима для производства бетона. Может быть измельчена в песок."
-			recurso_descripcion[idr_piedra_cuprica] = "Можно использовать как обычный камень или очистить для получения меди."
-			recurso_descripcion[idr_piedra_ferrica] = "Можно использовать как камень или очистить для получения железа."
-			recurso_descripcion[idr_piedra_sulfatada] = "Можно использовать как камень, но незаменима в продвинутом производстве."
-			edificio_descripcion[id_planta_desalinizadora] = "Очищает солёную воду, извлекая соль и пресную воду"
-			edificio_descripcion[id_planta_nuclear] = "Потребляет 1 часть обогащённого и 20 частей обеднённого урана, а также воду, создавая огромную энергию."
-			edificio_descripcion[id_planta_quimica] = "Позволяет выбирать рецепты для производства химических материалов."
-			edificio_descripcion[id_planta_de_enriquecimiento] = "Позволяет перерабатывать уран, постоянно потребляя большие объёмы воды и энергии"
-			edificio_descripcion[id_planta_de_reciclaje] = "Позволяет перерабатывать часть ресурсов от уничтоженных поблизости врагов"
-			recurso_descripcion[idr_plastico] = "Лёгкий материал, используется в производстве дронов."
-			edificio_descripcion[id_procesador] = "Обрабатывает логические инструкции."
-			edificio_descripcion[id_puerto_de_carga] = "Соединяет порты, позволяя дронам переносить ресурсы."
-			edificio_descripcion[id_recurso_infinito] = "Создаёт ресурсы с помощью магии."
-			edificio_descripcion[id_refineria_de_metales] = "Очищает медную или железную руду с помощью кислоты."
-			edificio_descripcion[id_refineria_de_petroleo] = "С помощью фракционной перегонки извлекает пластик, топливо и серу из нефти"
-			dron_descripcion[idd_reparador] = "Ремонтирует повреждённые здания"
-			edificio_descripcion[id_rifle] = "Дальнобойная турель. Стреляет бронзой, сталью или ураном."
-			recurso_descripcion[idr_sal] = "Полезный ресурс для улучшения других промышленных процессов, таких как химический завод, нефтепереработка и производство кремния"
-			edificio_descripcion[id_selector] = "Пропускает только один выбранный ресурс, перенаправляя остальные."
-			recurso_descripcion[idr_silicio] = "Используется для солнечных панелей, дронов и микросхем."
-			edificio_descripcion[id_silo_de_misiles] = "Здесь можно создать ядерную ракету, используя сталь, взрывчатку, нефть и уран, обогащённый"
-			edificio_descripcion[id_taladro] = "Добывает медь, железо и уголь бесплатно. Может быть усилен водой."
-			edificio_descripcion[id_taladro_electrico] = "Улучшенный бур, который также добывает камень и песок из земли, но потребляет энергию. Может быть усилен водой"
-			edificio_descripcion[id_taladro_de_explosion] = "Использует взрывчатку для добычи одного ресурса с каждой клетки в области."
-			dron_descripcion[idd_tanque] = "Тяжёлая осадная единица, стреляющая взрывчаткой и наносящая урон вокруг себя"
-			dron_descripcion[idd_titan] = "Максимальная наземная единица, ведущая дальнобойный взрывной обстрел"
-			edificio_descripcion[id_torre_reparadora] = "Использует энергию для ремонта зданий лазером."
-			edificio_descripcion[id_torre_basica] = "Простая оборонная турель; стреляет медью или железом."
-			edificio_descripcion[id_torre_de_alta_tension] = "Передаёт энергию на большие расстояния."
-			edificio_descripcion[id_triturador] = "Дробит камень в песок."
-			edificio_descripcion[id_tuberia] = "Перемещает жидкости между зданиями."
-			edificio_descripcion[id_tuberia_subterranea] = "Проводит жидкости под землёй."
-			edificio_descripcion[id_turbina] = "Производит энергию, используя топливо и воду."
-			edificio_descripcion[id_tunel] = "Пропускает ресурсы под землёй, позволяя строить сверху."
-			edificio_descripcion[id_tunel_salida] = "Пропускает ресурсы под землёй, позволяя строить сверху."
-			recurso_descripcion[idr_uranio_bruto] = "Необработанный уран. Можно переработать на обогащённый и обеднённый."
-			recurso_descripcion[idr_uranio_empobrecido] = "Уран-238. Используется на АЭС и как боеприпас."
-			recurso_descripcion[idr_uranio_enriquecido] = "Уран-235. Используется для производства энергии на АЭС."
+			variable_struct_set(L, "descargar_para_jugar_en_LAN", "Скачать для игры по LAN")
 			variable_struct_set(L, "desierto", "Пустыня")
 			variable_struct_set(L, "dificil", "Сложная")
 			variable_struct_set(L, "dificultad", "Сложность")
+			variable_struct_set(L, "direccion_IP", "IP-адрес")
+			variable_struct_set(L, "editar_desde_adentro", "Редактировать изнутри")
 			variable_struct_set(L, "editor_Reemplazar", "Заменить")
 			variable_struct_set(L, "editor_activar_oleadas", "Активировать волны")
 			variable_struct_set(L, "editor_add", "Добавить")
@@ -1411,6 +1470,7 @@ function set_idioma(){
 			variable_struct_set(L, "enciclopedia_unidades", "Юниты")
 			variable_struct_set(L, "enciclopedia_usado_en", "Используется в")
 			variable_struct_set(L, "enciclopedia_vida", "Макс. здоровье")
+			variable_struct_set(L, "enemigo", "Враг")
 			variable_struct_set(L, "energia_consumida", "Потреблённая энергия")
 			variable_struct_set(L, "energia_perdida", "Потерянная энергия")
 			variable_struct_set(L, "energia_producida", "Произведённая энергия")
@@ -1430,9 +1490,12 @@ function set_idioma(){
 			variable_struct_set(L, "game_producira", "Будет производить")
 			variable_struct_set(L, "game_puerto_carga", "Соединяется с другим портом погрузки")
 			variable_struct_set(L, "game_vincular_procesador", "Связывается с любым зданием")
+			variable_struct_set(L, "guardar", "Сохранять")
+			variable_struct_set(L, "guardar_plano", "Сохранить чертеж")
 			variable_struct_set(L, "islas", "Острова")
-			variable_struct_set(L, "liquido_Agua", "Вода")
+			variable_struct_set(L, "jugadores", "Игроки")
 			variable_struct_set(L, "liquido_Agua salada", "Солёная вода")
+			variable_struct_set(L, "liquido_Agua", "Вода")
 			variable_struct_set(L, "liquido_Lava", "Лава")
 			variable_struct_set(L, "liquido_Petróleo", "Нефть")
 			variable_struct_set(L, "liquido_Ácido", "Кислота")
@@ -1450,6 +1513,7 @@ function set_idioma(){
 			variable_struct_set(L, "menu_numero_oleadas", "Количество волн")
 			variable_struct_set(L, "menu_precio_tecnologia", "Цена Технологии")
 			variable_struct_set(L, "menu_sin_archivos", "Сценариев пока нет")
+			variable_struct_set(L, "menu_sin_blueprints", "Сценариев чертеж нет")
 			variable_struct_set(L, "menu_tutorial", "Обучение")
 			variable_struct_set(L, "mision_enemigos", "врагов")
 			variable_struct_set(L, "mision_tiempo", "Осталось времени")
@@ -1469,17 +1533,9 @@ function set_idioma(){
 			variable_struct_set(L, "modulo_reparadora", "Ремонтирует на 20% быстрее")
 			variable_struct_set(L, "modulo_sal", "Добывает на 50% больше")
 			variable_struct_set(L, "modulo_sin_edificio", "Требуется здание")
+			variable_struct_set(L, "multijugador", "Мультиплеер")
 			variable_struct_set(L, "nieve", "Снег")
 			variable_struct_set(L, "nuevo_archivo", "Новый файл")
-			objetivos_nombre[0] = "получить"
-			objetivos_nombre[1] = "иметь на складе"
-			objetivos_nombre[2] = "построить"
-			objetivos_nombre[3] = "иметь построенным"
-			objetivos_nombre[4] = "убить"
-			objetivos_nombre[5] = "без цели"
-			objetivos_nombre[6] = "нажать ADWS"
-			objetivos_nombre[7] = "загрузить здание"
-			objetivos_nombre[8] = "уничтожить здание"
 			variable_struct_set(L, "pausa", "П А У З А")
 			variable_struct_set(L, "pausa_UI", "Интерфейс")
 			variable_struct_set(L, "pausa_activar", "Включить")
@@ -1496,46 +1552,30 @@ function set_idioma(){
 			variable_struct_set(L, "pausa_reparar", "для восстановления зданий")
 			variable_struct_set(L, "pausa_sonido", "звук")
 			variable_struct_set(L, "personalizado", "Пользовательская")
-			planta_quimica_descripcion[0] = "Потребляет сульфатированный камень и энергию для производства кислоты"
-			planta_quimica_descripcion[1] = "Использует зажигательный состав и кислоту для производства взрывчатки"
-			planta_quimica_descripcion[2] = "Использует кислоту, медь и энергию для производства батарей"
-			planta_quimica_receta[0] = "Кислота"
-			planta_quimica_receta[1] = "Взрывчатка"
-			planta_quimica_receta[2] = "Батареи"
 			variable_struct_set(L, "praderas", "Луга")
-			variable_struct_set(L, "procesador_cargar", "Загрузить код")
-			variable_struct_set(L, "procesador_guardar", "Сохранить код")
-			variable_struct_set(L, "procesador_next_step", "Следующая инструкция")
 			variable_struct_set(L, "procesador_add", "Добавить")
-			variable_struct_set(L, "procesador_subir", "Вверх")
-			variable_struct_set(L, "procesador_clonar", "Клонировать")
 			variable_struct_set(L, "procesador_borrar", "Удалить")
-			variable_struct_set(L, "procesador_vincular", "Связать здания")
+			variable_struct_set(L, "procesador_cargar", "Загрузить код")
+			variable_struct_set(L, "procesador_clonar", "Клонировать")
 			variable_struct_set(L, "procesador_continue", "Продолжить")
-			variable_struct_set(L, "procesador_set", "Установить")
-			variable_struct_set(L, "procesador_random", "Случайное значение")
-			variable_struct_set(L, "procesador_to", "в")
+			variable_struct_set(L, "procesador_control", "Управление")
+			variable_struct_set(L, "procesador_from", "из")
+			variable_struct_set(L, "procesador_guardar", "Сохранить код")
 			variable_struct_set(L, "procesador_if", "Если")
+			variable_struct_set(L, "procesador_into_value_of_cell", "в значение ячейки")
 			variable_struct_set(L, "procesador_is", "равно")
 			variable_struct_set(L, "procesador_is_not", "не равно")
 			variable_struct_set(L, "procesador_jump", "переход на строку")
-			variable_struct_set(L, "procesador_control", "Управление")
-			variable_struct_set(L, "procesador_to_set", "для установки")
-			variable_struct_set(L, "procesador_from", "из")
-			variable_struct_set(L, "procesador_write", "Записать")
-			variable_struct_set(L, "procesador_to_value_of_cell", "в значение ячейки")
-			variable_struct_set(L, "procesador_into_value_of_cell", "в значение ячейки")
+			variable_struct_set(L, "procesador_next_step", "Следующая инструкция")
 			variable_struct_set(L, "procesador_of", "из")
-			procesador_instrucciones_nombre[0] = "Продолжить"
-			procesador_instrucciones_nombre[1] = "Назначить переменную"
-			procesador_instrucciones_nombre[2] = "Операции с одной переменной"
-			procesador_instrucciones_nombre[3] = "Операции с двумя переменными"
-			procesador_instrucciones_nombre[4] = "Перейти к строке"
-			procesador_instrucciones_nombre[5] = "Чтение информации о здании"
-			procesador_instrucciones_nombre[6] = "Управление зданием"
-			procesador_instrucciones_nombre[7] = "Чтение данных из памяти"
-			procesador_instrucciones_nombre[8] = "Запись данных в память"
-			procesador_instrucciones_nombre[9] = "Отрисовка на экран"
+			variable_struct_set(L, "procesador_random", "Случайное значение")
+			variable_struct_set(L, "procesador_set", "Установить")
+			variable_struct_set(L, "procesador_subir", "Вверх")
+			variable_struct_set(L, "procesador_to", "в")
+			variable_struct_set(L, "procesador_to_set", "для установки")
+			variable_struct_set(L, "procesador_to_value_of_cell", "в значение ячейки")
+			variable_struct_set(L, "procesador_vincular", "Связать здания")
+			variable_struct_set(L, "procesador_write", "Записать")
 			variable_struct_set(L, "recursos_obtenidos", "Полученные ресурсы")
 			variable_struct_set(L, "red_bateria", "Батарея")
 			variable_struct_set(L, "red_consumo", "Потребление")
@@ -1543,6 +1583,14 @@ function set_idioma(){
 			variable_struct_set(L, "red_generacion", "Генерация")
 			variable_struct_set(L, "red_red", "Сеть")
 			variable_struct_set(L, "salir", "Выходить")
+			variable_struct_set(L, "server_desconectado", "Соединение с сервером потеряно")
+			variable_struct_set(L, "server_error_nombre", "Ошибка\n\nВаше имя: \"{0}\" уже используется на этом сервере")
+			variable_struct_set(L, "server_expulsado", "Вы были исключены с сервера")
+			variable_struct_set(L, "server_jugador_desconectado", "{0} отключился")
+			variable_struct_set(L, "server_jugador_expulsado", "{0} был исключён")
+			variable_struct_set(L, "server_jugador_ido", "{0} вышел")
+			variable_struct_set(L, "server_jugador_unido", "{0} присоединился")
+			variable_struct_set(L, "server_muerto", "Сервер был закрыт")
 			variable_struct_set(L, "show_menu_invertir", "Инвертировать")
 			variable_struct_set(L, "show_menu_ningun_liquido", "Нет жидкости")
 			variable_struct_set(L, "show_menu_no_disponible", "Пока недоступно")
@@ -1569,58 +1617,10 @@ function set_idioma(){
 			variable_struct_set(L, "win_tecnologias", "Изученные технологии")
 			variable_struct_set(L, "win_tiempo", "Время")
 			variable_struct_set(L, "win_victoria", "Победа")
-			
-			variable_struct_set(L, "editar_desde_adentro", "Редактировать изнутри")
-			variable_struct_set(L, "buscar_servidores_en_LAN", "Поиск серверов в LAN")
-			variable_struct_set(L, "conectarse_a", "Подключиться к")
-			variable_struct_set(L, "conexion_directa", "Прямое подключение")
-			variable_struct_set(L, "direccion_IP", "IP-адрес")
-			variable_struct_set(L, "descargar_para_jugar_en_LAN", "Скачать для игры по LAN")
-			variable_struct_set(L, "abrir_en_LAN", "Открыть в LAN")
-			misiles_descripcion[0] = "Простая управляемая ракета"
-			misiles_descripcion[1] = "Уничтожает область множественными взрывами"
-			misiles_descripcion[2] = "Уничтожает вражескую базу и мгновенно выигрывает матч"
-			misiles_nombre[0] = "Крылатая ракета"
-			misiles_nombre[1] = "Кассетная ракета"
-			misiles_nombre[2] = "Ядерная ракета"
-			procesador_nombres_1var = ["синус", "косинус", "тангенс", "случайное", "пол", "округлить", "потолок", "квадрат", "квадратный корень", "пи"]
-			procesador_nombres_2var = [" + ", " - ", " * ", " / ", " целочисленное деление ", " модуль ", " или ", " и ", " исключающее или ", " << ", " >> ", " степень "]
-			procesador_nombres_read_data = ["включено", "заряд", "тип жидкости", "жидкости хранится", "ёмкость жидкости", "производство жидкости", "потребление жидкости", "энергии хранится", "ёмкость энергии", "энергии произведено", "энергии потреблено"]
-			procesador_nombres_draw = ["Очистить", "Цвет RGB", "Цвет HSV", "Прямоугольник", "Линия", "Треугольник", "Круг", "Текст", "Печать"]
-			variable_struct_set(L, "continuar", "Продолжать")
-			variable_struct_set(L, "multijugador", "Мультиплеер")
-			variable_struct_set(L, "cargar_partida", "Загрузить игру")
-			variable_struct_set(L, "guardar", "Сохранять")
-			variable_struct_set(L, "jugadores", "Игроки")
-			variable_struct_set(L, "controles", "Элементы управления")
-			CONTROL_NOMBRE = ["Влево", "Вправо", "Вверх", "Вниз", "Пауза", "Меню", "Вкл/выкл звук", "Вкл/выкл волны", "Скрыть интерфейс", "Показать информацию", "Показать векторы",
-				"Энциклопедия", "Повернуть здание", "Перестроить здания", "Показать сети", "Показать потоки", "Создать проект", "Просмотреть Игроков"]
-			variable_struct_set(L, "autoguardado", "Автоматическое сохранение")
-			dron_nombre[idd_minero] = "Шахтёр"
-			dron_descripcion[idd_minero] = "Добывает ресурсы на карте и доставляет их на ближайший склад"
-			dron_nombre[idd_reconstructor] = "Реконструктор"
-			dron_descripcion[idd_reconstructor] = "Восстанавливает разрушенные здания"
-			dron_descripcion[idd_kamikaze] = "Приближается к цели и взрывается, нанося урон"
-			dron_descripcion[idd_helicoptero] = "Продвинутая воздушная единица, атакует на расстоянии"
-			dron_nombre[idd_barco] = "Катер"
-			dron_descripcion[idd_barco] = "Ведёт артиллерийский огонь и может передвигаться только по воде"
-			variable_struct_set(L, "guardar_plano", "Сохранить чертеж")
-			variable_struct_set(L, "cargar_plano", "Загрузить чертеж")
-			variable_struct_set(L, "server_error_nombre", "Ошибка\n\nВаше имя: \"{0}\" уже используется на этом сервере")
-			variable_struct_set(L, "server_jugador_desconectado", "{0} отключился")
-			variable_struct_set(L, "server_jugador_expulsado", "{0} был исключён")
-			variable_struct_set(L, "server_jugador_ido", "{0} вышел")
-			variable_struct_set(L, "server_jugador_unido", "{0} присоединился")
-			variable_struct_set(L, "server_desconectado", "Соединение с сервером потеряно")
-			variable_struct_set(L, "server_expulsado", "Вы были исключены с сервера")
-			variable_struct_set(L, "server_muerto", "Сервер был закрыт")
-			variable_struct_set(L, "archivo_obsoleto", "Ошибка\n\nустаревший файл")
-			variable_struct_set(L, "menu_sin_blueprints", "Сценариев чертеж нет")
-			variable_struct_set(L, "enemigo", "Враг")
-			variable_struct_set(L, "abandonado", "Заброшенный")
 		}
 		sort_edificios()
 		sort_recursos()
+		sort_drones()
 		for(var a = 0; a < rss_max; a++)
 			recurso_descripcion[a] = string_trim(text_wrap(recurso_descripcion[a], 400))
 		for(var a = 0; a < dron_max; a++)

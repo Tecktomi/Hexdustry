@@ -73,7 +73,7 @@ function step(){
 		//Ciclo de disparos
 		draw_set_alpha(0.5)
 		for(var a = array_length(municiones) - 1; a >= 0; a--){
-			var municion = municiones[a], target = municion.target, enemigo = municion.enemigo, _jugador = municion.jugador
+			var municion = municiones[a], target = municion.target, _jugador = municion.jugador
 			if municion.tipo != 2{
 				draw_set_color(c_black)
 				draw_circle_off(municion.x, municion.y, 2, false)
@@ -105,13 +105,13 @@ function step(){
 				array_push(humos, add_humo(municion.x, municion.y, muna, munb, random_range(-1, 1), random_range(-1, 1), irandom_range(20, 30)))
 			//Colisión
 			if edificio_bool[# muna, munb]{
-				edificio = edificio_id[# muna, munb]
-				if edificio.enemigo != enemigo
+				var edificio = edificio_id[# muna, munb]
+				if edificio.enemigo != municion.enemigo
 					municion.dis = 0
 			}
 			//Munición perforadora
 			if municion.tipo = 4
-				herir_hexagono(muna, munb, floor(municion.dmg / 2), false, enemigo)
+				herir_hexagono(muna, munb, floor(municion.dmg / 2), false, municion.enemigo)
 			if --municion.dis <= 0{
 				municiones[a] = municiones[array_length(municiones) - 1]
 				array_pop(municiones)
@@ -131,10 +131,10 @@ function step(){
 					herir_edificio(municion.dmg, municion.target_build)
 				//Misil
 				if municion.tipo = 1
-					explosion(municion.x, municion.y, municion.target_build, enemigo, municion.radio,,, _jugador)
+					explosion(municion.x, municion.y, municion.target_build, municion.enemigo, municion.radio,,, _jugador)
 				//Misil incendiario
 				else if municion.tipo = 3
-					explosion(municion.x, municion.y, municion.target_build, enemigo, municion.radio,, true, _jugador)
+					explosion(municion.x, municion.y, municion.target_build, municion.enemigo, municion.radio,, true, _jugador)
 			}
 		}
 		draw_set_alpha(1)
@@ -208,16 +208,26 @@ function step(){
 				if not flag_2
 					e = array_length(size_size)
 				var temp_complex_list = get_size(spawn_x, spawn_y, 0, e)
-				for(var i = 0; i < min(array_length(temp_complex_list), d); i++){
+				len = min(array_length(temp_complex_list), d)
+				for(var i = 0; i < len; i++){
 					var temp_complex = temp_complex_list[i], aa = clamp(temp_complex[0], 0, xsize - 1), bb = clamp(temp_complex[1], 0, ysize - 1), enemigo
 					if grid_water_distance[# aa, bb] < infinity
-						enemigo = add_dron(aa, bb, idd_barco, true, 1)
-					else if not terreno_caminable[terreno[# aa, bb]] or edificio_cercano[# aa, bb] = null_edificio or (tutorial = 0 and random(1) < 0.15){
-						if irandom(min(array_length(temp_complex_list), d)) > i + 11{
+						if irandom(len) > i + 7{
+							enemigo = add_dron(aa, bb, idd_destructor, true, 1)
+							i += 8
+							continue
+						}
+						else if irandom(len) > i + 2{
+							enemigo = add_dron(aa, bb, idd_barco, true, 1)
+							i += 3
+							continue
+						}
+					if not terreno_caminable[terreno[# aa, bb]] or edificio_cercano[# aa, bb] = null_edificio or (tutorial = 0 and random(1) < 0.15){
+						if irandom(len) > i + 11{
 							enemigo = add_dron(aa, bb, idd_bombardero, true, 1)
 							i += 10
 						}
-						else if irandom(min(array_length(temp_complex_list), d)) > i + 5{
+						else if irandom(len) > i + 5{
 							enemigo = add_dron(aa, bb, idd_helicoptero, true, 1)
 							i += 4
 						}
@@ -225,11 +235,11 @@ function step(){
 							enemigo = add_dron(aa, bb, idd_kamikaze, true, 1)
 					}
 					else{
-						if irandom(min(array_length(temp_complex_list), d)) > i + 15{
+						if irandom(len) > i + 15{
 							enemigo = add_dron(aa, bb, idd_titan, true, 1)
 							i += 14
 						}
-						else if irandom(min(array_length(temp_complex_list), d)) > i + 6{
+						else if irandom(len) > i + 6{
 							enemigo = add_dron(aa, bb, idd_tanque, true, 1)
 							i += 5
 						}
