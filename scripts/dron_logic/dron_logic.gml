@@ -183,7 +183,7 @@ function dron_logic(){
 					else{
 						var i = dron.move_x, j = dron.move_y, b = repair_id[# i, j], comprable = (b > 0)
 						if comprable and not cheat
-							comprable = check_reconstruible(b)
+							comprable = check_reconstruible(b).comprable
 						if comprable{
 							var temp_edificio = construir(b, repair_dir[# i, j], i, j)
 							if tag_edificio_seteable[b]

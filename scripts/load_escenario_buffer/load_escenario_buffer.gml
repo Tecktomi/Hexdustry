@@ -79,10 +79,10 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 		//Terreno
 		for(var a = 0; a < xsize; a++)
 			for(var b = 0; b < ysize; b++){
-				ds_grid_set(terreno, a, b, real(buffer_read(buffer, buffer_u8)))
-				ds_grid_set(ore, a, b, real(buffer_read(buffer, buffer_s8)))
+				terreno[# a, b] = real(buffer_read(buffer, buffer_u8))
+				ore[# a, b] = real(buffer_read(buffer, buffer_s8))
 				if ore[# a, b] >= 0
-					ds_grid_set(ore_amount, a, b, real(buffer_read(buffer, buffer_u16)))
+					ore_amount[# a, b] = real(buffer_read(buffer, buffer_u16))
 			}
 		//Edificios
 		if _edificios{
@@ -102,6 +102,7 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 			}
 		}
 		buffer_delete(buffer)
+		clear_olas()
 		for(var a = 0; a < chunk_xsize; a++)
 			for(var b = 0; b < chunk_ysize; b++)
 				update_background(chunk_width * a, chunk_height * b)

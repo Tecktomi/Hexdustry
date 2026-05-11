@@ -141,6 +141,7 @@ if menu = 0{
 				keyboard_clear(vk_escape)
 				get_file = 0
 				input_layer = 0
+				default_mision(0)
 			}
 			ypos += text_y * 1.2
 			draw_panel(110, ypos, room_width - 220, room_height - 200 - ypos, 0, 1, 1, panel_partida_nueva)
@@ -2009,7 +2010,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		if b > 0{
 			var comprable = true
 			if not cheat
-				comprable = check_reconstruible(b)
+				comprable = check_reconstruible(b).comprable
 			if not comprable{
 				var temp_complex = abtoxy(mx, my)
 				draw_sprite_off(spr_rojo, 0, temp_complex[0], temp_complex[1],,,,, 0.5)
@@ -3414,8 +3415,6 @@ if menu = 1{
 	}
 	else if not chat_input
 		control_camara()
-	if flow > 0
-		draw_path_find()
 	if win > 0{
 		draw_set_color(c_black)
 		draw_set_alpha(min(++win_step / 100, 0.5))
@@ -3585,9 +3584,13 @@ if menu = 1 or menu = 3{
 			info = not info
 			save_setting("", "info", info)
 		}
-		if keyboard_check_pressed(CONTROL_FLOW)
-			flow = (flow + 1) mod 10
+		if keyboard_check_pressed(CONTROL_FLOW){
+			keyboard_clear(CONTROL_FLOW)
+			flow = (flow + 1) mod 11
+		}
 	}
+	if flow > 0
+		draw_flow()
 }
 update_cursor()
 if sprite_boton_text != ""

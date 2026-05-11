@@ -51,13 +51,13 @@ function step(){
 		}
 		//Ciclo edificios
 		for(var a = array_length(edificios_activos) - 1; a >= 0; a--){
-			edificio = edificios_activos[a]
+			var edificio = edificios_activos[a]
 			if edificio.idle or edificio.vida <= 0
 				continue
 			edificio_script[edificio.index](edificio)
 		}
 		for(var a = array_length(edificios_pendientes) - 1; a >= 0; a--){
-			edificio = array_pop(edificios_pendientes)
+			var edificio = array_pop(edificios_pendientes)
 			if edificio.eliminar and edificio.punteros[4] >= 0{
 				edificio.eliminar = false
 				array_disorder_remove(edificios_activos, edificio, 4)
@@ -323,7 +323,7 @@ function step(){
 			if flujo.almacen < 1 and flujo.generacion = 0{
 				if grafic_luz and flujo.liquido = 3
 					for(var b = array_length(flujo.edificios) - 1; b >= 0; b--){
-						edificio = flujo.edificios[b]
+						var edificio = flujo.edificios[b]
 						encender_luz(false, edificio)
 					}
 				flujo.liquido = -1
