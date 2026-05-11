@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"draw_path_find",
+  "%Name":"draw_flow",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"draw_path_find",
+  "name":"draw_flow",
   "parent":{
     "name":"DRAW",
     "path":"folders/SCRIPTS/DRAW.yy",

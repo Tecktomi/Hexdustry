@@ -36,11 +36,11 @@ function generar_bioma(bioma){
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if terreno[# aa, bb] != idt_agua{
-							set_terreno(aa, bb, temp_terreno)
+							terreno[# aa, bb] = temp_terreno
 							if temp_terreno = idt_piedra{
 								var c = random(1)
 								if c < 0.2
-									set_terreno(aa, bb, c < 0.1 ? idt_piedra_cuprica : idt_piedra_ferrica)
+									terreno[# aa, bb] = c < 0.1 ? idt_piedra_cuprica : idt_piedra_ferrica
 							}
 						}
 					}
@@ -66,7 +66,7 @@ function generar_bioma(bioma){
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if not tag_agua[terreno[# aa, bb]]
-							set_terreno(aa, bb, borde_agua)
+							terreno[# aa, bb] = borde_agua
 						if brandom(){
 							temp_complex = next_to(aa, bb, c)
 							aa = temp_complex[0]
@@ -74,7 +74,7 @@ function generar_bioma(bioma){
 							if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 								continue
 							if not tag_agua[terreno[# aa, bb]]
-								set_terreno(aa, bb, borde_agua)
+								terreno[# aa, bb] = borde_agua
 						}
 					}
 				}
@@ -85,7 +85,7 @@ function generar_bioma(bioma){
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if terreno[# aa, bb] != idt_petroleo
-							set_terreno(aa, bb, idt_piedra)
+							terreno[# aa, bb] = idt_piedra
 					}
 				}
 				//Basalto al rededor de la Lava
@@ -96,9 +96,9 @@ function generar_bioma(bioma){
 							continue
 						if terreno[# aa, bb] != idt_lava{
 							if random(1) < 0.9
-								set_terreno(aa, bb, idt_basalto)
+								terreno[# aa, bb] = idt_basalto
 							else
-								set_terreno(aa, bb, idt_basalto_sulfatado)
+								terreno[# aa, bb] = idt_basalto_sulfatado
 						}
 						if brandom(){
 							temp_complex = next_to(aa, bb, irandom(5))
@@ -108,9 +108,9 @@ function generar_bioma(bioma){
 								continue
 							if terreno[# aa, bb] != idt_lava{
 								if random(1) < 0.9
-									set_terreno(aa, bb, idt_basalto)
+									terreno[# aa, bb] = idt_basalto
 								else
-									set_terreno(aa, bb, idt_basalto_sulfatado)
+									terreno[# aa, bb] = idt_basalto_sulfatado
 							}
 						}
 					}
@@ -153,7 +153,7 @@ function generar_bioma(bioma){
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 				continue
 			if not terreno_caminable[terreno[# aa, bb]]
-				set_terreno(aa, bb, temp_terreno_change[terreno[# aa, bb]])
+				terreno[# aa, bb] = temp_terreno_change[terreno[# aa, bb]]
 		}
 		//Crear núcleo
 		if array_length(nucleos) = 0{
@@ -193,7 +193,7 @@ function generar_bioma(bioma){
 							if ore[# aa, bb] != i{
 								ds_grid_set(ore_amount, aa, bb, 0)
 								if tag_ore_piedras[i] and tag_terreno_piedras[temp_terreno]
-									set_terreno(aa, bb, i = ido_cobre ? idt_piedra_cuprica : idt_piedra_ferrica)
+									terreno[# aa, bb] = i = ido_cobre ? idt_piedra_cuprica : idt_piedra_ferrica
 								ore[# aa, bb] = i
 								beta[# aa, bb] = new_beta
 								array_push(new_beta.terrenos, [real(aa), real(bb)])
@@ -238,5 +238,6 @@ function generar_bioma(bioma){
 			}
 		}
 		until terreno_caminable[terreno[# spawn_x, spawn_y]]
+		clear_olas()
 	}
 }

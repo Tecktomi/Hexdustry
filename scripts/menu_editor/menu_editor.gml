@@ -411,7 +411,7 @@ function menu_editor(){
 			//Lapiz
 			else{
 				//Spawn point
-				if editor_herramienta = 1 and terreno_caminable[terreno[# mx, my]]{
+				if editor_herramienta = 1{
 					draw_set_color(c_red)
 					var temp_complex = abtoxy(mx, my)
 					draw_circle_off(temp_complex[0], temp_complex[1], 200, true)
@@ -647,5 +647,7 @@ function menu_editor(){
 		}
 		control_camara(-200)
 		update_cursor()
+		if keyboard_check_pressed(ord("V"))
+			clear_olas()
 	}
 }

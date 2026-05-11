@@ -18,7 +18,7 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 							var temp_complex = temp_list[j], aa = temp_complex[0], bb = temp_complex[1]
 							if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 								continue
-							set_terreno(aa, bb, dat1)
+							terreno[# aa, bb] = dat1
 						}
 						var c = irandom(5)
 						repeat(2){
@@ -40,7 +40,7 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 									var temp_complex = next_to(a, b, j), aa = temp_complex[0], bb = temp_complex[1]
 									if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or dat1 = terreno[# aa, bb]
 										continue
-									set_terreno(aa, bb, dat3)
+									terreno[# aa, bb] = dat3
 								}
 				}
 				else
@@ -51,7 +51,7 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 									var temp_complex = next_to(a, b, j), aa = temp_complex[0], bb = temp_complex[1]
 									if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or dat2 != terreno[# aa, bb]
 										continue
-									set_terreno(aa, bb, dat3)
+									terreno[# aa, bb] = dat3
 								}
 			}
 			//Ruido Aleatorio
@@ -59,7 +59,7 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 				for(var a = 0; a < xsize; a++)
 					for(var b = 0; b < ysize; b++)
 						if irandom(99) < dat3 and terreno[# a, b] = dat1
-							set_terreno(a, b, dat2)
+							terreno[# a, b] = dat2
 			}
 			//Menas de Recursos
 			else if tipo = 3{
@@ -88,4 +88,5 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 			}
 		}
 	}
+	clear_olas()
 }
