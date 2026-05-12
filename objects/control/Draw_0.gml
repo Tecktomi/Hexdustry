@@ -3586,7 +3586,7 @@ if menu = 1 or menu = 3{
 		}
 		if keyboard_check_pressed(CONTROL_FLOW){
 			keyboard_clear(CONTROL_FLOW)
-			flow = (flow + 1) mod 11
+			flow = (flow + 1) mod 12
 		}
 	}
 	if flow > 0

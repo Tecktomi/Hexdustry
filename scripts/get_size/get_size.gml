@@ -1,4 +1,4 @@
-function get_size(a, b, dir, size){
+function get_size(a = 0, b = 0, dir = 0, size = 0){
 	var i = 0
 	if size = 2.5
 		var output = array_create(4, [0, 0])
@@ -7,15 +7,21 @@ function get_size(a, b, dir, size){
 	output[0] = [real(a), real(b)]
 	if size = 2{
 		dir = 6 - (dir mod 2)
-		for(var c = 4; c < 6; c++)
-			output[++i] = next_to(a, b, (dir + c) mod 6)
+		for(var c = 4; c < 6; c++){
+			var temp_complex = DESFACE[b & 1, (c + dir) mod 6]
+			output[++i] = [a + temp_complex[0], b + temp_complex[1]]
+		}
 	}
 	if size = 2.5
-		for(var c = 4; c <= 6; c++)
-			output[++i] = next_to(a, b, (dir + c) mod 6)
+		for(var c = 4; c <= 6; c++){
+			var temp_complex = DESFACE[b & 1, (c + dir) mod 6]
+			output[++i] = [a + temp_complex[0], b + temp_complex[1]]
+		}
 	if size = 3
-		for(var c = 0; c < 6; c++)
-			output[++i] = next_to(a, b, (dir + c) mod 6)
+		for(var c = 0; c < 6; c++){
+			var temp_complex = DESFACE[b & 1, c]
+			output[++i] = [a + temp_complex[0], b + temp_complex[1]]
+		}
 	if size = 4
 		for(var c = 0; c < 6; c++){
 			var temp_complex = next_to(a, b, (dir + c) mod 6)

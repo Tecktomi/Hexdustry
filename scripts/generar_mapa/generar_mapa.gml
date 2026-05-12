@@ -22,9 +22,8 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 						}
 						var c = irandom(5)
 						repeat(2){
-							var temp_complex = next_to(a, b, c)
-							a = clamp(temp_complex[0], 0, xsize - 1)
-							b = clamp(temp_complex[1], 0, ysize - 1)
+							a = clamp(a + DESFACE[b & 1][c, 0], 0, xsize - 1)
+							b = clamp(b + DESFACE[b & 1][c, 1], 0, ysize - 1)
 						}
 					}
 				}
@@ -37,7 +36,7 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 						for(var b = 0; b < ysize; b++)
 							if terreno[# a, b] = dat1
 								for(var j = 0; j < 6; j++){
-									var temp_complex = next_to(a, b, j), aa = temp_complex[0], bb = temp_complex[1]
+									var aa = a + DESFACE[b & 1][j, 0], bb = b + DESFACE[b & 1][j, 1]
 									if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or dat1 = terreno[# aa, bb]
 										continue
 									terreno[# aa, bb] = dat3
@@ -48,7 +47,7 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 						for(var b = 0; b < ysize; b++)
 							if terreno[# a, b] = dat1
 								for(var j = 0; j < 6; j++){
-									var temp_complex = next_to(a, b, j), aa = temp_complex[0], bb = temp_complex[1]
+									var aa = a + DESFACE[b & 1][j, 0], bb = b + DESFACE[b & 1][j, 1]
 									if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or dat2 != terreno[# aa, bb]
 										continue
 									terreno[# aa, bb] = dat3
@@ -79,9 +78,8 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 						}
 						var c = irandom(5)
 						repeat(2){
-							var temp_complex = next_to(a, b, c)
-							a = clamp(temp_complex[0], 0, xsize - 1)
-							b = clamp(temp_complex[1], 0, ysize - 1)
+							a = clamp(a + DESFACE[b & 1][c, 0], 0, xsize - 1)
+							b = clamp(b + DESFACE[b & 1][c, 1], 0, ysize - 1)
 						}
 					}
 				}

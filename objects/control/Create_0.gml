@@ -14,6 +14,7 @@ FILE_VERSION = 2026_04_30
 PROCESADOR_VERSION = 2026_03_25
 size_size = [1, 3, 7, 12, 19, 27, 37]
 size_borde = [6, 9, 12, 15, 18, 21]
+DESFACE = [[[0, -1], [0, -2], [-1, -1], [-1, 1], [0, 2], [0, 1]], [[1, -1], [0, -2], [0, -1], [0, 1], [0, 2], [1, 1]]]
 ini_open("settings.ini")
 #region Controles
 	CONTROL_LEFT = ini_read_real("Controles", 0, ord("A"))
@@ -383,8 +384,6 @@ L = {}
 	blueprint_maxa = 0
 	blueprint_minb = 0
 	blueprint_maxb = 0
-	blueprint_grid = ds_grid_create(xsize, ysize)
-	ds_grid_clear(blueprint_grid, false)
 	null_blueprint = {
 		construible : true,
 		a : 0,
@@ -512,7 +511,60 @@ puerto_carga_array = array_create(0, null_edificio)
 puerto_carga_atended = 0
 puerto_carga_array_enemigo = array_create(0, null_edificio)
 puerto_carga_atended_enemigo = 0
+//Enemigos
+efectos_nombre = ["Shock", "Fuego"]
+efectos_max = array_length(efectos_nombre)
+null_dron = {
+	a : 0,
+	b : 0,
+	index : 0,
+	enemigo : true,
+	x : 0,
+	y : 0,
+	vida_max : 5,
+	vida : 5,
+	target : null_edificio,
+	temp_target : null_edificio,
+	target_dron : undefined,
+	chunk_x : 0,
+	chunk_y : 0,
+	carga : array_create(0, 0),
+	carga_total : 0,
+	modo : 0,
+	torres : array_create(0, null_edificio),
+	dir : 0,
+	dir_move : 0,
+	step : 0,
+	efecto : array_create(efectos_max, 0),
+	move_xmove : 0,
+	move_ymove : 0,
+	move_dis : 0,
+	move_x : 0,
+	move_y : 0,
+	oleada : 0,
+	random_int : random(1),
+	selected : false,
+	jugador : 0,
+	change_pos : false,
+	move_dir : 0,
+	punteros : array_create(2, 0)
+}
+enemigos = array_create(0, null_dron)
+drones_aliados = array_create(0, null_dron)
+null_edificio.target = null_dron
+null_dron.target_dron = null_dron
+selected_drones = array_create(0, null_dron)
+drones = array_create(0, null_dron)
+null_beta = {
+	recurso : 0,
+	terrenos : array_create(0, [0, 0]),
+	center_x : 0,
+	center_y : 0
+}
+selected_dron = null_dron
 #region GRIDS
+	blueprint_grid = ds_grid_create(xsize, ysize)
+	ds_grid_clear(blueprint_grid, false)
 	edificio_bool = ds_grid_create(xsize, ysize)
 	ds_grid_clear(edificio_bool, false)
 	edificio_id = ds_grid_create(xsize, ysize)
@@ -569,75 +621,34 @@ puerto_carga_atended_enemigo = 0
 	ds_grid_clear(usable_grid_bool, false)
 	grid_water_distance = ds_grid_create(xsize, ysize)
 	ds_grid_clear(grid_water_distance, infinity)
+	beta = ds_grid_create(xsize, ysize)
+	ds_grid_clear(beta, null_beta)
+	background = ds_grid_create(chunk_xsize, chunk_ysize)
+	chunk_dron_enemigo = ds_grid_create(chunk_xsize, chunk_ysize)
+	chunk_dron_aliado = ds_grid_create(chunk_xsize, chunk_ysize)
+	chunk_edificios = ds_grid_create(chunk_xsize, chunk_ysize)
+	chunk_edificios_enemigo = ds_grid_create(chunk_xsize, chunk_ysize)
+	chunk_edificios_abandonado = ds_grid_create(chunk_xsize, chunk_ysize)
+	chunk_edificios_estatico = ds_grid_create(chunk_xsize, chunk_ysize)
+	chunk_edificios_dinamico = ds_grid_create(chunk_xsize, chunk_ysize)
+	chunk_edificios_draw = ds_grid_create(chunk_xsize, chunk_ysize)
+	chunk_edificios_background = ds_grid_create(chunk_xsize, chunk_ysize)
+	chunk_edificios_dirty = ds_grid_create(chunk_xsize, chunk_ysize)
+	ds_grid_clear(chunk_edificios_dirty, true)
+	for(var a = 0; a < chunk_xsize; a++)
+		for(var b = 0; b < chunk_ysize; b++){
+			ds_grid_set(background, a, b, spr_hexagono)
+			ds_grid_set(chunk_edificios_background, a, b, spr_hexagono)
+			ds_grid_set(chunk_dron_enemigo, a, b, array_create(0, null_dron))
+			ds_grid_set(chunk_dron_aliado, a, b, array_create(0, null_dron))
+			ds_grid_set(chunk_edificios, a, b, array_create(0, null_edificio))
+			ds_grid_set(chunk_edificios_enemigo, a, b, array_create(0, null_edificio))
+			ds_grid_set(chunk_edificios_abandonado, a, b, array_create(0, null_edificio))
+			ds_grid_set(chunk_edificios_estatico, a, b, array_create(0, null_edificio))
+			ds_grid_set(chunk_edificios_dinamico, a, b, array_create(0, null_edificio))
+			ds_grid_set(chunk_edificios_draw, a, b, array_create(0, null_edificio))
+		}
 #endregion
-//Enemigos
-efectos_nombre = ["Shock", "Fuego"]
-efectos_max = array_length(efectos_nombre)
-null_dron = {
-	a : 0,
-	b : 0,
-	index : 0,
-	enemigo : true,
-	x : 0,
-	y : 0,
-	vida_max : 5,
-	vida : 5,
-	target : null_edificio,
-	temp_target : null_edificio,
-	target_dron : undefined,
-	chunk_x : 0,
-	chunk_y : 0,
-	carga : array_create(0, 0),
-	carga_total : 0,
-	modo : 0,
-	torres : array_create(0, null_edificio),
-	dir : 0,
-	dir_move : 0,
-	step : 0,
-	efecto : array_create(efectos_max, 0),
-	move_xmove : 0,
-	move_ymove : 0,
-	move_dis : 0,
-	move_x : 0,
-	move_y : 0,
-	oleada : 0,
-	random_int : random(1),
-	selected : false,
-	jugador : 0,
-	punteros : array_create(2, 0)
-}
-enemigos = array_create(0, null_dron)
-drones_aliados = array_create(0, null_dron)
-null_edificio.target = null_dron
-null_dron.target_dron = null_dron
-selected_drones = array_create(0, null_dron)
-drones = array_create(0, null_dron)
-background = ds_grid_create(chunk_xsize, chunk_ysize)
-chunk_dron_enemigo = ds_grid_create(chunk_xsize, chunk_ysize)
-chunk_dron_aliado = ds_grid_create(chunk_xsize, chunk_ysize)
-chunk_edificios = ds_grid_create(chunk_xsize, chunk_ysize)
-chunk_edificios_enemigo = ds_grid_create(chunk_xsize, chunk_ysize)
-chunk_edificios_abandonado = ds_grid_create(chunk_xsize, chunk_ysize)
-chunk_edificios_estatico = ds_grid_create(chunk_xsize, chunk_ysize)
-chunk_edificios_dinamico = ds_grid_create(chunk_xsize, chunk_ysize)
-chunk_edificios_draw = ds_grid_create(chunk_xsize, chunk_ysize)
-chunk_edificios_background = ds_grid_create(chunk_xsize, chunk_ysize)
-chunk_edificios_dirty = ds_grid_create(chunk_xsize, chunk_ysize)
-ds_grid_clear(chunk_edificios_dirty, true)
-for(var a = 0; a < chunk_xsize; a++)
-	for(var b = 0; b < chunk_ysize; b++){
-		ds_grid_set(background, a, b, spr_hexagono)
-		ds_grid_set(chunk_edificios_background, a, b, spr_hexagono)
-		ds_grid_set(chunk_dron_enemigo, a, b, array_create(0, null_dron))
-		ds_grid_set(chunk_dron_aliado, a, b, array_create(0, null_dron))
-		ds_grid_set(chunk_edificios, a, b, array_create(0, null_edificio))
-		ds_grid_set(chunk_edificios_enemigo, a, b, array_create(0, null_edificio))
-		ds_grid_set(chunk_edificios_abandonado, a, b, array_create(0, null_edificio))
-		ds_grid_set(chunk_edificios_estatico, a, b, array_create(0, null_edificio))
-		ds_grid_set(chunk_edificios_dinamico, a, b, array_create(0, null_edificio))
-		ds_grid_set(chunk_edificios_draw, a, b, array_create(0, null_edificio))
-	}
-selected_dron = null_dron
 //Recursos
 #region Definición
 	recurso_descripcion = [
@@ -1685,14 +1696,6 @@ redes = array_create(0, null_red)
 null_flujo = def_flujo()
 null_edificio.flujo = null_flujo
 flujos = array_create(0, null_flujo)
-null_beta = {
-	recurso : 0,
-	terrenos : array_create(0, [0, 0]),
-	center_x : 0,
-	center_y : 0
-}
-beta = ds_grid_create(xsize, ysize)
-ds_grid_clear(beta, null_beta)
 betas = array_create(0, null_beta)
 null_explosion = {
 	x : 0,

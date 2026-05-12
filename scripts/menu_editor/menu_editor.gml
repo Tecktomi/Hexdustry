@@ -367,8 +367,9 @@ function menu_editor(){
 						last_my = -1
 						for(var i = array_length(build_list) - 1; i >= 0; i--){
 							var temp_complex = build_list[i], aa = temp_complex[0], bb = temp_complex[1]
-							set_terreno(aa, bb, build_index)
+							terreno[# aa, bb] = build_index
 						}
+						clear_olas()
 					}
 					//Calcular tarro de pintura
 					else{
@@ -376,26 +377,26 @@ function menu_editor(){
 						last_mx = mx
 						last_my = my
 						mouse_clear(mb_left)
-						var temp_queue = ds_queue_create(), visitado = usable_grid_bool
-						ds_grid_clear(visitado, false)
-						ds_grid_set(visitado, mx, my, true)
-						ds_queue_enqueue(temp_queue, {a : mx, b : my, dir : -1})
+						var temp_queue = array_create(0, 0), maxi = 6
+						ds_grid_clear(usable_grid_bool, false)
+						usable_grid_bool[# mx, my] = true
+						array_push(temp_queue, mx, my, -1)
 						var target_id = terreno[# mx, my]
-						while not ds_queue_empty(temp_queue){
-							var temp_trio = ds_queue_dequeue(temp_queue), a = temp_trio.a, b = temp_trio.b, dir = temp_trio.dir
+						for(var counter = 0; counter < array_length(temp_queue);){
+							var a = temp_queue[counter++], b = temp_queue[counter++], dir = temp_queue[counter++] + 5
 							array_push(build_list, [a, b])
-							for(var i = 0; i < 6; i++){
-								if i= temp_trio.dir
-									continue
-								var temp_complex_2 = next_to(a, b, i), aa = temp_complex_2[0], bb = temp_complex_2[1]
+							for(var i = 0; i < maxi; i++){
+								dir = (dir + i) mod 6
+								var aa = a + DESFACE[b & 1][dir, 0], bb = b + DESFACE[b & 1][dir, 1]
 								if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 									continue
-								if not visitado[# aa, bb]{
-									ds_grid_set(visitado, aa, bb, true)
+								if not usable_grid_bool[# aa, bb]{
+									usable_grid_bool[# aa, bb] = true
 									if terreno[# aa, bb] = target_id
-										ds_queue_enqueue(temp_queue, {a : aa, b : bb, dir : (i + 3) mod 6})
+										array_push(temp_queue, aa, bb, dir)
 								}
 							}
+							maxi = 3
 						}
 					}
 				if mx = last_mx and my = last_my{

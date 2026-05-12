@@ -1,34 +1,38 @@
 function edificio_pathfind(edificio = control.null_edificio){
 	var a = edificio.a, b = edificio.b, dir = edificio.dir, index = edificio.index
 	with control{
-		var visitado = usable_grid_bool, temp_queue = array_create(0), temp_list = get_size(a, b, dir, edificio_size[index]), size = array_length(temp_list)
+		var visitado = usable_grid_bool, temp_queue = array_create(0), temp_list = get_size(a, b, dir, edificio_size[index]), size = array_length(temp_list), maxi = 6
 		ds_grid_clear(visitado, false)
 		for(var c = 0; c < size; c++){
 			var temp_complex = temp_list[c], aa = temp_complex[0], bb = temp_complex[1], temp_priority = ds_grid_get(edificio_cercano_priority, aa, bb)
 			ds_grid_set(visitado, aa, bb, true)
-			array_push(temp_queue, [aa, bb, 0, 0])//a, b, dis, dir
+			array_push(temp_queue, aa, bb, 0, 0)//a, b, dis, dir
 			ds_priority_add(temp_priority, edificio, 0)
-			ds_grid_set(edificio_cercano, aa, bb, edificio)
-			ds_grid_set(edificio_cercano_dis, aa, bb, 0)
+			edificio_cercano[# aa, bb] = edificio
+			edificio_cercano_dis[# aa, bb] = 0
 		}
 		for(var counter = 0; array_length(temp_queue) > counter; counter++){
-			var temp_trio = temp_queue[counter], dis = temp_trio[2] + 1, maxi = 3 + 3 * (dis = 1), desj = temp_trio[3] + 5
+			var aaa = temp_queue[counter++], bbb = temp_queue[counter++], dis = temp_queue[counter++] + 1, desj = temp_queue[counter] + 5
 			for(var i = 0; i < maxi; i++){
-				var j = (i + desj) mod 6, temp_complex_2 = next_to(temp_trio[0], temp_trio[1], j), aa = temp_complex_2[0], bb = temp_complex_2[1]
+				var j = (i + desj) mod 6, aa = aaa + DESFACE[bbb & 1][j, 0], bb = bbb + DESFACE[bbb & 1][j, 1]
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
-				if not visitado[# aa, bb] and terreno_caminable[terreno[# aa, bb]]{
+				if not visitado[# aa, bb]{
 					ds_grid_set(visitado, aa, bb, true)
-					array_push(temp_queue, [aa, bb, dis, j])
-					ds_grid_set(edificio.coordenadas_dis, aa, bb, dis)
-					var temp_priority = ds_grid_get(edificio_cercano_priority, aa, bb)
-					ds_priority_add(temp_priority, edificio, dis)
-					if dis < edificio_cercano_dis[# aa, bb]{
-						ds_grid_set(edificio_cercano_dis, aa, bb, dis)
-						ds_grid_set(edificio_cercano, aa, bb, edificio)
+					if terreno_caminable[terreno[# aa, bb]]{
+						array_push(temp_queue, aa, bb, dis, j)
+						edificio.coordenadas_dis[# aa, bb] = dis
+						var temp_priority = ds_grid_get(edificio_cercano_priority, aa, bb)
+						ds_priority_add(temp_priority, edificio, dis)
+						if dis < edificio_cercano_dis[# aa, bb]{
+							edificio_cercano_dis[# aa, bb] = dis
+							edificio_cercano[# aa, bb] = edificio
+						}
 					}
 				}
 			}
+			if dis > 1
+				maxi = 3
 		}
 		ds_grid_clear(edificio_cercano_dir, -1)
 	}

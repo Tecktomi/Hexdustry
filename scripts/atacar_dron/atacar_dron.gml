@@ -1,7 +1,7 @@
 function atacar_dron(dron = control.null_dron, edificio = control.null_edificio, target = control.null_dron){
 	with control{
 		var index = dron.index, _jugador = dron.jugador
-		//Ataque araña
+		//Ataque Araña
 		if index = idd_arana{
 			if dron.step >= dron_step[index]{
 				dron.step = 0
@@ -21,13 +21,13 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 			}
 			return false
 		}
-		//Ataque explosivo
+		//Ataque Explosivo
 		else if dron.index = idd_kamikaze{
 			explosion(dron.x, dron.y, edificio, dron.enemigo, 25_000, 2000,, _jugador)
 			delete_dron(dron)
 			return true
 		}
-		//Ataque tanque
+		//Ataque Tanque
 		else if index = idd_tanque{
 			if dron.step = dron_step[index]{
 				dron.step = 0
@@ -90,7 +90,7 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 				dron.step = 0
 			return false
 		}
-		//Ataque bombardero
+		//Ataque Bombardero
 		else if index = idd_bombardero{
 			if in(dron.step - dron_step[index], 0, 15, 30, 45, 60, 75){
 				dron.step++
@@ -100,7 +100,7 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 				dron.step = 0
 			return false
 		}
-		//Ataque barco
+		//Ataque Barco
 		else if index = idd_barco{
 			if dron.step = dron_step[index]{
 				dron.step = 0
