@@ -295,47 +295,48 @@ function dron_logic(){
 				else{
 					if tag_drones_terrestres[index]{
 						if edificio_cercano_dis[# aaa, bbb] > 1 and dis > dron_alcance[index] / 2{
-							if edificio_cercano_dir[# aaa, bbb] = -1{
-								var min_dis = edificio_cercano_dis[# aaa, bbb], min_dis_eu =  infinity
-								for(var i = 0; i < 6; i++){
-									temp_complex = next_to(aaa, bbb, i)
-									var aaaa = temp_complex[0], bbbb = temp_complex[1]
-									if aaaa < 0 or bbbb < 0 or aaaa >= xsize or bbbb >= ysize
-										continue
-									if not terreno_caminable[terreno[# aaaa, bbbb]]{
-										dron.x -= vel * cos_angle_dir[i] / 2
-										dron.y += vel * sin_angle_dir[i] / 2
-										continue
-									}
-									var disi = edificio_cercano_dis[# aaaa, bbbb]
-									if disi < min_dis{
-										min_dis = disi
-										dir = i
-										ds_grid_set(edificio_cercano_dir, aaa, bbb, i)
-										temp_complex = abtoxy(aaaa, bbbb)
-										min_dis_eu = distance_sqr(temp_complex[0], temp_complex[1], edificio.center_x, edificio.center_y)
-									}
-									else if disi = min_dis{
-										temp_complex = abtoxy(aaaa, bbbb)
-										var c = distance_sqr(temp_complex[0], temp_complex[1], edificio.center_x, edificio.center_y)
-										if c < min_dis_eu{
+							if dron.change_pos{
+								if edificio_cercano_dir[# aaa, bbb] = -1{
+									var min_dis = edificio_cercano_dis[# aaa, bbb], min_dis_eu =  infinity
+									for(var i = 0; i < 6; i++){
+										temp_complex = next_to(aaa, bbb, i)
+										var aaaa = temp_complex[0], bbbb = temp_complex[1]
+										if aaaa < 0 or bbbb < 0 or aaaa >= xsize or bbbb >= ysize
+											continue
+										if not terreno_caminable[terreno[# aaaa, bbbb]]{
+											dron.x -= vel * cos_angle_dir[i] / 2
+											dron.y += vel * sin_angle_dir[i] / 2
+											continue
+										}
+										var disi = edificio_cercano_dis[# aaaa, bbbb]
+										if disi < min_dis{
 											min_dis = disi
 											dir = i
 											ds_grid_set(edificio_cercano_dir, aaa, bbb, i)
-											min_dis_eu = c
+											temp_complex = abtoxy(aaaa, bbbb)
+											min_dis_eu = distance_sqr(temp_complex[0], temp_complex[1], edificio.center_x, edificio.center_y)
+										}
+										else if disi = min_dis{
+											temp_complex = abtoxy(aaaa, bbbb)
+											var c = distance_sqr(temp_complex[0], temp_complex[1], edificio.center_x, edificio.center_y)
+											if c < min_dis_eu{
+												min_dis = disi
+												dir = i
+												ds_grid_set(edificio_cercano_dir, aaa, bbb, i)
+												min_dis_eu = c
+											}
 										}
 									}
 								}
+								else
+									dir = edificio_cercano_dir[# aaa, bbb]
+								dron.move_dir = dir
 							}
-							else
-								dir = edificio_cercano_dir[# aaa, bbb]
-							if dir = -1
-								dir = 0
-							dron.dir += 0.05 * angle_difference(60 * dir + 30, dron.dir)
-							dron.x += vel * cos_angle_dir[dir]
-							dron.y -= vel * sin_angle_dir[dir]
+							dron.dir += 0.05 * angle_difference(60 * dron.move_dir + 30, dron.dir)
+							dron.x += vel * cos_angle_dir[dron.move_dir]
+							dron.y -= vel * sin_angle_dir[dron.move_dir]
 							if index = idd_tanque
-								dron.dir_move += angle_difference(dron.dir_move, radtodeg(arctan2(sin_angle_dir[dir], cos_angle_dir[dir]))) / 100
+								dron.dir_move += angle_difference(dron.dir_move, radtodeg(arctan2(sin_angle_dir[dron.move_dir], cos_angle_dir[dron.move_dir]))) / 100
 						}
 					}
 					else if dron_aereo[index]{
@@ -358,27 +359,30 @@ function dron_logic(){
 						}
 					}
 					else if tag_dron_marino[index] and dis > dron_alcance[index] * 0.9{
-						var min_dis = grid_water_distance[# aaa, bbb]
-						for(var i = 0; i < 6; i++){
-							temp_complex = next_to(aaa, bbb, i)
-							var aaaa = temp_complex[0], bbbb = temp_complex[1]
-							if aaaa < 0 or bbbb < 0 or aaaa >= xsize or bbbb >= ysize
-								continue
-							var disi = grid_water_distance[# aaaa, bbbb]
-							if disi = infinity{
-								dron.x -= vel * cos_angle_dir[i] / 2
-								dron.y += vel * sin_angle_dir[i] / 2
+						if dron.change_pos{
+							var min_dis = grid_water_distance[# aaa, bbb], _posibles = array_create(0, 0)
+							for(var i = 0; i < 6; i++){
+								temp_complex = next_to(aaa, bbb, i)
+								var aaaa = temp_complex[0], bbbb = temp_complex[1]
+								if aaaa < 0 or bbbb < 0 or aaaa >= xsize or bbbb >= ysize
+									continue
+								var disi = grid_water_distance[# aaaa, bbbb]
+								if disi = infinity{
+									dron.x -= vel * cos_angle_dir[i] / 2
+									dron.y += vel * sin_angle_dir[i] / 2
+								}
+								else if disi < min_dis{
+									_posibles = array_create(1, i)
+									min_dis = disi
+								}
+								else if disi = min_dis
+									array_push(_posibles, i)
 							}
-							else if disi < min_dis{
-								min_dis = disi
-								dir = i
-							}
+							dron.move_dir = array_choose(_posibles)
 						}
-						if dir = -1
-							dir = 0
-						dron.dir += 0.05 * angle_difference(60 * dir + 30, dron.dir)
-						dron.x += vel * cos_angle_dir[dir]
-						dron.y -= vel * sin_angle_dir[dir]
+						dron.dir += 0.05 * angle_difference(60 * dron.move_dir + 30, dron.dir)
+						dron.x += vel * cos_angle_dir[dron.move_dir]
+						dron.y -= vel * sin_angle_dir[dron.move_dir]
 					}
 				}
 				if dis < dron_alcance[index]{
@@ -470,13 +474,15 @@ function dron_logic(){
 					temp_enemigo.y -= bbb
 				}
 			}
-			//Cambiar de chunk
 			var temp_complex = xytoab(aa, bb)
 			aa = temp_complex[0]
 			bb = temp_complex[1]
+			dron.change_pos = false
+			//Cambio de coordenada
 			if aa != dron.a or bb != dron.b{
 				dron.a = aa
 				dron.b = bb
+				dron.change_pos = true
 				if not dron_aereo[index] and not tag_dron_marino[index] and array_length(edificios_target) > 0 and terreno_caminable[terreno[# aa, bb]]
 					dron.target = edificio_cercano[# aa, bb]
 				chunk_x = clamp(round(aa / chunk_width), 0, chunk_xsize - 1)

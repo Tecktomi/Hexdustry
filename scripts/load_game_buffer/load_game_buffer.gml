@@ -157,6 +157,8 @@ function load_game_buffer(buffer){
 			if mask & (1 << c++) dron.move_x = real(buffer_read(buffer, buffer_f16))
 			if mask & (1 << c++) dron.move_y = real(buffer_read(buffer, buffer_f16))
 			if mask & (1 << c++) dron.oleada = real(buffer_read(buffer, buffer_u8))
+			if mask & (1 << c++) dron.change_pos = true
+			if mask & (1 << c++) dron.move_dir = real(buffer_read(buffer, buffer_u8))
 		}
 		//Referencias cruzadas dron-dron
 		for(var i = 0; i < len; i++)

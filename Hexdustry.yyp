@@ -314,6 +314,7 @@
     {"id":{"name":"server_sync_timer","path":"scripts/server_sync_timer/server_sync_timer.yy",},},
     {"id":{"name":"set_camino_dir","path":"scripts/set_camino_dir/set_camino_dir.yy",},},
     {"id":{"name":"set_edificio","path":"scripts/set_edificio/set_edificio.yy",},},
+    {"id":{"name":"set_grid_size","path":"scripts/set_grid_size/set_grid_size.yy",},},
     {"id":{"name":"set_idioma","path":"scripts/set_idioma/set_idioma.yy",},},
     {"id":{"name":"set_terreno","path":"scripts/set_terreno/set_terreno.yy",},},
     {"id":{"name":"sort_drones","path":"scripts/sort_drones/sort_drones.yy",},},

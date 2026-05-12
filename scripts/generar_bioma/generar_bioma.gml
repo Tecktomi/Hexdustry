@@ -46,9 +46,8 @@ function generar_bioma(bioma){
 					}
 					var d = irandom(5)
 					repeat(2){
-						var temp_complex = next_to(a, b, d)
-						a = temp_complex[0]
-						b = temp_complex[1]
+						a += DESFACE[b & 1][d, 0]
+						b += DESFACE[b & 1][d, 1]
 					}
 					a = clamp(a, 0, xsize - 1)
 					b = clamp(b, 0, ysize - 1)
@@ -62,15 +61,14 @@ function generar_bioma(bioma){
 				//Añadir arena
 				if tag_agua_baja[temp_terreno]{
 					for(var c = 0; c < 6; c++){
-						var temp_complex = next_to(a, b, c), aa = temp_complex[0], bb = temp_complex[1]
+						var aa = a + DESFACE[b & 1][c, 0], bb = b + DESFACE[b & 1][c, 1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if not tag_agua[terreno[# aa, bb]]
 							terreno[# aa, bb] = borde_agua
 						if brandom(){
-							temp_complex = next_to(aa, bb, c)
-							aa = temp_complex[0]
-							bb = temp_complex[1]
+							aa += DESFACE[bb & 1][c, 0]
+							bb += DESFACE[bb & 1][c, 1]
 							if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 								continue
 							if not tag_agua[terreno[# aa, bb]]
@@ -81,7 +79,7 @@ function generar_bioma(bioma){
 				//Piedra al rededor de Petróleo
 				else if temp_terreno = idt_petroleo{
 					for(var c = 0; c < 6; c++){
-						var temp_complex = next_to(a, b, c), aa = temp_complex[0], bb = temp_complex[1]
+						var aa = a + DESFACE[b & 1][c, 0], bb = b + DESFACE[b & 1][c, 1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if terreno[# aa, bb] != idt_petroleo
@@ -91,7 +89,7 @@ function generar_bioma(bioma){
 				//Basalto al rededor de la Lava
 				else if temp_terreno = idt_lava{
 					for(var c = 0; c < 6; c++){
-						var temp_complex = next_to(a, b, c), aa = temp_complex[0], bb = temp_complex[1]
+						var aa = a + DESFACE[b & 1][c, 0], bb = b + DESFACE[b & 1][c, 1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if terreno[# aa, bb] != idt_lava{
@@ -101,9 +99,9 @@ function generar_bioma(bioma){
 								terreno[# aa, bb] = idt_basalto_sulfatado
 						}
 						if brandom(){
-							temp_complex = next_to(aa, bb, irandom(5))
-							aa = temp_complex[0]
-							bb = temp_complex[1]
+							var d = irandom(5)
+							aa += DESFACE[bb & 1][d, 0]
+							bb += DESFACE[bb & 1][d, 1]
 							if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 								continue
 							if terreno[# aa, bb] != idt_lava{
@@ -119,7 +117,7 @@ function generar_bioma(bioma){
 				if tag_agua_baja[temp_terreno]{
 					var flag = true
 					for(var c = 0; c < 6; c++){
-						var temp_complex = next_to(a, b, c), aa = temp_complex[0], bb = temp_complex[1]
+						var aa = a + DESFACE[b & 1][c, 0], bb = b + DESFACE[b & 1][c, 1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if not tag_agua[terreno[# aa, bb]]{
@@ -129,9 +127,9 @@ function generar_bioma(bioma){
 					}
 					if flag
 						if temp_terreno = idt_agua
-							set_terreno(a, b, idt_agua_profunda)
+							terreno[# a, b] = idt_agua_profunda
 						else if temp_terreno = idt_agua_salada
-							set_terreno(a, b, idt_agua_salada_profunda)
+							terreno[# a, b] = idt_agua_salada_profunda
 				}
 			}
 		//Limpiar zona del núcleo
@@ -156,13 +154,13 @@ function generar_bioma(bioma){
 				terreno[# aa, bb] = temp_terreno_change[terreno[# aa, bb]]
 		}
 		//Crear núcleo
-		if array_length(nucleos) = 0{
-			nucleo = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
-			jugador_recursos[0, idr_cobre] = 100
-			nucleo.carga_total = 100
-			carga_inicial = array_create(rss_max, 0)
-			array_copy(carga_inicial, 0, jugador_recursos[0], 0, rss_max)
-		}
+		if array_length(nucleos) > 0
+			delete_edificio(nucleos[0])
+		nucleo = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
+		jugador_recursos[0, idr_cobre] = 100
+		nucleo.carga_total = 100
+		carga_inicial = array_create(rss_max, 0)
+		array_copy(carga_inicial, 0, jugador_recursos[0], 0, rss_max)
 		//Menas de recursos
 		betas = array_create(0, null_beta)
 		if bioma = 0
@@ -202,9 +200,8 @@ function generar_bioma(bioma){
 						}
 					}
 					var d = irandom(5)
-					var temp_complex = next_to(a, b, d)
-					a = clamp(temp_complex[0], 0, xsize - 1)
-					b = clamp(temp_complex[1], 0, ysize - 1)
+					a = clamp(a + DESFACE[b & 1][d, 0], 0, xsize - 1)
+					b = clamp(b + DESFACE[b & 1][d, 1], 0, ysize - 1)
 				}
 			}
 		}

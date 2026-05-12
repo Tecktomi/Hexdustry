@@ -140,6 +140,38 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 		}
 		draw_set_color(c_white)
 		ypos += 140
+		if mapa = -1{
+			xpos = 200
+			if draw_boton(xpos, ypos, "Pequeño", xsize = 48 ? ui_azul : ui_gris,,,, 1) and xsize != 48{
+				xsize = 48
+				ysize = 96
+				set_grid_size()
+				biome_seed = irandom(2)
+				seed = random_get_seed()
+				generar_bioma(biome_seed)
+				randomize()
+			}
+			xpos += text_x * 1.2
+			if draw_boton(xpos, ypos, "Mediano", xsize = 72 ? ui_azul : ui_gris,,,, 1) and xsize != 72{
+				xsize = 72
+				ysize = 144
+				set_grid_size()
+				biome_seed = irandom(2)
+				seed = random_get_seed()
+				generar_bioma(biome_seed)
+				randomize()
+			}
+			xpos += text_x * 1.2
+			if draw_boton(xpos, ypos, "Grande", xsize = 128 ? ui_azul : ui_gris,,,, 1) and xsize != 128{
+				xsize = 128
+				ysize = 256
+				set_grid_size()
+				biome_seed = irandom(2)
+				seed = random_get_seed()
+				generar_bioma(biome_seed)
+				randomize()
+			}
+		}
 		return [xpos, ypos]
 	}
 }

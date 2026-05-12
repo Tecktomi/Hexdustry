@@ -16,7 +16,7 @@ function dibujar_fondo(editor = 0){
 					else if d = 18
 						draw_sprite_off(olas[terreno_pared_index[# a, b]], temp_step + 16 * ore_random[# a, b], aa, bb)
 				}
-			break
+			exit
 		}
 		//Fondos animados
 		if editor = 2{
@@ -33,7 +33,7 @@ function dibujar_fondo(editor = 0){
 						draw_sprite_off(olas[terreno_pared_index[# a, b]], temp_step + 16 * ore_random[# a, b], aa, bb)
 					}
 				}
-			break
+			exit
 		}
 		var xsize2 = (chunk_width + 1) * 48 * zoom, ysize2 = (chunk_height + 1) * 14 * zoom, xpos = chunk_width * 48 * zoom, ypos = chunk_height * 14 * zoom
 		if chunk_update{

@@ -1,5 +1,7 @@
 function delete_edificio(edificio = control.null_edificio, destruccion = false, _server = false, _cheat = control.cheat){
 	with control{
+		if edificio.index = id_nucleo
+			array_remove(nucleos, edificio)
 		if not edificio_bool[# edificio.a, edificio.b]{
 			show_debug_message($"###ADVERTENCIA###\n  Intentando eliminar {edificio_nombre[edificio.index]} en {edificio.a}, {edificio.b}")
 			exit
@@ -12,17 +14,14 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		}
 		var chunk_x = edificio.chunk_x, chunk_y = edificio.chunk_y, _jugador = real(edificio.jugador)
 		edificio.vida = 0
-		if index = id_nucleo and not enemigo{
-			array_remove(nucleos, edificio)
-			if menu = 1{
-				array_remove(edificios_targeteables, edificio)
-				if array_length(nucleos) = 0{
-					win = 2
-					selected_dron = null_dron
-					pausa = 0
-				}
-				ds_grid_clear(edificio_cercano_dir, -1)
+		if index = id_nucleo and menu = 1 and not enemigo{
+			array_remove(edificios_targeteables, edificio)
+			if array_length(nucleos) = 0{
+				win = 2
+				selected_dron = null_dron
+				pausa = 0
 			}
+			ds_grid_clear(edificio_cercano_dir, -1)
 		}
 		if enemigo{
 			array_disorder_remove(edificios_enemigos, edificio, 0)
