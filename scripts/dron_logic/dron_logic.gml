@@ -304,8 +304,8 @@ function dron_logic(){
 										if aaaa < 0 or bbbb < 0 or aaaa >= xsize or bbbb >= ysize
 											continue
 										if not terreno_caminable[terreno[# aaaa, bbbb]]{
-											dron.x -= vel * cos_angle_dir[i] / 2
-											dron.y += vel * sin_angle_dir[i] / 2
+											dron.x -= vel * COS_ANGLE_DIR[i] / 2
+											dron.y += vel * SIN_ANGLE_DIR[i] / 2
 											continue
 										}
 										var disi = edificio_cercano_dis[# aaaa, bbbb]
@@ -333,10 +333,10 @@ function dron_logic(){
 								dron.move_dir = dir
 							}
 							dron.dir += 0.05 * angle_difference(60 * dron.move_dir + 30, dron.dir)
-							dron.x += vel * cos_angle_dir[dron.move_dir]
-							dron.y -= vel * sin_angle_dir[dron.move_dir]
+							dron.x += vel * COS_ANGLE_DIR[dron.move_dir]
+							dron.y -= vel * SIN_ANGLE_DIR[dron.move_dir]
 							if index = idd_tanque
-								dron.dir_move += angle_difference(dron.dir_move, radtodeg(arctan2(sin_angle_dir[dron.move_dir], cos_angle_dir[dron.move_dir]))) / 100
+								dron.dir_move += angle_difference(dron.dir_move, radtodeg(arctan2(SIN_ANGLE_DIR[dron.move_dir], COS_ANGLE_DIR[dron.move_dir]))) / 100
 						}
 					}
 					else if dron_aereo[index]{
@@ -368,8 +368,8 @@ function dron_logic(){
 									continue
 								var disi = grid_water_distance[# aaaa, bbbb]
 								if disi = infinity{
-									dron.x -= vel * cos_angle_dir[i] / 2
-									dron.y += vel * sin_angle_dir[i] / 2
+									dron.x -= vel * COS_ANGLE_DIR[i] / 2
+									dron.y += vel * SIN_ANGLE_DIR[i] / 2
 								}
 								else if disi < min_dis{
 									_posibles = array_create(1, i)
@@ -381,8 +381,8 @@ function dron_logic(){
 							dron.move_dir = array_choose(_posibles)
 						}
 						dron.dir += 0.05 * angle_difference(60 * dron.move_dir + 30, dron.dir)
-						dron.x += vel * cos_angle_dir[dron.move_dir]
-						dron.y -= vel * sin_angle_dir[dron.move_dir]
+						dron.x += vel * COS_ANGLE_DIR[dron.move_dir]
+						dron.y -= vel * SIN_ANGLE_DIR[dron.move_dir]
 					}
 				}
 				if dis < dron_alcance[index]{

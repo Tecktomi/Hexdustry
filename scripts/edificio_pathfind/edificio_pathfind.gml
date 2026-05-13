@@ -11,10 +11,10 @@ function edificio_pathfind(edificio = control.null_edificio){
 			edificio_cercano[# aa, bb] = edificio
 			edificio_cercano_dis[# aa, bb] = 0
 		}
-		for(var counter = 0; array_length(temp_queue) > counter; counter++){
-			var aaa = temp_queue[counter++], bbb = temp_queue[counter++], dis = temp_queue[counter++] + 1, desj = temp_queue[counter] + 5
+		for(var counter = 0; array_length(temp_queue) > counter;){
+			var aaa = temp_queue[counter++], bbb = temp_queue[counter++], dis = temp_queue[counter++] + 1, desj = temp_queue[counter++] + 5, bmod = bbb & 1
 			for(var i = 0; i < maxi; i++){
-				var j = (i + desj) mod 6, aa = aaa + DESFACE[bbb & 1][j, 0], bb = bbb + DESFACE[bbb & 1][j, 1]
+				var j = (i + desj) mod 6, aa = aaa + DESFACE[bmod][j, 0], bb = bbb + DESFACE[bmod][j, 1]
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if not visitado[# aa, bb]{

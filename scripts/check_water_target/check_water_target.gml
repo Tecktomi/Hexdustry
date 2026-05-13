@@ -28,11 +28,10 @@ function check_water_target(){
 			}
 		}
 		for(var pointer = 0; pointer < array_length(next_queue); pointer++){
-			var aa = next_queue[pointer++], bb = next_queue[pointer], val = real(grid_water_distance[# aa, bb] + 1)
+			var aa = next_queue[pointer++], bb = next_queue[pointer], val = real(grid_water_distance[# aa, bb] + 1), bmod = bb & 1
 			ds_grid_set(visited, aa, bb, false)
 			for(var i = 0; i < 6; i++){
-				aaa = aa + DESFACE[bb & 1][i, 0]
-				bbb = bb + DESFACE[bb & 1][i, 1]
+				var aaa = aa + DESFACE[bmod][i, 0], bbb = bb + DESFACE[bmod][i, 1]
 				if aaa < 0 or bbb < 0 or aaa >= xsize or bbb >= ysize
 					continue
 				if not visited[# aaa, bbb] and tag_agua[terreno[# aaa, bbb]] and val < grid_water_distance[# aaa, bbb]{

@@ -52,7 +52,7 @@ if menu = 0{
 			flow = 4
 			dificultad = -1
 		}
-		if mapa >= 0 and load_escenario_buffer($"{default_maps[mapa]}.txt", false) = ""
+		if mapa >= 0 and load_escenario_buffer($"{DEFAULT_MAPS[mapa]}.txt", false) = ""
 			mapa = -1
 	}
 	if os_browser = browser_not_a_browser and devise and file_exists("last_save.save"){
@@ -274,8 +274,8 @@ if menu = 0{
 	update_cursor()
 	if keyboard_check_pressed(vk_escape)
 		game_end()
-	for(var a = 0; a < idiomas; a++)
-		if draw_sprite_boton(spr_bandera, a, 20 + 80 * a, 20, 64, 48,, function(data){draw_text_background(0, 80, idioma_name[data.a])}, {a : a}){
+	for(var a = 0; a < IDIOMAS; a++)
+		if draw_sprite_boton(spr_bandera, a, 20 + 80 * a, 20, 64, 48,, function(data){draw_text_background(0, 80, IDIOMA_NAME[data.a])}, {a : a}){
 			idioma = a
 			save_setting("", "Idioma", idioma, true)
 			set_idioma()
@@ -366,7 +366,7 @@ if in(menu, 1, 3){
 						draw_set_color(#7f0000)
 						draw_circle_off(aa + 8, bb, 5, false)
 					}
-					draw_set_color((_jugador = -1) ? c_ltgray : equipo_color[_jugador])
+					draw_set_color((_jugador = -1) ? c_ltgray : EQUIPO_COLOR[_jugador])
 					draw_circle_off(aa + 8, bb, 4, false)
 				}
 				if info and edificio.waiting{
@@ -673,8 +673,8 @@ if pausa = 1{
 		}
 	}
 	draw_set_halign(fa_left)
-	for(var a = 0; a < idiomas; a++)
-		if draw_sprite_boton(spr_bandera, a, 20 + 80 * a, 20, 64, 48,, function(data){draw_text_background(0, 80, idioma_name[data.a])}, {a : a}){
+	for(var a = 0; a < IDIOMAS; a++)
+		if draw_sprite_boton(spr_bandera, a, 20 + 80 * a, 20, 64, 48,, function(data){draw_text_background(0, 80, IDIOMA_NAME[data.a])}, {a : a}){
 			idioma = a
 			save_setting("", "Idioma", idioma, true)
 			set_idioma()
@@ -733,16 +733,16 @@ if show_menu{
 		}
 		if procesador_add{
 			var width = 0
-			for(var a = 0; a < array_length(procesador_instrucciones_length); a++)
+			for(var a = 0; a < array_length(PROCESADOR_INSTRUCCIONES_LENGTH); a++)
 				width = max(width, string_width($"{procesador_instrucciones_nombre[a]} ({a})"))
 			draw_set_color(c_gray)
-			draw_rectangle((room_width - width) / 2, 200, (room_width + width) / 2, 200 + 20 * array_length(procesador_instrucciones_length), false)
+			draw_rectangle((room_width - width) / 2, 200, (room_width + width) / 2, 200 + 20 * array_length(PROCESADOR_INSTRUCCIONES_LENGTH), false)
 			draw_set_color(c_white)
-			draw_rectangle((room_width - width) / 2, 200, (room_width + width) / 2, 200 + 20 * array_length(procesador_instrucciones_length), true)
+			draw_rectangle((room_width - width) / 2, 200, (room_width + width) / 2, 200 + 20 * array_length(PROCESADOR_INSTRUCCIONES_LENGTH), true)
 			draw_set_halign(fa_center)
-			for(var a = 0; a < array_length(procesador_instrucciones_length); a++)
+			for(var a = 0; a < array_length(PROCESADOR_INSTRUCCIONES_LENGTH); a++)
 				if draw_boton(room_width / 2, 200 + 20 * a, $"{procesador_instrucciones_nombre[a]} ({a})",,,, false, 1) or keyboard_check_pressed(ord(string(a))){
-					var new_instruccion = array_create(procesador_instrucciones_length[a], 0)
+					var new_instruccion = array_create(PROCESADOR_INSTRUCCIONES_LENGTH[a], 0)
 					new_instruccion[0] = a
 					array_push(edificio.instruccion, new_instruccion)
 					procesador_add = false
@@ -1861,7 +1861,7 @@ if puerto_carga_bool or (procesador_select != null_edificio) or (misil_set_targe
 	}
 }
 if sonido
-	for(var a = 0; a < sonidos_max; a++)
+	for(var a = 0; a < SONIDOS_MAX; a++)
 		volumen[a] = 0
 #region Menú de edificios
 	//ANDROID
@@ -1899,7 +1899,7 @@ if sonido
 			draw_set_alpha(0.5)
 			draw_arco(menu_x, menu_y, _size, a * b, (a + 1) * b)
 			draw_set_alpha(1)
-			draw_sprite(spr_items, categoria_index_disponible[a], menu_x - 15 + _size * cos((a + 0.5) * b), menu_y - 15 - _size * sin((a + 0.5) * b))
+			draw_sprite_stretched(spr_items, categoria_index_disponible[a], menu_x - 15 + _size * cos((a + 0.5) * b), menu_y - 15 - _size * sin((a + 0.5) * b), _size_sqrx, _size_sqry)
 			if devise{
 				temp_text = categoria_nombre[categoria_index_disponible[a]]
 				draw_text_background(min(room_width - string_width(temp_text), mouse_x + 20), min(room_height - string_height(temp_text), mouse_y), temp_text)
@@ -1907,7 +1907,7 @@ if sonido
 			if mouse_check_button_pressed(mb_left){
 				mouse_clear(mb_left)
 				build_menu = 2
-				menu_array = categoria_edificios_disponible[a]
+				menu_array = categoria_edificios_disponible[categoria_index_disponible[a]]
 			}
 		}
 		else if mouse_check_button_pressed(mb_left){
@@ -1942,7 +1942,7 @@ if sonido
 			draw_set_alpha(0.5)
 			draw_arco(menu_x, menu_y, _size, a * b, (a + 1) * b)
 			draw_set_alpha(1)
-			draw_sprite_stretched(edificio_sprite[menu_array[a]], 0, menu_x - 15 + _size * cos((a + 0.5) * b), menu_y - 15 - _size * sin((a + 0.5) * b), 30, 30)
+			draw_sprite_stretched(edificio_sprite[menu_array[a]], 0, menu_x - 15 + _size * cos((a + 0.5) * b), menu_y - 15 - _size * sin((a + 0.5) * b), _size_sqrx, _size_sqry)
 			a = menu_array[a]
 			if devise{
 				var temp_text = $"{edificio_nombre[a]} (hotkey: {edificio_key[a]})\n"
@@ -1979,10 +1979,15 @@ if sonido
 //Acceso directo
 if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastchar, CONTROL_LEFT, CONTROL_RIGHT, CONTROL_UP, CONTROL_DOWN, " ") or cheat) and win = 0 and not show_menu{
 	for(var a = 1; a < edificio_max; a++)
-		if edificio_key[a] != "" and string_ends_with(keyboard_string, edificio_key[a]) and (cheat or edificio_tecnologia[a] or not tecnologia){
+		if edificio_key[a] != "" and string_ends_with(keyboard_string, edificio_key[a]){
+			if tecnologia and not cheat and not edificio_tecnologia[a]{
+				enciclopedia_item = a
+				enciclopedia = 4
+			}
+			else
+				build_index = a
 			selected_dron = null_dron
 			keyboard_string = ""
-			build_index = a
 			build_menu = 0
 			just_pressed = true
 			deselect_drones()
@@ -2622,9 +2627,8 @@ if build_index > 0 and win = 0{
 						build_able = false
 						repeat(10){
 							c++
-							temp_complex_2 = next_to(a, b, build_dir)
-							a = temp_complex_2[0]
-							b = temp_complex_2[1]
+							a = a + DESFACE[b & 1][build_dir, 0]
+							b = b + DESFACE[b & 1][build_dir, 1]
 							if a < 0 or b < 0 or a >= xsize or b >= ysize
 								break
 							if edificio_bool[# a, b]{
@@ -2641,9 +2645,8 @@ if build_index > 0 and win = 0{
 							a = temp_mx
 							b = temp_my
 							repeat(c - 1){
-								temp_complex_2 = next_to(a, b, build_dir)
-								a = temp_complex_2[0]
-								b = temp_complex_2[1]
+								a = a + DESFACE[b & 1][build_dir, 0]
+								b = b + DESFACE[b & 1][build_dir, 1]
 								temp_complex_2 = abtoxy(a, b)
 								draw_sprite_off(spr_tunel_view, 0, temp_complex_2[0], temp_complex_2[1],,, (build_dir - 1) * 60,, 0.5)
 							}
@@ -2771,7 +2774,7 @@ if build_index > 0 and win = 0{
 	last_mx = mx
 	last_my = my
 }
-else if build_index = -1 and win = 0 and array_length(blueprint) > 0 and not online{
+else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
 	var len = array_length(blueprint), flip = (((blueprint_mod2 + my) mod 2) = 1), _rotar = false
 	//Guardar
 	if not blueprint_safe{
@@ -2874,9 +2877,8 @@ else if build_index = -1 and win = 0 and array_length(blueprint) > 0 and not onl
 				if temp_array_real[i] < 0
 					temp_array_real_2[i] = (temp_array_real_2[i] + 3) mod 6
 				repeat(abs(temp_array_real[i])){
-					var temp_complex = next_to(tempa, tempb, temp_array_real_2[i])
-					tempa = temp_complex[0]
-					tempb = temp_complex[1]
+					tempa = tempa + DESFACE[tempb & 1][temp_array_real_2[i], 0]
+					tempb = tempb + DESFACE[tempb & 1][temp_array_real_2[i], 1]
 				}
 			}
 			blueprint[a].a = tempa - mx
@@ -3210,13 +3212,13 @@ if menu = 1{
 			//Victoria
 			if (win mod 10) = 1{
 				if tutorial = 1
-					descubrir_zona(4, 8)
+					descubrir_zona(4, 8, tutorial)
 				else if tutorial = 2
-					descubrir_zona(4, 3)
+					descubrir_zona(4, 3, tutorial)
 				else if tutorial = 3
-					descubrir_zona(3, 7)
+					descubrir_zona(3, 7, tutorial)
 				else if tutorial = 4
-					descubrir_zona(4, 2)
+					descubrir_zona(4, 2, tutorial)
 				if in(tutorial, 1, 2, 3, 4) and draw_boton(room_width / 2, room_height - 250, L.win_siguiente_mision, ui_verde){
 					var file = load_escenario_buffer($"mision_{tutorial + 1}.txt")
 					if file != ""
@@ -3274,7 +3276,7 @@ update_cursor()
 if sprite_boton_text != ""
 	draw_text_background(mouse_x, mouse_y + 20, sprite_boton_text)
 if sonido{
-	for(var a = 0; a < sonidos_max; a++){
+	for(var a = 0; a < SONIDOS_MAX; a++){
 		if not audio_is_paused(sonido_id[a]) and volumen[a] = 0
 			audio_pause_sound(sonido_id[a])
 		if audio_is_paused(sonido_id[a]) and volumen[a] > 0
@@ -3283,13 +3285,13 @@ if sonido{
 	}
 	if random(3600) < 1{
 		var flag = true
-		for(var a = array_length(musica) - 1; a >= 0; a--)
-			if audio_is_playing(musica[a]){
+		for(var a = array_length(MUSICA) - 1; a >= 0; a--)
+			if audio_is_playing(MUSICA[a]){
 				flag = false
 				break
 			}
 		if flag
-			audio_play_sound(musica[irandom(array_length(musica) - 1)], 1, false)
+			audio_play_sound(MUSICA[irandom(array_length(MUSICA) - 1)], 1, false)
 	}
 	if clic_sound
 		audio_play_sound(snd_click, 1, false, 0.3)

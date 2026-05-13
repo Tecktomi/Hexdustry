@@ -16,6 +16,33 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 		if _misiones{
 			for(var a = 0; a < rss_max; a++)
 				carga_inicial[a] = real(buffer_read(buffer, buffer_u16))
+			for(var a = 0; a < edificio_max; a++){
+				var b = real(buffer_read(buffer, buffer_u8))
+				if b = 0{
+					mision_edificios[a] = false
+					edificio_tecnologia[a] = false
+				}
+				else if b = 1{
+					mision_edificios[a] = true
+					edificio_tecnologia[a] = false
+				}
+				else if b = 2{
+					mision_edificios[a] = true
+					edificio_tecnologia[a] = true
+				}
+			}
+			categoria_nombre_disponible = array_create(0, "")
+			categoria_index_disponible = array_create(0, 0)
+			for(var a = 0; a < array_length(categoria_nombre); a++){
+				categoria_edificios_disponible[a] = array_create(0, 0)
+				for(var b = 0; b < array_length(categoria_edificios[a]); b++)
+					if mision_edificios[categoria_edificios[a, b]]
+						array_push(categoria_edificios_disponible[a], categoria_edificios[a, b])
+				if array_length(categoria_edificios_disponible[a]) > 0{
+					array_push(categoria_nombre_disponible, categoria_nombre[a])
+					array_push(categoria_index_disponible, a)
+				}
+			}
 			oleadas = bool(buffer_read(buffer, buffer_bool))
 			oleadas_tiempo = real(buffer_read(buffer, buffer_u8))
 			oleadas_tiempo_primera = real(buffer_read(buffer, buffer_u8))
@@ -38,8 +65,8 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 			array_resize(mision_texto, len_mis)
 			array_resize(mision_tiempo_edit, len_mis)
 			for(var a = 0; a < len_mis; a++){
-				mision_nombre_idioma[a] = array_create(idiomas, "")
-				for(var b = 0; b < idiomas; b++)
+				mision_nombre_idioma[a] = array_create(IDIOMAS, "")
+				for(var b = 0; b < IDIOMAS; b++)
 					array_set(mision_nombre_idioma[a], b, string(buffer_read(buffer, buffer_string)))
 				mision_nombre[a] = mision_nombre_idioma[a, idioma]
 				mision_objetivo[a] = real(buffer_read(buffer, buffer_u8))
@@ -61,8 +88,8 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 				var len_text = real(buffer_read(buffer, buffer_u8))
 				mision_texto[a] = array_create(len_text, {x : 0, y : 0, texto : "", texto_idioma : array_create(0, "")})
 				for(var b = 0; b < len_text; b++){
-					var temp_array_string = array_create(idiomas, "")
-					for(var c = 0; c < idiomas; c++)
+					var temp_array_string = array_create(IDIOMAS, "")
+					for(var c = 0; c < IDIOMAS; c++)
 						temp_array_string[c] = string(buffer_read(buffer, buffer_string))
 					var temp_text = {
 						x : real(buffer_read(buffer, buffer_u16)),

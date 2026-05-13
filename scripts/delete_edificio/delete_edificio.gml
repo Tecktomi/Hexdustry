@@ -3,7 +3,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		if edificio.index = id_nucleo
 			array_remove(nucleos, edificio)
 		if not edificio_bool[# edificio.a, edificio.b]{
-			show_debug_message($"###ADVERTENCIA###\n  Intentando eliminar {edificio_nombre[edificio.index]} en {edificio.a}, {edificio.b}")
+			show_debug_message($"###ADVERTENCIA###\n  Intentando eliminar {edificio.index = -1 ? "??" : edificio_nombre[edificio.index]} en {edificio.a}, {edificio.b}")
 			exit
 		}
 		var index = edificio.index, pre_vida = edificio.vida, aa = edificio.a, bb = edificio.b, enemigo = edificio.enemigo
