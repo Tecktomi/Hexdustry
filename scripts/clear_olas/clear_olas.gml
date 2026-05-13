@@ -9,14 +9,14 @@ function clear_olas(){
 					sprite_delete(background[# a, b])
 		ds_grid_clear(background, spr_hexagono)
 		for(var b = 0; b < ysize; b++){
-			var des = b & 1
+			var bmod = b & 1
 			for(var a = 0; a < xsize; a++){
 				var temp_terreno = terreno[# a, b]
 				//Olas en Agua Salada
 				if temp_terreno = idt_agua_salada{
 					var c = 0
 					for(var i = 0; i < 6; i++){
-						var aa = a + DESFACE[des][i, 0], bb = b + DESFACE[des][i, 1]
+						var aa = a + DESFACE[bmod][i, 0], bb = b + DESFACE[bmod][i, 1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if not terreno_liquido[terreno[# aa, bb]]
@@ -27,7 +27,7 @@ function clear_olas(){
 				//Paredes
 				else if terreno_pared[temp_terreno]{
 					var c = 0; for(var i = 3; i < 6; i++){
-						var aa = a + DESFACE[des][i, 0], bb = b + DESFACE[des][i, 1]
+						var aa = a + DESFACE[bmod][i, 0], bb = b + DESFACE[bmod][i, 1]
 						if aa < 0 or aa >= xsize or bb >= ysize
 							continue
 						if not terreno_pared[terreno[# aa, bb]]

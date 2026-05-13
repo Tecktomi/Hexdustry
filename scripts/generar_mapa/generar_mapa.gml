@@ -34,24 +34,28 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 				if dat1 = dat2{
 					for(var a = 0; a < xsize; a++)
 						for(var b = 0; b < ysize; b++)
-							if terreno[# a, b] = dat1
+							if terreno[# a, b] = dat1{
+								var bmod = b & 1
 								for(var j = 0; j < 6; j++){
-									var aa = a + DESFACE[b & 1][j, 0], bb = b + DESFACE[b & 1][j, 1]
+									var aa = a + DESFACE[bmod][j, 0], bb = b + DESFACE[bmod][j, 1]
 									if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or dat1 = terreno[# aa, bb]
 										continue
 									terreno[# aa, bb] = dat3
 								}
+							}
 				}
 				else
 					for(var a = 0; a < xsize; a++)
 						for(var b = 0; b < ysize; b++)
-							if terreno[# a, b] = dat1
+							if terreno[# a, b] = dat1{
+								var bmod = b & 1
 								for(var j = 0; j < 6; j++){
-									var aa = a + DESFACE[b & 1][j, 0], bb = b + DESFACE[b & 1][j, 1]
+									var aa = a + DESFACE[bmod][j, 0], bb = b + DESFACE[bmod][j, 1]
 									if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or dat2 != terreno[# aa, bb]
 										continue
 									terreno[# aa, bb] = dat3
 								}
+							}
 			}
 			//Ruido Aleatorio
 			else if tipo = 2{

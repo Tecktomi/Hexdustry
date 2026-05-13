@@ -48,7 +48,7 @@ function draw_edificio(x, y, index, dir, alpha = 1, _jugador = jugador){
 		else
 			draw_sprite_off(edificio_sprite[index], 0, x, y,,, dir * 60,, alpha)
 		if _jugador != jugador{
-			draw_set_color(equipo_color[_jugador])
+			draw_set_color(EQUIPO_COLOR[_jugador])
 			draw_set_alpha(alpha)
 			draw_circle_off(x + 8, y, 4, false)
 			draw_set_alpha(1)

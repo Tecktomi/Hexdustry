@@ -33,7 +33,7 @@ function draw_flow(){
 				var dir = edificio_cercano_dir[# a, b]
 				if dir != -1{
 					var temp_complex = abtoxy(a, b), aa = temp_complex[0], bb = temp_complex[1]
-					draw_arrow_off(aa, bb, aa + 10 * cos_angle_dir[dir], bb - 10 * sin_angle_dir[dir], 4)
+					draw_arrow_off(aa, bb, aa + 10 * COS_ANGLE_DIR[dir], bb - 10 * SIN_ANGLE_DIR[dir], 4)
 				}
 			}
 		}

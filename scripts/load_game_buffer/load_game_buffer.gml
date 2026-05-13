@@ -21,7 +21,7 @@ function load_game_buffer(buffer){
 			load_escenario_buffer(tutorial_nombre[tutorial - 1], false, false)
 		}
 		else
-			load_escenario_buffer($"{default_maps[mapa]}.txt", false)
+			load_escenario_buffer($"{DEFAULT_MAPS[mapa]}.txt", false)
 		game_start(false)
 		camx = buffer_read(buffer, buffer_f16)
 		camy = buffer_read(buffer, buffer_f16)

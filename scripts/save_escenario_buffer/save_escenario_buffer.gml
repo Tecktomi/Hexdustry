@@ -13,6 +13,8 @@ function save_escenario_buffer(filename){
 		buffer_write(buffer, buffer_u16, 0) //Placeholder
 		for(var a = 0; a < rss_max; a++)
 			buffer_write(buffer, buffer_u16, carga_inicial[a])
+		for(var a = 0; a < edificio_max; a++)
+			buffer_write(buffer, buffer_u8, (not mision_edificios[a]) ? 0 : (edificio_tecnologia[a] ? 2 : 1))
 		buffer_write(buffer, buffer_bool, oleadas)
 		buffer_write(buffer, buffer_u8, oleadas_tiempo)
 		buffer_write(buffer, buffer_u8, oleadas_tiempo_primera)
@@ -22,7 +24,7 @@ function save_escenario_buffer(filename){
 		if len_mis > 0
 			buffer_write(buffer, buffer_string, mision_texto_victoria)
 		for(var a = 0; a < len_mis; a++){
-			for(var b = 0; b < idiomas; b++)
+			for(var b = 0; b < IDIOMAS; b++)
 				buffer_write(buffer, buffer_string, mision_nombre_idioma[a, b])
 			buffer_write(buffer, buffer_u8, mision_objetivo[a])
 			buffer_write(buffer, buffer_u8, mision_target_id[a])
@@ -40,7 +42,7 @@ function save_escenario_buffer(filename){
 			buffer_write(buffer, buffer_u8, len_text)
 			for(var b = 0; b < len_text; b++){
 				var temp_text = mision_texto[a, b]
-				for(var c = 0; c < idiomas; c++)
+				for(var c = 0; c < IDIOMAS; c++)
 					buffer_write(buffer, buffer_string, temp_text.texto_idioma[c])
 				buffer_write(buffer, buffer_u16, temp_text.x)
 				buffer_write(buffer, buffer_u16, temp_text.y)

@@ -123,13 +123,13 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 			mapa = -1
 		}
 		xpos += 120
-		for(var a = 0; a < array_length(default_maps); a++){
+		for(var a = 0; a < array_length(DEFAULT_MAPS); a++){
 			if mapa = a{
 				draw_set_color(c_blue)
 				draw_rectangle(xpos - 2, ypos - 2, xpos + 97, ypos + 97, false)
 			}
 			if draw_sprite_boton(default_maps_image[a],, xpos, ypos, 96, 96, 1, hover_sprite_boton_text, {a : a}) and mapa != a{
-				var file = load_escenario_buffer($"{default_maps[a]}.txt", false)
+				var file = load_escenario_buffer($"{DEFAULT_MAPS[a]}.txt", false)
 				if file != ""
 					mapa = a
 			}

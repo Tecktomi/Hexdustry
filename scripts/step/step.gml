@@ -40,10 +40,18 @@ function step(){
 				array_push(energia_perdida, energia_perdida_time)
 				energia_perdida_time = 0
 				if auto_guardado and tutorial = 0 and os_browser = browser_not_a_browser and not mapa_editado{
-					var buffer = buffer_create(1024, buffer_grow, 1)
-					save_game_buffer(buffer)
-					buffer_save(buffer, "last_save.save")
-					buffer_delete(buffer)
+					if tutorial = 0{
+						var buffer = buffer_create(1024, buffer_grow, 1)
+						save_game_buffer(buffer)
+						buffer_save(buffer, "last_save.save")
+						buffer_delete(buffer)
+					}
+					else{
+						var buffer = buffer_create(1024, buffer_grow, 1)
+						save_game_buffer(buffer)
+						buffer_save(buffer, $"Tutorial/mision{world_tutorial[# a, b]}.save")
+						buffer_delete(buffer)
+					}
 				}
 			}
 			if online and servidor and (timer mod 10) = 0
@@ -202,14 +210,14 @@ function step(){
 				var d = oleada_count++ + 3, e = 1, flag_2 = false
 				if mision_actual >= 0 and mision_objetivo[mision_actual] = 4 and ++mision_counter >= mision_target_num[mision_actual]
 					oleadas = false
-				for(var i = 0; i < array_length(size_size); i++)
-					if d <= size_size[i]{
+				for(var i = 0; i < array_length(SIZE_SIZE); i++)
+					if d <= SIZE_SIZE[i]{
 						e = i + 1
 						flag_2 = true
 						break
 					}
 				if not flag_2
-					e = array_length(size_size)
+					e = array_length(SIZE_SIZE)
 				var temp_complex_list = get_size(spawn_x, spawn_y, 0, e)
 				len = min(array_length(temp_complex_list), d)
 				for(var i = 0; i < len; i++){
@@ -260,8 +268,7 @@ function step(){
 				pasar_mision()
 			}
 			if mision_tiempo[a] > 0{
-				if mision_camara_step <= 0 and mision_current_tiempo <= 0{
-					mision_current_tiempo--
+				if mision_camara_step <= 0 and --mision_current_tiempo <= 0{
 					if mision_tiempo_victoria[a]
 						pasar_mision()
 					else

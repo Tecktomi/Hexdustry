@@ -10,7 +10,7 @@ function xytoab(x, y){
 		ry = -rx - rz
 	else
 		rz = -rx - ry
-	var best_a = rx,  best_b = rz, best_d = infinity;
+	var best_a = rx,  best_b = rz, best_d = infinity, rzmod = rz & 1
 	for (var dir = -1; dir < 8; dir++){
 		var a, b;
 		if dir = -1{
@@ -26,9 +26,8 @@ function xytoab(x, y){
 			b = rz
 		}
 		else{
-			var n = next_to(rx, rz, dir)
-			a = n[0]
-			b = n[1]
+			a = rx + DESFACE[rzmod][dir, 0]
+			b = rz + DESFACE[rzmod][dir, 1]
 		}
 		if a < 0 or b < 0 or a >= xsize or b >= ysize
 			continue

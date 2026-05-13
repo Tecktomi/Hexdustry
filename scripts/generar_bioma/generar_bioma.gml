@@ -57,11 +57,11 @@ function generar_bioma(bioma){
 		//Generar bordes
 		for(var a = 0; a < xsize; a++)
 			for(var b = 0; b < ysize; b++){
-				var temp_terreno = terreno[# a, b]
+				var temp_terreno = terreno[# a, b], bmod = b & 1
 				//Añadir arena
 				if tag_agua_baja[temp_terreno]{
 					for(var c = 0; c < 6; c++){
-						var aa = a + DESFACE[b & 1][c, 0], bb = b + DESFACE[b & 1][c, 1]
+						var aa = a + DESFACE[bmod][c, 0], bb = b + DESFACE[bmod][c, 1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if not tag_agua[terreno[# aa, bb]]
@@ -79,7 +79,7 @@ function generar_bioma(bioma){
 				//Piedra al rededor de Petróleo
 				else if temp_terreno = idt_petroleo{
 					for(var c = 0; c < 6; c++){
-						var aa = a + DESFACE[b & 1][c, 0], bb = b + DESFACE[b & 1][c, 1]
+						var aa = a + DESFACE[bmod][c, 0], bb = b + DESFACE[bmod][c, 1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if terreno[# aa, bb] != idt_petroleo
@@ -89,7 +89,7 @@ function generar_bioma(bioma){
 				//Basalto al rededor de la Lava
 				else if temp_terreno = idt_lava{
 					for(var c = 0; c < 6; c++){
-						var aa = a + DESFACE[b & 1][c, 0], bb = b + DESFACE[b & 1][c, 1]
+						var aa = a + DESFACE[bmod][c, 0], bb = b + DESFACE[bmod][c, 1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if terreno[# aa, bb] != idt_lava{
@@ -117,7 +117,7 @@ function generar_bioma(bioma){
 				if tag_agua_baja[temp_terreno]{
 					var flag = true
 					for(var c = 0; c < 6; c++){
-						var aa = a + DESFACE[b & 1][c, 0], bb = b + DESFACE[b & 1][c, 1]
+						var aa = a + DESFACE[bmod][c, 0], bb = b + DESFACE[bmod][c, 1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if not tag_agua[terreno[# aa, bb]]{

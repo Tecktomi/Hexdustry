@@ -11,7 +11,7 @@ function minimapa(){
 				draw_rectangle(2 * a + c, b, 2 * a + c + 1, b, false)
 				if edificio_bool[# a, b]{
 					var edificio = edificio_id[# a, b]
-					draw_set_color(equipo_color[edificio.jugador])
+					draw_set_color(EQUIPO_COLOR[edificio.jugador])
 					draw_rectangle(2 * a + c, b, 2 * a + c + 1, b, false)
 				}
 				else{

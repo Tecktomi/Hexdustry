@@ -2,7 +2,7 @@ function mover(edificio = control.null_edificio){
 	with control{
 		if not edificio.emisor
 			exit
-		var index = edificio.index, flag = false, out = 0, temp_edificio = null_edificio, b = 0
+		var index = edificio.index, flag = false, out = 0, temp_edificio = null_edificio, b = 0, bmod = edificio.b & 1
 		//Selección de recursos
 		for(out = 0; out < rss_max; out++)
 			if edificio.carga_output[out] and edificio.carga[out] > 0{
@@ -10,7 +10,7 @@ function mover(edificio = control.null_edificio){
 				if index = id_selector{
 					//Output selector frontal
 					if (edificio.carga_id = edificio.select xor edificio.mode){
-						var temp_complex = next_to(edificio.a, edificio.b, edificio.dir), aaa = temp_complex[0], bbb = temp_complex[1]
+						var aaa = edificio.a + DESFACE[bmod][edificio.dir, 0], bbb = edificio.b + DESFACE[bmod][edificio.dir, 1]
 						if edificio_bool[# aaa, bbb]{
 							temp_edificio = edificio_id[# aaa, bbb]
 							if mover_check(out, edificio, temp_edificio){
@@ -25,7 +25,7 @@ function mover(edificio = control.null_edificio){
 							b = a
 						else
 							b = 1 - a
-						var temp_complex = next_to(edificio.a, edificio.b, (edificio.dir + 1 + b * 4) mod 6), aaa = temp_complex[0], bbb = temp_complex[1]
+						var aaa = edificio.a + DESFACE[bmod][(edificio.dir + 1 + b * 4) mod 6, 0], bbb = edificio.b + DESFACE[bmod][(edificio.dir + 1 + b * 4) mod 6, 1]
 						if edificio_bool[# aaa, bbb]{
 							temp_edificio = edificio_id[# aaa, bbb]
 							if mover_check(out, edificio, temp_edificio){
@@ -40,7 +40,7 @@ function mover(edificio = control.null_edificio){
 				else if index = id_overflow{
 					//Output frontal
 					if not edificio.mode{
-						var temp_complex = next_to(edificio.a, edificio.b, edificio.dir), aaa = temp_complex[0], bbb = temp_complex[1]
+						var aaa = edificio.a + DESFACE[bmod][edificio.dir, 0], bbb = edificio.b + DESFACE[bmod][edificio.dir, 1]
 						if edificio_bool[# aaa, bbb]{
 							temp_edificio = edificio_id[# aaa, bbb]
 							if mover_check(out, edificio, temp_edificio){
@@ -55,7 +55,7 @@ function mover(edificio = control.null_edificio){
 							b = a
 						else
 							b = 1 - a
-						var temp_complex = next_to(edificio.a, edificio.b, (edificio.dir + 1 + b * 4) mod 6), aaa = temp_complex[0], bbb = temp_complex[1]
+						var aaa = edificio.a + DESFACE[bmod][(edificio.dir +1 + b * 4) mod 6, 0], bbb = edificio.b + DESFACE[bmod][(edificio.dir + 1 + b * 4) mod 6, 1]
 						if edificio_bool[# aaa, bbb]{
 							temp_edificio = edificio_id[# aaa, bbb]
 							if mover_check(out, edificio, temp_edificio){
@@ -67,7 +67,7 @@ function mover(edificio = control.null_edificio){
 					}
 					//Output frontal
 					if edificio.mode and not flag{
-						var temp_complex = next_to(edificio.a, edificio.b, edificio.dir), aaa = temp_complex[0], bbb = temp_complex[1]
+						var aaa = edificio.a + DESFACE[bmod][edificio.dir, 0], bbb = edificio.b + DESFACE[bmod][edificio.dir, 1]
 						if edificio_bool[# aaa, bbb]{
 							temp_edificio = edificio_id[# aaa, bbb]
 							if mover_check(out, edificio, temp_edificio){

@@ -8,7 +8,7 @@ function menu_editor(){
 				for(var c = 0; c < len; c++){
 					var edificio = chunk[c], aa = edificio.center_x, bb = edificio.center_y, _jugador = edificio.jugador
 					if _jugador != 2 or edificio.enemigo{
-						draw_set_color((_jugador = -1) ? c_ltgray : equipo_color[_jugador])
+						draw_set_color((_jugador = -1) ? c_ltgray : EQUIPO_COLOR[_jugador])
 						draw_circle_off(aa + 8, bb, 4, false)
 					}
 				}
@@ -244,10 +244,10 @@ function menu_editor(){
 							draw_set_color(c_green)
 						else
 							draw_set_color(c_yellow)
-						draw_circle(xpos, ypos, 18, false)
+						draw_circle(xpos, ypos, 22, false)
 						draw_set_color(c_black)
-						draw_circle(xpos, ypos, 18, true)
-						if draw_sprite_boton(edificio_sprite[a],, xpos - 15, ypos - 15, 40, 40){
+						draw_circle(xpos, ypos, 22, true)
+						if draw_sprite_boton(edificio_sprite[a],, xpos - 18, ypos - 18, 36, 36){
 							if not mision_edificios[a]{
 								mision_edificios[a] = true
 								edificio_tecnologia[a] = true
@@ -264,8 +264,8 @@ function menu_editor(){
 								edificio_tecnologia_desbloqueable[a] = false
 							}
 						}
-						ypos += 40
-						if (++b mod 12) = 0{
+						ypos += 50
+						if (++b mod 10) = 0{
 							ypos = 140
 							xpos += 60
 						}
@@ -383,11 +383,11 @@ function menu_editor(){
 						array_push(temp_queue, mx, my, -1)
 						var target_id = terreno[# mx, my]
 						for(var counter = 0; counter < array_length(temp_queue);){
-							var a = temp_queue[counter++], b = temp_queue[counter++], dir = temp_queue[counter++] + 5
+							var a = temp_queue[counter++], b = temp_queue[counter++], dir = temp_queue[counter++] + 5, bmod = b & 1
 							array_push(build_list, [a, b])
 							for(var i = 0; i < maxi; i++){
 								dir = (dir + i) mod 6
-								var aa = a + DESFACE[b & 1][dir, 0], bb = b + DESFACE[b & 1][dir, 1]
+								var aa = a + DESFACE[bmod][dir, 0], bb = b + DESFACE[bmod][dir, 1]
 								if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 									continue
 								if not usable_grid_bool[# aa, bb]{

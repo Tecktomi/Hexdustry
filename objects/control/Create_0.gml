@@ -1,4 +1,19 @@
 randomize()
+#region MACROS
+	FILE_VERSION = 2026_04_30
+	PROCESADOR_VERSION = 2026_03_25
+	SIZE_SIZE = [1, 3, 7, 12, 19, 27, 37]
+	SIZE_BORDE = [6, 9, 12, 15, 18, 21]
+	DESFACE = [[[0, -1], [0, -2], [-1, -1], [-1, 1], [0, 2], [0, 1]], [[1, -1], [0, -2], [0, -1], [0, 1], [0, 2], [1, 1]]]
+	DEFAULT_MAPS = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas", "Asalto"]
+	IDIOMAS = 3
+	IDIOMA_NAME = ["en", "es", "ru"]
+	var angle_dir = [pi / 6, pi / 2, 5 * pi / 6, 7 * pi / 6, 3 * pi / 2, 11 * pi / 6]
+	for(var a = 0; a < 6; a++){
+		COS_ANGLE_DIR[a] = cos(angle_dir[a])
+		SIN_ANGLE_DIR[a] = sin(angle_dir[a])
+	}
+#endregion
 devise = (os_type = os_windows)
 browser = (os_browser = browser_not_a_browser)
 if devise{
@@ -10,11 +25,6 @@ else{
 	font_titulo = ft_titulo_android
 }
 draw_set_font(font_normal)
-FILE_VERSION = 2026_04_30
-PROCESADOR_VERSION = 2026_03_25
-size_size = [1, 3, 7, 12, 19, 27, 37]
-size_borde = [6, 9, 12, 15, 18, 21]
-DESFACE = [[[0, -1], [0, -2], [-1, -1], [-1, 1], [0, 2], [0, 1]], [[1, -1], [0, -2], [0, -1], [0, 1], [0, 2], [1, 1]]]
 ini_open("settings.ini")
 #region Controles
 	CONTROL_LEFT = ini_read_real("Controles", 0, ord("A"))
@@ -55,8 +65,7 @@ ini_open("settings.ini")
 	grafic_hideui = false
 #endregion
 medallas = array_create(6)
-default_maps = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas", "Asalto"]
-for(var a = 0; a < array_length(default_maps); a++){
+for(var a = 0; a < array_length(DEFAULT_MAPS); a++){
 	medallas[a] = array_create(3, false)
 	for(var b = 0; b < 3; b++){
 		var c = ini_read_real("Medallas", $"{a},{b}", 0)
@@ -64,7 +73,7 @@ for(var a = 0; a < array_length(default_maps); a++){
 			array_set(medallas[a], b, true)
 	}
 	if browser
-		default_maps_image[a] = sprite_add($"{default_maps[a]}.png", 1, false, false, 0, 0)
+		default_maps_image[a] = sprite_add($"{DEFAULT_MAPS[a]}.png", 1, false, false, 0, 0)
 }
 ini_close()
 save_files = browser ? scan_files("*.txt", fa_none) : []
@@ -86,12 +95,12 @@ if browser{
 		directory_create("Scenarios")
 	if not directory_exists("Blueprints")
 		directory_create("Blueprints")
+	if not directory_exists("Tutorial")
+		directory_create("Tutorial")
 }
 else
 	default_maps_image = [spr_preset_maps_pradera, spr_preset_maps_cuevas, spr_preset_maps_desierto, spr_preset_maps_nieve, spr_preset_maps_islas, spr_preset_maps_asalto]
 save_codes = (browser) ? scan_files("*.code", fa_none) : []
-idiomas = 3
-idioma_name = ["en", "es", "ru"]
 L = {}
 #region Campaña
 	world_width = 10
@@ -172,11 +181,6 @@ L = {}
 	camy = (ysize * 14 - room_height) / 2
 	oleada_count = 0
 	keyboard_step = 0
-	angle_dir = [pi / 6, pi / 2, 5 * pi / 6, 7 * pi / 6, 3 * pi / 2, 11 * pi / 6]
-	for(var a = 0; a < 6; a++){
-		cos_angle_dir[a] = cos(angle_dir[a])
-		sin_angle_dir[a] = sin(angle_dir[a])
-	}
 	pre_build_list = array_create(0, [0, 0])
 	pre_build_list_cruce = array_create(0, false)
 	sprite_boton_text = ""
@@ -204,17 +208,17 @@ L = {}
 	minb = 0
 	maxa = 0
 	maxb = 0
-	sonidos = [snd_motor, snd_maquina, snd_horno, snd_taladro]
-	sonidos_max = array_length(sonidos)
-	musica = [snd_theme_1, snd_theme_2, snd_theme_3, snd_theme_4, snd_theme_5]
-	musica_max = array_length(musica)
-	volumen = array_create(sonidos_max, 0)
-	sonido_id = array_create(sonidos_max)
-	for(var a = 0; a < sonidos_max; a++){
-		sonido_id[a] = audio_play_sound(sonidos[a], 1, true)
+	SONIDOS = [snd_motor, snd_maquina, snd_horno, snd_taladro]
+	SONIDOS_MAX = array_length(SONIDOS)
+	MUSICA = [snd_theme_1, snd_theme_2, snd_theme_3, snd_theme_4, snd_theme_5]
+	MUSICA_MAX = array_length(MUSICA)
+	volumen = array_create(SONIDOS_MAX, 0)
+	sonido_id = array_create(SONIDOS_MAX)
+	for(var a = 0; a < SONIDOS_MAX; a++){
+		sonido_id[a] = audio_play_sound(SONIDOS[a], 1, true)
 		audio_pause_sound(sonido_id[a])
 	}
-	procesador_instrucciones_length = [1, 4, 5, 7, 9, 7, 6, 6, 7, 16]
+	PROCESADOR_INSTRUCCIONES_LENGTH = [1, 4, 5, 7, 9, 7, 6, 6, 7, 16]
 	procesador_instrucciones_nombre = [
 		"Continuar",
 		"Asignar variable",
@@ -295,7 +299,7 @@ L = {}
 #endregion
 #region Misiones
 	mision_nombre = array_create(0, "")
-	mision_nombre_idioma = array_create(idiomas, array_create(0, ""))
+	mision_nombre_idioma = array_create(IDIOMAS, array_create(0, ""))
 	mision_objetivo = array_create(0, 0)
 	mision_target_id = array_create(0, 0)
 	mision_target_num = array_create(0, 0)
@@ -303,7 +307,7 @@ L = {}
 	mision_tiempo_edit = array_create(0, false)
 	mision_tiempo_victoria = array_create(0, false)
 	mision_tiempo_show = array_create(0, true)
-	mision_texto = array_create(0, array_create(0, {x : 0, y : 0, texto : "", texto_idioma : array_create(idiomas, "")}))
+	mision_texto = array_create(0, array_create(0, {x : 0, y : 0, texto : "", texto_idioma : array_create(IDIOMAS, "")}))
 	mision_camara_move = array_create(0, false)
 	mision_camara_x = array_create(0, 0)
 	mision_camara_y = array_create(0, 0)
@@ -312,7 +316,7 @@ L = {}
 	mision_camara_x_start = 0
 	mision_camara_y_start = 0
 	mision_texto_victoria = "Todos los objetivos cumplidos"
-	mision_texto_victoria_idioma = array_create(idiomas, "")
+	mision_texto_victoria_idioma = array_create(IDIOMAS, "")
 	mision_actual = -1
 	mision_counter = 0
 	mision_current_tiempo = 0
@@ -351,7 +355,7 @@ L = {}
 	server_pvp = false
 	server_buscando_lan = false
 	server_buscando_lan_step = 0
-	equipo_color = [ #bfbfbf, #ff0000, #0000ff, #00ff00, #ffff00, #ff00ff, #00ffff, #ffffff, #000000, #7f0000, #007f00, #00007f, #7f7f00, #7f007f, #007f7f]
+	EQUIPO_COLOR = [ #bfbfbf, #ff0000, #0000ff, #00ff00, #ffff00, #ff00ff, #00ffff, #ffffff, #000000, #7f0000, #007f00, #00007f, #7f7f00, #7f007f, #007f7f]
 	jugador = 2
 #endregion
 #region UI
