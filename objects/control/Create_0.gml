@@ -880,8 +880,8 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 	idd_bombardero = def_dron("Bombardero", spr_bombardero,, 800, 900, 1_600, [idr_bronce, idr_acero, idr_uranio_bruto, idr_modulos], [30, 40, 50, 5], 6000, true, 3, 80)
 	idd_reconstructor = def_dron("Reconstructor", spr_reconstructor,, 100, 1_600, 1_600, [idr_plastico, idr_bateria, idr_modulos], [30, 20, 1], 100, true, 2)
 	idd_minero = def_dron("Minero", spr_tanque, spr_minero, 200, 1600, 90_000, [idr_hierro, idr_acero, idr_electronicos, idr_modulos], [50, 25, 10, 1], 1200,, 0.7, 60)
-	idd_barco = def_dron("Barco", spr_barco,, 400, 900, 160_000, [idr_acero, idr_silicio, idr_electronicos], [40, 60, 20], 800,, 1.8, 15)
-	idd_destructor = def_dron("Destructuor", spr_destructor,, 1500, 1_600, 202_500, [idr_acero, idr_silicio, idr_electronicos, idr_uranio_bruto], [150, 100, 50, 50], 1600,, 1.2, 200)
+	idd_barco = def_dron("Barco", spr_barco,, 300, 900, 160_000, [idr_acero, idr_silicio, idr_electronicos], [40, 60, 20], 800,, 1.8, 15)
+	idd_destructor = def_dron("Destructuor", spr_destructor,, 1200, 1_600, 202_500, [idr_acero, idr_silicio, idr_electronicos, idr_uranio_bruto], [150, 100, 50, 50], 1600,, 1.2, 200)
 #endregion
 dron_max = array_length(dron_nombre)
 //Liquidos

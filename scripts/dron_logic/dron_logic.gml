@@ -425,7 +425,7 @@ function dron_logic(){
 				if ataque = false{
 					if dron.temp_target = null_edificio{
 						if (image_index mod 10) = (a + 5 mod 10){
-							var closest_dis = dron_alcance[index], max_prioridad = -1
+							var closest_dis = dron_alcance[index], max_prioridad = 0
 							for(var u = minu; u <= maxu; u++)
 								for(var v = minv; v <= maxv; v++){
 									var chunk = enemigo ? chunk_edificios[# u, v] : chunk_edificios_enemigo[# u, v]

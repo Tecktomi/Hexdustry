@@ -10,9 +10,9 @@ function draw_panel(x, y, w, h, deslizante_x = 0, deslizante_y = 0, this_input_d
 			deslizante[deslizante_x] = draw_deslizante(x, x + w, y + h + 5, deslizante[deslizante_x], 0, ancho - w, deslizante_x, this_input_data)
 			if mouse_x > x and mouse_y > y and mouse_x < x + w and mouse_y < y + h{
 				if mouse_wheel_up()
-					deslizante[deslizante_x] = max(0, deslizante[deslizante_x] - 10)
+					deslizante[deslizante_x] = max(0, deslizante[deslizante_x] - 20)
 				if mouse_wheel_down()
-					deslizante[deslizante_x] = min(ancho - w, deslizante[deslizante_x] + 10)
+					deslizante[deslizante_x] = min(ancho - w, deslizante[deslizante_x] + 20)
 			}
 		}
 		if alto > h{
@@ -20,9 +20,9 @@ function draw_panel(x, y, w, h, deslizante_x = 0, deslizante_y = 0, this_input_d
 			deslizante[deslizante_y] = draw_deslizante_vertical(x - 5, y, y + h, deslizante[deslizante_y], 0, alto - h, deslizante_y, this_input_data)
 			if mouse_x > x and mouse_y > y and mouse_x < x + w and mouse_y < y + h{
 				if mouse_wheel_up()
-					deslizante[deslizante_y] = max(0, deslizante[deslizante_y] - 10)
+					deslizante[deslizante_y] = max(0, deslizante[deslizante_y] - 20)
 				if mouse_wheel_down()
-					deslizante[deslizante_y] = min(alto - h, deslizante[deslizante_y] + 10)
+					deslizante[deslizante_y] = min(alto - h, deslizante[deslizante_y] + 20)
 			}
 		}
 	}
