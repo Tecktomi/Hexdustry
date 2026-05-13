@@ -113,7 +113,7 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 						target_y = edificio.center_y
 					}
 					var dis = distance(aa, bb, target_x, target_y)
-					var municion = add_municion(aa, bb, vel * (target_x - aa) / dis, vel * (target_y - bb) / dis, 4, dis / vel, 20,, target, edificio, dron.enemigo,,, _jugador)
+					var municion = add_municion(aa, bb, vel * (target_x - aa) / dis, vel * (target_y - bb) / dis, 0, dis / vel, 20,, target, edificio, dron.enemigo,,, _jugador)
 					array_push(municiones, municion)
 				}
 			}
@@ -121,9 +121,7 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 		}
 		//Ataque Destructor
 		else if index = idd_destructor{
-			if in(dron.step - dron_step[index], 0, 20, 40, 60, 80){
-				if dron.step++ >= dron_step[index] + 80
-					dron.step = 0
+			if in(dron.step, 0, 20, 40, 60, 80){
 				if target != null_dron or edificio != null_edificio{
 					var aa = dron.x, bb = dron.y, vel = 20
 					if target != null_dron
@@ -137,7 +135,7 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 					array_push(municiones, municion)
 				}
 			}
-			if dron.step > dron_step[index] + 80
+			if dron.step >= dron_step[index]
 				dron.step = 0
 			return false
 		}
