@@ -73,8 +73,8 @@ function step(){
 		//Ciclo de disparos
 		draw_set_alpha(0.5)
 		for(var a = array_length(municiones) - 1; a >= 0; a--){
-			var municion = municiones[a], target = municion.target, _jugador = municion.jugador
-			if municion.tipo != 2{
+			var municion = municiones[a], target = municion.target, _jugador = municion.jugador, _tipo = municion.tipo, _dmg = municion.dmg
+			if _tipo != 2{
 				draw_set_color(c_black)
 				draw_circle_off(municion.x, municion.y, 2, false)
 				draw_set_color(c_yellow)
@@ -103,37 +103,41 @@ function step(){
 			var temp_complex = xytoab(municion.x, municion.y), muna = temp_complex[0], munb = temp_complex[1]
 			if grafic_humo and municion.humo
 				array_push(humos, add_humo(municion.x, municion.y, muna, munb, random_range(-1, 1), random_range(-1, 1), irandom_range(20, 30)))
-			//Colisión
+			//Colisión Edificio
 			if edificio_bool[# muna, munb]{
-				var edificio = edificio_id[# muna, munb]
-				if edificio.enemigo != municion.enemigo
+				var temp_edificio = edificio_id[# muna, munb]
+				if _tipo != 4 and temp_edificio.enemigo != municion.enemigo
 					municion.dis = 0
 			}
+			//Colisión Dron
+			if _tipo != 2 and target != null_dron and target.vida > 0 and muna = target.a and munb = target.b{
+				herir_dron(_dmg, target)
+				if _tipo != 4
+					dis = 0
+			}
 			//Munición perforadora
-			if municion.tipo = 4
-				herir_hexagono(muna, munb, floor(municion.dmg / 2), false, municion.enemigo)
+			if _tipo = 4
+				herir_hexagono(muna, munb, floor(_dmg / 2), false, municion.enemigo)
 			if --municion.dis <= 0{
 				municiones[a] = municiones[array_length(municiones) - 1]
 				array_pop(municiones)
 				//Daño unidad
 				if target != null_dron and target.vida > 0{
 					//Daño fuego
-					if municion.tipo = 2
+					if _tipo = 2
 						aplicar_efecto(1, 120, target)
 					//Daño área
 					else
-						herir_hexagono(muna, munb, municion.dmg)
-					if target.vida > 0
-						herir_dron(municion.dmg, target)
+						herir_hexagono(muna, munb, _dmg,, municion.enemigo)
 				}
 				//Daño edificio
 				if municion.target_build != null_edificio and municion.target_build.vida > 0
-					herir_edificio(municion.dmg, municion.target_build)
+					herir_hexagono(muna, munb, _dmg,, municion.enemigo)
 				//Misil
-				if municion.tipo = 1
+				if _tipo = 1
 					explosion(municion.x, municion.y, municion.target_build, municion.enemigo, municion.radio,,, _jugador)
 				//Misil incendiario
-				else if municion.tipo = 3
+				else if _tipo = 3
 					explosion(municion.x, municion.y, municion.target_build, municion.enemigo, municion.radio,, true, _jugador)
 			}
 		}
@@ -163,9 +167,8 @@ function step(){
 				humo.vmove *= 0.99
 			}
 			if --humo.time <= 0{
-				humos[a--] = humos[array_length(humos) - 1]
+				humos[a--] = humos[--len]
 				array_pop(humos)
-				len--
 			}
 		}
 		//Fuego

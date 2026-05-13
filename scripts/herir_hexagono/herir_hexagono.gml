@@ -7,6 +7,11 @@ function herir_hexagono(a, b, dmg, efecto = true, enemigo = false){
 			if dron.a = a and dron.b = b
 				herir_dron(dmg, dron)
 		}
+		if edificio_bool[# a, b]{
+			var edificio = edificio_id[# a, b]
+			if edificio.enemigo != enemigo and edificio.vida >= 0
+				herir_edificio(dmg, edificio)
+		}
 		if efecto{
 			var temp_complex = abtoxy(a, b)
 			array_push(efectos, add_efecto(spr_impacto, 0, temp_complex[0], temp_complex[1], 7, 1))

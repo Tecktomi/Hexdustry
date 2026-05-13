@@ -140,9 +140,10 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 		}
 		draw_set_color(c_white)
 		ypos += 140
+		//Tamaño del mapa aleatorio
 		if mapa = -1{
 			xpos = 200
-			if draw_boton(xpos, ypos, "Pequeño", xsize = 48 ? ui_azul : ui_gris,,,, 1) and xsize != 48{
+			if draw_boton(xpos, ypos, L.menu_size_little, xsize = 48 ? ui_azul : ui_gris,,,, 1) and xsize != 48{
 				xsize = 48
 				ysize = 96
 				set_grid_size()
@@ -152,7 +153,7 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 				randomize()
 			}
 			xpos += text_x * 1.2
-			if draw_boton(xpos, ypos, "Mediano", xsize = 72 ? ui_azul : ui_gris,,,, 1) and xsize != 72{
+			if draw_boton(xpos, ypos, L.menu_size_medium, xsize = 72 ? ui_azul : ui_gris,,,, 1) and xsize != 72{
 				xsize = 72
 				ysize = 144
 				set_grid_size()
@@ -162,7 +163,7 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 				randomize()
 			}
 			xpos += text_x * 1.2
-			if draw_boton(xpos, ypos, "Grande", xsize = 128 ? ui_azul : ui_gris,,,, 1) and xsize != 128{
+			if draw_boton(xpos, ypos, L.menu_size_large, xsize = 128 ? ui_azul : ui_gris,,,, 1) and xsize != 128{
 				xsize = 128
 				ysize = 256
 				set_grid_size()
@@ -171,6 +172,7 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 				generar_bioma(biome_seed)
 				randomize()
 			}
+			ypos += text_y * 1.2
 		}
 		return [xpos, ypos]
 	}

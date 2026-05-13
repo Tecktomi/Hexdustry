@@ -75,15 +75,24 @@ if menu = 0{
 	ypos += text_y * 2
 	//Configuración online
 	if os_browser = browser_not_a_browser{
-		if draw_boton(room_width / 2, ypos, L.multijugador){
+		if draw_boton(room_width / 2, ypos, L.multijugador, ui_azul){
 			input_layer = 1
 			get_file = 4
 			server_buscar_lan()
 		}
-		ypos += text_y * 2
 	}
 	else
 		draw_boton(room_width / 2, ypos, L.descargar_para_jugar_en_LAN, ui_gris)
+	ypos += text_y * 2
+	if draw_boton(room_width / 2, ypos, L.game_enciclopedia, ui_gris){
+		input_layer = 1
+		enciclopedia = 1
+	}
+	if enciclopedia > 0{
+		draw_enciclopedia(false, 1)
+		if enciclopedia = 0
+			input_layer = 0
+	}
 	draw_set_halign(fa_left)
 	if get_file > 0{
 		draw_set_color(c_dkgray)
@@ -142,6 +151,7 @@ if menu = 0{
 				get_file = 0
 				input_layer = 0
 				default_mision(0)
+				exit
 			}
 			ypos += text_y * 1.2
 			draw_panel(110, ypos, room_width - 220, room_height - 200 - ypos, 0, 1, 1, panel_partida_nueva)
@@ -423,339 +433,7 @@ if in(menu, 1, 3){
 	draw_set_halign(fa_left)
 	if enciclopedia > 0{
 		image_index--
-		draw_set_color(c_gray)
-		draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
-		draw_set_color(c_black)
-		draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
-		var width = 100, ypos = 100
-		if draw_boton(width, ypos, L.enciclopedia_recursos){
-			deslizante[0] = 0
-			enciclopedia = 1
-		}
-		width += text_x + 20
-		if draw_boton(width, ypos, L.enciclopedia_edificios){
-			deslizante[0] = 0
-			enciclopedia = 2
-		}
-		width += text_x + 20
-		if draw_boton(width, ypos, L.enciclopedia_unidades){
-			deslizante[0] = 0
-			enciclopedia = 5
-		}
-		width += text_x + 20
-		if tecnologia and draw_boton(width, ypos, L.enciclopedia_tecnologia){
-			deslizante[0] = 0
-			enciclopedia = 7
-		}
-		ypos += text_y * 1.2
-		//Menú Recursos
-		if enciclopedia = 1
-			scroll(110, ypos, rss_max, editor_max_height, editor_item_size, scroll_enciclopedia_recursos, {xpos : 140, ypos : ypos}, 0)
-		//Menú Edificios
-		else if enciclopedia = 2
-			scroll(140, ypos, edificio_max, editor_max_height, editor_item_size, scroll_enciclopedia_edificios, {xpos : 140, ypos : ypos})
-		//Detalles Recurso
-		else if enciclopedia = 3{
-			draw_set_font(devise ? font_titulo : ft_titulo_android)
-			ypos = draw_text_ypos(120, ypos, recurso_nombre[enciclopedia_item])
-			draw_set_font(font_normal)
-			ypos = draw_text_ypos(120, ypos, recurso_descripcion[enciclopedia_item])
-			if recurso_combustion[enciclopedia_item]
-				ypos = draw_text_ypos(120, ypos, $"{L.enciclopedia_combustible} {recurso_combustion_time[enciclopedia_item] / 60}[s]")
-			ypos = draw_text_ypos(120, ypos, L.enciclopedia_usado_en)
-			for(var a = 0; a < edificio_max; a++){
-				var aa = edi_sort[a]
-				for(b = 0; b < array_length(edificio_input_id[aa]); b++)
-					if edificio_input_id[aa, b] = enciclopedia_item{
-						if draw_boton(140, ypos, edificio_nombre[aa],,,, false){
-							enciclopedia_item = aa
-							enciclopedia = 4
-							exit
-						}
-						ypos += 20
-						break
-					}
-			}
-			ypos = draw_text_ypos(120, ypos, $"{L.enciclopedia_producido_en}:")
-			for(var a = 0; a < edificio_max; a++){
-				var aa = edi_sort[a]
-				for(b = 0; b < array_length(edificio_output_id[aa]); b++)
-					if edificio_output_id[aa, b] = enciclopedia_item{
-						if draw_boton(140, ypos, edificio_nombre[aa],,,, false){
-							enciclopedia_item = aa
-							enciclopedia = 4
-							exit
-						}
-						ypos += 20
-						break
-					}
-			}
-			var flag = false
-			for(var a = 0; a < edificio_max; a++){
-				for(b = 0; b < array_length(edificio_precio_id[a]); b++)
-					if edificio_precio_id[a, b] = enciclopedia_item{
-						flag = true
-						break
-					}
-				if flag
-					break
-			}
-			if flag{
-				ypos = draw_text_ypos(120, ypos, $"{L.enciclopedia_necesario_para_construir}:")
-				for(var a = 0; a < edificio_max; a++){
-					var aa = edi_sort[a]
-					for(b = 0; b < array_length(edificio_precio_id[aa]); b++)
-						if edificio_precio_id[aa, b] = enciclopedia_item{
-							if draw_boton(140, ypos, edificio_nombre[aa],,,, false){
-								enciclopedia_item = aa
-								enciclopedia = 4
-								exit
-							}
-							ypos += 20
-							break
-						}
-				}
-			}
-			else
-				ypos = draw_text_ypos(120, ypos, L.enciclopedia_inutil)
-			flag = false
-			for(var a = 0; a < dron_max; a++){
-				for(b = 0; b < array_length(dron_precio_id[a]); b++)
-					if dron_precio_id[a, b] = enciclopedia_item{
-						flag = true
-						break
-					}
-				if flag
-					break
-			}
-			if flag{
-				ypos = draw_text_ypos(120, ypos, $"{L.enciclopedia_necesario_para_producir}:")
-				for(var a = 0; a < dron_max; a++)
-					for(b = 0; b < array_length(dron_precio_id[a]); b++)
-						if dron_precio_id[a, b] = enciclopedia_item{
-							if draw_boton(140, ypos, dron_nombre[a],,,, false){
-								enciclopedia_item = a
-								enciclopedia = 6
-								exit
-							}
-							ypos += 20
-							break
-						}
-			}
-			draw_sprite_ext(recurso_sprite[enciclopedia_item], 0, room_width - 200, 200, 4, 4, 0, c_white, 1)
-		}
-		//Detalles Edificio
-		else if enciclopedia = 4{
-			var ei = enciclopedia_item
-			draw_set_font(font_titulo)
-			ypos = draw_text_ypos(120, ypos, edificio_nombre[ei])
-			draw_set_font(font_normal)
-			ypos = draw_text_ypos(120, ypos, edificio_descripcion[ei]) + 10
-			ypos = draw_text_ypos(120, ypos, $"{L.enciclopedia_vida}: {edificio_vida[ei]}")
-			ypos = draw_text_ypos(120, ypos, $"{L.enciclopedia_size}: {edificio_size[ei]}")
-			if array_length(edificio_precio_id[ei]) > 0{
-				ypos += 10
-				ypos = draw_text_ypos(120, ypos, $"{L.enciclopedia_coste_construccion}:")
-				for(var a = 0; a < array_length(edificio_precio_id[ei]); a++){
-					if draw_boton(140, ypos, $"{edificio_precio_num[ei, a]} {recurso_nombre[edificio_precio_id[ei, a]]}",,,, false){
-						enciclopedia_item = edificio_precio_id[ei, a]
-						enciclopedia = 3
-						exit
-					}
-					ypos += 20
-				}
-			}
-			if array_length(edificio_input_id[ei]) > 0{
-				ypos += 10
-				ypos = draw_text_ypos(120, ypos, $"{L.enciclopedia_consume}:")
-				for(var a = 0; a < array_length(edificio_input_id[ei]); a++){
-					if draw_boton(140, ypos, recurso_nombre[edificio_input_id[ei, a]],,,, false){
-						enciclopedia_item = edificio_input_id[ei, a]
-						enciclopedia = 3
-						exit
-					}
-					ypos += 20
-				}
-			}
-			if array_length(edificio_output_id[ei]) > 0{
-				ypos += 10
-				ypos = draw_text_ypos(120, ypos, $"{L.enciclopedia_produce}:")
-				for(var a = 0; a < array_length(edificio_output_id[ei]); a++){
-					if draw_boton(140, ypos, recurso_nombre[edificio_output_id[ei, a]],,,, false){
-						enciclopedia_item = edificio_output_id[ei, a]
-						enciclopedia = 3
-						exit
-					}
-					ypos += 20
-				}
-			}
-			if edificio_energia[ei]{
-				ypos += 10
-				if edificio_energia_consumo[ei] > 0
-					ypos = draw_text_ypos(120, ypos, $"{L.enciclopedia_consume} {edificio_energia_consumo[ei]} {L.red_energia}/s")
-				else if edificio_energia_consumo[ei] < 0
-					ypos = draw_text_ypos(120, ypos, $"{L.enciclopedia_produce} {abs(edificio_energia_consumo[ei])} {L.red_energia}/s")
-			}
-			if edificio_flujo[ei]{
-				ypos += 10
-				if edificio_flujo_liquido[ei] = -1
-					temp_text = L.flujo_liquido
-				else
-					temp_text = liquido_nombre[edificio_flujo_liquido[ei]]
-				if edificio_flujo_consumo[ei] > 0
-					ypos = draw_text_ypos(120, ypos, $"{L.enciclopedia_consume} {edificio_flujo_consumo[ei]} {temp_text}/s")
-				else if edificio_flujo_consumo[ei] < 0
-					ypos = draw_text_ypos(120, ypos, $"{L.enciclopedia_produce} {abs(edificio_flujo_consumo[ei])} {temp_text}/s")
-			}
-			if (edificio_tecnologia[ei] or cheat) and draw_boton(120, ypos + 40, L.enciclopedia_construir, ui_verde){
-				enciclopedia = 0
-				build_index = ei
-				build_dir = 0
-			}
-			draw_sprite_ext(edificio_sprite[ei], 0, room_width - 200, 200, 2, 2, 0, c_white, 1)
-			if edificio_armas[ei] and ei != id_onda_de_choque
-				if edificio_size[ei] mod 2 = 0
-					draw_sprite_ext(edificio_sprite_2[ei], 0, room_width - 200 + 16, 200 + 24, 2, 2, 0, c_white, 1)
-				else if edificio_size[ei] = 2.5
-					draw_sprite_ext(edificio_sprite_2[ei], 0, room_width - 200 + 24, 200 + 14, 2, 2, 0, c_white, 1)
-				else
-					draw_sprite_ext(edificio_sprite_2[ei], 0, room_width - 200, 200, 2, 2, 0, c_white, 1)
-			if tecnologia{
-				sprite_boton_text = ""
-				var size = array_length(edificio_tecnologia_prev[ei]), xpos = 800
-				ypos = 200
-				for(var a = 0; a < size; a++){
-					b = edificio_tecnologia_prev[ei, a]
-					if edificio_tecnologia[b]
-						draw_set_color(c_green)
-					else if edificio_tecnologia_desbloqueable[b]
-						draw_set_color(c_yellow)
-					else
-						draw_set_color(c_red)
-					draw_line(xpos + 50 * a - 25 * (size - 1), ypos, xpos, ypos + 100)
-					draw_circle(xpos + 50 * a - 25 * (size - 1), ypos, 25, false)
-					draw_set_color(c_black)
-					draw_circle(xpos + 50 * a - 25 * (size - 1), ypos, 25, true)
-					if draw_sprite_boton(edificio_sprite[b],, xpos - 20 + 50 * a - 25 * (size - 1), ypos - 20, 40, 40,, hover_sprite_boton_text, {a : edificio_nombre[b]}){
-						enciclopedia_item = b
-						enciclopedia = 4
-						exit
-					}
-					draw_text_background(mouse_x + 20, mouse_y, sprite_boton_text)
-				}
-				size = array_length(edificio_tecnologia_next[ei])
-				for(var a = 0; a < size; a++){
-					b = edificio_tecnologia_next[ei, a]
-					if edificio_tecnologia[b]
-						draw_set_color(c_green)
-					else if edificio_tecnologia_desbloqueable[b]
-						draw_set_color(c_yellow)
-					else
-						draw_set_color(c_red)
-					draw_line(xpos + 50 * a - 25 * (size - 1), ypos + 200, xpos, ypos + 100)
-					draw_circle(xpos + 50 * a - 25 * (size - 1), ypos + 200, 25, false)
-					draw_set_color(c_black)
-					draw_circle(xpos + 50 * a - 25 * (size - 1), ypos + 200, 25, true)
-					if draw_sprite_boton(edificio_sprite[b],, xpos - 20 + 50 * a - 25 * (size - 1), ypos + 180, 40, 40,, hover_sprite_boton_text, {a : edificio_nombre[b]}){
-						enciclopedia_item = b
-						enciclopedia = 4
-						exit
-					}
-					draw_text_background(mouse_x + 20, mouse_y, sprite_boton_text)
-				}
-				if edificio_tecnologia[ei]
-					draw_set_color(c_green)
-				else if edificio_tecnologia_desbloqueable[ei]{
-					var flag = true
-					temp_text = ""
-					if not cheat
-						for(var a = 0; a < array_length(edificio_tecnologia_precio[ei]); a++){
-							var temp_precio = edificio_tecnologia_precio[ei, a]
-							temp_text += $"\n{recurso_nombre[temp_precio.id]}: {temp_precio.num}"
-							if jugador_recursos[0, temp_precio.id] < temp_precio.num{
-								flag = false
-								temp_text += " !!"
-							}
-						}
-					draw_set_valign(fa_middle)
-					if draw_boton(xpos + 100, ypos + 100, (flag ? L.enciclopedia_investigar : L.almacen_sin_recursos) + temp_text, flag ? ui_verde : ui_rojo) and flag
-						investigar(ei)
-					draw_set_valign(fa_top)
-					draw_set_color(c_yellow)
-				}
-				else
-					draw_set_color(c_red)
-				draw_circle(xpos, ypos + 100, 25, false)
-				draw_set_color(c_black)
-				draw_circle(xpos, ypos + 100, 25, true)
-				draw_sprite_stretched(edificio_sprite[ei], 0, xpos - 20, ypos + 80, 40, 40)
-			}
-		}
-		//Menú Unidades
-		else if enciclopedia = 5
-			scroll(140, ypos, dron_max, editor_max_height, editor_item_size, scroll_enciclopedia_drones, {xpos : 140, ypos : ypos})
-		//Detalles Dron
-		else if enciclopedia = 6{
-			draw_set_font(font_titulo)
-			ypos = draw_text_ypos(120, ypos, dron_nombre[enciclopedia_item])
-			draw_set_font(font_normal)
-			ypos = draw_text_ypos(120, ypos, dron_descripcion[enciclopedia_item])
-			ypos = draw_text_ypos(120, ypos, $"{L.enciclopedia_vida}: {dron_vida_max[enciclopedia_item]}")
-			if dron_aereo[enciclopedia_item]
-				ypos = draw_text_ypos(140, ypos, L.enciclopedia_aerea)
-			if array_length(dron_precio_id[enciclopedia_item]) > 0{
-				ypos += 10
-				ypos = draw_text_ypos(120, ypos, $"{L.enciclopedia_coste_construccion}:")
-				for(var a = 0; a < array_length(dron_precio_id[enciclopedia_item]); a++){
-					if draw_boton(140, ypos, $"{dron_precio_num[enciclopedia_item, a]} {recurso_nombre[dron_precio_id[enciclopedia_item, a]]}",,,, false){
-						enciclopedia_item = dron_precio_id[enciclopedia_item, a]
-						enciclopedia = 3
-						exit
-					}
-					ypos += 20
-				}
-			}
-			draw_sprite_ext(dron_sprite[enciclopedia_item], image_index / 2, room_width - 200, 200, 2, 2, 0, c_white, 1)
-			draw_sprite_ext(dron_sprite_color[enciclopedia_item], image_index / 2, room_width - 200, 200, 2, 2, 0, c_white, 1)
-		}
-		//Tecnología
-		else if enciclopedia = 7{
-			sprite_boton_text = ""
-			var xpos = room_width / 2
-			draw_set_font(font_titulo)
-			ypos = draw_text_ypos(120, ypos, L.enciclopedia_tecnologia)
-			draw_set_font(font_normal)
-			ypos = 140
-			for(var a = 0; a < array_length(tecnologia_nivel_edificios); a++){
-				ypos += 60
-				width = array_length(tecnologia_nivel_edificios[a])
-				for(b = 0; b < width; b++){
-					var c = tecnologia_nivel_edificios[a, b]
-					if edificio_tecnologia[c]
-						draw_set_color(c_green)
-					else if edificio_tecnologia_desbloqueable[c]
-						draw_set_color(c_yellow)
-					else
-						draw_set_color(c_red)
-					draw_circle(xpos + 60 * b - 30 * (width - 1), ypos, 25, false)
-					draw_set_color(c_black)
-					draw_circle(xpos + 60 * b - 30 * (width - 1), ypos, 25, true)
-					if draw_sprite_boton(edificio_sprite[c],, xpos - 20 + 60 * b - 30 * (width - 1), ypos - 20, 40, 40,, hover_sprite_boton_text, {a : edificio_nombre[c]}){
-						enciclopedia_item = c
-						enciclopedia = 4
-						exit
-					}
-				}
-			}
-			draw_text_background(mouse_x + 20, mouse_y, sprite_boton_text)
-		}
-		if keyboard_check_pressed(vk_escape) or keyboard_check_pressed(CONTROL_ENCICLOPEDIA) or mouse_check_button_pressed(mb_right) or (mouse_check_button_pressed(mb_left) and (mouse_x < 100 or mouse_y < 100 or mouse_x > room_width - 100 or mouse_y > room_height - 100)){
-			mouse_clear(mouse_lastbutton)
-			keyboard_clear(vk_escape)
-			keyboard_clear(CONTROL_ENCICLOPEDIA)
-			enciclopedia = false
-		}
-		update_cursor()
+		draw_enciclopedia()
 		exit
 	}
 	if sonido and random(1) < 0.1{
