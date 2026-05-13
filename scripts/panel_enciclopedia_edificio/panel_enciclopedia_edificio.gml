@@ -52,10 +52,12 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 		}
 		if edificio_flujo[ei]{
 			ypos += 10
-			if edificio_flujo_liquido[ei] = -1
+			var temp_text = ""
+			if array_length(edificio_flujo_liquido[ei]) = 0
 				temp_text = L.flujo_liquido
 			else
-				temp_text = liquido_nombre[edificio_flujo_liquido[ei]]
+				for(var a = 0; a < array_length(edificio_flujo_liquido[ei]); a++)
+					temp_text += (temp_text = "" ? "" : " & ") + liquido_nombre[edificio_flujo_liquido[ei, a]]
 			if edificio_flujo_consumo[ei] > 0
 				ypos = draw_text_ypos(xpos + 10, ypos, $"{L.enciclopedia_consume} {edificio_flujo_consumo[ei]} {temp_text}/s")
 			else if edificio_flujo_consumo[ei] < 0
@@ -121,8 +123,7 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 			if edificio_tecnologia[ei]
 				draw_set_color(c_green)
 			else if edificio_tecnologia_desbloqueable[ei]{
-				var flag = true
-				temp_text = ""
+				var flag = true, temp_text = ""
 				if not cheat
 					for(var a = 0; a < array_length(edificio_tecnologia_precio[ei]); a++){
 						var temp_precio = edificio_tecnologia_precio[ei, a]
