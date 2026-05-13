@@ -354,8 +354,8 @@ if in(menu, 1, 3){
 				}
 				//Dibujo falta líquido
 				if tag_liquido_obligatorio[index]{
-					if edificio.flujo_consumo_max > 0 and (edificio.flujo.liquido != edificio_flujo_liquido[index] or (edificio.index = id_generador_geotermico and (edificio.flujo.liquido = idl_agua or edificio.flujo.liquido = idl_agua_salada))){
-						draw_sprite_off(liquido_sprite[edificio_flujo_liquido[index]], 0, aa, bb - 28 * ++alert_count)
+					if edificio.flujo_consumo_max > 0 and not array_contains(edificio_flujo_liquido[index], edificio.flujo.liquido){
+						draw_sprite_off(liquido_sprite[edificio_flujo_liquido[index, (image_index / 300) mod array_length(edificio_flujo_liquido[index])]], 0, aa, bb - 28 * ++alert_count)
 						draw_sprite_off(spr_falta, 0, aa, bb - 28 * alert_count)
 					}
 				}
