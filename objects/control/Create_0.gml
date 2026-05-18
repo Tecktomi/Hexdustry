@@ -197,6 +197,8 @@ L = {}
 	efectos = array_create(0, null_efecto)
 	text_x = 0
 	text_y = 0
+	text_xpos = 0
+	text_ypos = 0
 	enciclopedia = 0
 	enciclopedia_item = 0
 	null_humo = add_humo(0, 0, 0, 0, 0, 0, 0)
@@ -230,6 +232,19 @@ L = {}
 		"Leer datos de Memoria",
 		"Escribir datos a Memoria",
 		"Dibujar a Pantalla"]
+	procesador_instrucciones_descripcion = [
+		"Esta instrucción no hace nada, sirve para hacer pasar tiempo en un procesador",
+		"Esta instrucción permite darle un valor (número o texto) a una variable del procesador",
+		"Esta instrucción permite modificar una variable del procesador",
+		"Esta instrucción permite operar dos variables del procesador y obtener el resultado",
+		"Esta instrucción tiene una condición que, si se cumple, el ciclo de proceso salta a la línea elegida",
+		"Esta instrucción lee información de alguno de los edificios vinculados al procesador",
+		"Esta instrucción permite controlar alguno de los edificios vinculados al procesador",
+		"Esta instrucción permite leer una variable de otro procesador o memoria",
+		"Esta instrucción permite escribir una variable a otro procesador, mensaje o memoria",
+		"Esta instrucción permite entregar comandos de dibujo a una pantalla vinculada"]
+	for(var a = 0; a < array_length(procesador_instrucciones_descripcion); a++)
+		procesador_instrucciones_descripcion[a] = text_wrap(procesador_instrucciones_descripcion[a], 400)
 	procesador_add = false
 	procesador_move = -1
 	input_layer = 0
@@ -1714,6 +1729,48 @@ null_explosion = {
 explosion_queue = array_create(0, null_explosion)
 explosion_fx_queue = array_create(0, explosion_fx(0, 0, 0))
 set_idioma()
+#region Consejos
+	consejos_nombre = ["Control de Cámara", "Construcción", "Redes Eléctricas", "Tuberías", "Procesadores"]
+	consejos_texto = [[
+		"Los controles de cámara se puede modificar en el menú de controles",
+		$"Accede al menú presionando Escape -> {L.controles}",
+		$"{chr(CONTROL_LEFT)}{chr(CONTROL_RIGHT)}{chr(CONTROL_UP)}{chr(CONTROL_DOWN)} para desplazar la cámara.",
+		$"{chr(CONTROL_LEFT)}{chr(CONTROL_RIGHT)}{chr(CONTROL_UP)}{chr(CONTROL_DOWN)} + Shift Izquierdo para desplazar rápido.",
+		$"Rueda del Mouse + Control Izquierdo para aplicar zoom.",
+		$"{chr(CONTROL_HIDEUI)} para ocultar/mostrar la interfaz."
+	],[
+		"Clic Derecho sobre un edificio para destruirlo.",
+		"Clic Derecho sobre terreno libre para abrir el menú de construcción.",
+		$"Rueda del Mouse o {chr(CONTROL_ROTAR)} para rotar el edificio.",
+		"Clic Izquierdo para construir.",
+		"Mantén Clic Izquierdo para arrastrar la construcción de Cintas Transportadoras, Tuberías, Nodos Eléctricos y Muros.",
+		"Algunos edificios requieren terreno especial para ser construidos.",
+		$"{chr(CONTROL_ROTAR)} para invertir la dirección de un "
+	],[
+		"Las redes eléctricas permiten Producir, Transportar, Almacenar y Consumir energía entre varios edificios.",
+		"Los edificios que Producen energía son:",
+		"Los edificios que Transportan energía son:",
+		"Los edificios que Almacenan energía son:",
+		"Los edificios que Consumen energía son:"
+	],[
+		"Las redes de tuberías permiten mover líquidos entre edificios.",
+		"Los líquidos se puede producir en algunos edificios o extraer con",
+		"Luego puede ser transportados mediante",
+		"También pueden ser almacenados en",
+		"Hay varios líquidos distintos y estos no deben mezclarse entre sí.",
+		"Los siguientes edificios usan "
+	],[
+		"permiten programar una secuencia de instrucciones que se ejecutan cuando hay energía",
+		"Además se pueden vincular a otros edificios para leer datos de ellos o controlarlos",
+		"Las instrucciones disponibles son",
+		"permiten escribir en un mensaje de salida del",
+		"permite almacenar hasta 64 valores",
+		"permite dibujar basado en las instrucciones dadas por los procesadores",
+	]]
+for(var a = 0; a < array_length(consejos_texto); a++)
+	for(var b = 0; b < array_length(consejos_texto[a]); b++)
+		array_set(consejos_texto[a], b, text_wrap("-" + consejos_texto[a, b], 600))
+#endregion
 biome_seed = 0
 seed = random_get_seed()
 generar_bioma(biome_seed)

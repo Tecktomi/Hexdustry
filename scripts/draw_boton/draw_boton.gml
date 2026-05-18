@@ -21,15 +21,21 @@ function draw_boton(x, y, texto, back_color = ui_gris, text_color = control.ui_t
 			}
 		}
 		draw_set_color(text_color)
+		text_xtext = string_delete(texto, 0, string_last_pos("\n", texto))
+		text_ytext = string_delete(texto, string_last_pos("\n", texto), string_length(texto))
 		if box{
 			draw_text(x + offset / 2, y + offset / 2, texto)
 			text_x = width + offset
 			text_y = height + offset
+			text_xpos = string_width(text_xtext) + offset
+			text_ypos = string_height(text_ytext) + offset
 		}
 		else{
 			draw_text(x, y, texto)
 			text_x = width
 			text_y = height
+			text_xpos = string_width(text_xtext)
+			text_ypos = string_height(text_ytext)
 		}
 		draw_set_color(color)
 		if hover{

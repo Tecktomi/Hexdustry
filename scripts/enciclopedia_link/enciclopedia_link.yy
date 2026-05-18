@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"enciclopedia_link",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"enciclopedia_link",
+  "parent":{
+    "name":"CORE",
+    "path":"folders/SCRIPTS/CORE.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

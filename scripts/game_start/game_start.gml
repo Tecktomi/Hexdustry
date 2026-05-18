@@ -1,8 +1,11 @@
-function game_start(_nucleo = true){
+function game_start(_nucleo = true, mision_cumplida = false){
 	with control{
 		if not nucleo.vivo and _nucleo
 			game_restart()
 		redo_pathfind()
+		if mision_cumplida
+			oleadas = false
+		else
 		if array_length(mision_nombre) > 0{
 			mision_actual = -1
 			pasar_mision()
@@ -32,8 +35,6 @@ function game_start(_nucleo = true){
 		recursos_obtenidos = array_create(rss_max, 0)
 		recursos_obtenidos_time_temp = array_create(rss_max, 0)
 		recursos_obtenidos_time = array_create(0, array_create(rss_max, 0))
-		camx = clamp(nucleo.a * 48 - room_width / 2, 0, xsize * 48 * zoom - room_width)
-		camy = clamp(nucleo.b * 14 - room_height / 2, 0, ysize * 14 * zoom - room_height)
 		luces = array_create(0, {a : 0, b : 0, x : 0, y : 0, r : 0})
 		clic_sound = false
 		editor_enemigo = false

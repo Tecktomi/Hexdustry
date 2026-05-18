@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_enciclopedia_cosejo",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_enciclopedia_cosejo",
+  "parent":{
+    "name":"PANEL",
+    "path":"folders/SCRIPTS/CORE/PANEL.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

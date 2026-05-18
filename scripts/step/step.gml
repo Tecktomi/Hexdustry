@@ -261,6 +261,7 @@ function step(){
 			}
 		}
 		//Misiones
+		var temp_text_right = ""
 		if mision_actual >= 0 and win = 0{
 			var a = mision_actual
 			if in(mision_objetivo[a], 5, 7) and not oleadas and (not chat_input and keyboard_check_pressed(vk_enter)){

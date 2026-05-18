@@ -139,17 +139,22 @@ function menu_editor(){
 							continue
 						}
 					}
-					a = text_y
+					ypos += text_y
+					if draw_sprite_boton(spr_siguiente, 0, xpos + 300, ypos - text_y){
+						mision_choosing_coord = true
+						mision_choosing_coord_i = i
+						mision_choosing_coord_tipo = 2 + b
+					}
 					if get_keyboard_string = 100 + b{
 						draw_line(xpos, ypos + 20, xpos + text_x, ypos + 20)
 						texto.texto = keyboard_string
 						exit_keyboard_input()
 					}
-					xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.editor_on} ")
+					xpos = draw_text_xpos(xpos, ypos, $" {L.editor_on} ")
 					texto.x = draw_boton_text(xpos, ypos, texto.x)
 					xpos = draw_text_xpos(xpos + text_x, ypos, ", ")
 					texto.y = draw_boton_text(xpos, ypos, texto.y)
-					ypos += a
+					ypos += text_y
 				}
 				ypos += 10
 				if draw_boton(room_width / 2 + 40, ypos, L.editor_add_text, ui_azul){
@@ -352,6 +357,10 @@ function menu_editor(){
 					else if mision_choosing_coord_tipo = 1{
 						mision_camara_x[mision_choosing_coord_i] = temp_complex[0]
 						mision_camara_y[mision_choosing_coord_i] = temp_complex[1]
+					}
+					else if mision_choosing_coord_tipo >= 2{
+						mision_texto[mision_choosing_coord_i, mision_choosing_coord_tipo - 2].x = temp_complex[0]
+						mision_texto[mision_choosing_coord_i, mision_choosing_coord_tipo - 2].y = temp_complex[1]
 					}
 					mision_choosing_coord = false
 				}
@@ -645,6 +654,7 @@ function menu_editor(){
 			menu = 0
 			camx = max(camx, 0)
 			build_enemigo = false
+			build_index = 0
 		}
 		control_camara(-200)
 		update_cursor()

@@ -21,10 +21,12 @@ function menu_campanna(){
 						ini_open("settings.ini")
 						if ini_key_exists("World mision", world_tutorial[# a, b]){
 							var buffer = buffer_load($"Tutorial/mision{world_tutorial[# a, b]}.save")
-							game_start()
-							tutorial = world_tutorial[# a, b]
-							tecnologia = true
-							cheat = false
+							if load_game_buffer(buffer){
+								game_start(, true)
+								tutorial = world_tutorial[# a, b]
+								tecnologia = true
+								cheat = false
+							}
 						}
 						else{
 							var escenario = world_escenario[# a, b]

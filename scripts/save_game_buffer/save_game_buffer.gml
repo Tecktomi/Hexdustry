@@ -39,13 +39,13 @@ function save_game_buffer(buffer){
 				buffer_write(buffer, buffer_u8, len_2)
 				for(var b = 0; b < len_2; b++){
 					var temp_texto = mision_texto[a, b]
-					buffer_write(buffer, buffer_f16, temp_texto.x)
-					buffer_write(buffer, buffer_f16, temp_texto.y)
+					buffer_write(buffer, buffer_u16, temp_texto.x)
+					buffer_write(buffer, buffer_u16, temp_texto.y)
 					buffer_write(buffer, buffer_string, temp_texto.texto)
 				}
 				buffer_write(buffer, buffer_bool, mision_camara_move[a])
-				buffer_write(buffer, buffer_f16, mision_camara_x[a])
-				buffer_write(buffer, buffer_f16, mision_camara_y[a])
+				buffer_write(buffer, buffer_u16, mision_camara_x[a])
+				buffer_write(buffer, buffer_u16, mision_camara_y[a])
 				buffer_write(buffer, buffer_bool, mision_switch_oleadas[a])
 			}
 			buffer_write(buffer, buffer_u8, min(mision_camara_step, 255))
@@ -56,6 +56,7 @@ function save_game_buffer(buffer){
 			buffer_write(buffer, buffer_u16, mision_counter)
 			buffer_write(buffer, buffer_s16, mision_current_tiempo)
 			buffer_write(buffer, buffer_bool, mision_choosing_coord)
+			buffer_write(buffer, buffer_s8, mision_actual)
 		#endregion
 		for(var a = 0; a < rss_max; a++)
 			buffer_write(buffer, buffer_u16, clamp(jugador_recursos[0, a], 0, 65535))
