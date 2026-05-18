@@ -24,6 +24,11 @@ function draw_enciclopedia(_tecnologia = true, _this_input_layer = 0){
 		if _tecnologia and tecnologia and draw_boton(width, ypos, L.enciclopedia_tecnologia,,,,, _this_input_layer){
 			deslizante[0] = 0
 			enciclopedia = 7
+			width += text_x + 20
+		}
+		if draw_boton(width, ypos, L.enciclopedia_consejos,,,,, _this_input_layer){
+			deslizante[0] = 0
+			enciclopedia = 8
 		}
 		ypos += text_y * 1.2
 		//Menú Recursos
@@ -42,29 +47,8 @@ function draw_enciclopedia(_tecnologia = true, _this_input_layer = 0){
 		else if enciclopedia = 5
 			scroll(120, ypos, dron_max, editor_max_height, editor_item_size, scroll_enciclopedia_drones, {xpos : 140, ypos : ypos, _this_input_layer : _this_input_layer})
 		//Detalles Dron
-		else if enciclopedia = 6{
-			draw_set_font(font_titulo)
-			ypos = draw_text_ypos(120, ypos, dron_nombre[enciclopedia_item])
-			draw_set_font(font_normal)
-			ypos = draw_text_ypos(120, ypos, dron_descripcion[enciclopedia_item])
-			ypos = draw_text_ypos(120, ypos, $"{L.enciclopedia_vida}: {dron_vida_max[enciclopedia_item]}")
-			if dron_aereo[enciclopedia_item]
-				ypos = draw_text_ypos(140, ypos, L.enciclopedia_aerea)
-			if array_length(dron_precio_id[enciclopedia_item]) > 0{
-				ypos += 10
-				ypos = draw_text_ypos(120, ypos, $"{L.enciclopedia_coste_construccion}:")
-				for(var a = 0; a < array_length(dron_precio_id[enciclopedia_item]); a++){
-					if draw_boton(140, ypos, $"{dron_precio_num[enciclopedia_item, a]} {recurso_nombre[dron_precio_id[enciclopedia_item, a]]}",,,, false, _this_input_layer){
-						enciclopedia_item = dron_precio_id[enciclopedia_item, a]
-						enciclopedia = 3
-						exit
-					}
-					ypos += 20
-				}
-			}
-			draw_sprite_ext(dron_sprite[enciclopedia_item], image_index / 2, room_width - 200, 200, 2, 2, 0, c_white, 1)
-			draw_sprite_ext(dron_sprite_color[enciclopedia_item], image_index / 2, room_width - 200, 200, 2, 2, 0, c_white, 1)
-		}
+		else if enciclopedia = 6
+			draw_panel(120, ypos, room_width - 240, room_height - 120 - ypos, 0, 1, 1, panel_enciclopedia_dron, {_this_input_layer : _this_input_layer, _tecnologia : _tecnologia})
 		//Tecnología
 		else if enciclopedia = 7{
 			sprite_boton_text = ""
@@ -95,6 +79,13 @@ function draw_enciclopedia(_tecnologia = true, _this_input_layer = 0){
 				}
 			}
 			draw_text_background(mouse_x + 20, mouse_y, sprite_boton_text)
+		}
+		//Menú Consejos
+		else if enciclopedia = 8
+			scroll(120, ypos, array_length(consejos_nombre), editor_max_height, editor_item_size, scroll_enciclopedia_consejos, {xpos : 140, ypos : ypos, _this_input_layer : _this_input_layer}, 0)
+		//Detalle Consejo
+		else if enciclopedia = 9{
+			draw_panel(120, ypos, room_width - 240, room_height - 120 - ypos, 0, 1, 1, panel_enciclopedia_consejo, {_this_input_layer : _this_input_layer})
 		}
 		if keyboard_check_pressed(vk_escape) or keyboard_check_pressed(CONTROL_ENCICLOPEDIA) or mouse_check_button_pressed(mb_right) or (mouse_check_button_pressed(mb_left) and (mouse_x < 100 or mouse_y < 100 or mouse_x > room_width - 100 or mouse_y > room_height - 100)){
 			mouse_clear(mouse_lastbutton)

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scroll_enciclopedia_consejos",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scroll_enciclopedia_consejos",
+  "parent":{
+    "name":"SCROLL",
+    "path":"folders/SCRIPTS/CORE/SCROLL.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

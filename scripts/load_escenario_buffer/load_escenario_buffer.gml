@@ -91,9 +91,11 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 					var temp_array_string = array_create(IDIOMAS, "")
 					for(var c = 0; c < IDIOMAS; c++)
 						temp_array_string[c] = string(buffer_read(buffer, buffer_string))
+					var xx = real(buffer_read(buffer, buffer_u16))
+					var yy = real(buffer_read(buffer, buffer_u16))
 					var temp_text = {
-						x : real(buffer_read(buffer, buffer_u16)),
-						y : real(buffer_read(buffer, buffer_u16)),
+						x : xx,
+						y : yy,
 						texto : temp_array_string[idioma],
 						texto_idioma : temp_array_string
 					}
@@ -133,6 +135,10 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 		for(var a = 0; a < chunk_xsize; a++)
 			for(var b = 0; b < chunk_ysize; b++)
 				update_background(chunk_width * a, chunk_height * b)
+		if array_length(nucleos) > 0{
+			camx = clamp(nucleos[0].a * 48 - room_width / 2, 0, xsize * 48 * zoom - room_width)
+			camy = clamp(nucleos[0].b * 14 - room_height / 2, 0, ysize * 14 * zoom - room_height)
+		}
 		return filename
 	}
 }

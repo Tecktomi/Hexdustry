@@ -50,8 +50,8 @@ function load_game_buffer(buffer){
 				var len_2 = buffer_read(buffer, buffer_u8)
 				mision_texto[a] = array_create(len_2, {x : 0, y : 0, texto : ""})
 				for(var b = 0; b < len_2; b++){
-					var _x = real(buffer_read(buffer, buffer_f16))
-					var _y = real(buffer_read(buffer, buffer_f16))
+					var _x = real(buffer_read(buffer, buffer_u16))
+					var _y = real(buffer_read(buffer, buffer_u16))
 					var temp_texto = string(buffer_read(buffer, buffer_string))
 					array_set(mision_texto[a], b, {
 						x : _x,
@@ -60,8 +60,8 @@ function load_game_buffer(buffer){
 					})
 				}
 				mision_camara_move[a] = buffer_read(buffer, buffer_bool)
-				mision_camara_x[a] = buffer_read(buffer, buffer_f16)
-				mision_camara_y[a] = buffer_read(buffer, buffer_f16)
+				mision_camara_x[a] = buffer_read(buffer, buffer_u16)
+				mision_camara_y[a] = buffer_read(buffer, buffer_u16)
 				mision_switch_oleadas[a] = buffer_read(buffer, buffer_bool)
 			}
 			mision_camara_step = buffer_read(buffer, buffer_u8)
@@ -72,6 +72,7 @@ function load_game_buffer(buffer){
 			mision_counter = buffer_read(buffer, buffer_u16)
 			mision_current_tiempo = buffer_read(buffer, buffer_s16)
 			mision_choosing_coord = buffer_read(buffer, buffer_bool)
+			mision_actual = buffer_read(buffer, buffer_s8)
 		#endregion
 		for(var a = 0; a < rss_max; a++)
 			array_set(jugador_recursos[0], a, real(buffer_read(buffer, buffer_u16)))

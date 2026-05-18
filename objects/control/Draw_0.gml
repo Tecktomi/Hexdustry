@@ -69,6 +69,7 @@ if menu = 0{
 		menu = 4
 	ypos += text_y * 2
 	if draw_boton(room_width / 2, ypos, L.menu_editor, ui_azul){
+		build_index = -1
 		mapa_editado = true
 		menu = 2
 	}
@@ -419,7 +420,7 @@ if in(menu, 1, 3){
 	if mision_actual >= 0 and win = 0
 		for(var b = 0; b < array_length(mision_texto[mision_actual]); b++){
 			var texto = mision_texto[mision_actual, b]
-			draw_text_background(texto.x * zoom - camx, texto.y * zoom - camy, text_wrap(texto.texto, 250),, false)
+			draw_text_background(texto.x * zoom - camx, texto.y * zoom - camy, text_wrap(texto.texto_idioma[idioma], 250),, false)
 		}
 	var temp_text = "", b = 0
 	for(var a = 0; a < rss_max; a++)
