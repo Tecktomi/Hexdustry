@@ -54,7 +54,7 @@ function step(){
 					}
 				}
 			}
-			if online and servidor and (timer mod 10) = 0
+			if online and servidor and ((timer mod LAG) = 0 or (timer mod LAG) = LAG / 2)
 				server_sync_timer()
 		}
 		//Ciclo edificios
