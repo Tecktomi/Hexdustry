@@ -475,9 +475,95 @@ if pausa = 1{
 	//Ajustes generales
 	if get_file = 0{
 		draw_text(room_width / 2, 150,	$"{L.pausa_continuar}\n\"{chr(CONTROL_REDES)}\" {L.pausa_red}\n\"{chr(CONTROL_FLUJO)}\" {L.pausa_liquido}\n\"{chr(CONTROL_ENCICLOPEDIA)}\" {L.pausa_enciclopedia}\n\"{chr(CONTROL_REPARAR)}\" {L.pausa_reparar}")
-		if draw_boton(xpos, ypos, L.controles, ui_azul)
+		if devise{
+			if draw_boton(xpos, ypos, L.controles, ui_azul)
+				get_file = 3
+			ypos += text_y * 1.2
+		}
+		if draw_boton(xpos, ypos, "AJUSTES", ui_azul)
 			get_file = 2
 		ypos += text_y * 1.2
+		//Guardar / Abrir en LAN
+		if menu = 1{
+			if os_browser = browser_not_a_browser{
+				if not mapa_editado{
+					if server = -1 and menu = 1{
+						if draw_boton(xpos, ypos, L.abrir_en_LAN, ui_azul)
+							get_file = 1
+					}
+					else
+						draw_boton(xpos, ypos, $"{array_length(server_jugadores_nombre)} {L.jugadores}", ui_verde)
+					ypos += text_y * 1.2
+					if guardado
+						draw_boton(xpos, ypos, "Guardado", ui_verde)
+					else if tutorial = 0 and draw_boton(xpos, ypos, L.guardar, ui_azul){
+						guardado = true
+						var buffer = buffer_create(4096, buffer_grow, 1)
+						save_game_buffer(buffer)
+						var temp_text = $"Saves/{day_format()}"
+						buffer_save(buffer, $"{temp_text}.save")
+						buffer_delete(buffer)
+						var temp_sprite = minimapa()
+						sprite_save(temp_sprite, 0, $"{temp_text}.png")
+					}
+					ypos += text_y * 1.2
+				}
+			}
+			else{
+				draw_boton(xpos, ypos, L.descargar_para_jugar_en_LAN, ui_gris)
+				ypos += text_y * 1.2
+			}
+		}
+		if draw_boton(xpos, ypos, L.salir, ui_rojo){
+			clear_edit()
+			pausa = 0
+			cheat = false
+			if menu = 1{
+				if tutorial = 0 and os_browser = browser_not_a_browser and not mapa_editado{
+					var buffer = buffer_create(1024, buffer_grow, 1)
+					save_game_buffer(buffer)
+					buffer_save(buffer, "last_save.save")
+					buffer_delete(buffer)
+				}
+				menu = 0
+				if online{
+					if servidor
+						server_break()
+					else
+						server_jugador_irse()
+				}
+				clear_edificios()
+				exit
+			}
+			else if menu = 3{
+				menu = 2
+				build_index = -1
+				build_enemigo = false
+				draw_set_halign(fa_left)
+				draw_set_color(color)
+				exit
+			}
+			jugador = 2
+			exit
+		}
+	}
+	//Ajustes ONLINE
+	else if get_file = 1{
+		if draw_boton(xpos, ypos, L.abrir_en_LAN, ui_azul){
+			open_server()
+			get_file = 0
+		}
+		ypos += text_y * 1.2
+		if draw_boton(xpos, ypos, server_pvp ? "PVP" : "COOP", server_pvp ? ui_rojo : ui_verde)
+			server_pvp = not server_pvp
+		if draw_boton(xpos, room_height - 200, L.volver, ui_rojo) or (not devise and keyboard_check_pressed(vk_backspace)){
+			if not devise
+				keyboard_clear(vk_backspace)
+			get_file = 0
+		}
+	}
+	//Ajustes
+	else if get_file = 2{
 		if draw_boton(xpos, ypos, (info ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_info}", info ? ui_verde : ui_rojo){
 			info = not info
 			save_setting("", "info", info)
@@ -513,81 +599,6 @@ if pausa = 1{
 			auto_guardado = not auto_guardado
 			save_setting("", "auto_guardado", auto_guardado)
 		}
-		//Guardar / Abrir en LAN
-		if menu = 1{
-			ypos += 40
-			if os_browser = browser_not_a_browser{
-				if not mapa_editado{
-					if server = -1 and menu = 1{
-						if draw_boton(xpos, ypos, L.abrir_en_LAN, ui_azul)
-							get_file = 1
-					}
-					else
-						draw_boton(xpos, ypos, $"{array_length(server_jugadores_nombre)} {L.jugadores}", ui_verde)
-					ypos += 40
-					if guardado
-						draw_boton(xpos, ypos, "Guardado", ui_verde)
-					else if tutorial = 0 and draw_boton(xpos, ypos, L.guardar, ui_azul){
-						guardado = true
-						var buffer = buffer_create(4096, buffer_grow, 1)
-						save_game_buffer(buffer)
-						var temp_text = $"Saves/{day_format()}"
-						buffer_save(buffer, $"{temp_text}.save")
-						buffer_delete(buffer)
-						var temp_sprite = minimapa()
-						sprite_save(temp_sprite, 0, $"{temp_text}.png")
-					}
-				}
-			}
-			else
-				draw_boton(xpos, ypos, L.descargar_para_jugar_en_LAN, ui_gris)
-		}
-		ypos += 40
-		if draw_boton(xpos, ypos, L.salir, ui_rojo) or (not devise and keyboard_check_pressed(vk_backspace)){
-			if not devise
-				keyboard_clear(vk_backspace)
-			clear_edit()
-			pausa = 0
-			cheat = false
-			if menu = 1{
-				if tutorial = 0 and os_browser = browser_not_a_browser and not mapa_editado{
-					var buffer = buffer_create(1024, buffer_grow, 1)
-					save_game_buffer(buffer)
-					buffer_save(buffer, "last_save.save")
-					buffer_delete(buffer)
-				}
-				menu = 0
-				if online{
-					if servidor
-						server_break()
-					else
-						server_jugador_irse()
-				}
-				clear_edificios()
-				exit
-			}
-			else if menu = 3{
-				menu = 2
-				build_index = -1
-				build_enemigo = false
-				draw_set_halign(fa_left)
-				draw_set_color(color)
-				exit
-			}
-			jugador = 2
-			exit
-		}
-	}
-	//Ajustes ONLINE
-	else if get_file = 1{
-		draw_set_halign(fa_center)
-		if draw_boton(xpos, ypos, L.abrir_en_LAN, ui_azul){
-			open_server()
-			get_file = 0
-		}
-		ypos += text_y * 1.2
-		if draw_boton(xpos, ypos, server_pvp ? "PVP" : "COOP", server_pvp ? ui_rojo : ui_verde)
-			server_pvp = not server_pvp
 		if draw_boton(xpos, room_height - 200, L.volver, ui_rojo) or (not devise and keyboard_check_pressed(vk_backspace)){
 			if not devise
 				keyboard_clear(vk_backspace)
@@ -611,12 +622,12 @@ if pausa = 1{
 				char = chr(key)
 			draw_set_halign((a & 1) ? fa_left : fa_right)
 			if draw_boton(xpos + 40 * (a & 1) - 20, ypos, $"{CONTROL_NOMBRE[a]} \"{char}\"")
-				get_file = 3 + a
+				get_file = 4 + a
 			if (a & 1)
 				ypos += text_y * 1.2
 		}
 		draw_set_halign(fa_center)
-		if get_file > 2{
+		if get_file > 3{
 			draw_set_color(c_black)
 			draw_set_alpha(0.5)
 			draw_rectangle(0, 0, room_width, room_height, false)
@@ -624,7 +635,7 @@ if pausa = 1{
 			draw_set_alpha(1)
 			draw_text(xpos, ypos, "PRESIONA CUALQUIER TECLA")
 			if keyboard_check_pressed(vk_anykey) and (keyboard_lastkey = CONTROL_USADAS[get_file - 2] or not array_contains(CONTROL_USADAS, keyboard_lastkey)){
-				get_file -= 1
+				get_file -= 2
 				if get_file = 2
 					CONTROL_LEFT = keyboard_lastkey
 				else if get_file = 3
@@ -681,7 +692,9 @@ if pausa = 1{
 			set_idioma()
 		}
 	draw_set_color(color)
-	if keyboard_check_pressed(CONTROL_MENU){
+	if keyboard_check_pressed(CONTROL_MENU) or (not devise and keyboard_check_pressed(vk_backspace)){
+		if not devise
+			keyboard_clear(vk_backspace)
 		keyboard_clear(CONTROL_MENU)
 		if get_file = 0{
 			pausa = 0
@@ -1155,7 +1168,7 @@ if keyboard_check(CONTROL_BLUEPRINT){
 			build_index = -1
 	}
 }
-if get_file = 3{
+if pausa != 1 and get_file = 3{
 	var color = draw_get_color(), halign = draw_get_halign()
 	draw_set_color(ui_fondo)
 	draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
@@ -1870,6 +1883,7 @@ if sonido
 		build_menu = 1
 		menu_x = room_width / 2
 		menu_y = room_height / 2
+		android_building = false
 	}
 	var just_pressed = false, _size = devise ? 100 : 200, _size_sqr = devise ? 10_000 : 40_000, _size_sqrx = devise ? 32 : 64, _size_sqry = devise ? 28 : 56
 	if devise and mouse_check_button_pressed(mb_right) and build_index = 0 and not edificio_bool[# mx, my] and not keyboard_check(CONTROL_REPARAR) and pausa != 1{
@@ -2007,7 +2021,7 @@ if devise and (mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk
 }
 //CONSTRUCCIÓN
 if build_index > 0 and win = 0{
-	var temp_mx = 0, temp_my = 0
+	var construible = true
 	if just_pressed{
 		if not edificio_rotable[build_index]
 			build_dir = 0
@@ -2040,38 +2054,28 @@ if build_index > 0 and win = 0{
 	else{
 		if draw_sprite_boton(spr_construir, 1, room_width - 80, room_height - 80, 64, 56)
 			build_index = 0
-		if draw_sprite_boton(spr_construir, 2, room_width - 160, room_height - 80, 64, 56){
+		if draw_sprite_boton(spr_construir, 3, room_width - 160, room_height - 80, 64, 56){
 			if edificio_size[build_index] & 1
 				build_dir = (build_dir + 1) mod 6
 			else
 				build_dir = 5 - build_dir
 			prev_change = true
 		}
-		if draw_sprite_boton(spr_construir, 3, room_width - 240, room_height - 80, 64, 56){
+		if draw_sprite_boton(spr_construir, 4, room_width - 240, room_height - 80, 64, 56){
 			if edificio_size[build_index] & 1
 				build_dir = (build_dir + 5) mod 6
 			else
 				build_dir = 5 - build_dir
 			prev_change = true
 		}
-		if mouse_check_button_pressed(mb_left){
-			android_mx = mx
-			android_my = my
-			android_hovering = true
+		if not (mouse_x > room_width - 280 and mouse_y > room_height - 120){
+			temp_mx = mx
+			temp_my = my
 		}
-		if mouse_check_button(mb_left) and android_hovering{
-			temp_mx = 2 * android_mx - mx
-			temp_my = 2 * android_my - my
-		}
-		else{
-			temp_mx = android_mx
-			temp_my = android_my
-		}
-		if mouse_check_button_released(mb_left){
-			android_mx = temp_mx
-			android_my = temp_my
-			android_hovering = false
-		}
+		else
+			construible = false
+		if mouse_check_button_pressed(mb_left)
+			android_building = true
 	}
 	if last_mx != temp_mx or last_my != temp_my or prev_change{
 		build_list = get_size(temp_mx, temp_my, build_dir, edificio_size[build_index])
@@ -2160,7 +2164,7 @@ if build_index > 0 and win = 0{
 							}
 						if not flag_2
 							temp_text += $"{L.construir_recursos_insuficientes}\n"
-						else if mouse_check_button_pressed(mb_left){
+						else if (devise and mouse_check_button_pressed(mb_left)) or (not devise and mouse_check_button_released(mb_left)){
 							add_modulo(temp_edificio)
 							mouse_clear(mb_left)
 						}
@@ -2465,7 +2469,7 @@ if build_index > 0 and win = 0{
 						clicked = true
 					}
 					//Arrastre
-					if mouse_check_button(mb_left){
+					if mouse_check_button(mb_left) and construible{
 						pre_build_list = [[mx_clic, my_clic]]
 						pre_build_list_cruce = [false]
 						var temp_complex_2 = abtoxy(mx_clic, my_clic), aa = temp_complex_2[0], bb = temp_complex_2[1]
@@ -2515,7 +2519,7 @@ if build_index > 0 and win = 0{
 						}
 					}
 					//Construir en cadena
-					if mouse_check_button_released(mb_left) and clicked{
+					if mouse_check_button_released(mb_left) and clicked and construible{
 						flag_camino = false
 						clicked = false
 						for(var a = 0; a < array_length(pre_build_list); a++){
@@ -2556,7 +2560,7 @@ if build_index > 0 and win = 0{
 						}
 					}
 					//Extender
-					if mouse_check_button(mb_left){
+					if mouse_check_button(mb_left) and construible{
 						pre_build_list = [[mx_clic, my_clic]]
 						temp_complex_2 = abtoxy(mx_clic, my_clic)
 						aa = temp_complex_2[0]
@@ -2605,7 +2609,7 @@ if build_index > 0 and win = 0{
 						}
 					}
 					//Construir
-					if mouse_check_button_released(mb_left) and clicked{
+					if mouse_check_button_released(mb_left) and clicked and construible{
 						flag_camino = false
 						clicked = false
 						for(var a = 0; a < array_length(pre_build_list); a++){
@@ -2734,7 +2738,8 @@ if build_index > 0 and win = 0{
 						}
 					}
 					//Construir
-					if mouse_check_button_pressed(mb_left) and flag_camino and comprable and (not edificio_bool[# temp_mx, temp_my] or (build_index = id_cruce and edificio_camino[edificio_id[# temp_mx, temp_my].index])){
+					if ((devise and mouse_check_button_pressed(mb_left)) or (not devise and mouse_check_button_released(mb_left) and android_building and construible)) and flag_camino and comprable and (not edificio_bool[# temp_mx, temp_my] or (build_index = id_cruce and edificio_camino[edificio_id[# temp_mx, temp_my].index])){
+						android_building = false
 						var temp_edificio = construir(build_index, build_dir, temp_mx, temp_my, build_enemigo)
 						if temp_edificio != null_edificio and tag_dron_encima[temp_edificio.index]{
 							array_copy(temp_edificio.inputs_carga, 0, build_array_edificios_input, 0, array_length(build_array_edificios_input))
@@ -3356,3 +3361,4 @@ if keyboard_check(CONTROL_TAB) and online{
 draw_sprite(spr_vineta, 0, 0, 0)
 if keyboard_check(ord("V"))
 	draw_text(mouse_x + 20, mouse_y, $"{jugador}\n{server_jugadores_nombre}")
+draw_text(0, room_height - 40, $"{timer} + {LAG} > {server_timer}")

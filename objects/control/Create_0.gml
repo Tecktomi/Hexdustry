@@ -311,6 +311,8 @@ L = {}
 	chat_time = array_create(0, 0)
 	chat_text = ""
 	chat_input = false
+	temp_mx = 0
+	temp_my = 0
 #endregion
 #region Misiones
 	mision_nombre = array_create(0, "")
@@ -427,6 +429,8 @@ L = {}
 	android_hovering = false
 	android_mx = 0
 	android_my = 0
+	android_zooming = false
+	android_building = false
 #endregion
 null_sound = sound_play(snd_explosion, 0, 0, 0)
 null_edificio = {
