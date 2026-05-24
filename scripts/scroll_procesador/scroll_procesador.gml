@@ -64,7 +64,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 			pc[4] = draw_boton_text_list(xpos, ypos, pc[4], signs,, 10)
 			procesador_valor(xpos + text_x, ypos, pc, 5, 6)
 		}
-		//If [VAR]{A} [yes, no][<, >, =] [VAR]{B}, jump to [VAR]{C}
+		//If [VAR]{A} [<, <=, =, >=, >, !=] [VAR]{B}, jump to [VAR]{C}
 		else if pc0 = 4{
 			var signs = [" < ", " <= ", " = ", " >= ", " > ", " != "]
 			xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_if} ")
@@ -106,7 +106,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 		//Set VAR_{A} to [eneabled, carga, etc...][VAR]{B} from LINK[VAR]{C}
 		else if pc0 = 5{
 			var signs = procesador_nombres_read_data
-			var signs_subindex = [false, true, false, false, false, false, false, false, false, false, false]
+			var signs_subindex = [false, true, false, false, false, false, false, false, false, false, false, false, false]
 			xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_set} VAR_")
 			pc[1] = procesador_var(xpos, ypos, pc, 1)
 			xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to} ")
@@ -120,14 +120,13 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 			xpos = draw_text_xpos(xpos, ypos, $" {L.procesador_from} LINK_")
 			procesador_valor(xpos, ypos, pc, 5, 6, true)
 		}
-		//Control LINK[VAR]{A} to set [Eneable] to [VAR]{B}
+		//Control LINK[VAR]{A} to set [Eneable, Mode, Select] to [VAR]{B}
 		else if pc0 = 6{
-			var signs = ["Eneabled"]
+			var signs = ["Eneabled", "Mode", "Select"]
 			xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_control} LINK_")
 			procesador_valor(xpos, ypos, pc, 1, 2, true)
 			xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to_set} ")
-			if draw_boton(xpos, ypos, signs[pc[3]],,,, false)
-				pc[3] = (pc[3] + 1) mod array_length(signs)
+			pc[3] = draw_boton_text_list(xpos, ypos, pc[3], signs,, 10)
 			xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to} ")
 			procesador_valor(xpos, ypos, pc, 4, 5, false)
 		}
@@ -149,10 +148,10 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 			xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_of} LINK_")
 			procesador_valor(xpos, ypos, pc, 5, 6, true)
 		}
-		//Draw to LINK[VAR]{B} [clear(), color(r, g, b), color(h, s, v), rectangle(x, y, w, h), line(x1, y1, x2, y2), triangle(x1, y1, x2, y2, x3, y3), circle(x, y, radio), draw_flush()]
+		//Draw to LINK[VAR]{A} [clear(), color(r, g, b), color(h, s, v), rectangle(x, y, w, h), line(x1, y1, x2, y2), triangle(x1, y1, x2, y2, x3, y3), circle(x, y, radio), text(x, y, str), draw_flush()]
 		else if pc0 = 9{
 			var signs = procesador_nombres_draw
-			xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_write} {L.procesador_to} LINK_")
+			xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_draw} {L.procesador_to} LINK_")
 			procesador_valor(xpos, ypos, pc, 1, 2, true)
 			xpos += text_x
 			xpos = draw_text_xpos(xpos, ypos, " ")
@@ -164,7 +163,9 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 			}
 			if pc[3] = 0
 				xpos = draw_text_xpos(xpos + text_x, ypos, "()")
-			else if pc[3] = 1{
+			else if pc[3] = 1
+				xpos = draw_text_xpos(xpos + text_x, ypos, "()")
+			else if pc[3] = 2{
 				xpos = draw_text_xpos(xpos + text_x, ypos, "(R:")
 				procesador_valor(xpos, ypos, pc, 4, 5, true)
 				xpos = draw_text_xpos(xpos + text_x, ypos, ", G:")
@@ -173,7 +174,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 				procesador_valor(xpos, ypos, pc, 8, 9, true)
 				xpos = draw_text_xpos(xpos + text_x, ypos, ")")
 			}
-			else if pc[3] = 2{
+			else if pc[3] = 3{
 				xpos = draw_text_xpos(xpos + text_x, ypos, "(H:")
 				procesador_valor(xpos, ypos, pc, 4, 5, true)
 				xpos = draw_text_xpos(xpos + text_x, ypos, ", S:")
@@ -182,7 +183,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 				procesador_valor(xpos, ypos, pc, 8, 9, true)
 				xpos = draw_text_xpos(xpos + text_x, ypos, ")")
 			}
-			else if pc[3] = 3{
+			else if pc[3] = 4{
 				xpos = draw_text_xpos(xpos + text_x, ypos, "(X:")
 				procesador_valor(xpos, ypos, pc, 4, 5, true)
 				xpos = draw_text_xpos(xpos + text_x, ypos, ", Y:")
@@ -193,7 +194,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 				procesador_valor(xpos, ypos, pc, 10, 11, true)
 				xpos = draw_text_xpos(xpos + text_x, ypos, ")")
 			}
-			else if pc[3] = 4{
+			else if pc[3] = 5{
 				xpos = draw_text_xpos(xpos + text_x, ypos, "(X1:")
 				procesador_valor(xpos, ypos, pc, 4, 5, true)
 				xpos = draw_text_xpos(xpos + text_x, ypos, ", Y1:")
@@ -204,7 +205,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 				procesador_valor(xpos, ypos, pc, 10, 11, true)
 				xpos = draw_text_xpos(xpos + text_x, ypos, ")")
 			}
-			else if pc[3] = 5{
+			else if pc[3] = 6{
 				xpos = draw_text_xpos(xpos + text_x, ypos, "(X1:")
 				procesador_valor(xpos, ypos, pc, 4, 5, true)
 				xpos = draw_text_xpos(xpos + text_x, ypos, ", Y1:")
@@ -219,7 +220,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 				procesador_valor(xpos, ypos, pc, 14, 15, true)
 				xpos = draw_text_xpos(xpos + text_x, ypos, ")")
 			}
-			else if pc[3] = 6{
+			else if pc[3] = 7{
 				xpos = draw_text_xpos(xpos + text_x, ypos, "(X:")
 				procesador_valor(xpos, ypos, pc, 4, 5, true)
 				xpos = draw_text_xpos(xpos + text_x, ypos, ", Y:")
@@ -228,7 +229,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 				procesador_valor(xpos, ypos, pc, 8, 9, true)
 				xpos = draw_text_xpos(xpos + text_x, ypos, ")")
 			}
-			else if pc[3] = 7{
+			else if pc[3] = 8{
 				xpos = draw_text_xpos(xpos + text_x, ypos, "(X:")
 				procesador_valor(xpos, ypos, pc, 4, 5, true)
 				xpos = draw_text_xpos(xpos + text_x, ypos, ", Y:")
@@ -237,8 +238,13 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 				procesador_valor(xpos, ypos, pc, 8, 9, false)
 				xpos = draw_text_xpos(xpos + text_x, ypos, ")")
 			}
-			else if pc[3] = 8
-				xpos = draw_text_xpos(xpos + text_x, ypos, "()")
+			else if pc[3] = 9{
+				xpos = draw_text_xpos(xpos + text_x, ypos, "(X:")
+				procesador_valor(xpos, ypos, pc, 4, 5, true)
+				xpos = draw_text_xpos(xpos + text_x, ypos, ", Y:")
+				procesador_valor(xpos, ypos, pc, 6, 7, true)
+				xpos = draw_text_xpos(xpos + text_x, ypos, ")")
+			}
 		}
 		if procesador_link_handle != -1 and mouse_y > ypos and mouse_y < ypos + text_y{
 			draw_set_alpha(0.5)

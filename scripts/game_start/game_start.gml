@@ -12,9 +12,9 @@ function game_start(_nucleo = true, mision_cumplida = false){
 		}
 		if tecnologia
 			for(var a = 0; a < edificio_max; a++){
-				var temp_array = edificio_tecnologia_precio[a]
+				var temp_array = tecnologia_precio_num[a]
 				for(var b = 0; b < array_length(temp_array); b++)
-					temp_array[b].num = round(tecnologia_precio_multiplicador * temp_array[b].num)
+					temp_array[b] = round(tecnologia_precio_multiplicador * temp_array[b])
 			}
 		clear_edit()
 		pausa = 0

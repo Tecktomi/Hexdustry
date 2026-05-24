@@ -52,7 +52,7 @@ function scr_procesador(edificio = control.null_edificio){
 					val = pi
 				edificio.variables[pc[1]] = val
 			}
-			//Set {A} to [+, -, *, /, div, mod, or, and, xor, <<, >>, power] [VAR]{B}
+			//Set {A} to [VAR]{b] [+, -, *, /, div, mod, or, and, xor, <<, >>, power] [VAR]{C}
 			else if pc0 = 3{
 				var val = edificio.variables[pc[1]]
 				if pc[2] = 0
@@ -198,9 +198,17 @@ function scr_procesador(edificio = control.null_edificio){
 					if edificio_energia[temp_edificio.index]
 						val = temp_edificio.red.consumo
 				}
+				else if pc[2] = b++{
+					if edificio_energia[temp_edificio.index]
+						val = real(temp_edificio.mode)
+				}
+				else if pc[2] = b++{
+					if edificio_energia[temp_edificio.index]
+						val = temp_edificio.select
+				}
 				edificio.variables[pc[1]] = val
 			}
-			//Control LINK[VAR]{A} to set [Eneable] to [VAR]{B}
+			//Control LINK[VAR]{A} to set [Eneable, Mode, Select] to [VAR]{B}
 			else if pc0 = 6{
 				var b = array_length(edificio.procesador_link), temp_edificio = null_edificio, val = undefined
 				if b = 0 or not is_real(pc[2])
@@ -216,11 +224,17 @@ function scr_procesador(edificio = control.null_edificio){
 					val = edificio.variables[pc[5]]
 				else
 					val = pc[5]
-				if pc[3] = 0 and is_real(val){
-					if bool(val)
-						activar_edificio(temp_edificio)
-					else
-						desactivar_edificio(temp_edificio)
+				if is_real(val){
+					if pc[3] = 0{
+						if bool(val)
+							activar_edificio(temp_edificio)
+						else
+							desactivar_edificio(temp_edificio)
+					}
+					else if pc[3] = 1 and tag_edificio_seteable[temp_edificio.index]
+						set_edificio(bool(val), temp_edificio.select, temp_edificio)
+					else if pc[3] = 2 and tag_edificio_seteable[temp_edificio.index]
+						set_edificio(temp_edificio.mode, val, temp_edificio)
 				}
 			}
 			//Set VAR_{A} to value of cell [VAR]{B} of LINK[VAR]{C}
@@ -274,7 +288,7 @@ function scr_procesador(edificio = control.null_edificio){
 				else if temp_edificio.index = id_memoria
 					temp_edificio.variables[clamp(val2, 0, 127)] = val
 			}
-			//Draw to LINK[VAR]{A} [clear(), color(r, g, b), rectangle(x, y, w, h), line(x1, y1, x2, y2), triangle(x1, y1, x2, y2, x3, y3)]
+			//Draw to LINK[VAR]{A} [clear(), color(r, g, b), rectangle(x, y, w, h), line(x1, y1, x2, y2), triangle(x1, y1, x2, y2, x3, y3), ...]
 			else if pc0 = 9{
 				var b = array_length(edificio.procesador_link), val = "", temp_edificio = null_edificio
 				if b = 0 or not is_real(pc[2])
@@ -290,10 +304,10 @@ function scr_procesador(edificio = control.null_edificio){
 					continue
 				if pc[3] = 0
 					temp_edificio.instruccion = array_create(0, array_create(1, 0))
-				else if pc[3] = 8
+				else if pc[3] = 1
 					temp_edificio.mode = true
 				else{
-					var temp_array = [pc[3] - 1], temp_array_2 = [3, 3, 4, 4, 6, 3, 3], a = temp_array_2[pc[3] - 1]
+					var temp_array = [pc[3] - 2], temp_array_2 = [3, 3, 4, 4, 6, 3, 3, 2], a = temp_array_2[pc[3] - 2]
 					for(var i = 0; i < a; i++){
 						var j = 0
 						if pc[4 + 2 * i] = 0{
@@ -303,7 +317,7 @@ function scr_procesador(edificio = control.null_edificio){
 						}
 						else
 							j = pc[5 + 2 * i]
-						if not is_real(j) and pc[3] != 7
+						if not is_real(j) and pc[3] != 1
 							continue
 						array_push(temp_array, j)
 					}

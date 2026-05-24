@@ -24,6 +24,8 @@ function scr_draw_pantalla(edificio = control.null_edificio, offset_x = 0, offse
 					draw_circle(d[1], d[2], d[3], false)
 				else if e = 6
 					draw_text(d[1], d[2], d[3])
+				else if e = 7
+					draw_point(d[1], d[2])
 			}
 			edificio.imagen = sprite_create_from_surface(temp_surf, 0, 0, 60, 50, false, false, 0, 0)
 			edificio.modo = false

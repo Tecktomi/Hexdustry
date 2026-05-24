@@ -41,6 +41,8 @@ function set_edificio(mode, select, edificio = control.null_edificio, _server = 
 		}
 		//Seleccionar edificio
 		if in(index, id_selector, id_recurso_infinito, id_planta_de_reciclaje) and edificio.select != select{
+			if in(index, id_selector, id_recurso_infinito) and select < -1 or select >= rss_max
+				exit
 			if index = id_recurso_infinito and edificio.select >= 0
 				edificio.carga_output[edificio.select] = false
 			edificio.select = select
@@ -50,6 +52,8 @@ function set_edificio(mode, select, edificio = control.null_edificio, _server = 
 		}
 		//Líquido infinito
 		else if index = id_liquido_infinito{
+			if select < -1 or select >= array_length(liquido_nombre)
+				exit
 			if edificio.select >= 0 and select = -1{
 				change_flujo(0, edificio)
 				edificio.flujo.almacen = 0
@@ -67,6 +71,8 @@ function set_edificio(mode, select, edificio = control.null_edificio, _server = 
 		}
 		//Planta química
 		else if index = id_planta_quimica and edificio.select != select{
+			if select < 0 or select > 2
+				exit
 			change_flujo(0, edificio)
 			if edificio.flujo.almacen = 0 and edificio.flujo.generacion = 0
 				edificio.flujo.liquido = -1
@@ -117,6 +123,8 @@ function set_edificio(mode, select, edificio = control.null_edificio, _server = 
 		}
 		//Fábrica de drones
 		else if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande) and edificio.select != select and (edificio.enemigo or not tag_drones_terrestres[select]){
+			if select < 0 or select >= dron_max
+				exit
 			edificio.carga = array_create(rss_max, 0)
 			edificio.carga_max = array_create(rss_max, 0)
 			edificio.carga_input = array_create(rss_max, false)
@@ -140,9 +148,11 @@ function set_edificio(mode, select, edificio = control.null_edificio, _server = 
 		}
 		//Refinería de Petróleo
 		else if index = id_refineria_de_petroleo
-			edificio.select = select
+			edificio.select = clamp(select, 0, 100)
 		//Silo de Misiles
 		else if index = id_silo_de_misiles and edificio.select != select{
+			if select < 0 or select >= array_length(misiles_nombre)
+				exit
 			edificio.select = select
 			edificio.mode = false
 			for(var a = 0; a < rss_max; a++){

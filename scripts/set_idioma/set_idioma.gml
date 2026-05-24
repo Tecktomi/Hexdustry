@@ -247,8 +247,8 @@ function set_idioma(){
 					"This instruction allows sending drawing commands to a linked screen"]
 				procesador_nombres_1var = ["sine", "cosine", "tangent", "random", "floor", "round", "ceil", "square", "square root", "pi"]
 				procesador_nombres_2var = [" + ", " - ", " * ", " / ", " integer division ", " modulo ", " or ", " and ", " xor ", " << ", " >> ", " power "]
-				procesador_nombres_draw = ["Clear", "Color grb", "Color hsv", "Rectangle", "Line", "Triangle", "Circle", "Text", "Draw flush"]
-				procesador_nombres_read_data = ["eneabled", "load", "liquid type", "liquid storage", "liquid capacity", "liquido production", "liquid consume", "energy storage", "energy capacity", "energy production", "energy consume"]
+				procesador_nombres_draw = ["Clear", "Draw flush", "Color grb", "Color hsv", "Rectangle", "Line", "Triangle", "Circle", "Text", "Point"]
+				procesador_nombres_read_data = ["eneabled", "load", "liquid type", "liquid storage", "liquid capacity", "liquido production", "liquid consume", "energy storage", "energy capacity", "energy production", "energy consume", "mode", "select"]
 			#endregion
 			#region Recursos
 				recurso_descripcion[idr_acero] = "Useful resource for constructing mid-tier infrastructure"
@@ -541,6 +541,7 @@ function set_idioma(){
 			variable_struct_set(L, "procesador_clonar", "Clone")
 			variable_struct_set(L, "procesador_continue", "Continue")
 			variable_struct_set(L, "procesador_control", "Control")
+			variable_struct_set(L, "procesador_draw", "Draw")
 			variable_struct_set(L, "procesador_from", "from")
 			variable_struct_set(L, "procesador_guardar", "Save code")
 			variable_struct_set(L, "procesador_if", "If")
@@ -848,8 +849,8 @@ function set_idioma(){
 					"Esta instrucción permite entregar comandos de dibujo a una pantalla vinculada"]
 				procesador_nombres_1var = ["seno", "coseno", "tangente", "aleatorio", "piso", "redondeo", "cielo", "cuadrado", "raíz", "pi"]
 				procesador_nombres_2var = [" + ", " - ", " * ", " / ", " división entera ", " módulo ", " o ", " y ", " o exclusivo ", " << ", " >> ", " elevado "]
-				procesador_nombres_draw = ["Limpiar", "Color grb", "Color hsv", "Rectángulo", "Línea", "Triángulo", "Círculo", "Texto", "Imprimir"]
-				procesador_nombres_read_data = ["activado", "carga", "líquido tipo", "líquido almacen", "líquido capacidad", "líquido produccion", "líquido consumo", "energía almacenada", "energía capacidad", "energía producida", "energía consumida"]
+				procesador_nombres_draw = ["Limpiar", "Imprimir", "Color grb", "Color hsv", "Rectángulo", "Línea", "Triángulo", "Círculo", "Texto", "Punto"]
+				procesador_nombres_read_data = ["activado", "carga", "líquido tipo", "líquido almacen", "líquido capacidad", "líquido produccion", "líquido consumo", "energía almacenada", "energía capacidad", "energía producida", "energía consumida", "mode", "select"]
 			#endregion
 			#region Recursos
 				recurso_descripcion[idr_acero] = "Recurso útil para la construcción de infrastructura intermedia"
@@ -1142,6 +1143,7 @@ function set_idioma(){
 			variable_struct_set(L, "procesador_clonar", "Clonar")
 			variable_struct_set(L, "procesador_continue", "Continuar")
 			variable_struct_set(L, "procesador_control", "Controlar")
+			variable_struct_set(L, "procesador_draw", "Dibujar")
 			variable_struct_set(L, "procesador_from", "desde")
 			variable_struct_set(L, "procesador_guardar", "Guardar código")
 			variable_struct_set(L, "procesador_if", "si")
@@ -1158,7 +1160,7 @@ function set_idioma(){
 			variable_struct_set(L, "procesador_to_set", "para asignar")
 			variable_struct_set(L, "procesador_to_value_of_cell", "al valor en la celda")
 			variable_struct_set(L, "procesador_vincular", "Vincular edificios")
-			variable_struct_set(L, "procesador_write", "Write")
+			variable_struct_set(L, "procesador_write", "Escribir")
 			variable_struct_set(L, "recursos_obtenidos", "Recursos obtenidos")
 			variable_struct_set(L, "red_bateria", "Batería")
 			variable_struct_set(L, "red_consumo", "Consumo")
@@ -1448,8 +1450,8 @@ function set_idioma(){
 					"Эта инструкция позволяет отправлять команды рисования на подключённый экран"]
 				procesador_nombres_1var = ["синус", "косинус", "тангенс", "случайное", "пол", "округлить", "потолок", "квадрат", "квадратный корень", "пи"]
 				procesador_nombres_2var = [" + ", " - ", " * ", " / ", " целочисленное деление ", " модуль ", " или ", " и ", " исключающее или ", " << ", " >> ", " степень "]
-				procesador_nombres_draw = ["Очистить", "Цвет RGB", "Цвет HSV", "Прямоугольник", "Линия", "Треугольник", "Круг", "Текст", "Печать"]
-				procesador_nombres_read_data = ["включено", "заряд", "тип жидкости", "жидкости хранится", "ёмкость жидкости", "производство жидкости", "потребление жидкости", "энергии хранится", "ёмкость энергии", "энергии произведено", "энергии потреблено"]
+				procesador_nombres_draw = ["Очистить", "Печать", "Цвет RGB", "Цвет HSV", "Прямоугольник", "Линия", "Треугольник", "Круг", "Текст", "Точка"]
+				procesador_nombres_read_data = ["включено", "заряд", "тип жидкости", "жидкости хранится", "ёмкость жидкости", "производство жидкости", "потребление жидкости", "энергии хранится", "ёмкость энергии", "энергии произведено", "энергии потреблено", "mode", "select"]
 			#endregion
 			#region RECURSOS
 				recurso_descripcion[idr_acero] = "Полезный ресурс для строительства средней инфраструктуры."
@@ -1743,6 +1745,7 @@ function set_idioma(){
 			variable_struct_set(L, "procesador_clonar", "Клонировать")
 			variable_struct_set(L, "procesador_continue", "Продолжить")
 			variable_struct_set(L, "procesador_control", "Управление")
+			variable_struct_set(L, "procesador_draw", "Рисовать")
 			variable_struct_set(L, "procesador_from", "из")
 			variable_struct_set(L, "procesador_guardar", "Сохранить код")
 			variable_struct_set(L, "procesador_if", "Если")

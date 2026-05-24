@@ -8,27 +8,25 @@ function investigar(index, _server = false, _cheat = control.cheat){
 				exit
 		}
 		if not _cheat
-			for(var a = 0; a < array_length(edificio_tecnologia_precio[index]); a++){
-				var temp_precio = edificio_tecnologia_precio[index, a]
-				jugador_recursos[0, temp_precio.id] -= temp_precio.num
-			}
+			for(var a = 0; a < array_length(tecnologia_precio_id[index]); a++)
+				jugador_recursos[0, tecnologia_precio_id[index, a]] -= tecnologia_precio_num[index, a]
 		edificio_tecnologia_desbloqueable[index] = false
 		edificio_tecnologia[index] = true
 		tecnologias_estudiadas++
 		//Tecnologías que desbloquea
-		for(var a = 0; a < array_length(edificio_tecnologia_next[index]); a++){
-			var b = edificio_tecnologia_next[index, a]
-			if not edificio_tecnologia[b]{
+		for(var a = 0; a < array_length(tecnologia_next[index]); a++){
+			var _next = tecnologia_next[index, a]
+			if not edificio_tecnologia[_next]{
 				var flag = true
-				for(var c = 0; c < array_length(edificio_tecnologia_prev[b]); c++){
-					var d = edificio_tecnologia_prev[b, c]
+				for(var c = 0; c < array_length(tecnologia_prev[_next]); c++){
+					var d = tecnologia_prev[_next, c]
 					if not edificio_tecnologia[d]{
 						flag = false
 						break
 					}
 				}
 				if flag
-					edificio_tecnologia_desbloqueable[b] = true
+					edificio_tecnologia_desbloqueable[_next] = true
 			}
 		}
 	}
