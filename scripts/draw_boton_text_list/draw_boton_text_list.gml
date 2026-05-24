@@ -5,8 +5,9 @@ function draw_boton_text_list(xpos, ypos, variable = 0, array_name = array_creat
 			input_layer = 1
 			deslizante[draw_boton_text_counter] = 0
 		}
+		var a = text_x, b = text_y
 		if get_keyboard_string = draw_boton_text_counter++{
-			var max_width = 0, size = array_length(array_name), a = text_x, des_index = draw_boton_text_counter - 1
+			var max_width = 0, size = array_length(array_name), des_index = draw_boton_text_counter - 1
 			if array_length(array) = 0{
 				array = array_create(size)
 				for(var i = 0; i < array_length(array_name); i++)
@@ -20,8 +21,8 @@ function draw_boton_text_list(xpos, ypos, variable = 0, array_name = array_creat
 			editor_array_name = array_name
 			editor_max_height = max_height
 			editor_list = true
-			for(var b = 0; b < min(max_height, size); b++)
-				max_width = max(max_width, string_width(array_name[deslizante[des_index] + b]))
+			for(var i = 0; i < min(max_height, size); i++)
+				max_width = max(max_width, string_width(array_name[deslizante[des_index] + i]))
 			var color = draw_get_color(), item_height = devise ? 20 : 40
 			draw_set_color(c_ltgray)
 			draw_rectangle(xpos, ypos + item_height, xpos + max_width + item_height, ypos + item_height * (min(max_height, size) + 1), false)
@@ -30,11 +31,16 @@ function draw_boton_text_list(xpos, ypos, variable = 0, array_name = array_creat
 			draw_set_color(color)
 			ypos += item_height
 			var out = scroll(xpos + 10, ypos, size, max_height, item_height, scroll_draw_boton_text_list, {xpos : xpos + item_height, ypos : ypos, array : array, array_name : array_name, a : a, color : color}, des_index)
-			if out != -1
-				return out
 			text_x = real(a)
+			text_y = real(b)
 			exit_keyboard_input()
+			if is_undefined(out)
+				return variable
+			else if out != -1
+				return out
 		}
+		text_x = real(a)
+		text_y = real(b)
 		return variable
 	}
 }

@@ -737,7 +737,9 @@ if show_menu{
 		}
 		draw_set_halign(fa_left)
 		var xpos, ypos = 150, size = array_length(edificio.instruccion)
+		//SCROLL
 		scroll(110, ypos, size, devise ? 25 : 12, devise ? 20 : 40, scroll_procesador, {xpos : 150, ypos : ypos, edificio : edificio, size : size, b : 0})
+		draw_boton_text_list_end()
 		xpos = 150
 		ypos += min(size, 25) * 20
 		if draw_boton(xpos, ypos, L.procesador_add, ui_azul,,, false) or keyboard_check_pressed(vk_enter){
@@ -757,6 +759,8 @@ if show_menu{
 			for(var a = 0; a < array_length(PROCESADOR_INSTRUCCIONES_LENGTH); a++)
 				if draw_boton(room_width / 2, 200 + 20 * a, $"{procesador_instrucciones_nombre[a]} ({a})",,,, false, 1) or keyboard_check_pressed(ord(string(a))){
 					var new_instruccion = array_create(PROCESADOR_INSTRUCCIONES_LENGTH[a], 0)
+					for(var b = 0; b < array_length(procesador_default_instruccion[a]); b++)
+						new_instruccion[b] = procesador_default_instruccion[a, b]
 					new_instruccion[0] = a
 					array_push(edificio.instruccion, new_instruccion)
 					procesador_add = false
@@ -3361,4 +3365,3 @@ if keyboard_check(CONTROL_TAB) and online{
 draw_sprite(spr_vineta, 0, 0, 0)
 if keyboard_check(ord("V"))
 	draw_text(mouse_x + 20, mouse_y, $"{jugador}\n{server_jugadores_nombre}")
-draw_text(0, room_height - 40, $"{timer} + {LAG} > {server_timer}")

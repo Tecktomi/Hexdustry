@@ -220,33 +220,6 @@ L = {}
 		sonido_id[a] = audio_play_sound(SONIDOS[a], 1, true)
 		audio_pause_sound(sonido_id[a])
 	}
-	PROCESADOR_INSTRUCCIONES_LENGTH = [1, 4, 5, 7, 9, 7, 6, 6, 7, 16]
-	procesador_instrucciones_nombre = [
-		"Continuar",
-		"Asignar variable",
-		"Operaciones de una variable",
-		"Operaciones de dos variables",
-		"Saltar a línea",
-		"Leer información de edificio",
-		"Controlar edificio",
-		"Leer datos de Memoria",
-		"Escribir datos a Memoria",
-		"Dibujar a Pantalla"]
-	procesador_instrucciones_descripcion = [
-		"Esta instrucción no hace nada, sirve para hacer pasar tiempo en un procesador",
-		"Esta instrucción permite darle un valor (número o texto) a una variable del procesador",
-		"Esta instrucción permite modificar una variable del procesador",
-		"Esta instrucción permite operar dos variables del procesador y obtener el resultado",
-		"Esta instrucción tiene una condición que, si se cumple, el ciclo de proceso salta a la línea elegida",
-		"Esta instrucción lee información de alguno de los edificios vinculados al procesador",
-		"Esta instrucción permite controlar alguno de los edificios vinculados al procesador",
-		"Esta instrucción permite leer una variable de otro procesador o memoria",
-		"Esta instrucción permite escribir una variable a otro procesador, mensaje o memoria",
-		"Esta instrucción permite entregar comandos de dibujo a una pantalla vinculada"]
-	for(var a = 0; a < array_length(procesador_instrucciones_descripcion); a++)
-		procesador_instrucciones_descripcion[a] = text_wrap(procesador_instrucciones_descripcion[a], 400)
-	procesador_add = false
-	procesador_move = -1
 	input_layer = 0
 	show_smoke = true
 	oleadas_timer = 0
@@ -342,10 +315,48 @@ L = {}
 	mision_choosing_coord_i = 0
 #endregion
 #region Procesador
+	PROCESADOR_INSTRUCCIONES_LENGTH = [1, 4, 5, 7, 8, 7, 6, 6, 7, 16]
+	procesador_default_instruccion = [
+		[0],
+		[1, 0, 1, 0],
+		[2, 0, 3, 1, 1],
+		[3, 0, 0, 0, 0, 1, 1],
+		[4, 0, 0, 2, 1, 0, 1, 0],
+		[5, 0, 0, 0, 0, 1, 1],
+		[6, 1, 1, 0, 1, 0],
+		[7, 0, 0, 1, 1, 1],
+		[8, 0, 0, 0, 1, 1, 1],
+		[9, 1, 1, 1]]
+	procesador_instrucciones_nombre = [
+		"Continuar",
+		"Asignar variable",
+		"Operaciones de una variable",
+		"Operaciones de dos variables",
+		"Saltar a línea",
+		"Leer información de edificio",
+		"Controlar edificio",
+		"Leer datos de Memoria",
+		"Escribir datos a Memoria",
+		"Dibujar a Pantalla"]
+	procesador_instrucciones_descripcion = [
+		"Esta instrucción no hace nada, sirve para hacer pasar tiempo en un procesador",
+		"Esta instrucción permite darle un valor (número o texto) a una variable del procesador",
+		"Esta instrucción permite modificar una variable del procesador",
+		"Esta instrucción permite operar dos variables del procesador y obtener el resultado",
+		"Esta instrucción tiene una condición que, si se cumple, el ciclo de proceso salta a la línea elegida",
+		"Esta instrucción lee información de alguno de los edificios vinculados al procesador",
+		"Esta instrucción permite controlar alguno de los edificios vinculados al procesador",
+		"Esta instrucción permite leer una variable de otro procesador o memoria",
+		"Esta instrucción permite escribir una variable a otro procesador, mensaje o memoria",
+		"Esta instrucción permite entregar comandos de dibujo a una pantalla vinculada"]
+	for(var a = 0; a < array_length(procesador_instrucciones_descripcion); a++)
+		procesador_instrucciones_descripcion[a] = text_wrap(procesador_instrucciones_descripcion[a], 400)
+	procesador_add = false
+	procesador_move = -1
 	procesador_nombres_1var = ["sin", "cos", "tan", "random", "floor", "round", "ceil", "sqr", "sqrt", "pi"]
 	procesador_nombres_2var = [" + ", " - ", " * ", " / ", " div ", " mod ", " or ", " and ", " xor ", " << ", " >> ", " power "]
-	procesador_nombres_read_data = ["eneabled", "carga", "líquido tipo", "líquido almacen", "líquido capacidad", "líquido produccion", "líquido consumo", "energía almacenada", "energía capacidad", "energía producida", "energía consumida"]
-	procesador_nombres_draw = ["Clear", "Color grb", "Color hsv", "Rectangle", "Line", "Triangle", "Circle", "Texto", "Draw_flush"]
+	procesador_nombres_read_data = ["eneabled", "carga", "líquido tipo", "líquido almacen", "líquido capacidad", "líquido produccion", "líquido consumo", "energía almacenada", "energía capacidad", "energía producida", "energía consumida", "mode", "select"]
+	procesador_nombres_draw = ["Clear", "Draw_flush", "Color grb", "Color hsv", "Rectangle", "Line", "Triangle", "Circle", "Text", "Point"]
 	procesador_link_handle = -1
 #endregion
 #region SERVER
@@ -1583,90 +1594,93 @@ sort_drones()
 			spr_olas_56, spr_olas_57, spr_olas_58, spr_olas_59, spr_olas_60, spr_olas_61, spr_olas_62, spr_olas_63]
 #endregion
 #region Tecnologia
-	edificio_tecnologia_prev = array_create(edificio_max)
-	edificio_tecnologia_next = array_create(edificio_max)
-	edificio_tecnologia_precio = array_create(edificio_max)
+	tecnologia_prev = array_create(edificio_max)
+	tecnologia_next = array_create(edificio_max)
+	tecnologia_precio_id = array_create(edificio_max)
+	tecnologia_precio_num = array_create(edificio_max)
 	edificios_index = array_create(edificio_max)
 	for(var a = 0; a < edificio_max; a++){
-		edificio_tecnologia_prev[a] = array_create(0, 0)
-		edificio_tecnologia_next[a] = array_create(0, 0)
+		tecnologia_prev[a] = array_create(0, 0)
+		tecnologia_next[a] = array_create(0, 0)
 		edificios_index[a] = array_create(0, null_edificio)
 	}
 	function def_tecnologia(edificio){
-		var b = edificio_index[? string_lower(edificio)]
-		edificio_tecnologia_precio[b] = []
-		for(var a = 0; a < array_length(edificio_precio_id[b]); a++)
-			array_push(edificio_tecnologia_precio[b], {
-				id: edificio_precio_id[b, a],
-				num : round(tecnologia_precio_multiplicador * (5 + edificio_precio_num[b, a]))
-			})
-		for(var a = 1; a < argument_count; a++){
-			var temp_edificio = edificio_index[? string_lower(argument[a])]
-			array_push(edificio_tecnologia_prev[b], temp_edificio)
-			array_push(edificio_tecnologia_next[temp_edificio], b)
+		tecnologia_precio_id[edificio] = array_create(0, 0)
+		tecnologia_precio_num[edificio] = array_create(0, 0)
+		for(var a = 0; a < array_length(edificio_precio_id[edificio]); a++){
+			array_push(tecnologia_precio_id[edificio], edificio_precio_id[edificio, a])
+			array_push(tecnologia_precio_num[edificio], round(tecnologia_precio_multiplicador * (5 + edificio_precio_num[edificio, a])))
 		}
+		for(var a = 1; a < argument_count; a++){
+			var temp_edificio = argument[a]
+			array_push(tecnologia_prev[edificio], temp_edificio)
+			array_push(tecnologia_next[temp_edificio], edificio)
+		}
+		return edificio
 	}
-	def_tecnologia("enrutador", "cinta transportadora")
-	def_tecnologia("selector", "enrutador")
-	def_tecnologia("overflow", "enrutador")
-	def_tecnologia("túnel", "enrutador", "cruce")
-	def_tecnologia("horno", "taladro")
-	def_tecnologia("generador", "horno")
-	def_tecnologia("taladro eléctrico", "generador", "taladro")
-	def_tecnologia("triturador", "taladro eléctrico")
-	def_tecnologia("cable", "generador")
-	def_tecnologia("batería", "planta química")
-	def_tecnologia("panel solar", "generador")
-	def_tecnologia("bomba hidráulica", "bomba de evaporación", "generador")
-	def_tecnologia("tubería", "bomba de evaporación")
-	def_tecnologia("cinta magnética", "cinta transportadora")
-	def_tecnologia("rifle", "torre básica")
-	def_tecnologia("lanzallamas", "torre básica")
-	def_tecnologia("planta química", "horno", "bomba hidráulica", "generador")
-	def_tecnologia("láser", "generador", "torre básica")
-	def_tecnologia("depósito", "tubería")
-	def_tecnologia("turbina", "generador", "bomba hidráulica")
-	def_tecnologia("refinería de metales", "planta química")
-	def_tecnologia("fábrica de drones", "ensambladora")
-	def_tecnologia("bomba de evaporación", "horno")
-	def_tecnologia("horno de lava", "horno", "bomba hidráulica", "fábrica de concreto")
-	def_tecnologia("generador geotérmico", "horno de lava", "turbina")
-	def_tecnologia("taladro de explosión", "taladro eléctrico", "planta química")
-	def_tecnologia("muro", "rifle", "fábrica de concreto")
-	def_tecnologia("puerto de carga", "fábrica de drones")
-	def_tecnologia("ensambladora", "taladro eléctrico", "horno")
-	def_tecnologia("planta nuclear", "horno de lava", "taladro de explosión", "refinería de metales")
-	def_tecnologia("torre de alta tensión", "cable")
-	def_tecnologia("perforadora de petróleo", "bomba hidráulica", "fábrica de concreto")
-	def_tecnologia("mortero", "rifle", "planta química", "fábrica de concreto")
-	def_tecnologia("procesador", "refinería de petróleo", "ensambladora")
-	def_tecnologia("mensaje", "procesador")
-	def_tecnologia("memoria", "procesador")
-	def_tecnologia("torre reparadora", "torre básica", "generador")
-	def_tecnologia("tubería subterránea", "tubería")
-	def_tecnologia("onda de choque", "láser", "batería")
-	def_tecnologia("muro reforzado", "muro")
-	def_tecnologia("silo de misiles", "planta nuclear", "procesador", "mortero", "fábrica de drones")
-	def_tecnologia("planta de enriquecimiento", "planta nuclear", "procesador")
-	def_tecnologia("almacén", "cinta magnética")
-	def_tecnologia("fábrica de concreto", "horno", "bomba hidráulica")
-	def_tecnologia("pantalla", "procesador", "refinería de petróleo")
-	def_tecnologia("refinería de petróleo", "fábrica de concreto", "ensambladora")
-	def_tecnologia("planta de reciclaje", "refinería de metales", "horno de lava")
-	def_tecnologia("planta desalinizadora", "bomba de evaporación", "generador")
-	def_tecnologia("embotelladora", "tubería")
-	def_tecnologia("extractor atmosférico", "bomba hidráulica", "turbina", "ensambladora")
-	def_tecnologia("módulo", "procesador", "planta química", "refinería de petróleo")
-	array_set(edificio_tecnologia_precio, id_modulo, [{id : idr_electronicos, num : 20}, {id : idr_plastico, num : 20}, {id : idr_bateria, num : 20}])
-	def_tecnologia("fábrica de drones grande", "fábrica de drones", "procesador")
-	def_tecnologia("cinta grande", "cinta magnética", "fábrica de drones")
+	tec_enrutador = def_tecnologia(id_enrutador, id_cinta_transportadora)
+	tec_selector = def_tecnologia(id_selector, id_enrutador)
+	tec_overflow = def_tecnologia(id_overflow, id_enrutador)
+	tec_tunel = def_tecnologia(id_tunel, id_enrutador, id_cruce)
+	tec_horno = def_tecnologia(id_horno, id_taladro)
+	tec_generador = def_tecnologia(id_generador, id_horno)
+	tec_taladro_electrico = def_tecnologia(id_taladro_electrico, id_generador, id_taladro)
+	tec_triturador = def_tecnologia(id_triturador, id_taladro_electrico)
+	tec_cable = def_tecnologia(id_cable, id_generador)
+	tec_bateria = def_tecnologia(id_bateria, id_planta_quimica)
+	tec_panel_solar = def_tecnologia(id_panel_solar, id_generador)
+	tec_bomba_hidraulica = def_tecnologia(id_bomba_hidraulica, id_bomba_de_evaporacion, id_generador)
+	tec_tuberia = def_tecnologia(id_tuberia, id_bomba_de_evaporacion)
+	tec_cinta_magnetica = def_tecnologia(id_cinta_magnetica, id_cinta_transportadora)
+	tec_rifle = def_tecnologia(id_rifle, id_torre_basica)
+	tec_lanzallamas = def_tecnologia(id_lanzallamas, id_torre_basica)
+	tec_planta_quimica = def_tecnologia(id_planta_quimica, id_horno, id_bomba_hidraulica, id_generador)
+	tec_laser = def_tecnologia(id_laser, id_generador, id_torre_basica)
+	tec_deposito = def_tecnologia(id_deposito, id_tuberia)
+	tec_turbina = def_tecnologia(id_turbina, id_generador, id_bomba_hidraulica)
+	tec_enrutador = def_tecnologia(id_refineria_de_metales, id_planta_quimica)
+	tec_enrutador = def_tecnologia(id_fabrica_de_drones, id_ensambladora)
+	tec_enrutador = def_tecnologia(id_bomba_de_evaporacion, id_horno)
+	tec_enrutador = def_tecnologia(id_horno_de_lava, id_horno, id_bomba_hidraulica, id_fabrica_de_concreto)
+	tec_enrutador = def_tecnologia(id_generador_geotermico, id_horno_de_lava, id_turbina)
+	tec_enrutador = def_tecnologia(id_taladro_de_explosion, id_taladro_electrico, id_planta_quimica)
+	tec_enrutador = def_tecnologia(id_muro, id_rifle, id_fabrica_de_concreto)
+	tec_enrutador = def_tecnologia(id_puerto_de_carga, id_fabrica_de_drones)
+	tec_enrutador = def_tecnologia(id_ensambladora, id_taladro_electrico, id_horno)
+	tec_enrutador = def_tecnologia(id_planta_nuclear, id_horno_de_lava, id_taladro_de_explosion, id_refineria_de_metales)
+	tec_enrutador = def_tecnologia(id_torre_de_alta_tension, id_cable)
+	tec_enrutador = def_tecnologia(id_perforadora_de_petroleo, id_bomba_hidraulica, id_fabrica_de_concreto)
+	tec_enrutador = def_tecnologia(id_mortero, id_rifle, id_planta_quimica, id_fabrica_de_concreto)
+	tec_enrutador = def_tecnologia(id_procesador, id_refineria_de_petroleo, id_ensambladora)
+	tec_enrutador = def_tecnologia(id_mensaje, id_procesador)
+	tec_enrutador = def_tecnologia(id_memoria, id_procesador)
+	tec_enrutador = def_tecnologia(id_torre_reparadora, id_torre_basica, id_generador)
+	tec_enrutador = def_tecnologia(id_tuberia_subterranea, id_tuberia)
+	tec_enrutador = def_tecnologia(id_onda_de_choque, id_laser, id_bateria)
+	tec_enrutador = def_tecnologia(id_muro_reforzado, id_muro)
+	tec_enrutador = def_tecnologia(id_silo_de_misiles, id_planta_nuclear, id_procesador, id_mortero, id_fabrica_de_drones)
+	tec_enrutador = def_tecnologia(id_planta_de_enriquecimiento, id_planta_nuclear, id_procesador)
+	tec_enrutador = def_tecnologia(id_almacen, id_cinta_magnetica)
+	tec_enrutador = def_tecnologia(id_fabrica_de_concreto, id_horno, id_bomba_hidraulica)
+	tec_enrutador = def_tecnologia(id_pantalla, id_procesador, id_refineria_de_petroleo)
+	tec_enrutador = def_tecnologia(id_refineria_de_petroleo, id_fabrica_de_concreto, id_ensambladora)
+	tec_enrutador = def_tecnologia(id_planta_de_reciclaje, id_refineria_de_metales, id_horno_de_lava)
+	tec_enrutador = def_tecnologia(id_planta_desalinizadora, id_bomba_de_evaporacion, id_generador)
+	tec_enrutador = def_tecnologia(id_embotelladora, id_tuberia)
+	tec_enrutador = def_tecnologia(id_extractor_atmosferico, id_bomba_hidraulica, id_turbina, id_ensambladora)
+	tec_enrutador = def_tecnologia(id_modulo, id_procesador, id_planta_quimica, id_refineria_de_petroleo)
+	array_set(tecnologia_precio_id, id_modulo, [idr_electronicos, idr_plastico,  idr_bateria])
+	array_set(tecnologia_precio_num, id_modulo, [20, 20, 20])
+	tec_enrutador = def_tecnologia(id_fabrica_de_drones_grande, id_fabrica_de_drones, id_procesador)
+	tec_enrutador = def_tecnologia(id_cinta_grande, id_cinta_magnetica, id_fabrica_de_drones)
+	tec_mina = def_tecnologia(id_mina, id_rifle)
 	edificio_tecnologia_nivel = array_create(edificio_max, -1)
 	tecnologia_nivel_edificios = [array_create(0, 0)]
 	//Crear nivel mínimo tecnológico
 	var edi_count = 0
-	for(var a = 0; a < edificio_max; a++)
+	for(var a = 0; a < edificio_max; a++){
 		if tag_edificio_construible[a]{
-			if array_length(edificio_tecnologia_prev[a]) = 0{
+			if array_length(tecnologia_prev[a]) = 0{
 				edi_count++
 				edificio_tecnologia_nivel[a] = 0
 				array_push(tecnologia_nivel_edificios[0], a)
@@ -1675,6 +1689,7 @@ sort_drones()
 		}
 		else
 			edi_count++
+	}
 	//Verificar los requisitos tecnológicos
 	while edi_count < edificio_max{
 		var stable = true
@@ -1682,8 +1697,8 @@ sort_drones()
 		for(var b = 0; b < edificio_max; b++)
 			if tag_edificio_construible[b] and edificio_tecnologia_nivel[b] = -1{
 				var flag = true
-				for(var c = 0; c < array_length(edificio_tecnologia_prev[b]); c++)
-					if edificio_tecnologia_nivel[edificio_tecnologia_prev[b, c]] = -1 or edificio_tecnologia_nivel[edificio_tecnologia_prev[b, c]] = array_length(tecnologia_nivel_edificios){
+				for(var c = 0; c < array_length(tecnologia_prev[b]); c++)
+					if edificio_tecnologia_nivel[tecnologia_prev[b, c]] = -1 or edificio_tecnologia_nivel[tecnologia_prev[b, c]] = array_length(tecnologia_nivel_edificios){
 						flag = false
 						break
 					}
@@ -1702,8 +1717,8 @@ sort_drones()
 	//Desbloquear_los edificios básicos
 	for(var a = 0; a < array_length(tecnologia_nivel_edificios[1]); a++){
 		var b = tecnologia_nivel_edificios[1, a], flag = true
-		for(var c = 0; c < array_length(edificio_tecnologia_prev[b]); c++)
-			if not edificio_tecnologia[edificio_tecnologia_prev[b, c]]{
+		for(var c = 0; c < array_length(tecnologia_prev[b]); c++)
+			if not edificio_tecnologia[tecnologia_prev[b, c]]{
 				flag = false
 				break
 			}

@@ -6,30 +6,22 @@ function draw_enciclopedia(_tecnologia = true, _this_input_layer = 0){
 		draw_set_color(c_black)
 		draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
 		var width = 100, ypos = 100
-		if draw_boton(width, ypos, L.enciclopedia_recursos,,,,, _this_input_layer){
-			deslizante[0] = 0
-			enciclopedia = 1
-		}
+		if draw_boton(width, ypos, L.enciclopedia_recursos,,,,, _this_input_layer)
+			enciclopedia_link(1, 0)
 		width += text_x + 20
-		if draw_boton(width, ypos, L.enciclopedia_edificios,,,,, _this_input_layer){
-			deslizante[0] = 0
-			enciclopedia = 2
-		}
+		if draw_boton(width, ypos, L.enciclopedia_edificios,,,,, _this_input_layer)
+			enciclopedia_link(2, 0)
 		width += text_x + 20
-		if draw_boton(width, ypos, L.enciclopedia_unidades,,,,, _this_input_layer){
-			deslizante[0] = 0
-			enciclopedia = 5
-		}
+		if draw_boton(width, ypos, L.enciclopedia_unidades,,,,, _this_input_layer)
+			enciclopedia_link(5, 0)
 		width += text_x + 20
-		if _tecnologia and tecnologia and draw_boton(width, ypos, L.enciclopedia_tecnologia,,,,, _this_input_layer){
-			deslizante[0] = 0
-			enciclopedia = 7
+		if _tecnologia and tecnologia{
+			if draw_boton(width, ypos, L.enciclopedia_tecnologia,,,,, _this_input_layer)
+				enciclopedia_link(7, 0)
 			width += text_x + 20
 		}
-		if draw_boton(width, ypos, L.enciclopedia_consejos,,,,, _this_input_layer){
-			deslizante[0] = 0
-			enciclopedia = 8
-		}
+		if draw_boton(width, ypos, L.enciclopedia_consejos,,,,, _this_input_layer)
+			enciclopedia_link(8, 0)
 		ypos += text_y * 1.2
 		//Menú Recursos
 		if enciclopedia = 1
@@ -60,7 +52,7 @@ function draw_enciclopedia(_tecnologia = true, _this_input_layer = 0){
 			for(var a = 0; a < array_length(tecnologia_nivel_edificios); a++){
 				ypos += 60
 				width = array_length(tecnologia_nivel_edificios[a])
-				for(b = 0; b < width; b++){
+				for(var b = 0; b < width; b++){
 					var c = tecnologia_nivel_edificios[a, b]
 					if edificio_tecnologia[c]
 						draw_set_color(c_green)
@@ -72,8 +64,7 @@ function draw_enciclopedia(_tecnologia = true, _this_input_layer = 0){
 					draw_set_color(c_black)
 					draw_circle(xpos + 60 * b - 30 * (width - 1), ypos, 25, true)
 					if draw_sprite_boton(edificio_sprite[c],, xpos - 20 + 60 * b - 30 * (width - 1), ypos - 20, 40, 40,, hover_sprite_boton_text, {a : edificio_nombre[c]}){
-						enciclopedia_item = c
-						enciclopedia = 4
+						enciclopedia_link(4, c)
 						exit
 					}
 				}

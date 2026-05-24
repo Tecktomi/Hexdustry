@@ -75,11 +75,11 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 				draw_sprite_ext(edificio_sprite_2[ei], 0, room_width - 200, 200, 2, 2, 0, c_white, 1)
 		if _tecnologia and tecnologia{
 			sprite_boton_text = ""
-			var size = array_length(edificio_tecnologia_prev[ei])
+			var size = array_length(tecnologia_prev[ei])
 			xpos = 800
 			ypos = 200
 			for(var a = 0; a < size; a++){
-				var b = edificio_tecnologia_prev[ei, a]
+				var b = tecnologia_prev[ei, a]
 				if edificio_tecnologia[b]
 					draw_set_color(c_green)
 				else if edificio_tecnologia_desbloqueable[b]
@@ -96,9 +96,9 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 				}
 				draw_text_background(mouse_x + 20, mouse_y, sprite_boton_text)
 			}
-			size = array_length(edificio_tecnologia_next[ei])
+			size = array_length(tecnologia_next[ei])
 			for(var a = 0; a < size; a++){
-				var b = edificio_tecnologia_next[ei, a]
+				var b = tecnologia_next[ei, a]
 				if edificio_tecnologia[b]
 					draw_set_color(c_green)
 				else if edificio_tecnologia_desbloqueable[b]
@@ -120,10 +120,9 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 			else if edificio_tecnologia_desbloqueable[ei]{
 				var flag = true, temp_text = ""
 				if not cheat
-					for(var a = 0; a < array_length(edificio_tecnologia_precio[ei]); a++){
-						var temp_precio = edificio_tecnologia_precio[ei, a]
-						temp_text += $"\n{recurso_nombre[temp_precio.id]}: {temp_precio.num}"
-						if jugador_recursos[0, temp_precio.id] < temp_precio.num{
+					for(var a = 0; a < array_length(tecnologia_precio_id[ei]); a++){
+						temp_text += $"\n{recurso_nombre[tecnologia_precio_id[ei, a]]}: {tecnologia_precio_num[ei, a]}"
+						if jugador_recursos[0, tecnologia_precio_id[ei, a]] < tecnologia_precio_num[ei, a]{
 							flag = false
 							temp_text += " !!"
 						}
