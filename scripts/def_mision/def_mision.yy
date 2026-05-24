@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"default_mision",
+  "%Name":"def_mision",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"default_mision",
+  "name":"def_mision",
   "parent":{
     "name":"SCRIPTS",
     "path":"folders/SCRIPTS.yy",

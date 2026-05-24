@@ -26,7 +26,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		if enemigo{
 			array_disorder_remove(edificios_enemigos, edificio, 0)
 			array_disorder_remove(chunk_edificios_enemigo[# chunk_x, chunk_y], edificio, 1)
-			if mision_actual >= 0 and mision_objetivo[mision_actual] = 8 and mision_target_id[mision_actual] = index and ++mision_counter >= mision_target_num[mision_actual]
+			if mision_actual >= 0 and mision.objetivo = 8 and mision.target_id = index and ++mision_counter >= mision.target_num
 				pasar_mision()
 		}
 		else{

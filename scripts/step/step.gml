@@ -208,7 +208,7 @@ function step(){
 			var temp_time = oleadas_timer / 60 - oleadas_tiempo_primera
 			if (temp_time mod oleadas_tiempo) = 0 or keyboard_check_pressed(vk_enter){
 				var d = oleada_count++ + 3, e = 1, flag_2 = false
-				if mision_actual >= 0 and mision_objetivo[mision_actual] = 4 and ++mision_counter >= mision_target_num[mision_actual]
+				if mision_actual >= 0 and mision.objetivo = 4 and ++mision_counter >= mision.target_num
 					oleadas = false
 				for(var i = 0; i < array_length(SIZE_SIZE); i++)
 					if d <= SIZE_SIZE[i]{
@@ -264,35 +264,35 @@ function step(){
 		var temp_text_right = ""
 		if mision_actual >= 0 and win = 0{
 			var a = mision_actual
-			if in(mision_objetivo[a], 5, 7) and not oleadas and (not chat_input and keyboard_check_pressed(vk_enter)){
+			if in(mision.objetivo, 5, 7) and not oleadas and (not chat_input and keyboard_check_pressed(vk_enter)){
 				keyboard_clear(vk_enter)
 				pasar_mision()
 			}
-			if mision_tiempo[a] > 0{
+			if mision.tiempo > 0{
 				if mision_camara_step <= 0 and --mision_current_tiempo <= 0{
-					if mision_tiempo_victoria[a]
+					if mision.tiempo_victoria
 						pasar_mision()
 					else
 						win = 2
 				}
 			}
-			else if mision_objetivo[a] = 1{
-				mision_counter = jugador_recursos[0, mision_target_id[a]]
-				if mision_counter >= mision_target_num[a]{
+			else if mision.objetivo = 1{
+				mision_counter = jugador_recursos[0, mision.target_id]
+				if mision_counter >= mision.target_num{
 					pasar_mision()
 					a++
 				}
 			}
-			else if mision_objetivo[a] = 3{
-				mision_counter = edificios_counter[mision_target_id[a]]
-				if mision_counter >= mision_target_num[a]{
+			else if mision.objetivo = 3{
+				mision_counter = edificios_counter[mision.target_id]
+				if mision_counter >= mision.target_num{
 					pasar_mision()
 					a++
 				}
 			}
-			else if mision_objetivo[a] = 6{
+			else if mision.objetivo = 6{
 				mision_counter += (keyboard_check(CONTROL_RIGHT) or keyboard_check(CONTROL_LEFT) or keyboard_check(CONTROL_UP) or keyboard_check(CONTROL_DOWN))
-				if mision_counter >= mision_target_num[a]{
+				if mision_counter >= mision.target_num{
 					pasar_mision()
 					a++
 				}

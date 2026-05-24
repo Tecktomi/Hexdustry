@@ -51,42 +51,24 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 			var len_mis = real(buffer_read(buffer, buffer_u8))
 			if len_mis > 0
 				mision_texto_victoria = string(buffer_read(buffer, buffer_string))
-			array_resize(mision_nombre_idioma, len_mis)
-			array_resize(mision_nombre, len_mis)
-			array_resize(mision_target_id, len_mis)
-			array_resize(mision_target_num, len_mis)
-			array_resize(mision_tiempo, len_mis)
-			array_resize(mision_tiempo_victoria, len_mis)
-			array_resize(mision_tiempo_show, len_mis)
-			array_resize(mision_camara_move, len_mis)
-			array_resize(mision_camara_x, len_mis)
-			array_resize(mision_camara_y, len_mis)
-			array_resize(mision_switch_oleadas, len_mis)
-			array_resize(mision_texto, len_mis)
-			array_resize(mision_tiempo_edit, len_mis)
+			array_resize(misiones, len_mis)
 			for(var a = 0; a < len_mis; a++){
-				mision_nombre_idioma[a] = array_create(IDIOMAS, "")
+				var _nombre_idioma = array_create(IDIOMAS, "")
 				for(var b = 0; b < IDIOMAS; b++)
-					array_set(mision_nombre_idioma[a], b, string(buffer_read(buffer, buffer_string)))
-				mision_nombre[a] = mision_nombre_idioma[a, idioma]
-				mision_objetivo[a] = real(buffer_read(buffer, buffer_u8))
-				mision_target_id[a] = real(buffer_read(buffer, buffer_u8))
-				mision_target_num[a] = real(buffer_read(buffer, buffer_u16))
-				mision_tiempo[a] = real(buffer_read(buffer, buffer_u16))
-				mision_tiempo_victoria[a] = bool(buffer_read(buffer, buffer_bool))
-				mision_tiempo_show[a] = bool(buffer_read(buffer, buffer_bool))
-				mision_camara_move[a] = bool(buffer_read(buffer, buffer_bool))
-				if mision_camara_move[a]{
-					mision_camara_x[a] = real(buffer_read(buffer, buffer_u16))
-					mision_camara_y[a] = real(buffer_read(buffer, buffer_u16))
-				}
-				else{
-					mision_camara_x[a] = 0
-					mision_camara_y[a] = 0
-				}
-				mision_switch_oleadas[a] = bool(buffer_read(buffer, buffer_bool))
+					_nombre_idioma[b] = string(buffer_read(buffer, buffer_string))
+				var _nombre = _nombre_idioma[idioma]
+				var _objetivo = real(buffer_read(buffer, buffer_u8))
+				var _target_id = real(buffer_read(buffer, buffer_u8))
+				var _target_num = real(buffer_read(buffer, buffer_u16))
+				var _tiempo = real(buffer_read(buffer, buffer_u16))
+				var _tiempo_victoria = bool(buffer_read(buffer, buffer_bool))
+				var _tiempo_show = bool(buffer_read(buffer, buffer_bool))
+				var _camera_move = bool(buffer_read(buffer, buffer_bool))
+				var _camera_x = _camera_move ? real(buffer_read(buffer, buffer_u16)) : 0
+				var _camera_y = _camera_move ? real(buffer_read(buffer, buffer_u16)) : 0
+				var _switch_oleadas = bool(buffer_read(buffer, buffer_bool))
 				var len_text = real(buffer_read(buffer, buffer_u8))
-				mision_texto[a] = array_create(len_text, {x : 0, y : 0, texto : "", texto_idioma : array_create(0, "")})
+				var _texto = array_create(len_text, {x : 0, y : 0, texto : "", texto_idioma : array_create(0, "")})
 				for(var b = 0; b < len_text; b++){
 					var temp_array_string = array_create(IDIOMAS, "")
 					for(var c = 0; c < IDIOMAS; c++)
@@ -99,8 +81,9 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 						texto : temp_array_string[idioma],
 						texto_idioma : temp_array_string
 					}
-					array_set(mision_texto[a], b, temp_text)
+					_texto[b] = temp_text
 				}
+				misiones[a] = def_mision(_nombre, _nombre_idioma, _objetivo, _target_id, _target_num, _texto, false, _tiempo, _tiempo_victoria, _tiempo_show, _camera_move, _camera_x, _camera_y, _switch_oleadas)
 			}
 		}
 		else

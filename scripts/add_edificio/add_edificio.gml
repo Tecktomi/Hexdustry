@@ -125,7 +125,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			edificios_construidos++
 			array_disorder_push(edificios_index[index], edificio, 8)
 		}
-		if mision_actual >= 0 and mision_objetivo[mision_actual] = 2 and mision_target_id[mision_actual] = index and ++mision_counter >= mision_target_num[mision_actual]
+		if mision_actual >= 0 and mision.objetivo = 2 and mision.target_id = index and ++mision_counter >= mision.target_num
 			pasar_mision()
 		temp_complex = [0, 0]
 		if in(index, id_planta_quimica, id_fabrica_de_drones){

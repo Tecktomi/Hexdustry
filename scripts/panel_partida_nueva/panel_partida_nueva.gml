@@ -9,9 +9,9 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 			oleadas_tiempo = 90
 			multiplicador_vida_enemigos = 50
 			cheat = false
-			default_mision()
-			mision_objetivo = [4]
-			mision_target_num = [15]
+			misiones = array_create(1, null_mision)
+			misiones[0].objetivo = 4
+			misiones[0].target_num = 15
 			flow = 0
 			dificultad = 0
 		}
@@ -23,9 +23,9 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 			oleadas_tiempo = 75
 			multiplicador_vida_enemigos = 100
 			cheat = false
-			default_mision()
-			mision_objetivo = [4]
-			mision_target_num = [22]
+			misiones = array_create(1, null_mision)
+			misiones[0].objetivo = 4
+			misiones[0].target_num = 22
 			flow = 1
 			dificultad = 1
 		}
@@ -37,9 +37,9 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 			oleadas_tiempo = 60
 			multiplicador_vida_enemigos = 160
 			cheat = false
-			default_mision()
-			mision_objetivo = [4]
-			mision_target_num = [35]
+			misiones = array_create(1, null_mision)
+			misiones[0].objetivo = 4
+			misiones[0].target_num = 35
 			flow = 2
 			dificultad = 2
 		}
@@ -85,27 +85,28 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 			//Modos de Juego
 			xpos = 200
 			if draw_boton(xpos, ypos, L.menu_modo_infinito, flow = 3 ? ui_azul : ui_gris,,,, 1){
-				default_mision(0)
+				misiones = array_create(0, null_mision)
 				flow = 3
 			}
 			xpos += text_x + 20
 			if draw_boton(xpos, ypos, L.menu_modo_oleadas, flow = 4 ? ui_azul : ui_gris,,,, 1){
-				default_mision()
-				mision_objetivo = [4]
-				mision_target_num = [20]
+				misiones = array_create(1, null_mision)
+				misiones[0].objetivo = 4
+				misiones[0].target_num = 20
 				flow = 4
 			}
 			xpos += text_x + 20
 			if draw_boton(xpos, ypos, L.menu_modo_misiones, flow = 5 ? ui_azul : ui_gris,,,, 1){
 				modo_misiones = true
 				add_mision()
+				mision_actual = -1
 				flow = 5
 			}
 			if flow = 4{
 				ypos += text_y + 10
 				xpos = draw_text_xpos(160, ypos, L.menu_numero_oleadas)
-				mision_target_num[0] = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, mision_target_num[0], 10, 50, des_count++, 1))
-				draw_text_ypos(xpos + 145, ypos, mision_target_num[0])
+				misiones[0].target_num = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, misiones[0].target_num, 10, 50, des_count++, 1))
+				draw_text_ypos(xpos + 145, ypos, misiones[0].target_num)
 			}
 		}
 		ypos += text_y * 1.25
