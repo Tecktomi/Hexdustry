@@ -759,8 +759,8 @@ if show_menu{
 			for(var a = 0; a < array_length(PROCESADOR_INSTRUCCIONES_LENGTH); a++)
 				if draw_boton(room_width / 2, 200 + 20 * a, $"{procesador_instrucciones_nombre[a]} ({a})",,,, false, 1) or keyboard_check_pressed(ord(string(a))){
 					var new_instruccion = array_create(PROCESADOR_INSTRUCCIONES_LENGTH[a], 0)
-					for(var b = 0; b < array_length(procesador_default_instruccion[a]); b++)
-						new_instruccion[b] = procesador_default_instruccion[a, b]
+					for(var i = 0; i < array_length(procesador_default_instruccion[a]); i++)
+						new_instruccion[i] = procesador_default_instruccion[a, i]
 					new_instruccion[0] = a
 					array_push(edificio.instruccion, new_instruccion)
 					procesador_add = false
