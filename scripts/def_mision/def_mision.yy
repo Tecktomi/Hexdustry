@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"def_mision",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"def_mision",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

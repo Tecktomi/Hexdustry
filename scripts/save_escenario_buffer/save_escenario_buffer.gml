@@ -1,7 +1,6 @@
 function save_escenario_buffer(filename){
 	with control{
-		show_debug_message(mision_nombre_idioma)
-		var len_edi = array_length(edificios_totales), len_mis = array_length(mision_nombre)
+		var len_edi = array_length(edificios_totales), len_mis = array_length(misiones)
 		var buffer = buffer_create(2 * xsize * ysize + 5 * len_edi + 2 * rss_max + 12 * len_mis + 11, buffer_grow, 1)
 		//Variables globales
 		buffer_write(buffer, buffer_u8, xsize)
@@ -24,24 +23,25 @@ function save_escenario_buffer(filename){
 		if len_mis > 0
 			buffer_write(buffer, buffer_string, mision_texto_victoria)
 		for(var a = 0; a < len_mis; a++){
+			var _mision = misiones[a]
 			for(var b = 0; b < IDIOMAS; b++)
-				buffer_write(buffer, buffer_string, mision_nombre_idioma[a, b])
-			buffer_write(buffer, buffer_u8, mision_objetivo[a])
-			buffer_write(buffer, buffer_u8, mision_target_id[a])
-			buffer_write(buffer, buffer_u16, mision_target_num[a])
-			buffer_write(buffer, buffer_u16, mision_tiempo[a])
-			buffer_write(buffer, buffer_bool, mision_tiempo_victoria[a])
-			buffer_write(buffer, buffer_bool, mision_tiempo_show[a])
-			buffer_write(buffer, buffer_bool, mision_camara_move[a])
-			if mision_camara_move[a]{
-				buffer_write(buffer, buffer_u16, mision_camara_x[a])
-				buffer_write(buffer, buffer_u16, mision_camara_y[a])
+				buffer_write(buffer, buffer_string, _mision.nombre_idioma[b])
+			buffer_write(buffer, buffer_u8, _mision.objetivo)
+			buffer_write(buffer, buffer_u8, _mision.target_id)
+			buffer_write(buffer, buffer_u16, _mision.target_num)
+			buffer_write(buffer, buffer_u16, _mision.tiempo)
+			buffer_write(buffer, buffer_bool, _mision.tiempo_victoria)
+			buffer_write(buffer, buffer_bool, _mision.tiempo_show)
+			buffer_write(buffer, buffer_bool, _mision.camera_move)
+			if _mision.camera_move{
+				buffer_write(buffer, buffer_u16, _mision.camera_x)
+				buffer_write(buffer, buffer_u16, _mision.camera_y)
 			}
-			buffer_write(buffer, buffer_bool, mision_switch_oleadas[a])
-			var len_text = array_length(mision_texto[a])
+			buffer_write(buffer, buffer_bool, _mision.switch_oleadas)
+			var len_text = array_length(_mision.texto)
 			buffer_write(buffer, buffer_u8, len_text)
 			for(var b = 0; b < len_text; b++){
-				var temp_text = mision_texto[a, b]
+				var temp_text = _mision.texto[b]
 				for(var c = 0; c < IDIOMAS; c++)
 					buffer_write(buffer, buffer_string, temp_text.texto_idioma[c])
 				buffer_write(buffer, buffer_u16, temp_text.x)
@@ -78,10 +78,10 @@ function save_escenario_buffer(filename){
 		buffer_save(buffer, filename)
 		buffer_delete(buffer)
 		//Minimapa
-		var b = array_get_index(save_files, filename), temp_text = string_delete(filename, string_pos(".", filename), 4)
-		filename = temp_text
+		var b = array_get_index(save_files, filename), temp_string = string_delete(filename, string_pos(".", filename), 4)
+		filename = temp_string
 		var temp_sprite = minimapa()
-		sprite_save(temp_sprite, 0, temp_text + ".png")
+		sprite_save(temp_sprite, 0, temp_string + ".png")
 		if b = -1
 			array_push(save_files_png, temp_sprite)
 	}

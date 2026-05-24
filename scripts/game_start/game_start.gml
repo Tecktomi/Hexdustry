@@ -6,7 +6,7 @@ function game_start(_nucleo = true, mision_cumplida = false){
 		if mision_cumplida
 			oleadas = false
 		else
-		if array_length(mision_nombre) > 0{
+		if array_length(misiones) > 0{
 			mision_actual = -1
 			pasar_mision()
 		}

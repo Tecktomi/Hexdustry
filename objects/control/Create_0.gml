@@ -189,7 +189,6 @@ L = {}
 	get_keyboard_cursor = 0
 	get_keyboard_text = ""
 	get_keyboard_string_text = ""
-	objetivos_nombre = ["conseguir", "tener almacenado", "construir", "tener construido", "sobrevivir oleadas", "sin objetivo", "apretar ADWS", "cargar edificio", "destruir edificio"]
 	oleadas = true
 	oleadas_tiempo_primera = 210
 	oleadas_tiempo = 75
@@ -288,23 +287,12 @@ L = {}
 	temp_my = 0
 #endregion
 #region Misiones
-	mision_nombre = array_create(0, "")
-	mision_nombre_idioma = array_create(IDIOMAS, array_create(0, ""))
-	mision_objetivo = array_create(0, 0)
-	mision_target_id = array_create(0, 0)
-	mision_target_num = array_create(0, 0)
-	mision_tiempo = array_create(0, 0)
-	mision_tiempo_edit = array_create(0, false)
-	mision_tiempo_victoria = array_create(0, false)
-	mision_tiempo_show = array_create(0, true)
-	mision_texto = array_create(0, array_create(0, {x : 0, y : 0, texto : "", texto_idioma : array_create(IDIOMAS, "")}))
-	mision_camara_move = array_create(0, false)
-	mision_camara_x = array_create(0, 0)
-	mision_camara_y = array_create(0, 0)
-	mision_switch_oleadas = array_create(0, false)
+	null_mision = def_mision()
+	misiones = array_create(0, null_mision)
+	mision = def_mision()
 	mision_camara_step = 0
-	mision_camara_x_start = 0
-	mision_camara_y_start = 0
+	mision_camera_x_start = 0
+	mision_camera_y_start = 0
 	mision_texto_victoria = "Todos los objetivos cumplidos"
 	mision_texto_victoria_idioma = array_create(IDIOMAS, "")
 	mision_actual = -1
@@ -313,6 +301,17 @@ L = {}
 	mision_choosing_coord = false
 	mision_choosing_coord_tipo = 0
 	mision_choosing_coord_i = 0
+	objetivos_nombre = [
+		"conseguir",
+		"tener almacenado",
+		"construir",
+		"tener construido",
+		"sobrevivir oleadas",
+		"sin objetivo",
+		"apretar ADWS",
+		"cargar edificio",
+		"destruir edificio"
+	]
 #endregion
 #region Procesador
 	PROCESADOR_INSTRUCCIONES_LENGTH = [1, 4, 5, 7, 8, 7, 6, 6, 7, 16]

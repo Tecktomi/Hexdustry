@@ -44,22 +44,11 @@ function menu_editor(){
 				mision_actual = -2
 				get_keyboard_string = -1
 			}
-			var size = array_length(mision_nombre), pos = 150
+			var size = array_length(misiones), pos = 150
 			scroll(120, pos, size, devise ? 15 : 7, devise ? 30 : 50, scroll_editor_misiones, {xpos : 140, ypos : pos})
 			if draw_boton(140, 600, L.editor_nuevo_objetivo, ui_verde){
-				array_push(mision_nombre, $"{L.editor_objetivo} {size}")
-				array_push(mision_objetivo, 0)
-				array_push(mision_target_id, 0)
-				array_push(mision_target_num, 0)
-				array_push(mision_tiempo, 0)
-				array_push(mision_tiempo_edit, false)
-				array_push(mision_tiempo_victoria, 0)
-				array_push(mision_tiempo_show, 1)
-				array_push(mision_camara_move, 0)
-				array_push(mision_camara_x, 0)
-				array_push(mision_camara_y, 0)
-				array_push(mision_texto, array_create(0, {texto : "", x : 0, y : 0}))
-				array_push(mision_switch_oleadas, false)
+				var _mision = def_mision($"{L.editor_objetivo} {size}")
+				array_push(misiones, _mision)
 				mision_actual = size
 				if save_file != ""
 					save_escenario_buffer(save_file + ".txt")
@@ -71,61 +60,62 @@ function menu_editor(){
 			//Editar Objetivo
 			if mision_actual >= 0{
 				var i = mision_actual, ypos = 120, a
+				mision = misiones[i]
 				xpos = draw_text_xpos(room_width / 2 + 20, ypos, L.editor_nuevo_objetivo + ": ")
-				mision_nombre[i] = draw_boton_text(xpos, ypos, mision_nombre[i], false)
+				mision.nombre = draw_boton_text(xpos, ypos, mision.nombre, false)
 				xpos = room_width / 2 + 40
 				ypos = 150
 				xpos = draw_text_xpos(xpos, ypos, $"{L.editor_objetivo}: ")
 				//Objetivo
-				var prev_objetivo = mision_objetivo[i]
-				mision_objetivo[i] = draw_boton_text_list(xpos, ypos, mision_objetivo[i], objetivos_nombre)
-				if mision_objetivo[i] != prev_objetivo{
-					mision_target_id[i] = 0
-					mision_target_num[i] = 0
+				var prev_objetivo = mision.objetivo
+				mision.objetivo = draw_boton_text_list(xpos, ypos, mision.objetivo, objetivos_nombre)
+				if mision.objetivo != prev_objetivo{
+					mision.target_id = 0
+					mision.target_num = 0
 				}
 				xpos += text_x
 				//Cantidad
-				if not in(mision_objetivo[i], 5, 7){
+				if not in(mision.objetivo, 5, 7){
 					xpos = draw_text_xpos(xpos, ypos, " ")
-					mision_target_num[i] = draw_boton_text(xpos, ypos, mision_target_num[i], true)
+					mision.target_num = draw_boton_text(xpos, ypos, mision.target_num, true)
 					xpos += text_x
 				}
 				//Conseguir recurso / Tener almacenado
-				if mision_objetivo[i] < 2{
+				if mision.objetivo < 2{
 					xpos = draw_text_xpos(xpos, ypos, $" {L.editor_de} ")
-					mision_target_id[i] = draw_boton_text_list(xpos, ypos, mision_target_id[i], recurso_nombre,, 10)
+					mision.target_id = draw_boton_text_list(xpos, ypos, mision.target_id, recurso_nombre,, 10)
 				}
 				//Construir / Tener construido
-				else if in(mision_objetivo[i], 2, 3, 7, 8){
+				else if in(mision.objetivo, 2, 3, 7, 8){
 					xpos = draw_text_xpos(xpos, ypos, " ")
-					mision_target_id[i] = draw_boton_text_list(xpos, ypos, mision_target_id[i], edificio_nombre,, 10)
+					mision.target_id = draw_boton_text_list(xpos, ypos, mision.target_id, edificio_nombre,, 10)
 				}
 				//Matar enemigos
-				else if mision_objetivo[i] = 4
+				else if mision.objetivo = 4
 					draw_text(xpos, ypos, $" {L.editor_enemigos}")
 				xpos = room_width / 2 + 40
 				ypos = 180
-				if draw_boton(xpos, ypos, mision_tiempo_edit[i] ? L.editor_deshabilitar : L.editor_habilitar){
-					if mision_tiempo[i] > 0
-						mision_tiempo[i] = 0
+				if draw_boton(xpos, ypos, mision.tiempo_edit ? L.editor_deshabilitar : L.editor_habilitar){
+					if mision.tiempo > 0
+						mision.tiempo = 0
 					else
-						mision_tiempo[i] = 1
-					mision_tiempo_edit[i] = not mision_tiempo_edit[i]
+						mision.tiempo = 1
+					mision.tiempo_edit = not mision.tiempo_edit
 				}
-				if mision_tiempo_edit[i]{
+				if mision.tiempo_edit{
 					xpos = room_width / 2 + 70
 					ypos += 30
 					xpos = draw_text_xpos(xpos, ypos, $"{L.editor_luego_de} ")
-					mision_tiempo[i] = draw_boton_text(xpos, ypos, mision_tiempo[i])
+					mision.tiempo = draw_boton_text(xpos, ypos, mision.tiempo)
 					xpos = 20 + draw_text_xpos(xpos + text_x, ypos, "s")
-					if draw_boton(xpos, ypos, mision_tiempo_victoria[i] ? L.win_victoria : L.win_derrota)
-						mision_tiempo_victoria[i] = not mision_tiempo_victoria[i]
-					if draw_boton(xpos + text_x + 20, ypos, mision_tiempo_show[i] ? L.editor_mostrar : L.editor_ocultar)
-						mision_tiempo_show[i] = not mision_tiempo_show[i]
+					if draw_boton(xpos, ypos, mision.tiempo_victoria ? L.win_victoria : L.win_derrota)
+						mision.tiempo_victoria = not mision.tiempo_victoria
+					if draw_boton(xpos + text_x + 20, ypos, mision.tiempo_show ? L.editor_mostrar : L.editor_ocultar)
+						mision.tiempo_show = not mision.tiempo_show
 				}
 				ypos += 40
-				for(var b = 0; b < array_length(mision_texto[i]); b++){
-					var texto = mision_texto[i, b]
+				for(var b = 0; b < array_length(mision.texto); b++){
+					var texto = mision.texto[b]
 					xpos = room_width / 2 + 80
 					xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_write} ")
 					if draw_boton(xpos, ypos, $"'{text_wrap(texto.texto, 250)}'",,, mb_any, false){
@@ -135,16 +125,11 @@ function menu_editor(){
 							keyboard_string = texto.texto
 						}
 						else{
-							array_delete(mision_texto[i], b--, 1)
+							array_delete(mision.texto, b--, 1)
 							continue
 						}
 					}
 					ypos += text_y
-					if draw_sprite_boton(spr_siguiente, 0, xpos + 300, ypos - text_y){
-						mision_choosing_coord = true
-						mision_choosing_coord_i = i
-						mision_choosing_coord_tipo = 2 + b
-					}
 					if get_keyboard_string = 100 + b{
 						draw_line(xpos, ypos + 20, xpos + text_x, ypos + 20)
 						texto.texto = keyboard_string
@@ -154,6 +139,11 @@ function menu_editor(){
 					texto.x = draw_boton_text(xpos, ypos, texto.x)
 					xpos = draw_text_xpos(xpos + text_x, ypos, ", ")
 					texto.y = draw_boton_text(xpos, ypos, texto.y)
+					if draw_sprite_boton(spr_siguiente, 0, xpos + text_x, ypos){
+						mision_choosing_coord = true
+						mision_choosing_coord_i = i
+						mision_choosing_coord_tipo = 2 + b
+					}
 					ypos += text_y
 				}
 				ypos += 10
@@ -163,34 +153,27 @@ function menu_editor(){
 					mision_choosing_coord_tipo = 0
 				}
 				ypos += text_y + 10
-				if draw_boton(room_width / 2 + 40, ypos, (mision_switch_oleadas[i] ? "" : L.editor_no + " ") + L.editor_cambiar_oleadas)
-					mision_switch_oleadas[i] = not mision_switch_oleadas[i]
+				if draw_boton(room_width / 2 + 40, ypos, (mision.switch_oleadas ? "" : L.editor_no + " ") + L.editor_cambiar_oleadas)
+					mision.switch_oleadas = not mision.switch_oleadas
 				ypos += text_y + 10
-				if draw_boton(room_width / 2  + 40, ypos, (mision_camara_move[i] ? "" : L.editor_no + " ") + L.editor_mover_camara){
-					mision_camara_move[i] = not mision_camara_move[i]
-					if mision_camara_move[i]{
+				if draw_boton(room_width / 2  + 40, ypos, (mision.camera_move ? "" : L.editor_no + " ") + L.editor_mover_camara){
+					mision.camera_move = not mision.camera_move
+					if mision.camera_move{
 						mision_choosing_coord = true
 						mision_choosing_coord_i = i
 						mision_choosing_coord_tipo = 1
 					}
 				}
 				ypos += text_y + 10
-				if mision_camara_move[i]{
+				if mision.camera_move{
 					xpos = room_width / 2 + 80
 					xpos = draw_text_xpos(xpos, ypos, $"{L.editor_mover_a} ")
-					mision_camara_x[i] = draw_boton_text(xpos, ypos, mision_camara_x[i])
+					mision.camera_x = draw_boton_text(xpos, ypos, mision.camera_x)
 					xpos = draw_text_xpos(xpos+ text_x, ypos, ", ")
-					mision_camara_y[i] = draw_boton_text(xpos, ypos, mision_camara_y[i])
+					mision.camera_y = draw_boton_text(xpos, ypos, mision.camera_y)
 				}
 				if draw_boton(room_width / 2 + 10, room_height - 140, L.editor_eliminar_objetivo, ui_rojo){
-					array_delete(mision_nombre, i, 1)
-					array_delete(mision_objetivo, i, 1)
-					array_delete(mision_target_id, i, 1)
-					array_delete(mision_target_num, i, 1)
-					array_delete(mision_tiempo, i, 1)
-					array_delete(mision_tiempo_victoria, i, 1)
-					array_delete(mision_tiempo_show, i, 1)
-					array_delete(mision_texto, i, 1)
+					array_delete(misiones, i, 1)
 					mision_actual = -1
 					deslizante[0] = 0
 				}
@@ -210,7 +193,7 @@ function menu_editor(){
 					xpos = draw_text_xpos(xpos, ypos, $"{L.editor_siguiente_ronda}: ")
 					oleadas_tiempo = draw_boton_text(xpos, ypos, oleadas_tiempo)
 				}
-				if array_length(mision_nombre) > 0{
+				if array_length(misiones) > 0{
 					xpos = room_width / 2 + 40
 					ypos += 20
 					xpos = draw_text_xpos(xpos, ypos, $"{L.editor_texto_victoria}: ")
@@ -353,14 +336,14 @@ function menu_editor(){
 				if mouse_check_button_pressed(mb_left){
 					var temp_complex = abtoxy(mx, my)
 					if mision_choosing_coord_tipo = 0
-						array_push(mision_texto[mision_choosing_coord_i], {x : temp_complex[0], y : temp_complex[1], texto : ""})
+						array_push(misiones[mision_choosing_coord_i].texto, {x : temp_complex[0], y : temp_complex[1], texto : ""})
 					else if mision_choosing_coord_tipo = 1{
-						mision_camara_x[mision_choosing_coord_i] = temp_complex[0]
-						mision_camara_y[mision_choosing_coord_i] = temp_complex[1]
+						misiones[mision_choosing_coord_i].camera_x = temp_complex[0]
+						misiones[mision_choosing_coord_i].camera_y = temp_complex[1]
 					}
 					else if mision_choosing_coord_tipo >= 2{
-						mision_texto[mision_choosing_coord_i, mision_choosing_coord_tipo - 2].x = temp_complex[0]
-						mision_texto[mision_choosing_coord_i, mision_choosing_coord_tipo - 2].y = temp_complex[1]
+						misiones[mision_choosing_coord_i].texto[mision_choosing_coord_tipo - 2].x = temp_complex[0]
+						misiones[mision_choosing_coord_i].texto[mision_choosing_coord_tipo - 2].y = temp_complex[1]
 					}
 					mision_choosing_coord = false
 				}

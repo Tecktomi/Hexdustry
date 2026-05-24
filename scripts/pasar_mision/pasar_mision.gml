@@ -5,7 +5,7 @@ function pasar_mision(){
 			mision_actual--
 			misiones_pasadas++
 		}
-		if ++mision_actual >= array_length(mision_nombre){
+		if ++mision_actual >= array_length(misiones){
 			mision_actual = -1
 			win = 1
 			if mapa >= 0 and dificultad >= 0{
@@ -17,14 +17,15 @@ function pasar_mision(){
 		}
 		else{
 			mision_counter = 0
-			if mision_tiempo[mision_actual] > 0
-				mision_current_tiempo = 60 * mision_tiempo[mision_actual]
-			if mision_switch_oleadas[mision_actual]
+			mision = misiones[mision_actual]
+			if mision.tiempo > 0
+				mision_current_tiempo = 60 * mision.tiempo
+			if mision.switch_oleadas
 				oleadas = not oleadas
-			if mision_camara_move[mision_actual]{
+			if mision.camera_move{
 				mision_camara_step = 60
-				mision_camara_x_start = camx
-				mision_camara_y_start = camy
+				mision_camera_x_start = camx
+				mision_camera_y_start = camy
 			}
 		}
 	}

@@ -76,10 +76,10 @@ function scr_silo_misiles(edificio = control.null_edificio){
 					win = 1
 					mision_camara_step = 60
 					mision_actual = 0
-					mision_camara_x[0] = edificio.center_x
-					mision_camara_y[0] = edificio.center_y
-					mision_camara_x_start = camx
-					mision_camara_y_start = camy
+					misiones[0].camera_x = edificio.center_x
+					misiones[0].camera_y = edificio.center_y
+					mision_camera_x_start = camx
+					mision_camera_y_start = camy
 				}
 				else{
 					if --edificio.fuel > 300

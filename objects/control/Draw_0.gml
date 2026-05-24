@@ -36,15 +36,16 @@ if menu = 0{
 	if draw_boton(room_width / 2, ypos, L.menu_juego_rapido, ui_verde){
 		input_layer = 1
 		get_file = 2
-		if array_length(mision_nombre) = 0{
+		if array_length(misiones) = 0{
 			tecnologia = false
 			oleadas_tiempo_primera = 240
 			oleadas_tiempo = 90
 			multiplicador_vida_enemigos = 50
 			cheat = false
-			default_mision()
-			mision_objetivo = [4]
-			mision_target_num = [15]
+			misiones = array_create(1, null_mision)
+			mision = misiones[0]
+			mision.objetivo = 4
+			mision.target_num = 15
 			flow = 0
 			dificultad = 0
 		}
@@ -151,7 +152,7 @@ if menu = 0{
 				keyboard_clear(vk_escape)
 				get_file = 0
 				input_layer = 0
-				default_mision(0)
+				misiones = array_create(0, null_mision)
 				exit
 			}
 			ypos += text_y * 1.2
@@ -418,8 +419,8 @@ if in(menu, 1, 3){
 	}
 	draw_set_halign(fa_center)
 	if mision_actual >= 0 and win = 0
-		for(var b = 0; b < array_length(mision_texto[mision_actual]); b++){
-			var texto = mision_texto[mision_actual, b]
+		for(var b = 0; b < array_length(mision.texto); b++){
+			var texto = mision.texto[b]
 			draw_text_background(texto.x * zoom - camx, texto.y * zoom - camy, text_wrap(texto.texto_idioma[idioma], 250),, false)
 		}
 	var temp_text = "", b = 0
@@ -1906,6 +1907,23 @@ if sonido
 		var b = 2 * pi / array_length(categoria_nombre_disponible)
 		draw_set_color(c_white)
 		draw_circle(menu_x, menu_y, _size, true)
+		if mision_actual >= 0 and in(mision.objetivo, 2, 3){
+			var flag = false
+			draw_set_color(c_blue)
+			draw_set_alpha(0.5)
+			for(var a = 0; a < array_length(categoria_index_disponible); a++){
+				for(var i = 0; i < array_length(categoria_edificios[categoria_index_disponible[a]]); i++)
+					if categoria_edificios[categoria_index_disponible[a], i] = mision.target_id{
+						flag = true
+						draw_arco(menu_x, menu_y, _size, a * b, (a + 1) * b)
+						break
+					}
+				if flag
+					break
+			}
+			draw_set_color(c_white)
+			draw_set_alpha(1)
+		}
 		draw_circle(menu_x, menu_y, _size / 10, false)
 		for(var a = 0; a < array_length(categoria_nombre_disponible); a++){
 			var angle = a * b
@@ -2058,14 +2076,14 @@ if build_index > 0 and win = 0{
 	else{
 		if draw_sprite_boton(spr_construir, 1, room_width - 80, room_height - 80, 64, 56)
 			build_index = 0
-		if draw_sprite_boton(spr_construir, 3, room_width - 160, room_height - 80, 64, 56){
+		if (edificio_rotable[build_index] or edificio_size[build_index] & 1 = 0) and draw_sprite_boton(spr_construir, 3, room_width - 160, room_height - 80, 64, 56){
 			if edificio_size[build_index] & 1
 				build_dir = (build_dir + 1) mod 6
 			else
 				build_dir = 5 - build_dir
 			prev_change = true
 		}
-		if draw_sprite_boton(spr_construir, 4, room_width - 240, room_height - 80, 64, 56){
+		if edificio_rotable[build_index] and draw_sprite_boton(spr_construir, 4, room_width - 240, room_height - 80, 64, 56){
 			if edificio_size[build_index] & 1
 				build_dir = (build_dir + 5) mod 6
 			else
@@ -2995,17 +3013,17 @@ if menu = 1{
 	}
 	if mision_actual >= 0 and win = 0{
 		var a = mision_actual
-		if not in(mision_objetivo[a], 5, 6)
-			temp_text_right += $"\n\n{mision_nombre[a]}\n{objetivos_nombre[mision_objetivo[a]]} {mision_target_num[a]} "
-		if mision_objetivo[a] < 2
-			temp_text_right += recurso_nombre[mision_target_id[a]]
-		else if in(mision_objetivo[a], 2, 3, 7, 8)
-			temp_text_right += edificio_nombre[mision_target_id[a]]
-		else if mision_objetivo[a] = 4
+		if not in(mision.objetivo, 5, 6)
+			temp_text_right += $"\n\n{mision.nombre}\n{objetivos_nombre[mision.objetivo]} {mision.target_num} "
+		if mision.objetivo < 2
+			temp_text_right += recurso_nombre[mision.target_id]
+		else if in(mision.objetivo, 2, 3, 7, 8)
+			temp_text_right += edificio_nombre[mision.target_id]
+		else if mision.objetivo = 4
 			temp_text_right += L.mision_enemigos
-		if not in(mision_objetivo[a], 5, 7)
-			temp_text_right += $"\n{mision_counter} / {mision_target_num[a]}"
-		if mision_tiempo[a] > 0 and mision_tiempo_show[a]{
+		if not in(mision.objetivo, 5, 7)
+			temp_text_right += $"\n{mision_counter} / {mision.target_num}"
+		if mision.tiempo > 0 and mision.tiempo_show{
 			var seg = floor(mision_current_tiempo / 60)
 			temp_text_right += $"\n{L.mision_tiempo}: {seg > 60 ? string(floor(seg / 60)) + "m " + string(seg mod 60) : seg}s"
 		}
@@ -3100,8 +3118,8 @@ if menu = 1{
 	if mision_actual = 0 and mision_camara_step > 0{
 		mision_camara_step--
 		zoom = 1
-		camx = clamp(((mision_camara_x[mision_actual] - room_width / 2) * (60 - mision_camara_step) + mision_camara_x_start * mision_camara_step) / 60, 0, xsize * 48 * zoom - room_width)
-		camy = clamp(((mision_camara_y[mision_actual] - room_height / 2) * (60 - mision_camara_step) + mision_camara_y_start * mision_camara_step) / 60, 0, ysize * 14 * zoom - room_height)
+		camx = clamp(((mision.camera_x - room_width / 2) * (60 - mision_camara_step) + mision_camera_x_start * mision_camara_step) / 60, 0, xsize * 48 * zoom - room_width)
+		camy = clamp(((mision.camera_y - room_height / 2) * (60 - mision_camara_step) + mision_camera_y_start * mision_camara_step) / 60, 0, ysize * 14 * zoom - room_height)
 	}
 	else if not chat_input
 		control_camara()
@@ -3363,5 +3381,11 @@ if keyboard_check(CONTROL_TAB) and online{
 	draw_set_halign(fa_left)
 }
 draw_sprite(spr_vineta, 0, 0, 0)
-if keyboard_check(ord("V"))
-	draw_text(mouse_x + 20, mouse_y, $"{jugador}\n{server_jugadores_nombre}")
+if keyboard_check(ord("V")){
+	draw_set_valign(fa_bottom)
+	draw_text(0, room_height, $"{jugador}\n{server_jugadores_nombre}\n{misiones}")
+	if keyboard_check_pressed(ord("V"))
+		for(var a = 0; a < array_length(misiones); a++)
+			show_debug_message(misiones[a])
+	draw_set_valign(fa_top)
+}
