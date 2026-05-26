@@ -533,6 +533,20 @@ function menu_editor(){
 		if sprite_boton_text != ""
 			draw_text_background(mouse_x + 20, mouse_y, sprite_boton_text)
 		ypos = room_height - 400
+		if array_length(misiones) > 0{
+			var xpos = 10
+			if draw_boton(xpos, ypos - 40, "prev") and mision_actual > 0
+				mision = misiones[--mision_actual]
+			xpos = draw_text_xpos(xpos + 1.2 * text_x, ypos - 35, $"{mision_actual + 1}/{array_length(misiones)}")
+			if draw_boton(xpos + 0.2 * text_x, ypos - 40, "next") and mision_actual < array_length(misiones) - 1
+				mision = misiones[++mision_actual]
+			draw_set_halign(fa_center)
+			for(var a = 0; a < array_length(mision.texto); a++){
+				var _texto = mision.texto[a]
+				draw_text_background(_texto.x * zoom - camx, _texto.y * zoom - camy, text_wrap(_texto.texto_idioma[idioma], 250),, false)
+			}
+			draw_set_halign(fa_left)
+		}
 		if draw_boton(10, ypos, L.editor_objetivos, ui_azul){
 			editor_menu = 1
 			exit
@@ -574,13 +588,11 @@ function menu_editor(){
 				var xpos = 120
 				ypos = 200
 				for(var a = 0; a < array_length(save_files); a++){
-					var temp_text = string_delete(save_files[a], string_pos(".", save_files[a]), 4)
+					var temp_text = file_format(save_files[a])
 					if draw_sprite_boton(save_files_png[a],, xpos, ypos, 96, 96, 1){
 						input_layer = 0
 						get_file = 0
-						save_file = load_escenario_buffer("Scenarios/" + save_files[a])
-						if string_pos(".", save_file) > 0
-							save_file = string_delete(save_file, string_pos(".", save_file), 4)
+						save_file = file_format(load_escenario_buffer("Scenarios/" + save_files[a]))
 					}
 					if draw_sprite_boton(spr_basura,, xpos - 10, ypos - 30,,, 1){
 						file_delete("Scenarios/" + temp_text + ".txt")

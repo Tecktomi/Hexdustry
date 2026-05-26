@@ -199,11 +199,11 @@ function scr_procesador(edificio = control.null_edificio){
 						val = temp_edificio.red.consumo
 				}
 				else if pc[2] = b++{
-					if edificio_energia[temp_edificio.index]
+					if tag_edificio_seteable[temp_edificio.index]
 						val = real(temp_edificio.mode)
 				}
 				else if pc[2] = b++{
-					if edificio_energia[temp_edificio.index]
+					if tag_edificio_seteable[temp_edificio.index]
 						val = temp_edificio.select
 				}
 				edificio.variables[pc[1]] = val

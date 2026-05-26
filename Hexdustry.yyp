@@ -171,6 +171,7 @@
     {"id":{"name":"explosion_fx","path":"scripts/explosion_fx/explosion_fx.yy",},},
     {"id":{"name":"explosion","path":"scripts/explosion/explosion.yy",},},
     {"id":{"name":"far_from_nucleus","path":"scripts/far_from_nucleus/far_from_nucleus.yy",},},
+    {"id":{"name":"file_format","path":"scripts/file_format/file_format.yy",},},
     {"id":{"name":"file_write","path":"scripts/file_write/file_write.yy",},},
     {"id":{"name":"flujo_text","path":"scripts/flujo_text/flujo_text.yy",},},
     {"id":{"name":"game_start","path":"scripts/game_start/game_start.yy",},},

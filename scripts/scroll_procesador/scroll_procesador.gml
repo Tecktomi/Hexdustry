@@ -8,7 +8,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 		draw_set_halign(fa_left)
 		if draw_sprite_boton(spr_basura,, xpos, ypos, 20, 20,, hover_sprite_boton_text, {a : L.procesador_borrar}){
 			array_delete(edificio.instruccion, a, 1)
-			return 0
+			return infinity
 		}
 		xpos += 20
 		if draw_sprite_boton(spr_clonar,, xpos, ypos, 20, 20,, hover_sprite_boton_text, {a : L.procesador_clonar}){
@@ -258,5 +258,5 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 		}
 		param.ypos += editor_item_size
 	}
-	return - 1
+	return -1
 }
