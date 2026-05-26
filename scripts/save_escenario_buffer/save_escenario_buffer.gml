@@ -78,10 +78,10 @@ function save_escenario_buffer(filename){
 		buffer_save(buffer, filename)
 		buffer_delete(buffer)
 		//Minimapa
-		var b = array_get_index(save_files, filename), temp_string = string_delete(filename, string_pos(".", filename), 4)
-		filename = temp_string
+		var b = array_get_index(save_files, filename)
+		filename = file_format(filename)
 		var temp_sprite = minimapa()
-		sprite_save(temp_sprite, 0, temp_string + ".png")
+		sprite_save(temp_sprite, 0, $"Scenarios/{filename}.png")
 		if b = -1
 			array_push(save_files_png, temp_sprite)
 	}

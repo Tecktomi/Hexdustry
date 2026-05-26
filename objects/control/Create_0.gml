@@ -80,7 +80,7 @@ save_files = browser ? scan_files("*.txt", fa_none) : []
 if browser{
 	for(var a = array_length(save_files) - 1; a >= 0; a--){
 		save_file = save_files[a]
-		var temp_text = string_delete(save_file, string_pos(".", save_file), 4)
+		var temp_text = file_format(save_file)
 		if file_exists(temp_text + ".png")
 			var temp_image = sprite_add(temp_text + ".png", 1, false, false, 0, 0)
 		else

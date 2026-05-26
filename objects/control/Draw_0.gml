@@ -110,7 +110,7 @@ if menu = 0{
 			var xpos = 120
 			ypos = 200
 			for(var a = 0; a < array_length(save_files); a++){
-				var temp_text = string_delete(save_files[a], string_pos(".", save_files[a]), 4)
+				var temp_text = file_format(save_files[a])
 				if draw_sprite_boton(save_files_png[a],, xpos, ypos, 96, 96, 1){
 					tecnologia = true
 					load_escenario_buffer("Scenarios/" + save_files[a])
@@ -175,7 +175,7 @@ if menu = 0{
 					for(var a = array_length(partidas) - 1; a >= 0; a--){
 						if array_length(partidas_png) > a and partidas_png[a] != spr_null_image
 							sprite_delete(partidas_png[a])
-						var temp_text = string_delete(partidas[a], string_pos(".", partidas[a]), 5)
+						var temp_text = file_format(partidas[a])
 						if file_exists("Saves/" + temp_text + ".png")
 							var temp_image = sprite_add("Saves/" + temp_text + ".png", 1, false, false, 0, 0)
 						else
@@ -194,7 +194,7 @@ if menu = 0{
 			var xpos = 120
 			ypos = 200
 			for(var a = 0; a < array_length(partidas); a++){
-				var temp_text = string_delete(partidas[a], string_pos(".", partidas[a]), 5)
+				var temp_text = file_format(partidas[a])
 				if draw_sprite_boton(partidas_png[a],, xpos, ypos, 96, 96, 1){
 					var buffer = buffer_create(4096, buffer_grow, 1)
 					buffer = buffer_load("Saves/" + partidas[a])
@@ -1110,7 +1110,7 @@ if keyboard_check(CONTROL_BLUEPRINT){
 			if blueprints_image[a] != spr_null_image
 				sprite_delete(blueprints_image[a])
 		for(var a = 0; a < array_length(blueprints_files); a++){
-			var temp_text = "Blueprints/" + string_delete(blueprints_files[a], string_pos(".", blueprints_files[a]), 4)
+			var temp_text = "Blueprints/" + file_format(blueprints_files[a])
 			if file_exists(temp_text + ".png")
 				var temp_image = sprite_add(temp_text + ".png", 1, false, false, 0, 0)
 			else
@@ -1224,7 +1224,7 @@ if pausa != 1 and get_file = 3{
 				array_delete(blueprints_image, i, 1)
 				break
 			}
-			draw_text(xpos + 20, ypos - 20, string_delete(blueprints_files[i], string_pos(".", blueprints_files[i]), 4))
+			draw_text(xpos + 20, ypos - 20, file_format(blueprints_files[i]))
 			xpos += 120
 			if (i mod 9) = 8{
 				xpos = 120

@@ -4,7 +4,7 @@ function scan_files_save(){
 		for(var a = array_length(save_files) - 1; a >= 0; a--){
 			if a < array_length(save_files_png) and save_files_png[a] != spr_null_image
 				sprite_delete(save_files_png[a])
-			var temp_text = "Scenarios/" + string_delete(save_files[a], string_pos(".", save_files[a]), 4)
+			var temp_text = "Scenarios/" + file_format(save_files[a])
 			if file_exists(temp_text + ".png")
 				var temp_image = sprite_add(temp_text + ".png", 1, false, false, 0, 0)
 			else
