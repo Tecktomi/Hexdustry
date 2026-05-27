@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"small_connected_components_removal",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"small_connected_components_removal",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

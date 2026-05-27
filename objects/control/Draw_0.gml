@@ -2479,83 +2479,144 @@ if build_index > 0 and win = 0{
 			//Sí se puede construir
 			else{
 				temp_complex = abtoxy(temp_mx, temp_my)
-				if not (mouse_check_button(mb_left) and (edificio_camino[build_index] or build_index = id_tuberia))
+				if not (mouse_check_button(mb_left) and (edificio_camino[build_index] or build_index = id_tuberia)) and not (not devise and clicked and (edificio_camino[build_index] or in(build_index, id_tuberia, id_muro)))
 					draw_edificio(temp_complex[0], temp_complex[1], build_index, build_dir, 0.5)
 				var temp_array, temp_array_2, flag_camino = true
 				//Vista previa caminos
 				if edificio_camino[build_index] or in(build_index, id_tuberia, id_muro){
-					//Iniciar arrastre
-					if mouse_check_button_pressed(mb_left){
-						mx_clic = temp_mx
-						my_clic = temp_my
-						clicked = true
-					}
-					//Arrastre
-					if mouse_check_button(mb_left) and construible{
-						pre_build_list = [[mx_clic, my_clic]]
-						pre_build_list_cruce = [false]
-						var temp_complex_2 = abtoxy(mx_clic, my_clic), aa = temp_complex_2[0], bb = temp_complex_2[1]
-						draw_edificio(aa, bb, build_index, build_dir, 0.5)
-						if mx_clic != temp_mx or my_clic != temp_my{
-							var angle = radtodeg((arctan2(bb * zoom - camy - mouse_y, mouse_x - aa * zoom + camx) + 2 * pi) mod (2 * pi))
-							if (last_mx != temp_mx or last_my != temp_my) and edificio_camino[build_index]
-								build_dir = floor(angle / 60)
-							build_dir_camino = floor(angle / 60)
-							var a = mx_clic, b = my_clic, temp_complex_3, _mina = max(xmouse, aa, 0), _minb = max(ymouse, bb, 0), _maxa = min(xmouse, aa, 48 * xsize), _maxb = min(ymouse, bb, 14 * ysize)
-							do{
-								temp_complex_3 = next_to(a, b, build_dir_camino)
-								array_push(pre_build_list, temp_complex_3)
-								a = temp_complex_3[0]
-								b = temp_complex_3[1]
-								temp_complex_3 = abtoxy(a, b)
-								aaa = temp_complex_3[0]
-								bbb = temp_complex_3[1]
-								if in(build_index, id_cinta_transportadora, id_cinta_magnetica) and (a != temp_mx or b != temp_my) and (a != mx_clic or b != my_clic) and edificio_bool[# a, b] and not in(edificio_id[# a, b].dir, build_dir, (build_dir + 3) mod 6) and in(edificio_id[# a, b].index, id_cinta_transportadora, id_cinta_magnetica){
-									draw_edificio(aaa, bbb, id_cruce, 0, 0.5)
-									array_push(pre_build_list_cruce, true)
+					//WINDOWS
+					if devise{
+						//Iniciar arrastre
+						if mouse_check_button_pressed(mb_left){
+							mx_clic = temp_mx
+							my_clic = temp_my
+							clicked = true
+						}
+						//Arrastre
+						if mouse_check_button(mb_left) and construible{
+							pre_build_list = [[mx_clic, my_clic]]
+							pre_build_list_cruce = [false]
+							var temp_complex_2 = abtoxy(mx_clic, my_clic), aa = temp_complex_2[0], bb = temp_complex_2[1]
+							draw_edificio(aa, bb, build_index, build_dir, 0.5)
+							if mx_clic != temp_mx or my_clic != temp_my{
+								var angle = radtodeg((arctan2(bb * zoom - camy - mouse_y, mouse_x - aa * zoom + camx) + 2 * pi) mod (2 * pi))
+								if (last_mx != temp_mx or last_my != temp_my) and edificio_camino[build_index]
+									build_dir = floor(angle / 60)
+								build_dir_camino = floor(angle / 60)
+								var a = mx_clic, b = my_clic, temp_complex_3, _mina = max(xmouse, aa, 0), _minb = max(ymouse, bb, 0), _maxa = min(xmouse, aa, 48 * xsize), _maxb = min(ymouse, bb, 14 * ysize)
+								do{
+									temp_complex_3 = next_to(a, b, build_dir_camino)
+									array_push(pre_build_list, temp_complex_3)
+									a = temp_complex_3[0]
+									b = temp_complex_3[1]
+									temp_complex_3 = abtoxy(a, b)
+									aaa = temp_complex_3[0]
+									bbb = temp_complex_3[1]
+									if in(build_index, id_cinta_transportadora, id_cinta_magnetica) and (a != temp_mx or b != temp_my) and (a != mx_clic or b != my_clic) and edificio_bool[# a, b] and not in(edificio_id[# a, b].dir, build_dir, (build_dir + 3) mod 6) and in(edificio_id[# a, b].index, id_cinta_transportadora, id_cinta_magnetica){
+										draw_edificio(aaa, bbb, id_cruce, 0, 0.5)
+										array_push(pre_build_list_cruce, true)
+									}
+									else{
+										draw_edificio(aaa, bbb, build_index, build_dir, 0.5)
+										array_push(pre_build_list_cruce, false)
+									}
 								}
-								else{
-									draw_edificio(aaa, bbb, build_index, build_dir, 0.5)
-									array_push(pre_build_list_cruce, false)
+								until(temp_complex_3[0] < _maxa or temp_complex_3[0] > _mina or temp_complex_3[1] < _maxb or temp_complex_3[1] > _minb)
+							}
+						}
+						//Mostrar caminos solos
+						else{
+							temp_complex = next_to(temp_mx, temp_my, build_dir)
+							var temp_complex_2 = abtoxy(temp_mx, temp_my), aa = temp_complex_2[0], bb = temp_complex_2[1]
+							var temp_complex_3 = abtoxy(temp_complex[0], temp_complex[1])
+							if not in(build_index, id_tuberia, id_muro){
+								draw_set_color(c_black)
+								draw_arrow_off(aa, bb, temp_complex_3[0], temp_complex_3[1], 8)
+							}
+							if in(build_index, id_enrutador, id_selector, id_overflow){
+								temp_complex = next_to(temp_mx, temp_my, (build_dir + 1) mod 6)
+								temp_complex_3 = abtoxy(temp_complex[0], temp_complex[1])
+								draw_arrow_off(aa, bb, temp_complex_3[0], temp_complex_3[1], 8)
+								temp_complex = next_to(temp_mx, temp_my, (build_dir + 5) mod 6)
+								temp_complex_3 = abtoxy(temp_complex[0], temp_complex[1])
+								draw_arrow_off(aa, bb, temp_complex_3[0], temp_complex_3[1], 8)
+							}
+						}
+						//Construir en cadena
+						if mouse_check_button_released(mb_left) and clicked and construible{
+							flag_camino = false
+							clicked = false
+							for(var a = 0; a < array_length(pre_build_list); a++){
+								comprable = true
+								if not cheat
+									comprable = is_comprable(edificio_precio_id[build_index], edificio_precio_num[build_index])
+								if in(build_index, id_tuberia, id_muro)
+									build_dir = 0
+								if comprable{
+									var temp_complex_2 = pre_build_list[a]
+									if edificio_camino[build_index] and pre_build_list_cruce[a]
+										construir(id_cruce, 0, temp_complex_2[0], temp_complex_2[1], build_enemigo)
+									else
+										construir(build_index, build_dir, temp_complex_2[0], temp_complex_2[1], build_enemigo)
 								}
 							}
-							until(temp_complex_3[0] < _maxa or temp_complex_3[0] > _mina or temp_complex_3[1] < _maxb or temp_complex_3[1] > _minb)
 						}
 					}
-					//Mostrar caminos solos
+					//Android
 					else{
-						temp_complex = next_to(temp_mx, temp_my, build_dir)
-						var temp_complex_2 = abtoxy(temp_mx, temp_my), aa = temp_complex_2[0], bb = temp_complex_2[1]
-						var temp_complex_3 = abtoxy(temp_complex[0], temp_complex[1])
-						if not in(build_index, id_tuberia, id_muro){
-							draw_set_color(c_black)
-							draw_arrow_off(aa, bb, temp_complex_3[0], temp_complex_3[1], 8)
+						//Confirmar
+						if clicked{
+							if mouse_check_button_pressed(mb_left){
+								for(var i = array_length(pre_build_list) - 1; i >= 0; i--){
+									var temp_complex2 = pre_build_list[i]
+									if mx = temp_complex2[0] and my = temp_complex2[1]{
+										var j = temp_complex2[2], k = temp_complex2[3]
+										var a = mx_clic, b = my_clic
+										for(var l = 0; l <= k; l++){
+											if edificio_bool[# a, b] and edificio_camino[edificio_id[# a, b].index]
+												construir(id_cruce, j, a, b, build_enemigo)
+											else
+												construir(build_index, j, a, b, build_enemigo)
+											a += DESFACE[b & 1][j, 0]
+											b += DESFACE[b & 1][j, 1]
+										}
+										break
+									}
+								}
+								clicked = false
+							}
+							//Dibujo
+							for(var i = array_length(pre_build_list) - 1; i >= 0; i--){
+								var temp_complex2 = pre_build_list[i]
+								var temp_complex3 = abtoxy(temp_complex2[0], temp_complex2[1])
+								var j = temp_complex2[4] ? id_cruce : build_index
+								if not is_comprable(edificio_precio_id[j], edificio_precio_num[j]) or not edificio_tecnologia[j] or not mision_edificios[j]
+									draw_sprite_off(spr_rojo, 0, temp_complex3[0], temp_complex3[1],,,,, 0.5)
+								draw_edificio(temp_complex3[0], temp_complex3[1], j, temp_complex2[2], 0.5)
+							}
 						}
-						if in(build_index, id_enrutador, id_selector, id_overflow){
-							temp_complex = next_to(temp_mx, temp_my, (build_dir + 1) mod 6)
-							temp_complex_3 = abtoxy(temp_complex[0], temp_complex[1])
-							draw_arrow_off(aa, bb, temp_complex_3[0], temp_complex_3[1], 8)
-							temp_complex = next_to(temp_mx, temp_my, (build_dir + 5) mod 6)
-							temp_complex_3 = abtoxy(temp_complex[0], temp_complex[1])
-							draw_arrow_off(aa, bb, temp_complex_3[0], temp_complex_3[1], 8)
-						}
-					}
-					//Construir en cadena
-					if mouse_check_button_released(mb_left) and clicked and construible{
-						flag_camino = false
-						clicked = false
-						for(var a = 0; a < array_length(pre_build_list); a++){
-							comprable = true
-							if not cheat
-								comprable = is_comprable(edificio_precio_id[build_index], edificio_precio_num[build_index])
-							if in(build_index, id_tuberia, id_muro)
-								build_dir = 0
-							if comprable{
-								var temp_complex_2 = pre_build_list[a]
-								if edificio_camino[build_index] and pre_build_list_cruce[a]
-									construir(id_cruce, 0, temp_complex_2[0], temp_complex_2[1], build_enemigo)
-								else
-									construir(build_index, build_dir, temp_complex_2[0], temp_complex_2[1], build_enemigo)
+						//Iniciar
+						else if mouse_check_button_pressed(mb_left){
+							mx_clic = mx
+							my_clic = my
+							clicked = true
+							pre_build_list = array_create(0, array_create(4, 0))
+							for(var i = 0; i < 6; i++){
+								var a = mx_clic, b = my_clic
+								for(var j = 0; j < 10; j++){
+									a += DESFACE[b & 1][i, 0]
+									b += DESFACE[b & 1][i, 1]
+									if not terreno_caminable[terreno[# a, b]]
+										break
+									if edificio_bool[# a, b]{
+										if edificio_camino[edificio_id[# a, b].index]
+											array_push(pre_build_list, [a, b, i, j, 1])
+										else
+											break
+									}
+									else
+										array_push(pre_build_list, [a, b, i, j, 0])
+								}
 							}
 						}
 					}
@@ -3294,7 +3355,7 @@ if menu = 1 or menu = 3{
 		}
 		if keyboard_check_pressed(CONTROL_FLOW){
 			keyboard_clear(CONTROL_FLOW)
-			flow = (flow + 1) mod 12
+			flow = (flow + 1) mod flow_max
 		}
 	}
 	if flow > 0
@@ -3384,8 +3445,9 @@ draw_sprite(spr_vineta, 0, 0, 0)
 if keyboard_check(ord("V")){
 	draw_set_valign(fa_bottom)
 	draw_text(0, room_height, $"{jugador}\n{server_jugadores_nombre}\n{misiones}")
-	if keyboard_check_pressed(ord("V"))
+	if keyboard_check_pressed(ord("V")){
 		for(var a = 0; a < array_length(misiones); a++)
 			show_debug_message(misiones[a])
+	}
 	draw_set_valign(fa_top)
 }
