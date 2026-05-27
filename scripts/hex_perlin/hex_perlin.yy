@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"hex_perlin",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"hex_perlin",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

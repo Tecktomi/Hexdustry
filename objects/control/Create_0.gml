@@ -285,6 +285,7 @@ L = {}
 	chat_input = false
 	temp_mx = 0
 	temp_my = 0
+	flow_max = 10
 #endregion
 #region Misiones
 	null_mision = def_mision()

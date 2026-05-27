@@ -88,6 +88,17 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 					}
 				}
 			}
+			//Perlin
+			else if tipo = 4{
+				var random1 = hex_perlin(xsize, ysize, 0)
+				ds_grid_add_region(random1, 0, 0, xsize, ysize, -ds_grid_get_min(random1, 0, 0, xsize, ysize))
+				ds_grid_multiply_region(random1, 0, 0, xsize, ysize, 1 / ds_grid_get_max(random1, 0, 0, xsize, ysize))
+				for(var a = 0; a < xsize; a++)
+					for(var b = 0; b < ysize; b++)
+						if random1[# a, b] < 0.3
+							terreno[# a, b] = dat1
+				small_connected_components_removal(dat1, dat2, dat3)
+			}
 		}
 	}
 	clear_olas()

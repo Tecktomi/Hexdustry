@@ -296,9 +296,14 @@ function menu_editor(){
 			xpos = 120
 			ypos += 20 * min(18, size)
 			xpos = draw_text_xpos(xpos, ypos, $"{L.editor_add} ")
-			var a = draw_boton_text_list(xpos, ypos, 0, ["...", L.editor_manchas, L.editor_borde, L.editor_ruido, L.editor_menas])
+			var a = draw_boton_text_list(xpos, ypos, 0, ["...", L.editor_manchas, L.editor_borde, L.editor_ruido, L.editor_menas, "PERLIN"])
 			if a > 0{
-				var temp_array_array = [[a - 1, 0, 50, 5], [a - 1, 4, 0, 2], [a - 1, 0, 6, 3], [a - 1, 0, 10, 3]]
+				var temp_array_array = [
+					[a - 1, idt_piedra, 50, 5],
+					[a - 1, idt_agua_profunda, idt_piedra, idt_agua],
+					[a - 1, idt_piedra, idt_piedra_cuprica, 3],
+					[a - 1, ido_cobre, 10, 3],
+					[a - 1, idt_agua_profunda, idt_pasto, 25]]
 				array_push(editor_instrucciones, temp_array_array[a - 1])
 				a = 0
 			}
@@ -533,6 +538,44 @@ function menu_editor(){
 		if sprite_boton_text != ""
 			draw_text_background(mouse_x + 20, mouse_y, sprite_boton_text)
 		ypos = room_height - 400
+		if draw_boton(10, ypos - 100, "RANDOM"){
+			var _time = current_time
+			ds_grid_clear(terreno, idt_pasto)
+			var random1 = hex_perlin(xsize, ysize, 0)
+			ds_grid_add_region(random1, 0, 0, xsize, ysize, -ds_grid_get_min(random1, 0, 0, xsize, ysize))
+			ds_grid_multiply_region(random1, 0, 0, xsize, ysize, 1 / ds_grid_get_max(random1, 0, 0, xsize, ysize))
+			for(var a = 0; a < xsize; a++)
+				for(var b = 0; b < ysize; b++)
+					if random1[# a, b] < 0.3
+						terreno[# a, b] = idt_agua_salada_profunda
+			small_connected_components_removal()
+			for(var b = 0; b < ysize; b++){
+				var bmod = b & 1
+				for(var a = 0; a < xsize; a++)
+					if terreno[# a, b] = idt_agua_salada_profunda
+						for(var c = 0; c < 6; c++){
+							var aa = a + DESFACE[bmod][c, 0], bb = b + DESFACE[bmod][c, 1]
+							if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+								continue
+							if terreno[# aa, bb] = idt_pasto
+								terreno[# aa, bb] = idt_agua_salada
+						}
+			}
+			for(var b = 0; b < ysize; b++){
+				var bmod = b & 1
+				for(var a = 0; a < xsize; a++)
+					if terreno[# a, b] = idt_agua_salada
+						for(var c = 0; c < 6; c++){
+							var aa = a + DESFACE[bmod][c, 0], bb = b + DESFACE[bmod][c, 1]
+							if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+								continue
+							if terreno[# aa, bb] = idt_pasto
+								terreno[# aa, bb] = idt_arena
+						}
+			}
+			clear_olas()
+			show_debug_message($"{current_time - _time}ms")
+		}
 		if array_length(misiones) > 0{
 			var xpos = 10
 			if draw_boton(xpos, ypos - 40, "prev") and mision_actual > 0

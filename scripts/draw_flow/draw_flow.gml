@@ -70,12 +70,6 @@ function draw_flow(){
 				draw_text_off(temp_complex[0], temp_complex[1], grid_water_distance[# a, b])
 			}
 		}
-		else if flow = 10{
-			for(var a = mina; a < maxa; a++) for(var b = minb; b < maxb; b++){
-				var temp_complex = abtoxy(a, b)
-				draw_text_off(temp_complex[0], temp_complex[1], terreno_pared_index[# a, b])
-			}
-		}
 		draw_set_halign(h)
 		draw_set_valign(v)
 	}
