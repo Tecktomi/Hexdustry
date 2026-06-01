@@ -152,6 +152,7 @@
     {"id":{"name":"draw_text_background_off","path":"scripts/draw_text_background_off/draw_text_background_off.yy",},},
     {"id":{"name":"draw_text_background","path":"scripts/draw_text_background/draw_text_background.yy",},},
     {"id":{"name":"draw_text_off","path":"scripts/draw_text_off/draw_text_off.yy",},},
+    {"id":{"name":"draw_text_rich","path":"scripts/draw_text_rich/draw_text_rich.yy",},},
     {"id":{"name":"draw_text_sprites","path":"scripts/draw_text_sprites/draw_text_sprites.yy",},},
     {"id":{"name":"draw_text_xpos","path":"scripts/draw_text_xpos/draw_text_xpos.yy",},},
     {"id":{"name":"draw_text_ypos","path":"scripts/draw_text_ypos/draw_text_ypos.yy",},},
