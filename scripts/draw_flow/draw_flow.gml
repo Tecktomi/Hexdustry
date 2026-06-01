@@ -70,6 +70,16 @@ function draw_flow(){
 				draw_text_off(temp_complex[0], temp_complex[1], grid_water_distance[# a, b])
 			}
 		}
+		else if flow = 10{
+			var colors = array_create(20, c_black)
+			for(var a = 0; a < 20; a++)
+				colors[a] = make_color_hsv(255 * a / 20, 255, 255)
+			for(var a = mina; a < maxa; a++) for(var b = minb; b < maxb; b++){
+				var temp_complex = abtoxy(a, b), c = abba[# a, b]
+				draw_set_color(colors[c])
+				draw_text_off(temp_complex[0], temp_complex[1], c)
+			}
+		}
 		draw_set_halign(h)
 		draw_set_valign(v)
 	}

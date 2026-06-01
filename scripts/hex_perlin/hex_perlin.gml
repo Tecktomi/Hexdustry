@@ -1,4 +1,4 @@
-function hex_perlin(_xsize, _ysize, _octava = 3){
+function hex_perlin(_xsize, _ysize, _octava = 3, borde = false){
 	/*
 	var xw = 24, yh = 16
 	var _chunkx = ceil(_xsize / 2), _chunky = ceil(_ysize / 4)
@@ -40,11 +40,16 @@ function hex_perlin(_xsize, _ysize, _octava = 3){
 	return output
 	*/
 	var mask = perlin(2 * _xsize + 2, _ysize + 1, _octava)
+	if borde{
+		var med = min(_xsize + 1, _ysize / 2)
+		for(var i = 0; i < 10; i++)
+			ds_grid_add_disk(mask, _xsize + 1, _ysize / 2, med * i / 10, 1)
+	}
 	var output = ds_grid_create(_xsize, _ysize)
 	for(var b = 0; b < _ysize; b++){
-		var bmod = b & 1
+		var bmod = b & 1, bplus = b + 1, bmodplus = bmod + 1
 		for(var a = 0; a < _xsize; a++)
-			output[# a, b] = (mask[# 2 * a + bmod, b] + mask[# 2 * a + bmod + 1, b] + mask[# 2 * a + bmod, b + 1] + mask[# 2 * a + bmod + 1, b + 1]) / 4
+			output[# a, b] = (mask[# 2 * a + bmod, b] + mask[# 2 * a + bmodplus, b] + mask[# 2 * a + bmod, bplus] + mask[# 2 * a + bmodplus, bplus]) / 4
 	}
 	return output
 }

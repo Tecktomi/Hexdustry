@@ -15,6 +15,7 @@ randomize()
 	}
 #endregion
 devise = (os_type = os_windows)
+//ddevise = false
 browser = (os_browser = browser_not_a_browser)
 if devise{
 	font_normal = ft_letra
@@ -285,7 +286,7 @@ L = {}
 	chat_input = false
 	temp_mx = 0
 	temp_my = 0
-	flow_max = 10
+	flow_max = 11
 #endregion
 #region Misiones
 	null_mision = def_mision()
@@ -442,6 +443,7 @@ L = {}
 	android_my = 0
 	android_zooming = false
 	android_building = false
+	android_clic = false
 #endregion
 null_sound = sound_play(snd_explosion, 0, 0, 0)
 null_edificio = {
@@ -539,6 +541,7 @@ edificios_pendientes = array_create(0, null_edificio)
 edificios_totales = array_create(0, null_edificio)
 luces = array_create(0, {a : 0, b : 0, x : 0, y : 0, r : 0, source : null_edificio})
 //Puertos de Carga
+abba = ds_grid_create(xsize, ysize)
 puerto_carga_bool = false
 puerto_carga_link = null_edificio
 puerto_carga_array = array_create(0, null_edificio)
@@ -1749,7 +1752,7 @@ explosion_queue = array_create(0, null_explosion)
 explosion_fx_queue = array_create(0, explosion_fx(0, 0, 0))
 set_idioma()
 #region Consejos
-	consejos_nombre = ["Control de Cámara", "Construcción", "Redes Eléctricas", "Tuberías", "Procesadores"]
+	consejos_nombre = ["Control de Cámara", "Construcción", "Redes Eléctricas", "Tuberías", "Procesadores", "Uranio"]
 	consejos_texto = [[
 		"Los controles de cámara se puede modificar en el menú de controles",
 		$"Accede al menú presionando Escape -> {L.controles}",
@@ -1785,10 +1788,24 @@ set_idioma()
 		"permiten escribir en un mensaje de salida del",
 		"permite almacenar hasta 64 valores",
 		"permite dibujar basado en las instrucciones dadas por los procesadores",
+	],[
+		"El ",
+		" se extrae directamente usando un ",
+		"Este es útil para construir",
+		"Y como utilizado en",
+		"Luego se puede procesar en ",
+		"para separar el ",
+		"del",
+		"Estas variantes se pueden usar como reemplazo del ",
+		"Además el ",
+		" sirve para",
+		"Producir energía en ",
+		"Producir Armas Nucleares en ",
+		"Enriquecer Uranio en "
 	]]
 for(var a = 0; a < array_length(consejos_texto); a++)
 	for(var b = 0; b < array_length(consejos_texto[a]); b++)
-		array_set(consejos_texto[a], b, text_wrap("-" + consejos_texto[a, b], 600))
+		array_set(consejos_texto[a], b, text_wrap(consejos_texto[a, b], 600))
 #endregion
 biome_seed = 0
 seed = random_get_seed()

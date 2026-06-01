@@ -189,7 +189,7 @@ function generar_bioma(bioma){
 						var temp_terreno = terreno[# aa, bb]
 						if terreno_caminable[temp_terreno]{
 							if ore[# aa, bb] != i{
-								ds_grid_set(ore_amount, aa, bb, 0)
+								ore_amount[# aa, bb] = 0
 								if tag_ore_piedras[i] and tag_terreno_piedras[temp_terreno]
 									terreno[# aa, bb] = i = ido_cobre ? idt_piedra_cuprica : idt_piedra_ferrica
 								ore[# aa, bb] = i
@@ -220,8 +220,8 @@ function generar_bioma(bioma){
 			var temp_complex = temp_list_nucleo[a], aa = temp_complex[0], bb = temp_complex[1]
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 				continue
-			ds_grid_set(ore, aa, bb, -1)
-			ds_grid_set(ore_amount, aa, bb, 0)
+			ore[# aa, bb] = -1
+			ore_amount[# aa, bb] = 0
 		}
 		//Spawn point
 		do{

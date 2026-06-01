@@ -1904,6 +1904,8 @@ if sonido
 			build_menu = 1
 	}
 	if build_menu = 1{
+		if not devise and draw_sprite_boton(spr_construir, 1, room_width - 80, room_height - 80, 64, 56)
+			build_menu = 0
 		var b = 2 * pi / array_length(categoria_nombre_disponible)
 		draw_set_color(c_white)
 		draw_circle(menu_x, menu_y, _size, true)
@@ -1947,12 +1949,14 @@ if sonido
 				menu_array = categoria_edificios_disponible[categoria_index_disponible[a]]
 			}
 		}
-		else if mouse_check_button_pressed(mb_left){
+		else if devise and mouse_check_button_pressed(mb_left){
 			mouse_clear(mb_left)
 			build_menu = 0
 		}
 	}
 	else if build_menu = 2{
+		if not devise and draw_sprite_boton(spr_construir, 1, room_width - 80, room_height - 80, 64, 56)
+			build_menu = 1
 		var b = 2 * pi / array_length(menu_array)
 		draw_set_color(c_white)
 		draw_circle(menu_x, menu_y, _size, true)
@@ -2004,10 +2008,11 @@ if sonido
 					just_pressed = true
 					prev_change = true
 					clicked = false
+					android_clic = false
 				}
 			}
 		}
-		else if mouse_check_button_pressed(mb_left){
+		else if devise and mouse_check_button_pressed(mb_left){
 			mouse_clear(mb_left)
 			build_menu = 1
 		}
@@ -2074,23 +2079,39 @@ if build_index > 0 and win = 0{
 	}
 	//ANDROID
 	else{
-		if draw_sprite_boton(spr_construir, 1, room_width - 80, room_height - 80, 64, 56)
+		var xpos = room_width - 80
+		if draw_sprite_boton(spr_construir, 1, xpos, room_height - 80, 64, 56){
 			build_index = 0
-		if (edificio_rotable[build_index] or edificio_size[build_index] & 1 = 0) and draw_sprite_boton(spr_construir, 3, room_width - 160, room_height - 80, 64, 56){
-			if edificio_size[build_index] & 1
-				build_dir = (build_dir + 1) mod 6
-			else
-				build_dir = 5 - build_dir
-			prev_change = true
+			clicked = false
 		}
-		if edificio_rotable[build_index] and draw_sprite_boton(spr_construir, 4, room_width - 240, room_height - 80, 64, 56){
-			if edificio_size[build_index] & 1
-				build_dir = (build_dir + 5) mod 6
-			else
-				build_dir = 5 - build_dir
-			prev_change = true
+		xpos -= 80
+		if draw_sprite_boton(spr_construir, 2, xpos, room_height - 80, 64, 56){
+			construir(build_index, build_dir, mx_clic, my_clic)
+			clicked = false
+			android_clic = false
 		}
-		if not (mouse_x > room_width - 280 and mouse_y > room_height - 120){
+		xpos -= 80
+		if (edificio_rotable[build_index] or edificio_size[build_index] & 1 = 0){
+			if draw_sprite_boton(spr_construir, 3, xpos, room_height - 80, 64, 56){
+				if edificio_size[build_index] & 1
+					build_dir = (build_dir + 1) mod 6
+				else
+					build_dir = 5 - build_dir
+				prev_change = true
+			}
+			xpos -= 80
+		}
+		if edificio_rotable[build_index]{
+			if draw_sprite_boton(spr_construir, 4, xpos, room_height - 80, 64, 56){
+				if edificio_size[build_index] & 1
+					build_dir = (build_dir + 5) mod 6
+				else
+					build_dir = 5 - build_dir
+				prev_change = true
+			}
+			xpos -= 80
+		}
+		if not (mouse_x > xpos - 80 and mouse_y > room_height - 120){
 			temp_mx = mx
 			temp_my = my
 		}
@@ -2566,24 +2587,26 @@ if build_index > 0 and win = 0{
 					else{
 						//Confirmar
 						if clicked{
-							if mouse_check_button_pressed(mb_left){
+							if mouse_check_button_released(mb_left) and distance(mouse_x, mouse_y, android_mouse_x, android_mouse_y) < 10{
 								for(var i = array_length(pre_build_list) - 1; i >= 0; i--){
 									var temp_complex2 = pre_build_list[i]
 									if mx = temp_complex2[0] and my = temp_complex2[1]{
-										var j = temp_complex2[2], k = temp_complex2[3]
+										build_dir = temp_complex2[2]
+										var j = temp_complex2[3] + 1
 										var a = mx_clic, b = my_clic
-										for(var l = 0; l <= k; l++){
-											if edificio_bool[# a, b] and edificio_camino[edificio_id[# a, b].index]
-												construir(id_cruce, j, a, b, build_enemigo)
+										for(var k = 0; k <= j; k++){
+											if edificio_bool[# a, b] and edificio_camino[edificio_id[# a, b].index] and edificio_id[# a, b].dir mod 3 != build_dir mod 3
+												construir(id_cruce, build_dir, a, b, build_enemigo)
 											else
-												construir(build_index, j, a, b, build_enemigo)
-											a += DESFACE[b & 1][j, 0]
-											b += DESFACE[b & 1][j, 1]
+												construir(build_index, build_dir, a, b, build_enemigo)
+											a += DESFACE[b & 1][build_dir, 0]
+											b += DESFACE[b & 1][build_dir, 1]
 										}
+										clicked = false
+										android_clic = false
 										break
 									}
 								}
-								clicked = false
 							}
 							//Dibujo
 							for(var i = array_length(pre_build_list) - 1; i >= 0; i--){
@@ -2591,12 +2614,14 @@ if build_index > 0 and win = 0{
 								var temp_complex3 = abtoxy(temp_complex2[0], temp_complex2[1])
 								var j = temp_complex2[4] ? id_cruce : build_index
 								if not is_comprable(edificio_precio_id[j], edificio_precio_num[j]) or not edificio_tecnologia[j] or not mision_edificios[j]
-									draw_sprite_off(spr_rojo, 0, temp_complex3[0], temp_complex3[1],,,,, 0.5)
-								draw_edificio(temp_complex3[0], temp_complex3[1], j, temp_complex2[2], 0.5)
+									draw_sprite_off(spr_rojo, 0, temp_complex3[0], temp_complex3[1],,,,, 0.3)
+								draw_edificio(temp_complex3[0], temp_complex3[1], j, temp_complex2[2], 0.3)
 							}
+							var temp_complex3 = abtoxy(mx_clic, my_clic)
+							draw_edificio(temp_complex3[0], temp_complex3[1], build_index, build_dir, 0.5)
 						}
 						//Iniciar
-						else if mouse_check_button_pressed(mb_left){
+						else if mouse_check_button_released(mb_left) and android_clic and distance(mouse_x, mouse_y, android_mouse_x, android_mouse_y) < 10{
 							mx_clic = mx
 							my_clic = my
 							clicked = true
@@ -2606,11 +2631,17 @@ if build_index > 0 and win = 0{
 								for(var j = 0; j < 10; j++){
 									a += DESFACE[b & 1][i, 0]
 									b += DESFACE[b & 1][i, 1]
+									if a < 0 or b < 0 or a >= xsize or b >= ysize
+										continue
 									if not terreno_caminable[terreno[# a, b]]
 										break
 									if edificio_bool[# a, b]{
-										if edificio_camino[edificio_id[# a, b].index]
-											array_push(pre_build_list, [a, b, i, j, 1])
+										if edificio_camino[edificio_id[# a, b].index]{
+											if edificio_id[# a, b].dir mod 3 = i mod 3
+												array_push(pre_build_list, [a, b, i, j, 0])
+											else
+												array_push(pre_build_list, [a, b, i, j, 1])
+										}
 										else
 											break
 									}
@@ -2821,7 +2852,7 @@ if build_index > 0 and win = 0{
 						}
 					}
 					//Construir
-					if ((devise and mouse_check_button_pressed(mb_left)) or (not devise and mouse_check_button_released(mb_left) and android_building and construible)) and flag_camino and comprable and (not edificio_bool[# temp_mx, temp_my] or (build_index = id_cruce and edificio_camino[edificio_id[# temp_mx, temp_my].index])){
+					if ((devise and mouse_check_button_pressed(mb_left)) or (not devise and mouse_check_button_released(mb_left) and android_building and construible and distance(mouse_x, mouse_y, android_mouse_x, android_mouse_y) < 10)) and flag_camino and comprable and (not edificio_bool[# temp_mx, temp_my] or (build_index = id_cruce and edificio_camino[edificio_id[# temp_mx, temp_my].index])){
 						android_building = false
 						var temp_edificio = construir(build_index, build_dir, temp_mx, temp_my, build_enemigo)
 						if temp_edificio != null_edificio and tag_dron_encima[temp_edificio.index]{
@@ -2862,6 +2893,8 @@ if build_index > 0 and win = 0{
 	}
 	last_mx = mx
 	last_my = my
+	if not devise and mouse_check_button_released(mb_left)
+		android_clic = true
 }
 else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
 	var len = array_length(blueprint), flip = (((blueprint_mod2 + my) mod 2) = 1), _rotar = false
@@ -3446,6 +3479,22 @@ if keyboard_check(ord("V")){
 	draw_set_valign(fa_bottom)
 	draw_text(0, room_height, $"{jugador}\n{server_jugadores_nombre}\n{misiones}")
 	if keyboard_check_pressed(ord("V")){
+		var semillax = array_create(20, 0), semillay = array_create(20, 0)
+		for(var i = 0; i < 20; i++){
+			semillax[i] = random(48 * xsize)
+			semillay[i] = random(14 * ysize)
+		}
+		for(var a = 0; a < xsize; a++)
+			for(var b = 0; b < ysize; b++){
+				var mindis = infinity, temp_complex = abtoxy(a, b)
+				for(var i = 0; i < 20; i++){
+					var dis = distance_sqr(temp_complex[0], temp_complex[1], semillax[i], semillay[i])
+					if dis < mindis{
+						mindis = dis
+						abba[# a, b] = i
+					}
+				}
+			}
 		for(var a = 0; a < array_length(misiones); a++)
 			show_debug_message(misiones[a])
 	}
