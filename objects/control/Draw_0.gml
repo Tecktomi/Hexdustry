@@ -3479,22 +3479,39 @@ if keyboard_check(ord("V")){
 	draw_set_valign(fa_bottom)
 	draw_text(0, room_height, $"{jugador}\n{server_jugadores_nombre}\n{misiones}")
 	if keyboard_check_pressed(ord("V")){
-		var semillax = array_create(20, 0), semillay = array_create(20, 0)
+		_time = current_time
+		var temp_array = array_create(0, 0), visitado = ds_grid_create(xsize, ysize), _continue = array_create(20)
+		ds_grid_clear(visitado, false)
 		for(var i = 0; i < 20; i++){
-			semillax[i] = random(48 * xsize)
-			semillay[i] = random(14 * ysize)
+			_continue[i] = array_create(20, false)
+			var a = random(xsize - 1), b = random(ysize - 1)
+			array_push(temp_array, a, b)
+			visitado[# a, b] = true
+			abba[# a, b] = i
 		}
-		for(var a = 0; a < xsize; a++)
-			for(var b = 0; b < ysize; b++){
-				var mindis = infinity, temp_complex = abtoxy(a, b)
-				for(var i = 0; i < 20; i++){
-					var dis = distance_sqr(temp_complex[0], temp_complex[1], semillax[i], semillay[i])
-					if dis < mindis{
-						mindis = dis
-						abba[# a, b] = i
+		for(var _counter = 0; _counter < array_length(temp_array); _counter++){
+			var a = temp_array[_counter++], b = temp_array[_counter], bmod = b & 1, c = abba[# a, b]
+			for(var i = 0; i < 6; i++){
+				var aa = a + DESFACE[bmod][i, 0], bb = b + DESFACE[bmod][i, 1]
+				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+					continue
+				if not visitado[# aa, bb]{
+					visitado[# aa, bb] = true
+					array_push(temp_array, aa, bb)
+					abba[# aa, bb] = c
+				}
+				else{
+					var d = abba[# aa, bb]
+					if c != d{
+						_continue[c, d] = true
+						_continue[d, c] = true
 					}
 				}
 			}
+		}
+		for(var a = 0; a < 20; a++)
+			show_debug_message(_continue[a])
+		show_debug_message($"{current_time - _time}ms")
 		for(var a = 0; a < array_length(misiones); a++)
 			show_debug_message(misiones[a])
 	}

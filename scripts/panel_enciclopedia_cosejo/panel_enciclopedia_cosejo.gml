@@ -133,67 +133,36 @@ function panel_enciclopedia_consejo(xpos = 0, ypos = 0, param = {_this_input_lay
 		}
 		//Uranio
 		else if ei = 5{
-			var _xpos = xpos
-			_xpos = draw_text_xpos(_xpos, ypos, _consejos_texto[0])
-			draw_sprite_stretched(recurso_sprite[idr_uranio_bruto], 0, _xpos, ypos, 18, 18)
-			if draw_boton(_xpos + 20, ypos, recurso_nombre[idr_uranio_bruto],,,, false, _input_layer)
-				enciclopedia_link(3, idr_uranio_bruto)
-			_xpos = draw_text_xpos(_xpos + 20 + text_x, ypos, _consejos_texto[1])
-			draw_sprite_stretched(edificio_sprite[id_taladro_de_explosion], 0, _xpos, ypos, 18, 18)
-			if draw_boton(_xpos + 20, ypos, edificio_nombre[id_taladro_de_explosion],,,, false, _input_layer)
-				enciclopedia_link(4, id_taladro_de_explosion)
-			ypos += text_y
-			draw_text_ypos(xpos, ypos, _consejos_texto[2])
-			ypos += text_y
+			var instrucciones = [
+				_consejos_texto[0],
+				recurso_sprite[idr_uranio_bruto], {a : 3, b : idr_uranio_bruto}, enciclopedia_link, recurso_nombre[idr_uranio_bruto],
+				_consejos_texto[1],
+				edificio_sprite[id_taladro_de_explosion], {a : 4, b : id_taladro_de_explosion}, enciclopedia_link, edificio_nombre[id_taladro_de_explosion],
+				$"\n{_consejos_texto[2]}",
+			]
 			for(var a = 0; a < edificio_max; a++)
 				for(var b = 0; b < array_length(edificio_precio_id[a]); b++)
 					if edificio_precio_id[a, b] = idr_uranio_bruto{
-						draw_sprite_stretched(edificio_sprite[a], 0, xpos + 20, ypos, 18, 18)
-						if draw_boton(xpos + 40, ypos, edificio_nombre[a],,,, false, _input_layer)
-							enciclopedia_link(4, a)
-						ypos += text_y
+						array_push(instrucciones, "\n-", edificio_sprite[a], {a : 4, b : a}, enciclopedia_link, edificio_nombre[a])
 						break
 					}
-			draw_text_ypos(xpos, ypos, _consejos_texto[3])
-			ypos += text_y
+			array_push(instrucciones, $"\n{_consejos_texto[3]}")
 			for(var a = 0; a < edificio_max; a++)
 				for(var b = 0; b < array_length(edificio_input_id[a]); b++)
 					if edificio_input_id[a, b] = idr_uranio_bruto{
-						draw_sprite_stretched(edificio_sprite[a], 0, xpos + 20, ypos, 18, 18)
-						if draw_boton(xpos + 40, ypos, edificio_nombre[a],,,, false, _input_layer)
-							enciclopedia_link(4, a)
-						ypos += text_y
+						array_push(instrucciones, "\n-", edificio_sprite[a], {a : 4, b : a}, enciclopedia_link, edificio_nombre[a])
 						break
 					}
-			_xpos = draw_text_xpos(xpos, ypos, _consejos_texto[4])
-			draw_sprite_stretched(edificio_sprite[id_refineria_de_metales], 0, _xpos, ypos, 18, 18)
-			if draw_boton(_xpos + 20, ypos, edificio_nombre[id_refineria_de_metales],,,, false, _input_layer)
-				enciclopedia_link(4, id_refineria_de_metales)
-			_xpos = draw_text_xpos(_xpos + 20 + text_x, ypos, _consejos_texto[5])
-			draw_sprite_stretched(recurso_sprite[idr_uranio_empobrecido], 0, _xpos, ypos, 18, 18)
-			if draw_boton(_xpos + 20, ypos, recurso_nombre[idr_uranio_empobrecido],,,, false, _input_layer)
-				enciclopedia_link(3, idr_uranio_empobrecido)
-			_xpos = draw_text_xpos(_xpos + 20 + text_x, ypos, _consejos_texto[6])
-			draw_sprite_stretched(recurso_sprite[idr_uranio_enriquecido], 0, _xpos, ypos, 18, 18)
-			if draw_boton(_xpos + 20, ypos, recurso_nombre[idr_uranio_enriquecido],,,, false, _input_layer)
-				enciclopedia_link(3, idr_uranio_enriquecido)
-			ypos = draw_text_ypos(xpos, ypos + text_y, $"{_consejos_texto[7]} {recurso_nombre[idr_uranio_bruto]}")
-			ypos = draw_text_ypos(xpos, ypos, $"{_consejos_texto[8]} {recurso_nombre[idr_uranio_enriquecido]} {_consejos_texto[9]}")
-			_xpos = draw_text_xpos(xpos + 20, ypos, _consejos_texto[10])
-			draw_sprite_stretched(edificio_sprite[id_planta_nuclear], 0, _xpos, ypos, 18, 18)
-			if draw_boton(_xpos + 20, ypos, edificio_nombre[id_planta_nuclear],,,, false, _input_layer)
-				enciclopedia_link(4, id_planta_nuclear)
-			ypos += text_y
-			_xpos = draw_text_xpos(xpos + 20, ypos, _consejos_texto[11])
-			draw_sprite_stretched(edificio_sprite[id_silo_de_misiles], 0, _xpos, ypos, 18, 18)
-			if draw_boton(_xpos + 20, ypos, edificio_nombre[id_silo_de_misiles],,,, false, _input_layer)
-				enciclopedia_link(4, id_silo_de_misiles)
-			ypos += text_y
-			_xpos = draw_text_xpos(xpos + 20, ypos, _consejos_texto[12])
-			draw_sprite_stretched(edificio_sprite[id_planta_de_enriquecimiento], 0, _xpos, ypos, 18, 18)
-			if draw_boton(_xpos + 20, ypos, edificio_nombre[id_planta_de_enriquecimiento],,,, false, _input_layer)
-				enciclopedia_link(4, id_planta_de_enriquecimiento)
-			ypos += text_y
+			array_push(instrucciones, $"\n{_consejos_texto[4]}",
+				edificio_sprite[id_refineria_de_metales], {a : 4, b : id_refineria_de_metales}, enciclopedia_link, edificio_nombre[id_refineria_de_metales],
+				_consejos_texto[5], recurso_sprite[idr_uranio_empobrecido], {a : 3, b : idr_uranio_empobrecido}, enciclopedia_link, recurso_nombre[idr_uranio_empobrecido],
+				_consejos_texto[6], recurso_sprite[idr_uranio_enriquecido], {a : 3, b : idr_uranio_enriquecido}, enciclopedia_link, recurso_nombre[idr_uranio_enriquecido],
+				$".\n{_consejos_texto[7]} {recurso_nombre[idr_uranio_bruto]}",
+				$"\n{_consejos_texto[8]} {recurso_nombre[idr_uranio_enriquecido]} {_consejos_texto[9]}",
+				$"\n-{_consejos_texto[10]}", edificio_sprite[id_planta_nuclear], {a : 4, b : id_planta_nuclear}, enciclopedia_link, edificio_nombre[id_planta_nuclear],
+				$"\n-{_consejos_texto[11]}", edificio_sprite[id_silo_de_misiles], {a : 4, b : id_silo_de_misiles}, enciclopedia_link, edificio_nombre[id_silo_de_misiles],
+				$"\n-{_consejos_texto[12]}", edificio_sprite[id_planta_de_enriquecimiento], {a : 4, b : id_planta_de_enriquecimiento}, enciclopedia_link, edificio_nombre[id_planta_de_enriquecimiento])
+			return draw_text_rich(xpos, ypos, room_width - xpos - 120, instrucciones)
 		}
 		return [xpos, ypos]
 	}

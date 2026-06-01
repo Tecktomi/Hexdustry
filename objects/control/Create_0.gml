@@ -15,7 +15,7 @@ randomize()
 	}
 #endregion
 devise = (os_type = os_windows)
-//ddevise = false
+//devise = false
 browser = (os_browser = browser_not_a_browser)
 if devise{
 	font_normal = ft_letra
