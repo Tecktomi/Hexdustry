@@ -1,5 +1,6 @@
 function control_camara(min_camx = 0){
 	with control{
+		//WINDOWS
 		if devise{
 			var cam_vel = 8
 			if keyboard_check(vk_lcontrol) and mouse_wheel_up() and zoom < 4{
@@ -26,7 +27,7 @@ function control_camara(min_camx = 0){
 				camy = max(camy - cam_vel * (1 + 1.5 * keyboard_check(vk_lshift)), 0)
 		}
 		//ANDROID
-		else if build_menu = 0 and build_index = 0{
+		else{
 			//ZOOM
 			if (device_mouse_check_button(0, mb_left) and device_mouse_check_button(1, mb_left)){
 				if (device_mouse_check_button(0, mb_left) and device_mouse_check_button_pressed(1, mb_left)){

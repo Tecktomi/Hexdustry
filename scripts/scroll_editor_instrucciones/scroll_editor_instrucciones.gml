@@ -79,8 +79,41 @@ function scroll_editor_instrucciones(a, param = {xpos : 0, ypos : 0, ore_names :
 			xpos = draw_text_xpos(xpos, ypos, $" sobre ")
 			instruccion[2] = draw_boton_text_list(xpos, ypos, dat2, terreno_nombre,, 10)
 			xpos += text_x
-			xpos = draw_text_xpos(xpos, ypos, $" con tamaño mínimo de ")
-			instruccion[3] = draw_boton_text(xpos, ypos, dat3)
+			xpos = draw_text_xpos(xpos, ypos, $" tamaño ")
+			instruccion[3] = draw_boton_text(xpos, ypos, dat3, true)
+		}
+		//Small Continous Coponents Remove
+		else if tipo = 5{
+			xpos = draw_text_xpos(xpos, ypos, $"Eliminar manchas de ")
+			instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
+			xpos += text_x
+			xpos = draw_text_xpos(xpos, ypos, $" sobre ")
+			instruccion[2] = draw_boton_text_list(xpos, ypos, dat2, terreno_nombre,, 10)
+			xpos += text_x
+			xpos = draw_text_xpos(xpos, ypos, $" más pequeñas que ")
+			instruccion[3] = draw_boton_text(xpos, ypos, dat3, true)
+		}
+		//Contorno
+		else if tipo = 6{
+			xpos = draw_text_xpos(xpos, ypos, $"Añadir contorno de ")
+			instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
+			xpos += text_x
+			xpos = draw_text_xpos(xpos, ypos, $" sobre ")
+			instruccion[2] = draw_boton_text_list(xpos, ypos, dat2, terreno_nombre,, 10)
+			xpos += text_x
+			xpos = draw_text_xpos(xpos, ypos, $" tamaño ")
+			instruccion[3] = draw_boton_text(xpos, ypos, dat3, true)
+		}
+		//Autómata
+		else if tipo = 7{
+			xpos = draw_text_xpos(xpos, ypos, $"Añadir ")
+			instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
+			xpos += text_x
+			xpos = draw_text_xpos(xpos, ypos, $" autómata ")
+			instruccion[2] = draw_boton_text(xpos, ypos, dat2, true)
+			xpos += text_x
+			xpos = draw_text_xpos(xpos, ypos, $" repetir ")
+			instruccion[3] = draw_boton_text(xpos, ypos, dat3, true)
 		}
 		if procesador_move >= 0 and mouse_y > ypos and mouse_y < ypos + text_y{
 			draw_set_alpha(0.3)

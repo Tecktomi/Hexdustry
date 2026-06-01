@@ -91,13 +91,55 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 			//Perlin
 			else if tipo = 4{
 				var random1 = hex_perlin(xsize, ysize, 0)
-				ds_grid_add_region(random1, 0, 0, xsize, ysize, -ds_grid_get_min(random1, 0, 0, xsize, ysize))
 				ds_grid_multiply_region(random1, 0, 0, xsize, ysize, 1 / ds_grid_get_max(random1, 0, 0, xsize, ysize))
+				dat3 /= 100
 				for(var a = 0; a < xsize; a++)
 					for(var b = 0; b < ysize; b++)
-						if random1[# a, b] < 0.3
+						if random1[# a, b] < dat3 and terreno[# a, b] = dat2
 							terreno[# a, b] = dat1
+			}
+			//SCCR
+			else if tipo = 5
 				small_connected_components_removal(dat1, dat2, dat3)
+			//Contorno
+			else if tipo = 6{
+				var random1 = hex_perlin(xsize, ysize, 0, true)
+				ds_grid_multiply_region(random1, 0, 0, xsize, ysize, 1 / ds_grid_get_max(random1, 0, 0, xsize, ysize))
+				dat3 /= 100
+				for(var a = 0; a < xsize; a++)
+					for(var b = 0; b < ysize; b++)
+						if random1[# a, b] < dat3 and terreno[# a, b] = dat2
+							terreno[# a, b] = dat1
+			}
+			//Automata
+			else if tipo = 7{
+				var temp_bool = ds_grid_create(xsize, ysize)
+				var temp_real = ds_grid_create(xsize, ysize)
+				for(var a = 0; a < xsize; a++)
+					for(var b = 0; b < ysize; b++)
+						temp_bool[# a, b] = brandom()
+				repeat(dat3){
+					ds_grid_clear(temp_real, 0)
+					for(var b = 0; b < ysize; b++){
+						var bmod = b % 1
+						for(var a = 0; a < xsize; a++)
+							if temp_bool[# a, b]
+								for(var j = 0; j < 6; j++){
+									var aa = a + DESFACE[bmod][j, 0]
+									var bb = b + DESFACE[bmod][j, 1]
+									if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+										continue
+									temp_real[# aa, bb] += 1
+								}
+					}
+					for(var a = 0; a < xsize; a++)
+						for(var b = 0; b < ysize; b++)
+							temp_bool[# a, b] = (temp_real[# a, b] > dat2)
+				}
+				for(var a = 0; a < xsize; a++)
+					for(var b = 0; b < ysize; b++)
+						if temp_bool[# a, b]
+							terreno[# a, b] = dat1
 			}
 		}
 	}
