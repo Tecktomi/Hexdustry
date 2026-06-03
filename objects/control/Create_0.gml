@@ -15,7 +15,6 @@ randomize()
 	}
 #endregion
 devise = (os_type = os_windows)
-//devise = false
 browser = (os_browser = browser_not_a_browser)
 if devise{
 	font_normal = ft_letra
@@ -539,6 +538,7 @@ procesador_select = null_edificio
 null_edificio.procesador_link = array_create(0, null_edificio)
 edificios_pendientes = array_create(0, null_edificio)
 edificios_totales = array_create(0, null_edificio)
+show_menu_build = null_edificio
 luces = array_create(0, {a : 0, b : 0, x : 0, y : 0, r : 0, source : null_edificio})
 //Puertos de Carga
 abba = ds_grid_create(xsize, ysize)
@@ -923,15 +923,21 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 dron_max = array_length(dron_nombre)
 //Liquidos
 #region Líquidos
-	idl_agua = 0
-	idl_acido = 1
-	idl_petroleo = 2
-	idl_lava = 3
-	idl_agua_salada = 4
-	liquido_nombre = ["Agua", "Ácido", "Petróleo", "Lava", "Agua salada"]
-	liquido_color = [ #5FC8F0, #FFEF00, #000707, #FBAF5D, #3F6E85]
-	liquido_sprite = [spr_item_agua, spr_item_acido, spr_item_petroleo, spr_item_lava, spr_item_agua_salada]
-	lq_max = array_length(liquido_nombre)
+	liquido_nombre = array_create(0, "")
+	liquido_color = array_create(0, c_black)
+	liquido_sprite = array_create(0, spr_hexagono)
+	function def_liquido(nombre, color = c_black, sprite = spr_hexagono){
+		array_push(liquido_nombre, string(nombre))
+		array_push(liquido_color, color)
+		array_push(liquido_sprite, sprite)
+		return array_length(liquido_nombre) - 1
+	}
+	idl_agua = def_liquido("Agua", #5FC8F0, spr_item_agua)
+	idl_acido = def_liquido("Ácido", #FFEF00, spr_item_acido)
+	idl_petroleo = def_liquido("Petróleo", #000707, spr_item_petroleo)
+	idl_lava = def_liquido("Lava", #FBAF5D, spr_item_lava)
+	idl_agua_salada = def_liquido("Agua Salada", #3F6E85, spr_item_agua_salada)
+	liquido_max = array_length(liquido_nombre)
 #endregion
 //Edificios
 #region Descripciones
@@ -1050,9 +1056,9 @@ dron_max = array_length(dron_nombre)
 	edificio_precio = array_create(0, 0)
 	edificio_prioridad = array_create(0, 0)
 #endregion
-function def_edificio(name, size, sprite = spr_base, sprite_2 = spr_base, vida = 100, proceso = 0, accion = scr_null, draw_function = scr_draw_default, draw_estatico = true, camino = false, precio_id = array_create(0, 0), precio_num = array_create(0, 0), carga = 0, receptor = false, in_all = true, in_id = array_create(0, 0), in_num = array_create(0, 0), emisor = false, out_all = true, out_id = array_create(0, 0)){
+function def_edificio(name, size = 1, sprite = spr_base, sprite_2 = spr_base, vida = 100, proceso = 0, accion = scr_null, draw_function = scr_draw_default, draw_estatico = true, camino = false, precio_id = array_create(0, 0), precio_num = array_create(0, 0), carga = 0, receptor = false, in_all = true, in_id = array_create(0, 0), in_num = array_create(0, 0), emisor = false, out_all = true, out_id = array_create(0, 0)){
 	array_push(edificio_nombre, string(name))
-	array_push(edificio_size, real(size))
+	array_push(edificio_size, size)
 	array_push(edificio_sprite, sprite)
 	array_push(edificio_sprite_2, (sprite_2 = spr_base) ? sprite : sprite_2)
 	array_push(edificio_key, "")
@@ -1142,7 +1148,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 	id_muro = def_edificio("Muro", 1, spr_hexagono,, 500,,,,,, [idr_concreto], [1]); def_edificio_2(,,,,,, true, -1)
 	id_puerto_de_carga = def_edificio("Puerto de Carga", 2, spr_punto_carga,, 150,, scr_puerto_carga,,,, [idr_cobre, idr_bronce, idr_electronicos], [25, 10, 1], 25,, true,,,, true); def_edificio_2(,,,,,,, 1)
 	id_ensambladora = def_edificio("Ensambladora", 2.5, spr_ensambladora,, 250, 240, scr_ensambladora,,,, [idr_hierro, idr_bronce, idr_acero, idr_silicio], [25, 15, 5, 10], 40, true, false, [idr_cobre, idr_silicio], [10, 10], true, false, [idr_electronicos]); def_edificio_2(70,,,,,,, 1)
-	id_planta_nuclear = def_edificio("Planta Nuclear", 4, spr_planta_nuclear,, 500,, scr_planta_nuclear,,,, [idr_cobre, idr_acero, idr_concreto, idr_electronicos], [250, 80, 50, 20], 21, true, false, [idr_uranio_enriquecido, idr_uranio_empobrecido], [1, 20]); def_edificio_2(-500, 150, 200, [idl_agua, idl_agua_salada],,,, 3)
+	id_planta_nuclear = def_edificio("Planta Nuclear", 4, spr_planta_nuclear,, 500,, scr_planta_nuclear,,,, [idr_cobre, idr_acero, idr_concreto, idr_electronicos], [250, 80, 50, 20], 10, true, false, [idr_uranio_enriquecido], [10]); def_edificio_2(-500, 150, 200, [idl_agua, idl_agua_salada],,,, 3)
 	id_torre_de_alta_tension = def_edificio("Torre de Alta Tensión", 2, spr_cable_tension,, 100,,,,,, [idr_cobre, idr_acero, idr_electronicos], [10, 5, 1]); def_edificio_2(5,,,,,, true, 1)
 	id_perforadora_de_petroleo = def_edificio("Perforadora de Petróleo", 3, spr_perforadora,, 200,, scr_perforadora_petroleo, scr_draw_bomba_impar, false,, [idr_hierro, idr_acero, idr_concreto], [50, 15, 10]); def_edificio_2(80, 10, -40, [idl_petroleo],,,, 2)
 	//40
@@ -1607,7 +1613,7 @@ sort_drones()
 		tecnologia_next[a] = array_create(0, 0)
 		edificios_index[a] = array_create(0, null_edificio)
 	}
-	function def_tecnologia(edificio){
+	function def_tecnologia(edificio = 0){
 		tecnologia_precio_id[edificio] = array_create(0, 0)
 		tecnologia_precio_num[edificio] = array_create(0, 0)
 		for(var a = 0; a < array_length(edificio_precio_id[edificio]); a++){
@@ -1615,7 +1621,7 @@ sort_drones()
 			array_push(tecnologia_precio_num[edificio], round(tecnologia_precio_multiplicador * (5 + edificio_precio_num[edificio, a])))
 		}
 		for(var a = 1; a < argument_count; a++){
-			var temp_edificio = argument[a]
+			var temp_edificio = real(argument[a])
 			array_push(tecnologia_prev[edificio], temp_edificio)
 			array_push(tecnologia_next[temp_edificio], edificio)
 		}

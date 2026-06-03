@@ -90,7 +90,7 @@ function panel_enciclopedia_consejo(xpos = 0, ypos = 0, param = {_this_input_lay
 				return [xpos, ypos]
 			}
 			ypos = draw_text_ypos(xpos, ypos, _consejos_texto[4])
-			for(var a = 0; a < array_length(liquido_nombre); a++){
+			for(var a = 0; a < liquido_max; a++){
 				ypos = draw_text_ypos(xpos + 20, ypos, _consejos_texto[5] + " " + liquido_nombre[a])
 				draw_sprite_stretched(liquido_sprite[a], 0, xpos + text_x + 20, ypos - text_y, 24, 24)
 				for(var b = 0; b < edificio_max; b++)

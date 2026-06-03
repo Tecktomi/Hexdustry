@@ -52,7 +52,7 @@ function set_edificio(mode, select, edificio = control.null_edificio, _server = 
 		}
 		//Líquido infinito
 		else if index = id_liquido_infinito{
-			if select < -1 or select >= array_length(liquido_nombre)
+			if select < -1 or select >= liquido_max
 				exit
 			if edificio.select >= 0 and select = -1{
 				change_flujo(0, edificio)
