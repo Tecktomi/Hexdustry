@@ -35,14 +35,13 @@ function scr_planta_nuclear(edificio = control.null_edificio){
 		}
 		else if in(flujo.liquido, idl_agua, idl_agua_salada){
 			//Encender
-			if edificio.carga[idr_uranio_enriquecido] > 0 and edificio.carga[idr_uranio_empobrecido] > 0 and flujo_power > 0{
-				edificio.fuel = 300
-				edificio.carga[idr_uranio_enriquecido] -= 0.1
-				edificio.carga[idr_uranio_empobrecido]--
+			if edificio.carga[idr_uranio_enriquecido] >= 1 and flujo_power > 0{
+				edificio.fuel = 3000
+				edificio.carga[idr_uranio_enriquecido]--
 				encender_luz(, edificio)
 				change_energia(edificio_energia_consumo[index] * flujo_power, edificio)
 				change_flujo(edificio_flujo_consumo[index], edificio)
-				edificio.carga_total -= 1.1
+				edificio.carga_total--
 				mover_in(edificio)
 			}
 			//Apagar

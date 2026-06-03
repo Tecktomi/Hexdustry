@@ -336,9 +336,9 @@ if in(menu, 1, 3){
 					draw_sprite_off(planta_quimica_sprite[edificio.select], 0, aa, bb)
 				//Humo
 				if show_humo and tag_generadores_de_humo[index]{
-					if ((tag_generadores_de_humo_combustion[index] and edificio.fuel > 0) or (index = id_generador_geotermico and in(edificio.flujo.liquido, 0, 4)) or (index = id_refineria_de_petroleo and edificio.flujo.liquido = 2 and edificio.red.eficiencia > 0)) and image_index & 1{
+					if ((tag_generadores_de_humo_combustion[index] and edificio.fuel > 0) or (index = id_generador_geotermico and in(edificio.flujo.liquido, 0, 4)) or (index = id_refineria_de_petroleo and edificio.flujo.liquido = 2 and edificio.red.eficiencia > 0)) and image_index & 3{
 						var dir = direccion_viento + random_range(-pi / 4, pi / 4)
-						array_push(humos, add_humo(aa, bb, edificio.a, edificio.b, cos(dir), sin(dir), irandom_range(70, 100)))
+						array_push(humos, add_humo(center_x, center_y, edificio.a, edificio.b, cos(dir), sin(dir), irandom_range(70, 100)))
 					}
 				}
 				//Mensajes
@@ -894,7 +894,7 @@ if show_menu{
 		if in(index, id_selector, id_recurso_infinito)
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 28 * ceil(rss_max / 5)) * zoom, false)
 		else if index = id_liquido_infinito
-			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * lq_max) * zoom, false)
+			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * liquido_max) * zoom, false)
 		else if index = id_planta_quimica
 			draw_rectangle(aa - 90 * zoom, bb + 40 * zoom, aa + 90 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, false)
 		else if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
@@ -925,9 +925,9 @@ if show_menu{
 				draw_sprite_stretched(recurso_sprite[a], 0, aa + (-80 + 32 * (a mod 5)) * zoom, bb + (40 + 28 * floor(a / 5)) * zoom, 32 * zoom, 28 * zoom)
 		}
 		if index = id_liquido_infinito{
-			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * lq_max) * zoom, true)
+			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * liquido_max) * zoom, true)
 			draw_text(aa - 80 * zoom, bb + 20 * zoom, L.show_menu_ningun_liquido)
-			for(var a = 0; a < lq_max; a++)
+			for(var a = 0; a < liquido_max; a++)
 				draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, liquido_nombre[a])
 		}
 		if index = id_planta_quimica{
@@ -1009,7 +1009,7 @@ if show_menu{
 				}
 			}
 			else if index = id_liquido_infinito{
-				if mouse_check_button_pressed(mb_left) and mouse_y < bb + (40 + 20 * lq_max) * zoom{
+				if mouse_check_button_pressed(mb_left) and mouse_y < bb + (40 + 20 * liquido_max) * zoom{
 					mouse_clear(mb_left)
 					show_menu = false
 					var a = floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))
