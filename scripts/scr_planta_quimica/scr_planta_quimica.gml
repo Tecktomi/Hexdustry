@@ -7,30 +7,25 @@ function scr_planta_quimica(edificio = control.null_edificio){
 		if edificio.fuel > 0{
 			edificio.fuel--
 			if edificio.fuel = 0
-				change_flujo(0, edificio)
+				edificio_encender(edificio, false, false)
 		}
 		if (edificio.select = 0 and edificio.carga[idr_piedra_sulfatada] >= 3 and in(flujo.liquido, -1, idl_acido) and flujo.almacen < flujo.almacen_max) or
 			(edificio.select = 1 and flujo.liquido = idl_acido and edificio.carga[idr_compuesto_incendiario] > 0 and edificio.carga[idr_explosivo] < 10) or
 			(edificio.select = 2 and flujo.liquido = idl_acido and edificio.carga[idr_cobre] > 0 and edificio.carga[idr_bateria] < 10){
 			//Apagar
 			if edificio.energia_consumo_max > 0 and red_power = 0{
-				change_flujo(0, edificio)
-				change_energia(0, edificio)
-				encender_luz(false, edificio)
+				edificio_encender(edificio, false)
 				continue
 			}
 			//Encender
 			if not edificio.start{
-				change_energia(edificio.energia_consumo_max, edificio)
-				if edificio.flujo_consumo_max > 0
-					change_flujo(edificio.flujo_consumo_max, edificio)
+				edificio_encender(edificio,,, (edificio.flujo_consumo_max > 0))
 				edificio.start = true
 				if edificio.carga[idr_sal] > 0{
 					edificio.carga[idr_sal] -= 0.1
 					edificio.carga_total -= 0.1
 					edificio.proceso += floor(edificio_proceso[index] / 4)
 				}
-				encender_luz(, edificio)
 			}
 			if edificio.flujo_consumo_max > 0 and edificio.energia_consumo_max > 0
 				edificio.proceso += min(flujo_power, red_power) * (1 + 0.3 * edificio.modulo)
@@ -65,16 +60,12 @@ function scr_planta_quimica(edificio = control.null_edificio){
 					change_flujo(edificio.flujo_consumo_max, edificio)
 				edificio.proceso -= edificio_proceso[index]
 				edificio.start = false
-				change_energia(0, edificio)
+				edificio_encender(edificio, false,, false)
 				edificio.waiting = not mover(edificio)
-				encender_luz(false, edificio)
 			}
 		}
-		else if edificio.fuel = 0{
-			change_flujo(0, edificio)
-			change_energia(0, edificio)
-			encender_luz(false, edificio)
-		}
+		else if edificio.fuel = 0
+			edificio_encender(edificio, false)
 		if edificio.emisor and edificio.carga_total > 0
 			edificio.waiting = not mover(edificio)
 	}

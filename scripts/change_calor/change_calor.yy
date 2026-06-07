@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"change_calor",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"change_calor",
+  "parent":{
+    "name":"EDIFICIOS",
+    "path":"folders/SCRIPTS/EDIFICIOS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

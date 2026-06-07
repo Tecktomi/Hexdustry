@@ -1,8 +1,7 @@
 function scr_turbina(edificio = control.null_edificio){
 	with control{
 		var index = edificio.index
-		if edificio_flujo[index]
-			var flujo = edificio.flujo, flujo_power = flujo.eficiencia
+		var flujo = edificio.flujo, flujo_power = flujo.eficiencia
 		//Ya está encendido
 		if edificio.fuel > 0{
 			edificio.fuel--
@@ -23,18 +22,15 @@ function scr_turbina(edificio = control.null_edificio){
 					edificio.fuel = recurso_combustion_time[1]
 					edificio.carga[idr_carbon]--
 				}
-				encender_luz(, edificio)
+				edificio_encender(edificio,, false, false)
 				change_energia(edificio_energia_consumo[index] * flujo_power, edificio)
 				change_flujo(edificio_flujo_consumo[index] * (1 - 0.25 * edificio.modulo), edificio)
 				edificio.carga_total--
 				mover_in(edificio)
 			}
 			//Apagar
-			else{
-				encender_luz(false, edificio)
-				change_energia(0, edificio)
-				change_flujo(0, edificio)
-			}
+			else
+				edificio_encender(edificio, false)
 		}
 	}
 }

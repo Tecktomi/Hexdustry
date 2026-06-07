@@ -3,11 +3,11 @@ function scr_onda_choque(edificio = control.null_edificio){
 		var index = edificio.index
 		var red = edificio.red, red_power = red.eficiencia
 		if edificio.proceso < edificio_proceso[index]{
-			change_energia(edificio_energia_consumo[index], edificio)
+			edificio_encender(edificio,,, false)
 			edificio.proceso += red_power
 		}
 		else{
-			change_energia(0, edificio)
+			edificio_encender(edificio, false,, false)
 			if edificio.select = 0{
 				var dis = edificio_alcance_sqr[index], center_x = edificio.center_x, center_y = edificio.center_y
 				for(var a = array_length(edificio.target_chunks) - 1; a >= 0; a--){

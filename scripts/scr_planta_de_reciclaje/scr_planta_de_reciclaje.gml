@@ -6,17 +6,13 @@ function scr_planta_de_reciclaje(edificio = control.null_edificio){
 		if edificio.select >= 0 and flujo.liquido = idl_acido and edificio.carga_total < edificio_carga_max[index]{
 			//Apagar
 			if red_power = 0{
-				change_flujo(0, edificio)
-				change_energia(0, edificio)
-				encender_luz(false, edificio)
+				edificio_encender(edificio, false)
 				break
 			}
 			//Encender
 			if not edificio.start{
-				change_energia(edificio.energia_consumo_max, edificio)
-				change_flujo(edificio.flujo_consumo_max, edificio)
+				edificio_encender(edificio)
 				edificio.start = true
-				encender_luz(, edificio)
 			}
 			edificio.proceso += min(flujo_power, red_power) * (1 + 0.3 * edificio.modulo)
 			if edificio.mode
@@ -38,19 +34,15 @@ function scr_planta_de_reciclaje(edificio = control.null_edificio){
 						edificio.carga[dron_precio_id[edificio.select, a]] += b
 						edificio.carga_total += b
 					}
-				change_flujo(0, edificio)
-				change_energia(0, edificio)
+				edificio_encender(edificio, false)
 				edificio.proceso -= time_max
 				edificio.select = -1
 				edificio.start = false
 				edificio.waiting = not mover(edificio)
-				encender_luz(false, edificio)
 			}
 		}
-		else{
-			change_flujo(0, edificio)
-			change_energia(0, edificio)
-		}
+		else
+			edificio_encender(edificio, false)
 		if edificio.carga_total > 0
 			edificio.waiting = not mover(edificio)
 	}

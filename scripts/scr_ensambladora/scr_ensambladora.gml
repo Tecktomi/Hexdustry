@@ -6,9 +6,9 @@ function scr_ensambladora(edificio = control.null_edificio){
 			if edificio.carga[idr_cobre] > 0 and edificio.carga[idr_silicio] > 0 and edificio.carga[idr_electronicos] < 10{
 				//Encender
 				if not edificio.start{
+					edificio_encender(edificio,, false, false)
 					change_energia(edificio_energia_consumo[index] * (1 - 0.25 * edificio.modulo), edificio)
 					edificio.start = true
-					encender_luz(, edificio)
 				}
 				edificio.proceso += red_power
 				//Producir / Apagar
@@ -19,13 +19,12 @@ function scr_ensambladora(edificio = control.null_edificio){
 					edificio.carga_total--
 					edificio.proceso -= edificio_proceso[index]
 					edificio.start = false
-					change_energia(0, edificio)
-					encender_luz(false, edificio)
+					edificio_encender(edificio, false,, false)
 					edificio.waiting = not mover(edificio)
 				}
 			}
 			else
-				change_energia(0, edificio)
+				edificio_encender(edificio, false,, false)
 		}
 		else{
 			var temp_edificio = edificio.link
@@ -39,8 +38,8 @@ function scr_ensambladora(edificio = control.null_edificio){
 					change_energia(edificio_energia_consumo[index] * (1 - 0.25 * temp_edificio.modulo), temp_edificio)
 					edificio.start = true
 					temp_edificio.start = true
-					encender_luz(, edificio)
-					encender_luz(, temp_edificio)
+					edificio_encender(edificio,, false, false)
+					edificio_encender(temp_edificio,, false, false)
 				}
 				edificio.proceso += red_power / 2
 				//Producir / Apagar
@@ -82,16 +81,14 @@ function scr_ensambladora(edificio = control.null_edificio){
 					edificio.proceso -= edificio_proceso[index]
 					edificio.start = false
 					temp_edificio.start = false
-					change_energia(0, edificio)
-					change_energia(0, temp_edificio)
-					encender_luz(false, edificio)
-					encender_luz(false, temp_edificio)
+					edificio_encender(edificio, false,, false)
+					edificio_encender(temp_edificio, false,, false)
 				}
 				temp_edificio.proceso = edificio.proceso
 			}
 			else{
-				change_energia(0, edificio)
-				change_energia(0, temp_edificio)
+				edificio_encender(edificio, false,, false)
+				edificio_encender(temp_edificio, false,, false)
 			}
 		}
 		if edificio.carga_total > 0

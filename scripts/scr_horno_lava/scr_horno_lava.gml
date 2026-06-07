@@ -5,9 +5,8 @@ function scr_horno_lava(edificio = control.null_edificio){
 		if flujo.liquido = idl_lava and (edificio.carga[idr_cobre] > 1 or edificio.carga[idr_hierro] > 1 or edificio.carga[idr_arena] > 1) and edificio.carga[idr_bronce] < 10 and edificio.carga[idr_acero] < 10 and edificio.carga[idr_silicio] < 10{
 			//Encender
 			if not edificio.start{
-				change_flujo(edificio_flujo_consumo[index], edificio)
+				edificio_encender(edificio,, false)
 				edificio.start = true
-				encender_luz(, edificio)
 			}
 			edificio.proceso += flujo_power
 			//Producir / Apagar
@@ -37,8 +36,7 @@ function scr_horno_lava(edificio = control.null_edificio){
 				}
 				edificio.start = false
 				edificio.waiting = not mover(edificio)
-				change_flujo(0, edificio)
-				encender_luz(false, edificio)
+				edificio_encender(edificio, false, false)
 			}
 		}
 		if edificio.carga_total > 0

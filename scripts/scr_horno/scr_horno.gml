@@ -8,7 +8,7 @@ function scr_horno(edificio = control.null_edificio){
 		if (edificio.carga[idr_cobre] > 1 or edificio.carga[idr_hierro] > 1 or edificio.carga[idr_arena] > 1) and
 			(edificio.carga[idr_carbon] > 0 or edificio.carga[idr_compuesto_incendiario] > 0 or edificio.fuel > 0) and
 			(edificio.carga[idr_bronce] < 10 and edificio.carga[idr_acero] < 10 and edificio.carga[idr_silicio] < 10){
-			if edificio.fuel = 0
+			if edificio.fuel = 0{
 				if (edificio.carga[idr_carbon] > 0 or edificio.carga[idr_compuesto_incendiario] > 0){
 					if edificio.carga[idr_compuesto_incendiario] > 0{
 						edificio.fuel = recurso_combustion_time[idr_compuesto_incendiario]
@@ -18,12 +18,13 @@ function scr_horno(edificio = control.null_edificio){
 						edificio.fuel = recurso_combustion_time[idr_carbon]
 						edificio.carga[idr_carbon]--
 					}
-					encender_luz(, edificio)
+					edificio_encender(edificio,, false, false)
 					edificio.carga_total--
 					mover_in(edificio)
 				}
 				else
-					encender_luz(false, edificio)
+					edificio_encender(edificio, false, false, false)
+			}
 			edificio.proceso++
 			if edificio.proceso >= edificio_proceso[index]{
 				if edificio.carga[idr_arena] > 1{

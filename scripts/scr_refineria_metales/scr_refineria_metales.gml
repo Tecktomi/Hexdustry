@@ -8,17 +8,13 @@ function scr_refineria_metales(edificio = control.null_edificio){
 		if flujo.liquido = idl_acido and (edificio.carga[idr_piedra_cuprica] > 2 or edificio.carga[idr_piedra_ferrica] > 2 or edificio.carga[idr_uranio_bruto] > 0){
 			//Apagar
 			if red_power = 0{
-				change_flujo(0, edificio)
-				change_energia(0, edificio)
-				encender_luz(false, edificio)
+				edificio_encender(edificio, false)
 				continue
 			}
 			//Encender
 			if not edificio.start{
-				change_energia(edificio_energia_consumo[index], edificio)
-				change_flujo(edificio_flujo_consumo[index], edificio)
+				edificio_encender(edificio)
 				edificio.start = true
-				encender_luz(, edificio)
 			}
 			edificio.proceso += min(red_power, flujo_power) * (1 + 0.3 * edificio.modulo)
 			sound_play_edificio(2, edificio.center_x, edificio.center_y)
@@ -45,16 +41,11 @@ function scr_refineria_metales(edificio = control.null_edificio){
 				}
 				edificio.carga_total -= 2
 				edificio.waiting = not mover(edificio)
-				change_energia(0, edificio)
-				change_flujo(0, edificio)
-				encender_luz(false, edificio)
+				edificio_encender(edificio, false)
 			}
 		}
-		else{
-			change_flujo(0, edificio)
-			change_energia(0, edificio)
-			encender_luz(false, edificio)
-		}
+		else
+			edificio_encender(edificio, false)
 		//Vaciar interior
 		if edificio.carga_total > 0
 			edificio.waiting = not mover(edificio)

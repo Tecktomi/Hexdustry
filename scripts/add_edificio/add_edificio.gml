@@ -85,7 +85,9 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			chunk_minb : 0,
 			chunk_maxa : 0,
 			chunk_maxb : 0,
-			jugador : _jugador
+			jugador : _jugador,
+			calor : 0,
+			calor_generado : 0
 		}
 		if edificio_size[index] = 2.5{
 			if in(dir, 0, 1)

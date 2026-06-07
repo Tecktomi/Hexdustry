@@ -6,10 +6,8 @@ function scr_planta_desalinizadora(edificio = control.null_edificio){
 		if flujo.liquido = idl_agua_salada and edificio.carga[idr_sal] < 10 and edificio.carga[idr_barril_con_agua] < 10 and red_power > 0 and flujo_power > 0{
 			//Encender
 			if not edificio.start{
-				change_energia(edificio_energia_consumo[index], edificio)
-				change_flujo(edificio_flujo_consumo[index], edificio)
+				edificio_encender(edificio,,,, false)
 				edificio.start = true
-				encender_luz(, edificio)
 			}
 			edificio.proceso += min(flujo_power, red_power)
 			edificio.draw_rot += min(flujo_power, red_power)
@@ -21,15 +19,11 @@ function scr_planta_desalinizadora(edificio = control.null_edificio){
 				edificio.proceso -= edificio_proceso[index]
 				edificio.start = false
 				edificio.waiting = not mover(edificio)
-				change_energia(0, edificio)
-				change_flujo(0, edificio)
-				encender_luz(false, edificio)
+				edificio_encender(edificio, false,,, false)
 			}
 		}
 		else{
-			change_energia(0, edificio)
-			change_flujo(0, edificio)
-			encender_luz(false, edificio)
+			edificio_encender(edificio, false,,, false)
 		}
 		if edificio.carga_total > 0
 			edificio.waiting = not mover(edificio)
