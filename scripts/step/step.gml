@@ -63,6 +63,8 @@ function step(){
 			if edificio.idle or edificio.vida <= 0
 				continue
 			edificio_script[edificio.index](edificio)
+			if edificio.calor > 5 + 2 * edificio_temperatura[edificio.index]
+				herir_edificio(1, edificio)
 		}
 		for(var a = array_length(edificios_pendientes) - 1; a >= 0; a--){
 			var edificio = array_pop(edificios_pendientes)
@@ -168,7 +170,7 @@ function step(){
 		for(var a = 0; a < len; a++){
 			var humo = humos[a]
 			if show_smoke and humo.a >= mina and humo.b >= minb and humo.a < maxa and humo.b < maxb{
-				draw_sprite_off(spr_blur_32, 0, humo.x, humo.y)
+				draw_sprite_off(spr_blur_32, max(3 - humo.time / 10, 0), humo.x, humo.y)
 				humo.x += humo.hmove
 				humo.y += humo.vmove
 				humo.hmove *= 0.99
@@ -358,6 +360,10 @@ function step(){
 				draw_sprite_off(spr_blur, 0, nuclear_x, nuclear_y,,,,, nuclear_step / 300)
 			draw_set_color(c_black)
 			draw_set_alpha(1)
+		}
+		if image_index mod 20 = 0{
+			viento_dir += random_range(-0.01, 0.01)
+			viento_mag = clamp(vient_mag + random_range(-0.01, 0.01), 0.5, 2)
 		}
 	}
 }

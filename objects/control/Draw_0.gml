@@ -13,6 +13,30 @@
 		save_setting("", "fullscreen", window_get_fullscreen())
 	}
 #endregion
+//Primera vez jugando
+if FIRST_TIME{
+	dibujar_fondo(1)
+	var text_array = ["English", "Español", "Русски"], ypos = 200
+	draw_set_halign(fa_center)
+	draw_set_font(font_titulo)
+	for(var a = 0; a < IDIOMAS; a++){
+		if draw_boton(room_width / 2, ypos, text_array[a], ui_verde){
+			FIRST_TIME = false
+			idioma = a
+			set_idioma()
+			load_escenario_buffer("mision_1.txt")
+			game_start()
+			tutorial = 1
+			tecnologia = true
+			cheat = false
+		}
+		ypos += text_y * 1.2
+	}
+	draw_text(room_width / 2, 40, L.menu_hexdustry)
+	draw_set_halign(fa_left)
+	draw_set_font(font_normal)
+	exit
+}
 //Menú principal
 if menu = 0{
 	dibujar_fondo(1)
@@ -301,6 +325,7 @@ if in(menu, 1, 3){
 		dibujar_fondo(2)
 	dibujar_edificios()
 	var show_humo = (grafic_humo and pausa = 0 and enciclopedia = 0 and ((image_index mod 5) = 0))
+	//DIBUJO SECUNDARIO
 	for(var a = min_chunka; a < max_chunka; a++)
 		for(var b = min_chunkb; b < max_chunkb; b++){
 			var chunk = chunk_edificios_draw[# a, b], len = array_length(chunk)
@@ -337,8 +362,8 @@ if in(menu, 1, 3){
 				//Humo
 				if show_humo and tag_generadores_de_humo[index]{
 					if ((tag_generadores_de_humo_combustion[index] and edificio.fuel > 0) or (index = id_generador_geotermico and in(edificio.flujo.liquido, 0, 4)) or (index = id_refineria_de_petroleo and edificio.flujo.liquido = 2 and edificio.red.eficiencia > 0)) and image_index & 3{
-						var dir = direccion_viento + random_range(-pi / 4, pi / 4)
-						array_push(humos, add_humo(center_x, center_y, edificio.a, edificio.b, cos(dir), sin(dir), irandom_range(70, 100)))
+						var dir = viento_dir + random_range(-pi / 4, pi / 4)
+						array_push(humos, add_humo(center_x, center_y, edificio.a, edificio.b, cos(dir) * vient_mag, sin(dir) * viento_mag, irandom_range(70, 100)))
 					}
 				}
 				//Mensajes

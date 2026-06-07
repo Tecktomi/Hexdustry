@@ -15,10 +15,7 @@ function scr_fabrica_drones(edificio = control.null_edificio){
 			if flag{
 				//Encender
 				if not edificio.start{
-					change_energia(edificio_energia_consumo[index], edificio)
-					if index = id_fabrica_de_drones_grande
-						change_flujo(edificio_flujo_consumo[index], edificio)
-					encender_luz(, edificio)
+					edificio_encender(edificio,,, index = id_fabrica_de_drones_grande)
 					edificio.start = true
 				}
 				if index = id_fabrica_de_drones_grande
@@ -38,18 +35,11 @@ function scr_fabrica_drones(edificio = control.null_edificio){
 						edificio.proceso -= dron_time[edificio.select]
 					else
 						edificio.proceso--
-					change_energia(0, edificio)
-					if index = id_fabrica_de_drones_grande
-						change_flujo(0, edificio)
-					encender_luz(false, edificio)
+					edificio_encender(edificio, false,, index = id_fabrica_de_drones_grande)
 				}
 			}
 		}
-		else{
-			change_energia(0, edificio)
-			if index = id_fabrica_de_drones_grande
-				change_flujo(0, edificio)
-			encender_luz(false, edificio)
-		}
+		else
+			edificio_encender(edificio, false,, (index = id_fabrica_de_drones_grande))
 	}
 }

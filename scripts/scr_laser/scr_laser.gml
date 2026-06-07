@@ -18,6 +18,7 @@ function scr_laser(edificio = control.null_edificio){
 		if (enemigo != null_dron or enemigo_edificio != null_edificio) and distance_sqr(edificio.center_x, edificio.center_y, target_x, target_y) < edificio_alcance_sqr[edificio.index]{
 			edificio.select = radtodeg(-arctan2(edificio.center_x - target_x, target_y - edificio.center_y)) - 90
 			change_energia(edificio_energia_consumo[index], edificio)
+			edificio_encender(edificio,,, false)
 			edificio.mode = true
 			var dmg = red_power * edificio.fuel, temp_vel = 75 - 25 * edificio.modulo
 			edificio.fuel = ((temp_vel - 1) * edificio.fuel + 8) / temp_vel
@@ -28,7 +29,7 @@ function scr_laser(edificio = control.null_edificio){
 			if dmg > 6 and enemigo != null_dron
 				aplicar_efecto(1, 60, enemigo)
 			if (enemigo != null_dron and herir_dron(dmg, enemigo)) or (enemigo_edificio != null_edificio and herir_edificio(dmg, enemigo_edificio)){
-				change_energia(0, edificio)
+				edificio_encender(edificio, false,, false)
 				edificio.fuel = 0
 				edificio.target = null_dron
 				edificio.target_edificio = null_edificio
@@ -36,7 +37,7 @@ function scr_laser(edificio = control.null_edificio){
 			}
 		}
 		else{
-			change_energia(0, edificio)
+			edificio_encender(edificio, false,, false)
 			edificio.target = null_edificio
 			edificio.target_edificio = null_edificio
 			edificio.fuel = 0

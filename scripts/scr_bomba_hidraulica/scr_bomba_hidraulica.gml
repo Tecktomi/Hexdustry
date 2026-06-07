@@ -7,21 +7,17 @@ function scr_bomba_hidraulica(edificio = control.null_edificio){
 			var flujo = edificio.flujo
 		//Está encendido
 		if in(flujo.liquido, -1, edificio.fuel) and red_power > 0{
-			change_energia(edificio_energia_consumo[index], edificio)
 			change_flujo(red_power * edificio_flujo_consumo[index] * edificio.select / 3 * (1 + 0.2 * edificio.modulo), edificio)
+			edificio_encender(edificio,,, false,, false)
 			flujo.generacion -= edificio.proceso
 			edificio.draw_rot += red_power
-			if flujo.almacen >= flujo.almacen_max and flujo.generacion >= flujo.consumo{
-				change_energia(0, edificio)
-				change_flujo(0, edificio)
-			}
+			if flujo.almacen >= flujo.almacen_max and flujo.generacion >= flujo.consumo
+				edificio_encender(edificio, false,,,, false)
 			if flujo.liquido != idl_lava and edificio.fuel = idl_lava
 				encender_luz(, edificio)
 			flujo.liquido = edificio.fuel
 		}
-		else{
-			change_energia(0, edificio)
-			change_flujo(0, edificio)
-		}
+		else
+			edificio_encender(edificio, false,,,, false)
 	}
 }

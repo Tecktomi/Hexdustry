@@ -38,18 +38,14 @@ function scr_planta_nuclear(edificio = control.null_edificio){
 			if edificio.carga[idr_uranio_enriquecido] >= 1 and flujo_power > 0{
 				edificio.fuel = 3000
 				edificio.carga[idr_uranio_enriquecido]--
-				encender_luz(, edificio)
 				change_energia(edificio_energia_consumo[index] * flujo_power, edificio)
-				change_flujo(edificio_flujo_consumo[index], edificio)
+				edificio_encender(edificio,, false)
 				edificio.carga_total--
 				mover_in(edificio)
 			}
 			//Apagar
-			else{
-				encender_luz(false, edificio)
-				change_energia(0, edificio)
-				change_flujo(0, edificio)
-			}
+			else
+				edificio_encender(edificio, false)
 		}
 	}
 }

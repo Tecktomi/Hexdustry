@@ -28,6 +28,7 @@ function save_edificio(buffer, edificio = control.null_edificio){
 		mask += edificio.agregar << c++
 		mask += edificio.modulo << c++
 		mask += (edificio.outputs_carga_index != 0) << c++
+		mask += (edificio.calor_generado != 0) << c++
 		buffer_write(buffer, buffer_u64, mask)
 		c = 0
 		//DEMASK
@@ -69,5 +70,6 @@ function save_edificio(buffer, edificio = control.null_edificio){
 		c++
 		c++
 		if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(edificio.outputs_carga_index))
+		if mask & (1 << c++) buffer_write(buffer, buffer_s8, real(edificio.calor_generado))
 	}
 }

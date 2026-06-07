@@ -18,15 +18,13 @@ function scr_generador(edificio = control.null_edificio){
 					edificio.carga[idr_carbon]--
 					change_energia(edificio_energia_consumo[index], edificio)
 				}
-				encender_luz(, edificio)
+				edificio_encender(edificio,, false, false)
 				edificio.carga_total--
 				mover_in(edificio)
 			}
 			//Apagar
-			else{
-				encender_luz(false, edificio)
-				change_energia(0, edificio)
-			}
+			else
+				edificio_encender(edificio, false,, false)
 		}
 	}
 }
