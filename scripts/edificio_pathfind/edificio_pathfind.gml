@@ -14,7 +14,7 @@ function edificio_pathfind(edificio = control.null_edificio){
 		for(var counter = 0; array_length(temp_queue) > counter;){
 			var aaa = temp_queue[counter++], bbb = temp_queue[counter++], dis = temp_queue[counter++] + 1, desj = temp_queue[counter++] + 5, bmod = bbb & 1
 			for(var i = 0; i < maxi; i++){
-				var j = (i + desj) mod 6, aa = aaa + DESFACE[bmod][j, 0], bb = bbb + DESFACE[bmod][j, 1]
+				var j = (i + desj) mod 6, aa = aaa + DESFACE_A[bmod, j], bb = bbb + DESFACE_B[bmod, j]
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if not visitado[# aa, bb]{

@@ -21,14 +21,14 @@ function calcular_edificios_adyascentes(edificio = control.null_edificio, set_re
 		if index = id_cruce{
 			var bmod = b & 1
 			for(var c = 0; c < 3; c++){
-				var aa = a + DESFACE[bmod][c, 0], bb = b + DESFACE[bmod][c, 1]
+				var aa = a + DESFACE_A[bmod, c], bb = b + DESFACE_B[bmod, c]
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if edificio_bool[# aa, bb]{
 					var temp_edificio = edificio_id[# aa, bb], flag = false
 					while temp_edificio.index = id_cruce and aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
-						aa = aa + DESFACE[bb & 1][c, 0]
-						bb = bb + DESFACE[bb & 1][c, 1]
+						aa = aa + DESFACE_A[bb & 1, c]
+						bb = bb + DESFACE_B[bb & 1, c]
 						if edificio_bool[# aa, bb]
 							temp_edificio = edificio_id[# aa, bb]
 						else{
@@ -38,16 +38,16 @@ function calcular_edificios_adyascentes(edificio = control.null_edificio, set_re
 					}
 					if flag
 						continue
-					aa = a + DESFACE[bmod][(c + 3) mod 6, 0]
-					bb = b + DESFACE[bmod][(c + 3) mod 6, 1]
+					aa = a + DESFACE_A[bmod, (c + 3) mod 6]
+					bb = b + DESFACE_B[bmod, (c + 3) mod 6]
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 						continue
 					if edificio_bool[# aa, bb]{
 						var temp_edificio_2 = edificio_id[# aa, bb]
 						flag = false
 						while temp_edificio_2.index = id_cruce and aa >= 0 and bb >= 0 and aa < xsize and bb < ysize{
-							aa = aa + DESFACE[bb & 1][(c + 3) mod 6, 0]
-							bb = bb + DESFACE[bb & 1][(c + 3) mod 6, 1]
+							aa = aa + DESFACE_A[bb & 1, (c + 3) mod 6]
+							bb = bb + DESFACE_B[bb & 1, (c + 3) mod 6]
 							if edificio_bool[# aa, bb]
 								temp_edificio_2 = edificio_id[# aa, bb]
 							else{

@@ -12,7 +12,7 @@ function small_connected_components_removal(target = idt_agua_salada_profunda, s
 						var aa = xx[j], bb = yy[j]
 						bmod = bb & 1
 						for(var c = 0; c < 6; c++){
-							var aaa = aa + DESFACE[bmod][c, 0], bbb = bb + DESFACE[bmod][c, 1]
+							var aaa = aa + DESFACE_A[bmod, c], bbb = bb + DESFACE_B[bmod, c]
 							if aaa < 0 or bbb < 0 or aaa >= xsize or bbb >= ysize
 								continue
 							if not visitado[# aaa, bbb]{

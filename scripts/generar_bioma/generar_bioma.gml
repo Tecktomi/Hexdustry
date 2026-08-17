@@ -46,8 +46,8 @@ function generar_bioma(bioma){
 					}
 					var d = irandom(5)
 					repeat(2){
-						a += DESFACE[b & 1][d, 0]
-						b += DESFACE[b & 1][d, 1]
+						a += DESFACE_A[b & 1, d]
+						b += DESFACE_B[b & 1, d]
 					}
 					a = clamp(a, 0, xsize - 1)
 					b = clamp(b, 0, ysize - 1)
@@ -61,14 +61,14 @@ function generar_bioma(bioma){
 				//Añadir arena
 				if tag_agua_baja[temp_terreno]{
 					for(var c = 0; c < 6; c++){
-						var aa = a + DESFACE[bmod][c, 0], bb = b + DESFACE[bmod][c, 1]
+						var aa = a + DESFACE_A[bmod, c], bb = b + DESFACE_B[bmod, c]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if not tag_agua[terreno[# aa, bb]]
 							terreno[# aa, bb] = borde_agua
 						if brandom(){
-							aa += DESFACE[bb & 1][c, 0]
-							bb += DESFACE[bb & 1][c, 1]
+							aa += DESFACE_A[bb & 1, c]
+							bb += DESFACE_B[bb & 1, c]
 							if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 								continue
 							if not tag_agua[terreno[# aa, bb]]
@@ -79,7 +79,7 @@ function generar_bioma(bioma){
 				//Piedra al rededor de Petróleo
 				else if temp_terreno = idt_petroleo{
 					for(var c = 0; c < 6; c++){
-						var aa = a + DESFACE[bmod][c, 0], bb = b + DESFACE[bmod][c, 1]
+						var aa = a + DESFACE_A[bmod, c], bb = b + DESFACE_B[bmod, c]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if terreno[# aa, bb] != idt_petroleo
@@ -89,7 +89,7 @@ function generar_bioma(bioma){
 				//Basalto al rededor de la Lava
 				else if temp_terreno = idt_lava{
 					for(var c = 0; c < 6; c++){
-						var aa = a + DESFACE[bmod][c, 0], bb = b + DESFACE[bmod][c, 1]
+						var aa = a + DESFACE_A[bmod, c], bb = b + DESFACE_B[bmod, c]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if terreno[# aa, bb] != idt_lava{
@@ -100,8 +100,8 @@ function generar_bioma(bioma){
 						}
 						if brandom(){
 							var d = irandom(5)
-							aa += DESFACE[bb & 1][d, 0]
-							bb += DESFACE[bb & 1][d, 1]
+							aa += DESFACE_A[bb & 1, d]
+							bb += DESFACE_B[bb & 1, d]
 							if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 								continue
 							if terreno[# aa, bb] != idt_lava{
@@ -117,7 +117,7 @@ function generar_bioma(bioma){
 				if tag_agua_baja[temp_terreno]{
 					var flag = true
 					for(var c = 0; c < 6; c++){
-						var aa = a + DESFACE[bmod][c, 0], bb = b + DESFACE[bmod][c, 1]
+						var aa = a + DESFACE_A[bmod, c], bb = b + DESFACE_B[bmod, c]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if not tag_agua[terreno[# aa, bb]]{
@@ -200,8 +200,8 @@ function generar_bioma(bioma){
 						}
 					}
 					var d = irandom(5)
-					a = clamp(a + DESFACE[b & 1][d, 0], 0, xsize - 1)
-					b = clamp(b + DESFACE[b & 1][d, 1], 0, ysize - 1)
+					a = clamp(a + DESFACE_A[b & 1, d], 0, xsize - 1)
+					b = clamp(b + DESFACE_B[b & 1, d], 0, ysize - 1)
 				}
 			}
 		}

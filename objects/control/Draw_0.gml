@@ -363,7 +363,7 @@ if in(menu, 1, 3){
 				if show_humo and tag_generadores_de_humo[index]{
 					if ((tag_generadores_de_humo_combustion[index] and edificio.fuel > 0) or (index = id_generador_geotermico and in(edificio.flujo.liquido, 0, 4)) or (index = id_refineria_de_petroleo and edificio.flujo.liquido = 2 and edificio.red.eficiencia > 0)) and image_index & 3{
 						var dir = viento_dir + random_range(-pi / 4, pi / 4)
-						array_push(humos, add_humo(center_x, center_y, edificio.a, edificio.b, cos(dir) * vient_mag, sin(dir) * viento_mag, irandom_range(70, 100)))
+						array_push(humos, add_humo(center_x, center_y, edificio.a, edificio.b, cos(dir) * viento_mag, sin(dir) * viento_mag, irandom_range(70, 100)))
 					}
 				}
 				//Mensajes
@@ -2624,8 +2624,8 @@ if build_index > 0 and win = 0{
 												construir(id_cruce, build_dir, a, b, build_enemigo)
 											else
 												construir(build_index, build_dir, a, b, build_enemigo)
-											a += DESFACE[b & 1][build_dir, 0]
-											b += DESFACE[b & 1][build_dir, 1]
+											a += DESFACE_A[b & 1, build_dir]
+											b += DESFACE_B[b & 1, build_dir]
 										}
 										clicked = false
 										android_clic = false
@@ -2654,8 +2654,8 @@ if build_index > 0 and win = 0{
 							for(var i = 0; i < 6; i++){
 								var a = mx_clic, b = my_clic
 								for(var j = 0; j < 10; j++){
-									a += DESFACE[b & 1][i, 0]
-									b += DESFACE[b & 1][i, 1]
+									a += DESFACE_A[b & 1, i]
+									b += DESFACE_B[b & 1, i]
 									if a < 0 or b < 0 or a >= xsize or b >= ysize
 										continue
 									if not terreno_caminable[terreno[# a, b]]
@@ -2694,7 +2694,7 @@ if build_index > 0 and win = 0{
 							continue
 						if (aaaa != temp_mx or bbbb != temp_my) and edificio_bool[# aaaa, bbbb]{
 							var temp_edificio = edificio_id[# aaaa, bbbb]
-							if temp_edificio.enemigo = build_enemigo and edificio_energia[temp_edificio.index] and distance_sqr(aa, bb, temp_edificio.center_x, temp_edificio.center_y) <= 8100//90^2
+							if temp_edificio.enemigo = build_enemigo and edificio_energia[temp_edificio.index] and distance_sqr(aa, bb, temp_edificio.center_x, temp_edificio.center_y) <= CABLE_RANGE
 								draw_line_off(aa, bb, temp_edificio.center_x, temp_edificio.center_y)
 						}
 					}
@@ -2771,8 +2771,8 @@ if build_index > 0 and win = 0{
 						build_able = false
 						repeat(10){
 							c++
-							a = a + DESFACE[b & 1][build_dir, 0]
-							b = b + DESFACE[b & 1][build_dir, 1]
+							a = a + DESFACE_A[b & 1, build_dir]
+							b = b + DESFACE_B[b & 1, build_dir]
 							if a < 0 or b < 0 or a >= xsize or b >= ysize
 								break
 							if edificio_bool[# a, b]{
@@ -2789,8 +2789,8 @@ if build_index > 0 and win = 0{
 							a = temp_mx
 							b = temp_my
 							repeat(c - 1){
-								a = a + DESFACE[b & 1][build_dir, 0]
-								b = b + DESFACE[b & 1][build_dir, 1]
+								a = a + DESFACE_A[b & 1, build_dir]
+								b = b + DESFACE_B[b & 1, build_dir]
 								temp_complex_2 = abtoxy(a, b)
 								draw_sprite_off(spr_tunel_view, 0, temp_complex_2[0], temp_complex_2[1],,, (build_dir - 1) * 60,, 0.5)
 							}
@@ -2803,7 +2803,7 @@ if build_index > 0 and win = 0{
 							draw_circle_off(temp_complex[0], temp_complex[1], 1_000, true)
 							for(var c = array_length(torres_de_tension) - 1; c >= 0; c--){
 								var temp_edificio = torres_de_tension[c]
-								if distance_sqr(temp_edificio.center_x, temp_edificio.center_y, temp_complex[0], temp_complex[1]) < 1_000_000//1000^2
+								if distance_sqr(temp_edificio.center_x, temp_edificio.center_y, temp_complex[0], temp_complex[1]) < TORRE_TENSION_RANGE
 									draw_line_off(temp_edificio.center_x, temp_edificio.center_y, temp_complex[0],temp_complex[1])
 							}
 						}
@@ -2992,7 +2992,7 @@ else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
 		blueprint_mina = infinity
 		blueprint_minb = infinity
 		for(var a = 0; a < len; a++){
-			if (my % 1) and false
+			if (my & 1) and false
 				blueprint[a].b--
 			var temp_blueprint = blueprint[a], size = edificio_size[temp_blueprint.index]
 			if (size & 1) = 0
@@ -3024,8 +3024,8 @@ else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
 				if temp_array_real[i] < 0
 					temp_array_real_2[i] = (temp_array_real_2[i] + 3) mod 6
 				repeat(abs(temp_array_real[i])){
-					tempa = tempa + DESFACE[tempb & 1][temp_array_real_2[i], 0]
-					tempb = tempb + DESFACE[tempb & 1][temp_array_real_2[i], 1]
+					tempa = tempa + DESFACE_A[tempb & 1, temp_array_real_2[i]]
+					tempb = tempb + DESFACE_B[tempb & 1, temp_array_real_2[i]]
 				}
 			}
 			blueprint[a].a = tempa - mx
@@ -3449,7 +3449,7 @@ if array_length(chat) >= 0{
 		for(pos = 0; pos < array_length(chat); pos++)
 			if chat_time[pos] > image_index - 600
 				break
-	pos = max(0, array_length(chat) - 10)
+	pos = max(pos, array_length(chat) - 10)
 	for(var a = pos; a < array_length(chat); a++)
 		max_width = max(max_width, string_width(string(chat[a])))
 	if get_keyboard_string = 0{
@@ -3517,7 +3517,7 @@ if keyboard_check(ord("V")){
 		for(var _counter = 0; _counter < array_length(temp_array); _counter++){
 			var a = temp_array[_counter++], b = temp_array[_counter], bmod = b & 1, c = abba[# a, b]
 			for(var i = 0; i < 6; i++){
-				var aa = a + DESFACE[bmod][i, 0], bb = b + DESFACE[bmod][i, 1]
+				var aa = a + DESFACE_A[bmod, i], bb = b + DESFACE_B[bmod, i]
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if not visitado[# aa, bb]{

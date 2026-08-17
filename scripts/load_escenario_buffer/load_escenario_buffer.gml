@@ -108,7 +108,7 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 				var edificio = add_edificio(index, dir, a, b, _jugador)
 				if tag_edificio_seteable[index]{
 					var mode = bool(buffer_read(buffer, buffer_bool))
-					var select = real(buffer_read(buffer, buffer_f16))
+					var select = real(buffer_read(buffer, buffer_f64))
 					set_edificio(mode, select, edificio, true)
 				}
 			}

@@ -16,7 +16,7 @@ function clear_olas(){
 				if temp_terreno = idt_agua_salada{
 					var c = 0
 					for(var i = 0; i < 6; i++){
-						var aa = a + DESFACE[bmod][i, 0], bb = b + DESFACE[bmod][i, 1]
+						var aa = a + DESFACE_A[bmod, i], bb = b + DESFACE_B[bmod, i]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if not terreno_liquido[terreno[# aa, bb]]
@@ -27,7 +27,7 @@ function clear_olas(){
 				//Paredes
 				else if terreno_pared[temp_terreno]{
 					var c = 0; for(var i = 3; i < 6; i++){
-						var aa = a + DESFACE[bmod][i, 0], bb = b + DESFACE[bmod][i, 1]
+						var aa = a + DESFACE_A[bmod, i], bb = b + DESFACE_B[bmod, i]
 						if aa < 0 or aa >= xsize or bb >= ysize
 							continue
 						if not terreno_pared[terreno[# aa, bb]]

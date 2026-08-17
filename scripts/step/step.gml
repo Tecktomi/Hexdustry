@@ -363,7 +363,7 @@ function step(){
 		}
 		if image_index mod 20 = 0{
 			viento_dir += random_range(-0.01, 0.01)
-			viento_mag = clamp(vient_mag + random_range(-0.01, 0.01), 0.5, 2)
+			viento_mag = clamp(viento_mag + random_range(-0.01, 0.01), 0.5, 2)
 		}
 	}
 }

@@ -26,7 +26,7 @@ function dron_logic(){
 						herir_dron(dron_vida_max[index] / 2000, dron)
 						if grafic_humo and (image_index mod 10) = (a mod 10){
 							var dir = viento_dir + random_range(-pi / 4, pi / 4)
-							array_push(humos, add_humo(aa, bb, dron.a, dron.b, cos(dir) * viento_mag, sin(dir) * vient_mag, irandom_range(40, 70)))
+							array_push(humos, add_humo(aa, bb, dron.a, dron.b, cos(dir) * viento_mag, sin(dir) * viento_mag, irandom_range(40, 70)))
 						}
 					}
 				}

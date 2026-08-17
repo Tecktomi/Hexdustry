@@ -71,7 +71,7 @@ function save_escenario_buffer(filename){
 			buffer_write(buffer, buffer_u8, edificio.jugador)
 			if tag_edificio_seteable[edificio.index]{
 				buffer_write(buffer, buffer_bool, edificio.mode)
-				buffer_write(buffer, buffer_f16, edificio.select)
+				buffer_write(buffer, buffer_f64, edificio.select)
 			}
 		}
 		buffer_write(buffer, buffer_u16, seek_config)

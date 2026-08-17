@@ -119,7 +119,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		if edificio_size[index] <= 3 and tag_edificio_construible[index]{
 			for(var a = array_length(plantas_de_reciclaje) - 1; a >= 0; a--){
 				var temp_edificio = plantas_de_reciclaje[a]
-				if temp_edificio.select = -1 and distance_sqr(edificio.center_x, edificio.center_y, temp_edificio.center_x, temp_edificio.center_y) < 62_500{ //250^2
+				if temp_edificio.select = -1 and distance_sqr(edificio.center_x, edificio.center_y, temp_edificio.center_x, temp_edificio.center_y) < PLANTA_RECICLAJE_RANGE{
 					temp_edificio.mode = true
 					temp_edificio.select = index
 					break
@@ -129,7 +129,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		//Cancelar coordenadas
 		for(var i = array_length(edificio.coordenadas) - 1; i >= 0; i--){
 			var temp_coordenada_2 = edificio.coordenadas[i], a = temp_coordenada_2[0], b = temp_coordenada_2[1]
-			if index = 0{
+			if index = id_nucleo{
 				ds_grid_set(edificio_cercano, a, b, null_edificio)
 				ds_grid_set(edificio_cercano_dis, a, b, infinity)
 			}
@@ -224,7 +224,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 					if temp_edificio.index = id_bateria
 						red_bateria++
 				}
-				var agregado = array_create(0, null_edificio), visited = array_create(edificio_count, false)
+				var agregado = array_create(0, null_edificio), visited = array_create(array_length(edificios), false)
 				while array_length(temp_red.edificios) > 0{
 					var nodo = temp_red.edificios[array_length(temp_red.edificios) - 1]
 					if not visited[nodo.edificio_index]{
@@ -295,7 +295,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 					var flujo_almacen = 0
 					for(var a = array_length(temp_flujo.edificios) - 1; a >= 0; a--)
 						flujo_almacen += edificio_flujo_almacen[temp_flujo.edificios[a].index]
-					var agregado = array_create(0, null_edificio), visited = array_create(edificio_count, false)
+					var agregado = array_create(0, null_edificio), visited = array_create(array_length(edificios), false)
 					while array_length(temp_flujo.edificios) > 0{
 						var nodo = temp_flujo.edificios[array_length(temp_flujo.edificios) - 1]
 						if not visited[nodo.edificio_index]{
@@ -386,19 +386,19 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			//Daño edificios
 			for(var i = array_length(edificios) - 1; i >= 0; i--){
 				var temp_edificio = edificios[i], dis = distance_sqr(xpos, ypos, temp_edificio.center_x, temp_edificio.center_y)
-				if dis < 160_000 //400^2
+				if dis < PLANTA_NUCLEAR_RANGE
 					herir_edificio(9_000_000 / max(1, dis) * random_range(0.7, 1.3), temp_edificio)
 			}
 			//Daño enemigos
 			for(var i = array_length(enemigos) - 1; i >= 0; i--){
 				var dron = enemigos[i], dis = distance_sqr(xpos, ypos, dron.x, dron.y)
-				if dis < 160_000//400^2
+				if dis < PLANTA_NUCLEAR_RANGE
 					herir_dron(1_000_000 / max(1, dis) * random_range(0.7, 1.3), dron)
 			}
 			//Daño drones aliados
 			for(var i = array_length(drones_aliados) - 1; i >= 0; i--){
 				var dron = drones_aliados[i], dis = distance_sqr(xpos, ypos, dron.x, dron.y)
-				if dis < 160_000//400^2
+				if dis < PLANTA_NUCLEAR_RANGE
 					herir_dron(1_000_000 / max(1, dis) * random_range(0.7, 1.3), dron)
 			}
 			nuclear_x = xpos

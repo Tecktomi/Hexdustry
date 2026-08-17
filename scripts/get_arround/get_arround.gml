@@ -7,7 +7,7 @@ function get_arround(a, b, dir, size){
 			output = array_create(SIZE_BORDE[max(0, size - 1)], [0, 0])
 		if size = 1{
 			for(var c = 0; c < 6; c++)
-				output[++i] = [a + DESFACE[bmod][c, 0], b + DESFACE[bmod][c, 1]]
+				output[++i] = [a + DESFACE_A[bmod, c], b + DESFACE_B[bmod, c]]
 		}
 		else if size = 2{
 			dir = 6 - (dir mod 2)

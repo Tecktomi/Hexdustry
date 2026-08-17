@@ -1,12 +1,18 @@
 randomize()
 #region MACROS
-	#macro FILE_VERSION 2026_04_30
+	#macro FILE_VERSION 2026_08_17
 	#macro PROCESADOR_VERSION 2026_03_25
-	#macro tile_width 32
-	#macro TILE_WIDTH 28
+	#macro TILE_WIDTH 32
+	#macro TILE_HEIGHT 28
+	#macro CABLE_RANGE 8100
+	#macro TORRE_TENSION_RANGE 1_000_000
+	#macro PLANTA_NUCLEAR_RANGE 160_000
+	#macro PLANTA_RECICLAJE_RANGE 62_500
 	SIZE_SIZE = [1, 3, 7, 12, 19, 27, 37]
 	SIZE_BORDE = [6, 9, 12, 15, 18, 21]
 	DESFACE = [[[0, -1], [0, -2], [-1, -1], [-1, 1], [0, 2], [0, 1]], [[1, -1], [0, -2], [0, -1], [0, 1], [0, 2], [1, 1]]]
+	DESFACE_A = [[0, 0, -1, -1, 0, 0], [1, 0, 0, 0, 0, 1]]
+	DESFACE_B = [[-1, -2, -1, 1, 2, 1], [-1, -2, -1, 1, 2, 1]]
 	DEFAULT_MAPS = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas", "Asalto"]
 	#macro IDIOMAS 3
 	IDIOMA_NAME = ["en", "es", "ru"]
@@ -206,7 +212,7 @@ L = {}
 	null_humo = add_humo(0, 0, 0, 0, 0, 0, 0)
 	humos = array_create(0, null_humo)
 	viento_dir = random(2 * pi)
-	vient_mag = random_range(0.5, 1)
+	viento_mag = random_range(0.5, 1)
 	null_fuego = add_fuego(0, 0, 0, 0, 0, 0, 0)
 	fuegos = array_create(0, null_fuego)
 	mina = 0
@@ -590,7 +596,7 @@ null_dron = {
 	jugador : 0,
 	change_pos : false,
 	move_dir : 0,
-	punteros : array_create(2, 0)
+	punteros : array_create(3, 0)
 }
 enemigos = array_create(0, null_dron)
 drones_aliados = array_create(0, null_dron)
