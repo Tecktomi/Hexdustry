@@ -317,7 +317,7 @@ function menu_editor(){
 			xpos += 20
 			ypos += text_y
 			var prev_xsize = xsize
-			xsize = round(draw_deslizante(xpos, xpos + 100, ypos + 10, xsize, 28, 144, 0))
+			xsize = round(draw_deslizante(xpos, xpos + 100, ypos + 10, xsize, TILE_WIDTH, 144, 0))
 			chunk_xsize = ceil(xsize / chunk_width)
 			draw_text(xpos + 100, ypos, $"{xsize}")
 			if xsize > prev_xsize

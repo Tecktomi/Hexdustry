@@ -339,8 +339,8 @@ if in(menu, 1, 3){
 				}
 				//Munición armas
 				else if tag_municion_armas[index] and edificio.carga_total = 0{
-					draw_sprite_off(spr_ammo, 0, aa, bb - 28 * ++alert_count)
-					draw_sprite_off(spr_falta, 0, aa, bb - 28 * alert_count)
+					draw_sprite_off(spr_ammo, 0, aa, bb - TILE_WIDTH * ++alert_count)
+					draw_sprite_off(spr_falta, 0, aa, bb - TILE_WIDTH * alert_count)
 				}
 				//Dibujo de los links eléctricos
 				else if edificio_energia[index]{
@@ -352,8 +352,8 @@ if in(menu, 1, 3){
 						}
 					}
 					if edificio.red.generacion = 0 and edificio.red.bateria = 0 and edificio.energia_consumo_max > 0{
-						draw_sprite_off(spr_energia, 1, aa, bb - 28 * ++alert_count)
-						draw_sprite_off(spr_falta, 0, aa, bb - 28 * alert_count)
+						draw_sprite_off(spr_energia, 1, aa, bb - TILE_WIDTH * ++alert_count)
+						draw_sprite_off(spr_falta, 0, aa, bb - TILE_WIDTH * alert_count)
 					}
 				}
 				//Receta planta química
@@ -382,8 +382,8 @@ if in(menu, 1, 3){
 				//Dibujo falta líquido
 				if tag_liquido_obligatorio[index]{
 					if edificio.flujo_consumo_max > 0 and not array_contains(edificio_flujo_liquido[index], edificio.flujo.liquido){
-						draw_sprite_off(liquido_sprite[edificio_flujo_liquido[index, (image_index / 300) mod array_length(edificio_flujo_liquido[index])]], 0, aa, bb - 28 * ++alert_count)
-						draw_sprite_off(spr_falta, 0, aa, bb - 28 * alert_count)
+						draw_sprite_off(liquido_sprite[edificio_flujo_liquido[index, (image_index / 300) mod array_length(edificio_flujo_liquido[index])]], 0, aa, bb - TILE_WIDTH * ++alert_count)
+						draw_sprite_off(spr_falta, 0, aa, bb - TILE_WIDTH * alert_count)
 					}
 				}
 				draw_vida(aaa, bbb, edificio.vida, edificio_vida[index])
@@ -917,7 +917,7 @@ if show_menu{
 		draw_triangle(aa - 10 * zoom, bb + 20 * zoom, aa + 10 * zoom, bb + 20 * zoom, aa, bb + 10 * zoom, false)
 		draw_rectangle(aa - 80 * zoom, bb + 20 * zoom, aa + 80 * zoom, bb + 40 * zoom, false)
 		if in(index, id_selector, id_recurso_infinito)
-			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 28 * ceil(rss_max / 5)) * zoom, false)
+			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + TILE_WIDTH * ceil(rss_max / 5)) * zoom, false)
 		else if index = id_liquido_infinito
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * liquido_max) * zoom, false)
 		else if index = id_planta_quimica
@@ -945,9 +945,9 @@ if show_menu{
 		if in(index, id_selector, id_overflow)
 			draw_text(aa - 80 * zoom, bb + 20 * zoom, L.show_menu_invertir)
 		if in(index, id_selector, id_recurso_infinito){
-			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 28 * ceil(rss_max / 5)) * zoom, true)
+			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + TILE_WIDTH * ceil(rss_max / 5)) * zoom, true)
 			for(var a = 0; a < rss_max; a++)
-				draw_sprite_stretched(recurso_sprite[a], 0, aa + (-80 + 32 * (a mod 5)) * zoom, bb + (40 + 28 * floor(a / 5)) * zoom, 32 * zoom, 28 * zoom)
+				draw_sprite_stretched(recurso_sprite[a], 0, aa + (-80 + 32 * (a mod 5)) * zoom, bb + (40 + TILE_WIDTH * floor(a / 5)) * zoom, 32 * zoom, TILE_WIDTH * zoom)
 		}
 		if index = id_liquido_infinito{
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * liquido_max) * zoom, true)
@@ -1020,8 +1020,8 @@ if show_menu{
 				}
 			}
 			if in(index, id_selector, id_recurso_infinito){
-				if mouse_y < bb + (40 + 28 * ceil(rss_max / 5)) * zoom{
-					var a = floor((mouse_x - (aa - 80 * zoom)) / (32 * zoom)) + 5 * floor((mouse_y - (bb + 40 * zoom)) / (28 * zoom))
+				if mouse_y < bb + (40 + TILE_WIDTH * ceil(rss_max / 5)) * zoom{
+					var a = floor((mouse_x - (aa - 80 * zoom)) / (32 * zoom)) + 5 * floor((mouse_y - (bb + 40 * zoom)) / (TILE_WIDTH * zoom))
 					if a >= 0 and a < rss_max{
 						draw_text_background(mouse_x + 20, mouse_y, recurso_nombre[a])
 						cursor = cr_handpoint
@@ -1915,7 +1915,7 @@ if sonido
 		menu_y = room_height / 2
 		android_building = false
 	}
-	var just_pressed = false, _size = devise ? 100 : 200, _size_sqr = devise ? 10_000 : 40_000, _size_sqrx = devise ? 32 : 64, _size_sqry = devise ? 28 : 56
+	var just_pressed = false, _size = devise ? 100 : 200, _size_sqr = devise ? 10_000 : 40_000, _size_sqrx = devise ? 32 : 64, _size_sqry = devise ? TILE_WIDTH : 56
 	if devise and mouse_check_button_pressed(mb_right) and build_index = 0 and not edificio_bool[# mx, my] and not keyboard_check(CONTROL_REPARAR) and pausa != 1{
 		mouse_clear(mb_right)
 		if build_menu = 0{
