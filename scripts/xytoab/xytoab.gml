@@ -26,8 +26,8 @@ function xytoab(x, y){
 			b = rz
 		}
 		else{
-			a = rx + DESFACE[rzmod][dir, 0]
-			b = rz + DESFACE[rzmod][dir, 1]
+			a = rx + DESFACE_A[rzmod, dir]
+			b = rz + DESFACE_B[rzmod, dir]
 		}
 		if a < 0 or b < 0 or a >= xsize or b >= ysize
 			continue

@@ -5,14 +5,14 @@ function camino_calcular_in(edificio = control.null_edificio){
 		for(var c = 0; c < 6; c++){
 			if c = edificio.dir or c = ((edificio.dir + 3) mod 6)
 				continue
-			var aa = edificio.a + DESFACE[bmod][c, 0], bb = edificio.b + DESFACE[bmod][c, 1]
+			var aa = edificio.a + DESFACE_A[bmod, c], bb = edificio.b + DESFACE_B[bmod, c]
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 				continue
 			if edificio_bool[# aa, bb]{
 				var temp_edificio = edificio_id[# aa, bb]
 				if temp_edificio.index = id_cruce{
-					aa = aa + DESFACE[bb & 1][c, 0]
-					bb = bb + DESFACE[bb & 1][c, 1]
+					aa = aa + DESFACE_A[bb & 1, c]
+					bb = bb + DESFACE_B[bb & 1, c]
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or not edificio_bool[# aa, bb]
 						continue
 					temp_edificio = edificio_id[# aa, bb]

@@ -47,7 +47,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			energia_consumo : 0,
 			energia_consumo_max : edificio_energia_consumo[index],
 			edificio_index : real(edificio_count++),
-			coordenadas_dis : ds_grid_create(xsize, ysize),
+			coordenadas_dis : ds_grid_create(0, 0),
 			vivo : true,
 			emisor : edificio_emisor[index],
 			receptor : edificio_receptor[index],
@@ -130,7 +130,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		if mision_actual >= 0 and mision.objetivo = 2 and mision.target_id = index and ++mision_counter >= mision.target_num
 			pasar_mision()
 		temp_complex = [0, 0]
-		if in(index, id_planta_quimica, id_fabrica_de_drones){
+		if in(index, id_planta_quimica, id_fabrica_de_drones, id_fabrica_de_drones_grande){
 			edificio.carga_max = array_create(rss_max, 0)
 			edificio.carga_output = array_create(rss_max, 0)
 			if index = id_planta_quimica
@@ -151,8 +151,10 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		else if index = id_planta_de_reciclaje
 			array_disorder_push(plantas_de_reciclaje, edificio, 2)
 		array_push(efectos, add_efecto(size_fx[edificio_size[index] - 1], 0, x, y, 3))
-		if index = id_nucleo
+		if index = id_nucleo{
+			edificio.coordenadas_dis = ds_grid_create(xsize, ysize)
 			array_push(nucleos, edificio)
+		}
 		else
 			clic_sound = true
 		set_camino_dir(edificio)
@@ -361,7 +363,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 					continue
 				if (aa != a or bb != b) and edificio_bool[# aa, bb]{
 					var temp_edificio = edificio_id[# aa, bb]
-					if ((index = id_cable and edificio_energia[temp_edificio.index]) or temp_edificio.index = id_cable) and distance_sqr(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y) <= 8100 and not array_contains(edificio.energia_link, temp_edificio) and temp_edificio.jugador = _jugador{//90^2
+					if ((index = id_cable and edificio_energia[temp_edificio.index]) or temp_edificio.index = id_cable) and distance_sqr(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y) <= CABLE_RANGE and not array_contains(edificio.energia_link, temp_edificio) and temp_edificio.jugador = _jugador{
 						array_push(edificio.energia_link, temp_edificio)
 						array_push(temp_edificio.energia_link, edificio)
 						if not array_contains(temp_list_redes, temp_edificio.red)
@@ -373,7 +375,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			if index = id_torre_de_alta_tension{
 				for(var c = array_length(torres_de_tension) - 1; c >= 0; c--){
 					var temp_edificio = torres_de_tension[c]
-					if distance_sqr(temp_edificio.center_x, temp_edificio.center_y, center_x, center_y) < 1_000_000 and temp_edificio.jugador = _jugador{//1000^2
+					if distance_sqr(temp_edificio.center_x, temp_edificio.center_y, center_x, center_y) < TORRE_TENSION_RANGE and temp_edificio.jugador = _jugador{
 						array_push(edificio.energia_link, temp_edificio)
 						array_push(temp_edificio.energia_link, edificio)
 						if not array_contains(temp_list_redes, temp_edificio.red)

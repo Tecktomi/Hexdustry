@@ -387,7 +387,7 @@ function menu_editor(){
 							array_push(build_list, [a, b])
 							for(var i = 0; i < maxi; i++){
 								dir = (dir + i) mod 6
-								var aa = a + DESFACE[bmod][dir, 0], bb = b + DESFACE[bmod][dir, 1]
+								var aa = a + DESFACE_A[bmod, dir], bb = b + DESFACE_B[bmod, dir]
 								if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 									continue
 								if not usable_grid_bool[# aa, bb]{

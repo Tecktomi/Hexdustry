@@ -4,12 +4,11 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 		ds_grid_clear(terreno, fondo)
 		ds_grid_clear(ore, -1)
 		ds_grid_clear(ore_amount, 0)
-		size = array_length(instrucciones)
+		var size = array_length(instrucciones)
 		for(var i = 0; i < size; i++){
 			var instruccion = instrucciones[i], tipo = instruccion[0], dat1 = instruccion[1], dat2 = instruccion[2], dat3 = instruccion[3]
 			//Menas de Terrenos
 			if tipo = 0{
-				var caminable = terreno_caminable[dat1]
 				repeat(dat3){
 					var a = irandom(xsize - 1), b = irandom(ysize - 1)
 					repeat(dat2){
@@ -22,22 +21,21 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 						}
 						var c = irandom(5)
 						repeat(2){
-							a = clamp(a + DESFACE[b & 1][c, 0], 0, xsize - 1)
-							b = clamp(b + DESFACE[b & 1][c, 1], 0, ysize - 1)
+							a = clamp(a + DESFACE_A[b & 1, c], 0, xsize - 1)
+							b = clamp(b + DESFACE_B[b & 1, c], 0, ysize - 1)
 						}
 					}
 				}
 			}
 			//Bordes de Terrenos
 			else if tipo = 1{
-				var caminable = terreno_caminable[dat3]
 				if dat1 = dat2{
 					for(var a = 0; a < xsize; a++)
 						for(var b = 0; b < ysize; b++)
 							if terreno[# a, b] = dat1{
 								var bmod = b & 1
 								for(var j = 0; j < 6; j++){
-									var aa = a + DESFACE[bmod][j, 0], bb = b + DESFACE[bmod][j, 1]
+									var aa = a + DESFACE_A[bmod, j], bb = b + DESFACE_B[bmod, j]
 									if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or dat1 = terreno[# aa, bb]
 										continue
 									terreno[# aa, bb] = dat3
@@ -50,7 +48,7 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 							if terreno[# a, b] = dat1{
 								var bmod = b & 1
 								for(var j = 0; j < 6; j++){
-									var aa = a + DESFACE[bmod][j, 0], bb = b + DESFACE[bmod][j, 1]
+									var aa = a + DESFACE_A[bmod, j], bb = b + DESFACE_B[bmod, j]
 									if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or dat2 != terreno[# aa, bb]
 										continue
 									terreno[# aa, bb] = dat3
@@ -82,8 +80,8 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 						}
 						var c = irandom(5)
 						repeat(2){
-							a = clamp(a + DESFACE[b & 1][c, 0], 0, xsize - 1)
-							b = clamp(b + DESFACE[b & 1][c, 1], 0, ysize - 1)
+							a = clamp(a + DESFACE_A[b & 1, c], 0, xsize - 1)
+							b = clamp(b + DESFACE_B[b & 1, c], 0, ysize - 1)
 						}
 					}
 				}
@@ -121,12 +119,12 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 				repeat(dat3){
 					ds_grid_clear(temp_real, 0)
 					for(var b = 0; b < ysize; b++){
-						var bmod = b % 1
+						var bmod = b & 1
 						for(var a = 0; a < xsize; a++)
 							if temp_bool[# a, b]
 								for(var j = 0; j < 6; j++){
-									var aa = a + DESFACE[bmod][j, 0]
-									var bb = b + DESFACE[bmod][j, 1]
+									var aa = a + DESFACE_A[bmod, j]
+									var bb = b + DESFACE_B[bmod, j]
 									if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 										continue
 									temp_real[# aa, bb] += 1
@@ -140,6 +138,8 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 					for(var b = 0; b < ysize; b++)
 						if temp_bool[# a, b]
 							terreno[# a, b] = dat1
+				ds_grid_destroy(temp_bool)
+				ds_grid_destroy(temp_real)
 			}
 		}
 	}

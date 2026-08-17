@@ -10,17 +10,17 @@ function save_game_buffer(buffer){
 				buffer_write(buffer, buffer_u8, biome_seed)
 			}
 		}
-		buffer_write(buffer, buffer_f16, camx)
-		buffer_write(buffer, buffer_f16, camy)
-		buffer_write(buffer, buffer_f16, zoom)
+		buffer_write(buffer, buffer_f64, camx)
+		buffer_write(buffer, buffer_f64, camy)
+		buffer_write(buffer, buffer_f64, zoom)
 		buffer_write(buffer, buffer_u32, timer)
 		buffer_write(buffer, buffer_u32, oleadas_timer)
 		buffer_write(buffer, buffer_u32, oleadas_tiempo)
 		buffer_write(buffer, buffer_u32, oleadas_tiempo_primera)
 		buffer_write(buffer, buffer_u8, oleada_count)
 		buffer_write(buffer, buffer_bool, tecnologia)
-		buffer_write(buffer, buffer_f16, tecnologia_precio_multiplicador)
-		buffer_write(buffer, buffer_f16, multiplicador_vida_enemigos)
+		buffer_write(buffer, buffer_f64, tecnologia_precio_multiplicador)
+		buffer_write(buffer, buffer_f64, multiplicador_vida_enemigos)
 		buffer_write(buffer, buffer_s8, dificultad)
 		buffer_write(buffer, buffer_bool, modo_misiones)
 		#region Misiones
@@ -50,14 +50,13 @@ function save_game_buffer(buffer){
 				buffer_write(buffer, buffer_bool, _mision.switch_oleadas)
 			}
 			buffer_write(buffer, buffer_u8, min(mision_camara_step, 255))
-			buffer_write(buffer, buffer_f16, mision_camera_x_start)
-			buffer_write(buffer, buffer_f16, mision_camera_y_start)
+			buffer_write(buffer, buffer_f64, mision_camera_x_start)
+			buffer_write(buffer, buffer_f64, mision_camera_y_start)
 			buffer_write(buffer, buffer_string, mision_texto_victoria)
 			buffer_write(buffer, buffer_s8, mision_actual)
 			buffer_write(buffer, buffer_u16, mision_counter)
 			buffer_write(buffer, buffer_s16, mision_current_tiempo)
 			buffer_write(buffer, buffer_bool, mision_choosing_coord)
-			buffer_write(buffer, buffer_s8, mision_actual)
 		#endregion
 		for(var a = 0; a < rss_max; a++)
 			buffer_write(buffer, buffer_u16, clamp(jugador_recursos[0, a], 0, 65535))
@@ -73,17 +72,15 @@ function save_game_buffer(buffer){
 		buffer_write(buffer, buffer_u64, mask_tecnologia_desbloqueable)
 		//Filtrar Edificios
 		len = array_length(edificios_totales)
-		var b = 0
-		for(var a = 0; a < len; a++){
+		for(var a = len - 1; a >= 0; a--){
 			var edificio = edificios_totales[a]
 			if not edificio.vivo or edificio.vida <= 0
 				delete_edificio(edificio)
-			else
-				b++
 		}
-		buffer_write(buffer, buffer_u16, real(b))
+		len = array_length(edificios_totales)
+		buffer_write(buffer, buffer_u16, real(len))
 		//Guardar Edificios
-		for(var a = 0; a < b; a++){
+		for(var a = 0; a < len; a++){
 			var edificio = edificios_totales[a]
 			buffer_write(buffer, buffer_u8, real(edificio.index))
 			buffer_write(buffer, buffer_u8, real(edificio.dir))
@@ -102,7 +99,7 @@ function save_game_buffer(buffer){
 		for(var a = 0; a < len; a++){
 			var red = redes[a]
 			buffer_write(buffer, buffer_u16, real(red.edificios[0].punteros[12]))
-			buffer_write(buffer, buffer_f32, real(red.bateria))
+			buffer_write(buffer, buffer_f64, real(red.bateria))
 		}
 		//Flujos
 		len = array_length(flujos)
@@ -110,20 +107,17 @@ function save_game_buffer(buffer){
 		for(var a = 0; a < len; a++){
 			var flujo = flujos[a]
 			buffer_write(buffer, buffer_u16, real(flujo.edificios[0].punteros[12]))
-			buffer_write(buffer, buffer_f32, real(flujo.almacen))
+			buffer_write(buffer, buffer_f64, real(flujo.almacen))
 			buffer_write(buffer, buffer_u8, real(flujo.liquido))
 		}
 		//Filtrar drones
 		len = array_length(drones)
-		b = 0
-		for(var a = 0; a < len; a++){
+		for(var a = len - 1; a >= 0; a--){
 			var dron = drones[a]
 			if dron.vida <= 0
 				delete_dron(dron)
-			else
-				b++
 		}
-		len = b
+		len = array_length(drones)
 		buffer_write(buffer, buffer_u16, real(len))
 		//Guardar drones
 		for(var a = 0; a < len; a++){
@@ -144,12 +138,12 @@ function save_game_buffer(buffer){
 			mask += (dron.temp_target != null_edificio) << c++
 			mask += (dron.target_dron != null_dron) << c++
 			for(var i = 0; i < rss_max; i++)
-				mask += (dron.carga != 0) << c++
+				mask += (dron.carga[i] != 0) << c++
 			mask += (dron.modo != 0) << c++
 			mask += (dron.dir != 0) << c++
 			mask += (dron.dir_move != 0) << c++
 			mask += (dron.step != 0) << c++
-			for(var i = 0; i < array_length(efectos_max); i++)
+			for(var i = 0; i < efectos_max; i++)
 				mask += (dron.efecto[i] != 0) << c++
 			mask += (dron.move_xmove != 0) << c++
 			mask += (dron.move_ymove != 0) << c++
@@ -161,26 +155,26 @@ function save_game_buffer(buffer){
 			mask += (dron.move_dir != 0) << c++
 			buffer_write(buffer, buffer_u64, real(mask))
 			c = 0
-			buffer_write(buffer, buffer_f16, real(dron.x))
-			buffer_write(buffer, buffer_f16, real(dron.y))
-			if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(dron.vida_max))
-			if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(dron.vida))
+			buffer_write(buffer, buffer_f64, real(dron.x))
+			buffer_write(buffer, buffer_f64, real(dron.y))
+			if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(dron.vida_max))
+			if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(dron.vida))
 			if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(dron.target.punteros[12]))
 			if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(dron.temp_target.punteros[12]))
 			if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(dron.target_dron.punteros[2]))
 			for(var i = 0; i < rss_max; i++)
-				if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(dron.carga[i]))
+				if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(dron.carga[i]))
 			if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(dron.modo))
-			if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(dron.dir))
-			if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(dron.dir_move))
+			if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(dron.dir))
+			if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(dron.dir_move))
 			if mask & (1 << c++) buffer_write(buffer, buffer_s16, real(dron.step))
 			for(var i = 0; i < efectos_max; i++)
-				if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(dron.efecto[i]))
-			if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(dron.move_xmove))
-			if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(dron.move_ymove))
-			if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(dron.move_dis))
-			if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(dron.move_x))
-			if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(dron.move_y))
+				if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(dron.efecto[i]))
+			if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(dron.move_xmove))
+			if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(dron.move_ymove))
+			if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(dron.move_dis))
+			if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(dron.move_x))
+			if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(dron.move_y))
 			if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(dron.oleada))
 			c++
 			if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(dron.move_dir))
@@ -190,10 +184,10 @@ function save_game_buffer(buffer){
 		buffer_write(buffer, buffer_u16, len)
 		for(var a = 0; a < len; a++){
 			var municion = municiones[a]
-			buffer_write(buffer, buffer_f16, real(municion.x))
-			buffer_write(buffer, buffer_f16, real(municion.y))
-			buffer_write(buffer, buffer_f16, real(municion.hmove))
-			buffer_write(buffer, buffer_f16, real(municion.vmove))
+			buffer_write(buffer, buffer_f64, real(municion.x))
+			buffer_write(buffer, buffer_f64, real(municion.y))
+			buffer_write(buffer, buffer_f64, real(municion.hmove))
+			buffer_write(buffer, buffer_f64, real(municion.vmove))
 			var mask = 0, c = 0
 			mask += (municion.tipo != 0) << c++
 			mask += (municion.radio != 2500) << c++
@@ -205,9 +199,9 @@ function save_game_buffer(buffer){
 			buffer_write(buffer, buffer_u8, mask)
 			c = 0
 			if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(municion.tipo))
-			buffer_write(buffer, buffer_f16, real(municion.dis))
-			buffer_write(buffer, buffer_f16, real(municion.dmg))
-			if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(municion.radio))
+			buffer_write(buffer, buffer_f64, real(municion.dis))
+			buffer_write(buffer, buffer_f64, real(municion.dmg))
+			if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(municion.radio))
 			c++
 			c++
 			if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(municion.jugador))

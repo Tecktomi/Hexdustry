@@ -1,4 +1,4 @@
-function def_mision(nombre = "", nombre_idioma = array_create(0, ""), objetivo = 0, target_id = 0, target_num = 0, texto = array_create(0, {x : 0, y : 0, texto : "", texto_idioma : array_create(control.IDIOMAS, "")}), tiempo_edit = false, tiempo = 0, tiempo_victoria = false, tiempo_show = false, camera_move = false, camera_x = 0, camera_y = 0, switch_oleadas = false){
+function def_mision(nombre = "", nombre_idioma = array_create(0, ""), objetivo = 0, target_id = 0, target_num = 0, texto = array_create(0, {x : 0, y : 0, texto : "", texto_idioma : array_create(IDIOMAS, "")}), tiempo_edit = false, tiempo = 0, tiempo_victoria = false, tiempo_show = false, camera_move = false, camera_x = 0, camera_y = 0, switch_oleadas = false){
 	return {
 		nombre : nombre,
 		nombre_idioma : nombre_idioma,

@@ -47,7 +47,7 @@ function load_game_buffer_2026_03_27(buffer){
 			var b = real(buffer_read(buffer, buffer_u16)), c = real(buffer_read(buffer, buffer_f32)), d = real(buffer_read(buffer, buffer_u8))
 			if b < 65535{
 				var flujo = edificios_totales[b].flujo
-				flujo.capacidad = c
+				flujo.almacen = c
 				flujo.liquido = (d = 255) ? -1 : d
 			}
 		}
