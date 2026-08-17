@@ -11,7 +11,7 @@ function menu_campanna(){
 			keyboard_clear(vk_escape)
 			menu = 0
 		}
-		var total_width = world_width * 96, total_height = world_height * 28
+		var total_width = world_width * 96, total_height = world_height * TILE_WIDTH
 		for(var a = 0; a < world_width; a++)
 			for(var b = 0; b < world_height; b++){
 				var view = world_visible[# a, b]
@@ -42,7 +42,7 @@ function menu_campanna(){
 						ini_close()
 					}
 					if view = 1
-						draw_sprite_ext(spr_hexagono, 0, aa + 32, bb + 28, 2, 2, 0, c_black, 0.5)
+						draw_sprite_ext(spr_hexagono, 0, aa + 32, bb + TILE_WIDTH, 2, 2, 0, c_black, 0.5)
 				}
 			}
 	}

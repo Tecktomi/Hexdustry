@@ -1,12 +1,14 @@
 randomize()
 #region MACROS
-	FILE_VERSION = 2026_04_30
-	PROCESADOR_VERSION = 2026_03_25
+	#macro FILE_VERSION 2026_04_30
+	#macro PROCESADOR_VERSION 2026_03_25
+	#macro tile_width 32
+	#macro TILE_WIDTH 28
 	SIZE_SIZE = [1, 3, 7, 12, 19, 27, 37]
 	SIZE_BORDE = [6, 9, 12, 15, 18, 21]
 	DESFACE = [[[0, -1], [0, -2], [-1, -1], [-1, 1], [0, 2], [0, 1]], [[1, -1], [0, -2], [0, -1], [0, 1], [0, 2], [1, 1]]]
 	DEFAULT_MAPS = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas", "Asalto"]
-	IDIOMAS = 3
+	#macro IDIOMAS 3
 	IDIOMA_NAME = ["en", "es", "ru"]
 	var angle_dir = [pi / 6, pi / 2, 5 * pi / 6, 7 * pi / 6, 3 * pi / 2, 11 * pi / 6]
 	for(var a = 0; a < 6; a++){
