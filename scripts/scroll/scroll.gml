@@ -1,6 +1,6 @@
 function scroll(xpos, ypos, variable, cantidad_elementos, altura, funcion = null_function_scroll, param = {}, _deslizante = 0){
 	with control{
-		if devise{
+		if DEVISE{
 			if variable > cantidad_elementos
 				deslizante[_deslizante] = floor(draw_deslizante_vertical(xpos, ypos, ypos + cantidad_elementos * altura, deslizante[_deslizante], 0, variable - cantidad_elementos, 0))
 			if deslizante[_deslizante] + cantidad_elementos < variable and mouse_wheel_down()
@@ -15,7 +15,7 @@ function scroll(xpos, ypos, variable, cantidad_elementos, altura, funcion = null
 				break
 		}
 		//Android
-		if not devise and mouse_x > xpos and mouse_y > ypos and mouse_y < ypos + cantidad_elementos * altura and variable > cantidad_elementos{
+		if not DEVISE and mouse_x > xpos and mouse_y > ypos and mouse_y < ypos + cantidad_elementos * altura and variable > cantidad_elementos{
 			if mouse_check_button_pressed(mb_left){
 				android_mouse_y = mouse_y
 				android_camy = real(deslizante[_deslizante])

@@ -11,7 +11,7 @@ function draw_boton_text_list_end(){
 			}
 			for(var b = 0; b < min(editor_max_height, size); b++)
 				max_width = max(max_width, string_width(editor_array_name[deslizante[get_keyboard_string] + b]))
-			var color = draw_get_color(), item_height = devise ? 20 : 40
+			var color = draw_get_color(), item_height = DEVISE ? 20 : 40
 			draw_set_color(c_ltgray)
 			draw_rectangle(editor_xpos, editor_ypos + item_height, editor_xpos + max_width + item_height, editor_ypos + item_height * (min(editor_max_height, size) + 1), false)
 			draw_set_color(c_black)

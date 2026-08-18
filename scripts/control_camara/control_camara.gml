@@ -1,7 +1,7 @@
 function control_camara(min_camx = 0){
 	with control{
 		//WINDOWS
-		if devise{
+		if DEVISE{
 			var cam_vel = 8
 			if keyboard_check(vk_lcontrol) and mouse_wheel_up() and zoom < 4{
 				camx -= xsize * 48 * zoom / 2

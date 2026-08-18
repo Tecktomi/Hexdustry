@@ -1,4 +1,4 @@
-function draw_boton_text_list(xpos, ypos, variable = 0, array_name = array_create(0, ""), array = array_create(0, 0), max_height = devise ? 25 : 15){
+function draw_boton_text_list(xpos, ypos, variable = 0, array_name = array_create(0, ""), array = array_create(0, 0), max_height = DEVISE ? 25 : 15){
 	with control{
 		if draw_boton(xpos, ypos, array_name[variable],,,, false){
 			get_keyboard_string = draw_boton_text_counter
@@ -23,7 +23,7 @@ function draw_boton_text_list(xpos, ypos, variable = 0, array_name = array_creat
 			editor_list = true
 			for(var i = 0; i < min(max_height, size); i++)
 				max_width = max(max_width, string_width(array_name[deslizante[des_index] + i]))
-			var color = draw_get_color(), item_height = devise ? 20 : 40
+			var color = draw_get_color(), item_height = DEVISE ? 20 : 40
 			draw_set_color(c_ltgray)
 			draw_rectangle(xpos, ypos + item_height, xpos + max_width + item_height, ypos + item_height * (min(max_height, size) + 1), false)
 			draw_set_color(c_black)

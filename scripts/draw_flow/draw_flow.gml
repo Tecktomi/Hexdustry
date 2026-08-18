@@ -39,14 +39,14 @@ function draw_flow(){
 		}
 		else if flow = 6{
 			for(var a = min_chunka; a < max_chunka; a++) for(var b = min_chunkb; b < max_chunkb; b++){
-				var temp_complex = abtoxy(a * chunk_width, b * chunk_height)
+				var temp_complex = abtoxy(a * CHUNK_WIDTH, b * CHUNK_HEIGHT)
 				var temp_array_dron = chunk_dron_enemigo[# a, b], temp_array_dron_2 = chunk_dron_aliado[# a, b]
 				draw_text_off(temp_complex[0], temp_complex[1], $"{array_length(temp_array_dron)}\n{array_length(temp_array_dron_2)}")
 			}
 		}
 		else if flow = 7{
 			for(var a = min_chunka; a < max_chunka; a++) for(var b = min_chunkb; b < max_chunkb; b++){
-				var temp_complex = abtoxy(a * chunk_width, b * chunk_height)
+				var temp_complex = abtoxy(a * CHUNK_WIDTH, b * CHUNK_HEIGHT)
 				var temp_array_1 = chunk_edificios_estatico[# a, b], temp_array_2 = chunk_edificios_dinamico[# a, b], temp_array_3 = chunk_edificios_draw[# a, b]
 				draw_text_off(temp_complex[0], temp_complex[1], $"{array_length(temp_array_1)}\n{array_length(temp_array_2)}\n{array_length(temp_array_3)}")
 			}

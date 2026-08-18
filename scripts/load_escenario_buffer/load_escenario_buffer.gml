@@ -117,7 +117,7 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 		clear_olas()
 		for(var a = 0; a < chunk_xsize; a++)
 			for(var b = 0; b < chunk_ysize; b++)
-				update_background(chunk_width * a, chunk_height * b)
+				update_background(CHUNK_WIDTH * a, CHUNK_HEIGHT * b)
 		if array_length(nucleos) > 0{
 			camx = clamp(nucleos[0].a * 48 - room_width / 2, 0, xsize * 48 * zoom - room_width)
 			camy = clamp(nucleos[0].b * 14 - room_height / 2, 0, ysize * 14 * zoom - room_height)

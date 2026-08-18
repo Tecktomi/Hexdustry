@@ -2,7 +2,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 	with control{
 		if edificio_bool[# a, b]
 			exit
-		var temp_complex = abtoxy(a, b), chunk_x = clamp(floor(a / chunk_width), 0, chunk_xsize - 1), chunk_y = clamp(floor(b / chunk_height), 0, chunk_ysize - 1), enemigo = (jugador != _jugador)
+		var temp_complex = abtoxy(a, b), chunk_x = clamp(floor(a / CHUNK_WIDTH), 0, chunk_xsize - 1), chunk_y = clamp(floor(b / CHUNK_HEIGHT), 0, chunk_ysize - 1), enemigo = (jugador != _jugador)
 		x = temp_complex[0]
 		y = temp_complex[1]
 		var edificio = {
@@ -38,11 +38,14 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			energia_link : array_create(0, null_edificio),
 			flujo : null_flujo,
 			flujo_link : array_create(0, null_edificio),
+			flujo_2 : null_flujo,
+			flujo_2_link : array_create(0, null_edificio),
 			vida : edificio_vida[index],
 			target : null_dron,
 			target_edificio : null_edificio,
 			torres : array_create(0, null_edificio),
 			flujo_consumo : 0,
+			flujo_2_consumo : 0,
 			flujo_consumo_max : edificio_flujo_consumo[index],
 			energia_consumo : 0,
 			energia_consumo_max : edificio_energia_consumo[index],
@@ -152,7 +155,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			array_disorder_push(plantas_de_reciclaje, edificio, 2)
 		array_push(efectos, add_efecto(size_fx[edificio_size[index] - 1], 0, x, y, 3))
 		if index = id_nucleo{
-			edificio.coordenadas_dis = ds_grid_create(xsize, ysize)
+			ds_grid_resize(edificio.coordenadas_dis, xsize, ysize)
 			array_push(nucleos, edificio)
 		}
 		else
@@ -163,8 +166,8 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		if edificio_size[index] != 1
 			for(var c = array_length(temp_list_size) - 1; c >= 0; c--){
 				temp_complex = temp_list_size[c]
-				var aa = clamp(floor(temp_complex[0] / chunk_width), 0, chunk_xsize - 1)
-				var bb = clamp(floor(temp_complex[1] / chunk_height), 0, chunk_ysize - 1)
+				var aa = clamp(floor(temp_complex[0] / CHUNK_WIDTH), 0, chunk_xsize - 1)
+				var bb = clamp(floor(temp_complex[1] / CHUNK_HEIGHT), 0, chunk_ysize - 1)
 				chunk_mina = min(chunk_mina, aa)
 				chunk_minb = min(chunk_minb, bb)
 				chunk_maxa = max(chunk_maxa, aa)
@@ -207,7 +210,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		}
 		edificios_counter[index]++
 		if edificio_armas[index]{
-			var dis = edificio_alcance_sqr[index], chunk_size_x = chunk_width * 48, chunk_size_y = chunk_height * 14
+			var dis = edificio_alcance_sqr[index], chunk_size_x = CHUNK_WIDTH * 48, chunk_size_y = CHUNK_HEIGHT * 14
 			var mini = max(chunk_x - edificio_alcance_chunk_x[index], 0), minj = max(chunk_y - edificio_alcance_chunk_y[index], 0)
 			var maxi = min(chunk_x + edificio_alcance_chunk_x[index], chunk_xsize - 1), maxj = min(chunk_y + edificio_alcance_chunk_y[index], chunk_ysize - 1)
 			for(var i = mini; i <= maxi; i++)
@@ -424,147 +427,9 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		}
 		//Detectar cañerías cercanas
 		if edificio_flujo[index]{
-			if index = id_bomba_hidraulica{
-				edificio.select = 0
-				for(var c = array_length(temp_list_size) - 1; c >= 0; c--){
-					temp_complex = temp_list_size[c]
-					var aa = temp_complex[0], bb = temp_complex[1]
-					if in(terreno[# aa, bb], idt_agua, idt_agua_profunda){
-						edificio.select++
-						if terreno[# aa, bb] = idt_agua_profunda
-							edificio.select += 0.2
-						edificio.fuel = 0
-					}
-					else if terreno[# aa, bb] = idt_petroleo{
-						edificio.select++
-						edificio.fuel = 2
-					}
-					else if terreno[# aa, bb] = idt_lava{
-						edificio.select++
-						edificio.fuel = 3
-					}
-					else if tag_agua_salada[terreno[# aa, bb]]{
-						edificio.select++
-						if terreno[# aa, bb] = idt_agua_salada_profunda
-							edificio.select += 0.2
-						edificio.fuel = 4
-					}
-				}
-			}
-			var temp_list_flujos = array_create(0, null_flujo)
-			for(var c = array_length(temp_list_arround) - 1; c >= 0; c--){
-				temp_complex = temp_list_arround[c]
-				var aa = temp_complex[0], bb = temp_complex[1]
-				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
-					continue
-				if edificio_bool[# aa, bb]{
-					var temp_edificio = edificio_id[# aa, bb]
-					if edificio_flujo[temp_edificio.index] and (tag_edificio_tuberia[index] or tag_edificio_tuberia[temp_edificio.index]) and temp_edificio.jugador = _jugador{
-						array_push(edificio.flujo_link, temp_edificio)
-						array_push(temp_edificio.flujo_link, edificio)
-						if not array_contains(temp_list_flujos, temp_edificio.flujo)
-							array_push(temp_list_flujos, temp_edificio.flujo)
-						if temp_edificio.index = id_tuberia
-							tuberia_arround(temp_edificio)
-					}
-				}
-			}
-			if index = id_tuberia_subterranea{
-				var temp_list = get_size(a, b, 0, 7), flag = false, temp_edificio = null_edificio
-				for(var c = array_length(temp_list) - 1; c >= 0; c--){
-					temp_complex = temp_list[c]
-					var aa = temp_complex[0], bb = temp_complex[1]
-					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
-						continue
-					if edificio_bool[# aa, bb] and not (aa = a and bb = b){
-						temp_edificio = edificio_id[# aa, bb]
-						if temp_edificio.index = index and temp_edificio.link = null_edificio and temp_edificio.jugador = _jugador{
-							flag = true
-							break
-						}
-					}
-				}
-				if flag{
-					edificio.link = temp_edificio
-					temp_edificio.link = edificio
-					array_push(edificio.flujo_link, temp_edificio)
-					array_push(temp_edificio.flujo_link, edificio)
-					if not array_contains(temp_list_flujos, temp_edificio.flujo)
-						array_push(temp_list_flujos, temp_edificio.flujo)
-				}
-				
-			}
-			if array_length(temp_list_flujos) = 0{
-				var new_flujo = def_flujo()
-				array_disorder_push(flujos, new_flujo, 0)
-				edificio.flujo = new_flujo
-				array_disorder_push(new_flujo.edificios, edificio, 6)
-			}
-			else if tag_edificio_tuberia[index]{
-				var new_flujo = def_flujo()
-				for(var c = array_length(temp_list_flujos) - 1; c >= 0; c--){
-					var temp_flujo = temp_list_flujos[c]
-					if new_flujo.liquido = -1 or temp_flujo.liquido = -1 or new_flujo.liquido = temp_flujo.liquido{
-						for(var d = array_length(temp_flujo.edificios) - 1; d >= 0; d--){
-							var temp_edificio = temp_flujo.edificios[d]
-							temp_edificio.flujo = new_flujo
-							array_disorder_push(new_flujo.edificios, temp_edificio, 6)
-						}
-						if new_flujo.liquido = -1
-							new_flujo.liquido = temp_flujo.liquido
-						new_flujo.consumo += temp_flujo.consumo
-						new_flujo.generacion += temp_flujo.generacion
-						new_flujo.almacen += temp_flujo.almacen
-						new_flujo.almacen_max += temp_flujo.almacen_max
-						delete(temp_flujo.edificios)
-						array_disorder_remove(flujos, temp_flujo, 0)
-					}
-				}
-				array_disorder_push(flujos, new_flujo, 0)
-				edificio.flujo = new_flujo
-				array_disorder_push(new_flujo.edificios, edificio, 6)
-			}
-			else{
-				var temp_flujo = temp_list_flujos[0]
-				edificio.flujo = temp_flujo
-				array_disorder_push(temp_flujo.edificios, edificio, 6)
-			}
-			edificio.flujo.almacen_max += edificio_flujo_almacen[index]
-			if index = id_bomba_hidraulica and in(edificio.flujo.liquido, -1, edificio.fuel){
-				edificio.flujo.liquido = edificio.fuel
-				change_flujo(edificio_flujo_consumo[index], edificio)
-			}
-			else if in(index, id_bomba_de_evaporacion, id_generador_geotermico, id_extractor_atmosferico) and in(edificio.flujo.liquido, -1, idl_agua){
-				edificio.flujo.liquido = idl_agua
-				change_flujo(edificio_flujo_consumo[index], edificio)
-				if index = id_generador_geotermico{
-					edificio.select = 0
-					for(var c = array_length(temp_list_size) - 1; c >= 0; c--){
-						var temp_complex_2 = temp_list_size[c], aa = temp_complex_2[0], bb = temp_complex_2[1]
-						edificio.select += (terreno[# aa, bb] = idt_lava)
-					}
-				}
-				else if index = id_extractor_atmosferico{
-					edificio.select = 0
-					for(var c = array_length(temp_list_size) - 1; c >= 0; c--){
-						var temp_complex_2 = temp_list_size[c], aa = temp_complex_2[0], bb = temp_complex_2[1], d = terreno[# aa, bb]
-						if d = idt_hielo
-							edificio.select += 1.5
-						else if d = idt_nieve
-							edificio.select += 1.3
-						else if d != idt_salar
-							edificio.select++
-					}
-				}
-			}
-			else if index = id_planta_de_reciclaje{
-				edificio.flujo.liquido = 1
-				change_flujo(edificio_flujo_consumo[index], edificio)
-			}
-			if grafic_luz and edificio.flujo.liquido = idl_lava
-				encender_luz(, edificio)
-			if index = id_tuberia
-				tuberia_arround(edificio)
+			add_edificio_flujo(edificio, "flujo", _jugador)
+			if array_length(edificio_flujo_liquido[index]) = 2
+				add_edificio_flujo(edificio, "flujo_2", _jugador, 1)
 		}
 		//Datos específicos
 		if index = id_almacen

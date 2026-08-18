@@ -45,7 +45,7 @@ function menu_editor(){
 				get_keyboard_string = -1
 			}
 			var size = array_length(misiones), pos = 150
-			scroll(120, pos, size, devise ? 15 : 7, devise ? 30 : 50, scroll_editor_misiones, {xpos : 140, ypos : pos})
+			scroll(120, pos, size, DEVISE ? 15 : 7, DEVISE ? 30 : 50, scroll_editor_misiones, {xpos : 140, ypos : pos})
 			if draw_boton(140, 600, L.editor_nuevo_objetivo, ui_verde){
 				var _mision = def_mision($"{L.editor_objetivo} {size}")
 				array_push(misiones, _mision)
@@ -292,7 +292,7 @@ function menu_editor(){
 			var ore_names = [], size = array_length(editor_instrucciones)
 			for(var j = 0; j < ore_max; j++)
 				array_push(ore_names, recurso_nombre[ore_recurso[j]])
-			scroll(110, ypos, size, devise ? 18 : 9, devise ? 20 : 40, scroll_editor_instrucciones, {xpos : xpos, ypos : ypos, ore_names : ore_names})
+			scroll(110, ypos, size, DEVISE ? 18 : 9, DEVISE ? 20 : 40, scroll_editor_instrucciones, {xpos : xpos, ypos : ypos, ore_names : ore_names})
 			xpos = 120
 			ypos += 20 * min(18, size)
 			xpos = draw_text_xpos(xpos, ypos, $"{L.editor_add} ")
@@ -318,14 +318,14 @@ function menu_editor(){
 			ypos += text_y
 			var prev_xsize = xsize
 			xsize = round(draw_deslizante(xpos, xpos + 100, ypos + 10, xsize, TILE_WIDTH, 144, 0))
-			chunk_xsize = ceil(xsize / chunk_width)
+			chunk_xsize = ceil(xsize / CHUNK_WIDTH)
 			draw_text(xpos + 100, ypos, $"{xsize}")
 			if xsize > prev_xsize
 				resize_grid(prev_xsize, 0)
 			ypos += text_y
 			var prev_ysize = ysize
 			ysize = round(draw_deslizante(xpos, xpos + 100, ypos + 10, ysize, 60, 288, 1))
-			chunk_ysize = ceil(ysize / chunk_height)
+			chunk_ysize = ceil(ysize / CHUNK_HEIGHT)
 			draw_text(xpos + 100, ypos, $"{ysize}")
 			if ysize > prev_ysize
 				resize_grid(0, prev_ysize)
@@ -574,13 +574,13 @@ function menu_editor(){
 		}
 		ypos += text_y + 10
 		build_size = round(draw_deslizante(50, 150, ypos, build_size, 1, 5, 2))
-		if browser and draw_boton(10, room_height - 100, L.editor_guardar, ui_azul) or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("S"))){
+		if BROWSER and draw_boton(10, room_height - 100, L.editor_guardar, ui_azul) or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("S"))){
 			get_file = 2
 			input_layer = 1
 			scan_files_save()
 			keyboard_clear(ord("S"))
 		}
-		if browser and draw_boton(10, room_height - 60, L.editor_cargar, ui_azul) or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("A"))){
+		if BROWSER and draw_boton(10, room_height - 60, L.editor_cargar, ui_azul) or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("A"))){
 			get_file = 1
 			input_layer = 1
 			scan_files_save()
@@ -651,8 +651,8 @@ function menu_editor(){
 				get_file = 0
 			}
 		}
-		if draw_boton(10, room_height - 140, L.volver, ui_rojo) or keyboard_check_pressed(vk_escape) or (not devise and keyboard_check(vk_backspace)){
-			if not devise
+		if draw_boton(10, room_height - 140, L.volver, ui_rojo) or keyboard_check_pressed(vk_escape) or (not DEVISE and keyboard_check(vk_backspace)){
+			if not DEVISE
 				keyboard_clear(vk_backspace)
 			menu = 0
 			camx = max(camx, 0)

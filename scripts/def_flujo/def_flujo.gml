@@ -9,7 +9,8 @@ function def_flujo(){
 		eficiencia : 0,
 		punteros : array_create(0, 0),
 		promedio : 0,
-		pre_liq : -1
+		pre_liq : -1,
+		liquido_forzado : 0
 	}
 	return flujo
 }

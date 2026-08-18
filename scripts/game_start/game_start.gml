@@ -52,7 +52,7 @@ function game_start(_nucleo = true, mision_cumplida = false){
 			array_set(jugador_recursos[0], a, carga_inicial[a])
 		for(var a = 0; a < chunk_xsize; a++)
 			for(var b = 0; b < chunk_ysize; b++)
-				update_background(a * chunk_width, b * chunk_height)
+				update_background(a * CHUNK_WIDTH, b * CHUNK_HEIGHT)
 		grafic_hideui = false
 		check_water_target()
 	}

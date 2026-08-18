@@ -9,34 +9,8 @@ function set_edificio(mode, select, edificio = control.null_edificio, _server = 
 				exit
 		}
 		//Cambiar modo
-		if in(index, id_selector, id_overflow, id_embotelladora, id_planta_de_reciclaje) and edificio.mode != mode{
+		if in(index, id_selector, id_overflow, id_planta_de_reciclaje) and edificio.mode != mode{
 			edificio.mode = bool(mode)
-			if index = id_embotelladora{
-				var temp_array = [idr_barril_con_agua, idr_barril_con_acido, idr_barril_con_petroleo, idr_barril_con_lava, idr_barril_con_agua_salada]
-				if edificio.mode{
-					for(var a = array_length(temp_array) - 1; a >= 0; a--){
-						var b = temp_array[a]
-						edificio.carga_output[b] = false
-						edificio.carga_input[b] = true
-						edificio.carga_max[b] = 10
-					}
-					edificio.receptor = true
-					edificio.emisor = false
-				}
-				else{
-					for(var a = array_length(temp_array) - 1; a >= 0; a--){
-						var b = temp_array[a]
-						edificio.carga_output[b] = true
-						edificio.carga_input[b] = false
-						edificio.carga_max[b] = 0
-					}
-					edificio.receptor = false
-					edificio.emisor = true
-				}
-				edificio.fuel = 0
-				edificio.proceso = -1
-				calcular_edificios_adyascentes(edificio, false)
-			}
 			mover(edificio)
 		}
 		//Seleccionar edificio

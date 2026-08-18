@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"add_edificio_flujo",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"add_edificio_flujo",
+  "parent":{
+    "name":"EDIFICIOS",
+    "path":"folders/SCRIPTS/EDIFICIOS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
