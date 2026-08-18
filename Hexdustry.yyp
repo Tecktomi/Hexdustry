@@ -46,8 +46,6 @@
   ],
   "ForcedPrefabProjectReferences":[],
   "IncludedFiles":[
-    {"$GMIncludedFile":"","%Name":"Asalto.png","CopyToMask":-1,"filePath":"datafiles","name":"Asalto.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"Asalto.txt","CopyToMask":-1,"filePath":"datafiles","name":"Asalto.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Cuevas.png","CopyToMask":-1,"filePath":"datafiles","name":"Cuevas.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Cuevas.txt","CopyToMask":-1,"filePath":"datafiles","name":"Cuevas.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Desierto.png","CopyToMask":-1,"filePath":"datafiles","name":"Desierto.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -698,7 +696,6 @@
     {"id":{"name":"spr_planta_desalinizadora","path":"sprites/spr_planta_desalinizadora/spr_planta_desalinizadora.yy",},},
     {"id":{"name":"spr_planta_nuclear","path":"sprites/spr_planta_nuclear/spr_planta_nuclear.yy",},},
     {"id":{"name":"spr_planta_quimica","path":"sprites/spr_planta_quimica/spr_planta_quimica.yy",},},
-    {"id":{"name":"spr_preset_maps_asalto","path":"sprites/spr_preset_maps_asalto/spr_preset_maps_asalto.yy",},},
     {"id":{"name":"spr_preset_maps_cuevas","path":"sprites/spr_preset_maps_cuevas/spr_preset_maps_cuevas.yy",},},
     {"id":{"name":"spr_preset_maps_desierto","path":"sprites/spr_preset_maps_desierto/spr_preset_maps_desierto.yy",},},
     {"id":{"name":"spr_preset_maps_islas","path":"sprites/spr_preset_maps_islas/spr_preset_maps_islas.yy",},},
