@@ -13,7 +13,7 @@ randomize()
 	DESFACE = [[[0, -1], [0, -2], [-1, -1], [-1, 1], [0, 2], [0, 1]], [[1, -1], [0, -2], [0, -1], [0, 1], [0, 2], [1, 1]]]
 	DESFACE_A = [[0, 0, -1, -1, 0, 0], [1, 0, 0, 0, 0, 1]]
 	DESFACE_B = [[-1, -2, -1, 1, 2, 1], [-1, -2, -1, 1, 2, 1]]
-	DEFAULT_MAPS = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas", "Asalto"]
+	DEFAULT_MAPS = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas"]
 	#macro IDIOMAS 3
 	IDIOMA_NAME = ["en", "es", "ru"]
 	var angle_dir = [pi / 6, pi / 2, 5 * pi / 6, 7 * pi / 6, 3 * pi / 2, 11 * pi / 6]
@@ -108,7 +108,7 @@ if BROWSER{
 		directory_create("Tutorial")
 }
 else
-	default_maps_image = [spr_preset_maps_pradera, spr_preset_maps_cuevas, spr_preset_maps_desierto, spr_preset_maps_nieve, spr_preset_maps_islas, spr_preset_maps_asalto]
+	default_maps_image = [spr_preset_maps_pradera, spr_preset_maps_cuevas, spr_preset_maps_desierto, spr_preset_maps_nieve, spr_preset_maps_islas]
 save_codes = (BROWSER) ? scan_files("*.code", fa_none) : []
 L = {}
 #region Campaña
