@@ -485,8 +485,8 @@ function dron_logic(){
 				dron.change_pos = true
 				if not dron_aereo[index] and not tag_dron_marino[index] and array_length(edificios_target) > 0 and terreno_caminable[terreno[# aa, bb]]
 					dron.target = edificio_cercano[# aa, bb]
-				chunk_x = clamp(round(aa / chunk_width), 0, chunk_xsize - 1)
-				chunk_y = clamp(round(bb / chunk_height), 0, chunk_ysize - 1)
+				chunk_x = clamp(round(aa / CHUNK_WIDTH), 0, chunk_xsize - 1)
+				chunk_y = clamp(round(bb / CHUNK_HEIGHT), 0, chunk_ysize - 1)
 				if chunk_x != dron.chunk_x or chunk_y != dron.chunk_y{
 					dron_chunk_remove(dron)
 					dron.chunk_x = chunk_x

@@ -22,9 +22,9 @@ randomize()
 		SIN_ANGLE_DIR[a] = sin(angle_dir[a])
 	}
 #endregion
-devise = (os_type = os_windows)
-browser = (os_browser = browser_not_a_browser)
-if devise{
+DEVISE = (os_type = os_windows)
+BROWSER = (os_browser = browser_not_a_browser)
+if DEVISE{
 	font_normal = ft_letra
 	font_titulo = ft_titulo
 }
@@ -81,12 +81,12 @@ for(var a = 0; a < array_length(DEFAULT_MAPS); a++){
 		if c > 12092000 and (c mod (12092000 + (a + 1) * (b + 10))) = 1
 			array_set(medallas[a], b, true)
 	}
-	if browser
+	if BROWSER
 		default_maps_image[a] = sprite_add($"{DEFAULT_MAPS[a]}.png", 1, false, false, 0, 0)
 }
 ini_close()
-save_files = browser ? scan_files("*.txt", fa_none) : []
-if browser{
+save_files = BROWSER ? scan_files("*.txt", fa_none) : []
+if BROWSER{
 	for(var a = array_length(save_files) - 1; a >= 0; a--){
 		save_file = save_files[a]
 		var temp_text = file_format(save_file)
@@ -109,20 +109,20 @@ if browser{
 }
 else
 	default_maps_image = [spr_preset_maps_pradera, spr_preset_maps_cuevas, spr_preset_maps_desierto, spr_preset_maps_nieve, spr_preset_maps_islas, spr_preset_maps_asalto]
-save_codes = (browser) ? scan_files("*.code", fa_none) : []
+save_codes = (BROWSER) ? scan_files("*.code", fa_none) : []
 L = {}
 #region Campaña
-	world_width = 10
-	world_height = 12
-	world_visible = ds_grid_create(world_width, world_height)
+	#macro WORLD_WIDTH 10
+	#macro WORLD_HEIGHT 12
+	world_visible = ds_grid_create(WORLD_WIDTH, WORLD_HEIGHT)
 	ds_grid_clear(world_visible, 0)
-	world_escenario = ds_grid_create(world_width, world_height)
+	world_escenario = ds_grid_create(WORLD_WIDTH, WORLD_HEIGHT)
 	ds_grid_clear(world_escenario, "")
-	world_tutorial = ds_grid_create(world_width, world_height)
+	world_tutorial = ds_grid_create(WORLD_WIDTH, WORLD_HEIGHT)
 	ds_grid_clear(world_tutorial, 0)
-	world_sprite = ds_grid_create(world_width, world_height)
+	world_sprite = ds_grid_create(WORLD_WIDTH, WORLD_HEIGHT)
 	ds_grid_clear(world_sprite, spr_hexagono)
-	world_bioma = ds_grid_create(world_width, world_height)
+	world_bioma = ds_grid_create(WORLD_WIDTH, WORLD_HEIGHT)
 	ds_grid_clear(world_bioma, 0)
 	tutorial_nombre = array_create(0, "")
 	function set_world(a, b, escenario = "", tutorial = 1, sprite = spr_hexagono, bioma = 0){
@@ -138,8 +138,8 @@ L = {}
 	set_world(3, 7, "mision_4.txt", 4, spr_minimap_4)
 	set_world(4, 2, "mision_5.txt", 5, spr_minimap_5)
 	ini_open("settings.ini")
-	for(var a = 0; a < world_width; a++)
-		for(var b = 0; b < world_height; b++)
+	for(var a = 0; a < WORLD_WIDTH; a++)
+		for(var b = 0; b < WORLD_HEIGHT; b++)
 			world_visible[# a, b] = ini_read_real("World visible", $"{a},{b}", 0)
 	ini_close()	
 	descubrir_zona(4, 7)
@@ -150,10 +150,10 @@ L = {}
 	deslizante_id = -1
 	xsize = 72
 	ysize = 144
-	chunk_width = 4
-	chunk_height = 12
-	chunk_xsize = ceil(xsize / chunk_width)
-	chunk_ysize = ceil(ysize / chunk_height)
+	#macro CHUNK_WIDTH 4
+	#macro CHUNK_HEIGHT 12
+	chunk_xsize = ceil(xsize / CHUNK_WIDTH)
+	chunk_ysize = ceil(ysize / CHUNK_HEIGHT)
 	prev_x = 0
 	prev_y = 0
 	mx_clic = 0
@@ -242,8 +242,8 @@ L = {}
 	editor_ypos = 0
 	editor_array_name = array_create(0, "")
 	editor_array = array_create(0, 0)
-	editor_max_height = devise ? 25 : 12
-	editor_item_size = devise ? 20 : 40
+	editor_max_height = DEVISE ? 25 : 12
+	editor_item_size = DEVISE ? 20 : 40
 	editor_list = false
 	nuclear_x = 0
 	nuclear_y = 0
@@ -276,7 +276,7 @@ L = {}
 	tecnologia = true
 	tecnologia_precio_multiplicador = 1
 	chunk_update = true
-	LOGIC_DT = 1 / 60
+	#macro LOGIC_DT 1 / 60
 	acumulator = 0
 	deslizante = array_create(2, 0)
 	modo_misiones = false
@@ -387,7 +387,7 @@ L = {}
 	}
 	cambios = array_create(0, null_cambio)
 	server_timer = 0
-	LAG = 10
+	#macro LAG 10
 	server_yendose = false
 	server_sync_counter = 0
 	server_pvp = false
@@ -412,10 +412,10 @@ L = {}
 	ui_boton_gris_hover = make_color_hsv(color_get_hue(ui_boton_gris), color_get_saturation(ui_boton_gris), 0.8 * color_get_value(ui_boton_gris))
 	ui_boton_rojo = #A00000
 	ui_boton_rojo_hover = make_color_hsv(color_get_hue(ui_boton_rojo), color_get_saturation(ui_boton_rojo), 0.8 * color_get_value(ui_boton_rojo))
-	ui_verde = 0
-	ui_azul = 1
-	ui_gris = 2
-	ui_rojo = 3
+	#macro ui_verde 0
+	#macro ui_azul 1
+	#macro ui_gris 2
+	#macro ui_rojo 3
 	ui_boton_color = [ui_boton_verde, ui_boton_azul, ui_boton_gris, ui_boton_rojo]
 	ui_boton_color_hover = [ui_boton_verde_hover, ui_boton_azul_hover, ui_boton_gris_hover, ui_boton_rojo_hover]
 #endregion
@@ -488,11 +488,14 @@ null_edificio = {
 	energia_link : [],
 	flujo : undefined,
 	flujo_link: [],
+	flujo_2 : undefined,
+	flujo_2_link : [],
 	vida : 0,
 	target : undefined,
 	target_edificio : undefined,
 	torres : [],
 	flujo_consumo : 0,
+	flujo_2_consumo : 0,
 	flujo_consumo_max : 0,
 	energia_consumo : 0,
 	energia_consumo_max : 0,
@@ -538,6 +541,7 @@ null_edificio = {
 null_edificio.link = null_edificio
 null_edificio.energia_link = array_create(0, null_edificio)
 null_edificio.flujo_link = array_create(0, null_edificio)
+null_edificio.flujo_2_link = array_create(0, null_edificio)
 ds_grid_clear(null_edificio.coordenadas_dis, 0)
 null_edificio.edificios_cercanos = array_create(0, null_edificio)
 null_edificio.edificios_cercanos_heridos = array_create(0, null_edificio)
@@ -726,11 +730,6 @@ selected_dron = null_dron
 		"Uranio 238, necesario para acompañar la producción de energía en Plantas Nucleares. Y útil como munición",
 		//20
 		"Recurso útil para mejorar otros procesos industriales como la planta química, refinería de petróleo y producción de Silicio",
-		"Barril con Agua, útil para almacenarla y distribuirla",
-		"Barril con Ácido, útil para almacenarlo y distribuirlo",
-		"Barril con Petróleo, útil para almacenarlo y distribuirlo",
-		"Barril con Lava, útil para almacenarla y distribuirla",
-		"Barril con Agua salada, útil para almacenarla y distribuirla",
 		"Investiga los Módulos y construye dos Ensambladores juntos para empezar a producirlos"
 	]
 	for(var a = array_length(recurso_descripcion) - 1; a >= 0; a--)
@@ -779,11 +778,6 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 	idr_uranio_empobrecido = def_recurso("Uranio Empobrecido", spr_item_uranio_238, #4F5F32,, 4)
 	//20
 	idr_sal = def_recurso("Sal", spr_item_sal, #D8D6CF,, 2)
-	idr_barril_con_agua = def_recurso("Barril con Agua", spr_item_barril_agua, #5FC8F0,, 2)
-	idr_barril_con_acido = def_recurso("Barril con Ácido", spr_item_barril_acido, #FFEF00,, 3)
-	idr_barril_con_petroleo = def_recurso("Barril con Petróleo", spr_item_barril_petroleo, #000707,, 3)
-	idr_barril_con_lava = def_recurso("Barril con Lava", spr_item_barril_lava, #FBAF5D,, 3)
-	idr_barril_con_agua_salada = def_recurso("Barril con Agua salada", spr_item_barril_agua_salada, #3F6E85,, 2)
 	idr_modulos = def_recurso("Módulos", spr_item_modulo, c_red,, 4)
 #endregion
 rss_max = array_length(recurso_nombre)
@@ -910,8 +904,8 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 	array_push(dron_size, size)
 	array_push(dron_alcance, alcance)
 	var alcance_sqrt = sqrt(alcance)
-	array_push(dron_alcance_chunk_x, ceil(alcance_sqrt / chunk_width / 48))
-	array_push(dron_alcance_chunk_y, ceil(alcance_sqrt / chunk_height / 14))
+	array_push(dron_alcance_chunk_x, ceil(alcance_sqrt / CHUNK_WIDTH / 48))
+	array_push(dron_alcance_chunk_y, ceil(alcance_sqrt / CHUNK_HEIGHT / 14))
 	array_push(dron_precio_id, precio_id)
 	array_push(dron_precio_num, precio_num)
 	array_push(dron_aereo, aereo)
@@ -1017,12 +1011,11 @@ dron_max = array_length(dron_nombre)
 		"Mediante la destilación fraccionada permite extraer Plástico, Combustible y Azufre del Petróleo",
 		"Permite reciclar parte de los recursos de los enemigos destruidos cercanos",
 		"Purifica el Agua Salada para extraer la Sal y el Agua dulce",
-		"Llena y vacía barriles con líquidos",
 		"Extrae agua de la atmósfera, ideal para terrenos donde no es fácil obtenerla",
 		"Permite realizar conexiones de cintas transportadoras que se curcen",
 		"Mejora las características de algún edificio",
-		//60
 		"Permite fabricar drones más grandes usando Ácido",
+		//60
 		"Transporta drones entre fábricas",
 		"Se coloca en un sitio y explota cuando los enemigos terrestres pasan encima"
 	]
@@ -1115,8 +1108,8 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 	array_push(edificio_flujo_liquido, agua_tipo)
 	array_push(edificio_arma, arma)
 	array_push(edificio_alcance, alcance)
-	array_push(edificio_alcance_chunk_x, ceil(alcance / chunk_width / 48))
-	array_push(edificio_alcance_chunk_y, ceil(alcance / chunk_height / 14))
+	array_push(edificio_alcance_chunk_x, ceil(alcance / CHUNK_WIDTH / 48))
+	array_push(edificio_alcance_chunk_y, ceil(alcance / CHUNK_HEIGHT / 14))
 	array_push(edificio_alcance_sqr, sqr(alcance))
 	array_push(edificio_armas, bool(alcance > 0))
 	array_push(edificio_inerte, inerte)
@@ -1184,13 +1177,12 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 	id_pantalla = def_edificio("Pantalla", 3, spr_pantalla,, 100,,, scr_draw_pantalla, false,, [idr_cobre, idr_silicio, idr_plastico, idr_electronicos], [40, 15, 10, 20]); def_edificio_2()
 	id_refineria_de_petroleo = def_edificio("Refinería de Petróleo", 4, spr_refineria_de_petroleo,, 400, 50, scr_refineria_petroleo,,,, [idr_cobre, idr_bronce, idr_acero, idr_concreto, idr_electronicos], [50, 30, 20, 40, 20], 40, true, false, [idr_sal], [10], true, false, [idr_piedra_sulfatada, idr_compuesto_incendiario, idr_plastico]); def_edificio_2(240, 10, 125, [idl_petroleo],,,, 2, 2)
 	id_planta_de_reciclaje = def_edificio("Planta de Reciclaje", 3, spr_planta_de_reciclaje,, 300,, scr_planta_de_reciclaje,,,, [idr_bronce, idr_hierro, idr_silicio, idr_concreto], [20, 50, 15, 15], 100,,,,, true, true); def_edificio_2(60, 10, 20, [idl_acido],,,, 1, 1)
-	id_planta_desalinizadora = def_edificio("Planta Desalinizadora", 2, spr_planta_desalinizadora,, 200, 60, scr_planta_desalinizadora, scr_draw_bomba_par, false,, [idr_cobre, idr_bronce, idr_silicio], [40, 10, 15], 20,,,,, true, false, [idr_sal, idr_barril_con_agua]); def_edificio_2(40, 10, 20, [idl_agua_salada],,,, 1)
-	id_embotelladora = def_edificio("Embotelladora", 2, spr_embotelladora,, 120, 20, scr_embotelladora,,,, [idr_bronce, idr_hierro, idr_silicio], [15, 25, 15], 50, false, false, [idr_barril_con_agua, idr_barril_con_acido, idr_barril_con_petroleo, idr_barril_con_lava, idr_barril_con_agua_salada], [10, 10, 10, 10, 10], true, false, [idr_barril_con_agua, idr_barril_con_acido, idr_barril_con_petroleo, idr_barril_con_lava, idr_barril_con_agua_salada]); def_edificio_2(, 10, -250,,,,, 1)
+	id_planta_desalinizadora = def_edificio("Planta Desalinizadora", 2, spr_planta_desalinizadora,, 200, 60, scr_planta_desalinizadora, scr_draw_bomba_par, false,, [idr_cobre, idr_bronce, idr_silicio], [40, 10, 15], 10,,,,, true, false, [idr_sal]); def_edificio_2(40, 10, 20, [idl_agua_salada, idl_agua],,,, 1)
 	id_extractor_atmosferico = def_edificio("Extractor Atmosférico", 2.5, spr_extractor_atmosferico,, 200,, scr_extractor_agua,,, false, [idr_cobre, idr_bronce, idr_silicio, idr_electronicos], [30, 15, 10, 5]); def_edificio_2(40, 10, -6, [idl_agua],,,, 1, 1)
 	id_cruce = def_edificio("Cruce", 1, spr_cruce,,,,,,,, [idr_cobre, idr_hierro], [4, 4]); def_edificio_2(,,,,,, true)
 	id_modulo = def_edificio("Módulo", 1, spr_item_modulo,,,,,,,, [idr_modulos], [1]); def_edificio_2(,,,,,, true)
-	//60
 	id_fabrica_de_drones_grande = def_edificio("Fábrica de Drones Grande", 3, spr_fabrica_drones_grande,, 400,, scr_fabrica_drones,,,, [idr_cobre, idr_hierro, idr_acero, idr_electronicos, idr_uranio_bruto], [200, 150, 40, 20, 40], 20, true, false, [], []); def_edificio_2(250, 10, 10, [idl_acido],,,, 3, 2)
+	//60
 	id_cinta_grande = def_edificio("Cinta Grande", 2, spr_cinta_grande, spr_cinta_grande_diagonal, 80, 30, scr_cinta_grande,,,, [idr_bronce, idr_hierro], [5, 15]); def_edificio_2()
 	id_mina = def_edificio("Mina", 1, spr_mina,,,,,,,, [idr_acero, idr_explosivo], [3, 2]); def_edificio_2(,,,,,, true, -2)
 #endregion
@@ -1200,7 +1192,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 		[id_taladro, id_taladro_electrico, id_taladro_de_explosion, id_perforadora_de_petroleo, id_extractor_atmosferico],
 		[id_horno, id_triturador, id_fabrica_de_concreto, id_ensambladora, id_planta_quimica, id_refineria_de_petroleo, id_refineria_de_metales, id_horno_de_lava, id_planta_de_enriquecimiento],
 		[id_cable, id_torre_de_alta_tension, id_bateria, id_generador, id_turbina, id_panel_solar, id_generador_geotermico, id_planta_nuclear],
-		[id_tuberia, id_tuberia_subterranea, id_bomba_de_evaporacion, id_bomba_hidraulica, id_deposito, id_planta_desalinizadora, id_embotelladora],
+		[id_tuberia, id_tuberia_subterranea, id_bomba_de_evaporacion, id_bomba_hidraulica, id_deposito, id_planta_desalinizadora],
 		[id_torre_basica, id_rifle, id_lanzallamas, id_laser, id_mortero, id_onda_de_choque, id_torre_reparadora, id_muro, id_muro_reforzado, id_silo_de_misiles, id_mina],
 		[id_procesador, id_mensaje, id_memoria, id_pantalla, id_modulo],
 		[id_fabrica_de_drones, id_fabrica_de_drones_grande, id_cinta_grande, id_puerto_de_carga, id_planta_de_reciclaje]]
@@ -1368,7 +1360,6 @@ edificio_key[id_recurso_infinito] = "1z"
 		tag_edificio_seteable[id_liquido_infinito] = true
 		tag_edificio_seteable[id_planta_quimica] = true
 		tag_edificio_seteable[id_refineria_de_petroleo] = true
-		tag_edificio_seteable[id_embotelladora] = true
 		tag_edificio_seteable[id_fabrica_de_drones] = true
 		tag_edificio_seteable[id_silo_de_misiles] = true
 		tag_edificio_seteable[id_fabrica_de_drones_grande] = true
@@ -1663,41 +1654,40 @@ sort_drones()
 	tec_laser = def_tecnologia(id_laser, id_generador, id_torre_basica)
 	tec_deposito = def_tecnologia(id_deposito, id_tuberia)
 	tec_turbina = def_tecnologia(id_turbina, id_generador, id_bomba_hidraulica)
-	tec_enrutador = def_tecnologia(id_refineria_de_metales, id_planta_quimica)
-	tec_enrutador = def_tecnologia(id_fabrica_de_drones, id_ensambladora)
-	tec_enrutador = def_tecnologia(id_bomba_de_evaporacion, id_horno)
-	tec_enrutador = def_tecnologia(id_horno_de_lava, id_horno, id_bomba_hidraulica, id_fabrica_de_concreto)
-	tec_enrutador = def_tecnologia(id_generador_geotermico, id_horno_de_lava, id_turbina)
-	tec_enrutador = def_tecnologia(id_taladro_de_explosion, id_taladro_electrico, id_planta_quimica)
-	tec_enrutador = def_tecnologia(id_muro, id_rifle, id_fabrica_de_concreto)
-	tec_enrutador = def_tecnologia(id_puerto_de_carga, id_fabrica_de_drones)
-	tec_enrutador = def_tecnologia(id_ensambladora, id_taladro_electrico, id_horno)
-	tec_enrutador = def_tecnologia(id_planta_nuclear, id_horno_de_lava, id_taladro_de_explosion, id_refineria_de_metales)
-	tec_enrutador = def_tecnologia(id_torre_de_alta_tension, id_cable)
-	tec_enrutador = def_tecnologia(id_perforadora_de_petroleo, id_bomba_hidraulica, id_fabrica_de_concreto)
-	tec_enrutador = def_tecnologia(id_mortero, id_rifle, id_planta_quimica, id_fabrica_de_concreto)
-	tec_enrutador = def_tecnologia(id_procesador, id_refineria_de_petroleo, id_ensambladora)
-	tec_enrutador = def_tecnologia(id_mensaje, id_procesador)
-	tec_enrutador = def_tecnologia(id_memoria, id_procesador)
-	tec_enrutador = def_tecnologia(id_torre_reparadora, id_torre_basica, id_generador)
-	tec_enrutador = def_tecnologia(id_tuberia_subterranea, id_tuberia)
-	tec_enrutador = def_tecnologia(id_onda_de_choque, id_laser, id_bateria)
-	tec_enrutador = def_tecnologia(id_muro_reforzado, id_muro)
-	tec_enrutador = def_tecnologia(id_silo_de_misiles, id_planta_nuclear, id_procesador, id_mortero, id_fabrica_de_drones)
-	tec_enrutador = def_tecnologia(id_planta_de_enriquecimiento, id_planta_nuclear, id_procesador)
-	tec_enrutador = def_tecnologia(id_almacen, id_cinta_magnetica)
-	tec_enrutador = def_tecnologia(id_fabrica_de_concreto, id_horno, id_bomba_hidraulica)
-	tec_enrutador = def_tecnologia(id_pantalla, id_procesador, id_refineria_de_petroleo)
-	tec_enrutador = def_tecnologia(id_refineria_de_petroleo, id_fabrica_de_concreto, id_ensambladora)
-	tec_enrutador = def_tecnologia(id_planta_de_reciclaje, id_refineria_de_metales, id_horno_de_lava)
-	tec_enrutador = def_tecnologia(id_planta_desalinizadora, id_bomba_de_evaporacion, id_generador)
-	tec_enrutador = def_tecnologia(id_embotelladora, id_tuberia)
-	tec_enrutador = def_tecnologia(id_extractor_atmosferico, id_bomba_hidraulica, id_turbina, id_ensambladora)
-	tec_enrutador = def_tecnologia(id_modulo, id_procesador, id_planta_quimica, id_refineria_de_petroleo)
+	tec_refineria_de_metales = def_tecnologia(id_refineria_de_metales, id_planta_quimica)
+	tec_fabrica_de_drones = def_tecnologia(id_fabrica_de_drones, id_ensambladora)
+	tec_bomba_de_evaporacion = def_tecnologia(id_bomba_de_evaporacion, id_horno)
+	tec_horno_de_lava = def_tecnologia(id_horno_de_lava, id_horno, id_bomba_hidraulica, id_fabrica_de_concreto)
+	tec_generador_geotermico = def_tecnologia(id_generador_geotermico, id_horno_de_lava, id_turbina)
+	tec_taladro_de_explosion = def_tecnologia(id_taladro_de_explosion, id_taladro_electrico, id_planta_quimica)
+	tec_muro = def_tecnologia(id_muro, id_rifle, id_fabrica_de_concreto)
+	tec_puerto_de_carga = def_tecnologia(id_puerto_de_carga, id_fabrica_de_drones)
+	tec_ensambladora = def_tecnologia(id_ensambladora, id_taladro_electrico, id_horno)
+	tec_planta_nuclear = def_tecnologia(id_planta_nuclear, id_horno_de_lava, id_taladro_de_explosion, id_refineria_de_metales)
+	tec_torre_de_alta_tension = def_tecnologia(id_torre_de_alta_tension, id_cable)
+	tec_perforadora_de_petroleo = def_tecnologia(id_perforadora_de_petroleo, id_bomba_hidraulica, id_fabrica_de_concreto)
+	tec_mortero = def_tecnologia(id_mortero, id_rifle, id_planta_quimica, id_fabrica_de_concreto)
+	tec_procesador = def_tecnologia(id_procesador, id_refineria_de_petroleo, id_ensambladora)
+	tec_mensaje = def_tecnologia(id_mensaje, id_procesador)
+	tec_memoria = def_tecnologia(id_memoria, id_procesador)
+	tec_torre_reparadora = def_tecnologia(id_torre_reparadora, id_torre_basica, id_generador)
+	tec_tuberia_subterranea = def_tecnologia(id_tuberia_subterranea, id_tuberia)
+	tec_onda_de_choque = def_tecnologia(id_onda_de_choque, id_laser, id_bateria)
+	tec_muro_reforzado = def_tecnologia(id_muro_reforzado, id_muro)
+	tec_silo_de_misiles = def_tecnologia(id_silo_de_misiles, id_planta_nuclear, id_procesador, id_mortero, id_fabrica_de_drones)
+	tec_planta_de_enriquecimiento = def_tecnologia(id_planta_de_enriquecimiento, id_planta_nuclear, id_procesador)
+	tec_almacen = def_tecnologia(id_almacen, id_cinta_magnetica)
+	tec_fabrica_de_concreto = def_tecnologia(id_fabrica_de_concreto, id_horno, id_bomba_hidraulica)
+	tec_pantalla = def_tecnologia(id_pantalla, id_procesador, id_refineria_de_petroleo)
+	tec_refineria_de_petroleo = def_tecnologia(id_refineria_de_petroleo, id_fabrica_de_concreto, id_ensambladora)
+	tec_planta_de_reciclaje = def_tecnologia(id_planta_de_reciclaje, id_refineria_de_metales, id_horno_de_lava)
+	tec_planta_desalinizadora = def_tecnologia(id_planta_desalinizadora, id_bomba_de_evaporacion, id_generador)
+	tec_extractor_atmosferico = def_tecnologia(id_extractor_atmosferico, id_bomba_hidraulica, id_turbina, id_ensambladora)
+	tec_modulo = def_tecnologia(id_modulo, id_procesador, id_planta_quimica, id_refineria_de_petroleo)
 	array_set(tecnologia_precio_id, id_modulo, [idr_electronicos, idr_plastico,  idr_bateria])
 	array_set(tecnologia_precio_num, id_modulo, [20, 20, 20])
-	tec_enrutador = def_tecnologia(id_fabrica_de_drones_grande, id_fabrica_de_drones, id_procesador)
-	tec_enrutador = def_tecnologia(id_cinta_grande, id_cinta_magnetica, id_fabrica_de_drones)
+	tec_fabrica_de_drones_grande = def_tecnologia(id_fabrica_de_drones_grande, id_fabrica_de_drones, id_procesador)
+	tec_cinta_grande = def_tecnologia(id_cinta_grande, id_cinta_magnetica, id_fabrica_de_drones)
 	tec_mina = def_tecnologia(id_mina, id_rifle)
 	edificio_tecnologia_nivel = array_create(edificio_max, -1)
 	tecnologia_nivel_edificios = [array_create(0, 0)]
@@ -1758,6 +1748,7 @@ redes = array_create(0, null_red)
 //Flujos de líquidos
 null_flujo = def_flujo()
 null_edificio.flujo = null_flujo
+null_edificio.flujo_2 = null_flujo
 flujos = array_create(0, null_flujo)
 betas = array_create(0, null_beta)
 null_explosion = {

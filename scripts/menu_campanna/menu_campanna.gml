@@ -11,9 +11,9 @@ function menu_campanna(){
 			keyboard_clear(vk_escape)
 			menu = 0
 		}
-		var total_width = world_width * 96, total_height = world_height * TILE_WIDTH
-		for(var a = 0; a < world_width; a++)
-			for(var b = 0; b < world_height; b++){
+		var total_width = WORLD_WIDTH * 96, total_height = WORLD_HEIGHT * TILE_WIDTH
+		for(var a = 0; a < WORLD_WIDTH; a++)
+			for(var b = 0; b < WORLD_HEIGHT; b++){
 				var view = world_visible[# a, b]
 				if view > 0{
 					var temp_complex = abtoxy(a, b), aa =  2 * temp_complex[0] + (room_width - total_width) / 2, bb = 2 * temp_complex[1] + (room_height - total_height) / 2

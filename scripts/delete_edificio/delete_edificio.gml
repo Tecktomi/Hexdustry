@@ -224,7 +224,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 					if temp_edificio.index = id_bateria
 						red_bateria++
 				}
-				var agregado = array_create(0, null_edificio), visited = array_create(array_length(edificios), false)
+				var agregado = array_create(0, null_edificio), visited = array_create(edificio_count, false)
 				while array_length(temp_red.edificios) > 0{
 					var nodo = temp_red.edificios[array_length(temp_red.edificios) - 1]
 					if not visited[nodo.edificio_index]{
@@ -273,90 +273,9 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		}
 		//Flujos de cañerias
 		if edificio_flujo[index]{
-			var temp_flujo = edificio.flujo
-			change_flujo(0, edificio)
-			array_remove(temp_flujo.edificios, edificio)
-			if array_length(temp_flujo.edificios) = 0{
-				array_disorder_remove(flujos, temp_flujo, 0)
-				delete(temp_flujo.edificios)
-			}
-			else{
-				temp_flujo.almacen_max -= edificio_flujo_almacen[index]
-				temp_flujo.almacen = min(temp_flujo.almacen, temp_flujo.almacen_max)
-				//Reordenamiento de redes de cañerías
-				if array_length(edificio.flujo_link) > 1{
-					//Eliminar conecciones directas
-					for(var a = array_length(edificio.flujo_link) - 1; a >= 0; a--){
-						var temp_edificio = edificio.flujo_link[a]
-						array_remove(temp_edificio.flujo_link, edificio)
-					}
-					edificio.flujo_link = []
-					//Revisar nuevo estado de red
-					var flujo_almacen = 0
-					for(var a = array_length(temp_flujo.edificios) - 1; a >= 0; a--)
-						flujo_almacen += edificio_flujo_almacen[temp_flujo.edificios[a].index]
-					var agregado = array_create(0, null_edificio), visited = array_create(array_length(edificios), false)
-					while array_length(temp_flujo.edificios) > 0{
-						var nodo = temp_flujo.edificios[array_length(temp_flujo.edificios) - 1]
-						if not visited[nodo.edificio_index]{
-							var isla = array_create(0), isla_almacen = 0, pila = ds_stack_create()
-							ds_stack_push(pila, nodo)
-							array_push(agregado, nodo)
-							while not ds_stack_empty(pila){
-								nodo = ds_stack_pop(pila)
-								isla_almacen += edificio_flujo_almacen[nodo.index]
-								array_push(isla, nodo)
-								array_remove(temp_flujo.edificios, nodo)
-								if not visited[nodo.edificio_index]{
-									visited[nodo.edificio_index] = true
-									for(var a = array_length(nodo.flujo_link) - 1; a >= 0; a--){
-										var temp_edificio = nodo.flujo_link[a]
-										if not visited[temp_edificio.edificio_index] and not array_contains(agregado, temp_edificio){
-											ds_stack_push(pila, temp_edificio)
-											array_push(agregado, temp_edificio)
-										}
-									}
-								}
-							}
-							ds_stack_destroy(pila)
-							var temp_flujo_2 = def_flujo()
-							temp_flujo_2.edificios = isla
-							temp_flujo_2.liquido = temp_flujo.liquido
-							if flujo_almacen > 0
-								temp_flujo_2.almacen = floor(temp_flujo.almacen * isla_almacen / flujo_almacen)
-							for(var a = array_length(isla) - 1; a >= 0; a--){
-								var temp_edificio = isla[a]
-								temp_edificio.flujo = temp_flujo_2
-								temp_flujo_2.almacen_max += edificio_flujo_almacen[temp_edificio.index]
-								if edificio_flujo_consumo[temp_edificio.index] > 0
-									temp_flujo_2.consumo += temp_edificio.flujo_consumo
-								else
-									temp_flujo_2.generacion -= temp_edificio.flujo_consumo
-							}
-							array_disorder_push(flujos, temp_flujo_2, 0)
-						}
-					}
-				delete(temp_flujo.edificios)
-				array_disorder_remove(flujos, temp_flujo, 0)
-				}
-			}
-			//Eliminar links
-			for(var a = array_length(edificio.flujo_link) - 1; a >= 0; a--){
-				var temp_edificio = edificio.flujo_link[a]
-				array_remove(temp_edificio.flujo_link, edificio)
-			}
-			delete(edificio.flujo_link)
-			if index = id_tuberia_subterranea
-				edificio.link.link = null_edificio
-			var temp_list = get_arround(aa, bb, edificio.dir, edificio_size[index])
-			for(var a = array_length(temp_list) - 1; a >= 0; a--){
-				var temp_complex = temp_list[a], aaa = temp_complex[0], bbb = temp_complex[1]
-				if aaa < 0 or bbb < 0 or aaa >= xsize or bbb >= ysize or not edificio_bool[# aaa, bbb]
-					continue
-				var temp_edificio = edificio_id[# aaa, bbb]
-				if temp_edificio.index = id_tuberia
-					tuberia_arround(temp_edificio)
-			}
+			delete_edificio_flujo(edificio, edificio.flujo)
+			if array_length(edificio_flujo_liquido[index]) = 2
+				delete_edificio_flujo(edificio, edificio.flujo_2)
 		}
 		//Retorno de recursos
 		if not _cheat and not destruccion and ((_jugador = jugador) or (online and servidor)){

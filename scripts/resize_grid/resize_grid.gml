@@ -1,14 +1,14 @@
 function resize_grid(minx = 0, miny = 0){
 	with control{
-		chunk_xsize = ceil(xsize / chunk_width)
-		chunk_ysize = ceil(ysize / chunk_height)
+		chunk_xsize = ceil(xsize / CHUNK_WIDTH)
+		chunk_ysize = ceil(ysize / CHUNK_HEIGHT)
 		ds_grid_resize(background, chunk_xsize, chunk_ysize)
 		ds_grid_resize(background_bool, chunk_xsize, chunk_ysize)
-		for(var a = floor(minx / chunk_width); a < chunk_xsize; a++)
-			for(var b = floor(miny / chunk_height); b < chunk_ysize; b++){
+		for(var a = floor(minx / CHUNK_WIDTH); a < chunk_xsize; a++)
+			for(var b = floor(miny / CHUNK_HEIGHT); b < chunk_ysize; b++){
 				ds_grid_set(background, a, b, spr_hexagono)
 				ds_grid_set(background_bool, a, b, false)
-				update_background(a * chunk_width, b * chunk_height)
+				update_background(a * CHUNK_WIDTH, b * CHUNK_HEIGHT)
 			}
 		ds_grid_resize(edificio_bool, xsize, ysize)
 		ds_grid_resize(edificio_id, xsize, ysize)

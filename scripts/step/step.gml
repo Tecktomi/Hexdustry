@@ -63,8 +63,6 @@ function step(){
 			if edificio.idle or edificio.vida <= 0
 				continue
 			edificio_script[edificio.index](edificio)
-			if edificio.calor > 5 + 2 * edificio_temperatura[edificio.index]
-				herir_edificio(1, edificio)
 		}
 		for(var a = array_length(edificios_pendientes) - 1; a >= 0; a--){
 			var edificio = array_pop(edificios_pendientes)
@@ -339,7 +337,6 @@ function step(){
 						var edificio = flujo.edificios[b]
 						encender_luz(false, edificio)
 					}
-				flujo.liquido = -1
 			}
 		}
 		if array_length(explosion_queue) > 0{

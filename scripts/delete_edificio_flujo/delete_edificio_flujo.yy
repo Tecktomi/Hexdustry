@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_embotelladora",
+  "%Name":"delete_edificio_flujo",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_embotelladora",
+  "name":"delete_edificio_flujo",
   "parent":{
-    "name":"ACCIONES",
-    "path":"folders/SCRIPTS/EDIFICIOS/ACCIONES.yy",
+    "name":"EDIFICIOS",
+    "path":"folders/SCRIPTS/EDIFICIOS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

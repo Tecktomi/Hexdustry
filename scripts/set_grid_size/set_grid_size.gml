@@ -1,7 +1,7 @@
 function set_grid_size(){
 	with control{
-		chunk_xsize = ceil(xsize / chunk_width)
-		chunk_ysize = ceil(ysize / chunk_height)
+		chunk_xsize = ceil(xsize / CHUNK_WIDTH)
+		chunk_ysize = ceil(ysize / CHUNK_HEIGHT)
 		null_edificio.coordenadas_dis = ds_grid_create(xsize, ysize)
 		ds_grid_clear(null_edificio.coordenadas_dis, 0)
 		blueprint_grid = ds_grid_create(xsize, ysize)

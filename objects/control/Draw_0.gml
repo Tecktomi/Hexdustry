@@ -3,10 +3,10 @@
 	minb = max(0, floor(camy / zoom / 14) - 1)
 	maxa = min(xsize, ceil(1 + (camx + room_width) / zoom / 48))
 	maxb = min(ysize, ceil(1 + (camy + room_height) / zoom / 14))
-	min_chunka = max(0, floor(mina / chunk_width))
-	min_chunkb = max(0, floor(minb / chunk_height))
-	max_chunka = min(ceil(maxa / chunk_width), chunk_xsize)
-	max_chunkb = min(ceil(maxb / chunk_height), chunk_ysize)
+	min_chunka = max(0, floor(mina / CHUNK_WIDTH))
+	min_chunkb = max(0, floor(minb / CHUNK_HEIGHT))
+	max_chunka = min(ceil(maxa / CHUNK_WIDTH), chunk_xsize)
+	max_chunkb = min(ceil(maxb / CHUNK_HEIGHT), chunk_ysize)
 	if keyboard_check_pressed(vk_f4){
 		keyboard_clear(vk_f4)
 		window_set_fullscreen(not window_get_fullscreen())
@@ -80,7 +80,7 @@ if menu = 0{
 		if mapa >= 0 and load_escenario_buffer($"{DEFAULT_MAPS[mapa]}.txt", false) = ""
 			mapa = -1
 	}
-	if os_browser = browser_not_a_browser and devise and file_exists("last_save.save"){
+	if os_browser = browser_not_a_browser and DEVISE and file_exists("last_save.save"){
 		ypos += text_y * 1.2
 		if draw_boton(room_width / 2, ypos, L.continuar, ui_verde){
 			var buffer = buffer_create(128, buffer_grow, 1)
@@ -160,8 +160,8 @@ if menu = 0{
 				draw_text(room_width / 2, 200, L.menu_sin_archivos)
 				draw_set_halign(fa_left)
 			}
-			if draw_boton(120, 120, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape) or (not devise and keyboard_check(vk_backspace)){
-				if not devise
+			if draw_boton(120, 120, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape) or (not DEVISE and keyboard_check(vk_backspace)){
+				if not DEVISE
 					keyboard_clear(vk_backspace)
 				keyboard_clear(vk_escape)
 				get_file = 2
@@ -170,8 +170,8 @@ if menu = 0{
 		//Partida Nueva
 		else if get_file = 2{
 			ypos = 110
-			if draw_boton(120, ypos, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape) or (not devise and keyboard_check(vk_backspace)){
-				if not devise
+			if draw_boton(120, ypos, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape) or (not DEVISE and keyboard_check(vk_backspace)){
+				if not DEVISE
 					keyboard_clear(vk_backspace)
 				keyboard_clear(vk_escape)
 				get_file = 0
@@ -184,7 +184,7 @@ if menu = 0{
 			ypos = room_height - 180
 			draw_set_halign(fa_right)
 			//Cargar esenarios / partidas
-			if browser{
+			if BROWSER{
 				if draw_boton(room_width / 2 - 200, ypos, L.menu_cargar_escenario, ui_azul,,,, 1){
 					if not nucleo.vivo
 						game_restart()
@@ -244,8 +244,8 @@ if menu = 0{
 				draw_text(room_width / 2, 200, L.menu_sin_archivos)
 				draw_set_halign(fa_left)
 			}
-			if draw_boton(120, 120, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape) or (not devise and keyboard_check(vk_backspace)){
-				if not devise
+			if draw_boton(120, 120, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape) or (not DEVISE and keyboard_check(vk_backspace)){
+				if not DEVISE
 					keyboard_clear(vk_backspace)
 				keyboard_clear(vk_escape)
 				get_file = 2
@@ -254,8 +254,8 @@ if menu = 0{
 		//Multijugador
 		else if get_file = 4{
 			ypos = 110
-			if draw_boton(120, ypos, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape) or (not devise and keyboard_check(vk_backspace)){
-				if not devise
+			if draw_boton(120, ypos, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape) or (not DEVISE and keyboard_check(vk_backspace)){
+				if not DEVISE
 					keyboard_clear(vk_backspace)
 				keyboard_clear(vk_escape)
 				get_file = 0
@@ -292,7 +292,7 @@ if menu = 0{
 				server_buscando_lan = false
 		}
 	}
-	else if not devise and keyboard_check(vk_backspace)
+	else if not DEVISE and keyboard_check(vk_backspace)
 		game_end()
 	draw_set_valign(fa_bottom)
 	draw_text(10, room_height - 10, "Tomás Ramdohr")
@@ -501,7 +501,7 @@ if pausa = 1{
 	//Ajustes generales
 	if get_file = 0{
 		draw_text(room_width / 2, 150,	$"{L.pausa_continuar}\n\"{chr(CONTROL_REDES)}\" {L.pausa_red}\n\"{chr(CONTROL_FLUJO)}\" {L.pausa_liquido}\n\"{chr(CONTROL_ENCICLOPEDIA)}\" {L.pausa_enciclopedia}\n\"{chr(CONTROL_REPARAR)}\" {L.pausa_reparar}")
-		if devise{
+		if DEVISE{
 			if draw_boton(xpos, ypos, L.controles, ui_azul)
 				get_file = 3
 			ypos += text_y * 1.2
@@ -582,8 +582,8 @@ if pausa = 1{
 		ypos += text_y * 1.2
 		if draw_boton(xpos, ypos, server_pvp ? "PVP" : "COOP", server_pvp ? ui_rojo : ui_verde)
 			server_pvp = not server_pvp
-		if draw_boton(xpos, room_height - 200, L.volver, ui_rojo) or (not devise and keyboard_check_pressed(vk_backspace)){
-			if not devise
+		if draw_boton(xpos, room_height - 200, L.volver, ui_rojo) or (not DEVISE and keyboard_check_pressed(vk_backspace)){
+			if not DEVISE
 				keyboard_clear(vk_backspace)
 			get_file = 0
 		}
@@ -625,8 +625,8 @@ if pausa = 1{
 			auto_guardado = not auto_guardado
 			save_setting("", "auto_guardado", auto_guardado)
 		}
-		if draw_boton(xpos, room_height - 200, L.volver, ui_rojo) or (not devise and keyboard_check_pressed(vk_backspace)){
-			if not devise
+		if draw_boton(xpos, room_height - 200, L.volver, ui_rojo) or (not DEVISE and keyboard_check_pressed(vk_backspace)){
+			if not DEVISE
 				keyboard_clear(vk_backspace)
 			get_file = 0
 		}
@@ -704,8 +704,8 @@ if pausa = 1{
 				get_file = 1
 			}
 		}
-		if draw_boton(xpos, room_height - 200, L.volver, ui_rojo) or (not devise and keyboard_check_pressed(vk_backspace)){
-			if not devise
+		if draw_boton(xpos, room_height - 200, L.volver, ui_rojo) or (not DEVISE and keyboard_check_pressed(vk_backspace)){
+			if not DEVISE
 				keyboard_clear(vk_backspace)
 			get_file = 0
 		}
@@ -718,8 +718,8 @@ if pausa = 1{
 			set_idioma()
 		}
 	draw_set_color(color)
-	if keyboard_check_pressed(CONTROL_MENU) or (not devise and keyboard_check_pressed(vk_backspace)){
-		if not devise
+	if keyboard_check_pressed(CONTROL_MENU) or (not DEVISE and keyboard_check_pressed(vk_backspace)){
+		if not DEVISE
 			keyboard_clear(vk_backspace)
 		keyboard_clear(CONTROL_MENU)
 		if get_file = 0{
@@ -764,7 +764,7 @@ if show_menu{
 		draw_set_halign(fa_left)
 		var xpos, ypos = 150, size = array_length(edificio.instruccion)
 		//SCROLL
-		scroll(110, ypos, size, devise ? 25 : 12, devise ? 20 : 40, scroll_procesador, {xpos : 150, ypos : ypos, edificio : edificio, size : size, b : 0})
+		scroll(110, ypos, size, DEVISE ? 25 : 12, DEVISE ? 20 : 40, scroll_procesador, {xpos : 150, ypos : ypos, edificio : edificio, size : size, b : 0})
 		draw_boton_text_list_end()
 		xpos = 150
 		ypos += min(size, 25) * 20
@@ -814,13 +814,13 @@ if show_menu{
 			keyboard_clear(vk_space)
 			edificio.proceso = 1
 		}
-		if browser and draw_boton(room_width - 120, 530, L.procesador_guardar, ui_azul,,, false) or (keyboard_check(vk_control) and keyboard_check_pressed(ord("S"))){
+		if BROWSER and draw_boton(room_width - 120, 530, L.procesador_guardar, ui_azul,,, false) or (keyboard_check(vk_control) and keyboard_check_pressed(ord("S"))){
 			save_codes = scan_files("Codes/*.txt", fa_none)
 			get_file = 1
 			input_layer = 1
 			keyboard_clear(ord("S"))
 		}
-		if browser and draw_boton(room_width - 120, 560, L.procesador_cargar, ui_azul,,, false) or (keyboard_check(vk_control) and keyboard_check_pressed(ord("A"))){
+		if BROWSER and draw_boton(room_width - 120, 560, L.procesador_cargar, ui_azul,,, false) or (keyboard_check(vk_control) and keyboard_check_pressed(ord("A"))){
 			save_codes = scan_files("Codes/*.txt", fa_none)
 			get_file = 2
 			input_layer = 1
@@ -992,8 +992,6 @@ if show_menu{
 		}
 		else if index = id_deposito
 			draw_text(aa - 80 * zoom, bb + 20 * zoom, "Vaciar")
-		else if index = id_embotelladora
-			draw_text(aa - 80 * zoom, bb + 20 * zoom, edificio.mode ? "Embotellar" : "Desembotellar")
 		else if index = id_refineria_de_petroleo{
 			edificio.select = round(draw_deslizante(aa - 100 * zoom, aa + 100 * zoom, bb + 50 * zoom, edificio.select, 0, 100, 0))
 			draw_set_halign(fa_center)
@@ -1012,7 +1010,7 @@ if show_menu{
 				draw_text(aa - 70 * zoom, bb + (40 + 20 * a) * zoom, misiles_nombre[a])
 		}
 		if mouse_x > aa - 80 * zoom and mouse_y > bb + 20 * zoom and mouse_x < aa + 80 * zoom{
-			if in(index, id_selector, id_overflow, id_embotelladora){
+			if in(index, id_selector, id_overflow){
 				if mouse_check_button_pressed(mb_left) and mouse_y < bb + 40 * zoom{
 					mouse_clear(mb_left)
 					show_menu = false
@@ -1534,13 +1532,13 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 					draw_set_alpha(0.3)
 					for(var a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
 						var temp_coord = edificio.target_chunks[a]
-						var temp_coord_2 = abtoxy(chunk_width * (temp_coord[0] + 1), chunk_height * (temp_coord[1] + 1))
-						temp_coord = abtoxy(chunk_width * temp_coord[0], chunk_height * temp_coord[1])
+						var temp_coord_2 = abtoxy(CHUNK_WIDTH * (temp_coord[0] + 1), CHUNK_HEIGHT * (temp_coord[1] + 1))
+						temp_coord = abtoxy(CHUNK_WIDTH * temp_coord[0], CHUNK_HEIGHT * temp_coord[1])
 						draw_rectangle_off(temp_coord[0], temp_coord[1], temp_coord_2[0], temp_coord_2[1], false)
 					}
 					draw_set_color(c_red)
-					var temp_coord = abtoxy(chunk_width * edificio.chunk_x, chunk_height * edificio.chunk_y)
-					draw_rectangle_off(temp_coord[0], temp_coord[1], temp_coord[0] + chunk_width * 48, temp_coord[1] + chunk_height * 14, false)
+					var temp_coord = abtoxy(CHUNK_WIDTH * edificio.chunk_x, CHUNK_HEIGHT * edificio.chunk_y)
+					draw_rectangle_off(temp_coord[0], temp_coord[1], temp_coord[0] + CHUNK_WIDTH * 48, temp_coord[1] + CHUNK_HEIGHT * 14, false)
 					draw_set_alpha(1)
 				}
 			}
@@ -1704,6 +1702,20 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 					}
 					if info
 						temp_text += flujo_text(flujo)
+					if array_length(edificio_flujo_liquido[index]) > 1{
+						flujo = edificio.flujo_2
+						if flujo.liquido = -1
+							temp_text += $"{L.flujo_sin_liquido}!\n"
+						else{
+							if edificio_flujo_consumo[index] > 0
+								temp_text += $"  {L.almacen_consumiendo} {round(edificio.flujo_consumo)} {liquido_nombre[flujo.liquido]}\n"
+							else
+								temp_text += $"  {L.almacen_produciendo} {abs(round(edificio.flujo_consumo))} {liquido_nombre[flujo.liquido]}\n"
+							temp_text += $"  {flujo.promedio > 0 ? L.almacen_produciendo : L.almacen_consumiendo} {round(abs(flujo.promedio))} {liquido_nombre[flujo.liquido]}\n"
+							if flujo.almacen_max > 0
+								temp_text += $"  {L.flujo_almacenado}: {round(flujo.almacen)}/{round(flujo.almacen_max)}\n"
+						}
+					}
 				}
 			}
 			if info{
@@ -1748,12 +1760,12 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		}
 	}
 	//Seleccionar drones
-	else if devise and mouse_check_button_pressed(mb_left) and build_index = 0{
+	else if DEVISE and mouse_check_button_pressed(mb_left) and build_index = 0{
 		mx_clic = xmouse
 		my_clic = ymouse
 		clicked = true
 	}
-	if devise and mouse_check_button(mb_left) and clicked and build_index = 0 and not keyboard_check(CONTROL_REPARAR){
+	if DEVISE and mouse_check_button(mb_left) and clicked and build_index = 0 and not keyboard_check(CONTROL_REPARAR){
 		draw_set_alpha(0.5)
 		draw_set_color(c_black)
 		draw_rectangle_off(mx_clic, my_clic, xmouse, ymouse, false)
@@ -1769,7 +1781,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		}
 		draw_set_alpha(1)
 	}
-	if devise and mouse_check_button_released(mb_left) and clicked and build_index = 0{
+	if DEVISE and mouse_check_button_released(mb_left) and clicked and build_index = 0{
 		deselect_drones()
 		var minx = min(mx_clic, xmouse), miny = min(my_clic, ymouse), maxx = max(mx_clic, xmouse), maxy = max(my_clic, ymouse)
 		for(var a = array_length(drones_aliados) - 1; a >= 0; a--){
@@ -1785,9 +1797,9 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		clicked = false
 	}
 	//Pasar dron
-	var chunk_mx = floor(mx / chunk_width), chunk_my = floor(my / chunk_height), min_dis = 900, min_dron = null_dron, temp_array_dron
-	var next_chunk_x = ((mx mod chunk_width) > (chunk_width / 2)) ? [0, 1, 0, 1] : [0, -1, 0, -1]
-	var next_chunk_y = ((my mod chunk_height) > (chunk_height / 2)) ? [0, 0, 1, 1] : [0, 0, -1, -1]
+	var chunk_mx = floor(mx / CHUNK_WIDTH), chunk_my = floor(my / CHUNK_HEIGHT), min_dis = 900, min_dron = null_dron, temp_array_dron
+	var next_chunk_x = ((mx mod CHUNK_WIDTH) > (CHUNK_WIDTH / 2)) ? [0, 1, 0, 1] : [0, -1, 0, -1]
+	var next_chunk_y = ((my mod CHUNK_HEIGHT) > (CHUNK_HEIGHT / 2)) ? [0, 0, 1, 1] : [0, 0, -1, -1]
 	if array_length(enemigos) > 0
 		for(var i = 0; i < 4; i++){
 			var aa = chunk_mx + next_chunk_x[i], bb = chunk_my + next_chunk_y[i]
@@ -1909,14 +1921,14 @@ if sonido
 		volumen[a] = 0
 #region Menú de edificios
 	//ANDROID
-	if not devise and build_menu = 0 and build_index = 0 and draw_sprite_boton(spr_construir, 0, room_width - 80, room_height - 80, 68, 68){
+	if not DEVISE and build_menu = 0 and build_index = 0 and draw_sprite_boton(spr_construir, 0, room_width - 80, room_height - 80, 68, 68){
 		build_menu = 1
 		menu_x = room_width / 2
 		menu_y = room_height / 2
 		android_building = false
 	}
-	var just_pressed = false, _size = devise ? 100 : 200, _size_sqr = devise ? 10_000 : 40_000, _size_sqrx = devise ? 32 : 64, _size_sqry = devise ? TILE_WIDTH : 56
-	if devise and mouse_check_button_pressed(mb_right) and build_index = 0 and not edificio_bool[# mx, my] and not keyboard_check(CONTROL_REPARAR) and pausa != 1{
+	var just_pressed = false, _size = DEVISE ? 100 : 200, _size_sqr = DEVISE ? 10_000 : 40_000, _size_sqrx = DEVISE ? 32 : 64, _size_sqry = DEVISE ? TILE_WIDTH : 56
+	if DEVISE and mouse_check_button_pressed(mb_right) and build_index = 0 and not edificio_bool[# mx, my] and not keyboard_check(CONTROL_REPARAR) and pausa != 1{
 		mouse_clear(mb_right)
 		if build_menu = 0{
 			build_menu = 1
@@ -1929,7 +1941,7 @@ if sonido
 			build_menu = 1
 	}
 	if build_menu = 1{
-		if not devise and draw_sprite_boton(spr_construir, 1, room_width - 80, room_height - 80, 64, 56)
+		if not DEVISE and draw_sprite_boton(spr_construir, 1, room_width - 80, room_height - 80, 64, 56)
 			build_menu = 0
 		var b = 2 * pi / array_length(categoria_nombre_disponible)
 		draw_set_color(c_white)
@@ -1964,7 +1976,7 @@ if sonido
 			draw_arco(menu_x, menu_y, _size, a * b, (a + 1) * b)
 			draw_set_alpha(1)
 			draw_sprite_stretched(spr_items, categoria_index_disponible[a], menu_x - 15 + _size * cos((a + 0.5) * b), menu_y - 15 - _size * sin((a + 0.5) * b), _size_sqrx, _size_sqry)
-			if devise{
+			if DEVISE{
 				temp_text = categoria_nombre[categoria_index_disponible[a]]
 				draw_text_background(min(room_width - string_width(temp_text), mouse_x + 20), min(room_height - string_height(temp_text), mouse_y), temp_text)
 			}
@@ -1974,13 +1986,13 @@ if sonido
 				menu_array = categoria_edificios_disponible[categoria_index_disponible[a]]
 			}
 		}
-		else if devise and mouse_check_button_pressed(mb_left){
+		else if DEVISE and mouse_check_button_pressed(mb_left){
 			mouse_clear(mb_left)
 			build_menu = 0
 		}
 	}
 	else if build_menu = 2{
-		if not devise and draw_sprite_boton(spr_construir, 1, room_width - 80, room_height - 80, 64, 56)
+		if not DEVISE and draw_sprite_boton(spr_construir, 1, room_width - 80, room_height - 80, 64, 56)
 			build_menu = 1
 		var b = 2 * pi / array_length(menu_array)
 		draw_set_color(c_white)
@@ -2010,7 +2022,7 @@ if sonido
 			draw_set_alpha(1)
 			draw_sprite_stretched(edificio_sprite[menu_array[a]], 0, menu_x - 15 + _size * cos((a + 0.5) * b), menu_y - 15 - _size * sin((a + 0.5) * b), _size_sqrx, _size_sqry)
 			a = menu_array[a]
-			if devise{
+			if DEVISE{
 				var temp_text = $"{edificio_nombre[a]} (hotkey: {edificio_key[a]})\n"
 				if not cheat{
 					if tecnologia and not edificio_tecnologia[a]
@@ -2037,7 +2049,7 @@ if sonido
 				}
 			}
 		}
-		else if devise and mouse_check_button_pressed(mb_left){
+		else if DEVISE and mouse_check_button_pressed(mb_left){
 			mouse_clear(mb_left)
 			build_menu = 1
 		}
@@ -2066,7 +2078,7 @@ if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastchar, CONTROL_LEFT
 if keyboard_step-- = 0 and not show_menu
 	keyboard_string = ""
 //Cancelar construcción o cerrar menú del selector
-if devise and (mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape)) and (build_index > 0 or show_menu) and selected_dron = null_dron{
+if DEVISE and (mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape)) and (build_index > 0 or show_menu) and selected_dron = null_dron{
 	mouse_clear(mb_right)
 	keyboard_clear(vk_escape)
 	clear_edit()
@@ -2080,7 +2092,7 @@ if build_index > 0 and win = 0{
 		if edificio_size[build_index] mod 2 = 0
 			build_dir = 5 * (build_dir mod 2)
 	}
-	if devise{
+	if DEVISE{
 		temp_mx = mx
 		temp_my = my
 		if (edificio_rotable[build_index] or edificio_size[build_index] mod 2 = 0) and not keyboard_check(vk_lcontrol){
@@ -2232,7 +2244,7 @@ if build_index > 0 and win = 0{
 							}
 						if not flag_2
 							temp_text += $"{L.construir_recursos_insuficientes}\n"
-						else if (devise and mouse_check_button_pressed(mb_left)) or (not devise and mouse_check_button_released(mb_left)){
+						else if (DEVISE and mouse_check_button_pressed(mb_left)) or (not DEVISE and mouse_check_button_released(mb_left)){
 							add_modulo(temp_edificio)
 							mouse_clear(mb_left)
 						}
@@ -2525,13 +2537,13 @@ if build_index > 0 and win = 0{
 			//Sí se puede construir
 			else{
 				temp_complex = abtoxy(temp_mx, temp_my)
-				if not (mouse_check_button(mb_left) and (edificio_camino[build_index] or build_index = id_tuberia)) and not (not devise and clicked and (edificio_camino[build_index] or in(build_index, id_tuberia, id_muro)))
+				if not (mouse_check_button(mb_left) and (edificio_camino[build_index] or build_index = id_tuberia)) and not (not DEVISE and clicked and (edificio_camino[build_index] or in(build_index, id_tuberia, id_muro)))
 					draw_edificio(temp_complex[0], temp_complex[1], build_index, build_dir, 0.5)
 				var temp_array, temp_array_2, flag_camino = true
 				//Vista previa caminos
 				if edificio_camino[build_index] or in(build_index, id_tuberia, id_muro){
 					//WINDOWS
-					if devise{
+					if DEVISE{
 						//Iniciar arrastre
 						if mouse_check_button_pressed(mb_left){
 							mx_clic = temp_mx
@@ -2877,7 +2889,7 @@ if build_index > 0 and win = 0{
 						}
 					}
 					//Construir
-					if ((devise and mouse_check_button_pressed(mb_left)) or (not devise and mouse_check_button_released(mb_left) and android_building and construible and distance(mouse_x, mouse_y, android_mouse_x, android_mouse_y) < 10)) and flag_camino and comprable and (not edificio_bool[# temp_mx, temp_my] or (build_index = id_cruce and edificio_camino[edificio_id[# temp_mx, temp_my].index])){
+					if ((DEVISE and mouse_check_button_pressed(mb_left)) or (not DEVISE and mouse_check_button_released(mb_left) and android_building and construible and distance(mouse_x, mouse_y, android_mouse_x, android_mouse_y) < 10)) and flag_camino and comprable and (not edificio_bool[# temp_mx, temp_my] or (build_index = id_cruce and edificio_camino[edificio_id[# temp_mx, temp_my].index])){
 						android_building = false
 						var temp_edificio = construir(build_index, build_dir, temp_mx, temp_my, build_enemigo)
 						if temp_edificio != null_edificio and tag_dron_encima[temp_edificio.index]{
@@ -2918,7 +2930,7 @@ if build_index > 0 and win = 0{
 	}
 	last_mx = mx
 	last_my = my
-	if not devise and mouse_check_button_released(mb_left)
+	if not DEVISE and mouse_check_button_released(mb_left)
 		android_clic = true
 }
 else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
@@ -3395,8 +3407,8 @@ else if not chat_input
 	control_camara()
 if menu = 1 or menu = 3{
 	if win = 0 and not show_menu and (not chat_input and keyboard_check_pressed(vk_anykey)){
-		if (keyboard_check_pressed(CONTROL_MENU) or (not devise and keyboard_check_pressed(vk_backspace))) and pausa != 1{
-			if not devise
+		if (keyboard_check_pressed(CONTROL_MENU) or (not DEVISE and keyboard_check_pressed(vk_backspace))) and pausa != 1{
+			if not DEVISE
 				keyboard_clear(vk_backspace)
 			pausa = 1
 			clear_edit()

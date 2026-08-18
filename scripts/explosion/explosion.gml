@@ -5,7 +5,7 @@ function explosion(aa = 0, bb = 0, edificio = control.null_edificio, enemigo = t
 		var temp_complex = xytoab(aa, bb)
 		if temp_complex[0] < 0
 			exit
-		var chunk_x = floor(temp_complex[0] / chunk_width), chunk_y = floor(temp_complex[1] / chunk_height)
+		var chunk_x = floor(temp_complex[0] / CHUNK_WIDTH), chunk_y = floor(temp_complex[1] / CHUNK_HEIGHT)
 		var mina = max(chunk_x - 1, 0), minb = max(chunk_y - 1, 0), maxa = min(chunk_x + 1, chunk_xsize - 1), maxb = min(chunk_y + 1, chunk_ysize - 1)
 		var temp_chunk_edificios = (enemigo ? chunk_edificios : chunk_edificios_enemigo), temp_array_dron = (enemigo ? chunk_dron_aliado : chunk_dron_enemigo), dmg_total = 0
 		if incendiario{
