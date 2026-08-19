@@ -34,22 +34,6 @@ function construir(index, dir, mx, my, enemigo = false, _server = false, _cheat 
 					}
 					break
 				}
-				//Sobreescribir caminos
-				/*
-				else if temp_edificio.index = id_cinta_transportadora and index = id_cinta_magnetica{
-					var a = -1
-					if temp_edificio.carga_total = 1
-						a = edificio.carga_id
-					delete_edificio(temp_edificio)
-					temp_edificio = add_edificio(id_cinta_magnetica, dir, mx, my, _jugador)
-					if a != -1{
-						temp_edificio.carga_id = a
-						temp_edificio.carga_total = 1
-						temp_edificio.carga[a] = 1
-					}
-					break
-				}
-				*/
 				else
 					delete_edificio(temp_edificio)
 			}

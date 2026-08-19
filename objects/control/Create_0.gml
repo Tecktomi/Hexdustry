@@ -296,6 +296,8 @@ L = {}
 	temp_mx = 0
 	temp_my = 0
 	flow_max = 11
+	liquido_choose = 0
+	liquido_choose_array = array_create(0, 0)
 #endregion
 #region Misiones
 	null_mision = def_mision()
