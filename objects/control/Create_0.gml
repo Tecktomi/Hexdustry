@@ -180,6 +180,7 @@ L = {}
 	last_my = -1
 	build_list = get_size(0, 0, 0, 0)
 	build_list_arround = get_size(0, 0, 0, 0)
+	build_array_edificios = []
 	build_array_edificios_input = []
 	build_array_edificios_output = []
 	build_menu = 0

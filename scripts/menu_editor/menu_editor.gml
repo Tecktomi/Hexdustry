@@ -7,10 +7,8 @@ function menu_editor(){
 				var chunk = chunk_edificios_draw[# a, b], len = array_length(chunk)
 				for(var c = 0; c < len; c++){
 					var edificio = chunk[c], aa = edificio.center_x, bb = edificio.center_y, _jugador = edificio.jugador
-					if _jugador != 2 or edificio.enemigo{
-						draw_set_color((_jugador = -1) ? c_ltgray : EQUIPO_COLOR[_jugador])
-						draw_circle_off(aa + 8, bb, 4, false)
-					}
+					if _jugador != 2 or edificio.enemigo
+						draw_edificio_borde(edificio, (_jugador = -1) ? c_ltgray : EQUIPO_COLOR[_jugador])
 				}
 			}
 		var xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / zoom

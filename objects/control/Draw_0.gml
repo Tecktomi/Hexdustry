@@ -388,14 +388,8 @@ if in(menu, 1, 3){
 				}
 				draw_vida(aaa, bbb, edificio.vida, edificio_vida[index])
 				//Dibujo estados
-				if _jugador != jugador or edificio.enemigo{
-					if edificio.enemigo{
-						draw_set_color(#7f0000)
-						draw_circle_off(aa + 8, bb, 5, false)
-					}
-					draw_set_color((_jugador = -1) ? c_ltgray : EQUIPO_COLOR[_jugador])
-					draw_circle_off(aa + 8, bb, 4, false)
-				}
+				if _jugador != jugador or edificio.enemigo
+					draw_edificio_borde(edificio, (_jugador = -1) ? c_ltgray : EQUIPO_COLOR[_jugador])
 				if info and edificio.waiting{
 					draw_set_color(c_yellow)
 					draw_circle_off(aa, bb + 16, 4, false)
@@ -2168,8 +2162,12 @@ if build_index > 0 and win = 0{
 		else if build_index = id_cable
 			build_list_arround = get_size(temp_mx, temp_my, 0, 7)
 		show_menu = false
-		build_array_edificios_input = array_create(0, null_edificio)
-		build_array_edificios_output = array_create(0, null_edificio)
+		if tag_dron_encima[build_index]{
+			if build_index = id_planta_de_reciclaje
+				build_array_edificios = array_create(0, null_edificio)
+			build_array_edificios_input = array_create(0, null_edificio)
+			build_array_edificios_output = array_create(0, null_edificio)
+		}
 		comprable = true
 		if build_index = id_tuberia and not mouse_check_button(mb_left) and not mouse_check_button_released(mb_left){
 			liquido_choose = 0
@@ -2872,8 +2870,10 @@ if build_index > 0 and win = 0{
 							draw_circle_off(temp_complex[0], temp_complex[1], TORRE_TENSION_RANGE, true)
 							for(var c = array_length(torres_de_tension) - 1; c >= 0; c--){
 								var temp_edificio = torres_de_tension[c]
-								if distance_sqr(temp_edificio.center_x, temp_edificio.center_y, temp_complex[0], temp_complex[1]) < TORRE_TENSION_RANGE_SQR
+								if distance_sqr(temp_edificio.center_x, temp_edificio.center_y, temp_complex[0], temp_complex[1]) < TORRE_TENSION_RANGE_SQR{
 									draw_line_off(temp_edificio.center_x, temp_edificio.center_y, temp_complex[0],temp_complex[1])
+									draw_edificio_borde(temp_edificio, c_blue, 0.5)
+								}
 							}
 						}
 						//Vista previa Alcance de torres
@@ -2900,6 +2900,7 @@ if build_index > 0 and win = 0{
 							if flag{
 								draw_set_color(c_blue)
 								draw_line_off(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y)
+								draw_edificio_borde(temp_edificio, c_blue, 0.5)
 							}
 						}
 						//Ensambladora
@@ -2913,8 +2914,7 @@ if build_index > 0 and win = 0{
 									if edificio_bool[# aa, bb]{
 										var temp_edificio = edificio_id[# aa, bb]
 										if temp_edificio.index = id_ensambladora and not temp_edificio.mode and temp_edificio.enemigo = build_enemigo{
-											draw_set_color(c_blue)
-											draw_line_off(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y)
+											draw_edificio_borde(temp_edificio, c_blue, 0.5)
 											temp_text += "Conectando\n"
 											break
 										}
@@ -2928,20 +2928,41 @@ if build_index > 0 and win = 0{
 								var temp_complex_array = cinta_grande_check(temp_mx, temp_my, build_dir, build_index)
 								build_array_edificios_input = temp_complex_array.inputs
 								build_array_edificios_output = temp_complex_array.outputs
+								if build_index = id_planta_de_reciclaje{
+									temp_complex = abtoxy(mx, my)
+									var chunk_x = clamp(floor(mx / CHUNK_WIDTH), 0, chunk_xsize - 1), chunk_y = clamp(floor(my / CHUNK_HEIGHT), 0, chunk_ysize - 1)
+									var _chunk_alcance_x = ceil(PLANTA_RECICLAJE_RANGE / CHUNK_WIDTH / 48)
+									var _chunk_alcance_y = ceil(PLANTA_RECICLAJE_RANGE / CHUNK_HEIGHT / 14)
+									var mini = max(chunk_x - _chunk_alcance_x, 0), minj = max(chunk_y - _chunk_alcance_y, 0)
+									var maxi = min(chunk_x + _chunk_alcance_x, chunk_xsize - 1), maxj = min(chunk_y + _chunk_alcance_y, chunk_ysize - 1)
+									for(var i = mini; i <= maxi; i++)
+										for(var j = minj; j <= maxj; j++)
+											for(var k = array_length(chunk_edificios[# i, j]) - 1; k >= 0; k--){
+												var temp_edificio = chunk_edificios[# i, j][k]
+												if distance_sqr(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y) < PLANTA_RECICLAJE_RANGE_SQR
+													array_push(build_array_edificios, temp_edificio)
+											}
+								}
 							}
 							draw_set_color(c_red)
 							for(var a = array_length(build_array_edificios_input) - 1; a >= 0; a--){
 								var temp_edificio = build_array_edificios_input[a]
 								draw_arrow_off(temp_edificio.center_x, temp_edificio.center_y, temp_complex[0], temp_complex[1], 10)
+								draw_edificio_borde(temp_edificio, c_red, 0.5)
 							}
 							draw_set_color(c_blue)
 							for(var a = array_length(build_array_edificios_output) - 1; a >= 0; a--){
 								var temp_edificio = build_array_edificios_output[a]
 								draw_arrow_off(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y, 10)
+								draw_edificio_borde(temp_edificio, c_blue, 0.5)
 							}
 							if build_index = id_planta_de_reciclaje{
 								draw_set_color(c_lime)
 								draw_circle_off(temp_complex[0], temp_complex[1], PLANTA_RECICLAJE_RANGE, true)
+								for(var a = array_length(build_array_edificios) - 1; a >= 0; a--){
+									var temp_edificio = build_array_edificios[a]
+									draw_edificio_borde(temp_edificio, c_lime, 0.5)
+								}
 							}
 						}
 					}
