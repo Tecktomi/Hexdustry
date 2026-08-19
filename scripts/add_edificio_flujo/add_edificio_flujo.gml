@@ -4,6 +4,10 @@ function add_edificio_flujo(edificio = control.null_edificio, flujo_name = "fluj
 		var index = edificio.index, temp_list_size = get_size(a, b, edificio.dir, edificio_size[index]), temp_list_arround = get_arround(a, b, edificio.dir, edificio_size[index])
 		var forzado = (array_length(edificio_flujo_liquido[index]) > iter)
 		var my_liquido = forzado ? edificio_flujo_liquido[index, iter] : -1
+		if index = id_tuberia and array_length(liquido_choose_array) > 1{
+			forzado = true
+			my_liquido = liquido_choose_array[liquido_choose]
+		}
 		if index = id_bomba_hidraulica{
 			edificio.select = 0
 			for(var c = array_length(temp_list_size) - 1; c >= 0; c--){

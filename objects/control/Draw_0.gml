@@ -2168,6 +2168,10 @@ if build_index > 0 and win = 0{
 		show_menu = false
 		build_array_edificios_input = array_create(0, null_edificio)
 		build_array_edificios_output = array_create(0, null_edificio)
+		if build_index = id_tuberia and not mouse_check_button(mb_left) and not mouse_check_button_released(mb_left){
+			liquido_choose = 0
+			array_resize(liquido_choose_array, 0)
+		}
 	}
 	var comprable = true, temp_text = ""
 	//Detectar si el terreno existe
@@ -2598,6 +2602,50 @@ if build_index > 0 and win = 0{
 								temp_complex = next_to(temp_mx, temp_my, (build_dir + 5) mod 6)
 								temp_complex_3 = abtoxy(temp_complex[0], temp_complex[1])
 								draw_arrow_off(aa, bb, temp_complex_3[0], temp_complex_3[1], 8)
+							}
+							//Elegir entre varios líquidos
+							if build_index = id_tuberia{
+								if last_mx != temp_mx or last_my != temp_my or prev_change{
+									var _temp_array_liquidos = array_create(liquido_max, false)
+									for(var a = 0; a < 6; a++){
+										aaa = mx + DESFACE_A[my & 1, a]
+										bbb = my + DESFACE_B[my & 1, a]
+										if aaa < 0 or bbb < 0 or aaa >= xsize or bbb >= ysize
+											continue
+										if edificio_bool[# aaa, bbb]{
+											var temp_edificio = edificio_id[# aaa, bbb]
+											if edificio_flujo[temp_edificio.index]{
+												if temp_edificio.flujo != null_flujo and temp_edificio.flujo.liquido != -1
+													_temp_array_liquidos[temp_edificio.flujo.liquido] = true
+												if temp_edificio.flujo_2 != null_flujo and temp_edificio.flujo_2.liquido != -1
+													_temp_array_liquidos[temp_edificio.flujo_2.liquido] = true
+											}
+										}
+									}
+									array_resize(liquido_choose_array, 0)
+									for(var a = 0; a < liquido_max; a++)
+										if _temp_array_liquidos[a]
+											array_push(liquido_choose_array, a)
+								}
+								var _len = array_length(liquido_choose_array)
+								if _len > 1{
+									temp_complex = abtoxy(temp_mx, temp_my)
+									aa = temp_complex[0]
+									bb = temp_complex[1]
+									var b = 2 * pi / _len
+									draw_set_color(c_white)
+									draw_set_alpha(0.5)
+									draw_circle_off(aa, bb, 60, false)
+									for(var a = -5; a < 5; a++)
+										draw_triangle_off(aa, bb, aa + 60 * cos((liquido_choose + 0.1 * a) * b), bb + 60 * sin((liquido_choose + 0.1 * a) * b), aa + 60 * cos((liquido_choose + 0.1 * (a + 1)) * b), bb + 60 * sin((liquido_choose + 0.1 * (a + 1)) * b), false)
+									draw_set_alpha(1)
+									for(var a = 0; a < _len; a++)
+										draw_sprite_off(liquido_sprite[liquido_choose_array[a]], 0, aa + 50 * cos(a * b), bb + 50 * sin(a * b))
+									if mouse_wheel_up()
+										liquido_choose = (liquido_choose + 1) mod _len
+									if mouse_wheel_down()
+										liquido_choose = (liquido_choose + _len - 1) mod _len
+								}
 							}
 						}
 						//Construir en cadena
