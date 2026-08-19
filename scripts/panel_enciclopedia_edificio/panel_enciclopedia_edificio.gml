@@ -60,7 +60,7 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 			else if edificio_flujo_consumo[ei] < 0
 				ypos = draw_text_ypos(xpos + 10, ypos, $"{L.enciclopedia_produce} {abs(edificio_flujo_consumo[ei])} {temp_text}/s")
 		}
-		if _tecnologia and (edificio_tecnologia[ei] or cheat) and draw_boton(xpos + 10, ypos + 40, L.enciclopedia_construir, ui_verde,,,, _this_input_layer){
+		if ((_tecnologia and edificio_tecnologia[ei]) or cheat) and draw_boton(xpos + 10, ypos + 40, L.enciclopedia_construir, ui_verde,,,, _this_input_layer){
 			enciclopedia = 0
 			build_index = ei
 			build_dir = 0
