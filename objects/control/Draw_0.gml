@@ -2176,15 +2176,17 @@ if build_index > 0 and win = 0{
 			array_resize(liquido_choose_array, 0)
 		}
 	}
+	var _comprable = true
 	if _change
 		for(var a = array_length(build_list) - 1; a >= 0; a--){
 			var temp_complex_2 = build_list[a], aa = temp_complex_2[0], bb = temp_complex_2[1]
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize{
+				_comprable = false
 				comprable = false
 				break
 			}
 		}
-	var _comprable = comprable, temp_text = ""
+	var temp_text = ""
 	//CONSTRUCCIÓN
 	if _comprable and not outside{
 		//Módulos
@@ -2273,7 +2275,7 @@ if build_index > 0 and win = 0{
 						temp_text += $"  {recurso_nombre[edificio_precio_id[build_index, a]]} {jugador_recursos[0, edificio_precio_id[build_index, a]]}/{edificio_precio_num[build_index, a]}\n"
 					}
 				if not _comprable
-					temp_text = $"{L.construir_recursos_insuficientes}\n" + temp_text
+					temp_text = $"{L.construir_recursos_insuficientes}\n{temp_text}"
 				draw_set_color(c_red)
 				var flag_3 = false
 				for(var a = array_length(enemigos) - 1; a >= 0; a--){
