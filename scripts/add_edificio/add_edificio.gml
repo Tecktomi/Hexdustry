@@ -366,7 +366,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 					continue
 				if (aa != a or bb != b) and edificio_bool[# aa, bb]{
 					var temp_edificio = edificio_id[# aa, bb]
-					if ((index = id_cable and edificio_energia[temp_edificio.index]) or temp_edificio.index = id_cable) and distance_sqr(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y) <= CABLE_RANGE and not array_contains(edificio.energia_link, temp_edificio) and temp_edificio.jugador = _jugador{
+					if ((index = id_cable and edificio_energia[temp_edificio.index]) or temp_edificio.index = id_cable) and distance_sqr(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y) <= CABLE_RANGE_SQR and not array_contains(edificio.energia_link, temp_edificio) and temp_edificio.jugador = _jugador{
 						array_push(edificio.energia_link, temp_edificio)
 						array_push(temp_edificio.energia_link, edificio)
 						if not array_contains(temp_list_redes, temp_edificio.red)
@@ -378,7 +378,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			if index = id_torre_de_alta_tension{
 				for(var c = array_length(torres_de_tension) - 1; c >= 0; c--){
 					var temp_edificio = torres_de_tension[c]
-					if distance_sqr(temp_edificio.center_x, temp_edificio.center_y, center_x, center_y) < TORRE_TENSION_RANGE and temp_edificio.jugador = _jugador{
+					if distance_sqr(temp_edificio.center_x, temp_edificio.center_y, center_x, center_y) < TORRE_TENSION_RANGE_SQR and temp_edificio.jugador = _jugador{
 						array_push(edificio.energia_link, temp_edificio)
 						array_push(temp_edificio.energia_link, edificio)
 						if not array_contains(temp_list_redes, temp_edificio.red)

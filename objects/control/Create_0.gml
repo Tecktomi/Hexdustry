@@ -4,10 +4,14 @@ randomize()
 	#macro PROCESADOR_VERSION 2026_03_25
 	#macro TILE_WIDTH 32
 	#macro TILE_HEIGHT 28
-	#macro CABLE_RANGE 8100
-	#macro TORRE_TENSION_RANGE 1_000_000
-	#macro PLANTA_NUCLEAR_RANGE 160_000
-	#macro PLANTA_RECICLAJE_RANGE 62_500
+	#macro CABLE_RANGE 90
+	CABLE_RANGE_SQR = sqr(CABLE_RANGE)
+	#macro TORRE_TENSION_RANGE 1_000
+	TORRE_TENSION_RANGE_SQR = sqr(TORRE_TENSION_RANGE)
+	#macro PLANTA_NUCLEAR_RANGE 400
+	PLANTA_NUCLEAR_RANGE_SQR = sqr(PLANTA_NUCLEAR_RANGE)
+	#macro PLANTA_RECICLAJE_RANGE 250
+	PLANTA_RECICLAJE_RANGE_SQR = sqr(PLANTA_RECICLAJE_RANGE)
 	SIZE_SIZE = [1, 3, 7, 12, 19, 27, 37]
 	SIZE_BORDE = [6, 9, 12, 15, 18, 21]
 	DESFACE = [[[0, -1], [0, -2], [-1, -1], [-1, 1], [0, 2], [0, 1]], [[1, -1], [0, -2], [0, -1], [0, 1], [0, 2], [1, 1]]]
@@ -298,6 +302,8 @@ L = {}
 	flow_max = 11
 	liquido_choose = 0
 	liquido_choose_array = array_create(0, 0)
+	comprable = true
+	comprable_texto = ""
 #endregion
 #region Misiones
 	null_mision = def_mision()
