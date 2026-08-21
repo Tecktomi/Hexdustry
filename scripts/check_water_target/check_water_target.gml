@@ -1,18 +1,19 @@
 function check_water_target(){
 	with control{
-		var visited = ds_grid_create(xsize, ysize)
+		var visited = ds_grid_create(xsize, ysize), i, edificio, r, aa, bb, j, pointer, val, bmod, aaa, bbb
 		ds_grid_clear(visited, false)
-		var next_queue = array_create(0, 0)
+		next_queue = array_create(0, 0)
 		ds_grid_clear(grid_water_distance, infinity)
-		for(var i = 0; i < array_length(nucleos); i++){
-			var edificio = nucleos[i]
-			for(var r = 1; r < 15; r++){
-				var aa = edificio.a, bb = edificio.b
+		for(i = 0; i < array_length(nucleos); i++){
+			edificio = nucleos[i]
+			for(r = 1; r < 15; r++){
+				aa = edificio.a
+				bb = edificio.b
 				repeat(r){
 					aa += DESFACE_A[bb & 1, 4]
 					bb += DESFACE_B[bb & 1, 4]
 				}
-				for(var j = 0; j < 6; j++)
+				for(j = 0; j < 6; j++)
 					repeat(r){
 						aa += DESFACE_A[bb & 1, j]
 						bb += DESFACE_B[bb & 1, j]
@@ -27,11 +28,15 @@ function check_water_target(){
 					}
 			}
 		}
-		for(var pointer = 0; pointer < array_length(next_queue); pointer++){
-			var aa = next_queue[pointer++], bb = next_queue[pointer], val = real(grid_water_distance[# aa, bb] + 1), bmod = bb & 1
+		for(pointer = 0; pointer < array_length(next_queue); pointer++){
+			aa = next_queue[pointer++]
+			bb = next_queue[pointer]
+			val = real(grid_water_distance[# aa, bb] + 1)
+			bmod = bb & 1
 			ds_grid_set(visited, aa, bb, false)
-			for(var i = 0; i < 6; i++){
-				var aaa = aa + DESFACE_A[bmod, i], bbb = bb + DESFACE_B[bmod, i]
+			for(i = 0; i < 6; i++){
+				aaa = aa + DESFACE_A[bmod, i]
+				bbb = bb + DESFACE_B[bmod, i]
 				if aaa < 0 or bbb < 0 or aaa >= xsize or bbb >= ysize
 					continue
 				if not visited[# aaa, bbb] and tag_agua[terreno[# aaa, bbb]] and val < grid_water_distance[# aaa, bbb]{

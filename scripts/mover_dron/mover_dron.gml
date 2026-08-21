@@ -24,6 +24,7 @@ function mover_dron(dron = control.null_dron, x, y, _server = false){
 			dron.move_ymove = 0
 			dron.move_a = aa
 			dron.move_b = bb
+			dron.last_dir = -1
 		}
 		else if index = idd_minero{
 			if edificio_bool[# aa, bb] and edificio_id[# aa, bb].index = id_almacen{

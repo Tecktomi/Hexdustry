@@ -917,14 +917,7 @@ if show_menu{
 		else if index = id_planta_quimica
 			draw_rectangle(aa - 90 * zoom, bb + 40 * zoom, aa + 90 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, false)
 		else if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
-			var temp_array = index = id_fabrica_de_drones ? [idd_mula, idd_kamikaze, idd_arana] : [idd_reparador, idd_helicoptero, idd_bombardero, idd_reconstructor, idd_minero], len = array_length(temp_array)
-			if edificio.enemigo{
-				if index = id_fabrica_de_drones
-					array_push(temp_array, idd_arana)
-				else if index = id_fabrica_de_drones_grande
-					array_push(temp_array, idd_tanque)
-				len++
-			}
+			var temp_array = (index = id_fabrica_de_drones) ? fabrica_de_drones_array : fabrica_de_drones_grande_array, len = array_length(temp_array)
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * len) * zoom, false)
 		}
 		else if index = id_refineria_de_petroleo{
@@ -958,14 +951,7 @@ if show_menu{
 			}
 		}
 		if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
-			var temp_array = index = id_fabrica_de_drones ? [idd_mula, idd_kamikaze, idd_arana] : [idd_reparador, idd_helicoptero, idd_bombardero, idd_reconstructor, idd_minero], len = array_length(temp_array)
-			if edificio.enemigo{
-				if index = id_fabrica_de_drones
-					array_push(temp_array, idd_arana)
-				else if index = id_fabrica_de_drones_grande
-					array_push(temp_array, idd_tanque)
-				len++
-			}
+			var temp_array = (index = id_fabrica_de_drones) ? fabrica_de_drones_array : fabrica_de_drones_grande_array, len = array_length(temp_array)
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * len) * zoom, true)
 			draw_text(aa - 80 * zoom, bb + 20 * zoom, L.show_menu_unidad)
 			for(var a = 0; a < len; a++)
@@ -1046,12 +1032,7 @@ if show_menu{
 				}
 			}
 			else if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
-				var temp_array = index = id_fabrica_de_drones ? [idd_mula, idd_kamikaze, idd_arana] : [idd_reparador, idd_helicoptero, idd_bombardero, idd_reconstructor, idd_minero], len = array_length(temp_array)
-				if edificio.enemigo{
-					if index = id_fabrica_de_drones_grande
-						array_push(temp_array, idd_tanque)
-					len++
-				}
+				var temp_array = (index = id_fabrica_de_drones) ? fabrica_de_drones_array : fabrica_de_drones_grande_array, len = array_length(temp_array)
 				if mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * len) * zoom{
 					var a = temp_array[floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))], temp_text = $"{dron_descripcion[a]}\n"
 					for(var b = array_length(dron_precio_id[a]) - 1; b >= 0; b--)
@@ -2276,8 +2257,8 @@ if build_index > 0 and win = 0{
 				var flag_3 = false
 				for(var a = array_length(enemigos) - 1; a >= 0; a--){
 					var enemigo = enemigos[a]
-					draw_circle_off(enemigo.x, enemigo.y, 100, true)
-					if not flag_3 and distance_sqr(mouse_x, mouse_y, enemigo.x * zoom - camx, enemigo.y * zoom - camy) < 10000 * sqr(zoom){//100^2
+					draw_circle_off(enemigo.x, enemigo.y, ENEMIGO_CERCA, true)
+					if not flag_3 and distance_sqr(mouse_x, mouse_y, enemigo.x * zoom - camx, enemigo.y * zoom - camy) < ENEMIGO_CERCA_SQR * sqr(zoom){
 						temp_text += $"{L.construir_enemigos_cerca}\n"
 						_comprable = false
 						flag_3 = true

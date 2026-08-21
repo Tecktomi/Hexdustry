@@ -1,5 +1,6 @@
 function game_start(_nucleo = true, mision_cumplida = false){
 	with control{
+		var a, temp_array, b, temp_complex
 		if not nucleo.vivo and _nucleo
 			game_restart()
 		redo_pathfind()
@@ -11,9 +12,9 @@ function game_start(_nucleo = true, mision_cumplida = false){
 			pasar_mision()
 		}
 		if tecnologia
-			for(var a = 0; a < edificio_max; a++){
-				var temp_array = tecnologia_precio_num[a]
-				for(var b = 0; b < array_length(temp_array); b++)
+			for(a = 0; a < edificio_max; a++){
+				temp_array = tecnologia_precio_num[a]
+				for(b = 0; b < array_length(temp_array); b++)
 					temp_array[b] = round(tecnologia_precio_multiplicador * temp_array[b])
 			}
 		clear_edit()
@@ -38,20 +39,20 @@ function game_start(_nucleo = true, mision_cumplida = false){
 		luces = array_create(0, {a : 0, b : 0, x : 0, y : 0, r : 0})
 		clic_sound = false
 		editor_enemigo = false
-		for(var a = 0; a < xsize; a++)
-			for(var b = 0; b < ysize; b++)
+		for(a = 0; a < xsize; a++)
+			for(b = 0; b < ysize; b++)
 				if terreno[# a, b] = idt_lava{
-					var temp_complex = abtoxy(a, b)
+					temp_complex = abtoxy(a, b)
 					array_push(luces, {a : a, b : b, x : temp_complex[0], y : temp_complex[1], r : 10, source : null_edificio})
 				}
-		for(var a = array_length(enemigos) - 1; a >= 0; a--)
+		for(a = array_length(enemigos) - 1; a >= 0; a--)
 			delete_dron(enemigos[a])
-		for(var a = array_length(drones_aliados) - 1; a >= 0; a--)
+		for(a = array_length(drones_aliados) - 1; a >= 0; a--)
 			delete_dron(drones_aliados[a])
-		for(var a = 0; a < rss_max; a++)
+		for(a = 0; a < rss_max; a++)
 			array_set(jugador_recursos[0], a, carga_inicial[a])
-		for(var a = 0; a < chunk_xsize; a++)
-			for(var b = 0; b < chunk_ysize; b++)
+		for(a = 0; a < chunk_xsize; a++)
+			for(b = 0; b < chunk_ysize; b++)
 				update_background(a * CHUNK_WIDTH, b * CHUNK_HEIGHT)
 		grafic_hideui = false
 		check_water_target()

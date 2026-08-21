@@ -12,15 +12,18 @@ function menu_campanna(){
 			menu = 0
 		}
 		var total_width = WORLD_WIDTH * 96, total_height = WORLD_HEIGHT * TILE_WIDTH
-		for(var a = 0; a < WORLD_WIDTH; a++)
-			for(var b = 0; b < WORLD_HEIGHT; b++){
-				var view = world_visible[# a, b]
+		var a, b, view, temp_complex, aa, bb, buffer, escenario, file
+		for(a = 0; a < WORLD_WIDTH; a++)
+			for(b = 0; b < WORLD_HEIGHT; b++){
+				view = world_visible[# a, b]
 				if view > 0{
-					var temp_complex = abtoxy(a, b), aa =  2 * temp_complex[0] + (room_width - total_width) / 2, bb = 2 * temp_complex[1] + (room_height - total_height) / 2
+					temp_complex = abtoxy(a, b)
+					aa = 2 * temp_complex[0] + (room_width - total_width) / 2
+					bb = 2 * temp_complex[1] + (room_height - total_height) / 2
 					if draw_sprite_boton(world_sprite[# a, b],, aa, bb, 64, 56,, hover_sprite_boton_text({a : $"{a}, {b}, {view}"})) and view = 2{
 						ini_open("settings.ini")
 						if ini_key_exists("World mision", world_tutorial[# a, b]){
-							var buffer = buffer_load($"Tutorial/mision{world_tutorial[# a, b]}.save")
+							buffer = buffer_load($"Tutorial/mision{world_tutorial[# a, b]}.save")
 							if load_game_buffer(buffer){
 								game_start(, true)
 								tutorial = world_tutorial[# a, b]
@@ -29,9 +32,9 @@ function menu_campanna(){
 							}
 						}
 						else{
-							var escenario = world_escenario[# a, b]
+							escenario = world_escenario[# a, b]
 							if escenario != ""{
-								var file = load_escenario_buffer(escenario)
+								file = load_escenario_buffer(escenario)
 								if file != ""
 									game_start()
 								tutorial = world_tutorial[# a, b]
