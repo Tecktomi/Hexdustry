@@ -25,6 +25,13 @@ randomize()
 		COS_ANGLE_DIR[a] = cos(angle_dir[a])
 		SIN_ANGLE_DIR[a] = sin(angle_dir[a])
 	}
+	//Dirección más conveniente según el ángulo del target de 30° en 30°
+	preset_dir = [[0, 5, 1, 4, 2, 3], [0, 1, 5, 2, 4, 3]]
+	for(var a = 2; a < 12; a++){
+		preset_dir[a] = array_create(6, 0)
+		for(var b = 0; b < 6; b++)
+			array_set(preset_dir[a], b, (preset_dir[a & 1, b] + floor(a / 2)) mod 6)
+	}
 #endregion
 DEVISE = (os_type = os_windows)
 BROWSER = (os_browser = browser_not_a_browser)
@@ -603,6 +610,8 @@ null_dron = {
 	move_dis : 0,
 	move_x : 0,
 	move_y : 0,
+	target_a : 0,
+	target_b : 0,
 	oleada : 0,
 	random_int : random(1),
 	selected : false,
@@ -1436,6 +1445,14 @@ edificio_key[id_recurso_infinito] = "1z"
 		tag_dron_marino = array_create(dron_max, false)
 		tag_dron_marino[idd_barco] = true
 		tag_dron_marino[idd_destructor] = true
+	#endregion
+	#region dron_seleccionable
+		tag_dron_seleccionable = array_create(dron_max, false)
+		tag_dron_seleccionable[idd_arana] = true
+		tag_dron_seleccionable[idd_kamikaze] = true
+		tag_dron_seleccionable[idd_helicoptero] = true
+		tag_dron_seleccionable[idd_bombardero] = true
+		tag_dron_seleccionable[idd_minero] = true
 	#endregion
 #endregion
 //Inputs y outputs de fábrica de drones y planta de reciclaje

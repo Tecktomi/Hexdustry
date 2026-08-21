@@ -19,6 +19,12 @@ function mover_dron(dron = control.null_dron, x, y, _server = false){
 			dron.move_xmove = x
 			dron.move_ymove = y
 		}
+		else if tag_drones_terrestres[index]{
+			dron.move_xmove = 0
+			dron.move_ymove = 0
+			dron.move_a = aa
+			dron.move_b = bb
+		}
 		else if index = idd_minero{
 			if edificio_bool[# aa, bb] and edificio_id[# aa, bb].index = id_almacen{
 				dron.modo = 0
