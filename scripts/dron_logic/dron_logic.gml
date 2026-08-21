@@ -272,7 +272,7 @@ function dron_logic(){
 				if index != idd_bombardero and (dron_aereo[index] or dis < dron_alcance[index])
 					dron.dir += 0.1 * angle_difference(point_direction(aa, bb, edificio.center_x, edificio.center_y), dron.dir)
 				//Seguir instrucciones
-				if dron.modo = 1{
+				if dron.modo >= 1{
 					if index = idd_bombardero{
 						if dron.step <= dron_step[index]{
 							dron.dir += 0.02 * angle_difference(point_direction(dron.x, dron.y, dron.move_xmove, dron.move_ymove) + random_range(-0.01, 0.01), dron.dir)
@@ -283,26 +283,8 @@ function dron_logic(){
 						dron.x += lengthdir_x(vel, dron.dir)
 						dron.y += lengthdir_y(vel, dron.dir)
 					}
-					else if tag_drones_terrestres[index]{
-						if dron.change_pos{
-							var angle = floor(point_direction(aa, bb, dron.move_xmove, dron.move_ymove) / 30), c
-							for(var b = 0; b < 6; b++){
-								c = preset_dir[angle, b]
-								var aaaa = aa + DESFACE_A[c], bbbb = bb + DESFACE_B[c]
-								if aaaa < 0 or bbbb < 0 or aaaa >= xsize or bbbb >= ysize
-									continue
-								if terreno_caminable[terreno[# aaaa, bbbb]]{
-									dron.move_x = COS_ANGLE_DIR[c]
-									dron.move_y = SIN_ANGLE_DIR[c]
-									break
-								}
-							}
-						}
-						else{
-							dron.x += dron.move_x
-							dron.y += dron.move_y
-						}
-					}
+					else if tag_drones_terrestres[index]
+						dron_move_terrestre(dron)
 					else{
 						dron.dir += 0.05 * angle_difference(point_direction(aa, bb, dron.move_xmove, dron.move_ymove), dron.dir)
 						dron.x += vel * dron.move_xmove
@@ -482,31 +464,8 @@ function dron_logic(){
 					}
 				}
 			}
-			else if dron.modo = 1 and tag_drones_terrestres[index]{
-				if dron.change_pos or (dron.move_xmove = 0 and dron.move_ymove = 0){
-					if dron.a = dron.move_a and dron.b = dron.move_b
-						dron.modo = 0
-					else{
-						var angle = floor(point_direction(aa, bb, dron.move_x, dron.move_y) / 30), c
-						for(var b = 0; b < 6; b++){
-							c = preset_dir[angle, b]
-							var aaa = dron.a + DESFACE_A[dron.b & 1, c], bbb = dron.b + DESFACE_B[dron.b & 1, c]
-							if aaa < 0 or bbb < 0 or aaa >= xsize or bbb >= ysize
-								continue
-							if terreno_caminable[terreno[# aaa, bbb]]{
-								dron.move_xmove = vel * COS_ANGLE_DIR[c]
-								dron.move_ymove = -vel * SIN_ANGLE_DIR[c]
-								break
-							}
-						}
-					}
-				}
-				else{
-					show_debug_message($"dron.a{dron.a}, dron.b{dron.b}, dron.move_a{dron.move_a}, dron.move_b{dron.move_b}")
-					dron.x += dron.move_xmove
-					dron.y += dron.move_ymove
-				}
-			}
+			else if dron.modo >= 1 and tag_drones_terrestres[index]
+				dron_move_terrestre(dron)
 			//Alejarse de los enemigos cercanos
 			var temp_dron_size = dron_size[index], temp_array = enemigo ? chunk_dron_enemigo[# chunk_x, chunk_y] : chunk_dron_aliado[# chunk_x, chunk_y]
 			for(var b = array_length(temp_array) - 1; b >= 0; b--){

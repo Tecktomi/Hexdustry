@@ -5,13 +5,15 @@ randomize()
 	#macro TILE_WIDTH 32
 	#macro TILE_HEIGHT 28
 	#macro CABLE_RANGE 90
-	CABLE_RANGE_SQR = sqr(CABLE_RANGE)
+	#macro CABLE_RANGE_SQR 8_100
 	#macro TORRE_TENSION_RANGE 1_000
-	TORRE_TENSION_RANGE_SQR = sqr(TORRE_TENSION_RANGE)
+	#macro TORRE_TENSION_RANGE_SQR 1_000_000
 	#macro PLANTA_NUCLEAR_RANGE 400
-	PLANTA_NUCLEAR_RANGE_SQR = sqr(PLANTA_NUCLEAR_RANGE)
+	#macro PLANTA_NUCLEAR_RANGE_SQR 160_000
 	#macro PLANTA_RECICLAJE_RANGE 250
-	PLANTA_RECICLAJE_RANGE_SQR = sqr(PLANTA_RECICLAJE_RANGE)
+	#macro PLANTA_RECICLAJE_RANGE_SQR 62_500
+	#macro ENEMIGO_CERCA 100
+	#macro ENEMIGO_CERCA_SQR 10_000
 	SIZE_SIZE = [1, 3, 7, 12, 19, 27, 37]
 	SIZE_BORDE = [6, 9, 12, 15, 18, 21]
 	DESFACE = [[[0, -1], [0, -2], [-1, -1], [-1, 1], [0, 2], [0, 1]], [[1, -1], [0, -2], [0, -1], [0, 1], [0, 2], [1, 1]]]
@@ -612,6 +614,7 @@ null_dron = {
 	move_y : 0,
 	target_a : 0,
 	target_b : 0,
+	last_dir : -1,
 	oleada : 0,
 	random_int : random(1),
 	selected : false,
@@ -1453,7 +1456,11 @@ edificio_key[id_recurso_infinito] = "1z"
 		tag_dron_seleccionable[idd_helicoptero] = true
 		tag_dron_seleccionable[idd_bombardero] = true
 		tag_dron_seleccionable[idd_minero] = true
+		tag_dron_seleccionable[idd_tanque] = true
+		tag_dron_seleccionable[idd_titan] = true
 	#endregion
+	fabrica_de_drones_array = [idd_mula, idd_kamikaze, idd_arana]
+	fabrica_de_drones_grande_array = [idd_tanque, idd_titan, idd_reparador, idd_helicoptero, idd_bombardero, idd_reconstructor, idd_minero]
 #endregion
 //Inputs y outputs de fábrica de drones y planta de reciclaje
 for(var a = 0; a < dron_max; a++){

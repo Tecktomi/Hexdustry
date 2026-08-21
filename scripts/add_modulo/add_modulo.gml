@@ -1,8 +1,9 @@
 function add_modulo(edificio = control.null_edificio, _server = false, _cheat = control.cheat){
 	with control{
+		var a, b
 		if edificio.modulo
 			exit
-		var b = edificio_modulo_tier[edificio.index]
+		b = edificio_modulo_tier[edificio.index]
 		if b = -1
 			exit
 		if online and not _server{
@@ -11,7 +12,7 @@ function add_modulo(edificio = control.null_edificio, _server = false, _cheat = 
 				exit
 		}
 		if not _cheat and not build_enemigo
-			for(var a = array_length(modulo_precio_id[b]) - 1; a >= 0; a--)
+			for(a = array_length(modulo_precio_id[b]) - 1; a >= 0; a--)
 				jugador_recursos[0, modulo_precio_id[b, a]] -= modulo_precio_num[b, a]
 		edificio.modulo = true
 	}

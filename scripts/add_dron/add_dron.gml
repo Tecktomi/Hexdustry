@@ -30,6 +30,7 @@ function add_dron(a, b, index, enemigo = true, _jugador = 1){
 			move_y : 0,
 			target_a : 0,
 			target_b : 0,
+			last_dir : -1,
 			oleada : 0,
 			random_int : random(1),
 			selected : false,

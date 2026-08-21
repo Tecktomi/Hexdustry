@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"dron_move_terrestre",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"dron_move_terrestre",
+  "parent":{
+    "name":"DRONES",
+    "path":"folders/SCRIPTS/DRONES.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

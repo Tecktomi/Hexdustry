@@ -2,11 +2,16 @@ function menu_editor(){
 	with control{
 		dibujar_fondo(1)
 		dibujar_edificios()
-		for(var a = min_chunka; a < max_chunka; a++)
-			for(var b = min_chunkb; b < max_chunkb; b++){
-				var chunk = chunk_edificios_draw[# a, b], len = array_length(chunk)
-				for(var c = 0; c < len; c++){
-					var edificio = chunk[c], aa = edificio.center_x, bb = edificio.center_y, _jugador = edificio.jugador
+		var a, b, chunk, len, c, edificio, aa, bb, _jugador
+		for(a = min_chunka; a < max_chunka; a++)
+			for(b = min_chunkb; b < max_chunkb; b++){
+				chunk = chunk_edificios_draw[# a, b]
+				len = array_length(chunk)
+				for(c = 0; c < len; c++){
+					edificio = chunk[c]
+					aa = edificio.center_x
+					bb = edificio.center_y
+					_jugador = edificio.jugador
 					if _jugador != 2 or edificio.enemigo
 						draw_edificio_borde(edificio, (_jugador = -1) ? c_ltgray : EQUIPO_COLOR[_jugador])
 				}
@@ -57,7 +62,7 @@ function menu_editor(){
 			draw_rectangle(room_width / 2, 110, room_width - 110, room_height - 110, true)
 			//Editar Objetivo
 			if mision_actual >= 0{
-				var i = mision_actual, ypos = 120, a
+				var i = mision_actual, ypos = 120
 				mision = misiones[i]
 				xpos = draw_text_xpos(room_width / 2 + 20, ypos, L.editor_nuevo_objetivo + ": ")
 				mision.nombre = draw_boton_text(xpos, ypos, mision.nombre, false)
@@ -112,8 +117,9 @@ function menu_editor(){
 						mision.tiempo_show = not mision.tiempo_show
 				}
 				ypos += 40
-				for(var b = 0; b < array_length(mision.texto); b++){
-					var texto = mision.texto[b]
+				var texto
+				for(b = 0; b < array_length(mision.texto); b++){
+					texto = mision.texto[b]
 					xpos = room_width / 2 + 80
 					xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_write} ")
 					if draw_boton(xpos, ypos, $"'{text_wrap(texto.texto, 250)}'",,, mb_any, false){
@@ -206,13 +212,13 @@ function menu_editor(){
 				ypos = draw_text_ypos(room_width / 2 + 20, ypos, L.editor_carga_inicial)
 				xpos = room_width / 2 + 40
 				var width = 0, ypos_2 = ypos
-				for(var a = 0; a < rss_max; a++){
+				for(a = 0; a < rss_max; a++){
 					ypos_2 = draw_text_ypos(xpos, ypos_2, recurso_nombre[rss_sort[a]])
 					width = max(width, string_width(recurso_nombre[rss_sort[a]]))
 				}
 				xpos = room_width / 2 + 60 + width
 				ypos_2 = ypos
-				for(var a = 0; a < rss_max; a++){
+				for(a = 0; a < rss_max; a++){
 					carga_inicial[rss_sort[a]] = draw_boton_text(xpos, ypos_2, carga_inicial[rss_sort[a]])
 					ypos_2 += text_y
 				}
@@ -221,8 +227,8 @@ function menu_editor(){
 			else if mision_actual = -2{
 				xpos = room_width / 2 + 40
 				var ypos = 140
-				var b = 0
-				for(var a = 0; a < edificio_max; a++)
+				b = 0
+				for(a = 0; a < edificio_max; a++)
 					if tag_edificio_construible[a]{
 						if not mision_edificios[a]
 							draw_set_color(c_red)
@@ -294,7 +300,7 @@ function menu_editor(){
 			xpos = 120
 			ypos += 20 * min(18, size)
 			xpos = draw_text_xpos(xpos, ypos, $"{L.editor_add} ")
-			var a = draw_boton_text_list(xpos, ypos, 0, ["...", L.editor_manchas, L.editor_borde, L.editor_ruido, L.editor_menas, "PERLIN", "Eliminar islas", "Contorno", "Autómata"])
+			a = draw_boton_text_list(xpos, ypos, 0, ["...", L.editor_manchas, L.editor_borde, L.editor_ruido, L.editor_menas, "PERLIN", "Eliminar islas", "Contorno", "Autómata"])
 			if a > 0{
 				var temp_array_array = [
 					[a - 1, idt_piedra, 50, 5],
@@ -363,8 +369,11 @@ function menu_editor(){
 					if mx = last_mx and my = last_my{
 						last_mx = -1
 						last_my = -1
+						var temp_complex
 						for(var i = array_length(build_list) - 1; i >= 0; i--){
-							var temp_complex = build_list[i], aa = temp_complex[0], bb = temp_complex[1]
+							temp_complex = build_list[i]
+							aa = temp_complex[0]
+							bb = temp_complex[1]
 							terreno[# aa, bb] = build_index
 						}
 						clear_olas()
@@ -379,13 +388,17 @@ function menu_editor(){
 						ds_grid_clear(usable_grid_bool, false)
 						usable_grid_bool[# mx, my] = true
 						array_push(temp_queue, mx, my, -1)
-						var target_id = terreno[# mx, my]
+						var target_id = terreno[# mx, my], dir, bmod, i
 						for(var counter = 0; counter < array_length(temp_queue);){
-							var a = temp_queue[counter++], b = temp_queue[counter++], dir = temp_queue[counter++] + 5, bmod = b & 1
+							a = temp_queue[counter++]
+							b = temp_queue[counter++]
+							dir = temp_queue[counter++] + 5
+							bmod = b & 1
 							array_push(build_list, [a, b])
-							for(var i = 0; i < maxi; i++){
+							for(i = 0; i < maxi; i++){
 								dir = (dir + i) mod 6
-								var aa = a + DESFACE_A[bmod, dir], bb = b + DESFACE_B[bmod, dir]
+								aa = a + DESFACE_A[bmod, dir]
+								bb = b + DESFACE_B[bmod, dir]
 								if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 									continue
 								if not usable_grid_bool[# aa, bb]{
@@ -398,10 +411,14 @@ function menu_editor(){
 						}
 					}
 				if mx = last_mx and my = last_my{
-					var temp_sprite = terreno_sprite[build_index]
+					var temp_sprite = terreno_sprite[build_index], temp_complex, temp_complex_2
 					for(var i = array_length(build_list) - 1; i >= 0; i--){
-						var temp_complex = build_list[i], a = temp_complex[0], b = temp_complex[1]
-						var temp_complex_2 = abtoxy(a, b), aa = temp_complex_2[0], bb = temp_complex_2[1]
+						temp_complex = build_list[i]
+						a = temp_complex[0]
+						b = temp_complex[1]
+						temp_complex_2 = abtoxy(a, b)
+						aa = temp_complex_2[0]
+						bb = temp_complex_2[1]
 						draw_sprite_off(temp_sprite, 0, aa, bb,,,,, 0.5)
 					}
 					draw_text_background(mouse_x, mouse_y + 20, L.editor_clic_aplicar)
@@ -439,13 +456,16 @@ function menu_editor(){
 						build_size++
 					if mouse_wheel_down() and build_size > 1
 						build_size--
-					var temp_list = get_size(mx, my, 0, build_size)
+					var temp_list = get_size(mx, my, 0, build_size), temp_complex, offset
 					for(var i = array_length(temp_list) - 1; i >= 0; i--){
-						var temp_complex = temp_list[i], a = temp_complex[0], b = temp_complex[1]
+						temp_complex = temp_list[i]
+						a = temp_complex[0]
+						b = temp_complex[1]
 						if a < 0 or b < 0 or a >= xsize or b >= ysize
 							continue
 						temp_complex = abtoxy(a, b)
-						var aa = temp_complex[0], bb = temp_complex[1]
+						aa = temp_complex[0]
+						bb = temp_complex[1]
 						//Eliminar minerales
 						if editor_herramienta = 3{
 							draw_sprite_off(spr_rojo, 0, aa, bb,,,,, 0.5)
@@ -456,7 +476,7 @@ function menu_editor(){
 							}
 						}
 						if build_index >= 0{
-							var offset = 0
+							offset = 0
 							//Terrenos
 							if build_index < terreno_max{
 								draw_sprite_off(terreno_sprite[build_index], 0, aa, bb,,,,, 0.5)
@@ -491,7 +511,7 @@ function menu_editor(){
 			//Borrar edificio
 			if mouse_check_button_pressed(mb_right) and edificio_bool[# mx, my]{
 				mouse_clear(mb_right)
-				var edificio = edificio_id[# mx, my]
+				edificio = edificio_id[# mx, my]
 				if edificio.index != id_nucleo
 					delete_edificio(edificio)
 			}
@@ -513,8 +533,8 @@ function menu_editor(){
 		sprite_boton_text = ""
 		if size > 40
 			deslizante[0] = 5 * floor(draw_deslizante_vertical(5, 10, 290, deslizante[0], 0, size - 40, 0) / 5)
-		for(var a = deslizante[0]; a < min(deslizante[0] + 40, size); a++){
-			var b = 0
+		for(a = deslizante[0]; a < min(deslizante[0] + 40, size); a++){
+			b = 0
 			if a < terreno_max and draw_sprite_boton(terreno_sprite[a],, 10 + (a mod 5) * 36, ypos,,,, hover_sprite_boton_text, {a : terreno_nombre[a]}){
 				build_index = a
 				editor_herramienta = 0
@@ -547,8 +567,9 @@ function menu_editor(){
 			if draw_boton(xpos + 0.2 * text_x, ypos - 40, "next") and mision_actual < array_length(misiones) - 1
 				mision = misiones[++mision_actual]
 			draw_set_halign(fa_center)
-			for(var a = 0; a < array_length(mision.texto); a++){
-				var _texto = mision.texto[a]
+			var _texto
+			for(a = 0; a < array_length(mision.texto); a++){
+				_texto = mision.texto[a]
 				draw_text_background(_texto.x * zoom - camx, _texto.y * zoom - camy, text_wrap(_texto.texto_idioma[idioma], 250),, false)
 			}
 			draw_set_halign(fa_left)
@@ -591,10 +612,10 @@ function menu_editor(){
 			//Cargar
 			if get_file = 1{
 				draw_set_valign(fa_bottom)
-				var xpos = 120
+				var xpos = 120, temp_text
 				ypos = 200
-				for(var a = 0; a < array_length(save_files); a++){
-					var temp_text = file_format(save_files[a])
+				for(a = 0; a < array_length(save_files); a++){
+					temp_text = file_format(save_files[a])
 					if draw_sprite_boton(save_files_png[a],, xpos, ypos, 96, 96, 1){
 						input_layer = 0
 						get_file = 0
@@ -625,7 +646,7 @@ function menu_editor(){
 			else if get_file = 2{
 				draw_boton_text_counter = 0
 				var flag = false
-				for(var a = 0; a < array_length(save_files); a++)
+				for(a = 0; a < array_length(save_files); a++)
 					if draw_boton(140, 160 + 30 * a, save_files[a],,,,, 1){
 						save_file = save_files[a]
 						flag = true
