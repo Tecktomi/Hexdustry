@@ -917,7 +917,7 @@ if show_menu{
 		else if index = id_planta_quimica
 			draw_rectangle(aa - 90 * zoom, bb + 40 * zoom, aa + 90 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, false)
 		else if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
-			var temp_array = index = id_fabrica_de_drones ? [idd_mula, idd_kamikaze] : [idd_reparador, idd_helicoptero, idd_bombardero, idd_reconstructor, idd_minero], len = array_length(temp_array)
+			var temp_array = index = id_fabrica_de_drones ? [idd_mula, idd_kamikaze, idd_arana] : [idd_reparador, idd_helicoptero, idd_bombardero, idd_reconstructor, idd_minero], len = array_length(temp_array)
 			if edificio.enemigo{
 				if index = id_fabrica_de_drones
 					array_push(temp_array, idd_arana)
@@ -958,7 +958,7 @@ if show_menu{
 			}
 		}
 		if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
-			var temp_array = index = id_fabrica_de_drones ? [idd_mula, idd_kamikaze] : [idd_reparador, idd_helicoptero, idd_bombardero, idd_reconstructor, idd_minero], len = array_length(temp_array)
+			var temp_array = index = id_fabrica_de_drones ? [idd_mula, idd_kamikaze, idd_arana] : [idd_reparador, idd_helicoptero, idd_bombardero, idd_reconstructor, idd_minero], len = array_length(temp_array)
 			if edificio.enemigo{
 				if index = id_fabrica_de_drones
 					array_push(temp_array, idd_arana)
@@ -1046,11 +1046,9 @@ if show_menu{
 				}
 			}
 			else if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
-				var temp_array = index = id_fabrica_de_drones ? [idd_mula, idd_kamikaze] : [idd_reparador, idd_helicoptero, idd_bombardero, idd_reconstructor, idd_minero], len = array_length(temp_array)
+				var temp_array = index = id_fabrica_de_drones ? [idd_mula, idd_kamikaze, idd_arana] : [idd_reparador, idd_helicoptero, idd_bombardero, idd_reconstructor, idd_minero], len = array_length(temp_array)
 				if edificio.enemigo{
-					if index = id_fabrica_de_drones
-						array_push(temp_array, idd_arana)
-					else if index = id_fabrica_de_drones_grande
+					if index = id_fabrica_de_drones_grande
 						array_push(temp_array, idd_tanque)
 					len++
 				}
@@ -1767,7 +1765,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		var minx = min(mx_clic, xmouse), miny = min(my_clic, ymouse), maxx = max(mx_clic, xmouse), maxy = max(my_clic, ymouse)
 		for(var a = array_length(drones_aliados) - 1; a >= 0; a--){
 			var dron = drones_aliados[a]
-			if in(dron.index, idd_kamikaze, idd_helicoptero, idd_bombardero, idd_minero){
+			if tag_dron_seleccionable[dron.index]{
 				var xx = dron.x, yy = dron.y
 				if xx > minx and yy > miny and xx < maxx and yy < maxy
 					draw_circle_off(xx, yy, 30, true)
@@ -1780,7 +1778,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		var minx = min(mx_clic, xmouse), miny = min(my_clic, ymouse), maxx = max(mx_clic, xmouse), maxy = max(my_clic, ymouse)
 		for(var a = array_length(drones_aliados) - 1; a >= 0; a--){
 			var dron = drones_aliados[a]
-			if in(dron.index, idd_kamikaze, idd_helicoptero, idd_bombardero, idd_minero){
+			if tag_dron_seleccionable[dron.index]{
 				var xx = dron.x, yy = dron.y
 				if xx > minx and yy > miny and xx < maxx and yy < maxy{
 					array_push(selected_drones, dron)
@@ -1854,7 +1852,7 @@ if array_length(selected_drones) > 0{
 		draw_circle_off(dron.x, dron.y, 30, true)
 		if dron.modo = 1 and not dron.index = idd_minero
 			draw_sprite_off(spr_target, 0, dron.move_x, dron.move_y)
-		if right_clicked and in(dron.index, idd_kamikaze, idd_helicoptero, idd_bombardero, idd_minero){
+		if right_clicked and tag_dron_seleccionable[dron.index]{
 			mouse_clear(mb_right)
 			mover_dron(dron, xmouse, ymouse)
 		}
