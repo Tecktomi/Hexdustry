@@ -6,17 +6,17 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 			if dron.step >= dron_step[index]{
 				dron.step = 0
 				if target != null_dron or edificio != null_edificio{
-					var aa = dron.x, bb = dron.y, vel = 25
+					var a = dron.x, b = dron.y, vel = 25
 					if target != null_dron
 						var target_x = target.x, target_y = target.y
 					else{
 						target_x = edificio.center_x
 						target_y = edificio.center_y
 					}
-					var dis = distance(aa, bb, target_x, target_y)
-					var municion = add_municion(aa, bb, vel * (target_x - aa) / dis, vel * (target_y - bb) / dis, 0, dis / vel, 12,, target, edificio, dron.enemigo,,, _jugador)
+					var dis = distance(a, b, target_x, target_y)
+					var municion = add_municion(a, b, vel * (target_x - a) / dis, vel * (target_y - b) / dis, 0, dis / vel, 12,, target, edificio, dron.enemigo,,, _jugador)
 					array_push(municiones, municion)
-					sound_play(snd_disparo, aa, bb, 0.1)
+					sound_play(snd_disparo, a, b, 0.1)
 				}
 			}
 			return false
@@ -32,15 +32,15 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 			if dron.step = dron_step[index]{
 				dron.step = 0
 				if target != null_dron or edificio != null_edificio{
-					var aa = dron.x, bb = dron.y, vel = 25
+					var a = dron.x, b = dron.y, vel = 25
 					if target != null_dron
 						var target_x = target.x, target_y = target.y
 					else{
 						target_x = edificio.center_x
 						target_y = edificio.center_y
 					}
-					var dis = distance(aa, bb, target_x, target_y)
-					var municion = add_municion(aa, bb, vel * (target_x - aa) / dis, vel * (target_y - bb) / dis, 1, dis / vel, 30, 3600, target, edificio, dron.enemigo,,, _jugador)
+					var dis = distance(a, b, target_x, target_y)
+					var municion = add_municion(a, b, vel * (target_x - a) / dis, vel * (target_y - b) / dis, 1, dis / vel, 30, 3600, target, edificio, dron.enemigo,,, _jugador)
 					array_push(municiones, municion)
 				}
 			}
@@ -52,15 +52,15 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 				if dron.step++ = dron_step[index] + 30
 					dron.step = 0
 				if target != null_dron or edificio != null_edificio{
-					var aa = dron.x, bb = dron.y, vel = 10
+					var a = dron.x, b = dron.y, vel = 10
 					if target != null_dron
 						var target_x = target.x, target_y = target.y
 					else{
 						target_x = edificio.center_x
 						target_y = edificio.center_y
 					}
-					var dis = distance(aa, bb, target_x, target_y)
-					var municion = add_municion(aa, bb, vel * (target_x - aa) / dis, vel * (target_y - bb) / dis, 1, dis / vel, 25, 4900, target, edificio, dron.enemigo, true, true, _jugador)
+					var dis = distance(a, b, target_x, target_y)
+					var municion = add_municion(a, b, vel * (target_x - a) / dis, vel * (target_y - b) / dis, 1, dis / vel, 25, 4900, target, edificio, dron.enemigo, true, true, _jugador)
 					array_push(municiones, municion)
 				}
 			}
@@ -74,15 +74,15 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 				if dron.step++ = dron_step[index] + 45
 					dron.step = 0
 				if target != null_dron or edificio != null_edificio{
-					var aa = dron.x, bb = dron.y, vel = 10
+					var a = dron.x, b = dron.y, vel = 10
 					if target != null_dron
 						var target_x = target.x, target_y = target.y
 					else{
 						target_x = edificio.center_x
 						target_y = edificio.center_y
 					}
-					var dis = distance(aa, bb, target_x, target_y)
-					var municion = add_municion(aa, bb, vel * (target_x - aa) / dis, vel * (target_y - bb) / dis, 1, dis / vel, 10_000, 50, target, edificio, dron.enemigo, true,, _jugador)
+					var dis = distance(a, b, target_x, target_y)
+					var municion = add_municion(a, b, vel * (target_x - a) / dis, vel * (target_y - b) / dis, 1, dis / vel, 10_000, 50, target, edificio, dron.enemigo, true,, _jugador)
 					array_push(municiones, municion)
 				}
 			}
@@ -105,15 +105,15 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 			if dron.step = dron_step[index]{
 				dron.step = 0
 				if target != null_dron or edificio != null_edificio{
-					var aa = dron.x, bb = dron.y, vel = 20
+					var a = dron.x, b = dron.y, vel = 20
 					if target != null_dron
 						var target_x = target.x, target_y = target.y
 					else{
 						target_x = edificio.center_x
 						target_y = edificio.center_y
 					}
-					var dis = distance(aa, bb, target_x, target_y)
-					var municion = add_municion(aa, bb, vel * (target_x - aa) / dis, vel * (target_y - bb) / dis, 0, dis / vel, 20,, target, edificio, dron.enemigo,,, _jugador)
+					var dis = distance(a, b, target_x, target_y)
+					var municion = add_municion(a, b, vel * (target_x - a) / dis, vel * (target_y - b) / dis, 0, dis / vel, 20,, target, edificio, dron.enemigo,,, _jugador)
 					array_push(municiones, municion)
 				}
 			}
@@ -123,15 +123,15 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 		else if index = idd_destructor{
 			if in(dron.step, 0, 20, 40, 60, 80){
 				if target != null_dron or edificio != null_edificio{
-					var aa = dron.x, bb = dron.y, vel = 20
+					var a = dron.x, b = dron.y, vel = 20
 					if target != null_dron
 						var target_x = target.x, target_y = target.y
 					else{
 						target_x = edificio.center_x
 						target_y = edificio.center_y
 					}
-					var dis = distance(aa, bb, target_x, target_y)
-					var municion = add_municion(aa, bb, vel * (target_x + random_range(-25, 25) - aa) / dis, vel * (target_y + random_range(-25, 25) - bb) / dis, 1, dis / vel, 10_000, 50, target, edificio, dron.enemigo,,, _jugador)
+					var dis = distance(a, b, target_x, target_y)
+					var municion = add_municion(a, b, vel * (target_x + random_range(-25, 25) - a) / dis, vel * (target_y + random_range(-25, 25) - b) / dis, 1, dis / vel, 10_000, 50, target, edificio, dron.enemigo,,, _jugador)
 					array_push(municiones, municion)
 				}
 			}

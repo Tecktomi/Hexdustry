@@ -1,6 +1,7 @@
 function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_layer : 0, _tecnologia : false}){
 	with control{
 		var ei = enciclopedia_item, _this_input_layer = param._this_input_layer, _tecnologia = param._tecnologia
+		var a, b
 		draw_set_font(font_titulo)
 		ypos = draw_text_ypos(xpos + 10, ypos, edificio_nombre[ei])
 		draw_set_font(font_normal)
@@ -10,7 +11,7 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 		if array_length(edificio_precio_id[ei]) > 0{
 			ypos += 10
 			ypos = draw_text_ypos(xpos + 10, ypos, $"{L.enciclopedia_coste_construccion}:")
-			for(var a = 0; a < array_length(edificio_precio_id[ei]); a++){
+			for(a = 0; a < array_length(edificio_precio_id[ei]); a++){
 				if draw_boton(xpos + 20, ypos, $"{edificio_precio_num[ei, a]} {recurso_nombre[edificio_precio_id[ei, a]]}",,,, false, _this_input_layer){
 					enciclopedia_link(3, edificio_precio_id[ei, a])
 					return [xpos, ypos]
@@ -21,7 +22,7 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 		if array_length(edificio_input_id[ei]) > 0{
 			ypos += 10
 			ypos = draw_text_ypos(xpos + 10, ypos, $"{L.enciclopedia_consume}:")
-			for(var a = 0; a < array_length(edificio_input_id[ei]); a++){
+			for(a = 0; a < array_length(edificio_input_id[ei]); a++){
 				if draw_boton(xpos + 20, ypos, recurso_nombre[edificio_input_id[ei, a]],,,, false, _this_input_layer){
 					enciclopedia_link(3, edificio_input_id[ei, a])
 					return [xpos, ypos]
@@ -32,7 +33,7 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 		if array_length(edificio_output_id[ei]) > 0{
 			ypos += 10
 			ypos = draw_text_ypos(xpos + 10, ypos, $"{L.enciclopedia_produce}:")
-			for(var a = 0; a < array_length(edificio_output_id[ei]); a++){
+			for(a = 0; a < array_length(edificio_output_id[ei]); a++){
 				if draw_boton(xpos + 20, ypos, recurso_nombre[edificio_output_id[ei, a]],,,, false, _this_input_layer){
 					enciclopedia_link(3, edificio_output_id[ei, a])
 					return [xpos, ypos]
@@ -53,7 +54,7 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 			if array_length(edificio_flujo_liquido[ei]) = 0
 				temp_text = L.flujo_liquido
 			else
-				for(var a = 0; a < array_length(edificio_flujo_liquido[ei]); a++)
+				for(a = 0; a < array_length(edificio_flujo_liquido[ei]); a++)
 					temp_text += (temp_text = "" ? "" : " & ") + liquido_nombre[edificio_flujo_liquido[ei, a]]
 			if edificio_flujo_consumo[ei] > 0
 				ypos = draw_text_ypos(xpos + 10, ypos, $"{L.enciclopedia_consume} {edificio_flujo_consumo[ei]} {temp_text}/s")
@@ -78,8 +79,8 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 			var size = array_length(tecnologia_prev[ei])
 			xpos = 800
 			ypos = 200
-			for(var a = 0; a < size; a++){
-				var b = tecnologia_prev[ei, a]
+			for(a = 0; a < size; a++){
+				b = tecnologia_prev[ei, a]
 				if edificio_tecnologia[b]
 					draw_set_color(c_green)
 				else if edificio_tecnologia_desbloqueable[b]
@@ -97,8 +98,8 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 				draw_text_background(mouse_x + 20, mouse_y, sprite_boton_text)
 			}
 			size = array_length(tecnologia_next[ei])
-			for(var a = 0; a < size; a++){
-				var b = tecnologia_next[ei, a]
+			for(a = 0; a < size; a++){
+				b = tecnologia_next[ei, a]
 				if edificio_tecnologia[b]
 					draw_set_color(c_green)
 				else if edificio_tecnologia_desbloqueable[b]
@@ -120,7 +121,7 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 			else if edificio_tecnologia_desbloqueable[ei]{
 				var flag = true, temp_text = ""
 				if not cheat
-					for(var a = 0; a < array_length(tecnologia_precio_id[ei]); a++){
+					for(a = 0; a < array_length(tecnologia_precio_id[ei]); a++){
 						temp_text += $"\n{recurso_nombre[tecnologia_precio_id[ei, a]]}: {tecnologia_precio_num[ei, a]}"
 						if jugador_recursos[0, tecnologia_precio_id[ei, a]] < tecnologia_precio_num[ei, a]{
 							flag = false

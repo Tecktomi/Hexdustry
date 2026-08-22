@@ -46,11 +46,11 @@ function add_dron(a, b, index, enemigo = true, _jugador = 1){
 			dron.vida = dron.vida_max
 			dron.target = edificio_cercano[# a, b]
 			if dron_aereo[dron.index]{
-				var min_dis = infinity, temp_edificio = dron.target, aaa = temp_complex[0], bbb = temp_complex[1]
+				var min_dis = infinity, temp_edificio = dron.target, aaa = temp_complex[0], bbb = temp_complex[1], j, dis
 				if brandom(){
-					for(var j = array_length(nucleos) - 1; j >= 0; j--){
+					for(j = array_length(nucleos) - 1; j >= 0; j--){
 						temp_edificio = nucleos[j]
-						var dis = distance_sqr(aaa, bbb, temp_edificio.center_x, temp_edificio.center_y)
+						dis = distance_sqr(aaa, bbb, temp_edificio.center_x, temp_edificio.center_y)
 						if dis < min_dis{
 							min_dis = dis
 							dron.target = temp_edificio
@@ -70,9 +70,9 @@ function add_dron(a, b, index, enemigo = true, _jugador = 1){
 						temp_edificio = edificios_index[id_generador, 0]
 					else if array_length(edificios_index[id_panel_solar]) > 0
 						temp_edificio = edificios_index[id_panel_solar, 0]
-					else for(var j = array_length(nucleos) - 1; j >= 0; j--){
+					else for(j = array_length(nucleos) - 1; j >= 0; j--){
 						temp_edificio = nucleos[j]
-						var dis = distance_sqr(aaa, bbb, temp_edificio.center_x, temp_edificio.center_y)
+						dis = distance_sqr(aaa, bbb, temp_edificio.center_x, temp_edificio.center_y)
 						if dis < min_dis{
 							min_dis = dis
 							dron.target = temp_edificio

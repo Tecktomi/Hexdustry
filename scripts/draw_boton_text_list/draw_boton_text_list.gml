@@ -7,10 +7,10 @@ function draw_boton_text_list(xpos, ypos, variable = 0, array_name = array_creat
 		}
 		var a = text_x, b = text_y
 		if get_keyboard_string = draw_boton_text_counter++{
-			var max_width = 0, size = array_length(array_name), des_index = draw_boton_text_counter - 1
+			var max_width = 0, size = array_length(array_name), des_index = draw_boton_text_counter - 1, i
 			if array_length(array) = 0{
 				array = array_create(size)
-				for(var i = 0; i < array_length(array_name); i++)
+				for(i = 0; i < array_length(array_name); i++)
 					array[i] = i
 			}
 			xpos = clamp(xpos, 0, room_width - max_width - 20)
@@ -21,7 +21,7 @@ function draw_boton_text_list(xpos, ypos, variable = 0, array_name = array_creat
 			editor_array_name = array_name
 			editor_max_height = max_height
 			editor_list = true
-			for(var i = 0; i < min(max_height, size); i++)
+			for(i = 0; i < min(max_height, size); i++)
 				max_width = max(max_width, string_width(array_name[deslizante[des_index] + i]))
 			var color = draw_get_color(), item_height = DEVISE ? 20 : 40
 			draw_set_color(c_ltgray)

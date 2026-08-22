@@ -44,16 +44,16 @@ function draw_enciclopedia(_tecnologia = true, _this_input_layer = 0){
 		//Tecnología
 		else if enciclopedia = 7{
 			sprite_boton_text = ""
-			var xpos = room_width / 2
+			var xpos = room_width / 2, a, b, c
 			draw_set_font(font_titulo)
 			ypos = draw_text_ypos(120, ypos, L.enciclopedia_tecnologia)
 			draw_set_font(font_normal)
 			ypos = 140
-			for(var a = 0; a < array_length(tecnologia_nivel_edificios); a++){
+			for(a = 0; a < array_length(tecnologia_nivel_edificios); a++){
 				ypos += 60
 				width = array_length(tecnologia_nivel_edificios[a])
-				for(var b = 0; b < width; b++){
-					var c = tecnologia_nivel_edificios[a, b]
+				for(b = 0; b < width; b++){
+					c = tecnologia_nivel_edificios[a, b]
 					if edificio_tecnologia[c]
 						draw_set_color(c_green)
 					else if edificio_tecnologia_desbloqueable[c]

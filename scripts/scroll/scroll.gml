@@ -8,8 +8,8 @@ function scroll(xpos, ypos, variable, cantidad_elementos, altura, funcion = null
 			if deslizante[_deslizante] > 0 and mouse_wheel_up()
 				deslizante[_deslizante]--
 		}
-		var out = -1
-		for(var a = deslizante[_deslizante]; a < min(deslizante[_deslizante] + cantidad_elementos, variable); a++){
+		var out = -1, a
+		for(a = deslizante[_deslizante]; a < min(deslizante[_deslizante] + cantidad_elementos, variable); a++){
 			out = max(out, funcion(a, param))
 			if out = infinity
 				break

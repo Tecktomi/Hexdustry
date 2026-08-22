@@ -3,10 +3,11 @@ function step(){
 		//Detenerse por LAG
 		if online and not servidor and timer + LAG > server_timer
 			exit
+		var a, b, cambio, temp_array_real, buffer, edificio, municion, target, _jugador, _tipo, _dmg, temp_complex, muna, munb, len, efecto, humo, fuego, temp_time, flag, temp_complex_list, i, aa, bb, enemigo, temp_text_right, file, red, flujo, temp_explosion
 		//Input multijugador
 		if online and not servidor
-			for(var a = array_length(cambios) - 1; a >= 0; a--){
-				var cambio = cambios[a]
+			for(a = array_length(cambios) - 1; a >= 0; a--){
+				cambio = cambios[a]
 				if cambio.step <= timer{
 					array_delete(cambios, a, 1)
 					if cambio.tipo = 0
@@ -27,9 +28,9 @@ function step(){
 		//Estadísticas / Guardado automático
 		if win = 0{
 			if (++timer mod 3600) = 0{
-				var temp_array_real = array_create(rss_max, 0)
+				temp_array_real = array_create(rss_max, 0)
 				array_copy(temp_array_real, 0, recursos_obtenidos_time_temp, 0, rss_max)
-				for(var a = 0; a < rss_max; a++)
+				for(a = 0; a < rss_max; a++)
 					recursos_obtenidos[a] += recursos_obtenidos_time_temp[a]
 				array_push(recursos_obtenidos_time, temp_array_real)
 				recursos_obtenidos_time_temp = array_create(rss_max, 0)
@@ -41,13 +42,13 @@ function step(){
 				energia_perdida_time = 0
 				if auto_guardado and tutorial = 0 and os_browser = browser_not_a_browser and not mapa_editado{
 					if tutorial = 0{
-						var buffer = buffer_create(1024, buffer_grow, 1)
+						buffer = buffer_create(1024, buffer_grow, 1)
 						save_game_buffer(buffer)
 						buffer_save(buffer, "last_save.save")
 						buffer_delete(buffer)
 					}
 					else{
-						var buffer = buffer_create(1024, buffer_grow, 1)
+						buffer = buffer_create(1024, buffer_grow, 1)
 						save_game_buffer(buffer)
 						buffer_save(buffer, $"Tutorial/mision{world_tutorial[# a, b]}.save")
 						buffer_delete(buffer)
@@ -58,14 +59,14 @@ function step(){
 				server_sync_timer()
 		}
 		//Ciclo edificios
-		for(var a = array_length(edificios_activos) - 1; a >= 0; a--){
-			var edificio = edificios_activos[a]
+		for(a = array_length(edificios_activos) - 1; a >= 0; a--){
+			edificio = edificios_activos[a]
 			if edificio.idle or edificio.vida <= 0
 				continue
 			edificio_script[edificio.index](edificio)
 		}
-		for(var a = array_length(edificios_pendientes) - 1; a >= 0; a--){
-			var edificio = array_pop(edificios_pendientes)
+		for(a = array_length(edificios_pendientes) - 1; a >= 0; a--){
+			edificio = array_pop(edificios_pendientes)
 			if edificio.eliminar and edificio.punteros[4] >= 0{
 				edificio.eliminar = false
 				array_disorder_remove(edificios_activos, edificio, 4)
@@ -80,8 +81,12 @@ function step(){
 		dron_logic()
 		//Ciclo de disparos
 		draw_set_alpha(0.5)
-		for(var a = array_length(municiones) - 1; a >= 0; a--){
-			var municion = municiones[a], target = municion.target, _jugador = municion.jugador, _tipo = municion.tipo, _dmg = municion.dmg
+		for(a = array_length(municiones) - 1; a >= 0; a--){
+			municion = municiones[a]
+			target = municion.target
+			_jugador = municion.jugador
+			_tipo = municion.tipo
+			_dmg = municion.dmg
 			if _tipo != 2{
 				draw_set_color(c_black)
 				draw_circle_off(municion.x, municion.y, 2, false)
@@ -108,13 +113,15 @@ function step(){
 					draw_set_alpha(1)
 				}
 			}
-			var temp_complex = xytoab(municion.x, municion.y), muna = temp_complex[0], munb = temp_complex[1]
+			temp_complex = xytoab(municion.x, municion.y)
+			muna = temp_complex[0]
+			munb = temp_complex[1]
 			if grafic_humo and municion.humo
 				array_push(humos, add_humo(municion.x, municion.y, muna, munb, random_range(-1, 1), random_range(-1, 1), irandom_range(20, 30)))
 			//Colisión Edificio
 			if edificio_bool[# muna, munb]{
-				var temp_edificio = edificio_id[# muna, munb]
-				if _tipo != 4 and temp_edificio.enemigo != municion.enemigo
+				edificio = edificio_id[# muna, munb]
+				if _tipo != 4 and edificio.enemigo != municion.enemigo
 					municion.dis = 0
 			}
 			//Colisión Dron
@@ -151,9 +158,9 @@ function step(){
 		}
 		draw_set_alpha(1)
 		//Efectos estáticos
-		var len = array_length(efectos)
-		for(var a = 0; a < len; a++){
-			var efecto = efectos[a]
+		len = array_length(efectos)
+		for(a = 0; a < len; a++){
+			efecto = efectos[a]
 			if show_smoke
 				draw_sprite_off(efecto.sprite, efecto.subsprite, efecto.x, efecto.y)
 			efecto.subsprite += efecto.frame_speed
@@ -165,8 +172,8 @@ function step(){
 		}
 		//Humo
 		len = array_length(humos)
-		for(var a = 0; a < len; a++){
-			var humo = humos[a]
+		for(a = 0; a < len; a++){
+			humo = humos[a]
 			if show_smoke and humo.a >= mina and humo.b >= minb and humo.a < maxa and humo.b < maxb{
 				draw_sprite_off(spr_blur_32, max(3 - humo.time / 10, 0), humo.x, humo.y)
 				humo.x += humo.hmove
@@ -182,8 +189,8 @@ function step(){
 		//Fuego
 		draw_set_alpha(0.4)
 		len = array_length(fuegos)
-		for(var a = 0; a < len; a++){
-			var fuego = fuegos[a]
+		for(a = 0; a < len; a++){
+			fuego = fuegos[a]
 			if show_smoke and fuego.a >= mina and fuego.b >= minb and fuego.a < maxa and fuego.b < maxb{
 				draw_set_color(make_color_hsv(fuego.intensidad, 127, 255))
 				draw_circle_off(fuego.x, fuego.y, 10, false)
@@ -205,23 +212,27 @@ function step(){
 		draw_set_alpha(1)
 		//Oleadas
 		if oleadas and (++oleadas_timer >= 60 * oleadas_tiempo_primera or (not chat_input and keyboard_check_pressed(vk_enter))){
-			var temp_time = oleadas_timer / 60 - oleadas_tiempo_primera
+			temp_time = oleadas_timer / 60 - oleadas_tiempo_primera
 			if (temp_time mod oleadas_tiempo) = 0 or keyboard_check_pressed(vk_enter){
-				var d = oleada_count++ + 3, e = 1, flag_2 = false
+				a = ++oleada_count + 2
+				b = 1
+				flag = false
 				if mision_actual >= 0 and mision.objetivo = 4 and ++mision_counter >= mision.target_num
 					oleadas = false
-				for(var i = 0; i < array_length(SIZE_SIZE); i++)
-					if d <= SIZE_SIZE[i]{
-						e = i + 1
-						flag_2 = true
+				for(i = 0; i < array_length(SIZE_SIZE); i++)
+					if a <= SIZE_SIZE[i]{
+						b = i + 1
+						flag = true
 						break
 					}
-				if not flag_2
-					e = array_length(SIZE_SIZE)
-				var temp_complex_list = get_size(spawn_x, spawn_y, 0, e)
-				len = min(array_length(temp_complex_list), d)
-				for(var i = 0; i < len; i++){
-					var temp_complex = temp_complex_list[i], aa = clamp(temp_complex[0], 0, xsize - 1), bb = clamp(temp_complex[1], 0, ysize - 1), enemigo
+				if not flag
+					b = array_length(SIZE_SIZE)
+				temp_complex_list = get_size(spawn_x, spawn_y, 0, b)
+				len = min(array_length(temp_complex_list), a)
+				for(i = 0; i < len; i++){
+					temp_complex = temp_complex_list[i]
+					aa = clamp(temp_complex[0], 0, xsize - 1)
+					bb = clamp(temp_complex[1], 0, ysize - 1)
 					if grid_water_distance[# aa, bb] < infinity
 						if irandom(len) > i + 7{
 							enemigo = add_dron(aa, bb, idd_destructor, true, 1)
@@ -261,9 +272,9 @@ function step(){
 			}
 		}
 		//Misiones
-		var temp_text_right = ""
+		temp_text_right = ""
 		if mision_actual >= 0 and win = 0{
-			var a = mision_actual
+			a = mision_actual
 			if in(mision.objetivo, 5, 7) and not oleadas and (not chat_input and keyboard_check_pressed(vk_enter)){
 				keyboard_clear(vk_enter)
 				pasar_mision()
@@ -301,7 +312,7 @@ function step(){
 		if mision_actual = -1 and in(tutorial, 1, 2, 3, 4) and win = 0{
 			draw_set_halign(fa_right)
 			if draw_boton(room_width - 20, string_height(temp_text_right) + 64, L.win_siguiente_mision, ui_verde){
-				var file = load_escenario_buffer($"mision_{tutorial + 1}.txt")
+				file = load_escenario_buffer($"mision_{tutorial + 1}.txt")
 				if file != ""
 					game_start()
 				tutorial++
@@ -310,8 +321,8 @@ function step(){
 		}
 		energia_solar = clamp(2 * sin((image_index + 900) / 1800), 0, 1)
 		//Ciclo de redes
-		for(var a = array_length(redes) - 1; a >= 0; a--){
-			var red = redes[a]
+		for(a = array_length(redes) - 1; a >= 0; a--){
+			red = redes[a]
 			red.bateria = clamp(red.bateria + (red.generacion - red.consumo) / 30, 0, red.bateria_max)
 			red.eficiencia = clamp((red.generacion + red.bateria) / max(1, red.consumo), 0, 1)
 			red.promedio = (19 * red.promedio + red.generacion - red.consumo) / 20
@@ -323,8 +334,8 @@ function step(){
 			}
 		}
 		//Ciclo flujos
-		for(var a = array_length(flujos) - 1; a >= 0; a--){
-			var flujo = flujos[a]
+		for(a = array_length(flujos) - 1; a >= 0; a--){
+			flujo = flujos[a]
 			flujo.almacen = clamp(flujo.almacen + (flujo.generacion - flujo.consumo) / 30, 0, flujo.almacen_max)
 			flujo.promedio = (19 * flujo.promedio + flujo.generacion - flujo.consumo) / 20
 			if flujo.almacen = 0
@@ -333,15 +344,15 @@ function step(){
 				flujo.eficiencia = 1
 			if flujo.almacen < 1 and flujo.generacion = 0{
 				if grafic_luz and flujo.liquido = 3
-					for(var b = array_length(flujo.edificios) - 1; b >= 0; b--){
-						var edificio = flujo.edificios[b]
+					for(b = array_length(flujo.edificios) - 1; b >= 0; b--){
+						edificio = flujo.edificios[b]
 						encender_luz(false, edificio)
 					}
 			}
 		}
 		if array_length(explosion_queue) > 0{
-			for(var a = array_length(explosion_queue) - 1; a >= 0; a--){
-				var temp_explosion = explosion_queue[a]
+			for(a = array_length(explosion_queue) - 1; a >= 0; a--){
+				temp_explosion = explosion_queue[a]
 				explosion(temp_explosion.x, temp_explosion.y, temp_explosion.edificio, temp_explosion.enemigo, temp_explosion.radio, temp_explosion.dmg, temp_explosion.incendiario, temp_explosion.jugador)
 			}
 			array_resize(explosion_queue, 0)

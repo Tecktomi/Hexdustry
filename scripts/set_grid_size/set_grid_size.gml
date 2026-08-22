@@ -29,20 +29,23 @@ function set_grid_size(){
 		edificio_cercano_priority = ds_grid_create(xsize, ysize)
 		pre_abtoxy = ds_grid_create(xsize + 2, ysize + 2)
 		ds_grid_clear(pre_abtoxy, [0, 0])
-		for(var a = 0; a < xsize; a++){
-			ds_grid_set(pre_abtoxy, a, 0, [real(a + 0.5) * 48 + 16, 0])
-			ds_grid_set(pre_abtoxy, a, ysize + 1, [real(a + 0.5) * 48 + 16, (ysize + 2) * 14])
-			for(var b = 0; b < ysize; b++){
-				var temp_priority = ds_priority_create()
+		var a, b, a2, a3, temp_priority, temp_complex, edificio
+		for(a = 0; a < xsize; a++){
+			a2 = a + 0.5
+			a3 = a + 1
+			ds_grid_set(pre_abtoxy, a, 0, [a2 * 48 + 16, 0])
+			ds_grid_set(pre_abtoxy, a, ysize + 1, [a2 * 48 + 16, (ysize + 2) * 14])
+			for(b = 0; b < ysize; b++){
+				temp_priority = ds_priority_create()
 				ds_priority_add(temp_priority, null_edificio, 0)
 				ds_priority_delete_max(temp_priority)
 				ds_grid_set(edificio_cercano_priority, a, b, temp_priority)
-				var temp_complex = [real(a + (b mod 2) / 2) * 48 + 16, real(b + 1) * 14]
-				ds_grid_set(pre_abtoxy, a + 1, b + 1, temp_complex)
+				temp_complex = [real(a + (b mod 2) / 2) * 48 + 16, real(b + 1) * 14]
+				ds_grid_set(pre_abtoxy, a3, b + 1, temp_complex)
 				ds_grid_set(ore_random, a, b, random(1))
 			}
 		}
-		for(var b = 0; b < ysize; b++){
+		for(b = 0; b < ysize; b++){
 			ds_grid_set(pre_abtoxy, 0, b, [real((b mod 2) / 2) * 48 + 16, real(b + 1) * 14])
 			ds_grid_set(pre_abtoxy, xsize + 1, b, [real(xsize + 1 + (b mod 2) / 2) * 48 + 16, real(b + 1) * 14])
 		}
@@ -74,8 +77,8 @@ function set_grid_size(){
 		chunk_edificios_background = ds_grid_create(chunk_xsize, chunk_ysize)
 		chunk_edificios_dirty = ds_grid_create(chunk_xsize, chunk_ysize)
 		ds_grid_clear(chunk_edificios_dirty, true)
-		for(var a = 0; a < chunk_xsize; a++)
-			for(var b = 0; b < chunk_ysize; b++){
+		for(a = 0; a < chunk_xsize; a++)
+			for(b = 0; b < chunk_ysize; b++){
 				ds_grid_set(background, a, b, spr_hexagono)
 				ds_grid_set(chunk_edificios_background, a, b, spr_hexagono)
 				ds_grid_set(chunk_dron_enemigo, a, b, array_create(0, null_dron))
@@ -89,8 +92,8 @@ function set_grid_size(){
 			}
 		beta = ds_grid_create(xsize, ysize)
 		ds_grid_clear(beta, null_beta)
-		for(var a = array_length(nucleos) - 1; a >= 0; a--){
-			var edificio = nucleos[a]
+		for(a = array_length(nucleos) - 1; a >= 0; a--){
+			edificio = nucleos[a]
 			edificio.coordenadas_dis = ds_grid_create(xsize, ysize)
 			ds_grid_clear(edificio.coordenadas_dis, 0)
 		}

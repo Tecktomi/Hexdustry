@@ -1,6 +1,6 @@
 function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 	with control{
-		var des_count = 0
+		var des_count = 0, a, b, file
 		draw_boton_text_counter = 0
 		ypos = draw_text_ypos(xpos, ypos, L.dificultad)
 		if draw_boton(xpos, ypos, L.facil, flow = 0 ? ui_azul : ui_gris,,,, 1){
@@ -124,17 +124,17 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 			mapa = -1
 		}
 		xpos += 120
-		for(var a = 0; a < array_length(DEFAULT_MAPS); a++){
+		for(a = 0; a < array_length(DEFAULT_MAPS); a++){
 			if mapa = a{
 				draw_set_color(c_blue)
 				draw_rectangle(xpos - 2, ypos - 2, xpos + 97, ypos + 97, false)
 			}
 			if draw_sprite_boton(default_maps_image[a],, xpos, ypos, 96, 96, 1, hover_sprite_boton_text, {a : a}) and mapa != a{
-				var file = load_escenario_buffer($"{DEFAULT_MAPS[a]}.txt", false)
+				file = load_escenario_buffer($"{DEFAULT_MAPS[a]}.txt", false)
 				if file != ""
 					mapa = a
 			}
-			for(var b = 0; b < 3; b++)
+			for(b = 0; b < 3; b++)
 				if medallas[a, b]
 					draw_sprite(spr_medallas, b, xpos + 32 * b + 16, ypos + 110)
 			xpos += 120
