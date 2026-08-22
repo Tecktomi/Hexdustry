@@ -1,16 +1,16 @@
 function draw_text_background(x, y, text, sprites = false, dinamic = true){
 	if control.grafic_hideui or text = ""
 		return undefined
-	var sprite_pos
+	var sprite_pos, a, temp_text, b, len, substring, altura
 	if sprites{
-		for(var a = 0; a < rss_max; a++){
-			var temp_text = text
-			for(var b = 0; b < rss_max; b++)
+		for(a = 0; a < rss_max; a++){
+			temp_text = text
+			for(b = 0; b < rss_max; b++)
 				if a != b
 					temp_text = string_replace_all(temp_text, $"/{recurso_keyword[b]}", "   ")
 			sprite_pos[a] = string_pos_all(temp_text, $"/{recurso_keyword[a]}")
 		}
-		for(var a = 0; a < rss_max; a++)
+		for(a = 0; a < rss_max; a++)
 			text = string_replace_all(text, $"/{recurso_keyword[a]}", "   ")
 	}
 	if string_starts_with(text, "\n")
@@ -30,10 +30,11 @@ function draw_text_background(x, y, text, sprites = false, dinamic = true){
 	draw_set_color(c_white)
 	draw_text(x, y, text)
 	if sprites{
-		for(var a = 0; a < rss_max; a++){
-			var len = string_length(text)
-			for(var b = 0; b < array_length(sprite_pos[a]); b++){
-				var substring = string_delete(text, sprite_pos[a, b], len), altura = string_height(substring)
+		for(a = 0; a < rss_max; a++){
+			len = string_length(text)
+			for(b = 0; b < array_length(sprite_pos[a]); b++){
+				substring = string_delete(text, sprite_pos[a, b], len)
+				altura = string_height(substring)
 				while string_pos("\n", substring)
 					substring = string_delete(substring, 1, string_pos("\n", substring))
 				draw_sprite(recurso_sprite[a], 0, x + string_width(substring) - xx - 10, y + altura - yy - 10)

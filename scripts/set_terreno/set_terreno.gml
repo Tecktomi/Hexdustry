@@ -1,10 +1,11 @@
 function set_terreno(a, b, index){
 	with control{
-		var terreno_prev = terreno[# a, b], bmod = b & 1
+		var terreno_prev = terreno[# a, b], bmod = b & 1, aa, bb, i
 		if terreno_prev != index{
 			if terreno_liquido[terreno_prev] and not terreno_liquido[index]{
-				for(var i = 0; i < 6; i++){
-					var aa = a + DESFACE_A[bmod, i], bb = b + DESFACE_B[bmod, i]
+				for(i = 0; i < 6; i++){
+					aa = a + DESFACE_A[bmod, i]
+					bb = b + DESFACE_B[bmod, i]
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 						continue
 					if terreno[# aa, bb] = idt_agua_salada{
@@ -14,8 +15,9 @@ function set_terreno(a, b, index){
 				}
 			}
 			else if terreno_liquido[index] and not terreno_liquido[terreno_prev]{
-				for(var i = 0; i < 6; i++){
-					var aa = a + DESFACE_A[bmod, i], bb = b + DESFACE_B[bmod, i]
+				for(i = 0; i < 6; i++){
+					aa = a + DESFACE_A[bmod, i]
+					bb = b + DESFACE_B[bmod, i]
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 						continue
 					if terreno[# aa, bb] = idt_agua_salada{
@@ -25,8 +27,9 @@ function set_terreno(a, b, index){
 				}
 			}
 			if terreno_pared[terreno_prev] and not terreno_pared[index]{
-				for(var i = 0; i < 3; i++){
-					var aa = a + DESFACE_A[bmod, i], bb = b + DESFACE_B[bmod, i]
+				for(i = 0; i < 3; i++){
+					aa = a + DESFACE_A[bmod, i]
+					bb = b + DESFACE_B[bmod, i]
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 						continue
 					if terreno_pared[terreno[# aa, bb]]
@@ -34,8 +37,9 @@ function set_terreno(a, b, index){
 				}
 			}
 			else if terreno_pared[index] and not terreno_pared[terreno_prev]{
-				for(var i = 0; i < 3; i++){
-					var aa = a + DESFACE_A[bmod, i], bb = b + DESFACE_B[bmod, i]
+				for(i = 0; i < 3; i++){
+					aa = a + DESFACE_A[bmod, i]
+					bb = b + DESFACE_B[bmod, i]
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 						continue
 					if terreno_pared[terreno[# aa, bb]]
@@ -46,8 +50,9 @@ function set_terreno(a, b, index){
 			//Post cambio
 			if terreno_pared[index]{
 				var c = 0
-				for(var i = 0; i < 3; i++){
-					var aa = a + DESFACE_A[bmod, i + 3], bb = b + DESFACE_B[bmod, i + 3]
+				for(i = 0; i < 3; i++){
+					aa = a + DESFACE_A[bmod, i + 3]
+					bb = b + DESFACE_B[bmod, i + 3]
 					if aa < 0 or aa >= xsize or bb >= ysize
 						continue
 					if terreno_pared[terreno[# aa, bb]]
@@ -61,8 +66,9 @@ function set_terreno(a, b, index){
 			}
 			if index = idt_agua_salada{
 				var d = 0
-				for(var i = 0; i < 6; i++){
-					var aa = a + DESFACE_A[bmod, i], bb = b + DESFACE_B[bmod, i]
+				for(i = 0; i < 6; i++){
+					aa = a + DESFACE_A[bmod, i]
+					bb = b + DESFACE_B[bmod, i]
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 						continue
 					if not terreno_liquido[terreno[# aa, bb]]

@@ -1,4 +1,5 @@
 randomize()
+var a, b, c, flag
 #region MACROS
 	#macro FILE_VERSION 2026_08_17
 	#macro PROCESADOR_VERSION 2026_03_25
@@ -23,15 +24,15 @@ randomize()
 	#macro IDIOMAS 3
 	IDIOMA_NAME = ["en", "es", "ru"]
 	var angle_dir = [pi / 6, pi / 2, 5 * pi / 6, 7 * pi / 6, 3 * pi / 2, 11 * pi / 6]
-	for(var a = 0; a < 6; a++){
+	for(a = 0; a < 6; a++){
 		COS_ANGLE_DIR[a] = cos(angle_dir[a])
 		SIN_ANGLE_DIR[a] = sin(angle_dir[a])
 	}
 	//Dirección más conveniente según el ángulo del target de 30° en 30°
 	preset_dir = [[0, 5, 1, 4, 2, 3], [0, 1, 5, 2, 4, 3]]
-	for(var a = 2; a < 12; a++){
+	for(a = 2; a < 12; a++){
 		preset_dir[a] = array_create(6, 0)
-		for(var b = 0; b < 6; b++)
+		for(b = 0; b < 6; b++)
 			array_set(preset_dir[a], b, (preset_dir[a & 1, b] + floor(a / 2)) mod 6)
 	}
 #endregion
@@ -87,10 +88,10 @@ ini_open("settings.ini")
 	grafic_hideui = false
 #endregion
 medallas = array_create(6)
-for(var a = 0; a < array_length(DEFAULT_MAPS); a++){
+for(a = 0; a < array_length(DEFAULT_MAPS); a++){
 	medallas[a] = array_create(3, false)
-	for(var b = 0; b < 3; b++){
-		var c = ini_read_real("Medallas", $"{a},{b}", 0)
+	for(b = 0; b < 3; b++){
+		c = ini_read_real("Medallas", $"{a},{b}", 0)
 		if c > 12092000 and (c mod (12092000 + (a + 1) * (b + 10))) = 1
 			array_set(medallas[a], b, true)
 	}
@@ -100,11 +101,12 @@ for(var a = 0; a < array_length(DEFAULT_MAPS); a++){
 ini_close()
 save_files = BROWSER ? scan_files("*.txt", fa_none) : []
 if BROWSER{
-	for(var a = array_length(save_files) - 1; a >= 0; a--){
+	var temp_text, temp_image
+	for(a = array_length(save_files) - 1; a >= 0; a--){
 		save_file = save_files[a]
-		var temp_text = file_format(save_file)
+		temp_text = file_format(save_file)
 		if file_exists(temp_text + ".png")
-			var temp_image = sprite_add(temp_text + ".png", 1, false, false, 0, 0)
+			temp_image = sprite_add(temp_text + ".png", 1, false, false, 0, 0)
 		else
 			temp_image = spr_null_image
 		save_files_png[a] = temp_image
@@ -151,8 +153,8 @@ L = {}
 	set_world(3, 7, "mision_4.txt", 4, spr_minimap_4)
 	set_world(4, 2, "mision_5.txt", 5, spr_minimap_5)
 	ini_open("settings.ini")
-	for(var a = 0; a < WORLD_WIDTH; a++)
-		for(var b = 0; b < WORLD_HEIGHT; b++)
+	for(a = 0; a < WORLD_WIDTH; a++)
+		for(b = 0; b < WORLD_HEIGHT; b++)
 			world_visible[# a, b] = ini_read_real("World visible", $"{a},{b}", 0)
 	ini_close()	
 	descubrir_zona(4, 7)
@@ -239,7 +241,7 @@ L = {}
 	MUSICA_MAX = array_length(MUSICA)
 	volumen = array_create(SONIDOS_MAX, 0)
 	sonido_id = array_create(SONIDOS_MAX)
-	for(var a = 0; a < SONIDOS_MAX; a++){
+	for(a = 0; a < SONIDOS_MAX; a++){
 		sonido_id[a] = audio_play_sound(SONIDOS[a], 1, true)
 		audio_pause_sound(sonido_id[a])
 	}
@@ -377,7 +379,7 @@ L = {}
 		"Esta instrucción permite leer una variable de otro procesador o memoria",
 		"Esta instrucción permite escribir una variable a otro procesador, mensaje o memoria",
 		"Esta instrucción permite entregar comandos de dibujo a una pantalla vinculada"]
-	for(var a = 0; a < array_length(procesador_instrucciones_descripcion); a++)
+	for(a = 0; a < array_length(procesador_instrucciones_descripcion); a++)
 		procesador_instrucciones_descripcion[a] = text_wrap(procesador_instrucciones_descripcion[a], 400)
 	procesador_add = false
 	procesador_move = -1
@@ -662,20 +664,21 @@ selected_dron = null_dron
 	edificio_cercano_priority = ds_grid_create(xsize, ysize)
 	pre_abtoxy = ds_grid_create(xsize + 2, ysize + 2)
 	ds_grid_clear(pre_abtoxy, [0, 0])
-	for(var a = 0; a < xsize; a++){
+	var temp_priority, temp_complex
+	for(a = 0; a < xsize; a++){
 		ds_grid_set(pre_abtoxy, a, 0, [real(a + 0.5) * 48 + 16, 0])
 		ds_grid_set(pre_abtoxy, a, ysize + 1, [real(a + 0.5) * 48 + 16, (ysize + 2) * 14])
-		for(var b = 0; b < ysize; b++){
-			var temp_priority = ds_priority_create()
+		for(b = 0; b < ysize; b++){
+			temp_priority = ds_priority_create()
 			ds_priority_add(temp_priority, null_edificio, 0)
 			ds_priority_delete_max(temp_priority)
 			ds_grid_set(edificio_cercano_priority, a, b, temp_priority)
-			var temp_complex = [real(a + (b mod 2) / 2) * 48 + 16, real(b + 1) * 14]
+			temp_complex = [real(a + (b mod 2) / 2) * 48 + 16, real(b + 1) * 14]
 			ds_grid_set(pre_abtoxy, a + 1, b + 1, temp_complex)
 			ds_grid_set(ore_random, a, b, random(1))
 		}
 	}
-	for(var b = 0; b < ysize; b++){
+	for(b = 0; b < ysize; b++){
 		ds_grid_set(pre_abtoxy, 0, b, [real((b mod 2) / 2) * 48 + 16, real(b + 1) * 14])
 		ds_grid_set(pre_abtoxy, xsize + 1, b, [real(xsize + 1 + (b mod 2) / 2) * 48 + 16, real(b + 1) * 14])
 	}
@@ -711,8 +714,8 @@ selected_dron = null_dron
 	chunk_edificios_background = ds_grid_create(chunk_xsize, chunk_ysize)
 	chunk_edificios_dirty = ds_grid_create(chunk_xsize, chunk_ysize)
 	ds_grid_clear(chunk_edificios_dirty, true)
-	for(var a = 0; a < chunk_xsize; a++)
-		for(var b = 0; b < chunk_ysize; b++){
+	for(a = 0; a < chunk_xsize; a++)
+		for(b = 0; b < chunk_ysize; b++){
 			ds_grid_set(background, a, b, spr_hexagono)
 			ds_grid_set(chunk_edificios_background, a, b, spr_hexagono)
 			ds_grid_set(chunk_dron_enemigo, a, b, array_create(0, null_dron))
@@ -753,7 +756,7 @@ selected_dron = null_dron
 		"Recurso útil para mejorar otros procesos industriales como la planta química, refinería de petróleo y producción de Silicio",
 		"Investiga los Módulos y construye dos Ensambladores juntos para empezar a producirlos"
 	]
-	for(var a = array_length(recurso_descripcion) - 1; a >= 0; a--)
+	for(a = array_length(recurso_descripcion) - 1; a >= 0; a--)
 		recurso_descripcion[a] = text_wrap(recurso_descripcion[a], 400)
 #endregion
 #region Arreglos
@@ -898,7 +901,7 @@ ore_max = array_length(ore_sprite)
 			"Dispara artillería, solo puede desplazarse desde el agua",
 			"Básicamente es una batería de artillería pesada que ataca desde el mar"
 		]
-	for(var a = array_length(dron_descripcion) - 1; a >= 0; a--)
+	for(a = array_length(dron_descripcion) - 1; a >= 0; a--)
 		dron_descripcion[a] = text_wrap(dron_descripcion[a], 400)
 #endregion
 #region Arreglos
@@ -1040,7 +1043,7 @@ dron_max = array_length(dron_nombre)
 		"Transporta drones entre fábricas",
 		"Se coloca en un sitio y explota cuando los enemigos terrestres pasan encima"
 	]
-	for(var a = array_length(edificio_descripcion) - 1; a >= 0; a--)
+	for(a = array_length(edificio_descripcion) - 1; a >= 0; a--)
 		edificio_descripcion[a] = text_wrap(edificio_descripcion[a], 400)
 #endregion
 #region Arreglos
@@ -1217,8 +1220,8 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 		[id_torre_basica, id_rifle, id_lanzallamas, id_laser, id_mortero, id_onda_de_choque, id_torre_reparadora, id_muro, id_muro_reforzado, id_silo_de_misiles, id_mina],
 		[id_procesador, id_mensaje, id_memoria, id_pantalla, id_modulo],
 		[id_fabrica_de_drones, id_fabrica_de_drones_grande, id_cinta_grande, id_puerto_de_carga, id_planta_de_reciclaje]]
-	for(var a = 0; a < array_length(categoria_edificios); a++)
-		for(var b = 0; b < array_length(categoria_edificios[a]); b++){
+	for(a = 0; a < array_length(categoria_edificios); a++)
+		for(b = 0; b < array_length(categoria_edificios[a]); b++){
 			if b < 10
 				edificio_key[categoria_edificios[a, b]] = $"{a + 1}{(b + 1) mod 10}"
 			else
@@ -1230,7 +1233,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 	categoria_edificios_disponible = array_create(0, array_create(0, 0))
 	array_copy(categoria_edificios_disponible, 0, categoria_edificios, 0, array_length(categoria_edificios))
 	categoria_index_disponible = array_create(0, 0)
-	for(var a = 0; a < array_length(categoria_nombre); a++)
+	for(a = 0; a < array_length(categoria_nombre); a++)
 		categoria_index_disponible[a] = a
 #endregion
 #region Planta Quimica
@@ -1240,7 +1243,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 		"Consume Piedra Sulfatada y energía para producir Ácido",
 		"Utiliza Compuesto incendiario y Ácido para producir Explosivos",
 		"Utiliza Ácido, Cobre y energía para producir Baterías"]
-	for(var a = array_length(planta_quimica_descripcion) - 1; a >= 0; a--)
+	for(a = array_length(planta_quimica_descripcion) - 1; a >= 0; a--)
 		planta_quimica_descripcion[a] = text_wrap(planta_quimica_descripcion[a], 300)
 #endregion
 edificio_max = array_length(edificio_nombre)
@@ -1463,19 +1466,19 @@ edificio_key[id_recurso_infinito] = "1z"
 	fabrica_de_drones_grande_array = [idd_tanque, idd_titan, idd_reparador, idd_helicoptero, idd_bombardero, idd_reconstructor, idd_minero]
 #endregion
 //Inputs y outputs de fábrica de drones y planta de reciclaje
-for(var a = 0; a < dron_max; a++){
-	var c = 0
-	for(var b = array_length(dron_precio_id[a]) - 1; b >= 0; b--)
+for(a = 0; a < dron_max; a++){
+	c = 0
+	for(b = array_length(dron_precio_id[a]) - 1; b >= 0; b--)
 		c += dron_precio_num[a, b]
 	edificio_carga_max[id_fabrica_de_drones] = max(edificio_carga_max[id_fabrica_de_drones], 2 * c)
 	edificio_carga_max[id_fabrica_de_drones_grande] = edificio_carga_max[id_fabrica_de_drones]
 	edificio_carga_max[id_planta_de_reciclaje] = edificio_carga_max[id_fabrica_de_drones]
 }
 //Valor absoluto edificios
-for(var a = 0; a < edificio_max; a++){
+for(a = 0; a < edificio_max; a++){
 	edificio_precio[a] = 0
 	if tag_edificio_construible[a]
-		for(var b = 0; b < array_length(edificio_precio_id[a]); b++)
+		for(b = 0; b < array_length(edificio_precio_id[a]); b++)
 			edificio_precio[a] += edificio_precio_num[a, b] * (1 + recurso_tier[edificio_precio_id[a, b]])
 }
 size_fx = [fx_construir_1, fx_construir_2, fx_construir_3, fx_construir_4, spr_hexagono_5]
@@ -1486,9 +1489,9 @@ misiles_precio_num = [[30, 10], [60, 30, 5], [120, 80, 20, 40]]
 misiles_petroleo = [500, 1000, 4000]
 misiles_tiempo = [200, 300, 1200]
 misil_set_target = null_edificio
-for(var a = array_length(misiles_nombre) - 1; a >= 0; a--){
-	var c = 0
-	for(var b = array_length(misiles_precio_id[a]) - 1; b >= 0; b--)
+for(a = array_length(misiles_nombre) - 1; a >= 0; a--){
+	c = 0
+	for(b = array_length(misiles_precio_id[a]) - 1; b >= 0; b--)
 		c += misiles_precio_num[a, b]
 	edificio_carga_max[id_silo_de_misiles] = max(edificio_carga_max[id_silo_de_misiles], c)
 }
@@ -1500,11 +1503,11 @@ var modulo_edificios = [[id_taladro, id_torre_basica, id_bomba_hidraulica],
 	[id_onda_de_choque, id_fabrica_de_drones, id_fabrica_de_drones_grande, id_planta_de_enriquecimiento, id_planta_nuclear, id_refineria_de_petroleo, id_taladro_de_explosion],
 	[id_nucleo]]
 edificio_modulo_tier = array_create(edificio_max, -1)
-for(var a = 0; a < array_length(modulo_edificios); a++)
-	for(var b = 0; b < array_length(modulo_edificios[a]); b++)
+for(a = 0; a < array_length(modulo_edificios); a++)
+	for(b = 0; b < array_length(modulo_edificios[a]); b++)
 		edificio_modulo_tier[modulo_edificios[a, b]] = a
 edificios_construibles = array_create(0, 0)
-for(var a = 0; a < array_length(categoria_nombre); a++)
+for(a = 0; a < array_length(categoria_nombre); a++)
 	edificios_construibles = array_concat(edificios_construibles, categoria_edificios[a])
 edificios = array_create(0, null_edificio)
 edificios_enemigos = array_create(0, null_edificio)
@@ -1648,7 +1651,7 @@ sort_drones()
 	tecnologia_precio_id = array_create(edificio_max)
 	tecnologia_precio_num = array_create(edificio_max)
 	edificios_index = array_create(edificio_max)
-	for(var a = 0; a < edificio_max; a++){
+	for(a = 0; a < edificio_max; a++){
 		tecnologia_prev[a] = array_create(0, 0)
 		tecnologia_next[a] = array_create(0, 0)
 		edificios_index[a] = array_create(0, null_edificio)
@@ -1656,12 +1659,13 @@ sort_drones()
 	function def_tecnologia(edificio = 0){
 		tecnologia_precio_id[edificio] = array_create(0, 0)
 		tecnologia_precio_num[edificio] = array_create(0, 0)
-		for(var a = 0; a < array_length(edificio_precio_id[edificio]); a++){
+		for(a = 0; a < array_length(edificio_precio_id[edificio]); a++){
 			array_push(tecnologia_precio_id[edificio], edificio_precio_id[edificio, a])
 			array_push(tecnologia_precio_num[edificio], round(tecnologia_precio_multiplicador * (5 + edificio_precio_num[edificio, a])))
 		}
-		for(var a = 1; a < argument_count; a++){
-			var temp_edificio = real(argument[a])
+		var temp_edificio
+		for(a = 1; a < argument_count; a++){
+			temp_edificio = real(argument[a])
 			array_push(tecnologia_prev[edificio], temp_edificio)
 			array_push(tecnologia_next[temp_edificio], edificio)
 		}
@@ -1725,8 +1729,8 @@ sort_drones()
 	edificio_tecnologia_nivel = array_create(edificio_max, -1)
 	tecnologia_nivel_edificios = [array_create(0, 0)]
 	//Crear nivel mínimo tecnológico
-	var edi_count = 0
-	for(var a = 0; a < edificio_max; a++){
+	var edi_count = 0, stable
+	for(a = 0; a < edificio_max; a++){
 		if tag_edificio_construible[a]{
 			if array_length(tecnologia_prev[a]) = 0{
 				edi_count++
@@ -1740,12 +1744,12 @@ sort_drones()
 	}
 	//Verificar los requisitos tecnológicos
 	while edi_count < edificio_max{
-		var stable = true
+		stable = true
 		array_push(tecnologia_nivel_edificios, array_create(0, 0))
-		for(var b = 0; b < edificio_max; b++)
+		for(b = 0; b < edificio_max; b++)
 			if tag_edificio_construible[b] and edificio_tecnologia_nivel[b] = -1{
-				var flag = true
-				for(var c = 0; c < array_length(tecnologia_prev[b]); c++)
+				flag = true
+				for(c = 0; c < array_length(tecnologia_prev[b]); c++)
 					if edificio_tecnologia_nivel[tecnologia_prev[b, c]] = -1 or edificio_tecnologia_nivel[tecnologia_prev[b, c]] = array_length(tecnologia_nivel_edificios){
 						flag = false
 						break
@@ -1763,9 +1767,10 @@ sort_drones()
 		}
 	}
 	//Desbloquear_los edificios básicos
-	for(var a = 0; a < array_length(tecnologia_nivel_edificios[1]); a++){
-		var b = tecnologia_nivel_edificios[1, a], flag = true
-		for(var c = 0; c < array_length(tecnologia_prev[b]); c++)
+	for(a = 0; a < array_length(tecnologia_nivel_edificios[1]); a++){
+		b = tecnologia_nivel_edificios[1, a]
+		flag = true
+		for(c = 0; c < array_length(tecnologia_prev[b]); c++)
 			if not edificio_tecnologia[tecnologia_prev[b, c]]{
 				flag = false
 				break
@@ -1849,8 +1854,8 @@ set_idioma()
 		"Producir Armas Nucleares en ",
 		"Enriquecer Uranio en "
 	]]
-for(var a = 0; a < array_length(consejos_texto); a++)
-	for(var b = 0; b < array_length(consejos_texto[a]); b++)
+for(a = 0; a < array_length(consejos_texto); a++)
+	for(b = 0; b < array_length(consejos_texto[a]); b++)
 		array_set(consejos_texto[a], b, text_wrap(consejos_texto[a, b], 600))
 #endregion
 biome_seed = 0

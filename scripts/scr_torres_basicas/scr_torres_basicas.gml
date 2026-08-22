@@ -96,7 +96,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 									var temp_dron = temp_array_dron[c]
 									if point_in_triangle(temp_dron.x, temp_dron.y, center_x, center_y, x1, y1, x2, y2){
 										aplicar_efecto(1, 300, temp_dron)
-										herir_dron(1, temp_dron)
+										herir_dron(2, temp_dron)
 									}
 								}
 								if enemigo

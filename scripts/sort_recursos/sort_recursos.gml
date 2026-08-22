@@ -1,14 +1,14 @@
 function sort_recursos(){
 	with control{
 		rss_sort = array_create(rss_max, 0)
-		var temp_rss_sort = array_create(rss_max)
-		for(var a = 0; a < rss_max; a++)
+		var temp_rss_sort = array_create(rss_max), a
+		for(a = 0; a < rss_max; a++)
 			temp_rss_sort[a] = {
 				name : recurso_nombre[a],
 				index : a
 			}
 		array_sort(temp_rss_sort, sort_order)
-		for(var a = 0; a < rss_max; a++)
+		for(a = 0; a < rss_max; a++)
 			rss_sort[a] = temp_rss_sort[a].index
 	}
 }

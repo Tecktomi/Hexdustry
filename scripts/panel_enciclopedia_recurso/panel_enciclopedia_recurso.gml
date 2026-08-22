@@ -8,9 +8,10 @@ function panel_enciclopedia_recurso(xpos = 0, ypos = 0, param = {_this_input_lay
 		if recurso_combustion[ei]
 			ypos = draw_text_ypos(xpos + 10, ypos, $"{L.enciclopedia_combustible} {recurso_combustion_time[ei] / 60}[s]")
 		ypos = draw_text_ypos(xpos + 10, ypos, L.enciclopedia_usado_en)
-		for(var a = 0; a < edificio_max; a++){
-			var aa = edi_sort[a]
-			for(var b = 0; b < array_length(edificio_input_id[aa]); b++)
+		var a, b, aa
+		for(a = 0; a < edificio_max; a++){
+			aa = edi_sort[a]
+			for(b = 0; b < array_length(edificio_input_id[aa]); b++)
 				if edificio_input_id[aa, b] = ei{
 					if draw_boton(xpos + 20, ypos, edificio_nombre[aa],,,, false, _this_input_layer){
 						enciclopedia_link(4, aa)
@@ -21,9 +22,9 @@ function panel_enciclopedia_recurso(xpos = 0, ypos = 0, param = {_this_input_lay
 				}
 		}
 		ypos = draw_text_ypos(xpos + 10, ypos, $"{L.enciclopedia_producido_en}:")
-		for(var a = 0; a < edificio_max; a++){
-			var aa = edi_sort[a]
-			for(var b = 0; b < array_length(edificio_output_id[aa]); b++)
+		for(a = 0; a < edificio_max; a++){
+			aa = edi_sort[a]
+			for(b = 0; b < array_length(edificio_output_id[aa]); b++)
 				if edificio_output_id[aa, b] = ei{
 					if draw_boton(xpos + 20, ypos, edificio_nombre[aa],,,, false, _this_input_layer){
 						enciclopedia_link(4, aa)
@@ -34,8 +35,8 @@ function panel_enciclopedia_recurso(xpos = 0, ypos = 0, param = {_this_input_lay
 				}
 		}
 		var flag = false
-		for(var a = 0; a < edificio_max; a++){
-			for(var b = 0; b < array_length(edificio_precio_id[a]); b++)
+		for(a = 0; a < edificio_max; a++){
+			for(b = 0; b < array_length(edificio_precio_id[a]); b++)
 				if edificio_precio_id[a, b] = ei{
 					flag = true
 					break
@@ -45,9 +46,9 @@ function panel_enciclopedia_recurso(xpos = 0, ypos = 0, param = {_this_input_lay
 		}
 		if flag{
 			ypos = draw_text_ypos(xpos + 10, ypos, $"{L.enciclopedia_necesario_para_construir}:")
-			for(var a = 0; a < edificio_max; a++){
-				var aa = edi_sort[a]
-				for(var b = 0; b < array_length(edificio_precio_id[aa]); b++)
+			for(a = 0; a < edificio_max; a++){
+				aa = edi_sort[a]
+				for(b = 0; b < array_length(edificio_precio_id[aa]); b++)
 					if edificio_precio_id[aa, b] = ei{
 						if draw_boton(xpos + 20, ypos, edificio_nombre[aa],,,, false, _this_input_layer){
 							enciclopedia_link(4, aa)
@@ -61,8 +62,8 @@ function panel_enciclopedia_recurso(xpos = 0, ypos = 0, param = {_this_input_lay
 		else
 			ypos = draw_text_ypos(xpos + 10, ypos, L.enciclopedia_inutil)
 		flag = false
-		for(var a = 0; a < dron_max; a++){
-			for(var b = 0; b < array_length(dron_precio_id[a]); b++)
+		for(a = 0; a < dron_max; a++){
+			for(b = 0; b < array_length(dron_precio_id[a]); b++)
 				if dron_precio_id[a, b] = ei{
 					flag = true
 					break
@@ -72,8 +73,8 @@ function panel_enciclopedia_recurso(xpos = 0, ypos = 0, param = {_this_input_lay
 		}
 		if flag{
 			ypos = draw_text_ypos(xpos + 10, ypos, $"{L.enciclopedia_necesario_para_producir}:")
-			for(var a = 0; a < dron_max; a++)
-				for(var b = 0; b < array_length(dron_precio_id[a]); b++)
+			for(a = 0; a < dron_max; a++)
+				for(b = 0; b < array_length(dron_precio_id[a]); b++)
 					if dron_precio_id[a, b] = ei{
 						if draw_boton(xpos + 20, ypos, dron_nombre[a],,,, false, _this_input_layer){
 							enciclopedia_link(6, a)

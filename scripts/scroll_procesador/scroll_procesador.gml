@@ -1,7 +1,7 @@
 function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edificio, size : 0, b : 0}){
 	with control{
 		var xpos = param.xpos, ypos = param.ypos, edificio = param.edificio, size = param.size
-		var pc = edificio.instruccion[a], pc0 = pc[0]
+		var pc = edificio.instruccion[a], pc0 = pc[0], signs
 		xpos = 150
 		draw_set_halign(fa_right)
 		draw_text_xpos(xpos, ypos, ((edificio.select + 1) mod size = a ? ">" : "") + $"{a}|")
@@ -43,7 +43,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 		}
 		//Set {A} to [sin, cos, tan, random, floor, round, ceil, sqr, sqrt, pi] [VAR]{B}
 		else if pc0 = 2{
-			var signs = procesador_nombres_1var
+			signs = procesador_nombres_1var
 			xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_set} VAR_")
 			pc[1] = procesador_var(xpos, ypos, pc, 1)
 			xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to} ")
@@ -55,7 +55,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 		}
 		//Set {A} to [VAR]{B} [+, -, *, /, div, mod, or, and, xor, <<, >>, power] [VAR]{C}
 		else if pc0 = 3{
-			var signs = procesador_nombres_2var
+			signs = procesador_nombres_2var
 			xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_set} VAR_")
 			pc[1] = procesador_var(xpos, ypos, pc, 1)
 			xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to} ")
@@ -66,7 +66,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 		}
 		//If [VAR]{A} [<, <=, =, >=, >, !=] [VAR]{B}, jump to [VAR]{C}
 		else if pc0 = 4{
-			var signs = [" < ", " <= ", " = ", " >= ", " > ", " != "]
+			signs = [" < ", " <= ", " = ", " >= ", " > ", " != "]
 			xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_if} ")
 			procesador_valor(xpos, ypos, pc, 1, 2, false)
 			xpos += text_x
@@ -105,7 +105,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 		}
 		//Set VAR_{A} to [eneabled, carga, etc...][VAR]{B} from LINK[VAR]{C}
 		else if pc0 = 5{
-			var signs = procesador_nombres_read_data
+			signs = procesador_nombres_read_data
 			var signs_subindex = [false, true, false, false, false, false, false, false, false, false, false, false, false]
 			xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_set} VAR_")
 			pc[1] = procesador_var(xpos, ypos, pc, 1)
@@ -122,7 +122,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 		}
 		//Control LINK[VAR]{A} to set [Eneable, Mode, Select] to [VAR]{B}
 		else if pc0 = 6{
-			var signs = ["Eneabled", "Mode", "Select"]
+			signs = ["Eneabled", "Mode", "Select"]
 			xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_control} LINK_")
 			procesador_valor(xpos, ypos, pc, 1, 2, true)
 			xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to_set} ")
@@ -150,7 +150,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 		}
 		//Draw to LINK[VAR]{A} [clear(), color(r, g, b), color(h, s, v), rectangle(x, y, w, h), line(x1, y1, x2, y2), triangle(x1, y1, x2, y2, x3, y3), circle(x, y, radio), text(x, y, str), draw_flush()]
 		else if pc0 = 9{
-			var signs = procesador_nombres_draw
+			signs = procesador_nombres_draw
 			xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_draw} {L.procesador_to} LINK_")
 			procesador_valor(xpos, ypos, pc, 1, 2, true)
 			xpos += text_x

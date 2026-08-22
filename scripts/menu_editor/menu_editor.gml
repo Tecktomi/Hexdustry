@@ -380,7 +380,7 @@ function menu_editor(){
 					}
 					//Calcular tarro de pintura
 					else{
-						build_list = array_create(0, [0, 0])
+						build_list = get_size(0, 0, 0, 0)
 						last_mx = mx
 						last_my = my
 						mouse_clear(mb_left)

@@ -1,17 +1,8 @@
 function load_game_buffer(buffer){
 	with control{
 		var _version = buffer_read(buffer, buffer_u32)
-		if _version != FILE_VERSION{
-			if _version = 2026_03_27
-				load_game_buffer_2026_03_27(buffer)
-			else if _version = 2026_04_01
-				load_game_buffer_2026_04_01(buffer)
-			else if _version = 2026_04_27
-				load_game_buffer_2026_04_27(buffer)
-			else if _version = 2026_04_30
-				load_game_buffer_2026_04_30(buffer)
+		if _version != FILE_VERSION
 			return false
-		}
 		mapa = buffer_read(buffer, buffer_s8)
 		if mapa = -1{
 			seed = buffer_read(buffer, buffer_u32)

@@ -1,6 +1,6 @@
 function delete_dron(dron = control.null_dron){
 	with control{
-		var enemigo = dron.enemigo, array_drones, _jugador = dron.jugador
+		var enemigo = dron.enemigo, array_drones, _jugador = dron.jugador, a, edificio
 		array_disorder_remove(drones, dron, 2)
 		dron_chunk_remove(dron)
 		//Dron enemigo
@@ -17,8 +17,8 @@ function delete_dron(dron = control.null_dron){
 				array_remove(selected_drones, dron)
 			array_drones = drones_aliados
 			if array_length(drones_aliados) = 8 + 2 * nucleo.modulo
-				for(var a = array_length(edificios_salida_drones) - 1; a >= 0; a--){
-					var edificio = edificios_salida_drones[a]
+				for(a = array_length(edificios_salida_drones) - 1; a >= 0; a--){
+					edificio = edificios_salida_drones[a]
 					if edificio.select != -1 and edificio.waiting
 						edificio.waiting = mover_carga(edificio)
 				}
@@ -26,8 +26,8 @@ function delete_dron(dron = control.null_dron){
 		array_disorder_remove(array_drones, dron, 0)
 		//Cambiar target de torres
 		if array_length(array_drones) > 0{
-			for(var i = array_length(dron.torres) - 1; i >= 0; i--){
-				var edificio = dron.torres[i]
+			for(a = array_length(dron.torres) - 1; a >= 0; a--){
+				edificio = dron.torres[a]
 				if edificio.target = dron{
 					edificio.target = null_dron
 					if edificio.index = id_mortero
@@ -37,14 +37,14 @@ function delete_dron(dron = control.null_dron){
 				}
 			}
 		}
-		else for(var i = array_length(dron.torres) - 1; i >= 0; i--){
-			var edificio = dron.torres[i]
+		else for(a = array_length(dron.torres) - 1; a >= 0; a--){
+			edificio = dron.torres[a]
 			if edificio.target = dron
 				edificio.target = null_dron
 		}
 		//Ser reciclado
-		for(var a = array_length(plantas_de_reciclaje) - 1; a >= 0; a--){
-			var edificio = plantas_de_reciclaje[a]
+		for(a = array_length(plantas_de_reciclaje) - 1; a >= 0; a--){
+			edificio = plantas_de_reciclaje[a]
 			if edificio.select = -1 and distance_sqr(dron.x, dron.y, edificio.center_x, edificio.center_y) < PLANTA_RECICLAJE_RANGE_SQR{
 				edificio.mode = false
 				edificio.select = dron.index

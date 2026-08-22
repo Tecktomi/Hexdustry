@@ -1,35 +1,44 @@
 function dibujar_fondo(editor = 0){
 	with control{
+		var temp_step, a, b, temp_complex, aa, bb, c, d, surf
 		if editor = 1{
-			var temp_step = image_index / 10
-			for(var a = mina; a < maxa; a++)
-				for(var b = minb; b < maxb; b++){
-					var temp_complex = abtoxy(a, b), aa = temp_complex[0], bb = temp_complex[1], d = terreno[# a, b], e = ore[# a, b]
-					if terreno_pared[d]
-						draw_sprite_off(terreno_sprite[d], terreno_pared_index[# a, b], aa, bb)
+			temp_step = image_index / 10
+			for(a = mina; a < maxa; a++)
+				for(b = minb; b < maxb; b++){
+					temp_complex = abtoxy(a, b)
+					aa = temp_complex[0]
+					bb = temp_complex[1]
+					c = terreno[# a, b]
+					d = ore[# a, b]
+					if terreno_pared[c]
+						draw_sprite_off(terreno_sprite[c], terreno_pared_index[# a, b], aa, bb)
 					else
-						draw_sprite_off(terreno_sprite[d], 0, aa, bb)
-					if e >= 0
-						draw_sprite_off(ore_sprite[e], round(ore_random[# a, b]) + 2 * (ore_amount[# a, b] < 50), aa, bb)
-					if d = 14
+						draw_sprite_off(terreno_sprite[c], 0, aa, bb)
+					if d >= 0
+						draw_sprite_off(ore_sprite[d], round(ore_random[# a, b]) + 2 * (ore_amount[# a, b] < 50), aa, bb)
+					if c = 14
 						draw_sprite_off(spr_lava_animacion, temp_step + 16 * ore_random[# a, b], aa, bb)
-					else if d = 18
+					else if c = 18
 						draw_sprite_off(olas[terreno_pared_index[# a, b]], temp_step + 16 * ore_random[# a, b], aa, bb)
 				}
 			exit
 		}
 		//Fondos animados
 		if editor = 2{
-			var temp_step = image_index / 10
-			for(var a = mina; a < maxa; a++)
-				for(var b = minb; b < maxb; b++){
-					var c = terreno[# a, b]
+			temp_step = image_index / 10
+			for(a = mina; a < maxa; a++)
+				for(b = minb; b < maxb; b++){
+					c = terreno[# a, b]
 					if c = 14{
-						var temp_complex = abtoxy(a, b), aa = temp_complex[0], bb = temp_complex[1]
+						temp_complex = abtoxy(a, b)
+						aa = temp_complex[0]
+						bb = temp_complex[1]
 						draw_sprite_off(spr_lava_animacion, temp_step + 16 * ore_random[# a, b], aa, bb)
 					}
 					else if c = 18{
-						var temp_complex = abtoxy(a, b), aa = temp_complex[0], bb = temp_complex[1]
+						temp_complex = abtoxy(a, b)
+						aa = temp_complex[0]
+						bb = temp_complex[1]
 						draw_sprite_off(olas[terreno_pared_index[# a, b]], temp_step + 16 * ore_random[# a, b], aa, bb)
 					}
 				}
@@ -37,15 +46,23 @@ function dibujar_fondo(editor = 0){
 		}
 		var xsize2 = (CHUNK_WIDTH + 1) * 48 * zoom, ysize2 = (CHUNK_HEIGHT + 1) * 14 * zoom, xpos = CHUNK_WIDTH * 48 * zoom, ypos = CHUNK_HEIGHT * 14 * zoom
 		if chunk_update{
-			for(var a = 0; a < chunk_xsize; a++)
-				for(var b = 0; b < chunk_ysize; b++){
+			var minc, mind, maxc, maxd, e, f
+			for(a = 0; a < chunk_xsize; a++)
+				for(b = 0; b < chunk_ysize; b++){
 					if not background_bool[# a, b]{
-						var temp_surf = surface_create((CHUNK_WIDTH + 1) * 48, (CHUNK_HEIGHT + 1) * 14)
-						surface_set_target(temp_surf)
-						var minc = a * CHUNK_WIDTH, mind = b * CHUNK_HEIGHT, maxc = min((a + 1) * CHUNK_WIDTH, xsize), maxd = min((b + 1) * CHUNK_HEIGHT, ysize)
-						for(var c = minc; c < maxc; c++)
-							for(var d = mind; d < maxd; d++){
-								var temp_complex = abtoxy(c, d), aa = temp_complex[0] - a * CHUNK_WIDTH * 48, bb = temp_complex[1] - b * CHUNK_HEIGHT * 14, f = terreno[# c, d], e = ore[# c, d]
+						surf = surface_create((CHUNK_WIDTH + 1) * 48, (CHUNK_HEIGHT + 1) * 14)
+						surface_set_target(surf)
+						minc = a * CHUNK_WIDTH
+						mind = b * CHUNK_HEIGHT
+						maxc = min((a + 1) * CHUNK_WIDTH, xsize)
+						maxd = min((b + 1) * CHUNK_HEIGHT, ysize)
+						for(c = minc; c < maxc; c++)
+							for(d = mind; d < maxd; d++){
+								temp_complex = abtoxy(c, d)
+								aa = temp_complex[0] - a * CHUNK_WIDTH * 48
+								bb = temp_complex[1] - b * CHUNK_HEIGHT * 14
+								f = terreno[# c, d]
+								e = ore[# c, d]
 								if terreno_pared[f]
 									draw_sprite(terreno_sprite[f], terreno_pared_index[# c, d], aa, bb)
 								else{
@@ -54,18 +71,18 @@ function dibujar_fondo(editor = 0){
 										draw_sprite(ore_sprite[e], round(ore_random[# c, d]) + 2 * (ore_amount[# c, d] < 50), aa, bb)
 								}
 							}
-						ds_grid_set(background, a, b, sprite_create_from_surface(temp_surf, 0, 0, (CHUNK_WIDTH + 1) * 48, (CHUNK_HEIGHT + 1) * 14, false, false, 0, 0))
+						ds_grid_set(background, a, b, sprite_create_from_surface(surf, 0, 0, (CHUNK_WIDTH + 1) * 48, (CHUNK_HEIGHT + 1) * 14, false, false, 0, 0))
 						ds_grid_set(background_bool, a, b, true)
 						chunk_update = false
 						surface_reset_target()
-						surface_free(temp_surf)
+						surface_free(surf)
 					}
 					draw_sprite_stretched(background[# a, b], 0, -camx + a * xpos, -camy + b * ypos, xsize2, ysize2)
 				}
 		}
 		else
-			for(var a = min_chunka; a < max_chunka; a++)
-				for(var b = min_chunkb; b < max_chunkb; b++)
+			for(a = min_chunka; a < max_chunka; a++)
+				for(b = min_chunkb; b < max_chunkb; b++)
 					draw_sprite_stretched(background[# a, b], 0, -camx + a * xpos, -camy + b * ypos, xsize2, ysize2)
 	}
 }

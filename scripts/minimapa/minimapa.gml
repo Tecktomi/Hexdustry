@@ -4,18 +4,19 @@ function minimapa(){
 		for(var a = 0; a < ore_max; a++)
 			array_push(temp_array_color, recurso_color[ore_recurso[a]])
 		surface_set_target(temp_surf)
-		for(var b = height - 1; b >= 0; b--){
-			var c = b & 1
-			for(var a = width - 1; a >= 0; a--){
+		var a, b, c, d, edificio
+		for(b = height - 1; b >= 0; b--){
+			c = b & 1
+			for(a = width - 1; a >= 0; a--){
 				draw_set_color(terreno_color[terreno[# a, b]])
 				draw_rectangle(2 * a + c, b, 2 * a + c + 1, b, false)
 				if edificio_bool[# a, b]{
-					var edificio = edificio_id[# a, b]
+					edificio = edificio_id[# a, b]
 					draw_set_color(EQUIPO_COLOR[edificio.jugador])
 					draw_rectangle(2 * a + c, b, 2 * a + c + 1, b, false)
 				}
 				else{
-					var d = ore[# a, b]
+					d = ore[# a, b]
 					if d >= 0{
 						draw_set_color(temp_array_color[d])
 						draw_set_alpha(0.8)
