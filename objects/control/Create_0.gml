@@ -316,6 +316,7 @@ L = {}
 	liquido_choose_array = array_create(0, 0)
 	comprable = true
 	comprable_texto = ""
+	draw_once = true
 #endregion
 #region Misiones
 	null_mision = def_mision()
@@ -1526,7 +1527,7 @@ sort_edificios()
 sort_drones()
 #region Caminos
 	#region Camino 0
-		camino_0 = array_create(64, spr_camino_0_in)
+		camino_0 = array_create(64, spr_camino_diagonal)
 		camino_0[2] = spr_camino_0_in_2
 		camino_0[4] = spr_camino_0_in_4
 		camino_0[6] = spr_camino_0_in_6

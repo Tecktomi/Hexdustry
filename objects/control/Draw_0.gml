@@ -13,7 +13,7 @@
 		save_setting("", "fullscreen", window_get_fullscreen())
 	}
 #endregion
-var a, b, c, temp_text, temp_complex, aa = 0, bb = 0, xpos, ypos, temp_array_real, flag, buffer, i, j, temp_complex_2 = array_create(0, 0), _time = current_time
+var a, b, c, temp_text, temp_complex, aa = 0, bb = 0, xpos, ypos, temp_array_real, flag, buffer, i, j, temp_complex_2 = array_create(0, 0), _parpadeo = abs(sin(image_index / 20))
 //Primera vez jugando
 if FIRST_TIME{
 	dibujar_fondo(1)
@@ -42,6 +42,38 @@ if FIRST_TIME{
 //Menú principal
 if menu = 0{
 	dibujar_fondo(1)
+	#region redraw_tiles
+	if keyboard_check_pressed(ord("B")){
+		var surf = surface_create(TILE_WIDTH, TILE_HEIGHT), sprite
+		surface_set_target(surf)
+		var tw2 = TILE_WIDTH / 2, th2 = TILE_HEIGHT / 2
+		draw_set_color(c_black)
+		for(a = 0; a < 7; a++){
+			for(b = 0; b < 64; b++){
+				if b & 2 or b & 16
+					continue
+				draw_rectangle(0, 0, TILE_WIDTH, TILE_HEIGHT, false)
+				draw_sprite_ext(spr_camino, a, tw2, th2, 1, -1, 0, c_white, 1)
+				if b & 1
+					draw_sprite_ext(spr_camino_diagonal_borde, a, tw2, th2, -1, -1, 0, c_white, 1)
+				if b & 2
+					draw_sprite_ext(spr_camino_borde, a, tw2, th2, 1, -1, 0, c_white, 1)
+				if b & 4
+					draw_sprite_ext(spr_camino_diagonal_borde, a, tw2, th2, 1, -1, 0, c_white, 1)
+				if b & 8
+					draw_sprite_ext(spr_camino_diagonal_borde, a, tw2, th2, 1, 1, 0, c_white, 1)
+				if b & 16
+					draw_sprite_ext(spr_camino_borde, a, tw2, th2, 1, 1, 0, c_white, 1)
+				if b & 32
+					draw_sprite_ext(spr_camino_diagonal_borde, a, tw2, th2, -1, 1, 0, c_white, 1)
+				sprite = sprite_create_from_surface(surf, 0, 0, TILE_WIDTH, TILE_HEIGHT, true, false, 0, 0)
+				sprite_save(sprite, 0, $"spr_camino_4_in_{b}_{a}.png")
+			}
+		}
+		surface_reset_target()
+		surface_free(surf)
+	}
+	#endregion
 	draw_set_alpha(0.5)
 	draw_set_color(c_black)
 	draw_rectangle(0, 0, room_width, room_height, false)
@@ -2182,6 +2214,8 @@ if build_index > 0 and win = 0{
 			build_array_edificios_input = array_create(0, null_edificio)
 			build_array_edificios_output = array_create(0, null_edificio)
 		}
+		if build_index = id_torre_reparadora
+			build_array_edificios = array_create(0, null_edificio)
 		comprable = true
 		if build_index = id_tuberia and not mouse_check_button(mb_left) and not mouse_check_button_released(mb_left){
 			liquido_choose = 0
@@ -2934,9 +2968,35 @@ if build_index > 0 and win = 0{
 								var temp_edificio = torres_de_tension[c]
 								if distance_sqr(temp_edificio.center_x, temp_edificio.center_y, temp_complex[0], temp_complex[1]) < TORRE_TENSION_RANGE_SQR{
 									draw_line_off(temp_edificio.center_x, temp_edificio.center_y, temp_complex[0],temp_complex[1])
-									draw_edificio_borde(temp_edificio, c_blue, 0.5)
+									draw_edificio_borde(temp_edificio, c_blue, _parpadeo)
 								}
 							}
+						}
+						//Torre reparadora
+						else if build_index = id_torre_reparadora{
+							draw_set_color(c_lime)
+							draw_circle_off(temp_complex[0], temp_complex[1], edificio_alcance[build_index], true)
+							if _change{
+								temp_complex = abtoxy(mx, my)
+								var chunk_x = clamp(floor(mx / CHUNK_WIDTH), 0, chunk_xsize - 1), chunk_y = clamp(floor(my / CHUNK_HEIGHT), 0, chunk_ysize - 1)
+								var _chunk_alcance_x = ceil(edificio_alcance[build_index] / CHUNK_WIDTH / 48)
+								var _chunk_alcance_y = ceil(edificio_alcance[build_index] / CHUNK_HEIGHT / 14)
+								var mini = max(chunk_x - _chunk_alcance_x, 0), minj = max(chunk_y - _chunk_alcance_y, 0)
+								var maxi = min(chunk_x + _chunk_alcance_x, chunk_xsize - 1), maxj = min(chunk_y + _chunk_alcance_y, chunk_ysize - 1)
+								var temp_edificio
+								for(i = mini; i <= maxi; i++)
+									for(j = minj; j <= maxj; j++)
+										for(k = array_length(chunk_edificios[# i, j]) - 1; k >= 0; k--){
+											temp_edificio = chunk_edificios[# i, j][k]
+											if distance_sqr(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y) < edificio_alcance_sqr[build_index]
+												array_push(build_array_edificios, temp_edificio)
+										}
+							}
+							for(a = array_length(build_array_edificios) - 1; a >= 0; a--){
+								var temp_edificio = build_array_edificios[a]
+								draw_edificio_borde(temp_edificio, c_lime, _parpadeo)
+							}
+							
 						}
 						//Vista previa Alcance de torres
 						else if edificio_armas[build_index]{
@@ -2966,7 +3026,7 @@ if build_index > 0 and win = 0{
 							if flag{
 								draw_set_color(c_blue)
 								draw_line_off(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y)
-								draw_edificio_borde(temp_edificio, c_blue, 0.5)
+								draw_edificio_borde(temp_edificio, c_blue, _parpadeo)
 							}
 						}
 						//Ensambladora
@@ -2981,7 +3041,7 @@ if build_index > 0 and win = 0{
 									if edificio_bool[# aa, bb]{
 										var temp_edificio = edificio_id[# aa, bb]
 										if temp_edificio.index = id_ensambladora and not temp_edificio.mode and temp_edificio.enemigo = build_enemigo{
-											draw_edificio_borde(temp_edificio, c_blue, 0.5)
+											draw_edificio_borde(temp_edificio, c_blue, _parpadeo)
 											temp_text += "Conectando\n"
 											break
 										}
@@ -2992,7 +3052,7 @@ if build_index > 0 and win = 0{
 						//Drones encima
 						else if tag_dron_encima[build_index]{
 							if _change{
-								var temp_complex_array = cinta_grande_check(temp_mx, temp_my, build_dir, build_index)
+								var temp_complex_array = cinta_grande_check(temp_mx, temp_my, build_dir, build_index), k
 								build_array_edificios_input = temp_complex_array.inputs
 								build_array_edificios_output = temp_complex_array.outputs
 								if build_index = id_planta_de_reciclaje{
@@ -3002,10 +3062,11 @@ if build_index > 0 and win = 0{
 									var _chunk_alcance_y = ceil(PLANTA_RECICLAJE_RANGE / CHUNK_HEIGHT / 14)
 									var mini = max(chunk_x - _chunk_alcance_x, 0), minj = max(chunk_y - _chunk_alcance_y, 0)
 									var maxi = min(chunk_x + _chunk_alcance_x, chunk_xsize - 1), maxj = min(chunk_y + _chunk_alcance_y, chunk_ysize - 1)
+									var temp_edificio
 									for(i = mini; i <= maxi; i++)
 										for(j = minj; j <= maxj; j++)
-											for(var k = array_length(chunk_edificios[# i, j]) - 1; k >= 0; k--){
-												var temp_edificio = chunk_edificios[# i, j][k]
+											for(k = array_length(chunk_edificios[# i, j]) - 1; k >= 0; k--){
+												temp_edificio = chunk_edificios[# i, j][k]
 												if distance_sqr(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y) < PLANTA_RECICLAJE_RANGE_SQR
 													array_push(build_array_edificios, temp_edificio)
 											}
@@ -3015,23 +3076,24 @@ if build_index > 0 and win = 0{
 							for(a = array_length(build_array_edificios_input) - 1; a >= 0; a--){
 								var temp_edificio = build_array_edificios_input[a]
 								draw_arrow_off(temp_edificio.center_x, temp_edificio.center_y, temp_complex[0], temp_complex[1], 10)
-								draw_edificio_borde(temp_edificio, c_red, 0.5)
+								draw_edificio_borde(temp_edificio, c_red, _parpadeo)
 							}
 							draw_set_color(c_blue)
 							for(a = array_length(build_array_edificios_output) - 1; a >= 0; a--){
 								var temp_edificio = build_array_edificios_output[a]
 								draw_arrow_off(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y, 10)
-								draw_edificio_borde(temp_edificio, c_blue, 0.5)
+								draw_edificio_borde(temp_edificio, c_blue, _parpadeo)
 							}
 							if build_index = id_planta_de_reciclaje{
 								draw_set_color(c_lime)
 								draw_circle_off(temp_complex[0], temp_complex[1], PLANTA_RECICLAJE_RANGE, true)
 								for(a = array_length(build_array_edificios) - 1; a >= 0; a--){
 									var temp_edificio = build_array_edificios[a]
-									draw_edificio_borde(temp_edificio, c_lime, 0.5)
+									draw_edificio_borde(temp_edificio, c_lime, _parpadeo)
 								}
 							}
 						}
+						
 					}
 					//Construir
 					if ((DEVISE and mouse_check_button_pressed(mb_left)) or (not DEVISE and mouse_check_button_released(mb_left) and android_building and construible and distance(mouse_x, mouse_y, android_mouse_x, android_mouse_y) < 10)) and flag_camino and _comprable and (not edificio_bool[# temp_mx, temp_my] or (build_index = id_cruce and edificio_camino[edificio_id[# temp_mx, temp_my].index])){
@@ -3281,6 +3343,7 @@ if menu = 1{
 			else if server_jugadores_timeout[0] = 600
 				handle_server_break()
 		}
+		draw_once = true
 		for(ticks = 0; (acumulator >= LOGIC_DT and ticks < 5) or ticks = 0; ticks++)
 			step()
 	}
@@ -3718,5 +3781,3 @@ if keyboard_check(ord("V")){
 	}
 	draw_set_valign(fa_top)
 }
-if (image_index mod 10) = 0
-	show_debug_message(current_time - _time)
