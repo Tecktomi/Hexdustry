@@ -88,10 +88,12 @@ function step(){
 			_tipo = municion.tipo
 			_dmg = municion.dmg
 			if _tipo != 2{
-				draw_set_color(c_black)
-				draw_circle_off(municion.x, municion.y, 2, false)
-				draw_set_color(c_yellow)
-				draw_line_off(municion.origen_x, municion.origen_y, municion.x, municion.y)
+				if draw_once{
+					draw_set_color(c_black)
+					draw_circle_off(municion.x, municion.y, 2, false)
+					draw_set_color(c_yellow)
+					draw_line_off(municion.origen_x, municion.origen_y, municion.x, municion.y)
+				}
 				municion.origen_x = municion.x
 				municion.origen_y = municion.y
 			}
@@ -106,7 +108,7 @@ function step(){
 					municion.x += 0.2 * sign(municion.target_build.center_x - municion.x)
 					municion.y += 0.2 * sign(municion.target_build.center_y - municion.y)
 				}
-				if (image_index mod 10) < 5{
+				if (image_index mod 10) < 5 and draw_once{
 					draw_set_color(c_red)
 					draw_set_alpha(0.3)
 					draw_circle(municion.x, municion.y, 10, false)
@@ -161,7 +163,7 @@ function step(){
 		len = array_length(efectos)
 		for(a = 0; a < len; a++){
 			efecto = efectos[a]
-			if show_smoke
+			if show_smoke and draw_once
 				draw_sprite_off(efecto.sprite, efecto.subsprite, efecto.x, efecto.y)
 			efecto.subsprite += efecto.frame_speed
 			if --efecto.tiempo <= 0{
@@ -175,7 +177,8 @@ function step(){
 		for(a = 0; a < len; a++){
 			humo = humos[a]
 			if show_smoke and humo.a >= mina and humo.b >= minb and humo.a < maxa and humo.b < maxb{
-				draw_sprite_off(spr_blur_32, max(3 - humo.time / 10, 0), humo.x, humo.y)
+				if draw_once
+					draw_sprite_off(spr_blur_32, max(3 - humo.time / 10, 0), humo.x, humo.y)
 				humo.x += humo.hmove
 				humo.y += humo.vmove
 				humo.hmove *= 0.99
@@ -192,8 +195,10 @@ function step(){
 		for(a = 0; a < len; a++){
 			fuego = fuegos[a]
 			if show_smoke and fuego.a >= mina and fuego.b >= minb and fuego.a < maxa and fuego.b < maxb{
-				draw_set_color(make_color_hsv(fuego.intensidad, 127, 255))
-				draw_circle_off(fuego.x, fuego.y, 10, false)
+				if draw_once{
+					draw_set_color(make_color_hsv(fuego.intensidad, 127, 255))
+					draw_circle_off(fuego.x, fuego.y, 10, false)
+				}
 				fuego.x += fuego.hmove
 				fuego.y += fuego.vmove
 				fuego.hmove *= 0.9
@@ -311,7 +316,7 @@ function step(){
 		}
 		if mision_actual = -1 and in(tutorial, 1, 2, 3, 4) and win = 0{
 			draw_set_halign(fa_right)
-			if draw_boton(room_width - 20, string_height(temp_text_right) + 64, L.win_siguiente_mision, ui_verde){
+			if draw_once and draw_boton(room_width - 20, string_height(temp_text_right) + 64, L.win_siguiente_mision, ui_verde){
 				file = load_escenario_buffer($"mision_{tutorial + 1}.txt")
 				if file != ""
 					game_start()
@@ -359,12 +364,12 @@ function step(){
 		}
 		//Explosión nuclear
 		if nuclear_step > 0{
-			if --nuclear_step > 150{
+			if --nuclear_step > 150 and draw_once{
 				draw_set_color(c_white)
 				draw_set_alpha((nuclear_step - 150) / 150)
 				draw_rectangle(0, 0, room_width, room_height, false)
 			}
-			if nuclear_x >= 0
+			if draw_once and nuclear_x >= 0
 				draw_sprite_off(spr_blur, 0, nuclear_x, nuclear_y,,,,, nuclear_step / 300)
 			draw_set_color(c_black)
 			draw_set_alpha(1)
@@ -373,5 +378,6 @@ function step(){
 			viento_dir += random_range(-0.01, 0.01)
 			viento_mag = clamp(viento_mag + random_range(-0.01, 0.01), 0.5, 2)
 		}
+		draw_once = false
 	}
 }

@@ -12,21 +12,20 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"4c88c208-7119-43a0-89fb-70fb5716678d","name":"4c88c208-7119-43a0-89fb-70fb5716678d","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"v1","%Name":"23e45ab6-3e92-4c7a-ae72-12340b3f6076","name":"23e45ab6-3e92-4c7a-ae72-12340b3f6076","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"v1","%Name":"3f16bedf-50af-48ea-aa1f-523c0ad7ec1d","name":"3f16bedf-50af-48ea-aa1f-523c0ad7ec1d","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"v1","%Name":"6ba35699-9660-4acc-be13-169d0985e9ea","name":"6ba35699-9660-4acc-be13-169d0985e9ea","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"v1","%Name":"a2ef5b1c-7dc1-4154-8545-d2804e24b885","name":"a2ef5b1c-7dc1-4154-8545-d2804e24b885","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"v1","%Name":"8cbd58d2-7772-4149-80da-7ab8cce1fa7b","name":"8cbd58d2-7772-4149-80da-7ab8cce1fa7b","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"v1","%Name":"6b7c38da-abf0-47db-81c4-8bd67cc2ab5e","name":"6b7c38da-abf0-47db-81c4-8bd67cc2ab5e","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"v1","%Name":"02707cec-9291-4d58-afd9-e7999a19ad86","name":"02707cec-9291-4d58-afd9-e7999a19ad86","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"9ffaeab6-5028-486b-be21-07cc53cbe703","name":"9ffaeab6-5028-486b-be21-07cc53cbe703","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"cde64991-43fe-43c4-8531-159bfd8010ef","name":"cde64991-43fe-43c4-8531-159bfd8010ef","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"a529b18d-ab89-428e-8f97-2d80cd994ef6","name":"a529b18d-ab89-428e-8f97-2d80cd994ef6","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"d27ed745-f748-4106-a5aa-7a17d23e33e2","name":"d27ed745-f748-4106-a5aa-7a17d23e33e2","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"5c97e6df-d6c8-43cf-a7f6-c903b3a91b1c","name":"5c97e6df-d6c8-43cf-a7f6-c903b3a91b1c","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"db9147c1-f8bc-467f-b838-b82c4b9da727","name":"db9147c1-f8bc-467f-b838-b82c4b9da727","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"e56f9725-5c7b-4fae-b8c7-0fc2305b8895","name":"e56f9725-5c7b-4fae-b8c7-0fc2305b8895","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":28,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"bf5519ac-383f-4036-a0db-b419e738ed8f","blendMode":0,"displayName":"default","isLocked":false,"name":"bf5519ac-383f-4036-a0db-b419e738ed8f","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"91b1aa95-c367-4cb7-ae09-d3e47cf2e7dc","blendMode":0,"displayName":"default","isLocked":false,"name":"91b1aa95-c367-4cb7-ae09-d3e47cf2e7dc","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"spr_camino_3_in_54",
   "nineSlice":null,
@@ -56,7 +55,7 @@
     },
     "eventStubScript":null,
     "eventToFunction":{},
-    "length":8.0,
+    "length":7.0,
     "lockOrigin":false,
     "moments":{
       "$KeyframeStore<MomentsEventKeyframe>":"",
@@ -76,29 +75,26 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"4c88c208-7119-43a0-89fb-70fb5716678d","path":"sprites/spr_camino_3_in_54/spr_camino_3_in_54.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"90684dd6-6fc2-4db8-ae7f-23585675324d","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"9ffaeab6-5028-486b-be21-07cc53cbe703","path":"sprites/spr_camino_3_in_54/spr_camino_3_in_54.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"1203bab9-39c9-4ec6-962e-217f64a43d2b","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"23e45ab6-3e92-4c7a-ae72-12340b3f6076","path":"sprites/spr_camino_3_in_54/spr_camino_3_in_54.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"058a0de7-c6fd-4797-b5c7-b9326de3f807","IsCreationKey":false,"Key":1.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"cde64991-43fe-43c4-8531-159bfd8010ef","path":"sprites/spr_camino_3_in_54/spr_camino_3_in_54.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"c275d0b8-8557-402d-8e35-de8fcb9f2637","IsCreationKey":false,"Key":1.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"3f16bedf-50af-48ea-aa1f-523c0ad7ec1d","path":"sprites/spr_camino_3_in_54/spr_camino_3_in_54.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"0dd4b07a-bf0e-4af7-97bc-97226c9a5be1","IsCreationKey":false,"Key":2.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"a529b18d-ab89-428e-8f97-2d80cd994ef6","path":"sprites/spr_camino_3_in_54/spr_camino_3_in_54.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"459b09c7-041d-4db2-b5ff-31c769577d58","IsCreationKey":false,"Key":2.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"6ba35699-9660-4acc-be13-169d0985e9ea","path":"sprites/spr_camino_3_in_54/spr_camino_3_in_54.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"c0cb942f-8601-4e57-a97d-bb3f8f083eb1","IsCreationKey":false,"Key":3.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"d27ed745-f748-4106-a5aa-7a17d23e33e2","path":"sprites/spr_camino_3_in_54/spr_camino_3_in_54.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"90b288c9-466b-4f60-8152-f3d36a3ceb34","IsCreationKey":false,"Key":3.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"a2ef5b1c-7dc1-4154-8545-d2804e24b885","path":"sprites/spr_camino_3_in_54/spr_camino_3_in_54.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"04407fca-1f11-4d65-94d6-e3726e79df24","IsCreationKey":false,"Key":4.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"5c97e6df-d6c8-43cf-a7f6-c903b3a91b1c","path":"sprites/spr_camino_3_in_54/spr_camino_3_in_54.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"1fdda52b-5ce1-4ce2-ad84-560207ee231e","IsCreationKey":false,"Key":4.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"8cbd58d2-7772-4149-80da-7ab8cce1fa7b","path":"sprites/spr_camino_3_in_54/spr_camino_3_in_54.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"cc71c7c4-cc5d-42b2-9805-58bbeb382257","IsCreationKey":false,"Key":5.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"db9147c1-f8bc-467f-b838-b82c4b9da727","path":"sprites/spr_camino_3_in_54/spr_camino_3_in_54.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"e6f73ebc-5f32-4e15-b83c-0632232b2dcc","IsCreationKey":false,"Key":5.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"6b7c38da-abf0-47db-81c4-8bd67cc2ab5e","path":"sprites/spr_camino_3_in_54/spr_camino_3_in_54.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"5784bd00-493d-43f6-a39a-e094f0239614","IsCreationKey":false,"Key":6.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"02707cec-9291-4d58-afd9-e7999a19ad86","path":"sprites/spr_camino_3_in_54/spr_camino_3_in_54.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"52b18021-9d37-4dc7-820d-bbe31a130fa4","IsCreationKey":false,"Key":7.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"e56f9725-5c7b-4fae-b8c7-0fc2305b8895","path":"sprites/spr_camino_3_in_54/spr_camino_3_in_54.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"d1661c69-87d6-4a6a-9f02-2bfb3e8b82ec","IsCreationKey":false,"Key":6.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,

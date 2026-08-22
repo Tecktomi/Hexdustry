@@ -18,13 +18,15 @@ function dron_logic(){
 			drones_target = enemigo ? drones_aliados : enemigos
 			chunk_x = dron.chunk_x
 			chunk_y = dron.chunk_y
-			draw_dron(dron, enemigo)
-			if distance_sqr(cam_center_x, cam_center_y, aa, bb) > 250_000{
-				draw_set_color(enemigo ? c_red : c_blue)
-				angle = arctan2(cam_center_y - bb, cam_center_x - aa)
-				cosa = cos(angle)
-				sina = sin(angle)
-				draw_line(room_width / 2 - 60 * cosa, room_height / 2 - 60 * sina, room_width / 2 - 90 * cosa, room_height / 2 - 90 * sina)
+			if draw_once{
+				draw_dron(dron, enemigo)
+				if distance_sqr(cam_center_x, cam_center_y, aa, bb) > 250_000{
+					draw_set_color(enemigo ? c_red : c_blue)
+					angle = arctan2(cam_center_y - bb, cam_center_x - aa)
+					cosa = cos(angle)
+					sina = sin(angle)
+					draw_line(room_width / 2 - 60 * cosa, room_height / 2 - 60 * sina, room_width / 2 - 90 * cosa, room_height / 2 - 90 * sina)
+				}
 			}
 			//Efectos
 			for(b = 0; b < efectos_max; b++)
@@ -535,9 +537,10 @@ function dron_logic(){
 				}
 			}
 		}
-		for(a = array_length(drones) - 1; a >= 0; a--){
-			dron = drones[a]
-			draw_vida(dron.x * zoom - camx, dron.y * zoom - camy, dron.vida, dron.vida_max)
-		}
+		if draw_once
+			for(a = array_length(drones) - 1; a >= 0; a--){
+				dron = drones[a]
+				draw_vida(dron.x * zoom - camx, dron.y * zoom - camy, dron.vida, dron.vida_max)
+			}
 	}
 }
