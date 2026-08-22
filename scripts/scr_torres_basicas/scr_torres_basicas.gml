@@ -65,9 +65,9 @@ function scr_torres_basicas(edificio = control.null_edificio){
 					edificio.target = null_edificio
 					continue
 				}
-				var tiro = -1, arma = edificio_arma[index]
-				for(var b = 0; b < array_length(armas[arma]); b++){
-					var tiro_struct = armas[arma, b]
+				var tiro = -1, arma = edificio_arma[index], b, tiro_struct
+				for(b = 0; b < array_length(armas[arma]); b++){
+					tiro_struct = armas[arma, b]
 					if edificio.carga[tiro_struct.recurso] >= tiro_struct.cantidad{
 						tiro = b
 						break
@@ -75,7 +75,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 				}
 				if tiro >= 0{
 					if dron.vida > 0 or target_edificio.vida > 0{
-						var tiro_struct = armas[arma, tiro]
+						tiro_struct = armas[arma, tiro]
 						if index = id_lanzallamas{
 							edificio.array_real[4]++
 							edificio.array_real[5] = 1
@@ -92,8 +92,9 @@ function scr_torres_basicas(edificio = control.null_edificio){
 							if dron != null_dron{
 								var temp_array_dron = (enemigo ? chunk_dron_aliado[# dron.chunk_x, dron.chunk_y] : chunk_dron_enemigo[# dron.chunk_x, dron.chunk_y])
 								var disi = edificio_alcance[index], x1 = center_x + disi * cos(angle + pi / 6), y1 = center_y - disi * sin(angle + pi / 6), x2 = center_x + disi * cos(angle - pi / 6), y2 = center_y - disi * sin(angle - pi / 6), total_dmg = 0
-								for(var c = array_length(temp_array_dron) - 1; c >= 0; c--){
-									var temp_dron = temp_array_dron[c]
+								var c, temp_dron
+								for(c = array_length(temp_array_dron) - 1; c >= 0; c--){
+									temp_dron = temp_array_dron[c]
 									if point_in_triangle(temp_dron.x, temp_dron.y, center_x, center_y, x1, y1, x2, y2){
 										aplicar_efecto(1, 300, temp_dron)
 										herir_dron(2, temp_dron)
@@ -131,7 +132,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 						array_push(municiones, municion)
 						if index = id_lanzallamas{
 							angle = arctan2(center_y - target_y, center_x - target_x)
-							var b = angle + random_range(-pi / 16, pi / 16)
+							b = angle + random_range(-pi / 16, pi / 16)
 							array_push(fuegos, add_fuego(center_x - 20 * cos(angle), center_y - 20 * sin(angle), edificio.a, edificio.b, 12 * -cos(b), 12 * -sin(b), 40))
 						}
 						mover_in(edificio)

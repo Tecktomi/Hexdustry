@@ -1,11 +1,11 @@
 function load_edificio(buffer, edificio = control.null_edificio){
 	with control{
-		var mask = buffer_read(buffer, buffer_u64), c = 0, temp_target_dron = -1, flag = false
+		var mask = buffer_read(buffer, buffer_u64), c = 0, temp_target_dron = -1, flag = false, a
 		if mask & (1 << c++) edificio.input_index = real(buffer_read(buffer, buffer_u8))
 		if mask & (1 << c++) edificio.output_index = real(buffer_read(buffer, buffer_u8))
 		if mask & (1 << c++) edificio.proceso = real(buffer_read(buffer, buffer_f16))
 		if mask & (1 << c++) edificio.start = true
-		for(var a = 0; a < rss_max; a++)
+		for(a = 0; a < rss_max; a++)
 			if mask & (1 << c++){
 				edificio.carga[a] = real(buffer_read(buffer, buffer_f16))
 				edificio.carga_total += edificio.carga[a]
@@ -34,7 +34,7 @@ function load_edificio(buffer, edificio = control.null_edificio){
 		if mask & (1 << c++) encender_luz(edificio.luz)
 		if mask & (1 << c++){
 			var len = real(buffer_read(buffer, buffer_u16))
-			for(var a = 0; a < len; a++)
+			for(a = 0; a < len; a++)
 				array_push(edificio.procesador_link, edificios_totales[real(buffer_read(buffer, buffer_u16))])
 		}
 		if mask & (1 << c++) edificio.eliminar = true

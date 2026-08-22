@@ -1,11 +1,11 @@
 function save_edificio(buffer, edificio = control.null_edificio){
 	with control{
-		var mask = 0, c = 0
+		var mask = 0, c = 0, a, len, len_2
 		mask += (edificio.input_index != 0) << c++
 		mask += (edificio.output_index != 0) << c++
 		mask += (edificio.proceso != 0) << c++
 		mask += edificio.start << c++
-		for(var a = 0; a < rss_max; a++)
+		for(a = 0; a < rss_max; a++)
 			mask += (edificio.carga[a] != 0) << c++
 		mask += (edificio.carga_id != 0) << c++
 		mask += (edificio.fuel != 0) << c++
@@ -36,7 +36,7 @@ function save_edificio(buffer, edificio = control.null_edificio){
 		if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(edificio.output_index))
 		if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(edificio.proceso))
 		c++
-		for(var a = 0; a < rss_max; a++)
+		for(a = 0; a < rss_max; a++)
 			if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(edificio.carga[a]))
 		if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(edificio.carga_id))
 		if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(edificio.fuel))
@@ -55,15 +55,16 @@ function save_edificio(buffer, edificio = control.null_edificio){
 		if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(edificio.edificio_index))
 		c++
 		if mask & (1 << c++){
-			var len = array_length(edificio.procesador_link), len_2 = 0
-			for(var a = 0; a < len; a++){
+			len = array_length(edificio.procesador_link)
+			len_2 = 0
+			for(a = 0; a < len; a++){
 				if edificio.procesador_link[a] != null_edificio and edificio.procesador_link[a].punteros[12] != -1
 					len_2++
 				else
 					array_delete(edificio.procesador_link, a--, 1)
 			}
 			buffer_write(buffer, buffer_u16, real(len_2))
-			for(var a = 0; a < len_2; a++)
+			for(a = 0; a < len_2; a++)
 				buffer_write(buffer, buffer_u16, real(edificio.procesador_link[a].punteros[12]))
 		}
 		c++

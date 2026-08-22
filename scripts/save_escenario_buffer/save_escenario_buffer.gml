@@ -8,11 +8,11 @@ function save_escenario_buffer(filename){
 		buffer_write(buffer, buffer_u8, spawn_x)
 		buffer_write(buffer, buffer_u8, spawn_y)
 		//Config
-		var seek_config = buffer_tell(buffer)
+		var seek_config = buffer_tell(buffer), a, b, _mision, len_text, c, temp_text
 		buffer_write(buffer, buffer_u16, 0) //Placeholder
-		for(var a = 0; a < rss_max; a++)
+		for(a = 0; a < rss_max; a++)
 			buffer_write(buffer, buffer_u16, carga_inicial[a])
-		for(var a = 0; a < edificio_max; a++)
+		for(a = 0; a < edificio_max; a++)
 			buffer_write(buffer, buffer_u8, (not mision_edificios[a]) ? 0 : (edificio_tecnologia[a] ? 2 : 1))
 		buffer_write(buffer, buffer_bool, oleadas)
 		buffer_write(buffer, buffer_u8, oleadas_tiempo)
@@ -22,9 +22,9 @@ function save_escenario_buffer(filename){
 		buffer_write(buffer, buffer_u8, len_mis)
 		if len_mis > 0
 			buffer_write(buffer, buffer_string, mision_texto_victoria)
-		for(var a = 0; a < len_mis; a++){
-			var _mision = misiones[a]
-			for(var b = 0; b < IDIOMAS; b++)
+		for(a = 0; a < len_mis; a++){
+			_mision = misiones[a]
+			for(b = 0; b < IDIOMAS; b++)
 				buffer_write(buffer, buffer_string, _mision.nombre_idioma[b])
 			buffer_write(buffer, buffer_u8, _mision.objetivo)
 			buffer_write(buffer, buffer_u8, _mision.target_id)
@@ -38,11 +38,11 @@ function save_escenario_buffer(filename){
 				buffer_write(buffer, buffer_u16, _mision.camera_y)
 			}
 			buffer_write(buffer, buffer_bool, _mision.switch_oleadas)
-			var len_text = array_length(_mision.texto)
+			len_text = array_length(_mision.texto)
 			buffer_write(buffer, buffer_u8, len_text)
-			for(var b = 0; b < len_text; b++){
-				var temp_text = _mision.texto[b]
-				for(var c = 0; c < IDIOMAS; c++)
+			for(b = 0; b < len_text; b++){
+				temp_text = _mision.texto[b]
+				for(c = 0; c < IDIOMAS; c++)
 					buffer_write(buffer, buffer_string, temp_text.texto_idioma[c])
 				buffer_write(buffer, buffer_u16, temp_text.x)
 				buffer_write(buffer, buffer_u16, temp_text.y)
@@ -53,8 +53,8 @@ function save_escenario_buffer(filename){
 		buffer_write(buffer, buffer_u16, seek_config_end)
 		buffer_seek(buffer, buffer_seek_start, seek_config_end)
 		//Terreno
-		for(var a = 0; a < xsize; a++)
-			for(var b = 0; b < ysize; b++){
+		for(a = 0; a < xsize; a++)
+			for(b = 0; b < ysize; b++){
 				buffer_write(buffer, buffer_u8, terreno[# a, b])
 				buffer_write(buffer, buffer_s8, ore[# a, b])
 				if ore[# a, b] >= 0
@@ -62,7 +62,7 @@ function save_escenario_buffer(filename){
 			}
 		//Edificios
 		buffer_write(buffer, buffer_u16, len_edi)
-		for(var a = 0; a < len_edi; a++){
+		for(a = 0; a < len_edi; a++){
 			var edificio = edificios_totales[a]
 			buffer_write(buffer, buffer_u8, edificio.index)
 			buffer_write(buffer, buffer_u8, edificio.dir)
@@ -78,7 +78,7 @@ function save_escenario_buffer(filename){
 		buffer_save(buffer, filename)
 		buffer_delete(buffer)
 		//Minimapa
-		var b = array_get_index(save_files, filename)
+		b = array_get_index(save_files, filename)
 		filename = file_format(filename)
 		var temp_sprite = minimapa()
 		sprite_save(temp_sprite, 0, $"Scenarios/{filename}.png")

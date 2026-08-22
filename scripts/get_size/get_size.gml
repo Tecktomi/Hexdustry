@@ -5,7 +5,7 @@ function get_size(a = 0, b = 0, dir = 0, size = 0){
 			var output = array_create(4, [0, 0])
 		else
 			output = array_create(SIZE_SIZE[max(0, size - 1)], [0, 0])
-		output[0] = [real(a), real(b)]
+		array_set(output, 0, [real(a), real(b)])
 		if size = 2{
 			dir = 6 - (dir mod 2)
 			for(c = 4; c < 6; c++){

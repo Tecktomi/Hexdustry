@@ -14,9 +14,9 @@ function eliminar_jugador(index){
 				array_delete(jugador_recursos, index, 1)
 			index = index + 2
 			//Los edificios pasarán a ser salvajes
-			var len = array_length(edificios_totales) - 1
-			for(var a = len; a >= 0; a--){
-				var edificio = edificios_totales[a]
+			var len = array_length(edificios_totales) - 1, a, edificio, dron
+			for(a = len; a >= 0; a--){
+				edificio = edificios_totales[a]
 				if edificio.jugador = index{
 					if edificio.index = id_nucleo
 						delete_edificio(edificio, true)
@@ -32,8 +32,8 @@ function eliminar_jugador(index){
 			}
 			//Los drones se destruirán
 			len = array_length(drones) - 1
-			for(var a = len; a >= 0; a--){
-				var dron = drones[a]
+			for(a = len; a >= 0; a--){
+				dron = drones[a]
 				if dron.jugador = index
 					delete_dron(dron)
 			}

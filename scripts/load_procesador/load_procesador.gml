@@ -6,12 +6,13 @@ function load_procesador(buffer, edificio = control.null_edificio){
 			show_debug_message(L.archivo_obsoleto)
 			return false
 		}
-		var size = real(buffer_read(buffer, buffer_u16))
+		var size = real(buffer_read(buffer, buffer_u16)), a, size_2, b, esreal, temp_array
 		edificio.instruccion = array_create(size)
-		for(var a = 0; a < size; a++){
-			var size_2 = real(buffer_read(buffer, buffer_u8)), temp_array = array_create(size_2)
-			for(var b = 0; b < size_2; b++){
-				var esreal = buffer_read(buffer, buffer_bool)
+		for(a = 0; a < size; a++){
+			size_2 = real(buffer_read(buffer, buffer_u8))
+			temp_array = array_create(size_2)
+			for(b = 0; b < size_2; b++){
+				esreal = buffer_read(buffer, buffer_bool)
 				if esreal
 					temp_array[b] = real(buffer_read(buffer, buffer_f16))
 				else

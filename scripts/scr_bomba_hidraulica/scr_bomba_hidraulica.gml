@@ -1,10 +1,8 @@
 function scr_bomba_hidraulica(edificio = control.null_edificio){
 	with control{
 		var index = edificio.index
-		if edificio_energia[index]
-			var red = edificio.red, red_power = red.eficiencia
-		if edificio_flujo[index]
-			var flujo = edificio.flujo
+		var red = edificio.red, red_power = red.eficiencia
+		var flujo = edificio.flujo
 		//Está encendido
 		if in(flujo.liquido, -1, edificio.fuel) and red_power > 0{
 			change_flujo(red_power * edificio_flujo_consumo[index] * edificio.select / 3 * (1 + 0.2 * edificio.modulo), edificio)

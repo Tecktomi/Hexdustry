@@ -3,18 +3,28 @@ function edificio_pathfind(edificio = control.null_edificio){
 	with control{
 		var visitado = usable_grid_bool, temp_queue = array_create(0), temp_list = get_size(a, b, dir, edificio_size[index]), size = array_length(temp_list), maxi = 6
 		ds_grid_clear(visitado, false)
-		for(var c = 0; c < size; c++){
-			var temp_complex = temp_list[c], aa = temp_complex[0], bb = temp_complex[1], temp_priority = ds_grid_get(edificio_cercano_priority, aa, bb)
+		var c, temp_complex, aa, bb, temp_priority, aaa, bbb, dis, desj, i, j, counter, bmod
+		for(c = 0; c < size; c++){
+			temp_complex = temp_list[c]
+			aa = temp_complex[0]
+			bb = temp_complex[1]
+			temp_priority = ds_grid_get(edificio_cercano_priority, aa, bb)
 			ds_grid_set(visitado, aa, bb, true)
 			array_push(temp_queue, aa, bb, 0, 0)//a, b, dis, dir
 			ds_priority_add(temp_priority, edificio, 0)
 			edificio_cercano[# aa, bb] = edificio
 			edificio_cercano_dis[# aa, bb] = 0
 		}
-		for(var counter = 0; array_length(temp_queue) > counter;){
-			var aaa = temp_queue[counter++], bbb = temp_queue[counter++], dis = temp_queue[counter++] + 1, desj = temp_queue[counter++] + 5, bmod = bbb & 1
-			for(var i = 0; i < maxi; i++){
-				var j = (i + desj) mod 6, aa = aaa + DESFACE_A[bmod, j], bb = bbb + DESFACE_B[bmod, j]
+		for(counter = 0; array_length(temp_queue) > counter;){
+			aaa = temp_queue[counter++]
+			bbb = temp_queue[counter++]
+			dis = temp_queue[counter++] + 1
+			desj = temp_queue[counter++] + 5
+			bmod = bbb & 1
+			for(i = 0; i < maxi; i++){
+				j = (i + desj) mod 6
+				aa = aaa + DESFACE_A[bmod, j]
+				bb = bbb + DESFACE_B[bmod, j]
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if not visitado[# aa, bb]{
@@ -22,7 +32,7 @@ function edificio_pathfind(edificio = control.null_edificio){
 					if terreno_caminable[terreno[# aa, bb]]{
 						array_push(temp_queue, aa, bb, dis, j)
 						edificio.coordenadas_dis[# aa, bb] = dis
-						var temp_priority = ds_grid_get(edificio_cercano_priority, aa, bb)
+						temp_priority = ds_grid_get(edificio_cercano_priority, aa, bb)
 						ds_priority_add(temp_priority, edificio, dis)
 						if dis < edificio_cercano_dis[# aa, bb]{
 							edificio_cercano_dis[# aa, bb] = dis

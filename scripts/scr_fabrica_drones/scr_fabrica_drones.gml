@@ -4,8 +4,8 @@ function scr_fabrica_drones(edificio = control.null_edificio){
 		var red = edificio.red, red_power = red.eficiencia
 		var flujo = edificio.flujo, flujo_power = flujo.eficiencia
 		if edificio.select >= 0 and not edificio.waiting_dron{
-			var flag = true
-			for(var b = array_length(dron_precio_id[edificio.select]) - 1; b >= 0; b--)
+			var flag = true, b, c
+			for(b = array_length(dron_precio_id[edificio.select]) - 1; b >= 0; b--)
 				if edificio.carga[dron_precio_id[edificio.select, b]] < dron_precio_num[edificio.select, b]{
 					flag = false
 					break
@@ -25,8 +25,8 @@ function scr_fabrica_drones(edificio = control.null_edificio){
 				//Producir / Apagar
 				if edificio.proceso >= dron_time[edificio.select]{
 					edificio.start = false
-					for(var b = array_length(dron_precio_id[edificio.select]) - 1; b >= 0; b--){
-						var c = dron_precio_num[edificio.select, b]
+					for(b = array_length(dron_precio_id[edificio.select]) - 1; b >= 0; b--){
+						c = dron_precio_num[edificio.select, b]
 						edificio.carga_total -= c
 						edificio.carga[dron_precio_id[edificio.select, b]] -= c
 					}

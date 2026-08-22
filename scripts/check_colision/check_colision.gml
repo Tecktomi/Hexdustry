@@ -6,22 +6,24 @@ function check_colision(a, b, index, dir){
 		var temp_sobre_liquido = tag_construible_en_liquido[index]
 		var es_taladro_pesado = in(index, id_taladro_electrico, id_taladro_de_explosion)
 		var es_taladro = ((index = id_taladro) or es_taladro_pesado)
+		var i, aa, bb, edificio, temp_terreno
 		if es_taladro or in(index, id_bomba_hidraulica, id_bomba_de_evaporacion, id_generador_geotermico)
 			flag = false
-		for(var i = 0; i < array_length(size); i++){
-			var aa = size[i, 0], bb = size[i, 1]
+		for(i = 0; i < array_length(size); i++){
+			aa = size[i, 0]
+			bb = size[i, 1]
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 				return false
 			if edificio_bool[# aa, bb]{
 				if temp_es_camino{
-					var edificio = edificio_id[# aa, bb]
+					edificio = edificio_id[# aa, bb]
 					if not ((edificio_camino[edificio.index] or edificio.index = id_cruce))
 						return false
 				}
 				else
 					return false
 			}
-			var temp_terreno = terreno[# aa, bb]
+			temp_terreno = terreno[# aa, bb]
 			if terreno_pared[temp_terreno]
 				return false
 			if temp_terreno = idt_hielo and not temp_sobre_hielo

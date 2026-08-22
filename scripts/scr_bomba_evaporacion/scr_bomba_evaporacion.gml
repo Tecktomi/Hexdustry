@@ -1,7 +1,6 @@
 function scr_bomba_evaporacion(edificio = control.null_edificio){
 	with control{
-		var index = edificio.index
-		var flujo = edificio.flujo
+		var index = edificio.index, flujo = edificio.flujo
 		if in(flujo.liquido, -1, idl_agua){
 			change_flujo(energia_solar * edificio_flujo_consumo[index], edificio)
 			flujo.liquido = idl_agua

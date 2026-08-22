@@ -8,10 +8,13 @@ function add_edificio_flujo(edificio = control.null_edificio, flujo_name = "fluj
 			forzado = true
 			my_liquido = liquido_choose_array[liquido_choose]
 		}
+		var c, temp_complex, aa, bb, d, temp_complex_2, temp_flujo, temp_edificio
 		if index = id_bomba_hidraulica{
 			edificio.select = 0
-			for(var c = array_length(temp_list_size) - 1; c >= 0; c--){
-				var temp_complex = temp_list_size[c], aa = temp_complex[0], bb = temp_complex[1]
+			for(c = array_length(temp_list_size) - 1; c >= 0; c--){
+				temp_complex = temp_list_size[c]
+				aa = temp_complex[0]
+				bb = temp_complex[1]
 				if in(terreno[# aa, bb], idt_agua, idt_agua_profunda){
 					edificio.select++
 					if terreno[# aa, bb] = idt_agua_profunda
@@ -38,9 +41,12 @@ function add_edificio_flujo(edificio = control.null_edificio, flujo_name = "fluj
 		//Conexión con tuberías subterráneas
 		var temp_list_flujos = array_create(0, null_flujo)
 		if index = id_tuberia_subterranea{
-			var temp_list = get_size(a, b, 0, 7), temp_edificio = null_edificio
-			for(var c = array_length(temp_list) - 1; c >= 0; c--){
-				var temp_complex = temp_list[c], aa = temp_complex[0], bb = temp_complex[1]
+			var temp_list = get_size(a, b, 0, 7)
+			temp_edificio = null_edificio
+			for(c = array_length(temp_list) - 1; c >= 0; c--){
+				temp_complex = temp_list[c]
+				aa = temp_complex[0]
+				bb = temp_complex[1]
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if edificio_bool[# aa, bb] and not (aa = a and bb = b){
@@ -61,12 +67,14 @@ function add_edificio_flujo(edificio = control.null_edificio, flujo_name = "fluj
 			}
 		}
 		//Detectar edificios adyascentes
-		for(var c = array_length(temp_list_arround) - 1; c >= 0; c--){
-			var temp_complex = temp_list_arround[c], aa = temp_complex[0], bb = temp_complex[1]
+		for(c = array_length(temp_list_arround) - 1; c >= 0; c--){
+			temp_complex = temp_list_arround[c]
+			aa = temp_complex[0]
+			bb = temp_complex[1]
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 				continue
 			if edificio_bool[# aa, bb]{
-				var temp_edificio = edificio_id[# aa, bb]
+				temp_edificio = edificio_id[# aa, bb]
 				if edificio_flujo[temp_edificio.index] and (tag_edificio_tuberia[index] or tag_edificio_tuberia[temp_edificio.index]) and temp_edificio.jugador = _jugador
 				and (my_liquido = -1 or temp_edificio.flujo.liquido = -1 or my_liquido = temp_edificio.flujo.liquido or my_liquido = temp_edificio.flujo_2.liquido){
 					var _flujo1 = (my_liquido = -1 or temp_edificio.flujo.liquido = -1 or my_liquido = temp_edificio.flujo.liquido)
@@ -103,11 +111,11 @@ function add_edificio_flujo(edificio = control.null_edificio, flujo_name = "fluj
 		else if tag_edificio_tuberia[index]{
 			flujo = def_flujo()
 			flujo.liquido = my_liquido
-			for(var c = array_length(temp_list_flujos) - 1; c >= 0; c--){
-				var temp_flujo = temp_list_flujos[c]
+			for(c = array_length(temp_list_flujos) - 1; c >= 0; c--){
+				temp_flujo = temp_list_flujos[c]
 				if flujo.liquido = -1 or temp_flujo.liquido = -1 or flujo.liquido = temp_flujo.liquido{
-					for(var d = array_length(temp_flujo.edificios) - 1; d >= 0; d--){
-						var temp_edificio = temp_flujo.edificios[d]
+					for(d = array_length(temp_flujo.edificios) - 1; d >= 0; d--){
+						temp_edificio = temp_flujo.edificios[d]
 						if temp_edificio.flujo = temp_flujo
 						    temp_edificio.flujo = flujo
 						else if temp_edificio.flujo_2 = temp_flujo
@@ -143,15 +151,20 @@ function add_edificio_flujo(edificio = control.null_edificio, flujo_name = "fluj
 			change_flujo(edificio_flujo_consumo[index], edificio)
 			if index = id_generador_geotermico{
 				edificio.select = 0
-				for(var c = array_length(temp_list_size) - 1; c >= 0; c--){
-					var temp_complex_2 = temp_list_size[c], aa = temp_complex_2[0], bb = temp_complex_2[1]
+				for(c = array_length(temp_list_size) - 1; c >= 0; c--){
+					temp_complex_2 = temp_list_size[c]
+					aa = temp_complex_2[0]
+					bb = temp_complex_2[1]
 					edificio.select += (terreno[# aa, bb] = idt_lava)
 				}
 			}
 			else if index = id_extractor_atmosferico{
 				edificio.select = 0
-				for(var c = array_length(temp_list_size) - 1; c >= 0; c--){
-					var temp_complex_2 = temp_list_size[c], aa = temp_complex_2[0], bb = temp_complex_2[1], d = terreno[# aa, bb]
+				for(c = array_length(temp_list_size) - 1; c >= 0; c--){
+					temp_complex_2 = temp_list_size[c]
+					aa = temp_complex_2[0]
+					bb = temp_complex_2[1]
+					d = terreno[# aa, bb]
 					if d = idt_hielo
 						edificio.select += 1.5
 					else if d = idt_nieve

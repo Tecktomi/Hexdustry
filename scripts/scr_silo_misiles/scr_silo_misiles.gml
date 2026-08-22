@@ -5,13 +5,13 @@ function scr_silo_misiles(edificio = control.null_edificio){
 		var index = edificio.index
 		var red = edificio.red, red_power = red.eficiencia
 		var flujo = edificio.flujo, flujo_power = flujo.eficiencia
-		var tiempo_max = edificio.array_real[1]
+		var tiempo_max = edificio.array_real[1], a, dir
 		if not edificio.mode{
 			//Cargar materiales y energía
 			if edificio.proceso < tiempo_max{
 				var flag = true
-				for(var b = 0; b < array_length(misiles_precio_id[edificio.select]); b++)
-					if edificio.carga[misiles_precio_id[edificio.select, b]] < misiles_precio_num[edificio.select, b]{
+				for(a = 0; a < array_length(misiles_precio_id[edificio.select]); a++)
+					if edificio.carga[misiles_precio_id[edificio.select, a]] < misiles_precio_num[edificio.select, a]{
 						flag = false
 						break
 					}
@@ -44,8 +44,8 @@ function scr_silo_misiles(edificio = control.null_edificio){
 			//Misil de Crucero
 			if edificio.select = 0 and edificio.array_real[2] != -1{
 				if --edificio.fuel > 160
-					for(var a = 0; a < 2; a++){
-						var dir = random_range(a * pi, (a + 1) * pi)
+					for(a = 0; a < 2; a++){
+						dir = random_range(a * pi, (a + 1) * pi)
 						array_push(humos, add_humo(edificio.center_x, edificio.center_y, edificio.a, edificio.b, cos(dir), sin(dir), irandom_range(120, 180)))
 					}
 				if edificio.fuel = 0{
@@ -57,8 +57,8 @@ function scr_silo_misiles(edificio = control.null_edificio){
 			//Misil de Racimo
 			else if edificio.select = 1 and edificio.array_real[2] != -1{
 				if --edificio.fuel > 140
-					for(var a = 0; a < 2; a++){
-						var dir = random_range(a * pi, (a + 1) * pi)
+					for(a = 0; a < 2; a++){
+						dir = random_range(a * pi, (a + 1) * pi)
 						array_push(humos, add_humo(edificio.center_x, edificio.center_y, edificio.a, edificio.b, cos(dir), sin(dir), irandom_range(120, 180)))
 					}
 				if edificio.fuel < 50 and edificio.fuel mod 10 = 0{
@@ -83,8 +83,8 @@ function scr_silo_misiles(edificio = control.null_edificio){
 				}
 				else{
 					if --edificio.fuel > 300
-						for(var a = 0; a < 2; a++){
-							var dir = random_range(a * pi, (a + 1) * pi)
+						for(a = 0; a < 2; a++){
+							dir = random_range(a * pi, (a + 1) * pi)
 							array_push(humos, add_humo(edificio.center_x, edificio.center_y, edificio.a, edificio.b, cos(dir), sin(dir), irandom_range(120, 180)))
 						}
 					if edificio.fuel = 0{

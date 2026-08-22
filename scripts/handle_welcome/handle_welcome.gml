@@ -8,7 +8,7 @@ function handle_welcome(buffer){
 			show_message(L.archivo_obsoleto)
 		//Asignar núcleo y recursos
 		if server_pvp{
-			var a = real(buffer_read(buffer, buffer_u8)), b = real(buffer_read(buffer, buffer_u8))
+			var a = real(buffer_read(buffer, buffer_u8)), b = real(buffer_read(buffer, buffer_u8)), edificio, aa, bb
 			nucleo = edificio_id[# a, b]
 			jugador_recursos = array_create(1, array_create(rss_max, 0))
 			for(a = 0; a < rss_max; a++)
@@ -16,9 +16,10 @@ function handle_welcome(buffer){
 			camx = clamp(nucleo.a * 48 - room_width / 2, 0, xsize * 48 * zoom - room_width)
 			camy = clamp(nucleo.b * 14 - room_height / 2, 0, ysize * 14 * zoom - room_height)
 			for(a = array_length(nucleos) - 1; a >= 0; a--){
-				var edificio = nucleos[a]
+				edificio = nucleos[a]
 				if edificio != nucleo and not edificio.enemigo{
-					var aa = edificio.chunk_x, bb = edificio.chunk_y
+					aa = edificio.chunk_x
+					bb = edificio.chunk_y
 					edificio.enemigo = true
 					array_disorder_remove(edificios, edificio, 0)
 					array_disorder_push(edificios_enemigos, edificio, 0)

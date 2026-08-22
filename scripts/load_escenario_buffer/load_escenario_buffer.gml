@@ -12,12 +12,12 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 			resize_grid(0, min(prev_ysize, ysize))
 		spawn_x = real(buffer_read(buffer, buffer_u8))
 		spawn_y = real(buffer_read(buffer, buffer_u8))
-		var seek_config = real(buffer_read(buffer, buffer_u16))
+		var seek_config = real(buffer_read(buffer, buffer_u16)), a, b, c, temp_array_string
 		if _misiones{
-			for(var a = 0; a < rss_max; a++)
+			for(a = 0; a < rss_max; a++)
 				carga_inicial[a] = real(buffer_read(buffer, buffer_u16))
-			for(var a = 0; a < edificio_max; a++){
-				var b = real(buffer_read(buffer, buffer_u8))
+			for(a = 0; a < edificio_max; a++){
+				b = real(buffer_read(buffer, buffer_u8))
 				if b = 0{
 					mision_edificios[a] = false
 					edificio_tecnologia[a] = false
@@ -33,9 +33,9 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 			}
 			categoria_nombre_disponible = array_create(0, "")
 			categoria_index_disponible = array_create(0, 0)
-			for(var a = 0; a < array_length(categoria_nombre); a++){
+			for(a = 0; a < array_length(categoria_nombre); a++){
 				categoria_edificios_disponible[a] = array_create(0, 0)
-				for(var b = 0; b < array_length(categoria_edificios[a]); b++)
+				for(b = 0; b < array_length(categoria_edificios[a]); b++)
 					if mision_edificios[categoria_edificios[a, b]]
 						array_push(categoria_edificios_disponible[a], categoria_edificios[a, b])
 				if array_length(categoria_edificios_disponible[a]) > 0{
@@ -52,9 +52,9 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 			if len_mis > 0
 				mision_texto_victoria = string(buffer_read(buffer, buffer_string))
 			array_resize(misiones, len_mis)
-			for(var a = 0; a < len_mis; a++){
+			for(a = 0; a < len_mis; a++){
 				var _nombre_idioma = array_create(IDIOMAS, "")
-				for(var b = 0; b < IDIOMAS; b++)
+				for(b = 0; b < IDIOMAS; b++)
 					_nombre_idioma[b] = string(buffer_read(buffer, buffer_string))
 				var _nombre = _nombre_idioma[idioma]
 				var _objetivo = real(buffer_read(buffer, buffer_u8))
@@ -69,9 +69,9 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 				var _switch_oleadas = bool(buffer_read(buffer, buffer_bool))
 				var len_text = real(buffer_read(buffer, buffer_u8))
 				var _texto = array_create(len_text, {x : 0, y : 0, texto : "", texto_idioma : array_create(0, "")})
-				for(var b = 0; b < len_text; b++){
-					var temp_array_string = array_create(IDIOMAS, "")
-					for(var c = 0; c < IDIOMAS; c++)
+				for(b = 0; b < len_text; b++){
+					temp_array_string = array_create(IDIOMAS, "")
+					for(c = 0; c < IDIOMAS; c++)
 						temp_array_string[c] = string(buffer_read(buffer, buffer_string))
 					var xx = real(buffer_read(buffer, buffer_u16))
 					var yy = real(buffer_read(buffer, buffer_u16))
@@ -89,8 +89,8 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 		else
 			buffer_seek(buffer, buffer_seek_start, seek_config)
 		//Terreno
-		for(var a = 0; a < xsize; a++)
-			for(var b = 0; b < ysize; b++){
+		for(a = 0; a < xsize; a++)
+			for(b = 0; b < ysize; b++){
 				terreno[# a, b] = real(buffer_read(buffer, buffer_u8))
 				ore[# a, b] = real(buffer_read(buffer, buffer_s8))
 				if ore[# a, b] >= 0
@@ -102,8 +102,8 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 			repeat(len_edi){
 				var index = real(buffer_read(buffer, buffer_u8))
 				var dir = real(buffer_read(buffer, buffer_u8))
-				var a = real(buffer_read(buffer, buffer_u8))
-				var b = real(buffer_read(buffer, buffer_u8))
+				a = real(buffer_read(buffer, buffer_u8))
+				b = real(buffer_read(buffer, buffer_u8))
 				var _jugador = real(buffer_read(buffer, buffer_u8))
 				var edificio = add_edificio(index, dir, a, b, _jugador)
 				if tag_edificio_seteable[index]{
@@ -115,8 +115,8 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 		}
 		buffer_delete(buffer)
 		clear_olas()
-		for(var a = 0; a < chunk_xsize; a++)
-			for(var b = 0; b < chunk_ysize; b++)
+		for(a = 0; a < chunk_xsize; a++)
+			for(b = 0; b < chunk_ysize; b++)
 				update_background(CHUNK_WIDTH * a, CHUNK_HEIGHT * b)
 		if array_length(nucleos) > 0{
 			camx = clamp(nucleos[0].a * 48 - room_width / 2, 0, xsize * 48 * zoom - room_width)

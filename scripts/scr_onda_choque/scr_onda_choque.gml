@@ -7,13 +7,18 @@ function scr_onda_choque(edificio = control.null_edificio){
 			edificio.proceso += red_power
 		}
 		else{
+			var dis, center_x, center_y, a, temp_complex, temp_array_dron, b, dron, temp_dis
 			edificio_encender(edificio, false,, false)
 			if edificio.select = 0{
-				var dis = edificio_alcance_sqr[index], center_x = edificio.center_x, center_y = edificio.center_y
-				for(var a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
-					var temp_complex = edificio.target_chunks[a], temp_array_dron = (edificio.enemigo ? chunk_dron_aliado[# temp_complex[0], temp_complex[1]] : chunk_dron_enemigo[# temp_complex[0], temp_complex[1]])
-					for(var b = array_length(temp_array_dron) - 1; b >= 0; b--){
-						var dron = temp_array_dron[b], temp_dis = distance_sqr(center_x, center_y, dron.x, dron.y)
+				dis = edificio_alcance_sqr[index]
+				center_x = edificio.center_x
+				center_y = edificio.center_y
+				for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
+					temp_complex = edificio.target_chunks[a]
+					temp_array_dron = (edificio.enemigo ? chunk_dron_aliado[# temp_complex[0], temp_complex[1]] : chunk_dron_enemigo[# temp_complex[0], temp_complex[1]])
+					for(b = array_length(temp_array_dron) - 1; b >= 0; b--){
+						dron = temp_array_dron[b]
+						temp_dis = distance_sqr(center_x, center_y, dron.x, dron.y)
 						if temp_dis < dis{
 							edificio.select = 20
 							break
@@ -25,11 +30,16 @@ function scr_onda_choque(edificio = control.null_edificio){
 			}
 			else if --edificio.select <= 0{
 				edificio.select = 0
-				var dis = edificio_alcance_sqr[index] + 10, stun = 30 + 10 * edificio.modulo, center_x = edificio.center_x, center_y = edificio.center_y, total_dmg = 0
-				for(var a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
-					var temp_complex = edificio.target_chunks[a], temp_array_dron = (edificio.enemigo ? chunk_dron_aliado[# temp_complex[0], temp_complex[1]] : chunk_dron_enemigo[# temp_complex[0], temp_complex[1]])
-					for(var b = array_length(temp_array_dron) - 1; b >= 0; b--){
-						var dron = temp_array_dron[b], temp_dis = distance_sqr(center_x, center_y, dron.x, dron.y)
+				dis = edificio_alcance_sqr[index] + 10
+				var stun = 30 + 10 * edificio.modulo, total_dmg = 0
+				center_x = edificio.center_x
+				center_y = edificio.center_y
+				for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
+					temp_complex = edificio.target_chunks[a]
+					temp_array_dron = (edificio.enemigo ? chunk_dron_aliado[# temp_complex[0], temp_complex[1]] : chunk_dron_enemigo[# temp_complex[0], temp_complex[1]])
+					for(b = array_length(temp_array_dron) - 1; b >= 0; b--){
+						dron = temp_array_dron[b]
+						temp_dis = distance_sqr(center_x, center_y, dron.x, dron.y)
 						if temp_dis < dis{
 							aplicar_efecto(0, stun, dron)
 							herir_dron(130, dron)
