@@ -2563,8 +2563,6 @@ if build_index > 0 and win = 0{
 						bb = temp_complex_2[1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
-						var temp_complex_3 = abtoxy(aa, bb)
-						draw_sprite_off(spr_blanco, 0, temp_complex_3[0], temp_complex_3[1],,,,, 0.5)
 						if ore[# aa, bb] >= 0{
 							temp_array_real[ore_recurso[ore[# aa, bb]]]++
 							temp_array_2[ore_recurso[ore[# aa, bb]]] += ore_amount[# aa, bb]
@@ -2614,6 +2612,17 @@ if build_index > 0 and win = 0{
 						comprable = false
 						break
 					}
+				}
+			}
+			if build_index = id_taladro_de_explosion{
+				for(a = array_length(build_list_arround) - 1; a >= 0; a--){
+					temp_complex_2 = build_list_arround[a]
+					aa = temp_complex_2[0]
+					bb = temp_complex_2[1]
+					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+						continue
+					var temp_complex_3 = abtoxy(aa, bb)
+					draw_sprite_off(spr_blanco, 0, temp_complex_3[0], temp_complex_3[1],,,,, 0.5)
 				}
 			}
 			temp_text += comprable_texto
@@ -2983,7 +2992,7 @@ if build_index > 0 and win = 0{
 								var _chunk_alcance_y = ceil(edificio_alcance[build_index] / CHUNK_HEIGHT / 14)
 								var mini = max(chunk_x - _chunk_alcance_x, 0), minj = max(chunk_y - _chunk_alcance_y, 0)
 								var maxi = min(chunk_x + _chunk_alcance_x, chunk_xsize - 1), maxj = min(chunk_y + _chunk_alcance_y, chunk_ysize - 1)
-								var temp_edificio
+								var temp_edificio, k
 								for(i = mini; i <= maxi; i++)
 									for(j = minj; j <= maxj; j++)
 										for(k = array_length(chunk_edificios[# i, j]) - 1; k >= 0; k--){

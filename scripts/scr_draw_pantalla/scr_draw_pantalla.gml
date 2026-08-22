@@ -5,11 +5,11 @@ function scr_draw_pantalla(edificio = control.null_edificio, offset_x = 0, offse
 		if edificio.mode{
 			var d = array_create(0, array_create(1, 0)), color = draw_get_color()
 			draw_set_font(ft_mini)
-			var temp_surf = surface_create(60, 50), size = array_length(edificio.instruccion)
+			var temp_surf = surface_create(60, 50), size = array_length(edificio.instruccion), c, e
 			surface_set_target(temp_surf)
-			for(var c = 0; c < size; c++){
+			for(c = 0; c < size; c++){
 				d = edificio.instruccion[c]
-				var e = d[0]
+				e = d[0]
 				if e = 0
 					draw_set_color(make_color_rgb(d[1], d[2], d[3]))
 				else if e = 1

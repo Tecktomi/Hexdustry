@@ -1,10 +1,8 @@
 function scr_refineria_metales(edificio = control.null_edificio){
 	with control{
 		var index = edificio.index
-		if edificio_energia[index]
-			var red = edificio.red, red_power = red.eficiencia
-		if edificio_flujo[index]
-			var flujo = edificio.flujo, flujo_power = flujo.eficiencia
+		var red = edificio.red, red_power = red.eficiencia
+		var flujo = edificio.flujo, flujo_power = flujo.eficiencia
 		if flujo.liquido = idl_acido and (edificio.carga[idr_piedra_cuprica] > 2 or edificio.carga[idr_piedra_ferrica] > 2 or edificio.carga[idr_uranio_bruto] > 0){
 			//Apagar
 			if red_power = 0{

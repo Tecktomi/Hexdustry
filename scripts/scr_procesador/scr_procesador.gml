@@ -4,12 +4,14 @@ function scr_procesador(edificio = control.null_edificio){
 		var red = edificio.red, red_power = red.eficiencia
 		if procesador_select != edificio
 			edificio.proceso += red_power
+		var pc, pc0, val, type2, type3, b, temp_edificio, val2, val3, i, j, temp_array, temp_array_2
 		while edificio.proceso >= 1{
 			edificio.proceso--
 			if array_length(edificio.instruccion) = 0
 				continue
 			edificio.select = ++edificio.select mod max(1, array_length(edificio.instruccion))
-			var pc = edificio.instruccion[edificio.select], pc0 = pc[0]
+			pc = edificio.instruccion[edificio.select]
+			pc0 = pc[0]
 			//Continue
 			if pc0 = 0
 				continue
@@ -24,12 +26,12 @@ function scr_procesador(edificio = control.null_edificio){
 			}
 			//Set {A} to [VAR]{B} [sin, cos, tan, random, floor, round, ceil, sqr, sqrt, pi] [VAR]{C}
 			else if pc0 = 2{
-				var val = edificio.variables[pc[1]]
+				val = edificio.variables[pc[1]]
 				if pc[3] = 0
-					var val2 = edificio.variables[pc[4]]
+					val2 = edificio.variables[pc[4]]
 				else
 					val2 = pc[4]
-				var type2 = typeof(val2)
+				type2 = typeof(val2)
 				if pc[2] = 0 and type2 = "number"
 					val = sin(val2)
 				else if pc[2] = 1 and type2 = "number"
@@ -54,16 +56,17 @@ function scr_procesador(edificio = control.null_edificio){
 			}
 			//Set {A} to [VAR]{b] [+, -, *, /, div, mod, or, and, xor, <<, >>, power] [VAR]{C}
 			else if pc0 = 3{
-				var val = edificio.variables[pc[1]]
+				val = edificio.variables[pc[1]]
 				if pc[2] = 0
-					var val2 = edificio.variables[pc[3]]
+					val2 = edificio.variables[pc[3]]
 				else
 					val2 = pc[3]
 				if pc[5] = 0
-					var val3 = edificio.variables[pc[6]]
+					val3 = edificio.variables[pc[6]]
 				else
 					val3 = pc[6]
-				var type2 = typeof(val2), type3 = typeof(val3)
+				type2 = typeof(val2)
+				type3 = typeof(val3)
 				if pc[4] = 0{
 					if type2 = "string"
 						val = val2 + string(val3)
@@ -96,15 +99,17 @@ function scr_procesador(edificio = control.null_edificio){
 			}
 			//If [VAR]{A} [yes, no][<, >, =] [VAR]{B}, jump to [VAR]{int}
 			else if pc0 = 4{
-				var val3 = 0, val1 = undefined, val2 = undefined
+				val3 = 0
+				val = undefined
+				val2 = undefined
 				if pc[1] = 0
-					val1 = edificio.variables[pc[2]]
+					val = edificio.variables[pc[2]]
 				else
-					val1 = pc[2]
-				if string_digits(string(val1)) = string(val1)
-					val1 = real(val1)
+					val = pc[2]
+				if string_digits(string(val)) = string(val)
+					val = real(val)
 				else
-					val1 = string(val1)
+					val = string(val)
 				if pc[4] = 0
 					val2 = edificio.variables[pc[5]]
 				else
@@ -113,30 +118,32 @@ function scr_procesador(edificio = control.null_edificio){
 					val2 = real(val2)
 				else
 					val2 = string(val2)
-				if typeof(val1) != typeof(val2){
-					show_debug_message($"{val1}, {val2}")
+				if typeof(val) != typeof(val2){
+					show_debug_message($"{val}, {val2}")
 					continue
 				}
 				if pc[6] = 0
 					val3 = edificio.variables[pc[7]] - 1
 				else
 					val3 = pc[7] - 1
-				if pc[3] = 0 and val1 < val2
+				if pc[3] = 0 and val < val2
 					edificio.select = val3
-				else if pc[3] = 1 and val1 <= val2
+				else if pc[3] = 1 and val <= val2
 					edificio.select = val3
-				else if pc[3] = 2 and val1 = val2
+				else if pc[3] = 2 and val = val2
 					edificio.select = val3
-				else if pc[3] = 3 and val1 >= val2
+				else if pc[3] = 3 and val >= val2
 					edificio.select = val3
-				else if pc[3] = 4 and val1 > val2
+				else if pc[3] = 4 and val > val2
 					edificio.select = val3
-				else if pc[3] = 5 and val1 != val2
+				else if pc[3] = 5 and val != val2
 					edificio.select = val3
 			}
 			//Set VAR_{A} to [eneabled, carga, etc...][VAR]{B} from LINK[VAR]{C}
 			else if pc0 = 5{
-				var b = array_length(edificio.procesador_link), temp_edificio = null_edificio, val = -1
+				b = array_length(edificio.procesador_link)
+				temp_edificio = null_edificio
+				val = -1
 				if b = 0 or not is_real(pc[6])
 					continue
 				if pc[5] = 0{
@@ -152,7 +159,7 @@ function scr_procesador(edificio = control.null_edificio){
 				else if pc[2] = b++{
 					if not is_real(pc[4])
 						continue
-					var val2 = 0
+					val2 = 0
 					if pc[3] = 0{
 						val2 = edificio.variables[pc[4]]
 						if not is_real(val2)
@@ -210,7 +217,9 @@ function scr_procesador(edificio = control.null_edificio){
 			}
 			//Control LINK[VAR]{A} to set [Eneable, Mode, Select] to [VAR]{B}
 			else if pc0 = 6{
-				var b = array_length(edificio.procesador_link), temp_edificio = null_edificio, val = undefined
+				b = array_length(edificio.procesador_link)
+				temp_edificio = null_edificio
+				val = undefined
 				if b = 0 or not is_real(pc[2])
 					continue
 				if pc[1] = 0{
@@ -239,7 +248,9 @@ function scr_procesador(edificio = control.null_edificio){
 			}
 			//Set VAR_{A} to value of cell [VAR]{B} of LINK[VAR]{C}
 			else if pc0 = 7{
-				var b = array_length(edificio.procesador_link), val = 0, temp_edificio = null_edificio
+				b = array_length(edificio.procesador_link)
+				val = 0
+				temp_edificio = null_edificio
 				if b = 0 or not is_real(pc[3]) or not is_real(pc[5])
 					continue
 				if pc[4] = 0{
@@ -259,7 +270,10 @@ function scr_procesador(edificio = control.null_edificio){
 			}
 			//Write [VAR]{A} into value of cell [VAR]{B} of LINK[VAR]{c}
 			else if pc0 = 8{
-				var b = array_length(edificio.procesador_link), val = undefined, val2 = 0, temp_edificio = null_edificio
+				b = array_length(edificio.procesador_link)
+				val = undefined
+				val2 = 0
+				temp_edificio = null_edificio
 				if b = 0 or not is_real(pc[4]) or not is_real(pc[6])
 					continue
 				if pc[5] = 0{
@@ -290,7 +304,9 @@ function scr_procesador(edificio = control.null_edificio){
 			}
 			//Draw to LINK[VAR]{A} [clear(), color(r, g, b), rectangle(x, y, w, h), line(x1, y1, x2, y2), triangle(x1, y1, x2, y2, x3, y3), ...]
 			else if pc0 = 9{
-				var b = array_length(edificio.procesador_link), val = "", temp_edificio = null_edificio
+				b = array_length(edificio.procesador_link)
+				val = ""
+				temp_edificio = null_edificio
 				if b = 0 or not is_real(pc[2])
 					continue
 				if pc[1] = 0{
@@ -307,9 +323,11 @@ function scr_procesador(edificio = control.null_edificio){
 				else if pc[3] = 1
 					temp_edificio.mode = true
 				else{
-					var temp_array = [pc[3] - 2], temp_array_2 = [3, 3, 4, 4, 6, 3, 3, 2], a = temp_array_2[pc[3] - 2]
-					for(var i = 0; i < a; i++){
-						var j = 0
+					temp_array = [pc[3] - 2]
+					temp_array_2 = [3, 3, 4, 4, 6, 3, 3, 2]
+					b = temp_array_2[pc[3] - 2]
+					for(i = 0; i < b; i++){
+						j = 0
 						if pc[4 + 2 * i] = 0{
 							if not is_real(pc[5 + 2 * i])
 								continue

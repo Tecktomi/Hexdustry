@@ -34,15 +34,16 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			array_disorder_remove(chunk_edificios[# chunk_x, chunk_y], edificio, 1)
 			array_disorder_remove(edificios_index[index], edificio, 8)
 		}
-		for(var c = edificio.chunk_mina; c <= edificio.chunk_maxa; c++)
-			for(var d = edificio.chunk_minb; d <= edificio.chunk_maxb; d++){
+		var a, b, flag, temp_edificio, temp_coordenada_2, temp_priority, i, dis, temp_complex, dron, aaa, bbb
+		for(a = edificio.chunk_mina; a <= edificio.chunk_maxa; a++)
+			for(b = edificio.chunk_minb; b <= edificio.chunk_maxb; b++){
 				if edificio_draw_estatico[index]{
-					array_remove(chunk_edificios_estatico[# c, d], edificio)
-					chunk_edificios_dirty[# c, d] = true
+					array_remove(chunk_edificios_estatico[# a, b], edificio)
+					chunk_edificios_dirty[# a, b] = true
 				}
 				else
-					array_remove(chunk_edificios_dinamico[# c, d], edificio)
-				array_remove(chunk_edificios_draw[# c, d], edificio)
+					array_remove(chunk_edificios_dinamico[# a, b], edificio)
+				array_remove(chunk_edificios_draw[# a, b], edificio)
 			}
 		edificios_counter[index]--
 		array_disorder_remove(edificios_totales, edificio, 12)
@@ -71,19 +72,19 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			edificio.link.link = null_edificio
 		}
 		desactivar_edificio(edificio)
-		for(var i = real(index = id_procesador); i < array_length(edificio.procesador_link); i++)
-			array_remove(edificio.procesador_link[i].procesador_link, edificio)
+		for(a = real(index = id_procesador); a < array_length(edificio.procesador_link); a++)
+			array_remove(edificio.procesador_link[a].procesador_link, edificio)
 		#region Torres reparadoras
 			if index = id_torre_reparadora{
 				array_disorder_remove(torres_reparadoras, edificio, 2)
-				for(var c = array_length(edificio.edificios_cercanos) - 1; c >= 0; c--){
-					var temp_edificio = edificio.edificios_cercanos[c]
+				for(a = array_length(edificio.edificios_cercanos) - 1; a >= 0; a--){
+					temp_edificio = edificio.edificios_cercanos[a]
 					array_remove(temp_edificio.reparadores_cercanos, edificio)
 				}
 			}
-			var flag = pre_vida < edificio_vida[index]
-			for(var c = array_length(edificio.reparadores_cercanos) - 1; c >= 0; c--){
-				var temp_edificio = edificio.reparadores_cercanos[c]
+			flag = pre_vida < edificio_vida[index]
+			for(a = array_length(edificio.reparadores_cercanos) - 1; a >= 0; a--){
+				temp_edificio = edificio.reparadores_cercanos[a]
 				array_remove(temp_edificio.edificios_cercanos, edificio)
 				if flag
 					array_remove(temp_edificio.edificios_cercanos_heridos, edificio)
@@ -94,8 +95,8 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		if index = id_planta_de_reciclaje
 			array_disorder_remove(plantas_de_reciclaje, edificio, 2)
 		else if index = id_ensambladora and edificio.mode{
-			var temp_edificio = edificio.link
-			for(var a = 0; a < rss_max; a++)
+			temp_edificio = edificio.link
+			for(a = 0; a < rss_max; a++)
 				if a != idr_electronicos
 					temp_edificio.carga[a] = 0
 			temp_edificio.carga_total = 0
@@ -117,8 +118,8 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		}
 		//Ser reciclado
 		if edificio_size[index] <= 3 and tag_edificio_construible[index]{
-			for(var a = array_length(plantas_de_reciclaje) - 1; a >= 0; a--){
-				var temp_edificio = plantas_de_reciclaje[a]
+			for(a = array_length(plantas_de_reciclaje) - 1; a >= 0; a--){
+				temp_edificio = plantas_de_reciclaje[a]
 				if temp_edificio.select = -1 and distance_sqr(edificio.center_x, edificio.center_y, temp_edificio.center_x, temp_edificio.center_y) < PLANTA_RECICLAJE_RANGE_SQR{
 					temp_edificio.mode = true
 					temp_edificio.select = index
@@ -127,8 +128,10 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			}
 		}
 		//Cancelar coordenadas
-		for(var i = array_length(edificio.coordenadas) - 1; i >= 0; i--){
-			var temp_coordenada_2 = edificio.coordenadas[i], a = temp_coordenada_2[0], b = temp_coordenada_2[1]
+		for(i = array_length(edificio.coordenadas) - 1; i >= 0; i--){
+			temp_coordenada_2 = edificio.coordenadas[i]
+			a = temp_coordenada_2[0]
+			b = temp_coordenada_2[1]
 			if index = id_nucleo{
 				ds_grid_set(edificio_cercano, a, b, null_edificio)
 				ds_grid_set(edificio_cercano_dis, a, b, infinity)
@@ -148,12 +151,12 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			}
 		}
 		if menu = 1 and index = id_nucleo and array_length(edificios_targeteables) > 0
-			for(var a = 0; a < xsize; a++)
-				for(var b = 0; b < ysize; b++)
+			for(a = 0; a < xsize; a++)
+				for(b = 0; b < ysize; b++)
 					if terreno_caminable[terreno[# a, b]]{
-						var temp_priority = ds_grid_get(edificio_cercano_priority, a, b)
+						temp_priority = ds_grid_get(edificio_cercano_priority, a, b)
 						if not ds_priority_empty(temp_priority){
-							var temp_edificio = ds_priority_find_min(temp_priority)
+							temp_edificio = ds_priority_find_min(temp_priority)
 							while not temp_edificio.vivo{
 								ds_priority_delete_min(temp_priority)
 								temp_edificio = ds_priority_find_min(temp_priority)
@@ -183,16 +186,16 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		if in(index, id_tunel, id_tunel_salida) and not edificio.idle
 			edificio.link.idle = true
 		//Cancelar outputs
-		for(var a = array_length(edificio.outputs) - 1; a >= 0; a--){
-			var temp_edificio = edificio.outputs[a]
+		for(a = array_length(edificio.outputs) - 1; a >= 0; a--){
+			temp_edificio = edificio.outputs[a]
 			array_remove(temp_edificio.inputs, edificio)
 			if temp_edificio.index = id_cinta_transportadora
 				camino_calcular_in(temp_edificio)
 		}
 		delete(edificio.outputs)
 		//Cancelar inputs
-		for(var a = array_length(edificio.inputs) - 1; a >= 0; a--){
-			var temp_edificio = edificio.inputs[a]
+		for(a = array_length(edificio.inputs) - 1; a >= 0; a--){
+			temp_edificio = edificio.inputs[a]
 			array_remove(temp_edificio.outputs, edificio)
 			if temp_edificio.output_index >= array_length(temp_edificio.outputs)
 				temp_edificio.output_index = 0
@@ -201,7 +204,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		change_calor(0, edificio)
 		//Cancelar red
 		if edificio_energia[index]{
-			var temp_red = edificio.red
+			var temp_red = edificio.red, red_bateria, agregado, nodo, isla, temp_red_2, isla_bateria, pila, visited
 			array_remove(temp_red.edificios, edificio)
 			if index = id_torre_de_alta_tension
 				array_disorder_remove(torres_de_tension, edificio, 2)
@@ -213,22 +216,25 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			else{
 				change_energia(0, edificio)
 				//Eliminar conecciones directas
-				for(var a = array_length(edificio.energia_link) - 1; a >= 0; a--){
-					var temp_edificio = edificio.energia_link[a]
+				for(a = array_length(edificio.energia_link) - 1; a >= 0; a--){
+					temp_edificio = edificio.energia_link[a]
 					array_remove(temp_edificio.energia_link, edificio)
 				}
 				//Revisar nuevo estado de red
-				var red_bateria = 0
-				for(var a = array_length(temp_red.edificios) - 1; a >= 0; a--){
-					var temp_edificio = temp_red.edificios[a]
+				red_bateria = 0
+				for(a = array_length(temp_red.edificios) - 1; a >= 0; a--){
+					temp_edificio = temp_red.edificios[a]
 					if temp_edificio.index = id_bateria
 						red_bateria++
 				}
-				var agregado = array_create(0, null_edificio), visited = array_create(edificio_count, false)
+				agregado = array_create(0, null_edificio)
+				visitado = array_create(edificio_count, false)
 				while array_length(temp_red.edificios) > 0{
-					var nodo = temp_red.edificios[array_length(temp_red.edificios) - 1]
+					nodo = temp_red.edificios[array_length(temp_red.edificios) - 1]
 					if not visited[nodo.edificio_index]{
-						var isla = array_create(0), isla_bateria = 0, pila = ds_stack_create()
+						isla = array_create(0)
+						isla_bateria = 0
+						pila = ds_stack_create()
 						ds_stack_push(pila, nodo)
 						array_push(agregado, nodo)
 						while not ds_stack_empty(pila){
@@ -239,8 +245,8 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 							array_remove(temp_red.edificios, nodo)
 							if not visited[nodo.edificio_index]{
 								visited[nodo.edificio_index] = true
-								for(var a = array_length(nodo.energia_link) - 1; a >= 0; a--){
-									var temp_edificio = nodo.energia_link[a]
+								for(a = array_length(nodo.energia_link) - 1; a >= 0; a--){
+									temp_edificio = nodo.energia_link[a]
 									if not visited[temp_edificio.edificio_index] and not array_contains(agregado, temp_edificio){
 										ds_stack_push(pila, temp_edificio)
 										array_push(agregado, temp_edificio)
@@ -249,12 +255,12 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 							}
 						}
 						ds_stack_destroy(pila)
-						var temp_red_2 = def_red()
+						temp_red_2 = def_red()
 						temp_red_2.edificios = isla
 						if red_bateria > 0
 							temp_red_2.bateria = floor(temp_red.bateria * isla_bateria / red_bateria)
-						for(var a = array_length(isla) - 1; a >= 0; a--){
-							var temp_edificio = isla[a]
+						for(a = array_length(isla) - 1; a >= 0; a--){
+							temp_edificio = isla[a]
 							temp_edificio.red = temp_red_2
 							if edificio_energia_consumo[temp_edificio.index] > 0
 								temp_red_2.consumo += abs(temp_edificio.energia_consumo)
@@ -279,19 +285,19 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		}
 		//Retorno de recursos
 		if not _cheat and not destruccion and ((_jugador = jugador) or (online and servidor)){
-			var b = pre_vida / edificio_vida[index]
+			b = pre_vida / edificio_vida[index]
 			var temp_jugador = (online and servidor) ? (_jugador - 2) : 0
-			for(var a = array_length(edificio_precio_id[index]) - 1; a >= 0; a--)
+			for(a = array_length(edificio_precio_id[index]) - 1; a >= 0; a--)
 				jugador_recursos[temp_jugador, edificio_precio_id[index, a]] += floor(b * edificio_precio_num[index, a] / 2)
 		}
 		//Camiar target de enemigos
 		if index != id_nucleo
-			for(var a = array_length(enemigos) - 1; a >= 0; a--){
+			for(a = array_length(enemigos) - 1; a >= 0; a--){
 				var temp_enemigo = enemigos[a]
 				if temp_enemigo.target = edificio{
-					var temp_complex = xytoab(temp_enemigo.x, temp_enemigo.y)
+					temp_complex = xytoab(temp_enemigo.x, temp_enemigo.y)
 					if temp_complex[0] >= 0{
-						var temp_edificio = edificio_cercano[# temp_complex[0], temp_complex[1]]
+						temp_edificio = edificio_cercano[# temp_complex[0], temp_complex[1]]
 						if temp_edificio = null_edificio
 							temp_enemigo.target = nucleos[0]
 						else
@@ -303,20 +309,23 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		if destruccion and index = id_planta_nuclear and edificio.fuel > 0{
 			var xpos = edificio.center_x, ypos = edificio.center_y
 			//Daño edificios
-			for(var i = array_length(edificios) - 1; i >= 0; i--){
-				var temp_edificio = edificios[i], dis = distance_sqr(xpos, ypos, temp_edificio.center_x, temp_edificio.center_y)
+			for(i = array_length(edificios) - 1; i >= 0; i--){
+				temp_edificio = edificios[i]
+				dis = distance_sqr(xpos, ypos, temp_edificio.center_x, temp_edificio.center_y)
 				if dis < PLANTA_NUCLEAR_RANGE_SQR
 					herir_edificio(9_000_000 / max(1, dis) * random_range(0.7, 1.3), temp_edificio)
 			}
 			//Daño enemigos
-			for(var i = array_length(enemigos) - 1; i >= 0; i--){
-				var dron = enemigos[i], dis = distance_sqr(xpos, ypos, dron.x, dron.y)
+			for(i = array_length(enemigos) - 1; i >= 0; i--){
+				dron = enemigos[i]
+				dis = distance_sqr(xpos, ypos, dron.x, dron.y)
 				if dis < PLANTA_NUCLEAR_RANGE_SQR
 					herir_dron(1_000_000 / max(1, dis) * random_range(0.7, 1.3), dron)
 			}
 			//Daño drones aliados
-			for(var i = array_length(drones_aliados) - 1; i >= 0; i--){
-				var dron = drones_aliados[i], dis = distance_sqr(xpos, ypos, dron.x, dron.y)
+			for(i = array_length(drones_aliados) - 1; i >= 0; i--){
+				dron = drones_aliados[i]
+				dis = distance_sqr(xpos, ypos, dron.x, dron.y)
 				if dis < PLANTA_NUCLEAR_RANGE_SQR
 					herir_dron(1_000_000 / max(1, dis) * random_range(0.7, 1.3), dron)
 			}
@@ -337,20 +346,22 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				jugador : 0})
 		//Cruce de caminos
 		if index = id_cruce
-			for(var a = 0; a < 3; a++){
-				var temp_complex = next_to(aa, bb, a), aaa = temp_complex[0], bbb = temp_complex[1]
+			for(a = 0; a < 3; a++){
+				temp_complex = next_to(aa, bb, a)
+				aaa = temp_complex[0]
+				bbb = temp_complex[1]
 				if aaa < 0 or bbb < 0 or aaa >= xsize or bbb >= ysize
 					continue
 				if edificio_bool[# aaa, bbb]{
-					var temp_edificio = edificio_id[# aaa, bbb]
+					temp_edificio = edificio_id[# aaa, bbb]
 					calcular_edificios_adyascentes(temp_edificio)
 				}
 			}
 		//Cambiar target de torres
 		var array_edificios = enemigo ? edificios_enemigos : edificios
 		if array_length(array_edificios) > 0{
-			for(var i = array_length(edificio.torres) - 1; i >= 0; i--){
-				var temp_edificio = edificio.torres[i]
+			for(i = array_length(edificio.torres) - 1; i >= 0; i--){
+				temp_edificio = edificio.torres[i]
 				if temp_edificio.target_edificio = edificio{
 					temp_edificio.target_edificio = null_edificio
 					if temp_edificio.index = id_mortero
@@ -360,16 +371,16 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				}
 			}
 		}
-		else for(var i = array_length(edificio.torres) - 1; i >= 0; i--){
-			var temp_edificio = edificio.torres[i]
+		else for(i = array_length(edificio.torres) - 1; i >= 0; i--){
+			temp_edificio = edificio.torres[i]
 			if temp_edificio.target = edificio
 				temp_edificio.target_edificio = null_edificio
 		}
 		//Carga de drones
 		if tag_dron_encima[index]{
-			for(var a = array_length(edificio.inputs_carga) - 1; a >= 0; a--)
+			for(a = array_length(edificio.inputs_carga) - 1; a >= 0; a--)
 				array_remove(edificio.inputs_carga[a].outputs_carga, edificio)
-			for(var a = array_length(edificio.outputs_carga) - 1; a >= 0; a--)
+			for(a = array_length(edificio.outputs_carga) - 1; a >= 0; a--)
 				array_remove(edificio.outputs_carga[a].inputs_carga, edificio)
 			if array_contains(edificios_salida_drones, edificio)
 				array_remove(edificios_salida_drones, edificio)

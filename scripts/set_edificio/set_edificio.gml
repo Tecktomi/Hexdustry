@@ -2,7 +2,7 @@ function set_edificio(mode, select, edificio = control.null_edificio, _server = 
 	with control{
 		if edificio = null_edificio or edificio.vida <= 0
 			exit
-		var index = edificio.index
+		var index = edificio.index, a, b, c, temp_edificio
 		if online and not _server{
 			server_set_edificio(mode, select, edificio)
 			if not servidor
@@ -37,8 +37,8 @@ function set_edificio(mode, select, edificio = control.null_edificio, _server = 
 				change_flujo(edificio_flujo_consumo[index], edificio)
 			edificio.flujo.liquido = select
 			if grafic_luz and select = idl_lava and not edificio.luz{
-				for(var b = array_length(edificio.flujo.edificios) - 1; b >= 0; b--){
-					var temp_edificio = edificio.flujo.edificios[b]
+				for(b = array_length(edificio.flujo.edificios) - 1; b >= 0; b--){
+					temp_edificio = edificio.flujo.edificios[b]
 					encender_luz(true, temp_edificio)
 				}
 			}
@@ -50,13 +50,13 @@ function set_edificio(mode, select, edificio = control.null_edificio, _server = 
 			change_flujo(0, edificio)
 			if edificio.flujo.almacen = 0 and edificio.flujo.generacion = 0
 				edificio.flujo.liquido = -1
-			for(var i = 0; i < rss_max; i++){
-				if i = idr_sal
+			for(c = 0; c < rss_max; c++){
+				if c = idr_sal
 					continue
-				edificio.carga[i] = 0
-				edificio.carga_max[i] = 0
-				edificio.carga_input[i] = false
-				edificio.carga_output[i] = false
+				edificio.carga[c] = 0
+				edificio.carga_max[c] = 0
+				edificio.carga_input[c] = false
+				edificio.carga_output[c] = false
 			}
 			edificio.carga_total = 0
 			edificio.select = select
@@ -106,8 +106,8 @@ function set_edificio(mode, select, edificio = control.null_edificio, _server = 
 			edificio.select = select
 			edificio.proceso = 0
 			edificio.start = false
-			for(var b = array_length(dron_precio_id[select]) - 1; b >= 0; b--){
-				var c = 2 * dron_precio_num[select, b]
+			for(b = array_length(dron_precio_id[select]) - 1; b >= 0; b--){
+				c = 2 * dron_precio_num[select, b]
 				edificio.carga_max[dron_precio_id[select, b]] = c
 				edificio.carga_input[dron_precio_id[select, b]] = true
 				if dron_precio_id[select, b] = idr_uranio_bruto{
@@ -129,12 +129,12 @@ function set_edificio(mode, select, edificio = control.null_edificio, _server = 
 				exit
 			edificio.select = select
 			edificio.mode = false
-			for(var a = 0; a < rss_max; a++){
+			for(a = 0; a < rss_max; a++){
 				edificio.carga[a] = 0
 				edificio.carga_max[a] = 0
 				edificio.carga_input[a] = false
 			}
-			for(var a = array_length(misiles_precio_id[select]) - 1; a >= 0; a--){
+			for(a = array_length(misiles_precio_id[select]) - 1; a >= 0; a--){
 				edificio.carga_max[misiles_precio_id[select, a]] = misiles_precio_num[select, a]
 				edificio.carga_input[misiles_precio_id[select, a]] = true
 			}
@@ -142,8 +142,8 @@ function set_edificio(mode, select, edificio = control.null_edificio, _server = 
 			edificio.array_real[1] = misiles_tiempo[select]
 		}
 		if edificio_draw_estatico[index]
-			for(var c = edificio.chunk_mina; c <= edificio.chunk_maxa; c++)
-				for(var d = edificio.chunk_minb; d <= edificio.chunk_maxb; d++)
-					chunk_edificios_dirty[# c, d] = true
+			for(a = edificio.chunk_mina; a <= edificio.chunk_maxa; a++)
+				for(b = edificio.chunk_minb; b <= edificio.chunk_maxb; b++)
+					chunk_edificios_dirty[# a, b] = true
 	}
 }

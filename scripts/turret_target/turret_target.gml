@@ -2,18 +2,20 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 	with control{
 		var dis = edificio_alcance_sqr[edificio.index], dron_final = null_dron, center_x = edificio.center_x, center_y = edificio.center_y
 		var temp_array_dron = (edificio.enemigo ? chunk_dron_aliado : chunk_dron_enemigo), flag = true
+		var a, b, temp_complex, temp_array, temp_dis, dron, temp_edificio, temp_array_edificio
 		if (edificio.enemigo and array_length(drones_aliados) = 0) or (not edificio.enemigo and array_length(enemigos) = 0)
 			flag = false
 		if flag{
 			//Disparo normal
 			if alc_min = 0{
-				for(var a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
-					var temp_complex = edificio.target_chunks[a], temp_array = temp_array_dron[# temp_complex[0], temp_complex[1]]
-					for(var b = array_length(temp_array) - 1; b >= 0; b--){
-						var dron = temp_array[b]
+				for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
+					temp_complex = edificio.target_chunks[a]
+					temp_array = temp_array_dron[# temp_complex[0], temp_complex[1]]
+					for(b = array_length(temp_array) - 1; b >= 0; b--){
+						dron = temp_array[b]
 						if dron.vida <= 0
 							continue
-						var temp_dis = distance_sqr(center_x, center_y, dron.x, dron.y)
+						temp_dis = distance_sqr(center_x, center_y, dron.x, dron.y)
 						if temp_dis < dis{
 							dis = temp_dis
 							dron_final = dron
@@ -22,13 +24,14 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 				}
 			}
 			//Mortero
-			else for(var a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
-				var temp_complex = edificio.target_chunks[a], temp_array = temp_array_dron[# temp_complex[0], temp_complex[1]]
-				for(var b = array_length(temp_array) - 1; b >= 0; b--){
-					var dron = temp_array[b]
+			else for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
+				temp_complex = edificio.target_chunks[a]
+				temp_array = temp_array_dron[# temp_complex[0], temp_complex[1]]
+				for(b = array_length(temp_array) - 1; b >= 0; b--){
+					dron = temp_array[b]
 					if dron.vida < 0
 						continue
-					var temp_dis = distance_sqr(center_x, center_y, dron.x, dron.y)
+					temp_dis = distance_sqr(center_x, center_y, dron.x, dron.y)
 					if temp_dis < dis and temp_dis > alc_min{
 						dis = temp_dis
 						dron_final = dron
@@ -49,13 +52,14 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 		var edificio_final = null_edificio, target_chunk_edificio = (edificio.enemigo ? chunk_edificios : chunk_edificios_enemigo)
 		//Disparo normal
 		if alc_min = 0{
-			for(var a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
-				var temp_complex = edificio.target_chunks[a], temp_array_edificio = target_chunk_edificio[# temp_complex[0], temp_complex[1]]
-				for(var b = array_length(temp_array_edificio) - 1; b >= 0; b--){
-					var temp_edificio = temp_array_edificio[b]
+			for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
+				temp_complex = edificio.target_chunks[a]
+				temp_array_edificio = target_chunk_edificio[# temp_complex[0], temp_complex[1]]
+				for(b = array_length(temp_array_edificio) - 1; b >= 0; b--){
+					temp_edificio = temp_array_edificio[b]
 					if temp_edificio.vida <= 0
 						continue
-					var temp_dis = distance_sqr(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y)
+					temp_dis = distance_sqr(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y)
 					if temp_dis < dis{
 						dis = temp_dis
 						edificio_final = temp_edificio
@@ -64,13 +68,14 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 			}
 		}
 		//Mortero
-		else for(var a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
-			var temp_complex = edificio.target_chunks[a], temp_array_edificio = target_chunk_edificio[# temp_complex[0], temp_complex[1]]
-			for(var b = array_length(temp_array_edificio) - 1; b >= 0; b--){
-				var temp_edificio = temp_array_edificio[b]
+		else for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
+			temp_complex = edificio.target_chunks[a]
+			temp_array_edificio = target_chunk_edificio[# temp_complex[0], temp_complex[1]]
+			for(b = array_length(temp_array_edificio) - 1; b >= 0; b--){
+				temp_edificio = temp_array_edificio[b]
 				if temp_edificio.vida < 0
 					continue
-				var temp_dis = distance_sqr(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y)
+				temp_dis = distance_sqr(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y)
 				if temp_dis < dis and temp_dis > alc_min{
 					dis = temp_dis
 					edificio_final = temp_edificio

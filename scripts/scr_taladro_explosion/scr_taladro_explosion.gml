@@ -8,9 +8,11 @@ function scr_taladro_explosion(edificio = control.null_edificio){
 					sound_play(snd_explosion, edificio.center_x, edificio.center_y)
 					edificio.carga[idr_explosivo]--
 					edificio.carga_total--
-					var temp_list = get_size(edificio.a, edificio.b, edificio.dir, edificio_size[index] + 2), flag = false
-					for(var b = array_length(temp_list) - 1; b >= 0; b--){
-						var temp_complex = temp_list[b], aa = temp_complex[0], bb = temp_complex[1]
+					var temp_list = get_size(edificio.a, edificio.b, edificio.dir, edificio_size[index] + 2), flag = false, b, temp_complex, aa, bb
+					for(b = array_length(temp_list) - 1; b >= 0; b--){
+						temp_complex = temp_list[b]
+						aa = temp_complex[0]
+						bb = temp_complex[1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if ore[# aa, bb] >= 0{

@@ -1,8 +1,7 @@
 function scr_torre_reparadora(edificio = control.null_edificio){
 	with control{
 		var index = edificio.index
-		if edificio_energia[index]
-			var red = edificio.red, red_power = red.eficiencia
+		var red = edificio.red, red_power = red.eficiencia
 		if array_length(edificio.edificios_cercanos_heridos) = 0 or red_power = 0
 			continue
 		if edificio.link = null_edificio{

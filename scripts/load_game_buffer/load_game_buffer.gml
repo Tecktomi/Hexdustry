@@ -29,10 +29,11 @@ function load_game_buffer(buffer){
 		multiplicador_vida_enemigos = buffer_read(buffer, buffer_f64)
 		dificultad = buffer_read(buffer, buffer_s8)
 		modo_misiones = buffer_read(buffer, buffer_bool)
+		var a, b, c, d, _texto
 		#region Misiones
 			var len = buffer_read(buffer, buffer_u8)
 			misiones = array_create(len, null_mision)
-			for(var a = 0; a < len; a++){
+			for(a = 0; a < len; a++){
 				var _nombre = buffer_read(buffer, buffer_string)
 				var _objetivo = buffer_read(buffer, buffer_s8)
 				var _target_id = buffer_read(buffer, buffer_s8)
@@ -42,8 +43,8 @@ function load_game_buffer(buffer){
 				var _tiempo_victoria = buffer_read(buffer, buffer_bool)
 				var _tiempo_show = buffer_read(buffer, buffer_bool)
 				var len_2 = buffer_read(buffer, buffer_u8)
-				var _texto = array_create(len_2, {x : 0, y : 0, texto : "", texto_idioma : array_create(0, "")})
-				for(var b = 0; b < len_2; b++){
+				_texto = array_create(len_2, {x : 0, y : 0, texto : "", texto_idioma : array_create(0, "")})
+				for(b = 0; b < len_2; b++){
 					var _x = real(buffer_read(buffer, buffer_u16))
 					var _y = real(buffer_read(buffer, buffer_u16))
 					var temp_texto = string(buffer_read(buffer, buffer_string))
@@ -69,12 +70,12 @@ function load_game_buffer(buffer){
 			mision_current_tiempo = buffer_read(buffer, buffer_s16)
 			mision_choosing_coord = buffer_read(buffer, buffer_bool)
 		#endregion
-		for(var a = 0; a < rss_max; a++)
+		for(a = 0; a < rss_max; a++)
 			array_set(jugador_recursos[0], a, real(buffer_read(buffer, buffer_u16)))
 		image_index = buffer_read(buffer, buffer_u32)
 		var mask_tecnologia = buffer_read(buffer, buffer_u64)
 		var mask_tecnologia_desbloqueable = buffer_read(buffer, buffer_u64)
-		for(var a = 0; a < edificio_max; a++){
+		for(a = 0; a < edificio_max; a++){
 			edificio_tecnologia[a] = bool(mask_tecnologia & (1 << a))
 			edificio_tecnologia_desbloqueable[a] = bool(mask_tecnologia_desbloqueable & (1 << a))
 		}
@@ -84,8 +85,8 @@ function load_game_buffer(buffer){
 		for(var i = 0; i < len; i++){
 			var index = real(buffer_read(buffer, buffer_u8))
 			var dir = real(buffer_read(buffer, buffer_u8))
-			var a = real(buffer_read(buffer, buffer_u16))
-			var b = real(buffer_read(buffer, buffer_u16))
+			a = real(buffer_read(buffer, buffer_u16))
+			b = real(buffer_read(buffer, buffer_u16))
 			var _jugador = real(buffer_read(buffer, buffer_u8))
 			if index = id_nucleo
 				var edificio = add_edificio(index, dir, a, b, _jugador)
@@ -95,19 +96,22 @@ function load_game_buffer(buffer){
 				load_procesador(buffer, edificio)
 		}
 		//Cargar estado
-		for(var a = 0; a < len; a++)
+		for(a = 0; a < len; a++)
 			temp_edificios_target[a] = load_edificio(buffer, edificios_totales[a])
 		//Redes
 		len = real(buffer_read(buffer, buffer_u16))
-		for(var a = 0; a < len; a++){
-			var b = real(buffer_read(buffer, buffer_u16)), c = real(buffer_read(buffer, buffer_f64))
+		for(a = 0; a < len; a++){
+			b = real(buffer_read(buffer, buffer_u16))
+			c = real(buffer_read(buffer, buffer_f64))
 			if b < 65535
 				edificios_totales[b].red.bateria = c
 		}
 		//Flujos
 		len = real(buffer_read(buffer, buffer_u16))
-		for(var a = 0; a < len; a++){
-			var b = real(buffer_read(buffer, buffer_u16)), c = real(buffer_read(buffer, buffer_f64)), d = real(buffer_read(buffer, buffer_u8))
+		for(a = 0; a < len; a++){
+			b = real(buffer_read(buffer, buffer_u16))
+			c = real(buffer_read(buffer, buffer_f64))
+			d = real(buffer_read(buffer, buffer_u8))
 			if b < 65535{
 				var flujo = edificios_totales[b].flujo
 				flujo.almacen = c
@@ -118,8 +122,8 @@ function load_game_buffer(buffer){
 		len = real(buffer_read(buffer, buffer_u16))
 		var temp_dron_target = array_create(len, -1)
 		for(var i = 0; i < len; i++){
-			var a = real(buffer_read(buffer, buffer_u16))
-			var b = real(buffer_read(buffer, buffer_u16))
+			a = real(buffer_read(buffer, buffer_u16))
+			b = real(buffer_read(buffer, buffer_u16))
 			var index = real(buffer_read(buffer, buffer_u8))
 			var enemigo = bool(buffer_read(buffer, buffer_bool))
 			var _jugador = real(buffer_read(buffer, buffer_u8))
@@ -128,7 +132,8 @@ function load_game_buffer(buffer){
 		//Dron - estados
 		for(var i = 0; i < len; i++){
 			var dron = drones[i]
-			var mask = real(buffer_read(buffer, buffer_u64)), c = 0
+			var mask = real(buffer_read(buffer, buffer_u64))
+			c = 0
 			dron.x = real(buffer_read(buffer, buffer_f64))
 			dron.y = real(buffer_read(buffer, buffer_f64))
 			if mask & (1 << c++) dron.vida_max = real(buffer_read(buffer, buffer_f64))
@@ -162,7 +167,7 @@ function load_game_buffer(buffer){
 				drones[i].target_dron = drones[temp_dron_target[i]]
 		//Referencias cruzadas edificio-dron
 		len = array_length(temp_edificios_target)
-		for(var a = 0; a < len; a++)
+		for(a = 0; a < len; a++)
 			if temp_edificios_target[a] != -1{
 				var edificio = edificios_totales[a], dron = drones[temp_edificios_target[a]]
 				array_disorder_push(dron.torres, edificio, 2)
@@ -171,11 +176,12 @@ function load_game_buffer(buffer){
 		//Municiones
 		len = real(buffer_read(buffer, buffer_u16))
 		repeat(len){
-			var a = buffer_read(buffer, buffer_f64)
-			var b = buffer_read(buffer, buffer_f64)
+			a = buffer_read(buffer, buffer_f64)
+			b = buffer_read(buffer, buffer_f64)
 			var hmove = real(buffer_read(buffer, buffer_f64))
 			var vmove = real(buffer_read(buffer, buffer_f64))
-			var mask = real(buffer_read(buffer, buffer_u8)), c = 0
+			var mask = real(buffer_read(buffer, buffer_u8))
+			c = 0
 			var tipo = 0, radio = 2500, humo = false, rastreador = false, _jugador = jugador, _target = -1, _target_build = -1
 			if mask & (1 << c++) tipo = real(buffer_read(buffer, buffer_u8))
 			var dis = real(buffer_read(buffer, buffer_f64))
