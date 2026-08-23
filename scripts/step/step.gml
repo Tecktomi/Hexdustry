@@ -360,6 +360,8 @@ function step(){
 						edificio = flujo.edificios[b]
 						encender_luz(false, edificio)
 					}
+				if flujo.liquido_forzado = 0
+					flujo.liquido = -1
 			}
 		}
 		if array_length(explosion_queue) > 0{

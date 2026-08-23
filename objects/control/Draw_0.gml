@@ -1101,11 +1101,25 @@ if show_menu{
 				}
 			}
 			else if index = id_deposito{
-				if mouse_check_button_pressed(mb_left){
-					mouse_clear(mb_left)
-					show_menu = false
-					edificio.flujo.almacen = 0
-					edificio.flujo.liquido = -1
+				if edificio.flujo.liquido >= 0{
+					if edificio.flujo.liquido_forzado = 0{
+						if mouse_check_button_pressed(mb_left){
+							mouse_clear(mb_left)
+							show_menu = false
+							edificio.flujo.almacen = 0
+							edificio.flujo.liquido = -1
+						}
+					}
+					else{
+						draw_set_halign(fa_center)
+						draw_text_background(aa + 80 * zoom, bb + 80 * zoom, $"No se puede vaciar\nHay edificios que aún fuerzan {liquido_nombre[edificio.flujo.liquido]}")
+						draw_set_halign(fa_left)
+						for(a = array_length(edificio.flujo.edificios) - 1; a >= 0; a--){
+							var temp_edificio = edificio.flujo.edificios[a]
+							if not tag_edificio_tuberia[temp_edificio.index]
+								draw_edificio_borde(temp_edificio, c_red, _parpadeo)
+						}
+					}
 				}
 			}
 			else if index = id_silo_de_misiles{
@@ -2201,7 +2215,7 @@ if build_index > 0 and win = 0{
 	//Actualizar ante el movimiento
 	if _change{
 		build_list = get_size(temp_mx, temp_my, build_dir, edificio_size[build_index])
-		if build_index = id_taladro_de_explosion
+		if in(build_index, id_taladro_de_explosion, id_deposito)
 			build_list_arround = get_size(temp_mx, temp_my, build_dir, edificio_size[build_index] + 2)
 		else if in(build_index, id_fabrica_de_drones, id_ensambladora, id_planta_de_reciclaje, id_fabrica_de_drones_grande, id_cinta_grande)
 			build_list_arround = get_arround(temp_mx, temp_my, build_dir, edificio_size[build_index])
@@ -2217,7 +2231,7 @@ if build_index > 0 and win = 0{
 		if build_index = id_torre_reparadora
 			build_array_edificios = array_create(0, null_edificio)
 		comprable = true
-		if build_index = id_tuberia and not mouse_check_button(mb_left) and not mouse_check_button_released(mb_left){
+		if in(build_index, id_tuberia, id_deposito) and not mouse_check_button(mb_left) and not mouse_check_button_released(mb_left){
 			liquido_choose = 0
 			array_resize(liquido_choose_array, 0)
 		}
@@ -3102,7 +3116,51 @@ if build_index > 0 and win = 0{
 								}
 							}
 						}
-						
+						//Depósitos
+						else if build_index = id_deposito{
+							if _change{
+								var _temp_array_liquidos = array_create(liquido_max, false)
+								for(a = array_length(build_list_arround) - 1; a >= 0; a--){
+									temp_complex = build_list_arround[a]
+									aaa = temp_complex[0]
+									bbb = temp_complex[1]
+									if aaa < 0 or bbb < 0 or aaa >= xsize or bbb >= ysize
+										continue
+									if edificio_bool[# aaa, bbb]{
+										var temp_edificio = edificio_id[# aaa, bbb]
+										if edificio_flujo[temp_edificio.index]{
+											if temp_edificio.flujo != null_flujo and temp_edificio.flujo.liquido != -1
+												_temp_array_liquidos[temp_edificio.flujo.liquido] = true
+											if temp_edificio.flujo_2 != null_flujo and temp_edificio.flujo_2.liquido != -1
+												_temp_array_liquidos[temp_edificio.flujo_2.liquido] = true
+										}
+									}
+								}
+								array_resize(liquido_choose_array, 0)
+								for(a = 0; a < liquido_max; a++)
+									if _temp_array_liquidos[a]
+										array_push(liquido_choose_array, a)
+							}
+							var _len = array_length(liquido_choose_array)
+							if _len > 1{
+								temp_complex = abtoxy(temp_mx, temp_my)
+								aa = temp_complex[0]
+								bb = temp_complex[1]
+								b = 2 * pi / _len
+								draw_set_color(c_white)
+								draw_set_alpha(0.5)
+								draw_circle_off(aa, bb, 60, false)
+								for(a = -5; a < 5; a++)
+									draw_triangle_off(aa, bb, aa + 60 * cos((liquido_choose + 0.1 * a) * b), bb + 60 * sin((liquido_choose + 0.1 * a) * b), aa + 60 * cos((liquido_choose + 0.1 * (a + 1)) * b), bb + 60 * sin((liquido_choose + 0.1 * (a + 1)) * b), false)
+								draw_set_alpha(1)
+								for(a = 0; a < _len; a++)
+									draw_sprite_off(liquido_sprite[liquido_choose_array[a]], 0, aa + 50 * cos(a * b), bb + 50 * sin(a * b))
+								if mouse_wheel_up()
+									liquido_choose = (liquido_choose + 1) mod _len
+								if mouse_wheel_down()
+									liquido_choose = (liquido_choose + _len - 1) mod _len
+							}
+						}
 					}
 					//Construir
 					if ((DEVISE and mouse_check_button_pressed(mb_left)) or (not DEVISE and mouse_check_button_released(mb_left) and android_building and construible and distance(mouse_x, mouse_y, android_mouse_x, android_mouse_y) < 10)) and flag_camino and _comprable and (not edificio_bool[# temp_mx, temp_my] or (build_index = id_cruce and edificio_camino[edificio_id[# temp_mx, temp_my].index])){

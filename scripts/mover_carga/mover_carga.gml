@@ -22,6 +22,7 @@ function mover_carga(edificio = control.null_edificio){
 					temp_edificio.select = edificio.select
 					edificio.outputs_carga_index = (edificio.outputs_carga_index + a + 1) mod array_length(edificio.outputs_carga)
 					flag = true
+					break
 				}
 			}
 		}
