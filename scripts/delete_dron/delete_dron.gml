@@ -1,6 +1,6 @@
 function delete_dron(dron = control.null_dron){
 	with control{
-		var enemigo = dron.enemigo, array_drones, _jugador = dron.jugador, a, edificio
+		var enemigo = dron.enemigo, array_drones, _jugador = dron.jugador, a, edificio, temp_dron
 		array_disorder_remove(drones, dron, 2)
 		dron_chunk_remove(dron)
 		//Dron enemigo
@@ -41,6 +41,12 @@ function delete_dron(dron = control.null_dron){
 			edificio = dron.torres[a]
 			if edificio.target = dron
 				edificio.target = null_dron
+		}
+		//Cambiar target drones
+		for(a = array_length(drones) - 1; a >= 0; a--){
+			temp_dron = drones[a]
+			if temp_dron.target_dron = dron
+				temp_dron.target_dron = null_dron
 		}
 		//Ser reciclado
 		for(a = array_length(plantas_de_reciclaje) - 1; a >= 0; a--){

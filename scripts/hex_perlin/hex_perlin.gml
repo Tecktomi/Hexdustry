@@ -13,5 +13,6 @@ function hex_perlin(_xsize, _ysize, _octava = 3, borde = false){
 		for(a = 0; a < _xsize; a++)
 			output[# a, b] = (mask[# 2 * a + bmod, b] + mask[# 2 * a + bmodplus, b] + mask[# 2 * a + bmod, bplus] + mask[# 2 * a + bmodplus, bplus]) / 4
 	}
+	ds_grid_destroy(mask)
 	return output
 }

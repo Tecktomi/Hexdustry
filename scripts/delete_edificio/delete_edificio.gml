@@ -204,7 +204,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		change_calor(0, edificio)
 		//Cancelar red
 		if edificio_energia[index]{
-			var temp_red = edificio.red, red_bateria, agregado, nodo, isla, temp_red_2, isla_bateria, pila, visited
+			var temp_red = edificio.red, red_bateria, agregado, nodo, isla, temp_red_2, isla_bateria, pila, visitado
 			array_remove(temp_red.edificios, edificio)
 			if index = id_torre_de_alta_tension
 				array_disorder_remove(torres_de_tension, edificio, 2)

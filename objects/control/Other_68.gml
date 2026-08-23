@@ -7,8 +7,18 @@ if type = network_type_data{
 		show_debug_message($"msg: {msg}")
 	if msg = 1{ //Handle Hello
 		var temp_socket = async_load[? "id"]
-		array_push(server_jugadores, temp_socket)
-		handle_hello(temp_socket, buffer)
+		var player_name = buffer_read(buffer, buffer_string)
+		//Detectar nombre utilizado
+		if array_contains(server_jugadores_nombre, player_name){
+			var reply = buffer_create(1, buffer_grow, 1)
+			buffer_write(reply, buffer_u8, 16)
+			network_send_packet(socket, reply, buffer_tell(reply))
+			array_pop(server_jugadores)
+		}
+		else{
+			array_push(server_jugadores, temp_socket)
+			handle_hello(temp_socket, buffer)
+		}
 	}
 	else if msg = 2 //Handle Welcome
 		handle_welcome(buffer)
@@ -50,11 +60,13 @@ if type = network_type_data{
 		handle_jugador_expulsado(buffer)
 	else if msg = 18 //Timeout
 		handle_jugador_expulsado(buffer, true)
-	else if msg = 19 //Dar señales de vida
+	else if msg = 19{ //Dar señales de vida
 		handle_timeout(buffer)
+		//Timeout jugadores
+		if not servidor
+			server_jugadores_timeout = [0]
+	}
 	else if msg = 20 //Mensaje
 		handle_mensaje(buffer)
-	//Timeout jugadores
-	if not servidor
-		server_jugadores_timeout = [0]
+	
 }

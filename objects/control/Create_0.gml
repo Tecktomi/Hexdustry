@@ -789,7 +789,7 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 	idr_piedra = def_recurso("Piedra", spr_item_piedra, #7A7A74,, 2)
 	idr_silicio = def_recurso("Silicio", spr_item_vidrio, #A0A4A8,, 2)
 	idr_concreto = def_recurso("Concreto", spr_item_concreto, #9A9A94,, 3)
-	idr_piedra_cuprica = def_recurso("Piedra Cúprica", spr_item_piedra_cobre, #8A5A32, 2)
+	idr_piedra_cuprica = def_recurso("Piedra Cúprica", spr_item_piedra_cobre, #8A5A32,, 2)
 	//10
 	idr_piedra_ferrica = def_recurso("Piedra Férrica", spr_item_piedra_hierro, #6B4B3A,, 2)
 	idr_piedra_sulfatada = def_recurso("Piedra Sulfatada", spr_item_piedra_azufre, #8E8A6A,, 2)
