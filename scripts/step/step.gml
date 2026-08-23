@@ -130,7 +130,7 @@ function step(){
 			if _tipo != 2 and target != null_dron and target.vida > 0 and muna = target.a and munb = target.b{
 				herir_dron(_dmg, target)
 				if _tipo != 4
-					dis = 0
+					municion.dis = 0
 			}
 			//Munición perforadora
 			if _tipo = 4

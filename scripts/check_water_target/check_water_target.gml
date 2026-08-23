@@ -47,5 +47,6 @@ function check_water_target(){
 				}
 			}
 		}
+		ds_grid_destroy(visited)
 	}
 }

@@ -1,15 +1,6 @@
 function handle_hello(socket, buffer){
 	with control{
 		online = true
-		var player_name = buffer_read(buffer, buffer_string)
-		//Detectar nombre utilizado
-		if array_contains(server_jugadores_nombre, player_name){
-			var reply = buffer_create(1, buffer_grow, 1)
-			buffer_write(reply, buffer_u8, 16)
-			network_send_packet(socket, reply, buffer_tell(reply))
-			array_pop(server_jugadores)
-			break
-		}
 		#region Crear núcleo PvP
 			var new_nucleo_x, new_nucleo_y, tries = 0
 			if server_pvp{

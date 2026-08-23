@@ -75,7 +75,7 @@ function construir(index, dir, mx, my, enemigo = false, _server = false, _cheat 
 				if edificio_bool[# a, b]{
 					temp_edificio = edificio_id[# a, b]
 					if in(temp_edificio.index, id_tunel, id_tunel_salida) and temp_edificio.dir = (dir + 3) mod 6{
-						build_target = edificio_2
+						build_target = temp_edificio
 						build_able = true
 						break
 					}

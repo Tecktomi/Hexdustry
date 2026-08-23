@@ -29,6 +29,7 @@ function dron_logic(){
 				}
 			}
 			//Efectos
+			flag = false
 			for(b = 0; b < efectos_max; b++)
 				if dron.efecto[b] > 0{
 					dron.efecto[b]--
@@ -37,13 +38,18 @@ function dron_logic(){
 						vel /= 2
 					//Fuego
 					else if b = 1{
-						herir_dron(dron_vida_max[index] / 2000, dron)
+						if herir_dron(dron_vida_max[index] / 2000, dron){
+							flag = true
+							break
+						}
 						if grafic_humo and (image_index mod 10) = (a mod 10){
 							dir = viento_dir + random_range(-pi / 4, pi / 4)
 							array_push(humos, add_humo(aa, bb, dron.a, dron.b, cos(dir) * viento_mag, sin(dir) * viento_mag, irandom_range(40, 70)))
 						}
 					}
 				}
+			if flag
+				continue
 			if dron.vida <= 0{
 				delete_dron(dron)
 				continue
@@ -70,9 +76,9 @@ function dron_logic(){
 				if edificio_bool[# dron.a, dron.b]{
 					edificio = edificio_id[# dron.a, dron.b]
 					if edificio.index = id_mina{
-						explosion(edificio.center_x, edificio.center_y,, edificio.enemigo, 10_000, 1000,, dron.jugador)
+						flag = explosion(edificio.center_x, edificio.center_y,, edificio.enemigo, 10_000, 1000,, dron.jugador, dron)
 						delete_edificio(edificio)
-						if dron.vida <= 0
+						if flag
 							continue
 					}
 				}
@@ -427,7 +433,7 @@ function dron_logic(){
 				}
 				//Targetear unidades
 				else if array_length(drones_target) > 0{
-					if dron = null_dron{
+					if dron.target_dron = null_dron{
 						if (image_index mod 10) = (a mod 10){
 							closest_dis = dron_alcance[index]
 							for(u = minu; u <= maxu; u++)

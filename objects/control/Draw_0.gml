@@ -701,7 +701,7 @@ if pausa = 1{
 			draw_set_color(c_white)
 			draw_set_alpha(1)
 			draw_text(xpos, ypos, "PRESIONA CUALQUIER TECLA")
-			if keyboard_check_pressed(vk_anykey) and (keyboard_lastkey = CONTROL_USADAS[get_file - 2] or not array_contains(CONTROL_USADAS, keyboard_lastkey)){
+			if keyboard_check_pressed(vk_anykey) and (keyboard_lastkey = CONTROL_USADAS[get_file - 4] or not array_contains(CONTROL_USADAS, keyboard_lastkey)){
 				get_file -= 2
 				if get_file = 2
 					CONTROL_LEFT = keyboard_lastkey
@@ -3787,6 +3787,7 @@ if keyboard_check(ord("V")){
 		show_debug_message($"{current_time - _time}ms")
 		for(a = 0; a < array_length(misiones); a++)
 			show_debug_message(misiones[a])
+		ds_grid_destroy(visitado)
 	}
 	draw_set_valign(fa_top)
 }

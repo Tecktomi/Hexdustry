@@ -21,6 +21,11 @@ function resize_grid(minx = 0, miny = 0){
 		ds_grid_resize(edificio_cercano, xsize, ysize)
 		ds_grid_resize(edificio_cercano_dis, xsize, ysize)
 		ds_grid_resize(edificio_cercano_dir, xsize, ysize)
+		var prev_width = ds_grid_width(edificio_cercano_priority), prev_height = ds_grid_height(edificio_cercano_priority)
+		for(a = 0; a < prev_width; a++)
+			for(b = 0; b < prev_height; b++)
+				if a >= xsize or b >= ysize
+					ds_priority_destroy(edificio_cercano_priority[# a, b])
 		ds_grid_resize(edificio_cercano_priority, xsize, ysize)
 		ds_grid_resize(pre_abtoxy, xsize + 1, ysize + 1)
 		ds_grid_resize(terreno_pared_index, xsize, ysize)
@@ -40,10 +45,12 @@ function resize_grid(minx = 0, miny = 0){
 				temp_complex_2 = [real(a + (b mod 2) / 2) * 48 + 16, real(b + 1) * 14]
 				ds_grid_set(pre_abtoxy, aplus, b + 1, temp_complex_2)
 				ds_grid_set(ore_random, a, b, random(1))
-				temp_priority = ds_priority_create()
-				ds_priority_add(temp_priority, null_edificio, 0)
-				ds_priority_delete_max(temp_priority)
-				ds_grid_set(edificio_cercano_priority, a, b, temp_priority)
+				if a >= prev_width or b >= prev_height{
+					temp_priority = ds_priority_create()
+					ds_priority_add(temp_priority, null_edificio, 0)
+					ds_priority_delete_max(temp_priority)
+					ds_grid_set(edificio_cercano_priority, a, b, temp_priority)
+				}
 			}
 		}
 	}
