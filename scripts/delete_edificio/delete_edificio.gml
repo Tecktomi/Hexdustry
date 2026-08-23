@@ -373,7 +373,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		}
 		else for(i = array_length(edificio.torres) - 1; i >= 0; i--){
 			temp_edificio = edificio.torres[i]
-			if temp_edificio.target = edificio
+			if temp_edificio.target_edificio = edificio
 				temp_edificio.target_edificio = null_edificio
 		}
 		//Carga de drones

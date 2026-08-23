@@ -69,6 +69,8 @@ function set_grid_size(){
 		ds_grid_clear(background_bool, false)
 		ds_grid_resize(usable_grid_bool, xsize, ysize)
 		ds_grid_clear(usable_grid_bool, false)
+		ds_grid_resize(usable_grid_real, xsize, ysize)
+		ds_grid_clear(usable_grid_real, 0)
 		ds_grid_resize(grid_water_distance, xsize, ysize)
 		ds_grid_clear(grid_water_distance, infinity)
 		ds_grid_resize(background, chunk_xsize, chunk_ysize)

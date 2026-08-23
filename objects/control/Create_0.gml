@@ -15,6 +15,7 @@ var a, b, c, flag
 	#macro PLANTA_RECICLAJE_RANGE_SQR 62_500
 	#macro ENEMIGO_CERCA 100
 	#macro ENEMIGO_CERCA_SQR 10_000
+	#macro HEX_FAST_THRESHOLD 64
 	SIZE_SIZE = [1, 3, 7, 12, 19, 27, 37]
 	SIZE_BORDE = [6, 9, 12, 15, 18, 21]
 	DESFACE = [[[0, -1], [0, -2], [-1, -1], [-1, 1], [0, 2], [0, 1]], [[1, -1], [0, -2], [0, -1], [0, 1], [0, 2], [1, 1]]]
@@ -291,7 +292,6 @@ L = {}
 	get_file = 0
 	tecnologia = true
 	tecnologia_precio_multiplicador = 1
-	chunk_update = true
 	#macro LOGIC_DT 1 / 60
 	acumulator = 0
 	deslizante = array_create(2, 0)
@@ -317,6 +317,7 @@ L = {}
 	comprable = true
 	comprable_texto = ""
 	draw_once = true
+	light_surface = surface_create(room_width, room_height)
 #endregion
 #region Misiones
 	null_mision = def_mision()
@@ -697,6 +698,8 @@ selected_dron = null_dron
 	ds_grid_clear(background_bool, false)
 	usable_grid_bool = ds_grid_create(xsize, ysize)
 	ds_grid_clear(usable_grid_bool, false)
+	usable_grid_real = ds_grid_create(xsize, ysize)
+	ds_grid_clear(usable_grid_real, 0)
 	grid_water_distance = ds_grid_create(xsize, ysize)
 	ds_grid_clear(grid_water_distance, infinity)
 	beta = ds_grid_create(xsize, ysize)

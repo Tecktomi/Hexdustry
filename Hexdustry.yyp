@@ -208,6 +208,7 @@
     {"id":{"name":"in","path":"scripts/in/in.yy",},},
     {"id":{"name":"investigar","path":"scripts/investigar/investigar.yy",},},
     {"id":{"name":"is_comprable","path":"scripts/is_comprable/is_comprable.yy",},},
+    {"id":{"name":"line_of_sight","path":"scripts/line_of_sight/line_of_sight.yy",},},
     {"id":{"name":"load_edificio","path":"scripts/load_edificio/load_edificio.yy",},},
     {"id":{"name":"load_escenario_buffer","path":"scripts/load_escenario_buffer/load_escenario_buffer.yy",},},
     {"id":{"name":"load_game_buffer","path":"scripts/load_game_buffer/load_game_buffer.yy",},},

@@ -62,7 +62,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 				var dis = distance_sqr(center_x, edificio.center_y, target_x, target_y)
 				if dis > edificio_alcance_sqr[index]{
 					array_disorder_remove(edificio.target.torres, edificio, 2)
-					edificio.target = null_edificio
+					edificio.target = null_dron
 					continue
 				}
 				var tiro = -1, arma = edificio_arma[index], b, tiro_struct
@@ -91,13 +91,13 @@ function scr_torres_basicas(edificio = control.null_edificio){
 							}
 							if dron != null_dron{
 								var temp_array_dron = (enemigo ? chunk_dron_aliado[# dron.chunk_x, dron.chunk_y] : chunk_dron_enemigo[# dron.chunk_x, dron.chunk_y])
-								var disi = edificio_alcance[index], x1 = center_x + disi * cos(angle + pi / 6), y1 = center_y - disi * sin(angle + pi / 6), x2 = center_x + disi * cos(angle - pi / 6), y2 = center_y - disi * sin(angle - pi / 6), total_dmg = 0
+								var disi = edificio_alcance[index], x1 = center_x + disi * cos(angle + pi / 6), y1 = center_y - disi * sin(angle + pi / 6), x2 = center_x + disi * cos(angle - pi / 6), y2 = center_y - disi * sin(angle - pi / 6), total_dmg = tiro_struct.dmg * dmg_factor
 								var c, temp_dron
 								for(c = array_length(temp_array_dron) - 1; c >= 0; c--){
 									temp_dron = temp_array_dron[c]
 									if point_in_triangle(temp_dron.x, temp_dron.y, center_x, center_y, x1, y1, x2, y2){
 										aplicar_efecto(1, 300, temp_dron)
-										herir_dron(2, temp_dron)
+										herir_dron(total_dmg, temp_dron)
 									}
 								}
 								if enemigo
@@ -126,7 +126,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 								municion = add_municion(center_x, center_y, 20 * (target_x - center_x) / dis, 20 * (target_y - center_y) / dis, 1, dis / 20, tiro_struct.dmg * dmg_factor, 4900, dron, target_edificio, enemigo,,, _jugador)
 						}
 						else if index = id_rifle
-							municion = add_municion(center_x, center_y, 30 * (target_x - center_x) / dis, 30 * (target_y - center_y) / dis, 4, dis / 30 + 2, tiro_struct.dmg * dmg_factor,, dron, target_edificio, enemigo,,, _jugador)
+							municion = add_municion(center_x, center_y, 45 * (target_x - center_x) / dis, 45 * (target_y - center_y) / dis, 4, dis / 45 + 2, tiro_struct.dmg * dmg_factor,, dron, target_edificio, enemigo,,, _jugador)
 						else if index = id_torre_basica
 							municion = add_municion(center_x, center_y, 25 * (target_x - center_x) / dis, 25 * (target_y - center_y) / dis, 0, dis / 25, tiro_struct.dmg * dmg_factor,, dron, target_edificio, enemigo,,, _jugador)
 						array_push(municiones, municion)
@@ -153,7 +153,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 			change_flujo(0, edificio)
 		if index = id_lanzallamas and edificio.array_real[5] = 0 and edificio.array_real[4] > 0{
 			edificio.array_real[4] = 0
-			if not audio_is_paused(edificio.sound)
+			if not is_undefined(edificio.sound) and not audio_is_paused(edificio.sound)
 				audio_pause_sound(edificio.sound)
 			edificio.sound = sound_play(snd_flame_end, center_x, center_y, 0.1)
 		}

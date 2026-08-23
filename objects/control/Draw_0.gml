@@ -450,8 +450,9 @@ if in(menu, 1, 3){
 	if energia_solar < 1{
 		var luz_alpha = 0.6 * (1 - energia_solar)
 		if grafic_luz{
-			var surf = surface_create(room_width, room_height)
-			surface_set_target(surf)
+			if not surface_exists(light_surface)
+				light_surface = surface_create(room_width, room_height)
+			surface_set_target(light_surface)
 			draw_clear_alpha(c_black, 1)
 			gpu_set_blendmode(bm_subtract)
 			for(a = array_length(luces) - 1; a >= 0; a--){
@@ -463,9 +464,8 @@ if in(menu, 1, 3){
 			gpu_set_blendmode(bm_normal)
 			surface_reset_target()
 			draw_set_alpha(luz_alpha)
-			draw_surface(surf, 0, 0)
+			draw_surface(light_surface, 0, 0)
 			draw_set_alpha(1)
-			surface_free(surf)
 		}
 		else{
 			draw_set_alpha(luz_alpha)
@@ -3748,7 +3748,7 @@ if keyboard_check(ord("V")){
 	if keyboard_check_pressed(ord("V")){
 		var _time = current_time
 		temp_array_real = array_create(0, 0)
-		var visitado = ds_grid_create(xsize, ysize), _continue = array_create(20)
+		var visitado = usable_grid_bool, _continue = array_create(20)
 		ds_grid_clear(visitado, false)
 		for(i = 0; i < 20; i++){
 			_continue[i] = array_create(20, false)
@@ -3787,7 +3787,8 @@ if keyboard_check(ord("V")){
 		show_debug_message($"{current_time - _time}ms")
 		for(a = 0; a < array_length(misiones); a++)
 			show_debug_message(misiones[a])
-		ds_grid_destroy(visitado)
 	}
 	draw_set_valign(fa_top)
 }
+if keyboard_check(vk_lcontrol) and keyboard_check(ord("H"))
+	image_index += 100
