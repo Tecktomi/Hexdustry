@@ -123,8 +123,8 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 			}
 			//Automata
 			else if tipo = 7{
-				temp_bool = ds_grid_create(xsize, ysize)
-				temp_real = ds_grid_create(xsize, ysize)
+				temp_bool = usable_grid_bool
+				temp_real = usable_grid_real
 				for(a = 0; a < xsize; a++)
 					for(b = 0; b < ysize; b++)
 						temp_bool[# a, b] = brandom()
@@ -150,8 +150,6 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 					for(b = 0; b < ysize; b++)
 						if temp_bool[# a, b]
 							terreno[# a, b] = dat1
-				ds_grid_destroy(temp_bool)
-				ds_grid_destroy(temp_real)
 			}
 		}
 	}

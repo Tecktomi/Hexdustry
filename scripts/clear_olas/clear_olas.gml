@@ -1,7 +1,6 @@
 function clear_olas(){
 	with control{
 		var a, b, bmod, temp_terreno, c, i, aa, bb
-		chunk_update = true
 		ds_grid_clear(terreno_pared_index, 0)
 		ds_grid_clear(background_bool, false)
 		for(a = 0; a < chunk_xsize; a++)

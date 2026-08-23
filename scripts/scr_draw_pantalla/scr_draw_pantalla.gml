@@ -27,8 +27,10 @@ function scr_draw_pantalla(edificio = control.null_edificio, offset_x = 0, offse
 				else if e = 7
 					draw_point(d[1], d[2])
 			}
+			if edificio.imagen != spr_hexagono
+				sprite_delete(edificio.imagen)
 			edificio.imagen = sprite_create_from_surface(temp_surf, 0, 0, 60, 50, false, false, 0, 0)
-			edificio.modo = false
+			edificio.mode = false
 			surface_reset_target()
 			surface_free(temp_surf)
 			draw_set_font(font_normal)

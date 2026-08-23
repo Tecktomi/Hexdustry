@@ -145,7 +145,6 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		if index = id_procesador{
 			array_push(edificio.procesador_link, edificio)
 			edificio.variables = array_create(16)
-			edificio.variables_nombre = array_create(16, "")
 		}
 		else if index = id_mensaje
 			edificio.variables = array_create(1, "")

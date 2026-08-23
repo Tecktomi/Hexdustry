@@ -1,6 +1,6 @@
 function check_water_target(){
 	with control{
-		var visited = ds_grid_create(xsize, ysize), i, edificio, r, aa, bb, j, pointer, val, bmod, aaa, bbb
+		var visited = usable_grid_bool, i, edificio, r, aa, bb, j, pointer, val, bmod, aaa, bbb
 		ds_grid_clear(visited, false)
 		next_queue = array_create(0, 0)
 		ds_grid_clear(grid_water_distance, infinity)
@@ -47,6 +47,5 @@ function check_water_target(){
 				}
 			}
 		}
-		ds_grid_destroy(visited)
 	}
 }

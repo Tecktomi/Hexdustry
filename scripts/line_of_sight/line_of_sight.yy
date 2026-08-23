@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"line_of_sight",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"line_of_sight",
+  "parent":{
+    "name":"CORE",
+    "path":"folders/SCRIPTS/CORE.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

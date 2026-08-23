@@ -81,6 +81,7 @@ function step(){
 		dron_logic()
 		//Ciclo de disparos
 		draw_set_alpha(0.5)
+		var trazo
 		for(a = array_length(municiones) - 1; a >= 0; a--){
 			municion = municiones[a]
 			target = municion.target
@@ -94,9 +95,9 @@ function step(){
 					draw_set_color(c_yellow)
 					draw_line_off(municion.origen_x, municion.origen_y, municion.x, municion.y)
 				}
-				municion.origen_x = municion.x
-				municion.origen_y = municion.y
 			}
+			municion.origen_x = municion.x
+			municion.origen_y = municion.y
 			municion.x += municion.hmove
 			municion.y += municion.vmove
 			if municion.rastreador{
@@ -115,26 +116,32 @@ function step(){
 					draw_set_alpha(1)
 				}
 			}
-			temp_complex = xytoab(municion.x, municion.y)
-			muna = temp_complex[0]
-			munb = temp_complex[1]
-			if grafic_humo and municion.humo
-				array_push(humos, add_humo(municion.x, municion.y, muna, munb, random_range(-1, 1), random_range(-1, 1), irandom_range(20, 30)))
-			//Colisión Edificio
-			if edificio_bool[# muna, munb]{
-				edificio = edificio_id[# muna, munb]
-				if _tipo != 4 and edificio.enemigo != municion.enemigo
-					municion.dis = 0
+			trazo = line_of_sight(municion.origen_x, municion.origen_y, municion.x, municion.y)
+			for(b = 1; b < array_length(trazo); b++){
+				muna = trazo[b, 0]
+				munb = trazo[b, 1]
+				if grafic_humo and municion.humo
+					array_push(humos, add_humo(municion.x, municion.y, muna, munb, random_range(-1, 1), random_range(-1, 1), irandom_range(20, 30)))
+				//Colisión Edificio
+				if edificio_bool[# muna, munb]{
+					edificio = edificio_id[# muna, munb]
+					if _tipo != 4 and edificio.enemigo != municion.enemigo{
+						municion.dis = 0
+						break
+					}
+				}
+				//Colisión Dron
+				if _tipo != 2 and target != null_dron and target.vida > 0 and muna = target.a and munb = target.b{
+					herir_dron(_dmg, target)
+					if _tipo != 4{
+						municion.dis = 0
+						break
+					}
+				}
+				//Munición perforadora
+				if _tipo = 4
+					herir_hexagono(muna, munb, floor(_dmg / 2), false, municion.enemigo)
 			}
-			//Colisión Dron
-			if _tipo != 2 and target != null_dron and target.vida > 0 and muna = target.a and munb = target.b{
-				herir_dron(_dmg, target)
-				if _tipo != 4
-					municion.dis = 0
-			}
-			//Munición perforadora
-			if _tipo = 4
-				herir_hexagono(muna, munb, floor(_dmg / 2), false, municion.enemigo)
 			if --municion.dis <= 0{
 				municiones[a] = municiones[array_length(municiones) - 1]
 				array_pop(municiones)

@@ -45,44 +45,37 @@ function dibujar_fondo(editor = 0){
 			exit
 		}
 		var xsize2 = (CHUNK_WIDTH + 1) * 48 * zoom, ysize2 = (CHUNK_HEIGHT + 1) * 14 * zoom, xpos = CHUNK_WIDTH * 48 * zoom, ypos = CHUNK_HEIGHT * 14 * zoom
-		if chunk_update{
-			var minc, mind, maxc, maxd, e, f
-			for(a = 0; a < chunk_xsize; a++)
-				for(b = 0; b < chunk_ysize; b++){
-					if not background_bool[# a, b]{
-						surf = surface_create((CHUNK_WIDTH + 1) * 48, (CHUNK_HEIGHT + 1) * 14)
-						surface_set_target(surf)
-						minc = a * CHUNK_WIDTH
-						mind = b * CHUNK_HEIGHT
-						maxc = min((a + 1) * CHUNK_WIDTH, xsize)
-						maxd = min((b + 1) * CHUNK_HEIGHT, ysize)
-						for(c = minc; c < maxc; c++)
-							for(d = mind; d < maxd; d++){
-								temp_complex = abtoxy(c, d)
-								aa = temp_complex[0] - a * CHUNK_WIDTH * 48
-								bb = temp_complex[1] - b * CHUNK_HEIGHT * 14
-								f = terreno[# c, d]
-								e = ore[# c, d]
-								if terreno_pared[f]
-									draw_sprite(terreno_sprite[f], terreno_pared_index[# c, d], aa, bb)
-								else{
-									draw_sprite(terreno_sprite[f], 0, aa, bb)
-									if e >= 0
-										draw_sprite(ore_sprite[e], round(ore_random[# c, d]) + 2 * (ore_amount[# c, d] < 50), aa, bb)
-								}
+		var minc, mind, maxc, maxd, e, f
+		for(a = min_chunka; a < max_chunka; a++)
+			for(b = min_chunkb; b < max_chunkb; b++){
+				if not background_bool[# a, b]{
+					surf = surface_create((CHUNK_WIDTH + 1) * 48, (CHUNK_HEIGHT + 1) * 14)
+					surface_set_target(surf)
+					minc = a * CHUNK_WIDTH
+					mind = b * CHUNK_HEIGHT
+					maxc = min((a + 1) * CHUNK_WIDTH, xsize)
+					maxd = min((b + 1) * CHUNK_HEIGHT, ysize)
+					for(c = minc; c < maxc; c++)
+						for(d = mind; d < maxd; d++){
+							temp_complex = abtoxy(c, d)
+							aa = temp_complex[0] - a * CHUNK_WIDTH * 48
+							bb = temp_complex[1] - b * CHUNK_HEIGHT * 14
+							f = terreno[# c, d]
+							e = ore[# c, d]
+							if terreno_pared[f]
+								draw_sprite(terreno_sprite[f], terreno_pared_index[# c, d], aa, bb)
+							else{
+								draw_sprite(terreno_sprite[f], 0, aa, bb)
+								if e >= 0
+									draw_sprite(ore_sprite[e], round(ore_random[# c, d]) + 2 * (ore_amount[# c, d] < 50), aa, bb)
 							}
-						ds_grid_set(background, a, b, sprite_create_from_surface(surf, 0, 0, (CHUNK_WIDTH + 1) * 48, (CHUNK_HEIGHT + 1) * 14, false, false, 0, 0))
-						ds_grid_set(background_bool, a, b, true)
-						chunk_update = false
-						surface_reset_target()
-						surface_free(surf)
-					}
-					draw_sprite_stretched(background[# a, b], 0, -camx + a * xpos, -camy + b * ypos, xsize2, ysize2)
+						}
+					ds_grid_set(background, a, b, sprite_create_from_surface(surf, 0, 0, (CHUNK_WIDTH + 1) * 48, (CHUNK_HEIGHT + 1) * 14, false, false, 0, 0))
+					ds_grid_set(background_bool, a, b, true)
+					surface_reset_target()
+					surface_free(surf)
 				}
-		}
-		else
-			for(a = min_chunka; a < max_chunka; a++)
-				for(b = min_chunkb; b < max_chunkb; b++)
-					draw_sprite_stretched(background[# a, b], 0, -camx + a * xpos, -camy + b * ypos, xsize2, ysize2)
+				draw_sprite_stretched(background[# a, b], 0, -camx + a * xpos, -camy + b * ypos, xsize2, ysize2)
+			}
 	}
 }
