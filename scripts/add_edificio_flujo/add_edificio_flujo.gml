@@ -4,7 +4,7 @@ function add_edificio_flujo(edificio = control.null_edificio, flujo_name = "fluj
 		var index = edificio.index, temp_list_size = get_size(a, b, edificio.dir, edificio_size[index]), temp_list_arround = get_arround(a, b, edificio.dir, edificio_size[index])
 		var forzado = (array_length(edificio_flujo_liquido[index]) > iter)
 		var my_liquido = forzado ? edificio_flujo_liquido[index, iter] : -1
-		if index = id_tuberia and array_length(liquido_choose_array) > 1{
+		if in(index, id_tuberia, id_deposito) and array_length(liquido_choose_array) > 1{
 			forzado = true
 			my_liquido = liquido_choose_array[liquido_choose]
 		}
@@ -108,7 +108,7 @@ function add_edificio_flujo(edificio = control.null_edificio, flujo_name = "fluj
 			array_disorder_push(flujo.edificios, edificio, 6)
 		}
 		//Este edificio es una tubería
-		else if tag_edificio_tuberia[index]{
+		else if array_length(temp_list_flujos) > 1{
 			flujo = def_flujo()
 			flujo.liquido = my_liquido
 			for(c = array_length(temp_list_flujos) - 1; c >= 0; c--){
@@ -128,6 +128,7 @@ function add_edificio_flujo(edificio = control.null_edificio, flujo_name = "fluj
 					flujo.generacion += temp_flujo.generacion
 					flujo.almacen += temp_flujo.almacen
 					flujo.almacen_max += temp_flujo.almacen_max
+					flujo.liquido_forzado += temp_flujo.liquido_forzado
 					delete(temp_flujo.edificios)
 					array_disorder_remove(flujos, temp_flujo, 0)
 				}
@@ -144,6 +145,8 @@ function add_edificio_flujo(edificio = control.null_edificio, flujo_name = "fluj
 			struct_set(edificio, flujo_name, flujo)
 			array_disorder_push(flujo.edificios, edificio, 6)
 		}
+		if not in(index, id_tuberia, id_deposito, id_tuberia_subterranea, id_liquido_infinito)
+			flujo.liquido_forzado++
 		flujo.almacen_max += edificio_flujo_almacen[index]
 		if index = id_bomba_hidraulica and in(flujo.liquido, -1, edificio.fuel)
 			change_flujo(edificio_flujo_consumo[index], edificio)

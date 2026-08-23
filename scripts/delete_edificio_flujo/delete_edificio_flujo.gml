@@ -11,6 +11,8 @@ function delete_edificio_flujo(edificio = control.null_edificio, flujo = control
 		else{
 			flujo.almacen_max -= edificio_flujo_almacen[index]
 			flujo.almacen = min(flujo.almacen, flujo.almacen_max)
+			if not in(index, id_tuberia, id_tuberia_subterranea, id_deposito)
+				flujo.liquido_forzado--
 			//Reordenamiento de redes de cañerías
 			if array_length(flujo_link) > 1{
 				//Eliminar conecciones directas
@@ -61,6 +63,8 @@ function delete_edificio_flujo(edificio = control.null_edificio, flujo = control
 							else
 								temp_edificio.flujo_2 = temp_flujo_2
 							temp_flujo_2.almacen_max += edificio_flujo_almacen[temp_edificio.index]
+							if not in(temp_edificio.index, id_tuberia, id_tuberia_subterranea, id_deposito)
+								temp_flujo_2.liquido_forzado++
 							if edificio_flujo_consumo[temp_edificio.index] > 0
 								temp_flujo_2.consumo += temp_edificio.flujo_consumo
 							else
