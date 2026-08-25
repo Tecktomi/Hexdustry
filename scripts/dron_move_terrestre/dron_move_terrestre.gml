@@ -7,6 +7,8 @@ function dron_move_terrestre(dron = control.null_dron){
 			else{
 				var xx = dron.x, yy = dron.y, vel = dron_vel[dron.index]
 				var angle = floor(point_direction(xx, yy, dron.move_x, dron.move_y) / 30), b, aaa, bbb
+				dron.move_xmove = 0
+				dron.move_ymove = 0
 				for(var a = 0; a < 6; a++){
 					b = preset_dir[angle, a]
 					if b = dron.last_dir
@@ -22,8 +24,10 @@ function dron_move_terrestre(dron = control.null_dron){
 						break
 					}
 				}
-				dron.modo = 0
-				dron.last_dir = -1
+				if dron.move_xmove = 0 and dron.move_ymove = 0{
+					dron.modo = 0
+					dron.last_dir = -1
+				}
 			}
 		}
 		else{

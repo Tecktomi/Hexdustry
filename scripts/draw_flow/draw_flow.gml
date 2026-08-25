@@ -46,9 +46,8 @@ function draw_flow(){
 		else if flow = 6{
 			for(a = min_chunka; a < max_chunka; a++) for(b = min_chunkb; b < max_chunkb; b++){
 				temp_complex = abtoxy(a * CHUNK_WIDTH, b * CHUNK_HEIGHT)
-				temp_array_dron = chunk_dron_enemigo[# a, b]
-				temp_array_dron_2 = chunk_dron_aliado[# a, b]
-				draw_text_off(temp_complex[0], temp_complex[1], $"{array_length(temp_array_dron)}\n{array_length(temp_array_dron_2)}")
+				temp_array_dron = chunk_dron[# a, b]
+				draw_text_off(temp_complex[0], temp_complex[1], $"{array_length(temp_array_dron)}")
 			}
 		}
 		else if flow = 7{

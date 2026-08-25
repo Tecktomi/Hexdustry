@@ -4,11 +4,12 @@ function dron_logic(){
 		var a, b, dron, aa, bb, index, vel, enemigo, edificios_target, drones_target, chunk_x, temp_complex, edificio, i, j
 		var u, v, dis, min_dis, aaa, bbb, angle, cosa, sina, dir, temp_puerto_array, c, d, _comprable, flag, temp_beta, temp_terreno, temp_complex_2
 		var min_puerto, temp_almacenes, minu, minv, maxu, maxv, ataque, min_dis_eu, aaaa, bbbb, disi, dis_2, _posibles, closest_dis, chunk, max_prioridad
-		var chunk_dron, temp_dron_2, temp_dron_size, temp_array, temp_enemigo, temp_dis
+		var temp_chunk_dron, temp_dron_2, temp_dron_size, temp_array, temp_enemigo, temp_dis, temp_dron, _jugador
 		for(a = array_length(drones) - 1; a >= 0; a--){
 			if a >= array_length(drones)
 				continue
 			dron = drones[a]
+			_jugador = dron.jugador
 			aa = dron.x
 			bb = dron.y
 			index = dron.index
@@ -438,13 +439,15 @@ function dron_logic(){
 							closest_dis = dron_alcance[index]
 							for(u = minu; u <= maxu; u++)
 								for(v = minv; v <= maxv; v++){
-									chunk_dron = enemigo ? chunk_dron_aliado[# u, v] : chunk_dron_enemigo[# u, v]
-									for(i = array_length(chunk_dron) - 1; i >= 0; i--){
-										temp_dron_2 = chunk_dron[i]
-										temp_dis = distance_sqr(aa, bb, temp_dron_2.x, temp_dron_2.y)
-										if temp_dis < closest_dis{
-											closest_dis = temp_dis
-											dron.target_dron = temp_dron_2
+									temp_chunk_dron = chunk_dron[# u, v]
+									for(i = array_length(temp_chunk_dron) - 1; i >= 0; i--){
+										temp_dron = temp_chunk_dron[i]
+										if temp_dron.jugador != _jugador{
+											temp_dis = distance_sqr(aa, bb, temp_dron.x, temp_dron.y)
+											if temp_dis < closest_dis{
+												closest_dis = temp_dis
+												dron.target_dron = temp_dron
+											}
 										}
 									}
 								}
@@ -505,21 +508,40 @@ function dron_logic(){
 					}
 				}
 			}
-			else if dron.modo >= 1 and tag_drones_terrestres[index]
-				dron_move_terrestre(dron)
+			else if dron.modo >= 1{
+				if index = idd_bombardero{
+					if dron.step <= dron_step[index]{
+						dron.dir += 0.02 * angle_difference(point_direction(dron.x, dron.y, dron.move_xmove, dron.move_ymove) + random_range(-0.01, 0.01), dron.dir)
+						vel *= 0.9
+					}
+					else
+						vel *= 1.2
+					dron.x += lengthdir_x(vel, dron.dir)
+					dron.y += lengthdir_y(vel, dron.dir)
+				}
+				else if tag_drones_terrestres[index]
+					dron_move_terrestre(dron)
+				else{
+					dron.dir += 0.05 * angle_difference(point_direction(aa, bb, dron.move_xmove, dron.move_ymove), dron.dir)
+					dron.x += vel * dron.move_xmove
+					dron.y += vel * dron.move_ymove
+					if --dron.move_dis <= 0
+						dron.modo = 0
+				}
+			}
 			//Alejarse de los enemigos cercanos
 			temp_dron_size = dron_size[index]
-			temp_array = enemigo ? chunk_dron_enemigo[# chunk_x, chunk_y] : chunk_dron_aliado[# chunk_x, chunk_y]
+			temp_array = chunk_dron[# chunk_x, chunk_y]
 			for(b = array_length(temp_array) - 1; b >= 0; b--){
-				temp_enemigo = temp_array[b]
-				dis = distance_sqr(aa, bb, temp_enemigo.x, temp_enemigo.y)
+				temp_dron = temp_array[b]
+				dis = distance_sqr(aa, bb, temp_dron.x, temp_dron.y)
 				if dis < temp_dron_size{
-					aaa = sign(aa - temp_enemigo.x)
-					bbb = sign(bb - temp_enemigo.y)
+					aaa = sign(aa - temp_dron.x)
+					bbb = sign(bb - temp_dron.y)
 					dron.x += aaa
 					dron.y += bbb
-					temp_enemigo.x -= aaa
-					temp_enemigo.y -= bbb
+					temp_dron.x -= aaa
+					temp_dron.y -= bbb
 				}
 			}
 			temp_complex = xytoab(aa, bb)

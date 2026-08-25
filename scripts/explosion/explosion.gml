@@ -12,7 +12,6 @@ function explosion(aa = 0, bb = 0, edificio = control.null_edificio, enemigo = t
 		maxa = min(chunk_x + 1, chunk_xsize - 1)
 		maxb = min(chunk_y + 1, chunk_ysize - 1)
 		temp_chunk_edificios = (enemigo ? chunk_edificios : chunk_edificios_enemigo)
-		temp_array_dron = (enemigo ? chunk_dron_aliado : chunk_dron_enemigo)
 		dmg_total = 0
 		if incendiario{
 			for(a = mina; a <= maxa; a++)
@@ -25,14 +24,17 @@ function explosion(aa = 0, bb = 0, edificio = control.null_edificio, enemigo = t
 							herir_edificio(dmg / (10 + sqrt(dis)), edificio)
 					}
 					//Herir drones
-					for(i = array_length(temp_array_dron[# a, b]) - 1; i >= 0; i--){
-						dron = temp_array_dron[# a, b][i]
-						dis = distance_sqr(aa, bb, dron.x, dron.y)
-						if dis < radio{
-							if herir_dron(dmg / (10 + sqrt(dis)), dron) and dron = _target_dron
-								flag = true
-							else
-								aplicar_efecto(1, 120, dron)
+					temp_array_dron = ds_grid_get(chunk_dron, a, b)
+					for(i = array_length(temp_array_dron) - 1; i >= 0; i--){
+						dron = temp_array_dron[i]
+						if dron.jugador != _jugador{
+							dis = distance_sqr(aa, bb, dron.x, dron.y)
+							if dis < radio{
+								if herir_dron(dmg / (10 + sqrt(dis)), dron) and dron = _target_dron
+									flag = true
+								else
+									aplicar_efecto(1, 120, dron)
+							}
 						}
 					}
 				}
@@ -48,12 +50,15 @@ function explosion(aa = 0, bb = 0, edificio = control.null_edificio, enemigo = t
 							herir_edificio(dmg / (10 + sqrt(dis)), edificio)
 					}
 					//Herir drones
-					for(i = array_length(temp_array_dron[# a, b]) - 1; i >= 0; i--){
-						dron = temp_array_dron[# a, b][i]
-						dis = distance_sqr(aa, bb, dron.x, dron.y)
-						if dis < radio
-							if herir_dron(dmg / (10 + sqrt(dis)), dron) and dron = _target_dron
-								flag = true
+					temp_array_dron = ds_grid_get(chunk_dron, a, b)
+					for(i = array_length(temp_array_dron) - 1; i >= 0; i--){
+						dron = temp_array_dron[i]
+						if dron.jugador != _jugador{
+							dis = distance_sqr(aa, bb, dron.x, dron.y)
+							if dis < radio
+								if herir_dron(dmg / (10 + sqrt(dis)), dron) and dron = _target_dron
+									flag = true
+						}
 					}
 				}
 		}

@@ -1,6 +1,6 @@
 function scr_torres_basicas(edificio = control.null_edificio){
 	with control{
-		var index = edificio.index, center_x = edificio.center_x, center_y = edificio.center_y, enemigo = edificio.enemigo
+		var index = edificio.index, center_x = edificio.center_x, center_y = edificio.center_y, enemigo = edificio.enemigo, _jugador = edificio.jugador
 		if index = id_lanzallamas
 			edificio.array_real[5] = 0
 		if edificio_flujo[index]
@@ -90,20 +90,22 @@ function scr_torres_basicas(edificio = control.null_edificio){
 								edificio.sound = sound_play(snd_flame_cont, center_x, center_y, 0.1)
 							}
 							if dron != null_dron{
-								var temp_array_dron = (enemigo ? chunk_dron_aliado[# dron.chunk_x, dron.chunk_y] : chunk_dron_enemigo[# dron.chunk_x, dron.chunk_y])
+								var temp_array_dron = ds_grid_get(chunk_dron, dron.chunk_x, dron.chunk_y)
 								var disi = edificio_alcance[index], x1 = center_x + disi * cos(angle + pi / 6), y1 = center_y - disi * sin(angle + pi / 6), x2 = center_x + disi * cos(angle - pi / 6), y2 = center_y - disi * sin(angle - pi / 6), total_dmg = tiro_struct.dmg * dmg_factor
 								var c, temp_dron
 								for(c = array_length(temp_array_dron) - 1; c >= 0; c--){
 									temp_dron = temp_array_dron[c]
-									if point_in_triangle(temp_dron.x, temp_dron.y, center_x, center_y, x1, y1, x2, y2){
-										aplicar_efecto(1, 300, temp_dron)
-										herir_dron(total_dmg, temp_dron)
+									if temp_dron.jugador != _jugador{
+										if point_in_triangle(temp_dron.x, temp_dron.y, center_x, center_y, x1, y1, x2, y2){
+											aplicar_efecto(1, 300, temp_dron)
+											herir_dron(total_dmg, temp_dron)
+										}
 									}
 								}
-								if enemigo
-									dmg_recibido += total_dmg
-								else
+								if edificio.jugador = jugador
 									dmg_causado += total_dmg
+								else
+									dmg_recibido += total_dmg
 							}
 						}
 						else if index = id_torre_basica
@@ -113,7 +115,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 						edificio.carga[tiro_struct.recurso] -= tiro_struct.cantidad
 						edificio.carga_total -= tiro_struct.cantidad
 						dis = sqrt(dis)
-						var municion, _jugador = edificio.jugador
+						var municion
 						if index = id_lanzallamas
 							municion = add_municion(center_x, center_y, 20 * (target_x - center_x) / dis, 20 * (target_y - center_y) / dis, 2, dis / 20, tiro_struct.dmg * dmg_factor,, dron, target_edificio, enemigo,,, _jugador)
 						else if index = id_mortero{

@@ -140,7 +140,7 @@ function step(){
 				}
 				//Munición perforadora
 				if _tipo = 4
-					herir_hexagono(muna, munb, floor(_dmg / 2), false, municion.enemigo)
+					herir_hexagono(muna, munb, floor(_dmg / 2), false, municion.jugador)
 			}
 			if --municion.dis <= 0{
 				municiones[a] = municiones[array_length(municiones) - 1]
@@ -152,11 +152,11 @@ function step(){
 						aplicar_efecto(1, 120, target)
 					//Daño área
 					else
-						herir_hexagono(muna, munb, _dmg,, municion.enemigo)
+						herir_hexagono(muna, munb, _dmg,, municion.jugador)
 				}
 				//Daño edificio
 				if municion.target_build != null_edificio and municion.target_build.vida > 0
-					herir_hexagono(muna, munb, _dmg,, municion.enemigo)
+					herir_hexagono(muna, munb, _dmg,, municion.jugador)
 				//Misil
 				if _tipo = 1
 					explosion(municion.x, municion.y, municion.target_build, municion.enemigo, municion.radio,,, _jugador)

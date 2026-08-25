@@ -231,7 +231,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				visitado = array_create(edificio_count, false)
 				while array_length(temp_red.edificios) > 0{
 					nodo = temp_red.edificios[array_length(temp_red.edificios) - 1]
-					if not visited[nodo.edificio_index]{
+					if not visitado[nodo.edificio_index]{
 						isla = array_create(0)
 						isla_bateria = 0
 						pila = ds_stack_create()
@@ -243,11 +243,11 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 								isla_bateria++
 							array_push(isla, nodo)
 							array_remove(temp_red.edificios, nodo)
-							if not visited[nodo.edificio_index]{
-								visited[nodo.edificio_index] = true
+							if not visitado[nodo.edificio_index]{
+								visitado[nodo.edificio_index] = true
 								for(a = array_length(nodo.energia_link) - 1; a >= 0; a--){
 									temp_edificio = nodo.energia_link[a]
-									if not visited[temp_edificio.edificio_index] and not array_contains(agregado, temp_edificio){
+									if not visitado[temp_edificio.edificio_index] and not array_contains(agregado, temp_edificio){
 										ds_stack_push(pila, temp_edificio)
 										array_push(agregado, temp_edificio)
 									}

@@ -1851,43 +1851,28 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 	//Pasar dron
 	var chunk_mx = floor(mx / CHUNK_WIDTH), chunk_my = floor(my / CHUNK_HEIGHT), min_dis = 900, min_dron = null_dron, temp_array_dron
 	var next_chunk_x = ((mx mod CHUNK_WIDTH) > (CHUNK_WIDTH / 2)) ? [0, 1, 0, 1] : [0, -1, 0, -1]
-	var next_chunk_y = ((my mod CHUNK_HEIGHT) > (CHUNK_HEIGHT / 2)) ? [0, 0, 1, 1] : [0, 0, -1, -1]
-	if array_length(enemigos) > 0
-		for(i = 0; i < 4; i++){
-			aa = chunk_mx + next_chunk_x[i]
-			bb = chunk_my + next_chunk_y[i]
-			if aa < 0 or bb < 0 or aa >= chunk_xsize or bb >= chunk_ysize
-				continue
-			temp_array_dron = ds_grid_get(chunk_dron_enemigo, aa, bb)
-			for(a = 0; a < array_length(temp_array_dron); a++){
-				var dron = temp_array_dron[a], dis = distance_sqr(dron.x, dron.y, xmouse, ymouse)
-				if dis < min_dis{
-					min_dis = dis
-					min_dron = dron
-				}
+	var next_chunk_y = ((my mod CHUNK_HEIGHT) > (CHUNK_HEIGHT / 2)) ? [0, 0, 1, 1] : [0, 0, -1, -1], dron, dis
+	for(i = 0; i < 4; i++){
+		aa = chunk_mx + next_chunk_x[i]
+		bb = chunk_my + next_chunk_y[i]
+		if aa < 0 or bb < 0 or aa >= chunk_xsize or bb >= chunk_ysize
+			continue
+		temp_array_dron = ds_grid_get(chunk_dron, aa, bb)
+		for(a = 0; a < array_length(temp_array_dron); a++){
+			dron = temp_array_dron[a]
+			dis = distance_sqr(dron.x, dron.y, xmouse, ymouse)
+			if dis < min_dis{
+				min_dis = dis
+				min_dron = dron
 			}
 		}
-	if array_length(drones_aliados) > 0
-		for(i = 0; i < 4; i++){
-			aa = chunk_mx + next_chunk_x[i]
-			bb = chunk_my + next_chunk_y[i]
-			if aa < 0 or bb < 0 or aa >= chunk_xsize or bb >= chunk_ysize
-				continue
-			temp_array_dron = ds_grid_get(chunk_dron_aliado, aa, bb)
-			for(a = 0; a < array_length(temp_array_dron); a++){
-				var dron = temp_array_dron[a], dis = distance_sqr(dron.x, dron.y, xmouse, ymouse)
-				if dis < min_dis{
-					min_dis = dis
-					min_dron = dron
-				}
-			}
-		}
+	}
 	if min_dis < 900{
-		var dron = min_dron
+		dron = min_dron
 		draw_set_color(c_white)
 		draw_circle_off(dron.x, dron.y, 20, true)
 		temp_text += $"{dron_nombre[dron.index]}\n"
-		temp_text += $"{dron.enemigo ? "ENEMIGO" : "ALIADO"}\n"
+		temp_text += $"{dron.jugador != jugador ? "ENEMIGO" : "ALIADO"}\n"
 		temp_text += $"vida: {dron.vida}/{dron.vida_max}\n"
 		var flag_dron = false
 		for(a = 0; a < rss_max; a++)
