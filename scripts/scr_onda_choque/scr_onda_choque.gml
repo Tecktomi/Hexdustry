@@ -7,7 +7,7 @@ function scr_onda_choque(edificio = control.null_edificio){
 			edificio.proceso += red_power
 		}
 		else{
-			var dis, center_x, center_y, a, temp_complex, temp_array_dron, b, dron, temp_dis
+			var dis, center_x, center_y, a, temp_complex, temp_array_dron, b, dron, temp_dis, _jugador = edificio.jugador
 			edificio_encender(edificio, false,, false)
 			if edificio.select = 0{
 				dis = edificio_alcance_sqr[index]
@@ -15,13 +15,15 @@ function scr_onda_choque(edificio = control.null_edificio){
 				center_y = edificio.center_y
 				for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
 					temp_complex = edificio.target_chunks[a]
-					temp_array_dron = (edificio.enemigo ? chunk_dron_aliado[# temp_complex[0], temp_complex[1]] : chunk_dron_enemigo[# temp_complex[0], temp_complex[1]])
+					temp_array_dron = ds_grid_get(chunk_dron, temp_complex[0], temp_complex[1])
 					for(b = array_length(temp_array_dron) - 1; b >= 0; b--){
 						dron = temp_array_dron[b]
-						temp_dis = distance_sqr(center_x, center_y, dron.x, dron.y)
-						if temp_dis < dis{
-							edificio.select = 20
-							break
+						if dron.jugador != _jugador{
+							temp_dis = distance_sqr(center_x, center_y, dron.x, dron.y)
+							if temp_dis < dis{
+								edificio.select = 20
+								break
+							}
 						}
 					}
 					if edificio.select > 0
@@ -36,13 +38,15 @@ function scr_onda_choque(edificio = control.null_edificio){
 				center_y = edificio.center_y
 				for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
 					temp_complex = edificio.target_chunks[a]
-					temp_array_dron = (edificio.enemigo ? chunk_dron_aliado[# temp_complex[0], temp_complex[1]] : chunk_dron_enemigo[# temp_complex[0], temp_complex[1]])
+					temp_array_dron = ds_grid_get(chunk_dron, temp_complex[0], temp_complex[1])
 					for(b = array_length(temp_array_dron) - 1; b >= 0; b--){
 						dron = temp_array_dron[b]
-						temp_dis = distance_sqr(center_x, center_y, dron.x, dron.y)
-						if temp_dis < dis{
-							aplicar_efecto(0, stun, dron)
-							herir_dron(130, dron)
+						if dron.jugador != _jugador{
+							temp_dis = distance_sqr(center_x, center_y, dron.x, dron.y)
+							if temp_dis < dis{
+								aplicar_efecto(0, stun, dron)
+								herir_dron(130, dron)
+							}
 						}
 					}
 				}
