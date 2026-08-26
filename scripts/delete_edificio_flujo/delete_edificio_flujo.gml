@@ -22,7 +22,7 @@ function delete_edificio_flujo(edificio = control.null_edificio, flujo = control
 				}
 				array_resize((flujo = edificio.flujo) ? edificio.flujo_link : edificio.flujo_2_link, 0)
 				//Revisar nuevo estado de red
-				var flujo_almacen = 0, agregado = array_create(0, null_edificio), visited = array_create(edificio_count, false), nodo, isla, isla_almacen, pila, temp_flujo_link, temp_flujo_2
+				var flujo_almacen = 0, agregado = array_create(edificio_count, false), visited = array_create(edificio_count, false), nodo, isla, isla_almacen, pila, temp_flujo_link, temp_flujo_2
 				for(a = array_length(flujo.edificios) - 1; a >= 0; a--)
 					flujo_almacen += edificio_flujo_almacen[flujo.edificios[a].index]
 				while array_length(flujo.edificios) > 0{
@@ -32,7 +32,7 @@ function delete_edificio_flujo(edificio = control.null_edificio, flujo = control
 						isla_almacen = 0
 						pila = ds_stack_create()
 						ds_stack_push(pila, nodo)
-						array_push(agregado, nodo)
+						agregado[nodo.edificio_index] = true
 						while not ds_stack_empty(pila){
 							nodo = ds_stack_pop(pila)
 							isla_almacen += edificio_flujo_almacen[nodo.index]
@@ -43,9 +43,9 @@ function delete_edificio_flujo(edificio = control.null_edificio, flujo = control
 								temp_flujo_link = (nodo.flujo = flujo) ? nodo.flujo_link : nodo.flujo_2_link
 								for(a = array_length(temp_flujo_link) - 1; a >= 0; a--){
 									temp_edificio = temp_flujo_link[a]
-									if not visited[temp_edificio.edificio_index] and not array_contains(agregado, temp_edificio){
+									if not visited[temp_edificio.edificio_index] and not agregado[temp_edificio.edificio_index]{
 										ds_stack_push(pila, temp_edificio)
-										array_push(agregado, temp_edificio)
+										agregado[temp_edificio.edificio_index] = true
 									}
 								}
 							}

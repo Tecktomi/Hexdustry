@@ -19,6 +19,8 @@ function dibujar_edificios(){
 						edificio_draw_function[edificio.index](edificio, -a * CHUNK_WIDTH * 48, -b * CHUNK_HEIGHT * 14)
 					}
 					sprite = sprite_create_from_surface(surf, 0, 0, (CHUNK_WIDTH + 1) * 48, (CHUNK_HEIGHT + 1) * 14, false, false, 0, 0)
+					if chunk_edificios_background[# a, b] != spr_hexagono
+						sprite_delete(chunk_edificios_background[# a, b])
 					ds_grid_set(chunk_edificios_background, a, b, sprite)
 					surface_reset_target()
 					surface_free(surf)

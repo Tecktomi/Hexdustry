@@ -368,7 +368,7 @@ if in(menu, 1, 3){
 					draw_sprite_off(planta_quimica_sprite[edificio.select], 0, aa, bb)
 				//Humo
 				if show_humo and tag_generadores_de_humo[index]{
-					if ((tag_generadores_de_humo_combustion[index] and edificio.fuel > 0) or (index = id_generador_geotermico and in(edificio.flujo.liquido, 0, 4)) or (index = id_refineria_de_petroleo and edificio.flujo.liquido = 2 and edificio.red.eficiencia > 0)) and image_index & 3{
+					if ((tag_generadores_de_humo_combustion[index] and edificio.fuel > 0) or (index = id_generador_geotermico and in(edificio.flujo.liquido, idl_agua, idl_agua_salada)) or (index = id_refineria_de_petroleo and edificio.flujo.liquido = idl_petroleo and edificio.red.eficiencia > 0)) and image_index & 3{
 						var dir = viento_dir + random_range(-pi / 4, pi / 4)
 						array_push(humos, add_humo(center_x, center_y, edificio.a, edificio.b, cos(dir) * viento_mag, sin(dir) * viento_mag, irandom_range(70, 100)))
 					}

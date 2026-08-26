@@ -3,8 +3,9 @@ function mover(edificio = control.null_edificio){
 		if not edificio.emisor
 			exit
 		var index = edificio.index, flag = false, out = 0, temp_edificio = null_edificio, b = 0, bmod = edificio.b & 1, aaa, bbb, a, dir = edificio.dir
+		var _mina = (index = id_cinta_transportadora ? edificio.carga_id : 0), _maxa = (index = id_cinta_transportadora ? edificio.carga_id + 1 : rss_max)
 		//Selección de recursos
-		for(out = 0; out < rss_max; out++)
+		for(out = _mina; out < _maxa; out++)
 			if edificio.carga_output[out] and edificio.carga[out] > 0{
 				//Output selector
 				if index = id_selector{

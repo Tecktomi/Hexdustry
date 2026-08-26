@@ -545,8 +545,8 @@ function dron_logic(){
 				}
 			}
 			temp_complex = xytoab(aa, bb)
-			aa = temp_complex[0]
-			bb = temp_complex[1]
+			aa = clamp(temp_complex[0], 0, xsize - 1)
+			bb = clamp(temp_complex[1], 0, ysize - 1)
 			dron.change_pos = false
 			//Cambio de coordenada
 			if aa != dron.a or bb != dron.b{
