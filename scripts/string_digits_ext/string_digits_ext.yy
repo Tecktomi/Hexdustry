@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"panel_enciclopedia_cosejo",
+  "%Name":"string_digits_ext",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"panel_enciclopedia_cosejo",
+  "name":"string_digits_ext",
   "parent":{
-    "name":"PANEL",
-    "path":"folders/SCRIPTS/CORE/PANEL.yy",
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

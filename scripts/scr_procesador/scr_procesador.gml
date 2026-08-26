@@ -20,7 +20,7 @@ function scr_procesador(edificio = control.null_edificio){
 				if pc[2] = 0
 					edificio.variables[pc[1]] = edificio.variables[pc[3]]
 				else if pc[2] = 1
-					edificio.variables[pc[1]] = real(string_digits(string(pc[3])))
+					edificio.variables[pc[1]] = real(string_digits_ext(string(pc[3])))
 				else
 					edificio.variables[pc[1]] = string(pc[3])
 			}
@@ -78,11 +78,11 @@ function scr_procesador(edificio = control.null_edificio){
 				else if pc[4] = 2 and not (type2 = "string")
 					val = val2 * val3
 				else if pc[4] = 3 and not (type2 = "string" or type3 = "string")
-					val = val2 / val3
+					val = (val3 = 0 ? NaN : val2 / val3)
 				else if pc[4] = 4 and not (type2 = "string" or type3 = "string")
-					val = val2 div val3
+					val = (val3 = 0 ? NaN : val2 div val3)
 				else if pc[4] = 5 and not (type2 = "string" or type3 = "string")
-					val = val2 % val3
+					val = (val3 = 0 ? NaN : val2 % val3)
 				else if pc[4] = 6
 					val = val2 | val3
 				else if pc[4] = 7
@@ -106,7 +106,7 @@ function scr_procesador(edificio = control.null_edificio){
 					val = edificio.variables[pc[2]]
 				else
 					val = pc[2]
-				if string_digits(string(val)) = string(val)
+				if string_digits_ext(string(val)) = string(val)
 					val = real(val)
 				else
 					val = string(val)
@@ -114,7 +114,7 @@ function scr_procesador(edificio = control.null_edificio){
 					val2 = edificio.variables[pc[5]]
 				else
 					val2 = pc[5]
-				if string_digits(string(val2)) = string(val2)
+				if string_digits_ext(string(val2)) = string(val2)
 					val2 = real(val2)
 				else
 					val2 = string(val2)
@@ -122,8 +122,11 @@ function scr_procesador(edificio = control.null_edificio){
 					show_debug_message($"{val}, {val2}")
 					continue
 				}
-				if pc[6] = 0
+				if pc[6] = 0{
+					if not is_real(edificio.variables[pc[7]])
+						continue
 					val3 = edificio.variables[pc[7]] - 1
+				}
 				else
 					val3 = pc[7] - 1
 				if pc[3] = 0 and val < val2
@@ -326,20 +329,26 @@ function scr_procesador(edificio = control.null_edificio){
 					temp_array = [pc[3] - 2]
 					temp_array_2 = [3, 3, 4, 4, 6, 3, 3, 2]
 					b = temp_array_2[pc[3] - 2]
+					var flag = true
 					for(i = 0; i < b; i++){
 						j = 0
 						if pc[4 + 2 * i] = 0{
-							if not is_real(pc[5 + 2 * i])
+							if not is_real(pc[5 + 2 * i]){
+								flag = false
 								continue
+							}
 							j = edificio.variables[pc[5 + 2 * i]]
 						}
 						else
 							j = pc[5 + 2 * i]
-						if not is_real(j) and pc[3] != 1
+						if not is_real(j) and pc[3] != 1{
+							flag = false
 							continue
+						}
 						array_push(temp_array, j)
 					}
-					array_push(temp_edificio.instruccion, temp_array)
+					if flag
+						array_push(temp_edificio.instruccion, temp_array)
 				}
 			}
 		}

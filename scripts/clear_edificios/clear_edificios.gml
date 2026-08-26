@@ -9,8 +9,6 @@ function clear_edificios(){
 		for(a = 0; a < chunk_xsize; a++)
 			for(b = 0; b < chunk_ysize; b++){
 				array_resize(chunk_edificios[# a, b], 0)
-				array_resize(chunk_edificios_enemigo[# a, b], 0)
-				array_resize(chunk_edificios_abandonado[# a, b], 0)
 				array_resize(chunk_edificios_estatico[# a, b], 0)
 				array_resize(chunk_edificios_dinamico[# a, b], 0)
 				array_resize(chunk_edificios_draw[# a, b], 0)

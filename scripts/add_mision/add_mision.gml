@@ -8,7 +8,7 @@ function add_mision(){
 			do b = irandom(rss_max - 1)
 			until recurso_tier[b] <= floor((misiones_pasadas + 2) / 3) and not in(b, idr_piedra_sulfatada, idr_piedra_cuprica, idr_piedra_ferrica, idr_uranio_enriquecido, idr_uranio_empobrecido)
 			mision.target_id = b
-			mision.target_num = irandom_range(max(10, 100 * (1 + misiones_pasadas) / (2 + recurso_tier[b])), min(20, 200 * (1 + misiones_pasadas) / (2 + recurso_tier[b])))
+			mision.target_num = irandom_range(min(20, 200 * (1 + misiones_pasadas) / (2 + recurso_tier[b])), max(10, 100 * (1 + misiones_pasadas) / (2 + recurso_tier[b])))
 		}
 		//Construir
 		else if a = 1{
@@ -17,7 +17,7 @@ function add_mision(){
 			do b = tecnologia_nivel_edificios[c, irandom(array_length(tecnologia_nivel_edificios[c]) - 1)]
 			until tag_edificio_construible[b]
 			mision.target_id = b
-			mision.target_num = irandom_range(max(1, 20 * (1 + misiones_pasadas) / edificio_precio[b]), min(1, 40 * (1 + misiones_pasadas) / edificio_precio[b]))
+			mision.target_num = irandom_range(min(1, 40 * (1 + misiones_pasadas) / edificio_precio[b]), max(1, 20 * (1 + misiones_pasadas) / edificio_precio[b]))
 		}
 		misiones = array_create(1, mision)
 	}

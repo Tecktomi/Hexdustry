@@ -1,7 +1,7 @@
 function save_escenario_buffer(filename){
 	with control{
 		var len_edi = array_length(edificios_totales), len_mis = array_length(misiones)
-		var buffer = buffer_create(2 * xsize * ysize + 5 * len_edi + 2 * rss_max + 12 * len_mis + 11, buffer_grow, 1)
+		var buffer = buffer_create(1024, buffer_grow, 1)
 		//Variables globales
 		buffer_write(buffer, buffer_u8, xsize)
 		buffer_write(buffer, buffer_u8, ysize)

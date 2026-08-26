@@ -13,6 +13,7 @@ if type = network_type_data{
 			var reply = buffer_create(1, buffer_grow, 1)
 			buffer_write(reply, buffer_u8, 16)
 			network_send_packet(temp_socket, reply, buffer_tell(reply))
+			buffer_delete(reply)
 			array_pop(server_jugadores)
 		}
 		else{

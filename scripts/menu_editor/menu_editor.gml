@@ -335,8 +335,6 @@ function menu_editor(){
 				resize_grid(0, prev_ysize)
 			draw_boton_text_list_end()
 			update_cursor()
-			if keyboard_check_pressed(ord("F"))
-				editor_instrucciones = [ [ 0,0,50,5 ],[ 0,4,15,2 ],[ 1,4,0,2 ],[ 1,4,3,2 ],[ 1,2,3,1 ],[ 0,11,50,5 ],[ 0,5,10,3 ],[ 1,5,3,16 ],[ 1,5,1,16 ],[ 1,5,11,16 ],[ 1,5,2,16 ],[ 1,5,4,16 ],[ 1,5,0,16 ],[ 0,14,15,1 ],[ 1,14,2,16 ],[ 1,14,3,16 ],[ 2,0,7,3 ],[ 2,0,6,3 ],[ 2,16,8,15 ] ]
 			exit
 		}
 		//click en mapa
@@ -388,7 +386,7 @@ function menu_editor(){
 						ds_grid_clear(usable_grid_bool, false)
 						usable_grid_bool[# mx, my] = true
 						array_push(temp_queue, mx, my, -1)
-						var target_id = terreno[# mx, my], dir, bmod, i
+						var target_id = terreno[# mx, my], dir, bmod, i, j
 						for(var counter = 0; counter < array_length(temp_queue);){
 							a = temp_queue[counter++]
 							b = temp_queue[counter++]
@@ -396,15 +394,15 @@ function menu_editor(){
 							bmod = b & 1
 							array_push(build_list, [a, b])
 							for(i = 0; i < maxi; i++){
-								dir = (dir + i) mod 6
-								aa = a + DESFACE_A[bmod, dir]
-								bb = b + DESFACE_B[bmod, dir]
+								j = (dir + i) mod 6
+								aa = a + DESFACE_A[bmod, j]
+								bb = b + DESFACE_B[bmod, j]
 								if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 									continue
 								if not usable_grid_bool[# aa, bb]{
 									usable_grid_bool[# aa, bb] = true
 									if terreno[# aa, bb] = target_id
-										array_push(temp_queue, aa, bb, dir)
+										array_push(temp_queue, aa, bb, j)
 								}
 							}
 							maxi = 3
@@ -657,7 +655,8 @@ function menu_editor(){
 					input_layer = 1
 					if save_file != "" and (draw_boton(120, 160 + 30 * array_length(save_files), L.nuevo_archivo,,,,, 1) or keyboard_check_pressed(vk_enter)){
 						keyboard_clear(vk_enter)
-						save_file += ".txt"
+						if not string_count(".txt", save_file)
+							save_file += ".txt"
 						flag = true
 					}
 				}

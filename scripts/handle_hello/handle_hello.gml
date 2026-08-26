@@ -13,6 +13,7 @@ function handle_hello(socket, buffer){
 					var reply = buffer_create(1, buffer_grow, 1)
 					buffer_write(reply, buffer_u8, 16)
 					network_send_packet(socket, reply, buffer_tell(reply))
+					buffer_delete(reply)
 					array_pop(server_jugadores)
 					break
 				}

@@ -25,15 +25,14 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		}
 		if enemigo{
 			array_disorder_remove(edificios_enemigos, edificio, 0)
-			array_disorder_remove(chunk_edificios_enemigo[# chunk_x, chunk_y], edificio, 1)
 			if mision_actual >= 0 and mision.objetivo = 8 and mision.target_id = index and ++mision_counter >= mision.target_num
 				pasar_mision()
 		}
 		else{
 			array_disorder_remove(edificios, edificio, 0)
-			array_disorder_remove(chunk_edificios[# chunk_x, chunk_y], edificio, 1)
 			array_disorder_remove(edificios_index[index], edificio, 8)
 		}
+		array_disorder_remove(chunk_edificios[# chunk_x, chunk_y], edificio, 1)
 		var a, b, flag, temp_edificio, temp_coordenada_2, temp_priority, i, dis, temp_complex, dron, aaa, bbb
 		for(a = edificio.chunk_mina; a <= edificio.chunk_maxa; a++)
 			for(b = edificio.chunk_minb; b <= edificio.chunk_maxb; b++){

@@ -25,9 +25,11 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 			draw_set_alpha(0.3)
 			draw_rectangle(150, ypos, xpos, ypos + text_y, false)
 			draw_set_alpha(1)
-			if mouse_check_button_released(mb_left) and a != procesador_move{
-				array_insert(edificio.instruccion, a, edificio.instruccion[procesador_move])
-				array_delete(edificio.instruccion, procesador_move + (procesador_move > a), 1)
+			if mouse_check_button_released(mb_left){
+				if a != procesador_move{
+					array_insert(edificio.instruccion, a, edificio.instruccion[procesador_move])
+					array_delete(edificio.instruccion, procesador_move + (procesador_move > a), 1)
+				}
 				procesador_move = -1
 			}
 		}
@@ -75,7 +77,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 			procesador_valor(xpos, ypos, pc, 4, 5, false)
 			xpos = draw_text_xpos(xpos + text_x, ypos, $", {L.procesador_jump} ")
 			procesador_valor(xpos, ypos, pc, 6, 7, true)
-			if not pc[6]
+			if pc[6]
 				pc[7] = clamp(pc[7], 0, size)
 			xpos += text_x
 			var val = 0, flag = true

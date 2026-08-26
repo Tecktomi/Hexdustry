@@ -159,10 +159,10 @@ function step(){
 					herir_hexagono(muna, munb, _dmg,, municion.jugador)
 				//Misil
 				if _tipo = 1
-					explosion(municion.x, municion.y, municion.target_build, municion.enemigo, municion.radio,,, _jugador)
+					explosion(municion.x, municion.y, municion.target_build, municion.radio,,, _jugador)
 				//Misil incendiario
 				else if _tipo = 3
-					explosion(municion.x, municion.y, municion.target_build, municion.enemigo, municion.radio,, true, _jugador)
+					explosion(municion.x, municion.y, municion.target_build, municion.radio,, true, _jugador)
 			}
 		}
 		draw_set_alpha(1)
@@ -367,7 +367,7 @@ function step(){
 		if array_length(explosion_queue) > 0{
 			for(a = array_length(explosion_queue) - 1; a >= 0; a--){
 				temp_explosion = explosion_queue[a]
-				explosion(temp_explosion.x, temp_explosion.y, temp_explosion.edificio, temp_explosion.enemigo, temp_explosion.radio, temp_explosion.dmg, temp_explosion.incendiario, temp_explosion.jugador)
+				explosion(temp_explosion.x, temp_explosion.y, temp_explosion.edificio, temp_explosion.radio, temp_explosion.dmg, temp_explosion.incendiario, temp_explosion.jugador)
 			}
 			array_resize(explosion_queue, 0)
 		}

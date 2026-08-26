@@ -30,6 +30,7 @@ function menu_campanna(){
 								tecnologia = true
 								cheat = false
 							}
+							buffer_delete(buffer)
 						}
 						else{
 							escenario = world_escenario[# a, b]

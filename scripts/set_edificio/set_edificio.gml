@@ -1,6 +1,6 @@
 function set_edificio(mode, select, edificio = control.null_edificio, _server = false){
 	with control{
-		if edificio = null_edificio or edificio.vida <= 0
+		if edificio = null_edificio or edificio.vida <= 0 or (edificio.mode = mode and edificio.select = select)
 			exit
 		var index = edificio.index, a, b, c, temp_edificio
 		if online and not _server{
@@ -15,7 +15,7 @@ function set_edificio(mode, select, edificio = control.null_edificio, _server = 
 		}
 		//Seleccionar edificio
 		if in(index, id_selector, id_recurso_infinito, id_planta_de_reciclaje) and edificio.select != select{
-			if in(index, id_selector, id_recurso_infinito) and select < -1 or select >= rss_max
+			if in(index, id_selector, id_recurso_infinito) and (select < -1 or select >= rss_max)
 				exit
 			if index = id_recurso_infinito and edificio.select >= 0
 				edificio.carga_output[edificio.select] = false
