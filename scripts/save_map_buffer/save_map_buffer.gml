@@ -3,8 +3,9 @@ function save_map_buffer(buffer){
 		buffer_write(buffer, buffer_u8, xsize)
 		buffer_write(buffer, buffer_u8, ysize)
 		//Simplificar terreno base
-		var max_terreno = 0, max_terreno_counter = 0, cordenadas = array_create(terreno_max, array_create(0, [0, 0])), recursos = array_create(0, [0, 0, 0, 0])
-		var a, b, temp_complex
+		var max_terreno = 0, max_terreno_counter = 0, cordenadas = array_create(terreno_max), recursos = array_create(0, [0, 0, 0, 0]), a, b, temp_complex
+		for(a = 0; a < terreno_max; a++)
+			cordenadas[a] = array_create(0, [0, 0])
 		for(a = 0; a < xsize; a++)
 			for(b = 0; b < ysize; b++){
 				array_push(cordenadas[terreno[# a, b]], [a, b])

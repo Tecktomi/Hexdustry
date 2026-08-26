@@ -82,7 +82,7 @@ function draw_enciclopedia(_tecnologia = true, _this_input_layer = 0){
 			mouse_clear(mouse_lastbutton)
 			keyboard_clear(vk_escape)
 			keyboard_clear(CONTROL_ENCICLOPEDIA)
-			enciclopedia = false
+			enciclopedia = 0
 		}
 		update_cursor()
 	}

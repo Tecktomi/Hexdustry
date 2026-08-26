@@ -201,14 +201,11 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		}
 		var temp_list_arround = get_arround(a, b, dir, edificio_size[index])
 		ds_grid_set(edificio_draw, a, b, true)
-		if enemigo{
+		if enemigo
 			array_disorder_push(edificios_enemigos, edificio, 0)
-			array_disorder_push(chunk_edificios_enemigo[# chunk_x, chunk_y], edificio, 1)
-		}
-		else{
+		else
 			array_disorder_push(edificios, edificio, 0)
-			array_disorder_push(chunk_edificios[# chunk_x, chunk_y], edificio, 1)
-		}
+		array_disorder_push(chunk_edificios[# chunk_x, chunk_y], edificio, 1)
 		edificios_counter[index]++
 		if edificio_armas[index]{
 			var dis = edificio_alcance_sqr[index], chunk_size_x = CHUNK_WIDTH * 48, chunk_size_y = CHUNK_HEIGHT * 14

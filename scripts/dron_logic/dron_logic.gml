@@ -77,7 +77,7 @@ function dron_logic(){
 				if edificio_bool[# dron.a, dron.b]{
 					edificio = edificio_id[# dron.a, dron.b]
 					if edificio.index = id_mina{
-						flag = explosion(edificio.center_x, edificio.center_y,, edificio.enemigo, 10_000, 1000,, dron.jugador, dron)
+						flag = explosion(edificio.center_x, edificio.center_y,, 10_000, 1000,, edificio.jugador, dron)
 						delete_edificio(edificio)
 						if flag
 							continue
@@ -209,7 +209,7 @@ function dron_logic(){
 						b = repair_id[# i, j]
 						_comprable = (b > 0)
 						if _comprable and not cheat
-							_comprable = check_reconstruible(b)._comprable
+							_comprable = check_reconstruible(b, false)._comprable
 						if _comprable{
 							edificio = construir(b, repair_dir[# i, j], i, j)
 							if tag_edificio_seteable[b]
@@ -474,10 +474,10 @@ function dron_logic(){
 							max_prioridad = 0
 							for(u = minu; u <= maxu; u++)
 								for(v = minv; v <= maxv; v++){
-									chunk = enemigo ? chunk_edificios[# u, v] : chunk_edificios_enemigo[# u, v]
+									chunk = ds_grid_get(chunk_edificios, u, v)
 									for(i = array_length(chunk) - 1; i >= 0; i--){
 										edificio = chunk[i]
-										if edificio.prioridad >= max_prioridad{
+										if edificio.jugador != _jugador and edificio.prioridad >= max_prioridad{
 											max_prioridad = edificio.prioridad
 											dis = distance_sqr(aa, bb, edificio.center_x, edificio.center_y)
 											if dis < closest_dis{

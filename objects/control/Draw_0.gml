@@ -13,7 +13,8 @@
 		save_setting("", "fullscreen", window_get_fullscreen())
 	}
 #endregion
-var a, b, c, temp_text, temp_complex, aa = 0, bb = 0, xpos, ypos, temp_array_real, flag, buffer, i, j, temp_complex_2 = array_create(0, 0), _parpadeo = abs(sin(image_index / 20))
+var a, b, c, temp_text, temp_complex, aa = 0, bb = 0, xpos, ypos, temp_array_real, flag, buffer, i, j, temp_complex_2 = array_create(0, 0)
+var _parpadeo = abs(sin(image_index / 20)), len
 //Primera vez jugando
 if FIRST_TIME{
 	dibujar_fondo(1)
@@ -42,38 +43,6 @@ if FIRST_TIME{
 //Menú principal
 if menu = 0{
 	dibujar_fondo(1)
-	#region redraw_tiles
-	if keyboard_check_pressed(ord("B")){
-		var surf = surface_create(TILE_WIDTH, TILE_HEIGHT), sprite
-		surface_set_target(surf)
-		var tw2 = TILE_WIDTH / 2, th2 = TILE_HEIGHT / 2
-		draw_set_color(c_black)
-		for(a = 0; a < 7; a++){
-			for(b = 0; b < 64; b++){
-				if b & 2 or b & 16
-					continue
-				draw_rectangle(0, 0, TILE_WIDTH, TILE_HEIGHT, false)
-				draw_sprite_ext(spr_camino, a, tw2, th2, 1, -1, 0, c_white, 1)
-				if b & 1
-					draw_sprite_ext(spr_camino_diagonal_borde, a, tw2, th2, -1, -1, 0, c_white, 1)
-				if b & 2
-					draw_sprite_ext(spr_camino_borde, a, tw2, th2, 1, -1, 0, c_white, 1)
-				if b & 4
-					draw_sprite_ext(spr_camino_diagonal_borde, a, tw2, th2, 1, -1, 0, c_white, 1)
-				if b & 8
-					draw_sprite_ext(spr_camino_diagonal_borde, a, tw2, th2, 1, 1, 0, c_white, 1)
-				if b & 16
-					draw_sprite_ext(spr_camino_borde, a, tw2, th2, 1, 1, 0, c_white, 1)
-				if b & 32
-					draw_sprite_ext(spr_camino_diagonal_borde, a, tw2, th2, -1, 1, 0, c_white, 1)
-				sprite = sprite_create_from_surface(surf, 0, 0, TILE_WIDTH, TILE_HEIGHT, true, false, 0, 0)
-				sprite_save(sprite, 0, $"spr_camino_4_in_{b}_{a}.png")
-			}
-		}
-		surface_reset_target()
-		surface_free(surf)
-	}
-	#endregion
 	draw_set_alpha(0.5)
 	draw_set_color(c_black)
 	draw_rectangle(0, 0, room_width, room_height, false)
@@ -117,7 +86,6 @@ if menu = 0{
 	if os_browser = browser_not_a_browser and DEVISE and file_exists("last_save.save"){
 		ypos += text_y * 1.2
 		if draw_boton(room_width / 2, ypos, L.continuar, ui_verde){
-			buffer = buffer_create(128, buffer_grow, 1)
 			buffer = buffer_load("last_save.save")
 			load_game_buffer(buffer)
 			buffer_delete(buffer)
@@ -255,10 +223,10 @@ if menu = 0{
 			for(a = 0; a < array_length(partidas); a++){
 				temp_text = file_format(partidas[a])
 				if draw_sprite_boton(partidas_png[a],, xpos, ypos, 96, 96, 1){
-					buffer = buffer_create(4096, buffer_grow, 1)
 					buffer = buffer_load("Saves/" + partidas[a])
 					if not load_game_buffer(buffer)
 						show_message(L.archivo_obsoleto)
+					buffer_delete(buffer)
 				}
 				if draw_sprite_boton(spr_basura,, xpos - 10, ypos - 30,,, 1){
 					file_delete("Saves/" + temp_text + ".png")
@@ -363,7 +331,8 @@ if in(menu, 1, 3){
 	//DIBUJO SECUNDARIO
 	for(a = min_chunka; a < max_chunka; a++)
 		for(b = min_chunkb; b < max_chunkb; b++){
-			var chunk = chunk_edificios_draw[# a, b], len = array_length(chunk)
+			var chunk = chunk_edificios_draw[# a, b]
+			len = array_length(chunk)
 			for(c = 0; c < len; c++){
 				var edificio = chunk[c], index = edificio.index
 				aa = edificio.x
@@ -567,6 +536,7 @@ if pausa = 1{
 						buffer_delete(buffer)
 						var temp_sprite = minimapa()
 						sprite_save(temp_sprite, 0, $"{temp_text}.png")
+						sprite_delete(temp_sprite)
 					}
 					ypos += text_y * 1.2
 				}
@@ -879,7 +849,6 @@ if show_menu{
 					if draw_boton(140, 160 + 30 * a, save_codes[a],,,,, 1){
 						input_layer = 0
 						get_file = 0
-						buffer = buffer_create(6, buffer_grow, 1)
 						buffer = buffer_load("Codes/" + save_codes[a])
 						load_procesador(buffer, edificio)
 						buffer_delete(buffer)
@@ -968,7 +937,7 @@ if show_menu{
 			draw_rectangle(aa - 90 * zoom, bb + 40 * zoom, aa + 90 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, false)
 		else if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
 			temp_array_real = (index = id_fabrica_de_drones) ? fabrica_de_drones_array : fabrica_de_drones_grande_array
-			var len = array_length(temp_array_real)
+			len = array_length(temp_array_real)
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * len) * zoom, false)
 		}
 		else if index = id_refineria_de_petroleo{
@@ -1003,7 +972,7 @@ if show_menu{
 		}
 		if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
 			temp_array_real = (index = id_fabrica_de_drones) ? fabrica_de_drones_array : fabrica_de_drones_grande_array
-			var len = array_length(temp_array_real)
+			len = array_length(temp_array_real)
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * len) * zoom, true)
 			draw_text(aa - 80 * zoom, bb + 20 * zoom, L.show_menu_unidad)
 			for(a = 0; a < len; a++)
@@ -1085,7 +1054,7 @@ if show_menu{
 			}
 			else if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
 				temp_array_real = (index = id_fabrica_de_drones) ? fabrica_de_drones_array : fabrica_de_drones_grande_array
-				var len = array_length(temp_array_real)
+				len = array_length(temp_array_real)
 				if mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * len) * zoom{
 					a = temp_array_real[floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))]
 					temp_text = $"{dron_descripcion[a]}\n"
@@ -1250,7 +1219,9 @@ if pausa != 1 and get_file = 3{
 	else{
 		xpos = 120
 		ypos = 200
+		var _file_name
 		for(i = 0; i < array_length(blueprints_files); i++){
+			_file_name = file_format(blueprints_files[i])
 			draw_set_color(ui_panel_secundario)
 			draw_rectangle(xpos, ypos, xpos + 100, ypos + 100, false)
 			if draw_sprite_boton(blueprints_image[i],, xpos, ypos, 100, 100, 1){
@@ -1258,9 +1229,8 @@ if pausa != 1 and get_file = 3{
 				input_layer = 0
 				blueprint_safe = true
 				build_index = -1
-				buffer = buffer_create(2, buffer_grow, 1)
-				buffer = buffer_load($"Blueprints\\{blueprints_files[i]}")
-				var len = real(buffer_read(buffer, buffer_u8))
+				buffer = buffer_load($"Blueprints\\{_file_name}.txt")
+				len = real(buffer_read(buffer, buffer_u8))
 				blueprint_mod2 = bool(buffer_read(buffer, buffer_bool))
 				array_resize(blueprint, len)
 				for(j = 0; j < len; j++){
@@ -1285,8 +1255,9 @@ if pausa != 1 and get_file = 3{
 			draw_set_color(ui_texto)
 			draw_rectangle(xpos, ypos, xpos + 100, ypos + 100, true)
 			if draw_sprite_boton(spr_basura,, xpos, ypos - 20,,, 1){
-				file_delete($"Blueprints\\{blueprints_files[i]}")
-				file_delete($"Blueprints\\{blueprints_image[i]}")
+				file_delete($"Blueprints\\{_file_name}.txt")
+				file_delete($"Blueprints\\{_file_name}.png")
+				sprite_delete(blueprints_image[i])
 				array_delete(blueprints_files, i, 1)
 				array_delete(blueprints_image, i, 1)
 				break
@@ -1312,23 +1283,6 @@ if pausa != 1 and get_file = 3{
 if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_procesador){
 	//Mostrar terreno
 	temp_text = $"{terreno_nombre[terreno[# mx, my]]}\n"
-	//Seleccionar Dron
-	if mouse_check_button_pressed(mb_left) and false{
-		var flag_dron = true, min_dis = 900 * sqr(zoom) //(30 / zoom)^2
-		for(a = array_length(drones_aliados) - 1; a >= 0; a--){
-			var temp_dron = drones_aliados[a], dis = distance_sqr(mouse_x, mouse_y, temp_dron.x * zoom - camx, temp_dron.y * zoom - camy)
-			if dis < min_dis{
-				mouse_clear(mb_left)
-				min_dis = dis
-				selected_dron = temp_dron
-				flag_dron = false
-			}
-		}
-		if flag_dron{
-			selected_drones = array_create(0, null_dron)
-			selected_dron = null_dron
-		}
-	}
 	if ore[# mx, my] >= 0
 		temp_text += $"{recurso_nombre[ore_recurso[ore[# mx, my]]]}: {ore_amount[# mx, my]}\n"
 	if edificio_bool[# mx, my]{
@@ -1520,7 +1474,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 						temp_complex = edificio.coordenadas[a]
 						aa = temp_complex[0]
 						bb = temp_complex[1]
-						if in(ore[# aa, bb], 0, 1, 2)
+						if in(ore[# aa, bb], ido_cobre, ido_hierro, ido_carbon)
 							temp_array_real[ore_recurso[ore[# aa, bb]]] += ore_amount[# aa, bb]
 						else if terreno_recurso_bool[terreno[# aa, bb]] and index = id_taladro_electrico
 							temp_array_real[terreno_recurso_id[terreno[# aa, bb]]] = -1
@@ -1548,7 +1502,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 						bb = temp_complex[1]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
-						if in(ore[# aa, bb], 0, 1, 2)
+						if ore[# aa, bb] >= 0
 							temp_array_real[ore_recurso[ore[# aa, bb]]] += ore_amount[# aa, bb]
 						else if terreno_recurso_bool[terreno[# aa, bb]]
 							temp_array_real[terreno_recurso_id[terreno[# aa, bb]]] = -1
@@ -1597,9 +1551,9 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			if in(index, id_tunel, id_tunel_salida){
 				if keyboard_check_pressed(CONTROL_ROTAR) and edificio.link != null_edificio{
 					keyboard_clear(CONTROL_ROTAR)
-					if edificio.index = 16{
-						edificio.index = 6
-						edificio.link.index = 16
+					if edificio.index = id_tunel_salida{
+						edificio.index = id_tunel
+						edificio.link.index = id_tunel_salida
 						calcular_inputs_outputs(edificio)
 						calcular_inputs_outputs(edificio.link)
 						calcular_edificios_adyascentes(edificio)
@@ -1608,8 +1562,8 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 						array_push(edificio.link.inputs, edificio)
 					}
 					else{
-						edificio.index = 16
-						edificio.link.index = 6
+						edificio.index = id_tunel_salida
+						edificio.link.index = id_tunel
 						calcular_inputs_outputs(edificio)
 						calcular_inputs_outputs(edificio.link)
 						calcular_edificios_adyascentes(edificio)
@@ -1913,9 +1867,9 @@ if array_length(selected_drones) > 0{
 			if ore[# mx, my] >= 0
 				draw_sprite(spr_minar, ore[# mx, my] = ido_uranio, mouse_x, mouse_y)
 		}
-		if dron.temp_target != null_dron
+		if dron.temp_target != null_edificio
 			draw_sprite_off(spr_target, 0, dron.temp_target.center_x, dron.temp_target.center_y)
-		if dron.target_dron != null_edificio
+		if dron.target_dron != null_dron
 			draw_sprite_off(spr_target, 0, dron.target_dron.x, dron.target_dron.y)
 	}
 }
@@ -1938,7 +1892,7 @@ if puerto_carga_bool or (procesador_select != null_edificio) or (misil_set_targe
 		temp_text = L.marcar_objetivo
 	draw_text_background(room_width / 2, 100, temp_text)
 	draw_set_halign(fa_left)
-	if misil_set_target{
+	if misil_set_target != null_edificio{
 		if mouse_check_button_pressed(mb_left){
 			misil_set_target.array_real[2] = xmouse
 			misil_set_target.array_real[3] = ymouse
@@ -2095,7 +2049,7 @@ if sonido
 	}
 #endregion
 //Acceso directo
-if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastchar, CONTROL_LEFT, CONTROL_RIGHT, CONTROL_UP, CONTROL_DOWN, " ") or cheat) and win = 0 and not show_menu{
+if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastkey, CONTROL_LEFT, CONTROL_RIGHT, CONTROL_UP, CONTROL_DOWN, ord(" ")) or cheat) and win = 0 and not show_menu{
 	for(a = 1; a < edificio_max; a++)
 		if edificio_key[a] != "" and string_ends_with(keyboard_string, edificio_key[a]){
 			if tecnologia and not cheat and not edificio_tecnologia[a]{
@@ -2241,7 +2195,7 @@ if build_index > 0 and win = 0{
 			temp_complex = abtoxy(temp_mx, temp_my)
 			draw_sprite_off(spr_item_modulo, 0, temp_complex[0], temp_complex[1],,,,, 0.5)
 			if edificio_bool[# temp_mx, temp_my]{
-				var temp_edificio = edificio_id[# temp_mx, temp_my], index = edificio.index, temp_modulo_tier = edificio_modulo_tier[index], flag_2 = true
+				var temp_edificio = edificio_id[# temp_mx, temp_my], index = temp_edificio.index, temp_modulo_tier = edificio_modulo_tier[index], flag_2 = true
 				if temp_modulo_tier = -1{
 					temp_text = L.modulo_edificio_sin_modulo
 					flag_2 = false
@@ -2991,14 +2945,16 @@ if build_index > 0 and win = 0{
 								var _chunk_alcance_y = ceil(edificio_alcance[build_index] / CHUNK_HEIGHT / 14)
 								var mini = max(chunk_x - _chunk_alcance_x, 0), minj = max(chunk_y - _chunk_alcance_y, 0)
 								var maxi = min(chunk_x + _chunk_alcance_x, chunk_xsize - 1), maxj = min(chunk_y + _chunk_alcance_y, chunk_ysize - 1)
-								var temp_edificio, k
+								var temp_edificio, k, temp_array_edificio
 								for(i = mini; i <= maxi; i++)
-									for(j = minj; j <= maxj; j++)
-										for(k = array_length(chunk_edificios[# i, j]) - 1; k >= 0; k--){
-											temp_edificio = chunk_edificios[# i, j][k]
-											if distance_sqr(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y) < edificio_alcance_sqr[build_index]
+									for(j = minj; j <= maxj; j++){
+										temp_array_edificio = ds_grid_get(chunk_edificios, i, j)
+										for(k = array_length(temp_array_edificio) - 1; k >= 0; k--){
+											temp_edificio = temp_array_edificio[k]
+											if temp_edificio.jugador = jugador and distance_sqr(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y) < edificio_alcance_sqr[build_index]
 												array_push(build_array_edificios, temp_edificio)
 										}
+									}
 							}
 							for(a = array_length(build_array_edificios) - 1; a >= 0; a--){
 								var temp_edificio = build_array_edificios[a]
@@ -3070,14 +3026,16 @@ if build_index > 0 and win = 0{
 									var _chunk_alcance_y = ceil(PLANTA_RECICLAJE_RANGE / CHUNK_HEIGHT / 14)
 									var mini = max(chunk_x - _chunk_alcance_x, 0), minj = max(chunk_y - _chunk_alcance_y, 0)
 									var maxi = min(chunk_x + _chunk_alcance_x, chunk_xsize - 1), maxj = min(chunk_y + _chunk_alcance_y, chunk_ysize - 1)
-									var temp_edificio
+									var temp_edificio, temp_array_edificio
 									for(i = mini; i <= maxi; i++)
-										for(j = minj; j <= maxj; j++)
-											for(k = array_length(chunk_edificios[# i, j]) - 1; k >= 0; k--){
-												temp_edificio = chunk_edificios[# i, j][k]
-												if distance_sqr(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y) < PLANTA_RECICLAJE_RANGE_SQR
+										for(j = minj; j <= maxj; j++){
+											temp_array_edificio = ds_grid_get(chunk_edificios, i, j)
+											for(k = array_length(temp_array_edificio) - 1; k >= 0; k--){
+												temp_edificio = temp_array_edificio[k]
+												if temp_edificio.jugador = jugador and distance_sqr(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y) < PLANTA_RECICLAJE_RANGE_SQR
 													array_push(build_array_edificios, temp_edificio)
 											}
+										}
 								}
 							}
 							draw_set_color(c_red)
@@ -3196,7 +3154,8 @@ if build_index > 0 and win = 0{
 		android_clic = true
 }
 else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
-	var len = array_length(blueprint), flip = (((blueprint_mod2 + my) mod 2) = 1), _rotar = false
+	len = array_length(blueprint)
+	var flip = (((blueprint_mod2 + my) mod 2) = 1), _rotar = false
 	//Guardar
 	if not blueprint_safe{
 		draw_set_halign(fa_center)
@@ -3269,8 +3228,6 @@ else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
 		blueprint_mina = infinity
 		blueprint_minb = infinity
 		for(a = 0; a < len; a++){
-			if (my & 1) and false
-				blueprint[a].b--
 			var temp_blueprint = blueprint[a], size = edificio_size[temp_blueprint.index]
 			if (size & 1) = 0
 				blueprint[a].dir = 5 - temp_blueprint.dir
@@ -3437,7 +3394,7 @@ if menu = 1{
 		draw_set_halign(fa_left)
 	}
 	if draw_sprite_boton(spr_manual,, room_width - 64, string_height(temp_text_right), 64, 64,, hover_sprite_boton_text, {a : $"{L.game_enciclopedia} (Y)"})
-		enciclopedia = true
+		enciclopedia = 1
 	//Input
 	if win = 0 and not show_menu and not chat_input{
 		if keyboard_check_pressed(vk_anykey){
@@ -3611,8 +3568,10 @@ if menu = 1{
 				ypos = draw_text_ypos(xpos, ypos, $"{L.energia_producida}: {num_format(temp_prod)}")
 				draw_set_color(c_black)
 				ypos = draw_text_ypos(xpos, ypos, $"{L.energia_consumida}: {num_format(temp_cons)}")
-				draw_set_color(c_red)
-				ypos = draw_text_ypos(xpos, ypos, $"{L.energia_perdida}: {num_format(temp_perd)} ({100 - floor(100 * temp_prod / (temp_prod + temp_perd))}%)")
+				if (temp_prod + temp_perd) > 0{
+					draw_set_color(c_red)
+					ypos = draw_text_ypos(xpos, ypos, $"{L.energia_perdida}: {num_format(temp_perd)} ({100 - floor(100 * temp_prod / (temp_prod + temp_perd))}%)")
+				}
 				draw_set_color(c_white)
 				draw_graph(xpos - 200, ypos, 400, 100, [energia_producida, energia_consumida, energia_perdida], [ #FFF899, c_black, c_red], true)
 			}
@@ -3728,8 +3687,8 @@ if sonido{
 	if clic_sound
 		audio_play_sound(snd_click, 1, false, 0.3)
 }
-if array_length(chat) >= 0{
-	var max_width = 0, pos
+if array_length(chat) > 0{
+	var max_width = 0, pos = 0
 	if get_keyboard_string != 0
 		for(pos = 0; pos < array_length(chat); pos++)
 			if chat_time[pos] > image_index - 600
@@ -3785,53 +3744,3 @@ if keyboard_check(CONTROL_TAB) and online{
 	draw_set_halign(fa_left)
 }
 draw_sprite(spr_vineta, 0, 0, 0)
-if keyboard_check(ord("V")){
-	draw_set_valign(fa_bottom)
-	draw_text(0, room_height, $"{jugador}\n{server_jugadores_nombre}\n{misiones}")
-	if keyboard_check_pressed(ord("V")){
-		var _time = current_time
-		temp_array_real = array_create(0, 0)
-		var visitado = usable_grid_bool, _continue = array_create(20)
-		ds_grid_clear(visitado, false)
-		for(i = 0; i < 20; i++){
-			_continue[i] = array_create(20, false)
-			a = random(xsize - 1)
-			b = random(ysize - 1)
-			array_push(temp_array_real, a, b)
-			visitado[# a, b] = true
-			abba[# a, b] = i
-		}
-		for(var _counter = 0; _counter < array_length(temp_array_real); _counter++){
-			a = temp_array_real[_counter++]
-			b = temp_array_real[_counter]
-			var bmod = b & 1
-			c = abba[# a, b]
-			for(i = 0; i < 6; i++){
-				aa = a + DESFACE_A[bmod, i]
-				bb = b + DESFACE_B[bmod, i]
-				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
-					continue
-				if not visitado[# aa, bb]{
-					visitado[# aa, bb] = true
-					array_push(temp_array_real, aa, bb)
-					abba[# aa, bb] = c
-				}
-				else{
-					var d = abba[# aa, bb]
-					if c != d{
-						_continue[c, d] = true
-						_continue[d, c] = true
-					}
-				}
-			}
-		}
-		for(a = 0; a < 20; a++)
-			show_debug_message(_continue[a])
-		show_debug_message($"{current_time - _time}ms")
-		for(a = 0; a < array_length(misiones); a++)
-			show_debug_message(misiones[a])
-	}
-	draw_set_valign(fa_top)
-}
-if keyboard_check(vk_lcontrol) and keyboard_check(ord("H"))
-	image_index += 100

@@ -23,7 +23,7 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 		}
 		//Ataque Explosivo
 		else if dron.index = idd_kamikaze{
-			explosion(dron.x, dron.y, edificio, dron.enemigo, 25_000, 2000,, _jugador)
+			explosion(dron.x, dron.y, edificio, 25_000, 2000,, _jugador)
 			delete_dron(dron)
 			return true
 		}
@@ -94,7 +94,7 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 		else if index = idd_bombardero{
 			if in(dron.step - dron_step[index], 0, 15, 30, 45, 60, 75){
 				dron.step++
-				explosion(dron.x + random_range(-5, 5), dron.y + random_range(-5, 5), edificio, dron.enemigo, 10_000, 500, true, _jugador)
+				explosion(dron.x + random_range(-5, 5), dron.y + random_range(-5, 5), edificio, 10_000, 500, true, _jugador)
 			}
 			if dron.step >= dron_step[index] + 75
 				dron.step = 0

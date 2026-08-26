@@ -8,7 +8,7 @@ function handle_welcome(buffer){
 			show_message(L.archivo_obsoleto)
 		//Asignar núcleo y recursos
 		if server_pvp{
-			var a = real(buffer_read(buffer, buffer_u8)), b = real(buffer_read(buffer, buffer_u8)), edificio, aa, bb
+			var a = real(buffer_read(buffer, buffer_u8)), b = real(buffer_read(buffer, buffer_u8)), edificio, aa, bb, dron, _enemigo
 			nucleo = edificio_id[# a, b]
 			jugador_recursos = array_create(1, array_create(rss_max, 0))
 			for(a = 0; a < rss_max; a++)
@@ -23,9 +23,22 @@ function handle_welcome(buffer){
 					edificio.enemigo = true
 					array_disorder_remove(edificios, edificio, 0)
 					array_disorder_push(edificios_enemigos, edificio, 0)
-					array_disorder_remove(chunk_edificios[# aa, bb], edificio, 2)
-					array_disorder_push(chunk_edificios_enemigo[# aa, bb], edificio, 2)
 				}
+			}
+			for(a = array_length(drones) - 1; a >= 0; a--){
+			    dron = drones[a]
+				_enemigo = (jugador != dron.jugador)
+			    if _enemigo != dron.enemigo{
+			        dron.enemigo = _enemigo
+			        if _enemigo{
+			            array_disorder_remove(drones_aliados, dron, 0)
+			            array_disorder_push(enemigos, dron, 0)
+			        }
+			        else{
+			            array_disorder_remove(enemigos, dron, 0)
+			            array_disorder_push(drones_aliados, dron, 0)
+			        }
+			    }
 			}
 		}
 		server_jugadores_nombre = array_create(0, "")

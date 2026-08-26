@@ -53,20 +53,22 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 			if edificio.target != null_dron
 				exit
 		}
-		var edificio_final = null_edificio, target_chunk_edificio = (edificio.enemigo ? chunk_edificios : chunk_edificios_enemigo)
+		var edificio_final = null_edificio
 		//Disparo normal
 		if alc_min = 0{
 			for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
 				temp_complex = edificio.target_chunks[a]
-				temp_array_edificio = target_chunk_edificio[# temp_complex[0], temp_complex[1]]
+				temp_array_edificio = ds_grid_get(chunk_edificios, temp_complex[0], temp_complex[1])
 				for(b = array_length(temp_array_edificio) - 1; b >= 0; b--){
 					temp_edificio = temp_array_edificio[b]
 					if temp_edificio.vida <= 0
 						continue
-					temp_dis = distance_sqr(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y)
-					if temp_dis < dis{
-						dis = temp_dis
-						edificio_final = temp_edificio
+					if temp_edificio.jugador != _jugador{
+						temp_dis = distance_sqr(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y)
+						if temp_dis < dis{
+							dis = temp_dis
+							edificio_final = temp_edificio
+						}
 					}
 				}
 			}
@@ -74,15 +76,17 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 		//Mortero
 		else for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
 			temp_complex = edificio.target_chunks[a]
-			temp_array_edificio = target_chunk_edificio[# temp_complex[0], temp_complex[1]]
+			temp_array_edificio = ds_grid_get(chunk_edificios, temp_complex[0], temp_complex[1])
 			for(b = array_length(temp_array_edificio) - 1; b >= 0; b--){
 				temp_edificio = temp_array_edificio[b]
 				if temp_edificio.vida < 0
 					continue
-				temp_dis = distance_sqr(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y)
-				if temp_dis < dis and temp_dis > alc_min{
-					dis = temp_dis
-					edificio_final = temp_edificio
+				if temp_edificio.jugador != _jugador{
+					temp_dis = distance_sqr(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y)
+					if temp_dis < dis and temp_dis > alc_min{
+						dis = temp_dis
+						edificio_final = temp_edificio
+					}
 				}
 			}
 		}

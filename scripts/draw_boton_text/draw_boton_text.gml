@@ -2,9 +2,9 @@ function draw_boton_text(xpos, ypos, variable, es_real = true, detect_real = fal
 	with control{
 		if draw_boton(xpos, ypos, (es_real ? "" : "'") + string(variable) + (es_real ? "" : "'"),,,, box, input_layer){
 			if detect_real
-				es_real = (keyboard_string = string_digits(keyboard_string))
+				es_real = (keyboard_string = string_digits_ext(keyboard_string))
 			if es_real
-				keyboard_string = string_digits(string(variable))
+				keyboard_string = string_digits_ext(string(variable))
 			else
 				keyboard_string = string(variable)
 			get_keyboard_string = draw_boton_text_counter
@@ -17,8 +17,8 @@ function draw_boton_text(xpos, ypos, variable, es_real = true, detect_real = fal
 			var xx = draw_get_halign() = fa_left ? 0 : (draw_get_halign() = fa_center ? text_x / 2 : text_x)
 			draw_line(xpos - xx, ypos + text_y, xpos + text_x - xx, ypos + text_y)
 			if detect_real
-				es_real = (keyboard_string = string_digits(keyboard_string))
-			var pre_text = string_copy($"'get_keyboard_text'", 1, get_keyboard_cursor)
+				es_real = (keyboard_string = string_digits_ext(keyboard_string))
+			var pre_text = string_copy(es_real ? $"{get_keyboard_text}" : $"'{get_keyboard_text}'", 1, get_keyboard_cursor)
 			var cursor_x = xpos + string_width(pre_text)
 			draw_line(cursor_x - xx, ypos, cursor_x - xx, ypos + 16)
 			if keyboard_check_pressed(vk_anykey){
@@ -49,13 +49,13 @@ function draw_boton_text(xpos, ypos, variable, es_real = true, detect_real = fal
 				else if keyboard_check_pressed(vk_delete){
 					if keyboard_check(vk_lcontrol){
 						do get_keyboard_text = string_delete(get_keyboard_text, get_keyboard_cursor, 1)
-						until (string_char_at(get_keyboard_text, get_keyboard_cursor) = " " or get_keyboard_cursor = 1)
+						until (string_char_at(get_keyboard_text, get_keyboard_cursor) = " " or get_keyboard_cursor > string_length(get_keyboard_text))
 					}
 					else
 						get_keyboard_text = string_delete(get_keyboard_text, get_keyboard_cursor, 1)
 				}
 				else if keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("V")){
-					get_keyboard_text += clipboard_get_text()
+					get_keyboard_text = string_insert(clipboard_get_text(), get_keyboard_text, get_keyboard_cursor)
 					get_keyboard_cursor += string_length(clipboard_get_text())
 				}
 				else if keyboard_check_pressed(vk_home)
@@ -74,7 +74,7 @@ function draw_boton_text(xpos, ypos, variable, es_real = true, detect_real = fal
 			}
 			keyboard_string = get_keyboard_text
 			if es_real
-				variable = (string_digits(keyboard_string) = "" ? 0 : real(string_digits(keyboard_string)))
+				variable = (string_digits_ext(keyboard_string) = "" ? 0 : real(string_digits_ext(keyboard_string)))
 			else
 				variable = keyboard_string
 			exit_keyboard_input()

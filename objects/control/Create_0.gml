@@ -36,6 +36,10 @@ var a, b, c, flag
 		for(b = 0; b < 6; b++)
 			array_set(preset_dir[a], b, (preset_dir[a & 1, b] + floor(a / 2)) mod 6)
 	}
+	DIGITS = array_create(256, false)
+	for(a = 45; a < 58; a++)
+		DIGITS[a] = true
+	DIGITS[47] = false
 #endregion
 DEVISE = (os_type = os_windows)
 BROWSER = (os_browser = browser_not_a_browser)
@@ -709,8 +713,6 @@ selected_dron = null_dron
 	background = ds_grid_create(chunk_xsize, chunk_ysize)
 	chunk_dron = ds_grid_create(chunk_xsize, chunk_ysize)
 	chunk_edificios = ds_grid_create(chunk_xsize, chunk_ysize)
-	chunk_edificios_enemigo = ds_grid_create(chunk_xsize, chunk_ysize)
-	chunk_edificios_abandonado = ds_grid_create(chunk_xsize, chunk_ysize)
 	chunk_edificios_estatico = ds_grid_create(chunk_xsize, chunk_ysize)
 	chunk_edificios_dinamico = ds_grid_create(chunk_xsize, chunk_ysize)
 	chunk_edificios_draw = ds_grid_create(chunk_xsize, chunk_ysize)
@@ -723,8 +725,6 @@ selected_dron = null_dron
 			ds_grid_set(chunk_edificios_background, a, b, spr_hexagono)
 			ds_grid_set(chunk_dron, a, b, array_create(0, null_dron))
 			ds_grid_set(chunk_edificios, a, b, array_create(0, null_edificio))
-			ds_grid_set(chunk_edificios_enemigo, a, b, array_create(0, null_edificio))
-			ds_grid_set(chunk_edificios_abandonado, a, b, array_create(0, null_edificio))
 			ds_grid_set(chunk_edificios_estatico, a, b, array_create(0, null_edificio))
 			ds_grid_set(chunk_edificios_dinamico, a, b, array_create(0, null_edificio))
 			ds_grid_set(chunk_edificios_draw, a, b, array_create(0, null_edificio))
