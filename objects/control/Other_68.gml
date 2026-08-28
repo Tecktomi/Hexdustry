@@ -7,18 +7,28 @@ if type = network_type_data{
 		show_debug_message($"msg: {msg}")
 	if msg = 1{ //Handle Hello
 		var temp_socket = async_load[? "id"]
-		var player_name = buffer_read(buffer, buffer_string)
+		var player_name = string(buffer_read(buffer, buffer_string))
 		//Detectar nombre utilizado
 		if array_contains(server_jugadores_nombre, player_name){
 			var reply = buffer_create(1, buffer_grow, 1)
 			buffer_write(reply, buffer_u8, 16)
+			buffer_write(reply, buffer_u8, 0)
 			network_send_packet(temp_socket, reply, buffer_tell(reply))
 			buffer_delete(reply)
-			array_pop(server_jugadores)
 		}
 		else{
-			array_push(server_jugadores, temp_socket)
-			handle_hello(temp_socket, buffer)
+			var slot = find_server_slot()
+			if slot = -1{
+				var reply = buffer_create(1, buffer_grow, 1)
+				buffer_write(reply, buffer_u8, 16)
+				buffer_write(reply, buffer_u8, 1)
+				network_send_packet(temp_socket, reply, buffer_tell(reply))
+				buffer_delete(reply)
+			}
+			else{
+				server_jugadores[slot] = temp_socket
+				handle_hello(temp_socket, buffer, slot)
+			}
 		}
 	}
 	else if msg = 2 //Handle Welcome
@@ -55,8 +65,13 @@ if type = network_type_data{
 		handle_jugador_eliminado(buffer)
 	else if msg = 15 //Server break
 		handle_server_break()
-	else if msg = 16 //Error: Nombre utilizado
-		show_message(string(L.server_error_nombre, online_nombre))
+	else if msg = 16{ //Error: Nombre utilizado
+		var _error = buffer_read(buffer, buffer_u8)
+		if _error = 0
+			show_message(string(L.server_error_nombre, online_nombre))
+		else if _error = 1
+			show_message(L.server_error_lleno)
+	}
 	else if msg = 17 //Expulsado
 		handle_jugador_expulsado(buffer)
 	else if msg = 18 //Timeout

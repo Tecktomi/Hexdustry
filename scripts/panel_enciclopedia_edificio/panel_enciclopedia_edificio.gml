@@ -61,7 +61,7 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 			else if edificio_flujo_consumo[ei] < 0
 				ypos = draw_text_ypos(xpos + 10, ypos, $"{L.enciclopedia_produce} {abs(edificio_flujo_consumo[ei])} {temp_text}/s")
 		}
-		if ((_tecnologia and edificio_tecnologia[ei]) or cheat) and draw_boton(xpos + 10, ypos + 40, L.enciclopedia_construir, ui_verde,,,, _this_input_layer){
+		if ((_tecnologia and edificio_tecnologia[jugador, ei]) or cheat) and draw_boton(xpos + 10, ypos + 40, L.enciclopedia_construir, ui_verde,,,, _this_input_layer){
 			enciclopedia = 0
 			build_index = ei
 			build_dir = 0
@@ -81,9 +81,9 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 			ypos = 200
 			for(a = 0; a < size; a++){
 				b = tecnologia_prev[ei, a]
-				if edificio_tecnologia[b]
+				if edificio_tecnologia[jugador, b]
 					draw_set_color(c_green)
-				else if edificio_tecnologia_desbloqueable[b]
+				else if edificio_tecnologia_desbloqueable[jugador, b]
 					draw_set_color(c_yellow)
 				else
 					draw_set_color(c_red)
@@ -100,9 +100,9 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 			size = array_length(tecnologia_next[ei])
 			for(a = 0; a < size; a++){
 				b = tecnologia_next[ei, a]
-				if edificio_tecnologia[b]
+				if edificio_tecnologia[jugador, b]
 					draw_set_color(c_green)
-				else if edificio_tecnologia_desbloqueable[b]
+				else if edificio_tecnologia_desbloqueable[jugador, b]
 					draw_set_color(c_yellow)
 				else
 					draw_set_color(c_red)
@@ -116,14 +116,14 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 				}
 				draw_text_background(mouse_x + 20, mouse_y, sprite_boton_text)
 			}
-			if edificio_tecnologia[ei]
+			if edificio_tecnologia[jugador, ei]
 				draw_set_color(c_green)
-			else if edificio_tecnologia_desbloqueable[ei]{
+			else if edificio_tecnologia_desbloqueable[jugador, ei]{
 				var flag = true, temp_text = ""
 				if not cheat
 					for(a = 0; a < array_length(tecnologia_precio_id[ei]); a++){
 						temp_text += $"\n{recurso_nombre[tecnologia_precio_id[ei, a]]}: {tecnologia_precio_num[ei, a]}"
-						if jugador_recursos[0, tecnologia_precio_id[ei, a]] < tecnologia_precio_num[ei, a]{
+						if jugador_recursos[jugador, tecnologia_precio_id[ei, a]] < tecnologia_precio_num[ei, a]{
 							flag = false
 							temp_text += " !!"
 						}

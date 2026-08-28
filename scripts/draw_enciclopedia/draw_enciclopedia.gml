@@ -54,9 +54,9 @@ function draw_enciclopedia(_tecnologia = true, _this_input_layer = 0){
 				width = array_length(tecnologia_nivel_edificios[a])
 				for(b = 0; b < width; b++){
 					c = tecnologia_nivel_edificios[a, b]
-					if edificio_tecnologia[c]
+					if edificio_tecnologia[jugador, c]
 						draw_set_color(c_green)
-					else if edificio_tecnologia_desbloqueable[c]
+					else if edificio_tecnologia_desbloqueable[jugador, c]
 						draw_set_color(c_yellow)
 					else
 						draw_set_color(c_red)

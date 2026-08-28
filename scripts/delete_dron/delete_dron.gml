@@ -1,13 +1,13 @@
 function delete_dron(dron = control.null_dron){
 	with control{
-		var enemigo = dron.enemigo, array_drones = (enemigo ? enemigos : drones_aliados), _jugador = dron.jugador, a, edificio, temp_dron
+		var enemigo = dron.enemigo, _jugador = dron.jugador, a, edificio, temp_dron
 		array_disorder_remove(drones, dron, 2)
 		dron_chunk_remove(dron)
-		array_disorder_remove(array_drones, dron, 0)
+		array_disorder_remove(drones_jugador[_jugador], dron, 0)
 		//Dron enemigo
-		if enemigo{
+		if _jugador != jugador{
 			enemigos_eliminados++
-			if mision_actual >= 0 and mision.objetivo = 4 and array_length(enemigos) <= 1 and mision_counter >= mision.target_num
+			if mision_actual >= 0 and mision.objetivo = 4 and array_length(drones_jugador[_jugador]) = 0 and mision_counter >= mision.target_num
 				pasar_mision()
 		}
 		//Dron aliado
@@ -15,15 +15,15 @@ function delete_dron(dron = control.null_dron){
 			drones_perdidos++
 			if dron.selected
 				array_remove(selected_drones, dron)
-			if array_length(drones_aliados) < 8 + 2 * nucleo.modulo
+			if array_length(drones_jugador[_jugador]) < 8 + 2 * nucleos[_jugador].modulo
 				for(a = array_length(edificios_salida_drones) - 1; a >= 0; a--){
 					edificio = edificios_salida_drones[a]
-					if edificio.select != -1 and edificio.waiting
+					if edificio.jugador = _jugador and edificio.select != -1 and edificio.waiting
 						mover_carga(edificio)
 				}
 		}
 		//Cambiar target de torres
-		if array_length(array_drones) > 0{
+		if array_length(drones_jugador[_jugador]) > 0{
 			for(a = array_length(dron.torres) - 1; a >= 0; a--){
 				edificio = dron.torres[a]
 				if edificio.target = dron{
@@ -47,9 +47,9 @@ function delete_dron(dron = control.null_dron){
 				temp_dron.target_dron = null_dron
 		}
 		//Ser reciclado
-		for(a = array_length(plantas_de_reciclaje) - 1; a >= 0; a--){
-			edificio = plantas_de_reciclaje[a]
-			if edificio.select = -1 and distance_sqr(dron.x, dron.y, edificio.center_x, edificio.center_y) < PLANTA_RECICLAJE_RANGE_SQR{
+		for(a = array_length(edificios_index[id_planta_de_reciclaje]) - 1; a >= 0; a--){
+			edificio = edificios_index[id_planta_de_reciclaje][a]
+			if edificio.select = -1 and edificio.jugador = _jugador and distance_sqr(dron.x, dron.y, edificio.center_x, edificio.center_y) < PLANTA_RECICLAJE_RANGE_SQR{
 				edificio.mode = false
 				edificio.select = dron.index
 				break

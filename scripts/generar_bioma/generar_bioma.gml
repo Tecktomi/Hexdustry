@@ -167,13 +167,12 @@ function generar_bioma(bioma){
 				terreno[# aa, bb] = temp_terreno_change[terreno[# aa, bb]]
 		}
 		//Crear núcleo
-		if array_length(nucleos) > 0
-			delete_edificio(nucleos[0])
-		nucleo = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
-		jugador_recursos[0, idr_cobre] = 100
-		nucleo.carga_total = 100
+		while array_length(edificios_index[id_nucleo]) > 0
+			delete_edificio(edificios_index[id_nucleo][0])
+		nucleos[jugador] = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
+		jugador_recursos[jugador, idr_cobre] = 100
 		carga_inicial = array_create(rss_max, 0)
-		array_copy(carga_inicial, 0, jugador_recursos[0], 0, rss_max)
+		array_copy(carga_inicial, 0, jugador_recursos[jugador], 0, rss_max)
 		//Menas de recursos
 		betas = array_create(0, null_beta)
 		if bioma = 0

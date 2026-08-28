@@ -60,17 +60,20 @@ function save_game_buffer(buffer){
 			buffer_write(buffer, buffer_bool, mision_choosing_coord)
 		#endregion
 		for(a = 0; a < rss_max; a++)
-			buffer_write(buffer, buffer_u16, clamp(jugador_recursos[0, a], 0, 65535))
+			for(b = 0; b < EQUIPOS; b++)
+				buffer_write(buffer, buffer_u16, clamp(jugador_recursos[b, a], 0, 65535))
 		buffer_write(buffer, buffer_u32, image_index)
-		var mask_tecnologia = 0, mask_tecnologia_desbloqueable = 0
-		for(a = 0; a < edificio_max; a++){
-			if edificio_tecnologia[a]
-				mask_tecnologia |= 1 << a
-			if edificio_tecnologia_desbloqueable[a]
-				mask_tecnologia_desbloqueable |= 1 << a
+		for(b = 0; b < EQUIPOS; b++){
+			var mask_tecnologia = 0, mask_tecnologia_desbloqueable = 0
+			for(a = 0; a < edificio_max; a++){
+				if edificio_tecnologia[b, a]
+					mask_tecnologia |= 1 << a
+				if edificio_tecnologia_desbloqueable[b, a]
+					mask_tecnologia_desbloqueable |= 1 << a
+			}
+			buffer_write(buffer, buffer_u64, mask_tecnologia)
+			buffer_write(buffer, buffer_u64, mask_tecnologia_desbloqueable)
 		}
-		buffer_write(buffer, buffer_u64, mask_tecnologia)
-		buffer_write(buffer, buffer_u64, mask_tecnologia_desbloqueable)
 		//Filtrar Edificios
 		len = array_length(edificios_totales)
 		for(a = len - 1; a >= 0; a--){
@@ -126,7 +129,6 @@ function save_game_buffer(buffer){
 			buffer_write(buffer, buffer_u16, real(dron.a))
 			buffer_write(buffer, buffer_u16, real(dron.b))
 			buffer_write(buffer, buffer_u8, real(dron.index))
-			buffer_write(buffer, buffer_bool, bool(dron.enemigo))
 			buffer_write(buffer, buffer_u8, real(dron.jugador))
 		}
 		//Estado drones

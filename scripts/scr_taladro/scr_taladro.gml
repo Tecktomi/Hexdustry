@@ -16,10 +16,8 @@ function scr_taladro(edificio = control.null_edificio){
 			sound_play_edificio(3, edificio.center_x, edificio.center_y, 0.4)
 			if edificio.proceso >= edificio_proceso[index]{
 				edificio.proceso = 0
-				temp_list = array_create(array_length(edificio.coordenadas), array_create(0, 0))
+				temp_list = array_shuffle(edificio.coordenadas)
 				flag = false
-				array_clone(temp_list, edificio.coordenadas)
-				array_shuffle(temp_list)
 				for(i = array_length(temp_list) - 1; i >= 0; i--){
 					temp_complex = temp_list[i]
 					aa = temp_complex[0]

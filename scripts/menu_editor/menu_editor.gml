@@ -232,7 +232,7 @@ function menu_editor(){
 					if tag_edificio_construible[a]{
 						if not mision_edificios[a]
 							draw_set_color(c_red)
-						else if edificio_tecnologia[a]
+						else if edificio_tecnologia[jugador, a]
 							draw_set_color(c_green)
 						else
 							draw_set_color(c_yellow)
@@ -242,18 +242,24 @@ function menu_editor(){
 						if draw_sprite_boton(edificio_sprite[a],, xpos - 18, ypos - 18, 36, 36){
 							if not mision_edificios[a]{
 								mision_edificios[a] = true
-								edificio_tecnologia[a] = true
-								edificio_tecnologia_desbloqueable[a] = false
+								for(b = 0; b < EQUIPOS; b++){
+									array_set(edificio_tecnologia[b], a, true)
+									array_set(edificio_tecnologia_desbloqueable[b], a, false)
+								}
 							}
-							else if edificio_tecnologia[a]{
+							else if edificio_tecnologia[jugador, a]{
 								mision_edificios[a] = true
-								edificio_tecnologia[a] = false
-								edificio_tecnologia_desbloqueable[a] = true
+								for(b = 0; b < EQUIPOS; b++){
+									array_set(edificio_tecnologia[b], a, false)
+									array_set(edificio_tecnologia_desbloqueable[b], a, true)
+								}
 							}
 							else{
 								mision_edificios[a] = false
-								edificio_tecnologia[a] = false
-								edificio_tecnologia_desbloqueable[a] = false
+								for(b = 0; b < EQUIPOS; b++){
+									array_set(edificio_tecnologia[b], a, false)
+									array_set(edificio_tecnologia_desbloqueable[b], a, false)
+								}
 							}
 						}
 						ypos += 50
@@ -443,8 +449,8 @@ function menu_editor(){
 					if mouse_check_button_pressed(mb_left){
 						mouse_clear(mb_left)
 						var temp_nucleo = add_edificio(0, 0, mx, my)
-						delete_edificio(nucleo, false)
-						nucleo = temp_nucleo
+						delete_edificio(nucleos[jugador], false)
+						nucleos[jugador] = temp_nucleo
 						editor_herramienta = 0
 					}
 				}

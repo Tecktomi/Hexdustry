@@ -1,7 +1,7 @@
 randomize()
 var a, b, c, flag
 #region MACROS
-	#macro FILE_VERSION 2026_08_17
+	#macro FILE_VERSION 2026_08_28
 	#macro PROCESADOR_VERSION 2026_03_25
 	#macro TILE_WIDTH 32
 	#macro TILE_HEIGHT 28
@@ -40,6 +40,8 @@ var a, b, c, flag
 	for(a = 45; a < 58; a++)
 		DIGITS[a] = true
 	DIGITS[47] = false
+	#macro MAX_JUGADORES 9
+	EQUIPOS = 11
 #endregion
 DEVISE = (os_type = os_windows)
 BROWSER = (os_browser = browser_not_a_browser)
@@ -402,9 +404,10 @@ L = {}
 	udp_socket = network_create_socket(network_socket_udp)
 	server_ip = "192.168.1.x"
 	servidor = false
-	server_jugadores = [-1]
-	server_jugadores_nombre = [online_nombre]
-	server_jugadores_timeout = [0]
+	server_jugadores = array_create(MAX_JUGADORES, -1)
+	server_jugadores_nombre = array_create(MAX_JUGADORES, "")
+	server_jugadores_nombre[0] = online_nombre
+	server_jugadores_timeout = array_create(MAX_JUGADORES, 0)
 	mapa_editado = false
 	null_cambio = {
 		step : 0,
@@ -580,16 +583,17 @@ procesador_select = null_edificio
 null_edificio.procesador_link = array_create(0, null_edificio)
 edificios_pendientes = array_create(0, null_edificio)
 edificios_totales = array_create(0, null_edificio)
+nucleos = array_create(EQUIPOS, null_edificio)
 show_menu_build = null_edificio
 luces = array_create(0, {a : 0, b : 0, x : 0, y : 0, r : 0, source : null_edificio})
 //Puertos de Carga
 abba = ds_grid_create(xsize, ysize)
 puerto_carga_bool = false
 puerto_carga_link = null_edificio
-puerto_carga_array = array_create(0, null_edificio)
-puerto_carga_atended = 0
-puerto_carga_array_enemigo = array_create(0, null_edificio)
-puerto_carga_atended_enemigo = 0
+puerto_carga_array = array_create(EQUIPOS)
+puerto_carga_atended = array_create(EQUIPOS, 0)
+for(a = 0; a < EQUIPOS; a++)
+	puerto_carga_array[a] = array_create(0, null_edificio)
 //Enemigos
 efectos_nombre = ["Shock", "Fuego"]
 efectos_max = array_length(efectos_nombre)
@@ -631,12 +635,13 @@ null_dron = {
 	move_dir : 0,
 	punteros : array_create(3, 0)
 }
-enemigos = array_create(0, null_dron)
-drones_aliados = array_create(0, null_dron)
 null_edificio.target = null_dron
 null_dron.target_dron = null_dron
 selected_drones = array_create(0, null_dron)
 drones = array_create(0, null_dron)
+drones_jugador = array_create(EQUIPOS)
+for(a = 0; a < EQUIPOS; a++)
+	drones_jugador[a] = array_create(0, null_dron)
 null_beta = {
 	recurso : 0,
 	terrenos : array_create(0, [0, 0]),
@@ -809,7 +814,9 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 rss_max = array_length(recurso_nombre)
 sort_recursos()
 usable_rss_bool = array_create(rss_max, false)
-jugador_recursos = array_create(1, array_create(rss_max, 0))
+jugador_recursos = array_create(EQUIPOS)
+for(a = 0; a < EQUIPOS; a++)
+	jugador_recursos[a] = array_create(rss_max, 0)
 //Disparos
 null_municion = add_municion()
 municiones = array_create(0, null_municion)
@@ -1249,8 +1256,12 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 		planta_quimica_descripcion[a] = text_wrap(planta_quimica_descripcion[a], 300)
 #endregion
 edificio_max = array_length(edificio_nombre)
-edificio_tecnologia = array_create(edificio_max, false)
-edificio_tecnologia_desbloqueable = array_create(edificio_max, false)
+edificio_tecnologia = array_create(EQUIPOS)
+edificio_tecnologia_desbloqueable = array_create(EQUIPOS)
+for(a = 0; a < EQUIPOS; a++){
+	edificio_tecnologia[a] = array_create(edificio_max, false)
+	edificio_tecnologia_desbloqueable[a] = array_create(edificio_max, false)
+}
 mision_edificios = array_create(edificio_max, true)
 edificio_rotable[id_tunel] = true
 edificio_rotable[id_fabrica_de_drones] = true
@@ -1362,7 +1373,7 @@ edificio_key[id_recurso_infinito] = "1z"
 		tag_construible_en_liquido[id_generador_geotermico] = true
 		tag_construible_en_liquido[id_tuberia_subterranea] = true
 	#endregion
-	#region generadores de humo combustión
+	#region generadores_de_humo_combustión
 		tag_generadores_de_humo_combustion = array_create(edificio_max, false)
 		tag_generadores_de_humo_combustion[id_generador] = true
 		tag_generadores_de_humo_combustion[id_turbina] = true
@@ -1512,18 +1523,13 @@ edificios_construibles = array_create(0, 0)
 for(a = 0; a < array_length(categoria_nombre); a++)
 	edificios_construibles = array_concat(edificios_construibles, categoria_edificios[a])
 edificios = array_create(0, null_edificio)
-edificios_enemigos = array_create(0, null_edificio)
-edificios_abandonados = array_create(0, null_edificio)
-torres_reparadoras = array_create(0, null_edificio)
+edificios_jugador = array_create(EQUIPOS)
+for(a = 0; a < EQUIPOS; a++)
+	edificios_jugador[a] = array_create(0, null_edificio)
 edificios_counter = array_create(edificio_max, 0)
 edificios_targeteables = array_create(0, null_edificio)
-torres_de_tension = array_create(0, null_edificio)
-plantas_de_reciclaje = array_create(0, null_edificio)
 edificios_salida_drones = array_create(0, null_edificio)
-almacenes = array_create(0, null_edificio)
-almacenes_enemigos = array_create(0, null_edificio)
 edi_sort = array_create(edificio_max, 0)
-nucleos = array_create(0, null_edificio)
 sort_edificios()
 sort_drones()
 #region Caminos
@@ -1738,7 +1744,8 @@ sort_drones()
 				edi_count++
 				edificio_tecnologia_nivel[a] = 0
 				array_push(tecnologia_nivel_edificios[0], a)
-				edificio_tecnologia[a] = true
+				for(b = 0; b < EQUIPOS; b++)
+					array_set(edificio_tecnologia[b], a, true)
 			}
 		}
 		else
@@ -1773,12 +1780,12 @@ sort_drones()
 		b = tecnologia_nivel_edificios[1, a]
 		flag = true
 		for(c = 0; c < array_length(tecnologia_prev[b]); c++)
-			if not edificio_tecnologia[tecnologia_prev[b, c]]{
+			if not edificio_tecnologia[jugador, tecnologia_prev[b, c]]{
 				flag = false
 				break
 			}
 		if flag
-			edificio_tecnologia_desbloqueable[b] = true
+			array_set(edificio_tecnologia_desbloqueable[jugador], b, true)
 	}
 #endregion
 //Redes electricas

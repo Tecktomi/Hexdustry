@@ -13,7 +13,7 @@ function save_escenario_buffer(filename){
 		for(a = 0; a < rss_max; a++)
 			buffer_write(buffer, buffer_u16, carga_inicial[a])
 		for(a = 0; a < edificio_max; a++)
-			buffer_write(buffer, buffer_u8, (not mision_edificios[a]) ? 0 : (edificio_tecnologia[a] ? 2 : 1))
+			buffer_write(buffer, buffer_u8, (not mision_edificios[a]) ? 0 : (edificio_tecnologia[jugador, a] ? 2 : 1))
 		buffer_write(buffer, buffer_bool, oleadas)
 		buffer_write(buffer, buffer_u8, oleadas_tiempo)
 		buffer_write(buffer, buffer_u8, oleadas_tiempo_primera)
