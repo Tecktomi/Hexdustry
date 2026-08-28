@@ -1,8 +1,8 @@
 function dron_logic(){
 	with control{
 		var cam_center_x = (camx + room_width * zoom / 2), cam_center_y = (camy + room_height * zoom / 2)
-		var a, b, dron, aa, bb, index, vel, enemigo, edificios_target, drones_target, chunk_x, temp_complex, edificio, i, j
-		var u, v, dis, min_dis, aaa, bbb, angle, cosa, sina, dir, temp_puerto_array, c, d, _comprable, flag, temp_beta, temp_terreno, temp_complex_2
+		var a, b, dron, aa, bb, index, vel, enemigo, chunk_x, temp_complex, edificio, i, j
+		var u, v, dis, min_dis, aaa, bbb, angle, cosa, sina, dir, c, d, _comprable, flag, temp_beta, temp_terreno, temp_complex_2
 		var min_puerto, temp_almacenes, minu, minv, maxu, maxv, ataque, min_dis_eu, aaaa, bbbb, disi, dis_2, _posibles, closest_dis, chunk, max_prioridad
 		var temp_chunk_dron, temp_dron_2, temp_dron_size, temp_array, temp_enemigo, temp_dis, temp_dron, _jugador
 		for(a = array_length(drones) - 1; a >= 0; a--){
@@ -15,8 +15,6 @@ function dron_logic(){
 			index = dron.index
 			vel = dron_vel[index]
 			enemigo = dron.enemigo
-			edificios_target = enemigo ? edificios : edificios_enemigos
-			drones_target = enemigo ? drones_aliados : enemigos
 			chunk_x = dron.chunk_x
 			chunk_y = dron.chunk_y
 			if draw_once{
@@ -65,12 +63,8 @@ function dron_logic(){
 				dron.y--
 			if dron.target != null_edificio and dron.target.vida <= 0
 				dron.target = null_edificio
-			if enemigo and tag_drones_terrestres[index]{
-				if array_length(edificios_target) > 0 and dron.target = null_edificio{
-					temp_complex = xytoab(aa, bb)
-					dron.target = edificio_cercano[# temp_complex[0], temp_complex[1]]
-				}
-			}
+			if enemigo and tag_drones_terrestres[index] and dron.target = null_edificio and array_length(edificios_jugador[_jugador]) < array_length(edificios_totales)
+				dron.target = edificio_cercano[# dron.a, dron.b]
 			if not dron_aereo[index]{
 				if terreno[# dron.a, dron.b] = idt_hielo
 					vel *= 1.2
@@ -88,14 +82,10 @@ function dron_logic(){
 				dron.step++
 			//Dron de Transporte
 			if index = idd_mula{
-				temp_puerto_array = enemigo ? puerto_carga_array_enemigo : puerto_carga_array
-				if array_length(temp_puerto_array) > 0{
+				if array_length(puerto_carga_array[_jugador]) > 0{
 					if dron.modo = 0{
-						if enemigo
-							puerto_carga_atended_enemigo = (++puerto_carga_atended_enemigo) mod array_length(temp_puerto_array)
-						else
-							puerto_carga_atended = (++puerto_carga_atended) mod array_length(temp_puerto_array)
-						dron.target = temp_puerto_array[enemigo ? puerto_carga_atended_enemigo : puerto_carga_atended]
+						puerto_carga_atended[_jugador] = (++puerto_carga_atended[_jugador]) mod array_length(puerto_carga_array[_jugador])
+						dron.target = puerto_carga_array[_jugador][puerto_carga_atended[_jugador]]
 						dron.modo = 1
 					}
 					else{
@@ -135,11 +125,8 @@ function dron_logic(){
 									}
 								}
 								mover(edificio)
-								if enemigo
-									puerto_carga_atended_enemigo = (++puerto_carga_atended_enemigo) mod array_length(temp_puerto_array)
-								else
-									puerto_carga_atended = (++puerto_carga_atended) mod array_length(temp_puerto_array)
-								dron.target = temp_puerto_array[enemigo ? puerto_carga_atended_enemigo : puerto_carga_atended]
+								puerto_carga_atended[_jugador] = (++puerto_carga_atended[_jugador]) mod array_length(puerto_carga_array[_jugador])
+								dron.target = puerto_carga_array[_jugador][puerto_carga_atended[_jugador]]
 								dron.modo = 1
 							}
 						}
@@ -148,8 +135,8 @@ function dron_logic(){
 			}
 			//Dron Reparador
 			else if index = idd_reparador{
-				if dron.modo = 0{
-					edificio = array_choose(enemigo ? edificios_enemigos : edificios)
+				if dron.modo = 0 and array_length(edificios_jugador[_jugador]) > 0{
+					edificio = array_choose(edificios_jugador[_jugador])
 					if edificio.vida < edificio_vida[edificio.index]{
 						dron.modo = 1
 						dron.target = edificio
@@ -209,7 +196,7 @@ function dron_logic(){
 						b = repair_id[# i, j]
 						_comprable = (b > 0)
 						if _comprable and not cheat
-							_comprable = check_reconstruible(b, false)._comprable
+							_comprable = check_reconstruible(b, false, _jugador)._comprable
 						if _comprable{
 							edificio = construir(b, repair_dir[# i, j], i, j)
 							if tag_edificio_seteable[b]
@@ -254,10 +241,9 @@ function dron_logic(){
 								dron.modo = 0
 								min_dis = infinity
 								min_puerto = null_edificio
-								temp_almacenes = enemigo ? almacenes_enemigos : almacenes
-								for(b = array_length(temp_almacenes) - 1; b >= 0; b--){
-									edificio = temp_almacenes[b]
-									if edificio.carga_total < edificio_carga_max[edificio.index]{
+								for(b = array_length(edificios_index[id_almacen]) - 1; b >= 0; b--){
+									edificio = edificios_index[id_almacen, b]
+									if edificio.jugador = _jugador and edificio.carga_total < edificio_carga_max[edificio.index]{
 										dis = distance_sqr(dron.x, dron.y, edificio.center_x, edificio.center_y)
 										if dis < min_dis{
 											min_dis = dis
@@ -433,7 +419,7 @@ function dron_logic(){
 						continue
 				}
 				//Targetear unidades
-				else if array_length(drones_target) > 0{
+				else{
 					if dron.target_dron = null_dron{
 						if (image_index mod 10) = (a mod 10){
 							closest_dis = dron_alcance[index]
@@ -553,7 +539,7 @@ function dron_logic(){
 				dron.a = aa
 				dron.b = bb
 				dron.change_pos = true
-				if not dron_aereo[index] and not tag_dron_marino[index] and array_length(edificios_target) > 0 and terreno_caminable[terreno[# aa, bb]]
+				if not dron_aereo[index] and not tag_dron_marino[index] and terreno_caminable[terreno[# aa, bb]] and array_length(edificios_jugador[_jugador]) < array_length(edificios_totales)
 					dron.target = edificio_cercano[# aa, bb]
 				chunk_x = clamp(round(aa / CHUNK_WIDTH), 0, chunk_xsize - 1)
 				chunk_y = clamp(round(bb / CHUNK_HEIGHT), 0, chunk_ysize - 1)

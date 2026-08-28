@@ -5,8 +5,7 @@ function scr_laser(edificio = control.null_edificio){
 		if ((image_index mod 10) = (edificio.a mod 10) and edificio.target = null_dron and edificio.target_edificio = null_edificio) or edificio.target.vida <= 0 or edificio.target_edificio.vida <= 0{
 			edificio.target = null_dron
 			edificio.target_edificio = null_edificio
-			if (edificio.enemigo and array_length(drones_aliados) + array_length(edificios) > 0) or (not edificio.enemigo and array_length(enemigos) + array_length(edificios_enemigos) > 0)
-				turret_target(edificio)
+			turret_target(edificio)
 		}
 		var enemigo = edificio.target, enemigo_edificio = edificio.target_edificio
 		if enemigo != null_dron

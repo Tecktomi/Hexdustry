@@ -21,7 +21,7 @@ function step(){
 					else if cambio.tipo = 4
 						add_modulo(edificio_id[# cambio.data.a, cambio.data.b], true, cambio.data.cheat)
 					else if cambio.tipo = 5
-						investigar(cambio.data.index, true, cambio.data.cheat)
+						investigar(cambio.data.index, true, cambio.data.cheat, cambio.data.jugador)
 				}
 			}
 		acumulator -= LOGIC_DT
@@ -125,7 +125,7 @@ function step(){
 				//Colisión Edificio
 				if edificio_bool[# muna, munb]{
 					edificio = edificio_id[# muna, munb]
-					if _tipo != 4 and edificio.enemigo != municion.enemigo{
+					if _tipo != 4 and edificio.jugador != municion.jugador{
 						municion.dis = 0
 						break
 					}
@@ -247,38 +247,38 @@ function step(){
 					bb = clamp(temp_complex[1], 0, ysize - 1)
 					if grid_water_distance[# aa, bb] < infinity
 						if irandom(len) > i + 7{
-							enemigo = add_dron(aa, bb, idd_destructor, true, 1)
+							enemigo = add_dron(aa, bb, idd_destructor, 1)
 							i += 8
 							continue
 						}
 						else if irandom(len) > i + 2{
-							enemigo = add_dron(aa, bb, idd_barco, true, 1)
+							enemigo = add_dron(aa, bb, idd_barco, 1)
 							i += 3
 							continue
 						}
 					if not terreno_caminable[terreno[# aa, bb]] or edificio_cercano[# aa, bb] = null_edificio or (tutorial = 0 and random(1) < 0.15){
 						if irandom(len) > i + 11{
-							enemigo = add_dron(aa, bb, idd_bombardero, true, 1)
+							enemigo = add_dron(aa, bb, idd_bombardero, 1)
 							i += 10
 						}
 						else if irandom(len) > i + 5{
-							enemigo = add_dron(aa, bb, idd_helicoptero, true, 1)
+							enemigo = add_dron(aa, bb, idd_helicoptero, 1)
 							i += 4
 						}
 						else
-							enemigo = add_dron(aa, bb, idd_kamikaze, true, 1)
+							enemigo = add_dron(aa, bb, idd_kamikaze, 1)
 					}
 					else{
 						if irandom(len) > i + 15{
-							enemigo = add_dron(aa, bb, idd_titan, true, 1)
+							enemigo = add_dron(aa, bb, idd_titan, 1)
 							i += 14
 						}
 						else if irandom(len) > i + 6{
-							enemigo = add_dron(aa, bb, idd_tanque, true, 1)
+							enemigo = add_dron(aa, bb, idd_tanque, 1)
 							i += 5
 						}
 						else
-							enemigo = add_dron(aa, bb, idd_arana, true, 1)
+							enemigo = add_dron(aa, bb, idd_arana, 1)
 					}
 				}
 			}
@@ -300,7 +300,7 @@ function step(){
 				}
 			}
 			else if mision.objetivo = 1{
-				mision_counter = jugador_recursos[0, mision.target_id]
+				mision_counter = jugador_recursos[jugador, mision.target_id]
 				if mision_counter >= mision.target_num{
 					pasar_mision()
 					a++

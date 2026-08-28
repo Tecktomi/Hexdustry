@@ -110,10 +110,7 @@ function mover(edificio = control.null_edificio){
 				out = idr_uranio_bruto
 			if index = id_nucleo{
 				recursos_obtenidos_time_temp[out]++
-				if online and servidor
-					jugador_recursos[edificio.jugador - 2, out]++
-				else if not (online and not servidor and edificio.jugador != jugador)
-					jugador_recursos[0, out]++
+				jugador_recursos[edificio.jugador, out]++
 				if mision_actual >= 0 and mision.objetivo = 0 and mision.target_id = out and ++mision_counter >= mision.target_num
 					pasar_mision()
 			}

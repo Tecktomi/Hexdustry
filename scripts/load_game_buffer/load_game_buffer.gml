@@ -71,13 +71,16 @@ function load_game_buffer(buffer){
 			mision_choosing_coord = buffer_read(buffer, buffer_bool)
 		#endregion
 		for(a = 0; a < rss_max; a++)
-			array_set(jugador_recursos[0], a, real(buffer_read(buffer, buffer_u16)))
+			for(b = 0; b < EQUIPOS; b++)
+				array_set(jugador_recursos[b], a, real(buffer_read(buffer, buffer_u16)))
 		image_index = buffer_read(buffer, buffer_u32)
-		var mask_tecnologia = buffer_read(buffer, buffer_u64)
-		var mask_tecnologia_desbloqueable = buffer_read(buffer, buffer_u64)
-		for(a = 0; a < edificio_max; a++){
-			edificio_tecnologia[a] = bool(mask_tecnologia & (1 << a))
-			edificio_tecnologia_desbloqueable[a] = bool(mask_tecnologia_desbloqueable & (1 << a))
+		for(b = 0; b < EQUIPOS; b++){
+			var mask_tecnologia = buffer_read(buffer, buffer_u64)
+			var mask_tecnologia_desbloqueable = buffer_read(buffer, buffer_u64)
+			for(a = 0; a < edificio_max; a++){
+				array_set(edificio_tecnologia[b], a, bool(mask_tecnologia & (1 << a)))
+				array_set(edificio_tecnologia_desbloqueable[b], a, bool(mask_tecnologia_desbloqueable & (1 << a)))
+			}
 		}
 		//Construir edificios
 		len = real(buffer_read(buffer, buffer_u16))
@@ -125,9 +128,8 @@ function load_game_buffer(buffer){
 			a = real(buffer_read(buffer, buffer_u16))
 			b = real(buffer_read(buffer, buffer_u16))
 			var index = real(buffer_read(buffer, buffer_u8))
-			var enemigo = bool(buffer_read(buffer, buffer_bool))
 			var _jugador = real(buffer_read(buffer, buffer_u8))
-			var dron = add_dron(a, b, index, enemigo, _jugador)
+			var dron = add_dron(a, b, index, _jugador)
 		}
 		//Dron - estados
 		for(var i = 0; i < len; i++){

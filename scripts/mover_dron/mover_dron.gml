@@ -8,7 +8,7 @@ function mover_dron(dron = control.null_dron, x, y, _server = false){
 		var index = dron.index, temp_complex = xytoab(x, y), aa = temp_complex[0], bb = temp_complex[1]
 		if tag_drones_de_ataque[index] and edificio_bool[# aa, bb]{
 			var edificio = edificio_id[# aa, bb]
-			if edificio.enemigo != dron.enemigo{
+			if edificio.jugador != dron.jugador{
 				x = edificio.center_x
 				y = edificio.center_y
 				dron.temp_target = edificio

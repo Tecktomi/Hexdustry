@@ -188,13 +188,13 @@ if menu = 0{
 			//Cargar esenarios / partidas
 			if BROWSER{
 				if draw_boton(room_width / 2 - 200, ypos, L.menu_cargar_escenario, ui_azul,,,, 1){
-					if not nucleo.vivo
+					if not nucleos[jugador].vivo
 						game_restart()
 					get_file = 1
 					scan_files_save()
 				}
 				if draw_boton(room_width / 2 - 200, ypos + text_y, L.cargar_partida, ui_azul,,,, 1){
-					if not nucleo.vivo
+					if not nucleos[jugador].vivo
 						game_restart()
 					get_file = 3
 					partidas = scan_files("Saves/*.save", fa_none)
@@ -452,10 +452,10 @@ if in(menu, 1, 3){
 	temp_text = ""
 	b = 0
 	for(a = 0; a < rss_max; a++)
-		if jugador_recursos[0, rss_sort[a]] != 0{
+		if jugador_recursos[jugador, rss_sort[a]] != 0{
 			if ++b mod 2
 				temp_text += "\n"
-			temp_text += $"/{recurso_keyword[rss_sort[a]]}{jugador_recursos[0, rss_sort[a]]} "
+			temp_text += $"/{recurso_keyword[rss_sort[a]]}{jugador_recursos[jugador, rss_sort[a]]} "
 		}
 	if temp_text != ""
 		draw_text_background(room_width / 2, 0, temp_text, true)
@@ -486,10 +486,8 @@ if in(menu, 1, 3){
 }
 //Pausa - Menú
 if pausa = 1{
-	for(a = array_length(enemigos) - 1; a >= 0; a--)
-		draw_dron(enemigos[a], true)
-	for(a = array_length(drones_aliados) - 1; a >= 0; a--)
-		draw_dron(drones_aliados[a], false)
+	for(a = array_length(drones) - 1; a >= 0; a--)
+		draw_dron(drones[a], true)
 	image_index--
 	var color = draw_get_color()
 	draw_set_color(c_black)
@@ -522,8 +520,12 @@ if pausa = 1{
 						if draw_boton(xpos, ypos, L.abrir_en_LAN, ui_azul)
 							get_file = 1
 					}
-					else
-						draw_boton(xpos, ypos, $"{array_length(server_jugadores_nombre)} {L.jugadores}", ui_verde)
+					else{
+						b = 0
+						for(a = 0; a < MAX_JUGADORES; a++)
+							b += (server_jugadores[a] != -1)
+						draw_boton(xpos, ypos, $"{b} {L.jugadores}", ui_verde)
+					}
 					ypos += text_y * 1.2
 					if guardado
 						draw_boton(xpos, ypos, "Guardado", ui_verde)
@@ -743,10 +745,8 @@ if pausa = 1{
 }
 //Solo pausa
 if pausa = 2{
-	for(a = array_length(enemigos) - 1; a >= 0; a--)
-		draw_dron(enemigos[a], true)
-	for(a = array_length(drones_aliados) - 1; a >= 0; a--)
-		draw_dron(drones_aliados[a], false)
+	for(a = array_length(drones) - 1; a >= 0; a--)
+		draw_dron(drones[a], true)
 	image_index--
 	draw_set_color(c_white)
 	draw_set_halign(fa_center)
@@ -1365,14 +1365,13 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 				if mouse_check_button_pressed(mb_left){
 					mouse_clear(mb_left)
 					if puerto_carga_bool and edificio != puerto_carga_link{
-						var temp_puerto_carga = edificio.enemigo ? puerto_carga_array_enemigo : puerto_carga_array
 						if puerto_carga_link.link != null_edificio{
 							if puerto_carga_link.receptor
-								array_disorder_remove(temp_puerto_carga, puerto_carga_link, 2)
+								array_disorder_remove(puerto_carga_array[jugador], puerto_carga_link, 2)
 							else
-								array_disorder_remove(temp_puerto_carga, puerto_carga_link.link, 2)
-							if puerto_carga_atended >= array_length(temp_puerto_carga)
-								puerto_carga_atended = 0
+								array_disorder_remove(puerto_carga_array[jugador], puerto_carga_link.link, 2)
+							if puerto_carga_atended[jugador] >= array_length(puerto_carga_array[jugador])
+								puerto_carga_atended[jugador] = 0
 							puerto_carga_link.link.receptor = false
 							puerto_carga_link.link.emisor = false
 							calcular_edificios_adyascentes(puerto_carga_link.link)
@@ -1385,11 +1384,11 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 						calcular_edificios_adyascentes(puerto_carga_link, false)
 						if edificio.link != null_edificio{
 							if edificio.receptor
-								array_disorder_remove(temp_puerto_carga, edificio, 2)
+								array_disorder_remove(puerto_carga_array[jugador], edificio, 2)
 							else
-								array_disorder_remove(temp_puerto_carga, edificio.link, 2)
-							if puerto_carga_atended >= array_length(temp_puerto_carga)
-								puerto_carga_atended = 0
+								array_disorder_remove(puerto_carga_array[jugador], edificio.link, 2)
+							if puerto_carga_atended[jugador] >= array_length(puerto_carga_array[jugador])
+								puerto_carga_atended[jugador] = 0
 							edificio.link.receptor = false
 							edificio.link.emisor = false
 							calcular_edificios_adyascentes(edificio.link)
@@ -1400,7 +1399,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 						edificio.link = puerto_carga_link
 						calcular_inputs_outputs(edificio)
 						calcular_edificios_adyascentes(edificio, false)
-						array_disorder_push(temp_puerto_carga, puerto_carga_link, 2)
+						array_disorder_push(puerto_carga_array[jugador], puerto_carga_link, 2)
 						puerto_carga_link = null_edificio
 						puerto_carga_bool = false
 					}
@@ -1577,13 +1576,13 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			}
 			else if tag_dron_encima[index]{
 				if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande) and edificio.select >= 0{
-					temp_text += $"{L.game_creando_dron} {dron_nombre[edificio.select]} ({array_length(drones_aliados)}/{8 + 2 * nucleo.modulo})\n"
+					temp_text += $"{L.game_creando_dron} {dron_nombre[edificio.select]} ({array_length(drones_jugador[jugador])}/{8 + 2 * nucleo.modulo})\n"
 					for(a = 0; a < array_length(dron_precio_id[edificio.select]); a++)
 						temp_text += $"  {recurso_nombre[dron_precio_id[edificio.select, a]]} {edificio.carga[dron_precio_id[edificio.select, a]]}/{dron_precio_num[edificio.select, a]}\n"
 					if edificio.proceso > 0
 						temp_text += $"  {L.game_creando_dron} {floor(100 * edificio.proceso / dron_time[edificio.select])}%\n"
-					else if array_length(drones_aliados) = 8 + 2 * nucleo.modulo
-						temp_text += $"  {L.game_limite_dron} ({array_length(drones_aliados)}/{8 + 2 * nucleo.modulo})\n"
+					else if array_length(drones_jugador[jugador]) = 8 + 2 * nucleo.modulo
+						temp_text += $"  {L.game_limite_dron} ({array_length(drones_jugador[jugador])}/{8 + 2 * nucleos[jugador].modulo})\n"
 				}
 				else if index = id_planta_de_reciclaje{
 					draw_set_color(c_lime)
@@ -1750,7 +1749,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		if b > 0{
 			var _comprable = true
 			if not cheat
-				_comprable = check_reconstruible(b)._comprable
+				_comprable = check_reconstruible(b,, jugador)._comprable
 			if not _comprable{
 				temp_complex = abtoxy(mx, my)
 				draw_sprite_off(spr_rojo, 0, temp_complex[0], temp_complex[1],,,,, 0.5)
@@ -1777,8 +1776,8 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		draw_rectangle_off(mx_clic, my_clic, xmouse, ymouse, false)
 		draw_set_color(c_white)
 		var minx = min(mx_clic, xmouse), miny = min(my_clic, ymouse), maxx = max(mx_clic, xmouse), maxy = max(my_clic, ymouse)
-		for(a = array_length(drones_aliados) - 1; a >= 0; a--){
-			var dron = drones_aliados[a]
+		for(a = array_length(drones_jugador[jugador]) - 1; a >= 0; a--){
+			var dron = drones_jugador[jugador][a]
 			if tag_dron_seleccionable[dron.index]{
 				var xx = dron.x, yy = dron.y
 				if xx > minx and yy > miny and xx < maxx and yy < maxy
@@ -1790,8 +1789,8 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 	if DEVISE and mouse_check_button_released(mb_left) and clicked and build_index = 0{
 		deselect_drones()
 		var minx = min(mx_clic, xmouse), miny = min(my_clic, ymouse), maxx = max(mx_clic, xmouse), maxy = max(my_clic, ymouse)
-		for(a = array_length(drones_aliados) - 1; a >= 0; a--){
-			var dron = drones_aliados[a]
+		for(a = array_length(drones_jugador[jugador]) - 1; a >= 0; a--){
+			var dron = drones_jugador[jugador][a]
 			if tag_dron_seleccionable[dron.index]{
 				var xx = dron.x, yy = dron.y
 				if xx > minx and yy > miny and xx < maxx and yy < maxy{
@@ -1994,7 +1993,7 @@ if sonido
 			var angle = a * b, _comprable = true, index = menu_array[a]
 			draw_line(menu_x, menu_y, menu_x + _size * cos(angle), menu_y - _size * sin(angle))
 			if not cheat{
-				_comprable = edificio_tecnologia[index] or not tecnologia
+				_comprable = edificio_tecnologia[jugador, index] or not tecnologia
 				if _comprable
 					_comprable = is_comprable(edificio_precio_id[index], edificio_precio_num[index])
 				if not _comprable{
@@ -2018,7 +2017,7 @@ if sonido
 			if DEVISE{
 				temp_text = $"{edificio_nombre[a]} (hotkey: {edificio_key[a]})\n"
 				if not cheat{
-					if tecnologia and not edificio_tecnologia[a]
+					if tecnologia and not edificio_tecnologia[jugador, a]
 						temp_text += "  Falta Tecnología\n"
 					for(c = 0; c < array_length(edificio_precio_id[a]); c++)
 						temp_text += $"  {recurso_nombre[edificio_precio_id[a, c]]}: {edificio_precio_num[a, c]}\n"
@@ -2029,7 +2028,7 @@ if sonido
 			if mouse_check_button_pressed(mb_left){
 				mouse_clear(mb_left)
 				build_menu = 0
-				if tecnologia and not cheat and not edificio_tecnologia[a]{
+				if tecnologia and not cheat and not edificio_tecnologia[jugador, a]{
 					enciclopedia_item = a
 					enciclopedia = 4
 				}
@@ -2049,10 +2048,10 @@ if sonido
 	}
 #endregion
 //Acceso directo
-if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastkey, CONTROL_LEFT, CONTROL_RIGHT, CONTROL_UP, CONTROL_DOWN, ord(" ")) or cheat) and win = 0 and not show_menu{
+if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastchar, CONTROL_LEFT, CONTROL_RIGHT, CONTROL_UP, CONTROL_DOWN, " ") or cheat) and win = 0 and not show_menu{
 	for(a = 1; a < edificio_max; a++)
 		if edificio_key[a] != "" and string_ends_with(keyboard_string, edificio_key[a]){
-			if tecnologia and not cheat and not edificio_tecnologia[a]{
+			if tecnologia and not cheat and not edificio_tecnologia[jugador, a]{
 				enciclopedia_item = a
 				enciclopedia = 4
 			}
@@ -2095,7 +2094,8 @@ if build_index > 0 and win = 0{
 					build_dir = 5 - build_dir
 				else
 					build_dir = (build_dir + 1) mod 6
-				prev_change = true
+				if not edificio_camino[build_index]
+					prev_change = true
 			}
 			if mouse_wheel_down() or (keyboard_check(vk_lshift) and keyboard_check_pressed(CONTROL_ROTAR)){
 				keyboard_clear(CONTROL_ROTAR)
@@ -2103,7 +2103,8 @@ if build_index > 0 and win = 0{
 					build_dir = 5 - build_dir
 				else
 					build_dir = (build_dir + 5) mod 6
-				prev_change = true
+				if not edificio_camino[build_index]
+					prev_change = true
 			}
 		}
 	}
@@ -2250,7 +2251,7 @@ if build_index > 0 and win = 0{
 						if not cheat 
 							for(a = array_length(modulo_precio_id[temp_modulo_tier]) - 1; a >= 0; a--){
 								temp_text += $"  {recurso_nombre[modulo_precio_id[temp_modulo_tier, a]]}: {modulo_precio_num[temp_modulo_tier, a]}\n"
-								if flag_2 and jugador_recursos[0, modulo_precio_id[temp_modulo_tier, a]] < modulo_precio_num[temp_modulo_tier, a]
+								if flag_2 and jugador_recursos[jugador, modulo_precio_id[temp_modulo_tier, a]] < modulo_precio_num[temp_modulo_tier, a]
 									flag_2 = false
 							}
 						if not flag_2
@@ -2271,21 +2272,23 @@ if build_index > 0 and win = 0{
 			//Detectar recursos y enemigos cerca
 			if not cheat{
 				for(a = array_length(edificio_precio_id[build_index]) - 1; a >= 0; a--)
-					if jugador_recursos[0, edificio_precio_id[build_index, a]] < edificio_precio_num[build_index, a]{
+					if jugador_recursos[jugador, edificio_precio_id[build_index, a]] < edificio_precio_num[build_index, a]{
 						_comprable = false
-						temp_text += $"  {recurso_nombre[edificio_precio_id[build_index, a]]} {jugador_recursos[0, edificio_precio_id[build_index, a]]}/{edificio_precio_num[build_index, a]}\n"
+						temp_text += $"  {recurso_nombre[edificio_precio_id[build_index, a]]} {jugador_recursos[jugador, edificio_precio_id[build_index, a]]}/{edificio_precio_num[build_index, a]}\n"
 					}
 				if not _comprable
 					temp_text = $"{L.construir_recursos_insuficientes}\n{temp_text}"
 				draw_set_color(c_red)
 				var flag_3 = false
-				for(a = array_length(enemigos) - 1; a >= 0; a--){
-					var enemigo = enemigos[a]
-					draw_circle_off(enemigo.x, enemigo.y, ENEMIGO_CERCA, true)
-					if not flag_3 and distance_sqr(mouse_x, mouse_y, enemigo.x * zoom - camx, enemigo.y * zoom - camy) < ENEMIGO_CERCA_SQR * sqr(zoom){
-						temp_text += $"{L.construir_enemigos_cerca}\n"
-						_comprable = false
-						flag_3 = true
+				for(a = array_length(drones) - 1; a >= 0; a--){
+					var enemigo = drones[a]
+					if enemigo.jugador != jugador{
+						draw_circle_off(enemigo.x, enemigo.y, ENEMIGO_CERCA, true)
+						if not flag_3 and distance_sqr(mouse_x, mouse_y, enemigo.x * zoom - camx, enemigo.y * zoom - camy) < ENEMIGO_CERCA_SQR * sqr(zoom){
+							temp_text += $"{L.construir_enemigos_cerca}\n"
+							_comprable = false
+							flag_3 = true
+						}
 					}
 				}
 				draw_set_color(c_white)
@@ -2616,7 +2619,7 @@ if build_index > 0 and win = 0{
 							draw_edificio(aa, bb, build_index, build_dir, 0.5)
 							if mx_clic != temp_mx or my_clic != temp_my{
 								var angle = radtodeg((arctan2(bb * zoom - camy - mouse_y, mouse_x - aa * zoom + camx) + 2 * pi) mod (2 * pi))
-								if (_change) and edificio_camino[build_index]
+								if _change and edificio_camino[build_index]
 									build_dir = floor(angle / 60)
 								build_dir_camino = floor(angle / 60)
 								a = mx_clic
@@ -2757,7 +2760,7 @@ if build_index > 0 and win = 0{
 								var temp_complex2 = pre_build_list[i]
 								var temp_complex3 = abtoxy(temp_complex2[0], temp_complex2[1])
 								j = temp_complex2[4] ? id_cruce : build_index
-								if not is_comprable(edificio_precio_id[j], edificio_precio_num[j]) or not edificio_tecnologia[j] or not mision_edificios[j]
+								if not is_comprable(edificio_precio_id[j], edificio_precio_num[j]) or not edificio_tecnologia[jugador, j] or not mision_edificios[j]
 									draw_sprite_off(spr_rojo, 0, temp_complex3[0], temp_complex3[1],,,,, 0.3)
 								draw_edificio(temp_complex3[0], temp_complex3[1], j, temp_complex2[2], 0.3)
 							}
@@ -2926,9 +2929,9 @@ if build_index > 0 and win = 0{
 						//Torres de alta tensión
 						if build_index = id_torre_de_alta_tension{
 							draw_circle_off(temp_complex[0], temp_complex[1], TORRE_TENSION_RANGE, true)
-							for(c = array_length(torres_de_tension) - 1; c >= 0; c--){
-								var temp_edificio = torres_de_tension[c]
-								if distance_sqr(temp_edificio.center_x, temp_edificio.center_y, temp_complex[0], temp_complex[1]) < TORRE_TENSION_RANGE_SQR{
+							for(c = array_length(edificios_index[id_torre_de_alta_tension]) - 1; c >= 0; c--){
+								var temp_edificio = edificios_index[id_torre_de_alta_tension][c]
+								if temp_edificio.jugador = jugador and distance_sqr(temp_edificio.center_x, temp_edificio.center_y, temp_complex[0], temp_complex[1]) < TORRE_TENSION_RANGE_SQR{
 									draw_line_off(temp_edificio.center_x, temp_edificio.center_y, temp_complex[0],temp_complex[1])
 									draw_edificio_borde(temp_edificio, c_blue, _parpadeo)
 								}
@@ -2995,7 +2998,7 @@ if build_index > 0 and win = 0{
 						}
 						//Ensambladora
 						else if build_index = id_ensambladora{
-							if edificio_tecnologia[id_modulo] or not tecnologia{
+							if edificio_tecnologia[jugador, id_modulo] or not tecnologia{
 								for(a = array_length(build_list_arround) - 1; a >= 0; a--){
 									temp_complex_2 = build_list_arround[a]
 									aa = temp_complex_2[0]
@@ -3726,21 +3729,31 @@ if keyboard_check(CONTROL_TAB) and online{
 	draw_set_color(c_black)
 	draw_set_halign(fa_center)
 	draw_set_alpha(0.5)
-	var max_width = 0
-	for(a = 0; a < array_length(server_jugadores_nombre); a++)
-		max_width = max(max_width, string_width(server_jugadores_nombre[a]))
+	var max_width = 0, max_height = 20
+	for(a = 0; a < MAX_JUGADORES; a++)
+		if server_jugadores[a] != -1{
+			max_width = max(max_width, string_width(server_jugadores_nombre[a]))
+			max_height += 40
+		}
 	max_width += 30
-	draw_rectangle((room_width - max_width) / 2, 150, (room_width + max_width) / 2, 170 + 40 * array_length(server_jugadores_nombre), false)
+	draw_rectangle((room_width - max_width) / 2, 150, (room_width + max_width) / 2, 150 + max_height, false)
 	draw_set_color(c_white)
 	draw_set_alpha(1)
+	ypos = 160
 	if servidor{
-		for(a = 0; a < array_length(server_jugadores_nombre); a++)
-			if draw_boton(room_width / 2, 160 + 40 * a, server_jugadores_nombre[a],,,, true) and a != 0
-				server_jugador_expulsar(a)
+		for(a = 0; a < MAX_JUGADORES; a++)
+			if server_jugadores[a] != -1{
+				if draw_boton(room_width / 2, ypos, server_jugadores_nombre[a],,,, true) and a != 0
+					server_jugador_expulsar(a)
+				ypos += text_y * 1.5
+			}
 	}
 	else
-		for(a = 0; a < array_length(server_jugadores_nombre); a++)
-			draw_boton(room_width / 2, 160 + 40 * a, server_jugadores_nombre[a],,,, true)
+		for(a = 0; a < MAX_JUGADORES; a++)
+			if server_jugadores[a] != -1{
+				draw_boton(room_width / 2, ypos, server_jugadores_nombre[a],,,, true)
+				ypos += text_y * 1.5
+			}
 	draw_set_halign(fa_left)
 }
 draw_sprite(spr_vineta, 0, 0, 0)

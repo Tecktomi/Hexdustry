@@ -75,7 +75,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			imagen : spr_hexagono,
 			sound : null_sound,
 			modulo : false,
-			// 0 = edificios, 1 = chunk_edificios, 2 = [torres_tension, plantas_reciclaje, torres_reparadoras, puertos_carga, target.torres, almacenes], 3 = luz, 4 = edificios_activos
+			// 0 = edificios, 1 = chunk_edificios, 2 = edificios_jugador, 3 = luz, 4 = edificios_activos
 			// 5 = red, 6 = flujo, 7 = torres, 8 = edificios_index, 9 = edificio_dinamico/estatico, 10 = edificio_draw, 11 = edificios_totales, 12 = data.edificios, 13 = data.edificios_id, 14 = data.chunk_edificios
 			punteros : array_create(12, 0),
 			enemigo : (jugador != _jugador),
@@ -124,12 +124,11 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			}
 		}
 		array_disorder_push(edificios_totales, edificio, 12)
-		var center_x = edificio.center_x, center_y = edificio.center_y
+		var center_x = edificio.center_x, center_y = edificio.center_y, dron
 		ds_grid_clear(edificio.coordenadas_dis, infinity)
-		if not enemigo{
+		if not enemigo
 			edificios_construidos++
-			array_disorder_push(edificios_index[index], edificio, 8)
-		}
+		array_disorder_push(edificios_index[index], edificio, 8)
 		if mision_actual >= 0 and mision.objetivo = 2 and mision.target_id = index and ++mision_counter >= mision.target_num
 			pasar_mision()
 		temp_complex = [0, 0]
@@ -150,12 +149,10 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			edificio.variables = array_create(1, "")
 		else if index = id_memoria
 			edificio.variables = array_create(128)
-		else if index = id_planta_de_reciclaje
-			array_disorder_push(plantas_de_reciclaje, edificio, 2)
 		array_push(efectos, add_efecto(size_fx[edificio_size[index] - 1], 0, x, y, 3))
 		if index = id_nucleo{
 			ds_grid_resize(edificio.coordenadas_dis, xsize, ysize)
-			array_push(nucleos, edificio)
+			nucleos[_jugador] = edificio
 		}
 		else
 			clic_sound = true
@@ -201,10 +198,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		}
 		var temp_list_arround = get_arround(a, b, dir, edificio_size[index])
 		ds_grid_set(edificio_draw, a, b, true)
-		if enemigo
-			array_disorder_push(edificios_enemigos, edificio, 0)
-		else
-			array_disorder_push(edificios, edificio, 0)
+		array_disorder_push(edificios_jugador[_jugador], edificio, 0)
 		array_disorder_push(chunk_edificios[# chunk_x, chunk_y], edificio, 1)
 		edificios_counter[index]++
 		if edificio_armas[index]{
@@ -241,11 +235,9 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		#region Torres reparadoras
 			var alc = edificio_alcance_sqr[id_torre_reparadora]
 			if index = id_torre_reparadora{
-				array_disorder_push(torres_reparadoras, edificio, 2)
-				temp_array = enemigo ? edificios_enemigos : edificios
-				for(c = array_length(temp_array) - 2; c >= 0; c--){
-					temp_edificio = temp_array[c]
-					if temp_edificio.jugador = _jugador and distance_sqr(temp_edificio.center_x, temp_edificio.center_y, x, y) < alc{
+				for(c = array_length(edificios_jugador[_jugador]) - 2; c >= 0; c--){
+					temp_edificio = edificios_jugador[_jugador][c]
+					if distance_sqr(temp_edificio.center_x, temp_edificio.center_y, x, y) < alc{
 						array_push(edificio.edificios_cercanos, temp_edificio)
 						array_push(temp_edificio.reparadores_cercanos, edificio)
 						if temp_edificio.vida < edificio_vida[temp_edificio.index]
@@ -253,8 +245,8 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 					}
 				}
 			}
-			for(c = array_length(torres_reparadoras) - 1; c >= 0; c--){
-				temp_edificio = torres_reparadoras[c]
+			for(c = array_length(edificios_index[id_torre_reparadora]) - 1; c >= 0; c--){
+				temp_edificio = edificios_index[id_torre_reparadora][c]
 				if temp_edificio.jugador = _jugador and distance_sqr(temp_edificio.center_x, temp_edificio.center_y, x, y) < alc{
 					array_push(temp_edificio.edificios_cercanos, edificio)
 					array_push(edificio.reparadores_cercanos, temp_edificio)
@@ -264,16 +256,15 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		if index = id_nucleo and menu = 1{
 			edificio_pathfind(edificio)
 			array_push(edificios_targeteables, edificio)
-			for(c = array_length(enemigos) - 1; c >= 0; c--){
-				var temp_enemigo = enemigos[c]
-				temp_complex = xytoab(temp_enemigo.x, temp_enemigo.y)
-				if temp_complex[0] >= 0
-					temp_enemigo.target = edificio_cercano[# temp_complex[0], temp_complex[1]]
+			for(c = array_length(drones) - 1; c >= 0; c--){
+				dron = drones[c]
+				if dron.jugador != _jugador
+					dron.target = edificio_cercano[# dron.a, dron.b]
 			}
 		}
 		else if index = id_ensambladora{
 			edificio.mode = false
-			if (edificio_tecnologia[id_modulo] or not tecnologia){
+			if (edificio_tecnologia[_jugador, id_modulo] or not tecnologia){
 				for(c = array_length(temp_list_arround) - 1; c >= 0; c--){
 					temp_complex = temp_list_arround[c]
 					aa = temp_complex[0]
@@ -379,16 +370,15 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			}
 			//Buscar otras torres de alta tensión
 			if index = id_torre_de_alta_tension{
-				for(c = array_length(torres_de_tension) - 1; c >= 0; c--){
-					temp_edificio = torres_de_tension[c]
-					if distance_sqr(temp_edificio.center_x, temp_edificio.center_y, center_x, center_y) < TORRE_TENSION_RANGE_SQR and temp_edificio.jugador = _jugador{
+				for(c = array_length(edificios_index[id_torre_de_alta_tension]) - 1; c >= 0; c--){
+					temp_edificio = edificios_index[id_torre_de_alta_tension][c]
+					if temp_edificio.jugador = _jugador and distance_sqr(temp_edificio.center_x, temp_edificio.center_y, center_x, center_y) < TORRE_TENSION_RANGE_SQR{
 						array_push(edificio.energia_link, temp_edificio)
 						array_push(temp_edificio.energia_link, edificio)
 						if not array_contains(temp_list_redes, temp_edificio.red)
 							array_push(temp_list_redes, temp_edificio.red)
 					}
 				}
-				array_disorder_push(torres_de_tension, edificio, 2)
 			}
 			//Añadir red
 			var temp_red = def_red()
@@ -435,8 +425,6 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 				add_edificio_flujo(edificio, "flujo_2", _jugador, 1)
 		}
 		//Datos específicos
-		if index = id_almacen
-			array_disorder_push(enemigo ? almacenes_enemigos : almacenes, edificio, 2)
 		if index = id_laser
 			edificio.mode = true
 		if in(index, id_rifle, id_mortero, id_onda_de_choque)

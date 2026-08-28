@@ -8,7 +8,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 		//Buscar enemigos
 		if ((image_index mod 10) = 0 and edificio.target = null_dron) or edificio.target.vida <= 0{
 			edificio.target = null_dron
-			if (not enemigo and array_length(enemigos) > 0) or (enemigo and array_length(drones_aliados) > 0){
+			if array_length(drones_jugador[_jugador]) < array_length(drones){
 				if index = id_mortero
 					turret_target(edificio, 10000)//100^2
 				else
@@ -19,7 +19,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 		//Buscar edificios
 		if dron = null_dron and ((image_index mod 10) = 0 and edificio.target_edificio = null_edificio) or edificio.target_edificio.vida <= 0{
 			edificio.target_edificio = null_edificio
-			if (not enemigo and array_length(edificios_enemigos) > 0) or (enemigo and array_length(edificios) > 0){
+			if array_length(edificios_jugador[_jugador]) < array_length(edificios_totales){
 				if index = id_mortero
 					turret_target(edificio, 10000)//100^2
 				else
@@ -141,7 +141,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 					}
 					else{
 						edificio.target = null_dron
-						if array_length(enemigos) > 0{
+						if array_length(drones_jugador[_jugador]) < array_length(drones){
 							if index = id_mortero
 								turret_target(edificio, 10000)//100^2
 							else

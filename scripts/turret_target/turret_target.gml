@@ -1,58 +1,54 @@
 function turret_target(edificio = control.null_edificio, alc_min = 0){
 	with control{
 		var dis = edificio_alcance_sqr[edificio.index], dron_final = null_dron, center_x = edificio.center_x, center_y = edificio.center_y
-		var temp_array_dron, flag = true, _jugador = edificio.jugador
+		var temp_array_dron, _jugador = edificio.jugador
 		var a, b, temp_complex, temp_dis, dron, temp_edificio, temp_array_edificio
-		if (edificio.enemigo and array_length(drones_aliados) = 0) or (not edificio.enemigo and array_length(enemigos) = 0)
-			flag = false
-		if flag{
-			//Disparo normal
-			if alc_min = 0{
-				for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
-					temp_complex = edificio.target_chunks[a]
-					temp_array_dron = ds_grid_get(chunk_dron, temp_complex[0], temp_complex[1])
-					for(b = array_length(temp_array_dron) - 1; b >= 0; b--){
-						dron = temp_array_dron[b]
-						if dron.vida <= 0
-							continue
-						if dron.jugador != _jugador{
-							temp_dis = distance_sqr(center_x, center_y, dron.x, dron.y)
-							if temp_dis < dis{
-								dis = temp_dis
-								dron_final = dron
-							}
-						}
-					}
-				}
-			}
-			//Mortero
-			else for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
+		//Disparo normal
+		if alc_min = 0{
+			for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
 				temp_complex = edificio.target_chunks[a]
 				temp_array_dron = ds_grid_get(chunk_dron, temp_complex[0], temp_complex[1])
 				for(b = array_length(temp_array_dron) - 1; b >= 0; b--){
 					dron = temp_array_dron[b]
-					if dron.vida < 0
+					if dron.vida <= 0
 						continue
 					if dron.jugador != _jugador{
 						temp_dis = distance_sqr(center_x, center_y, dron.x, dron.y)
-						if temp_dis < dis and temp_dis > alc_min{
+						if temp_dis < dis{
 							dis = temp_dis
 							dron_final = dron
 						}
 					}
 				}
 			}
-			var prev_enemigo = edificio.target
-			if dron_final != null_dron and prev_enemigo != dron_final{
-				if prev_enemigo != null_dron
-					array_disorder_remove(prev_enemigo.torres, edificio, 2)
-				array_disorder_push(dron_final.torres, edificio, 2)
-			}
-			edificio.target = dron_final
-			//Target edificios
-			if edificio.target != null_dron
-				exit
 		}
+		//Mortero
+		else for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
+			temp_complex = edificio.target_chunks[a]
+			temp_array_dron = ds_grid_get(chunk_dron, temp_complex[0], temp_complex[1])
+			for(b = array_length(temp_array_dron) - 1; b >= 0; b--){
+				dron = temp_array_dron[b]
+				if dron.vida < 0
+					continue
+				if dron.jugador != _jugador{
+					temp_dis = distance_sqr(center_x, center_y, dron.x, dron.y)
+					if temp_dis < dis and temp_dis > alc_min{
+						dis = temp_dis
+						dron_final = dron
+					}
+				}
+			}
+		}
+		var prev_enemigo = edificio.target
+		if dron_final != null_dron and prev_enemigo != dron_final{
+			if prev_enemigo != null_dron
+				array_disorder_remove(prev_enemigo.torres, edificio, 2)
+			array_disorder_push(dron_final.torres, edificio, 2)
+		}
+		edificio.target = dron_final
+		//Target edificios
+		if edificio.target != null_dron
+			exit
 		var edificio_final = null_edificio
 		//Disparo normal
 		if alc_min = 0{

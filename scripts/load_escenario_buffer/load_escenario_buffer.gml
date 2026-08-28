@@ -20,15 +20,18 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 				b = real(buffer_read(buffer, buffer_u8))
 				if b = 0{
 					mision_edificios[a] = false
-					edificio_tecnologia[a] = false
+					for(c = 0; c < EQUIPOS; c++)
+						array_set(edificio_tecnologia[c], a, false)
 				}
 				else if b = 1{
 					mision_edificios[a] = true
-					edificio_tecnologia[a] = false
+					for(c = 0; c < EQUIPOS; c++)
+						array_set(edificio_tecnologia[c], a, false)
 				}
 				else if b = 2{
 					mision_edificios[a] = true
-					edificio_tecnologia[a] = true
+					for(c = 0; c < EQUIPOS; c++)
+						array_set(edificio_tecnologia[c], a, true)
 				}
 			}
 			categoria_nombre_disponible = array_create(0, "")
@@ -118,9 +121,9 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 		for(a = 0; a < chunk_xsize; a++)
 			for(b = 0; b < chunk_ysize; b++)
 				update_background(CHUNK_WIDTH * a, CHUNK_HEIGHT * b)
-		if array_length(nucleos) > 0{
-			camx = clamp(nucleos[0].a * 48 - room_width / 2, 0, xsize * 48 * zoom - room_width)
-			camy = clamp(nucleos[0].b * 14 - room_height / 2, 0, ysize * 14 * zoom - room_height)
+		if array_length(edificios_index[id_nucleo]) > 0{
+			camx = clamp(edificios_index[id_nucleo][0].a * 48 - room_width / 2, 0, xsize * 48 * zoom - room_width)
+			camy = clamp(edificios_index[id_nucleo][0].b * 14 - room_height / 2, 0, ysize * 14 * zoom - room_height)
 		}
 		return filename
 	}

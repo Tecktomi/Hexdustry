@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"find_server_slot",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"find_server_slot",
+  "parent":{
+    "name":"ONLINE",
+    "path":"folders/SCRIPTS/ONLINE.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -2,11 +2,11 @@ function mover_carga(edificio = control.null_edificio){
 	with control{
 		if edificio.select = -1
 			return false
-		var flag = false, a, temp_edificio
+		var flag = false, a, temp_edificio, _jugador = edificio.jugador
 		//Liberar Dron
 		if array_length(edificio.outputs_carga) = 0{
-			if array_length(drones_aliados) < 8 + 2 * nucleo.modulo{
-				var dron = add_dron(edificio.a, edificio.b, edificio.select, edificio.enemigo, edificio.jugador)
+			if array_length(drones_jugador[_jugador]) < 8 + 2 * nucleos[_jugador].modulo{
+				var dron = add_dron(edificio.a, edificio.b, edificio.select, _jugador)
 				dron.x = edificio.center_x + random(0.1)
 				dron.y = edificio.center_y + random(0.1)
 				flag = true

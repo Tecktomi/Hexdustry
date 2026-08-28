@@ -1,8 +1,15 @@
 function game_start(_nucleo = true, mision_cumplida = false){
 	with control{
 		var a, temp_array, b, temp_complex
-		if not nucleo.vivo and _nucleo
-			game_restart()
+		if _nucleo and array_length(edificios_index[id_nucleo]) = 0{
+			if mapa >= 0
+			    load_escenario_buffer($"{DEFAULT_MAPS[mapa]}.txt", false)
+			else{
+			    biome_seed = irandom(2)
+			    seed = random_get_seed()
+			    generar_bioma(biome_seed)
+			}
+		}
 		redo_pathfind()
 		if mision_cumplida
 			oleadas = false
@@ -45,12 +52,11 @@ function game_start(_nucleo = true, mision_cumplida = false){
 					temp_complex = abtoxy(a, b)
 					array_push(luces, {a : a, b : b, x : temp_complex[0], y : temp_complex[1], r : 10, source : null_edificio})
 				}
-		for(a = array_length(enemigos) - 1; a >= 0; a--)
-			delete_dron(enemigos[a])
-		for(a = array_length(drones_aliados) - 1; a >= 0; a--)
-			delete_dron(drones_aliados[a])
+		for(a = array_length(drones) - 1; a >= 0; a--)
+			delete_dron(drones[a])
 		for(a = 0; a < rss_max; a++)
-			array_set(jugador_recursos[0], a, carga_inicial[a])
+			for(b = 0; b < EQUIPOS; b++)
+				array_set(jugador_recursos[b], a, carga_inicial[a])
 		for(a = 0; a < chunk_xsize; a++)
 			for(b = 0; b < chunk_ysize; b++)
 				update_background(a * CHUNK_WIDTH, b * CHUNK_HEIGHT)

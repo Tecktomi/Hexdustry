@@ -94,9 +94,9 @@ function set_grid_size(){
 			}
 		ds_grid_resize(beta, xsize, ysize)
 		ds_grid_clear(beta, null_beta)
-		for(a = array_length(nucleos) - 1; a >= 0; a--){
-			edificio = nucleos[a]
-			 ds_grid_resize(edificio.coordenadas_dis, xsize, ysize)
+		for(a = array_length(edificios_index[id_nucleo]) - 1; a >= 0; a--){
+			edificio = edificios_index[id_nucleo][a]
+			ds_grid_resize(edificio.coordenadas_dis, xsize, ysize)
 			ds_grid_clear(edificio.coordenadas_dis, 0)
 		}
 	}
