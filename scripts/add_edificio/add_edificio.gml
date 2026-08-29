@@ -75,9 +75,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			imagen : spr_hexagono,
 			sound : null_sound,
 			modulo : false,
-			// 0 = edificios, 1 = chunk_edificios, 2 = edificios_jugador, 3 = luz, 4 = edificios_activos
-			// 5 = red, 6 = flujo, 7 = torres, 8 = edificios_index, 9 = edificio_dinamico/estatico, 10 = edificio_draw, 11 = edificios_totales, 12 = data.edificios, 13 = data.edificios_id, 14 = data.chunk_edificios
-			punteros : array_create(12, 0),
+			punteros : array_create(ptre_MAX, 0),
 			enemigo : (jugador != _jugador),
 			prioridad : edificio_prioridad[index],
 			inputs_carga : array_create(0, null_edificio),
@@ -123,13 +121,13 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 				edificio.xscale = -1 + 2 * (dir = 0)
 			}
 		}
-		array_disorder_push(edificios_totales, edificio, 12)
+		array_disorder_push(edificios_totales, edificio, ptre_total)
 		var center_x = edificio.center_x, center_y = edificio.center_y, dron
 		ds_grid_clear(edificio.coordenadas_dis, infinity)
 		if not enemigo
 			edificios_construidos++
-		array_disorder_push(edificios_index[index], edificio, 8)
-		if mision_actual >= 0 and mision.objetivo = 2 and mision.target_id = index and ++mision_counter >= mision.target_num
+		array_disorder_push(edificios_index[index], edificio, ptre_index)
+		if mision_actual >= 0 and mision.objetivo = idm_construir and mision.target_id = index and ++mision_counter >= mision.target_num
 			pasar_mision()
 		temp_complex = [0, 0]
 		if in(index, id_planta_quimica, id_fabrica_de_drones, id_fabrica_de_drones_grande){
@@ -140,7 +138,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		}
 		calcular_inputs_outputs(edificio)
 		if not edificio_inerte[edificio.index]
-			array_disorder_push(edificios_activos, edificio, 4)
+			array_disorder_push(edificios_activos, edificio, ptre_activo)
 		if index = id_procesador{
 			array_push(edificio.procesador_link, edificio)
 			edificio.variables = array_create(16)
@@ -198,8 +196,8 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		}
 		var temp_list_arround = get_arround(a, b, dir, edificio_size[index])
 		ds_grid_set(edificio_draw, a, b, true)
-		array_disorder_push(edificios_jugador[_jugador], edificio, 0)
-		array_disorder_push(chunk_edificios[# chunk_x, chunk_y], edificio, 1)
+		array_disorder_push(edificios_jugador[_jugador], edificio, ptre_jugador)
+		array_disorder_push(chunk_edificios[# chunk_x, chunk_y], edificio, ptre_chunk)
 		edificios_counter[index]++
 		if edificio_armas[index]{
 			var dis = edificio_alcance_sqr[index], chunk_size_x = CHUNK_WIDTH * 48, chunk_size_y = CHUNK_HEIGHT * 14
@@ -390,7 +388,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 					for(d = array_length(temp_red_2.edificios) - 1; d >= 0; d--){
 						temp_edificio = temp_red_2.edificios[d]
 						temp_edificio.red = temp_red
-						array_disorder_push(temp_red.edificios, temp_edificio, 5)
+						array_disorder_push(temp_red.edificios, temp_edificio, ptre_red)
 					}
 					temp_red.consumo += temp_red_2.consumo
 					temp_red.generacion += temp_red_2.generacion
@@ -411,12 +409,12 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 				temp_red.generacion += abs(edificio.energia_consumo)
 			if index = id_bateria{
 				temp_red.bateria_max += 2500
-				if _jugador = 1
+				if _jugador = jugador_IA
 					temp_red.bateria += 2500
 			}
 			else if in(index, id_panel_solar, id_procesador, id_planta_de_reciclaje)
 				change_energia(edificio_energia_consumo[index], edificio)
-			array_disorder_push(temp_red.edificios, edificio, 5)
+			array_disorder_push(temp_red.edificios, edificio, ptre_red)
 		}
 		//Detectar cañerías cercanas
 		if edificio_flujo[index]{

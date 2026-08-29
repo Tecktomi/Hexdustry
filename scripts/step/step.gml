@@ -10,17 +10,17 @@ function step(){
 				cambio = cambios[a]
 				if cambio.step <= timer{
 					array_delete(cambios, a, 1)
-					if cambio.tipo = 0
+					if cambio.tipo = cambio_construir
 						construir(cambio.data.index, cambio.data.dir, cambio.data.a, cambio.data.b,, true, cambio.data.cheat, cambio.data.jugador)
-					else if cambio.tipo = 1
+					else if cambio.tipo = cambio_delete_edificio
 						delete_edificio(edificio_id[# cambio.data.a, cambio.data.b], false, true, cambio.data.cheat)
-					else if cambio.tipo = 2
+					else if cambio.tipo = cambio_set_edificio
 						set_edificio(cambio.data.mode, cambio.data.select, edificio_id[# cambio.data.a, cambio.data.b], true)
-					else if cambio.tipo = 3
+					else if cambio.tipo = cambio_mover_dron
 						mover_dron(drones[cambio.data.index], cambio.data.x, cambio.data.y, true)
-					else if cambio.tipo = 4
+					else if cambio.tipo = cambio_add_modulo
 						add_modulo(edificio_id[# cambio.data.a, cambio.data.b], true, cambio.data.cheat)
-					else if cambio.tipo = 5
+					else if cambio.tipo = cambio_investigar
 						investigar(cambio.data.index, true, cambio.data.cheat, cambio.data.jugador)
 				}
 			}
@@ -67,14 +67,14 @@ function step(){
 		}
 		for(a = array_length(edificios_pendientes) - 1; a >= 0; a--){
 			edificio = array_pop(edificios_pendientes)
-			if edificio.eliminar and edificio.punteros[4] >= 0{
+			if edificio.eliminar and edificio.punteros[ptre_activo] >= 0{
 				edificio.eliminar = false
-				array_disorder_remove(edificios_activos, edificio, 4)
+				array_disorder_remove(edificios_activos, edificio, ptre_activo)
 				edificio.punteros[4] = -1
 			}
-			if edificio.agregar and edificio.punteros[4] = -1{
+			if edificio.agregar and edificio.punteros[ptre_activo] = -1{
 				edificio.agregar = false
-				array_disorder_push(edificios_activos, edificio, 4)
+				array_disorder_push(edificios_activos, edificio, ptre_activo)
 			}
 		}
 		//Drones
@@ -88,7 +88,7 @@ function step(){
 			_jugador = municion.jugador
 			_tipo = municion.tipo
 			_dmg = municion.dmg
-			if _tipo != 2{
+			if _tipo != municion_tipo_fuego{
 				if draw_once{
 					draw_set_color(c_black)
 					draw_circle_off(municion.x, municion.y, 2, false)
@@ -125,21 +125,20 @@ function step(){
 				//Colisión Edificio
 				if edificio_bool[# muna, munb]{
 					edificio = edificio_id[# muna, munb]
-					if _tipo != 4 and edificio.jugador != municion.jugador{
+					if _tipo != municion_tipo_perforadora and edificio.jugador != municion.jugador{
 						municion.dis = 0
 						break
 					}
 				}
 				//Colisión Dron
-				if _tipo != 2 and target != null_dron and target.vida > 0 and muna = target.a and munb = target.b{
+				if _tipo != municion_tipo_fuego and target != null_dron and target.vida > 0 and muna = target.a and munb = target.b{
 					herir_dron(_dmg, target)
 					if _tipo != 4{
 						municion.dis = 0
 						break
 					}
 				}
-				//Munición perforadora
-				if _tipo = 4
+				if _tipo = municion_tipo_perforadora
 					herir_hexagono(muna, munb, floor(_dmg / 2), false, municion.jugador)
 			}
 			if --municion.dis <= 0{
@@ -147,8 +146,7 @@ function step(){
 				array_pop(municiones)
 				//Daño unidad
 				if target != null_dron and target.vida > 0{
-					//Daño fuego
-					if _tipo = 2
+					if _tipo = municion_tipo_fuego
 						aplicar_efecto(1, 120, target)
 					//Daño área
 					else
@@ -157,11 +155,9 @@ function step(){
 				//Daño edificio
 				if municion.target_build != null_edificio and municion.target_build.vida > 0
 					herir_hexagono(muna, munb, _dmg,, municion.jugador)
-				//Misil
-				if _tipo = 1
+				if _tipo = municion_tipo_misil
 					explosion(municion.x, municion.y, municion.target_build, municion.radio,,, _jugador)
-				//Misil incendiario
-				else if _tipo = 3
+				else if _tipo = municion_tipo_misil_incendiario
 					explosion(municion.x, municion.y, municion.target_build, municion.radio,, true, _jugador)
 			}
 		}
@@ -229,7 +225,7 @@ function step(){
 				a = ++oleada_count + 2
 				b = 1
 				flag = false
-				if mision_actual >= 0 and mision.objetivo = 4 and ++mision_counter >= mision.target_num
+				if mision_actual >= 0 and mision.objetivo = idm_sobrevivir_oleadas and ++mision_counter >= mision.target_num
 					oleadas = false
 				for(i = 0; i < array_length(SIZE_SIZE); i++)
 					if a <= SIZE_SIZE[i]{
@@ -247,38 +243,38 @@ function step(){
 					bb = clamp(temp_complex[1], 0, ysize - 1)
 					if grid_water_distance[# aa, bb] < infinity
 						if irandom(len) > i + 7{
-							enemigo = add_dron(aa, bb, idd_destructor, 1)
+							enemigo = add_dron(aa, bb, idd_destructor, jugador_IA)
 							i += 8
 							continue
 						}
 						else if irandom(len) > i + 2{
-							enemigo = add_dron(aa, bb, idd_barco, 1)
+							enemigo = add_dron(aa, bb, idd_barco, jugador_IA)
 							i += 3
 							continue
 						}
 					if not terreno_caminable[terreno[# aa, bb]] or edificio_cercano[# aa, bb] = null_edificio or (tutorial = 0 and random(1) < 0.15){
 						if irandom(len) > i + 11{
-							enemigo = add_dron(aa, bb, idd_bombardero, 1)
+							enemigo = add_dron(aa, bb, idd_bombardero, jugador_IA)
 							i += 10
 						}
 						else if irandom(len) > i + 5{
-							enemigo = add_dron(aa, bb, idd_helicoptero, 1)
+							enemigo = add_dron(aa, bb, idd_helicoptero, jugador_IA)
 							i += 4
 						}
 						else
-							enemigo = add_dron(aa, bb, idd_kamikaze, 1)
+							enemigo = add_dron(aa, bb, idd_kamikaze, jugador_IA)
 					}
 					else{
 						if irandom(len) > i + 15{
-							enemigo = add_dron(aa, bb, idd_titan, 1)
+							enemigo = add_dron(aa, bb, idd_titan, jugador_IA)
 							i += 14
 						}
 						else if irandom(len) > i + 6{
-							enemigo = add_dron(aa, bb, idd_tanque, 1)
+							enemigo = add_dron(aa, bb, idd_tanque, jugador_IA)
 							i += 5
 						}
 						else
-							enemigo = add_dron(aa, bb, idd_arana, 1)
+							enemigo = add_dron(aa, bb, idd_arana, jugador_IA)
 					}
 				}
 			}
@@ -287,7 +283,7 @@ function step(){
 		temp_text_right = ""
 		if mision_actual >= 0 and win = 0{
 			a = mision_actual
-			if in(mision.objetivo, 5, 7) and not oleadas and (not chat_input and keyboard_check_pressed(vk_enter)){
+			if in(mision.objetivo, idm_sin_objetivo, idm_cargar_edificio) and not oleadas and (not chat_input and keyboard_check_pressed(vk_enter)){
 				keyboard_clear(vk_enter)
 				pasar_mision()
 			}
@@ -299,21 +295,21 @@ function step(){
 						win = 2
 				}
 			}
-			else if mision.objetivo = 1{
+			else if mision.objetivo = idm_tener_acumulado{
 				mision_counter = jugador_recursos[jugador, mision.target_id]
 				if mision_counter >= mision.target_num{
 					pasar_mision()
 					a++
 				}
 			}
-			else if mision.objetivo = 3{
+			else if mision.objetivo = idm_tener_construido{
 				mision_counter = edificios_counter[mision.target_id]
 				if mision_counter >= mision.target_num{
 					pasar_mision()
 					a++
 				}
 			}
-			else if mision.objetivo = 6{
+			else if mision.objetivo = idm_apretar_ADWS{
 				mision_counter += (keyboard_check(CONTROL_RIGHT) or keyboard_check(CONTROL_LEFT) or keyboard_check(CONTROL_UP) or keyboard_check(CONTROL_DOWN))
 				if mision_counter >= mision.target_num{
 					pasar_mision()

@@ -12,7 +12,7 @@ function handle_set_edificio(buffer){
 		else{
 			var cambio = {
 				step : _timer,
-				tipo : 2,
+				tipo : cambio_set_edificio,
 				data : {
 					mode : mode,
 					select : select,

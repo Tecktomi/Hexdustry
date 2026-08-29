@@ -6,6 +6,7 @@ function handle_jugador_eliminado(buffer){
 			server = -1
 			servidor = false
 			jugador = 2
+			drones_propios = drones_jugador[jugador]
 		}
 		else{
 			var player_name = string(buffer_read(buffer, buffer_string))

@@ -1,7 +1,7 @@
 function server_set_edificio(mode, select, edificio = control.null_edificio){
 	with control{
 		var buffer = buffer_create(11, buffer_grow, 1)
-		buffer_write(buffer, buffer_u8, 7) //Add edificio
+		buffer_write(buffer, buffer_u8, net_set_edificio)
 		buffer_write(buffer, buffer_u32, real(timer))
 		buffer_write(buffer, buffer_bool, bool(mode))
 		buffer_write(buffer, buffer_s8, real(select))

@@ -1,4 +1,4 @@
-function add_dron(a, b, index, _jugador = 1){
+function add_dron(a, b, index, _jugador = jugador){
 	with control{
 		var temp_complex = abtoxy(a, b), enemigo = (_jugador != jugador)
 		var dron = {
@@ -37,8 +37,7 @@ function add_dron(a, b, index, _jugador = 1){
 			jugador : _jugador,
 			change_pos : false,
 			move_dir : 0,
-			//0 = [jugador], 1 = chunk_pointer, 2 = drones_totales
-			punteros : array_create(3, 0),
+			punteros : array_create(ptrd_MAX, -1),
 		}
 		if _jugador = 1{
 			dron.vida_max = ceil(dron.vida * power((oleada_count + 3) / 3, 1.1) * multiplicador_vida_enemigos / 100)
@@ -55,8 +54,8 @@ function add_dron(a, b, index, _jugador = 1){
 		}
 		else
 			drones_construidos++
-		array_disorder_push(drones_jugador[_jugador], dron, 0)
-		array_disorder_push(drones, dron, 2)
+		array_disorder_push(drones_jugador[_jugador], dron, ptrd_jugador)
+		array_disorder_push(drones, dron, ptrd_total)
 		dron_chunk_push(dron)
 		return dron
 	}

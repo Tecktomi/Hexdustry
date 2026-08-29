@@ -78,23 +78,23 @@ function menu_editor(){
 				}
 				xpos += text_x
 				//Cantidad
-				if not in(mision.objetivo, 5, 7){
+				if not in(mision.objetivo, idm_sin_objetivo, idm_cargar_edificio){
 					xpos = draw_text_xpos(xpos, ypos, " ")
 					mision.target_num = draw_boton_text(xpos, ypos, mision.target_num, true)
 					xpos += text_x
 				}
 				//Conseguir recurso / Tener almacenado
-				if mision.objetivo < 2{
+				if in(mision.objetivo, idm_conseguir, idm_tener_acumulado){
 					xpos = draw_text_xpos(xpos, ypos, $" {L.editor_de} ")
 					mision.target_id = draw_boton_text_list(xpos, ypos, mision.target_id, recurso_nombre,, 10)
 				}
 				//Construir / Tener construido
-				else if in(mision.objetivo, 2, 3, 7, 8){
+				else if in(mision.objetivo, idm_construir, idm_tener_construido, idm_cargar_edificio, idm_destruir_edificio){
 					xpos = draw_text_xpos(xpos, ypos, " ")
 					mision.target_id = draw_boton_text_list(xpos, ypos, mision.target_id, edificio_nombre,, 10)
 				}
-				//Matar enemigos
-				else if mision.objetivo = 4
+				//Sobrevivir oleadas
+				else if mision.objetivo = idm_sobrevivir_oleadas
 					draw_text(xpos, ypos, $" {L.editor_enemigos}")
 				xpos = room_width / 2 + 40
 				ypos = 180

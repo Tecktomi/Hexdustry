@@ -11,7 +11,7 @@ function handle_investigar(buffer){
 		else{
 			var cambio = {
 				step : _timer,
-				tipo : 5,
+				tipo : cambio_investigar,
 				data : {
 					index : index,
 					cheat : _cheat,

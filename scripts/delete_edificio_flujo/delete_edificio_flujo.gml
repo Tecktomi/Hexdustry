@@ -3,7 +3,7 @@ function delete_edificio_flujo(edificio = control.null_edificio, flujo = control
 		var index = edificio.index, a, temp_edificio, temp_complex
 		var flujo_link = (flujo = edificio.flujo) ? edificio.flujo_link : edificio.flujo_2_link
 		change_flujo(0, edificio, flujo)
-		array_remove(flujo.edificios, edificio)
+		array_disorder_remove(flujo.edificios, edificio, (edificio.flujo = flujo) ? ptre_flujo_1 : ptre_flujo_2)
 		if array_length(flujo.edificios) = 0{
 			array_disorder_remove(flujos, flujo, 0)
 			delete(flujo.edificios)
@@ -37,7 +37,7 @@ function delete_edificio_flujo(edificio = control.null_edificio, flujo = control
 							nodo = ds_stack_pop(pila)
 							isla_almacen += edificio_flujo_almacen[nodo.index]
 							array_push(isla, nodo)
-							array_remove(flujo.edificios, nodo)
+							array_disorder_remove(flujo.edificios, nodo, (nodo.flujo = flujo) ? ptre_flujo_1 : ptre_flujo_2)
 							if not visited[nodo.edificio_index]{
 								visited[nodo.edificio_index] = true
 								temp_flujo_link = (nodo.flujo = flujo) ? nodo.flujo_link : nodo.flujo_2_link

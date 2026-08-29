@@ -4,6 +4,7 @@ function add_edificio_flujo(edificio = control.null_edificio, flujo_name = "fluj
 		var index = edificio.index, temp_list_size = get_size(a, b, edificio.dir, edificio_size[index]), temp_list_arround = get_arround(a, b, edificio.dir, edificio_size[index])
 		var forzado = (array_length(edificio_flujo_liquido[index]) > iter)
 		var my_liquido = forzado ? edificio_flujo_liquido[index, iter] : -1
+		var puntero = (flujo_name = "flujo" ? ptre_flujo_1 : ptre_flujo_2)
 		if in(index, id_tuberia, id_deposito) and array_length(liquido_choose_array) > 1{
 			forzado = true
 			my_liquido = liquido_choose_array[liquido_choose]
@@ -105,7 +106,7 @@ function add_edificio_flujo(edificio = control.null_edificio, flujo_name = "fluj
 			flujo.liquido = my_liquido
 			array_disorder_push(flujos, flujo, 0)
 			struct_set(edificio, flujo_name, flujo)
-			array_disorder_push(flujo.edificios, edificio, 6)
+			array_disorder_push(flujo.edificios, edificio, puntero)
 		}
 		//Este edificio es una tubería
 		else if array_length(temp_list_flujos) > 1{
@@ -120,7 +121,7 @@ function add_edificio_flujo(edificio = control.null_edificio, flujo_name = "fluj
 						    temp_edificio.flujo = flujo
 						else if temp_edificio.flujo_2 = temp_flujo
 						    temp_edificio.flujo_2 = flujo
-						array_disorder_push(flujo.edificios, temp_edificio, 6)
+						array_disorder_push(flujo.edificios, temp_edificio, puntero)
 					}
 					if flujo.liquido = -1
 						flujo.liquido = temp_flujo.liquido
@@ -135,7 +136,7 @@ function add_edificio_flujo(edificio = control.null_edificio, flujo_name = "fluj
 			}
 			array_disorder_push(flujos, flujo, 0)
 			struct_set(edificio, flujo_name, flujo)
-			array_disorder_push(flujo.edificios, edificio, 6)
+			array_disorder_push(flujo.edificios, edificio, puntero)
 		}
 		//Este edificio es normal
 		else{
@@ -143,7 +144,7 @@ function add_edificio_flujo(edificio = control.null_edificio, flujo_name = "fluj
 			if my_liquido != -1
 				flujo.liquido = my_liquido
 			struct_set(edificio, flujo_name, flujo)
-			array_disorder_push(flujo.edificios, edificio, 6)
+			array_disorder_push(flujo.edificios, edificio, puntero)
 		}
 		if not in(index, id_tuberia, id_deposito, id_tuberia_subterranea, id_liquido_infinito)
 			flujo.liquido_forzado++

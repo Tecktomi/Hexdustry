@@ -13,7 +13,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		var chunk_x = edificio.chunk_x, chunk_y = edificio.chunk_y, _jugador = real(edificio.jugador)
 		var a, b, flag, temp_edificio, temp_coordenada_2, temp_priority, i, dis, temp_complex, dron, aaa, bbb
 		edificio.vida = 0
-		array_disorder_remove(edificios_index[index], edificio, 8)
+		array_disorder_remove(edificios_index[index], edificio, ptre_index)
 		if index = id_nucleo and menu = 1 and not enemigo{
 			if nucleos[_jugador] = edificio
 				nucleos[_jugador] = null_edificio
@@ -33,10 +33,10 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			}
 			ds_grid_clear(edificio_cercano_dir, -1)
 		}
-		if enemigo and mision_actual >= 0 and mision.objetivo = 8 and mision.target_id = index and ++mision_counter >= mision.target_num
+		if enemigo and mision_actual >= 0 and mision.objetivo = idm_destruir_edificio and mision.target_id = index and ++mision_counter >= mision.target_num
 			pasar_mision()
-		array_disorder_remove(edificios_jugador[_jugador], edificio, 0)
-		array_disorder_remove(chunk_edificios[# chunk_x, chunk_y], edificio, 1)
+		array_disorder_remove(edificios_jugador[_jugador], edificio, ptre_jugador)
+		array_disorder_remove(chunk_edificios[# chunk_x, chunk_y], edificio, ptre_chunk)
 		for(a = edificio.chunk_mina; a <= edificio.chunk_maxa; a++)
 			for(b = edificio.chunk_minb; b <= edificio.chunk_maxb; b++){
 				if edificio_draw_estatico[index]{
@@ -48,7 +48,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				array_remove(chunk_edificios_draw[# a, b], edificio)
 			}
 		edificios_counter[index]--
-		array_disorder_remove(edificios_totales, edificio, 12)
+		array_disorder_remove(edificios_totales, edificio, ptre_total)
 		ds_grid_destroy(edificio.coordenadas_dis)
 		if destruccion{
 			if enemigo
@@ -58,9 +58,9 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		}
 		if index = id_puerto_de_carga and edificio.link != null_edificio{
 			if edificio.receptor
-				array_disorder_remove(puerto_carga_array[_jugador], edificio, 2)
+				array_disorder_remove(puerto_carga_array[_jugador], edificio, ptre_puerto)
 			else
-				array_disorder_remove(puerto_carga_array[_jugador], edificio.link, 2)
+				array_disorder_remove(puerto_carga_array[_jugador], edificio.link, ptre_puerto)
 			if puerto_carga_atended[_jugador] >= array_length(puerto_carga_array[_jugador])
 				puerto_carga_atended[_jugador] = 0
 			edificio.link.receptor = false
@@ -174,7 +174,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		edificio.vivo = false
 		if edificio_armas[index]{
 			if edificio.target != null_dron and edificio.target.vida > 0
-				array_disorder_remove(edificio.target.torres, edificio, 2)
+				array_disorder_remove(edificio.target.torres, edificio, ptre_torre_dron)
 		}
 		//Eliminar tuneles
 		if in(index, id_tunel, id_tunel_salida) and not edificio.idle
@@ -199,7 +199,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		//Cancelar red
 		if edificio_energia[index]{
 			var temp_red = edificio.red, red_bateria, agregado, nodo, isla, temp_red_2, isla_bateria, pila, visitado
-			array_remove(temp_red.edificios, edificio)
+			array_disorder_remove(temp_red.edificios, edificio, ptre_red)
 			//Eliminar la red si no hay más edificios
 			if array_length(temp_red.edificios) = 0{
 				delete(temp_red.edificios)
@@ -234,7 +234,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 							if nodo.index = id_bateria
 								isla_bateria++
 							array_push(isla, nodo)
-							array_remove(temp_red.edificios, nodo)
+							array_disorder_remove(temp_red.edificios, nodo, ptre_red)
 							if not visitado[nodo.edificio_index]{
 								visitado[nodo.edificio_index] = true
 								for(a = array_length(nodo.energia_link) - 1; a >= 0; a--){
@@ -359,7 +359,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			for(a = array_length(edificio.outputs_carga) - 1; a >= 0; a--)
 				array_remove(edificio.outputs_carga[a].inputs_carga, edificio)
 			if array_contains(edificios_salida_drones, edificio)
-				array_remove(edificios_salida_drones, edificio)
+				array_disorder_remove(edificios_salida_drones, edificio, ptre_salida_drones)
 		}
 		if show_menu and edificio = show_menu_build{
 			show_menu = false

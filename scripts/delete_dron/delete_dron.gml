@@ -1,13 +1,13 @@
 function delete_dron(dron = control.null_dron){
 	with control{
 		var enemigo = dron.enemigo, _jugador = dron.jugador, a, edificio, temp_dron
-		array_disorder_remove(drones, dron, 2)
+		array_disorder_remove(drones, dron, ptrd_total)
 		dron_chunk_remove(dron)
-		array_disorder_remove(drones_jugador[_jugador], dron, 0)
+		array_disorder_remove(drones_jugador[_jugador], dron, ptrd_jugador)
 		//Dron enemigo
 		if _jugador != jugador{
 			enemigos_eliminados++
-			if mision_actual >= 0 and mision.objetivo = 4 and array_length(drones_jugador[_jugador]) = 0 and mision_counter >= mision.target_num
+			if mision_actual >= 0 and mision.objetivo = idm_sobrevivir_oleadas and array_length(drones_jugador[_jugador]) = 0 and mision_counter >= mision.target_num
 				pasar_mision()
 		}
 		//Dron aliado

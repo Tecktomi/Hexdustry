@@ -16,6 +16,7 @@ var a, b, c, flag
 	#macro ENEMIGO_CERCA 100
 	#macro ENEMIGO_CERCA_SQR 10_000
 	#macro HEX_FAST_THRESHOLD 64
+	#macro MORTERO_MIN_RANGE_SQR 10_000
 	SIZE_SIZE = [1, 3, 7, 12, 19, 27, 37]
 	SIZE_BORDE = [6, 9, 12, 15, 18, 21]
 	DESFACE = [[[0, -1], [0, -2], [-1, -1], [-1, 1], [0, 2], [0, 1]], [[1, -1], [0, -2], [0, -1], [0, 1], [0, 2], [1, 1]]]
@@ -41,7 +42,14 @@ var a, b, c, flag
 		DIGITS[a] = true
 	DIGITS[47] = false
 	#macro MAX_JUGADORES 9
-	EQUIPOS = 11
+	#macro EQUIPOS (MAX_JUGADORES + 2)
+	#macro municion_tipo_normal 0
+	#macro municion_tipo_misil 1
+	#macro municion_tipo_fuego 2
+	#macro municion_tipo_misil_incendiario 3
+	#macro municion_tipo_perforadora 4
+	#macro jugador_salvaje 0
+	#macro jugador_IA 1
 #endregion
 DEVISE = (os_type = os_windows)
 BROWSER = (os_browser = browser_not_a_browser)
@@ -340,6 +348,15 @@ L = {}
 	mision_choosing_coord = false
 	mision_choosing_coord_tipo = 0
 	mision_choosing_coord_i = 0
+	#macro idm_sin_objetivo 0
+	#macro idm_conseguir 1
+	#macro idm_tener_acumulado 2
+	#macro idm_cargar_edificio 3
+	#macro idm_construir 4
+	#macro idm_tener_construido 5
+	#macro idm_destruir_edificio 6
+	#macro idm_sobrevivir_oleadas 7
+	#macro idm_apretar_ADWS 8
 	objetivos_nombre = [
 		"conseguir",
 		"tener almacenado",
@@ -411,7 +428,7 @@ L = {}
 	mapa_editado = false
 	null_cambio = {
 		step : 0,
-		tipo : 0,
+		tipo : -1,
 		data : {}
 	}
 	cambios = array_create(0, null_cambio)
@@ -424,6 +441,34 @@ L = {}
 	server_buscando_lan_step = 0
 	EQUIPO_COLOR = [ #bfbfbf, #ff0000, #0000ff, #00ff00, #ffff00, #ff00ff, #00ffff, #ffffff, #000000, #7f0000, #007f00, #00007f, #7f7f00, #7f007f, #007f7f]
 	jugador = 2
+	#macro net_hello 0
+	#macro net_welcome 1
+	#macro net_add_edificio 2
+	#macro net_delete_edificio 3
+	#macro net_buscar_server 4
+	#macro net_respuesta_buscar 5
+	#macro net_set_edificio 6
+	#macro net_timer 7
+	#macro net_mover_dron 8
+	#macro net_add_modulo 9
+	#macro net_investigar 10
+	#macro net_jugador_unido 11
+	#macro net_jugador_ido 12
+	#macro net_jugador_eliminado 13
+	#macro net_server_break 14
+	#macro net_error 15
+	#macro net_expulsado 16
+	#macro net_timeout 17
+	#macro net_heartbeat 18
+	#macro net_mensaje 19
+	#macro net_error_nombre_usado 0
+	#macro net_error_server_lleno 1
+	#macro cambio_construir 0
+	#macro cambio_delete_edificio 1
+	#macro cambio_set_edificio 2
+	#macro cambio_mover_dron 3
+	#macro cambio_add_modulo 4
+	#macro cambio_investigar 5
 #endregion
 #region UI
 	ui_fondo = #282828
@@ -552,7 +597,7 @@ null_edificio = {
 	imagen : spr_hexagono,
 	sound : null_sound,
 	modulo : false,
-	punteros : array_create(12, -1),
+	punteros : array_create(ptre_MAX, -1),
 	enemigo : false,
 	prioridad : 0,
 	inputs_carga : [],
@@ -567,6 +612,20 @@ null_edificio = {
 	calor : 0,
 	calor_generado : 0
 }
+#macro ptre_jugador 0
+#macro ptre_chunk 1
+#macro ptre_total 2
+#macro ptre_index 3
+#macro ptre_luz 4
+#macro ptre_activo 5
+#macro ptre_red 6
+#macro ptre_flujo_1 7
+#macro ptre_flujo_2 8
+#macro ptre_torre_dron 9
+#macro ptre_torre_edificio 10
+#macro ptre_puerto 11
+#macro ptre_salida_drones 12
+#macro ptre_MAX 13
 null_edificio.link = null_edificio
 null_edificio.energia_link = array_create(0, null_edificio)
 null_edificio.flujo_link = array_create(0, null_edificio)
@@ -633,8 +692,12 @@ null_dron = {
 	jugador : 0,
 	change_pos : false,
 	move_dir : 0,
-	punteros : array_create(3, 0)
+	punteros : array_create(ptrd_MAX, -1)
 }
+#macro ptrd_jugador 0
+#macro ptrd_chunk 1
+#macro ptrd_total 2
+#macro ptrd_MAX 3
 null_edificio.target = null_dron
 null_dron.target_dron = null_dron
 selected_drones = array_create(0, null_dron)
@@ -642,6 +705,7 @@ drones = array_create(0, null_dron)
 drones_jugador = array_create(EQUIPOS)
 for(a = 0; a < EQUIPOS; a++)
 	drones_jugador[a] = array_create(0, null_dron)
+drones_propios = drones_jugador[jugador]
 null_beta = {
 	recurso : 0,
 	terrenos : array_create(0, [0, 0]),

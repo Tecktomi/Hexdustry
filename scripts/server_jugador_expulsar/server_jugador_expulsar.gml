@@ -1,7 +1,7 @@
 function server_jugador_expulsar(index, timeout = false){
 	with control{
 		var buffer = buffer_create(1, buffer_grow, 1)
-		buffer_write(buffer, buffer_u8, 17 + timeout)
+		buffer_write(buffer, buffer_u8, timeout ? net_timeout : net_expulsado)
 		buffer_write(buffer, buffer_string, server_jugadores_nombre[index])
 		server_broadcast_buffer(buffer)
 		buffer_delete(buffer)

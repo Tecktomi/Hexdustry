@@ -3,7 +3,7 @@ function server_mensaje(mensaje){
 		exit
 	with control{
 		var buffer = buffer_create(1, buffer_grow, 1)
-		buffer_write(buffer, buffer_u8, 20)
+		buffer_write(buffer, buffer_u8, net_mensaje)
 		buffer_write(buffer, buffer_string, string(mensaje))
 		if servidor
 			server_broadcast_buffer(buffer)

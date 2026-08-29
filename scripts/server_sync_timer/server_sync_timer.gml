@@ -1,6 +1,6 @@
 function server_sync_timer(){
 	var buffer = buffer_create(5, buffer_grow, 1)
-	buffer_write(buffer, buffer_u8, 8) //Synct timer
+	buffer_write(buffer, buffer_u8, net_timer)
 	buffer_write(buffer, buffer_u32, timer)
 	for(var i = 0; i < MAX_JUGADORES; i++)
 		if server_jugadores[i] != -1{
