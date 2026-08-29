@@ -18,7 +18,7 @@ function handle_add_edificio(buffer){
 		else{
 			var cambio = {
 				step : _timer,
-				tipo : 0,
+				tipo : cambio_construir,
 				data : {
 					index : index,
 					dir : dir,

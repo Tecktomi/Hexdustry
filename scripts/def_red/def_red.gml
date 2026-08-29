@@ -6,7 +6,7 @@ function def_red(){
 		bateria : 0,
 		bateria_max : 0,
 		eficiencia : 0,
-		punteros : array_create(0, 0),
+		punteros : array_create(1, -1),
 		promedio : 0
 	}
 	return red

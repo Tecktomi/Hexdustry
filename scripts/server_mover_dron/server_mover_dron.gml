@@ -1,7 +1,7 @@
 function server_mover_dron(x, y, dron = control.null_dron){
 	with control{
 		var buffer = buffer_create(11, buffer_grow, 1)
-		buffer_write(buffer, buffer_u8, 9) //Mover dron
+		buffer_write(buffer, buffer_u8, net_mover_dron)
 		buffer_write(buffer, buffer_u32, real(timer))
 		buffer_write(buffer, buffer_f32, real(x))
 		buffer_write(buffer, buffer_f32, real(y))

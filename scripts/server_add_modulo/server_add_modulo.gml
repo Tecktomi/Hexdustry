@@ -1,7 +1,7 @@
 function server_add_modulo(a, b, _cheat = control.cheat){
 	with control{
 		var buffer = buffer_create(10, buffer_grow, 1)
-		buffer_write(buffer, buffer_u8, 10) //Add módulo
+		buffer_write(buffer, buffer_u8, net_add_modulo)
 		buffer_write(buffer, buffer_u32, real(timer))
 		buffer_write(buffer, buffer_u16, real(a))
 		buffer_write(buffer, buffer_u16, real(b))

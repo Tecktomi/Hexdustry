@@ -13,7 +13,7 @@ function handle_add_modulo(buffer){
 		else{
 			var cambio = {
 				step : _timer,
-				tipo : 4,
+				tipo : cambio_add_modulo,
 				data : {
 					a : a,
 					b : b,

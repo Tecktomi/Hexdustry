@@ -7,6 +7,7 @@ function handle_welcome(buffer){
 		if not load_game_buffer(buffer)
 			show_message(L.archivo_obsoleto)
 		random_set_seed(real(buffer_read(buffer, buffer_u32)))
+		drones_propios = drones_jugador[jugador]
 		//Asignar núcleo y recursos
 		if server_pvp{
 			var a = real(buffer_read(buffer, buffer_u8)), b = real(buffer_read(buffer, buffer_u8))

@@ -11,8 +11,8 @@ function handle_hello(socket, buffer, slot){
 				until (far_from_nucleus(new_nucleo_x, new_nucleo_y) and check_colision(new_nucleo_x, new_nucleo_y, id_nucleo, 0)) or tries++ = 100
 				if tries = 100{
 					var reply = buffer_create(1, buffer_grow, 1)
-					buffer_write(reply, buffer_u8, 16)
-					buffer_write(reply, buffer_u8, 255)
+					buffer_write(reply, buffer_u8, net_error)
+					buffer_write(reply, buffer_u8, net_error_server_lleno)
 					network_send_packet(socket, reply, buffer_tell(reply))
 					buffer_delete(reply)
 					server_jugadores[slot] = -1
@@ -29,7 +29,7 @@ function handle_hello(socket, buffer, slot){
 		//Informar del nuevo jugador a los otros jugadores
 		if servidor{
 			var buffer_2 = buffer_create(2, buffer_grow, 1)
-			buffer_write(buffer_2, buffer_u8, 12)
+			buffer_write(buffer_2, buffer_u8, net_jugador_unido)
 			buffer_write(buffer_2, buffer_string, player_name)
 			buffer_write(buffer_2, buffer_u8, slot)
 			server_broadcast_buffer(buffer_2)
@@ -37,7 +37,7 @@ function handle_hello(socket, buffer, slot){
 		}
 		#region Reply
 			var reply = buffer_create(1024, buffer_grow, 1)
-			buffer_write(reply, buffer_u8, 2)
+			buffer_write(reply, buffer_u8, net_welcome)
 			buffer_write(reply, buffer_bool, server_pvp)
 			buffer_write(reply, buffer_u8, slot)
 			save_game_buffer(reply)

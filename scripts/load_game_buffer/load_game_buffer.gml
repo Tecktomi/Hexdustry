@@ -69,6 +69,8 @@ function load_game_buffer(buffer){
 			mision_counter = buffer_read(buffer, buffer_u16)
 			mision_current_tiempo = buffer_read(buffer, buffer_s16)
 			mision_choosing_coord = buffer_read(buffer, buffer_bool)
+			if mision_actual >= 0 and mision_actual < len
+				mision = misiones[mision_actual]
 		#endregion
 		for(a = 0; a < rss_max; a++)
 			for(b = 0; b < EQUIPOS; b++)
@@ -172,7 +174,7 @@ function load_game_buffer(buffer){
 		for(a = 0; a < len; a++)
 			if temp_edificios_target[a] != -1{
 				var edificio = edificios_totales[a], dron = drones[temp_edificios_target[a]]
-				array_disorder_push(dron.torres, edificio, 2)
+				array_disorder_push(dron.torres, edificio, ptre_torre_dron)
 				edificio.target = dron
 			}
 		//Municiones
@@ -184,7 +186,7 @@ function load_game_buffer(buffer){
 			var vmove = real(buffer_read(buffer, buffer_f64))
 			var mask = real(buffer_read(buffer, buffer_u8))
 			c = 0
-			var tipo = 0, radio = 2500, humo = false, rastreador = false, _jugador = jugador, _target = -1, _target_build = -1
+			var tipo = municion_tipo_normal, radio = 2500, humo = false, rastreador = false, _jugador = jugador, _target = -1, _target_build = -1
 			if mask & (1 << c++) tipo = real(buffer_read(buffer, buffer_u8))
 			var dis = real(buffer_read(buffer, buffer_f64))
 			var dmg = real(buffer_read(buffer, buffer_f64))

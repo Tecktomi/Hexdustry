@@ -10,7 +10,7 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 			multiplicador_vida_enemigos = 50
 			cheat = false
 			misiones = array_create(1, null_mision)
-			misiones[0].objetivo = 4
+			misiones[0].objetivo = idm_sobrevivir_oleadas
 			misiones[0].target_num = 15
 			flow = 0
 			dificultad = 0
@@ -24,7 +24,7 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 			multiplicador_vida_enemigos = 100
 			cheat = false
 			misiones = array_create(1, null_mision)
-			misiones[0].objetivo = 4
+			misiones[0].objetivo = idm_sobrevivir_oleadas
 			misiones[0].target_num = 22
 			flow = 1
 			dificultad = 1
@@ -38,7 +38,7 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 			multiplicador_vida_enemigos = 160
 			cheat = false
 			misiones = array_create(1, null_mision)
-			misiones[0].objetivo = 4
+			misiones[0].objetivo = idm_sobrevivir_oleadas
 			misiones[0].target_num = 35
 			flow = 2
 			dificultad = 2
@@ -91,7 +91,7 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 			xpos += text_x + 20
 			if draw_boton(xpos, ypos, L.menu_modo_oleadas, flow = 4 ? ui_azul : ui_gris,,,, 1){
 				misiones = array_create(1, null_mision)
-				misiones[0].objetivo = 4
+				misiones[0].objetivo = idm_sobrevivir_oleadas
 				misiones[0].target_num = 20
 				flow = 4
 			}

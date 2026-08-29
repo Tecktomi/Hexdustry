@@ -7,7 +7,7 @@ function def_flujo(){
 		almacen : 0,
 		almacen_max : 0,
 		eficiencia : 0,
-		punteros : array_create(0, 0),
+		punteros : array_create(1, -1),
 		promedio : 0,
 		pre_liq : -1,
 		liquido_forzado : 0

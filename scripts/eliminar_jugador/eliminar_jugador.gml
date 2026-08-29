@@ -21,10 +21,10 @@ function eliminar_jugador(index){
 					if edificio.index = id_nucleo
 						delete_edificio(edificio, true)
 					else{
-						edificio.jugador = 0
+						edificio.jugador = jugador_salvaje
 						desactivar_edificio(edificio)
-						array_disorder_remove(edificios_jugador[index], edificio, 0)
-						array_disorder_push(edificios_jugador[0], edificio, 0)
+						array_disorder_remove(edificios_jugador[index], edificio, ptre_jugador)
+						array_disorder_push(edificios_jugador[jugador_salvaje], edificio, ptre_jugador)
 					}
 				}
 			}

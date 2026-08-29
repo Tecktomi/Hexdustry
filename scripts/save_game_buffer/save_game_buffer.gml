@@ -102,7 +102,7 @@ function save_game_buffer(buffer){
 		buffer_write(buffer, buffer_u16, len)
 		for(a = 0; a < len; a++){
 			red = redes[a]
-			buffer_write(buffer, buffer_u16, real(red.edificios[0].punteros[12]))
+			buffer_write(buffer, buffer_u16, real(red.edificios[0].punteros[ptre_total]))
 			buffer_write(buffer, buffer_f64, real(red.bateria))
 		}
 		//Flujos
@@ -110,7 +110,7 @@ function save_game_buffer(buffer){
 		buffer_write(buffer, buffer_u16, len)
 		for(a = 0; a < len; a++){
 			flujo = flujos[a]
-			buffer_write(buffer, buffer_u16, real(flujo.edificios[0].punteros[12]))
+			buffer_write(buffer, buffer_u16, real(flujo.edificios[0].punteros[ptre_total]))
 			buffer_write(buffer, buffer_f64, real(flujo.almacen))
 			buffer_write(buffer, buffer_u8, real(flujo.liquido))
 		}
@@ -163,9 +163,9 @@ function save_game_buffer(buffer){
 			buffer_write(buffer, buffer_f64, real(dron.y))
 			if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(dron.vida_max))
 			if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(dron.vida))
-			if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(dron.target.punteros[12]))
-			if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(dron.temp_target.punteros[12]))
-			if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(dron.target_dron.punteros[2]))
+			if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(dron.target.punteros[ptre_total]))
+			if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(dron.temp_target.punteros[ptre_total]))
+			if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(dron.target_dron.punteros[ptrd_total]))
 			for(i = 0; i < rss_max; i++)
 				if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(dron.carga[i]))
 			if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(dron.modo))
@@ -210,8 +210,8 @@ function save_game_buffer(buffer){
 			c++
 			c++
 			if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(municion.jugador))
-			if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(municion.target.punteros[2]))
-			if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(municion.target_build.punteros[12]))
+			if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(municion.target.punteros[ptrd_total]))
+			if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(municion.target_build.punteros[ptre_total]))
 		}
 	}
 }

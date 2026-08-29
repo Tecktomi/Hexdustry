@@ -1,11 +1,11 @@
 function tuberia_arround(edificio = control.null_edificio){
 	with control{
 		var _jugador = edificio.jugador, temp_complex, aa, bb, c, temp_edificio, temp_liquido
-		var my_liquido = (edificio.flujo = null_flujo) ? -1 : edificio.flujo.liquido
+		var my_liquido = (edificio.flujo = null_flujo) ? -1 : edificio.flujo.liquido, bmod = edificio.b & 1
 		edificio.select = 0
 		for(c = 0; c < 6; c++){
-			aa = edificio.a + DESFACE_A[bb & 1, c]
-			bb = edificio.b + DESFACE_B[bb & 1, c]
+			aa = edificio.a + DESFACE_A[bmod, c]
+			bb = edificio.b + DESFACE_B[bmod, c]
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or not edificio_bool[# aa, bb]
 				continue
 			temp_edificio = edificio_id[# aa, bb]

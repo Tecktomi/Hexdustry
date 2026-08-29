@@ -11,7 +11,7 @@ function handle_mover_dron(buffer){
 		else{
 			var cambio = {
 				step : _timer,
-				tipo : 3,
+				tipo : cambio_mover_dron,
 				data : {
 					x : _x,
 					y : _y,

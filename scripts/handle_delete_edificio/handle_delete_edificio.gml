@@ -13,7 +13,7 @@ function handle_delete_edificio(buffer){
 		else{
 			var cambio = {
 				step : _timer,
-				tipo : 1,
+				tipo : cambio_delete_edificio,
 				data : {
 					a : a,
 					b : b,
