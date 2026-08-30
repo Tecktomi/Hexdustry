@@ -8,7 +8,7 @@ if type = network_type_data{
 		var player_name = string(buffer_read(buffer, buffer_string))
 		//Detectar nombre utilizado
 		if array_contains(server_jugadores_nombre, player_name){
-			var reply = buffer_create(1, buffer_grow, 1)
+			var reply = buffer_create(2, buffer_grow, 1)
 			buffer_write(reply, buffer_u8, net_error)
 			buffer_write(reply, buffer_u8, net_error_nombre_usado)
 			network_send_packet(temp_socket, reply, buffer_tell(reply))
@@ -17,7 +17,7 @@ if type = network_type_data{
 		else{
 			var slot = find_server_slot()
 			if slot = -1{
-				var reply = buffer_create(1, buffer_grow, 1)
+				var reply = buffer_create(2, buffer_grow, 1)
 				buffer_write(reply, buffer_u8, net_error)
 				buffer_write(reply, buffer_u8, net_error_server_lleno)
 				network_send_packet(temp_socket, reply, buffer_tell(reply))

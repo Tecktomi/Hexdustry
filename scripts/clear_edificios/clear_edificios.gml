@@ -18,7 +18,6 @@ function clear_edificios(){
 				array_resize(chunk_edificios_draw[# a, b], 0)
 			}
 		array_resize(edificios, 0)
-		array_resize(edificios_targeteables, 0)
 		array_resize(edificios_salida_drones, 0)
 		for(a = 0; a < edificio_max; a++)
 			array_resize(edificios_index[a], 0)

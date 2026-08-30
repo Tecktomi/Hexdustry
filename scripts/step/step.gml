@@ -142,13 +142,15 @@ function step(){
 					herir_hexagono(muna, munb, floor(_dmg / 2), false, municion.jugador)
 			}
 			if --municion.dis <= 0{
+				temp_complex = xytoab(municion.x, municion.y)
+				muna = temp_complex[0]
+				munb = temp_complex[1]
 				municiones[a] = municiones[array_length(municiones) - 1]
 				array_pop(municiones)
 				//Daño unidad
 				if target != null_dron and target.vida > 0{
 					if _tipo = municion_tipo_fuego
 						aplicar_efecto(1, 120, target)
-					//Daño área
 					else
 						herir_hexagono(muna, munb, _dmg,, municion.jugador)
 				}

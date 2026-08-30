@@ -253,7 +253,6 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		#endregion
 		if index = id_nucleo and menu = 1{
 			edificio_pathfind(edificio)
-			array_push(edificios_targeteables, edificio)
 			for(c = array_length(drones) - 1; c >= 0; c--){
 				dron = drones[c]
 				if dron.jugador != _jugador
