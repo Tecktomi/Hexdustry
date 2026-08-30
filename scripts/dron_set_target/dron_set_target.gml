@@ -4,8 +4,8 @@ function dron_set_target(dron = control.null_dron, temp_array){
 		for(i = 0; i < array_length(temp_array); i++) if flag{
 			temp_array_edificios = array_shuffle(edificios_index[temp_array[i]])
 			for(j = array_length(temp_array_edificios) - 1; j >= 0; j--){
+				edificio = temp_array_edificios[j]
 				if edificio.jugador != _jugador{
-					edificio = temp_array_edificios[j]
 					flag = false
 					break
 				}
@@ -13,6 +13,6 @@ function dron_set_target(dron = control.null_dron, temp_array){
 			if not flag
 				break
 		}
-		dron.target = edificio
+		dron.target = (edificio.jugador = _jugador ? null_edificio : edificio)
 	}
 }

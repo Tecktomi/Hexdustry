@@ -131,7 +131,7 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 						target_y = edificio.center_y
 					}
 					var dis = distance(a, b, target_x, target_y)
-					var municion = add_municion(a, b, vel * (target_x + random_range(-25, 25) - a) / dis, vel * (target_y + random_range(-25, 25) - b) / dis, municion_tipo_misil, dis / vel, 10_000, 50, target, edificio, dron.enemigo,,, _jugador)
+					var municion = add_municion(a, b, vel * (target_x + random_range(-25, 25) - a) / dis, vel * (target_y + random_range(-25, 25) - b) / dis, municion_tipo_misil, dis / vel, 50, 2_500, target, edificio, dron.enemigo,,, _jugador)
 					array_push(municiones, municion)
 				}
 			}

@@ -252,6 +252,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 							temp_red_2.bateria = floor(temp_red.bateria * isla_bateria / red_bateria)
 						for(a = array_length(isla) - 1; a >= 0; a--){
 							temp_edificio = isla[a]
+							temp_edificio.punteros[ptre_red] = a
 							temp_edificio.red = temp_red_2
 							if edificio_energia_consumo[temp_edificio.index] > 0
 								temp_red_2.consumo += abs(temp_edificio.energia_consumo)

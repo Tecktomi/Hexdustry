@@ -58,17 +58,25 @@ function delete_edificio_flujo(edificio = control.null_edificio, flujo = control
 							temp_flujo_2.almacen = floor(flujo.almacen * isla_almacen / flujo_almacen)
 						for(a = array_length(isla) - 1; a >= 0; a--){
 							temp_edificio = isla[a]
-							if temp_edificio.flujo = flujo
+							if temp_edificio.flujo = flujo{
 								temp_edificio.flujo = temp_flujo_2
-							else
+								temp_edificio.punteros[ptre_flujo_1] = a
+								if edificio_flujo_consumo[temp_edificio.index] > 0
+									temp_flujo_2.consumo += temp_edificio.flujo_consumo
+								else
+									temp_flujo_2.generacion -= temp_edificio.flujo_consumo
+							}
+							else{
 								temp_edificio.flujo_2 = temp_flujo_2
+								temp_edificio.punteros[ptre_flujo_2] = a
+								if edificio_flujo_2_consumo[temp_edificio.index] > 0
+									temp_flujo_2.consumo += temp_edificio.flujo_2_consumo
+								else
+									temp_flujo_2.generacion -= temp_edificio.flujo_2_consumo
+							}
 							temp_flujo_2.almacen_max += edificio_flujo_almacen[temp_edificio.index]
 							if not in(temp_edificio.index, id_tuberia, id_tuberia_subterranea, id_deposito)
 								temp_flujo_2.liquido_forzado++
-							if edificio_flujo_consumo[temp_edificio.index] > 0
-								temp_flujo_2.consumo += temp_edificio.flujo_consumo
-							else
-								temp_flujo_2.generacion -= temp_edificio.flujo_consumo
 						}
 						array_disorder_push(flujos, temp_flujo_2, 0)
 					}

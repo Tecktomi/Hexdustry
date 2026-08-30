@@ -3,6 +3,7 @@ function change_flujo(cantidad, edificio = control.null_edificio, flujo = contro
 		if flujo = null_flujo
 			flujo = edificio.flujo
 		var consumo = (flujo = edificio.flujo) ? edificio.flujo_consumo : edificio.flujo_2_consumo
+		var maximo = (flujo = edificio.flujo) ? edificio.flujo_consumo_max : edificio_flujo_2_consumo[edificio.index]
 		if cantidad = consumo
 			exit
 		var index = edificio.index
@@ -13,7 +14,7 @@ function change_flujo(cantidad, edificio = control.null_edificio, flujo = contro
 			else
 				edificio.flujo_2_consumo = cantidad
 			//Fábrica
-			if edificio.flujo_consumo_max >= 0
+			if maximo >= 0
 				flujo.consumo += a
 			//Generador
 			else

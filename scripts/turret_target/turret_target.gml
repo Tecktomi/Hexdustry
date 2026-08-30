@@ -40,15 +40,20 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 			}
 		}
 		var prev_enemigo = edificio.target
-		if dron_final != null_dron and prev_enemigo != dron_final{
-			if prev_enemigo != null_dron
-				array_disorder_remove(prev_enemigo.torres, edificio, ptre_torre_dron)
-			array_disorder_push(dron_final.torres, edificio, ptre_torre_dron)
+		if prev_enemigo != dron_final{
+		    if prev_enemigo != null_dron
+		        array_disorder_remove(prev_enemigo.torres, edificio, ptre_torre_dron)
+		    if dron_final != null_dron
+		        array_disorder_push(dron_final.torres, edificio, ptre_torre_dron)
 		}
 		edificio.target = dron_final
 		//Target edificios
-		if edificio.target != null_dron
+		if edificio.target != null_dron{
+			if edificio.target_edificio != null_edificio
+				array_disorder_remove(edificio.target_edificio.torres, edificio, ptre_torre_edificio)
+			edificio.target_edificio = null_edificio
 			exit
+		}
 		var edificio_final = null_edificio
 		//Disparo normal
 		if alc_min = 0{
@@ -86,14 +91,13 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 				}
 			}
 		}
-		var prev_enemigo_edificio = edificio.target_edificio
-		if edificio_final != null_edificio and prev_enemigo_edificio != edificio_final{
-			if prev_enemigo_edificio != null_edificio
-				array_disorder_remove(prev_enemigo_edificio.torres, edificio, ptre_torre_edificio)
-			array_disorder_push(edificio_final.torres, edificio, ptre_torre_edificio)
-			edificio.target_edificio = edificio_final
+		var prev_edificio = edificio.target_edificio
+		if prev_edificio != edificio_final{
+		    if prev_edificio != null_edificio
+		        array_disorder_remove(prev_edificio.torres, edificio, ptre_torre_edificio)
+		    if edificio_final != null_edificio
+		        array_disorder_push(edificio_final.torres, edificio, ptre_torre_edificio)
 		}
-		else
-			edificio.target_edificio = edificio_final
+		edificio.target_edificio = edificio_final
 	}
 }

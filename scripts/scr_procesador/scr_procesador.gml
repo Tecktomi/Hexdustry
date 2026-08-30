@@ -158,7 +158,7 @@ function scr_procesador(edificio = control.null_edificio){
 					temp_edificio = edificio.procesador_link[clamp(pc[6], 0, b - 1)]
 				b = 0
 				if pc[2] = b++
-					val = real(temp_edificio.punteros[4] >= 0)
+					val = real(temp_edificio.punteros[ptre_activo] >= 0)
 				else if pc[2] = b++{
 					if not is_real(pc[4])
 						continue

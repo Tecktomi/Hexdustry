@@ -2,8 +2,12 @@ function scr_laser(edificio = control.null_edificio){
 	with control{
 		var index = edificio.index
 		var red = edificio.red, red_power = red.eficiencia
-		if ((image_index mod 10) = (edificio.a mod 10) and edificio.target = null_dron and edificio.target_edificio = null_edificio) or edificio.target.vida <= 0 or edificio.target_edificio.vida <= 0{
+		if ((image_index mod 10) = (edificio.a mod 10) and edificio.target = null_dron and edificio.target_edificio = null_edificio) or edificio.target.vida <= 0 or (edificio.target_edificio != null_edificio and edificio.target_edificio.vida <= 0){
+			if edificio.target != null_dron
+				array_disorder_remove(edificio.target.torres, edificio, ptre_torre_dron)
 			edificio.target = null_dron
+			if edificio.target_edificio != null_edificio
+				array_disorder_remove(edificio.target_edificio.torres, edificio, ptre_torre_edificio)
 			edificio.target_edificio = null_edificio
 			turret_target(edificio)
 		}
@@ -30,14 +34,22 @@ function scr_laser(edificio = control.null_edificio){
 			if (enemigo != null_dron and herir_dron(dmg, enemigo)) or (enemigo_edificio != null_edificio and herir_edificio(dmg, enemigo_edificio)){
 				edificio_encender(edificio, false,, false)
 				edificio.fuel = 0
+				if edificio.target != null_dron
+					array_disorder_remove(edificio.target.torres, edificio, ptre_torre_dron)
 				edificio.target = null_dron
+				if edificio.target_edificio != null_edificio
+					array_disorder_remove(edificio.target_edificio.torres, edificio, ptre_torre_edificio)
 				edificio.target_edificio = null_edificio
 				turret_target(edificio)
 			}
 		}
 		else{
 			edificio_encender(edificio, false,, false)
-			edificio.target = null_edificio
+			if edificio.target != null_dron
+				array_disorder_remove(edificio.target.torres, edificio, ptre_torre_dron)
+			edificio.target = null_dron
+			if edificio.target_edificio != null_edificio
+				array_disorder_remove(edificio.target_edificio.torres, edificio, ptre_torre_edificio)
 			edificio.target_edificio = null_edificio
 			edificio.fuel = 0
 		}
