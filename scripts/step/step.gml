@@ -70,7 +70,7 @@ function step(){
 			if edificio.eliminar and edificio.punteros[ptre_activo] >= 0{
 				edificio.eliminar = false
 				array_disorder_remove(edificios_activos, edificio, ptre_activo)
-				edificio.punteros[4] = -1
+				edificio.punteros[ptre_activo] = -1
 			}
 			if edificio.agregar and edificio.punteros[ptre_activo] = -1{
 				edificio.agregar = false

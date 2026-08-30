@@ -1316,7 +1316,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 				last_mx = mx
 				last_my = my
 			}
-			if not edificio_inerte[index] and edificio.punteros[4] = -1{
+			if not edificio_inerte[index] and edificio.punteros[ptre_activo] = -1{
 				draw_sprite_off(spr_diseneabled, 0, edificio.center_x, edificio.center_y)
 				if draw_boton(edificio.center_x * zoom - camx, edificio.center_y * zoom - camy, L.game_activar)
 					activar_edificio(edificio)

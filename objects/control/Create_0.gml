@@ -1149,6 +1149,7 @@ dron_max = array_length(dron_nombre)
 	edificio_flujo_liquido = array_create(0, array_create(0, 0))
 	edificio_flujo_almacen = array_create(0, 0)
 	edificio_flujo_consumo = array_create(0, 0)
+	edificio_flujo_2_consumo = array_create(0, 0)
 	edificio_arma = array_create(0, 0)
 	edificio_alcance = array_create(0, 0)
 	edificio_alcance_chunk_x = array_create(0, 0)
@@ -1196,7 +1197,7 @@ function def_edificio(name, size = 1, sprite = spr_base, sprite_2 = spr_base, vi
 	ds_map_add(edificio_index, string_lower(name), array_length(edificio_energia))
 	return array_length(edificio_energia)
 }
-function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = array_create(0, 0), arma = -1, alcance = 0, inerte = false, prioridad = 0, _temperatura = 0){
+function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = array_create(0, 0), arma = -1, alcance = 0, inerte = false, prioridad = 0, _temperatura = 0, agua_2_consumo = 0){
 	array_push(edificio_energia, (energia != 0))
 	array_push(edificio_energia_consumo, energia)
 	array_push(edificio_flujo, (agua > 0))
@@ -1212,6 +1213,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 	array_push(edificio_inerte, inerte)
 	array_push(edificio_prioridad, prioridad)
 	array_push(edificio_temperatura, _temperatura)
+	array_push(edificio_flujo_2_consumo, agua_2_consumo)
 }
 #region Definición
 	id_nucleo = def_edificio("Núcleo", 3, spr_base,, 1500,,,,,,,,, true); def_edificio_2(,,,,,, true)
@@ -1242,7 +1244,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 	id_laser = def_edificio("Láser", 2.5, spr_laser, spr_laser_2, 400, 1, scr_laser,, false,, [idr_cobre, idr_acero, idr_silicio, idr_electronicos], [50, 15, 15, 5]); def_edificio_2(200,,,, 0, 320,, 3, 2)
 	id_deposito = def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, 200,,, scr_draw_liquido_sin_bomba, false,, [idr_bronce, idr_acero], [20, 10]); def_edificio_2(, 1000,,,,, true, 1)
 	id_liquido_infinito = def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, 100,,, scr_draw_liquido_sin_bomba); def_edificio_2(, 10, -999_999,,,, true, 99)
-	id_turbina = def_edificio("Turbina", 2, spr_turbina,, 160,, scr_turbina, scr_draw_bomba_par, false,, [idr_cobre, idr_bronce, idr_acero], [20, 10, 10], 20, true, false, [idr_carbon, idr_compuesto_incendiario], [10, 10]); def_edificio_2(-120, 10, 50, [idl_agua],,,, 2, 2)
+	id_turbina = def_edificio("Turbina", 2, spr_turbina,, 160,, scr_turbina, scr_draw_bomba_par, false,, [idr_cobre, idr_bronce, idr_acero], [20, 10, 10], 20, true, false, [idr_carbon, idr_compuesto_incendiario], [10, 10]); def_edificio_2(-120, 10, 40, [idl_agua],,,, 2, 2)
 	id_refineria_de_metales = def_edificio("Refinería de Metales", 3, spr_refineria_minerales,, 150, 80, scr_refineria_metales,,,, [idr_bronce, idr_acero, idr_silicio], [15, 15, 10], 30, true, false, [idr_piedra_cuprica, idr_piedra_ferrica, idr_uranio_bruto], [5, 5, 10], true, false, [idr_cobre, idr_hierro, idr_uranio_enriquecido, idr_uranio_empobrecido]); def_edificio_2(50, 10, 20, [idl_acido],,,, 1, 1)
 	id_fabrica_de_drones = def_edificio("Fábrica de Drones", 2, spr_fabrica_drones, spr_fabrica_drones_diagonal, 200,, scr_fabrica_drones,,,, [idr_cobre, idr_acero, idr_electronicos], [30, 15, 10], 20, true, false, [], []); def_edificio_2(120,,,,,,, 3, 1)
 	id_recurso_infinito = def_edificio("Recurso Infinito", 1, spr_recurso_infinito, spr_selector_color, 100,, scr_recurso_infinito, scr_draw_recurso_infinito,,,,,,,,,, true, true); def_edificio_2(,,,,,,, 99)
@@ -1274,7 +1276,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 	id_pantalla = def_edificio("Pantalla", 3, spr_pantalla,, 100,,, scr_draw_pantalla, false,, [idr_cobre, idr_silicio, idr_plastico, idr_electronicos], [40, 15, 10, 20]); def_edificio_2()
 	id_refineria_de_petroleo = def_edificio("Refinería de Petróleo", 4, spr_refineria_de_petroleo,, 400, 50, scr_refineria_petroleo,,,, [idr_cobre, idr_bronce, idr_acero, idr_concreto, idr_electronicos], [50, 30, 20, 40, 20], 40, true, false, [idr_sal], [10], true, false, [idr_piedra_sulfatada, idr_compuesto_incendiario, idr_plastico]); def_edificio_2(240, 10, 125, [idl_petroleo],,,, 2, 2)
 	id_planta_de_reciclaje = def_edificio("Planta de Reciclaje", 3, spr_planta_de_reciclaje,, 300,, scr_planta_de_reciclaje,,,, [idr_bronce, idr_hierro, idr_silicio, idr_concreto], [20, 50, 15, 15], 100,,,,, true, true); def_edificio_2(60, 10, 20, [idl_acido],,,, 1, 1)
-	id_planta_desalinizadora = def_edificio("Planta Desalinizadora", 2, spr_planta_desalinizadora,, 200, 60, scr_planta_desalinizadora, scr_draw_bomba_par, false,, [idr_cobre, idr_bronce, idr_silicio], [40, 10, 15], 10,,,,, true, false, [idr_sal]); def_edificio_2(40, 10, 20, [idl_agua_salada, idl_agua],,,, 1)
+	id_planta_desalinizadora = def_edificio("Planta Desalinizadora", 2, spr_planta_desalinizadora,, 200, 60, scr_planta_desalinizadora, scr_draw_bomba_par, false,, [idr_cobre, idr_bronce, idr_silicio], [40, 10, 15], 10,,,,, true, false, [idr_sal]); def_edificio_2(20, 10, 30, [idl_agua_salada, idl_agua],,,, 1,, -30)
 	id_extractor_atmosferico = def_edificio("Extractor Atmosférico", 2.5, spr_extractor_atmosferico,, 200,, scr_extractor_agua,,, false, [idr_cobre, idr_bronce, idr_silicio, idr_electronicos], [30, 15, 10, 5]); def_edificio_2(40, 10, -6, [idl_agua],,,, 1, 1)
 	id_cruce = def_edificio("Cruce", 1, spr_cruce,,,,,,,, [idr_cobre, idr_hierro], [4, 4]); def_edificio_2(,,,,,, true)
 	id_modulo = def_edificio("Módulo", 1, spr_item_modulo,,,,,,,, [idr_modulos], [1]); def_edificio_2(,,,,,, true)

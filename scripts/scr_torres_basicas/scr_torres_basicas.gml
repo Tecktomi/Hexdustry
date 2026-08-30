@@ -7,6 +7,8 @@ function scr_torres_basicas(edificio = control.null_edificio){
 			var flujo = edificio.flujo, flujo_power = flujo.eficiencia
 		//Buscar enemigos
 		if ((image_index mod 10) = 0 and edificio.target = null_dron) or edificio.target.vida <= 0{
+			if edificio.target != null_dron
+				array_disorder_remove(edificio.target.torres, edificio, ptre_torre_dron)
 			edificio.target = null_dron
 			if array_length(drones_jugador[_jugador]) < array_length(drones){
 				if index = id_mortero
@@ -36,10 +38,6 @@ function scr_torres_basicas(edificio = control.null_edificio){
 				target_y = dron.y
 			}
 			else{
-				if dron.vida <= 0{
-					edificio.target = null_dron
-					exit
-				}
 				target_x = target_edificio.center_x
 				target_y = target_edificio.center_y
 			}
@@ -61,7 +59,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 			//Disparo
 			if ++edificio.proceso >= edificio_proceso[index]{
 				edificio.proceso = 0
-				var dis = distance_sqr(center_x, edificio.center_y, target_x, target_y)
+				var dis = distance_sqr(center_x, center_y, target_x, target_y)
 				if dis > edificio_alcance_sqr[index]{
 					array_disorder_remove(edificio.target.torres, edificio, ptre_torre_dron)
 					edificio.target = null_dron
@@ -142,6 +140,8 @@ function scr_torres_basicas(edificio = control.null_edificio){
 						mover_in(edificio)
 					}
 					else{
+						if edificio.target != null_dron
+							array_disorder_remove(edificio.target.torres, edificio, ptre_torre_dron)
 						edificio.target = null_dron
 						if array_length(drones_jugador[_jugador]) < array_length(drones){
 							if index = id_mortero

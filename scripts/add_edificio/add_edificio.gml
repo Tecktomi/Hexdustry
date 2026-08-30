@@ -245,7 +245,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			}
 			for(c = array_length(edificios_index[id_torre_reparadora]) - 1; c >= 0; c--){
 				temp_edificio = edificios_index[id_torre_reparadora][c]
-				if temp_edificio.jugador = _jugador and distance_sqr(temp_edificio.center_x, temp_edificio.center_y, x, y) < alc{
+				if temp_edificio != edificio and temp_edificio.jugador = _jugador and distance_sqr(temp_edificio.center_x, temp_edificio.center_y, x, y) < alc{
 					array_push(temp_edificio.edificios_cercanos, edificio)
 					array_push(edificio.reparadores_cercanos, temp_edificio)
 				}
@@ -369,7 +369,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			if index = id_torre_de_alta_tension{
 				for(c = array_length(edificios_index[id_torre_de_alta_tension]) - 1; c >= 0; c--){
 					temp_edificio = edificios_index[id_torre_de_alta_tension][c]
-					if temp_edificio.jugador = _jugador and distance_sqr(temp_edificio.center_x, temp_edificio.center_y, center_x, center_y) < TORRE_TENSION_RANGE_SQR{
+					if temp_edificio != edificio and temp_edificio.jugador = _jugador and distance_sqr(temp_edificio.center_x, temp_edificio.center_y, center_x, center_y) < TORRE_TENSION_RANGE_SQR{
 						array_push(edificio.energia_link, temp_edificio)
 						array_push(temp_edificio.energia_link, edificio)
 						if not array_contains(temp_list_redes, temp_edificio.red)
@@ -379,7 +379,6 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			}
 			//Añadir red
 			var temp_red = def_red()
-			array_disorder_push(redes, temp_red, 0)
 			//Combinar otras redes si las hay cerca
 			if array_length(temp_list_redes) > 0{
 				for(c = array_length(temp_list_redes) - 1; c >= 0; c--){
@@ -414,6 +413,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			else if in(index, id_panel_solar, id_procesador, id_planta_de_reciclaje)
 				change_energia(edificio_energia_consumo[index], edificio)
 			array_disorder_push(temp_red.edificios, edificio, ptre_red)
+			array_disorder_push(redes, temp_red, 0)
 		}
 		//Detectar cañerías cercanas
 		if edificio_flujo[index]{
@@ -436,7 +436,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		}
 		if in(index, id_planta_quimica, id_fabrica_de_drones, id_fabrica_de_drones_grande, id_cinta_grande, id_planta_de_reciclaje)
 			edificio.select = -1
-		if in(index, id_planta_de_enriquecimiento, id_fabrica_de_drones, id_planta_de_reciclaje, id_planta_desalinizadora)
+		if in(index, id_planta_de_enriquecimiento, id_fabrica_de_drones, id_planta_de_reciclaje)
 			edificio.proceso = -1
 		if index = id_laser
 			edificio.fuel = 1

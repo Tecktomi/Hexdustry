@@ -7,6 +7,7 @@ function scr_torre_reparadora(edificio = control.null_edificio){
 		if edificio.link = null_edificio{
 			edificio.link = edificio.edificios_cercanos_heridos[0]
 			if edificio != edificio.link and edificio.link.vida >= edificio_vida[edificio.link.index] or distance_sqr(edificio.center_x, edificio.center_y, edificio.link.center_x, edificio.link.center_y) > edificio_alcance_sqr[index]{
+				array_shift(edificio.edificios_cercanos_heridos)
 				edificio.link = null_edificio
 				change_energia(0, edificio)
 			}
