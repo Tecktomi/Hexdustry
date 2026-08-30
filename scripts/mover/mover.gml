@@ -117,6 +117,15 @@ function mover(edificio = control.null_edificio){
 			temp_edificio.carga[out]++
 			temp_edificio.carga_total++
 			temp_edificio.carga_id = out
+			if edificio_camino[index] and edificio_camino[temp_edificio.index]{
+				var temp_dir = temp_edificio.dir
+				if temp_dir != dir{
+					if (temp_dir = ((dir + 1) mod 6)) or (temp_dir = ((dir + 5) mod 6))
+						temp_edificio.proceso = edificio_proceso[temp_edificio.index] / 3
+					else if (temp_dir = ((dir + 2) mod 6)) or (temp_dir = ((dir + 4) mod 6))
+						temp_edificio.proceso = edificio_proceso[temp_edificio.index] / 2
+				}
+			}
 			if edificio.carga_total = 0
 				edificio.waiting = false
 			if edificio.receptor or edificio.index = id_tunel_salida

@@ -9,14 +9,8 @@ function redo_pathfind(){
 		ds_grid_clear(edificio_cercano, null_edificio)
 		ds_grid_clear(edificio_cercano_dis, infinity)
 		ds_grid_clear(edificio_cercano_dir, -1)
-		edificios_targeteables = array_create(0, null_edificio)
-		for(a = array_length(edificios) - 1; a >= 0; a--){
-			edificio = edificios[a]
-			if edificio.index = id_nucleo
-				array_push(edificios_targeteables, edificio)
-		}
-		for(a = array_length(edificios_targeteables) - 1; a >= 0; a--){
-			edificio = edificios_targeteables[a]
+		for(a = array_length(edificios_index[id_nucleo]) - 1; a >= 0; a--){
+			edificio = edificios_index[id_nucleo][a]
 			ds_grid_clear(edificio.coordenadas_dis, infinity)
 			edificio_pathfind(edificio)
 		}

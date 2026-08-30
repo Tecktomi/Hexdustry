@@ -22,30 +22,30 @@ function delete_edificio_flujo(edificio = control.null_edificio, flujo = control
 				}
 				array_resize((flujo = edificio.flujo) ? edificio.flujo_link : edificio.flujo_2_link, 0)
 				//Revisar nuevo estado de red
-				var flujo_almacen = 0, agregado = array_create(edificio_count, false), visited = array_create(edificio_count, false), nodo, isla, isla_almacen, pila, temp_flujo_link, temp_flujo_2
+				var flujo_almacen = 0, agregado = array_create(array_length(edificios_totales), false), visited = array_create(array_length(edificios_totales), false), nodo = null_edificio, isla, isla_almacen, pila, temp_flujo_link, temp_flujo_2
 				for(a = array_length(flujo.edificios) - 1; a >= 0; a--)
 					flujo_almacen += edificio_flujo_almacen[flujo.edificios[a].index]
 				while array_length(flujo.edificios) > 0{
 					nodo = flujo.edificios[array_length(flujo.edificios) - 1]
-					if not visited[nodo.edificio_index]{
+					if not visited[nodo.punteros[ptre_total]]{
 						isla = array_create(0)
 						isla_almacen = 0
 						pila = ds_stack_create()
 						ds_stack_push(pila, nodo)
-						agregado[nodo.edificio_index] = true
+						agregado[nodo.punteros[ptre_total]] = true
 						while not ds_stack_empty(pila){
 							nodo = ds_stack_pop(pila)
 							isla_almacen += edificio_flujo_almacen[nodo.index]
 							array_push(isla, nodo)
 							array_disorder_remove(flujo.edificios, nodo, (nodo.flujo = flujo) ? ptre_flujo_1 : ptre_flujo_2)
-							if not visited[nodo.edificio_index]{
-								visited[nodo.edificio_index] = true
+							if not visited[nodo.punteros[ptre_total]]{
+								visited[nodo.punteros[ptre_total]] = true
 								temp_flujo_link = (nodo.flujo = flujo) ? nodo.flujo_link : nodo.flujo_2_link
 								for(a = array_length(temp_flujo_link) - 1; a >= 0; a--){
 									temp_edificio = temp_flujo_link[a]
-									if not visited[temp_edificio.edificio_index] and not agregado[temp_edificio.edificio_index]{
+									if not visited[temp_edificio.punteros[ptre_total]] and not agregado[temp_edificio.punteros[ptre_total]]{
 										ds_stack_push(pila, temp_edificio)
-										agregado[temp_edificio.edificio_index] = true
+										agregado[temp_edificio.punteros[ptre_total]] = true
 									}
 								}
 							}

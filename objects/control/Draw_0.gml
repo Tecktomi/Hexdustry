@@ -341,7 +341,7 @@ if in(menu, 1, 3){
 				//Recursos sobre caminos
 				if tag_camino_o_tunel[index] and edificio.carga_total > 0{
 					var proceso = edificio_proceso[index]
-					var d = 1.2 * (max(edificio.proceso, edificio.waiting * proceso) - proceso / 2) * 20 / proceso
+					var d = 1.2 * (max(edificio.proceso, edificio.waiting * proceso) - proceso / 2) * 24 / proceso
 					draw_sprite_off(recurso_sprite[edificio.carga_id], 0, aa + d * edificio.array_real[0], bb + d * edificio.array_real[1])
 				}
 				//Munición armas
@@ -1163,7 +1163,7 @@ if keyboard_check(CONTROL_BLUEPRINT){
 		blueprint_safe = false
 		blueprint_mod2 = (blueprint_minb & 1)
 		blueprint = array_create(0, null_blueprint)
-		var temp_array_bool = array_create(array_length(edificios), true)
+		var temp_array_bool = array_create(array_length(edificios_totales), true)
 		var temp_blueprint_mina = infinity, temp_blueprint_maxa = 0, temp_blueprint_minb = infinity, temp_blueprint_maxb = 0
 		for(a = blueprint_mina; a <= blueprint_maxa; a++)
 			for(b = blueprint_minb; b <= blueprint_maxb; b++)

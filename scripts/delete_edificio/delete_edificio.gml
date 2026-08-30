@@ -17,7 +17,6 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		if index = id_nucleo and menu = 1 and not enemigo{
 			if nucleos[_jugador] = edificio
 				nucleos[_jugador] = null_edificio
-			array_remove(edificios_targeteables, edificio)
 			flag = true
 			for(a = array_length(edificios_index[id_nucleo]) - 1; a >= 0; a--){
 				temp_edificio = edificios_index[id_nucleo, a]
@@ -144,7 +143,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				ds_grid_set(repair_select, aa, bb, edificio.select)
 			}
 		}
-		if menu = 1 and index = id_nucleo and array_length(edificios_targeteables) > 0
+		if menu = 1 and index = id_nucleo and array_length(edificios_index[id_nucleo]) > 0
 			for(a = 0; a < xsize; a++)
 				for(b = 0; b < ysize; b++)
 					if terreno_caminable[terreno[# a, b]]{
@@ -219,29 +218,29 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 					if temp_edificio.index = id_bateria
 						red_bateria++
 				}
-				agregado = array_create(edificio_count, false)
-				visitado = array_create(edificio_count, false)
+				agregado = array_create(array_length(edificios_totales), false)
+				visitado = array_create(array_length(edificios_totales), false)
 				while array_length(temp_red.edificios) > 0{
 					nodo = temp_red.edificios[array_length(temp_red.edificios) - 1]
-					if not visitado[nodo.edificio_index]{
+					if not visitado[nodo.punteros[ptre_total]]{
 						isla = array_create(0)
 						isla_bateria = 0
 						pila = ds_stack_create()
 						ds_stack_push(pila, nodo)
-						agregado[nodo.edificio_index] = true
+						agregado[nodo.punteros[ptre_total]] = true
 						while not ds_stack_empty(pila){
 							nodo = ds_stack_pop(pila)
 							if nodo.index = id_bateria
 								isla_bateria++
 							array_push(isla, nodo)
 							array_disorder_remove(temp_red.edificios, nodo, ptre_red)
-							if not visitado[nodo.edificio_index]{
-								visitado[nodo.edificio_index] = true
+							if not visitado[nodo.punteros[ptre_total]]{
+								visitado[nodo.punteros[ptre_total]] = true
 								for(a = array_length(nodo.energia_link) - 1; a >= 0; a--){
 									temp_edificio = nodo.energia_link[a]
-									if not visitado[temp_edificio.edificio_index] and not agregado[temp_edificio.edificio_index]{
+									if not visitado[temp_edificio.punteros[ptre_total]] and not agregado[temp_edificio.punteros[ptre_total]]{
 										ds_stack_push(pila, temp_edificio)
-										agregado[temp_edificio.edificio_index] = true
+										agregado[temp_edificio.punteros[ptre_total]] = true
 									}
 								}
 							}
@@ -300,8 +299,8 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		if destruccion and index = id_planta_nuclear and edificio.fuel > 0{
 			var xpos = edificio.center_x, ypos = edificio.center_y
 			//Daño edificios
-			for(i = array_length(edificios) - 1; i >= 0; i--){
-				temp_edificio = edificios[i]
+			for(i = array_length(edificios_totales) - 1; i >= 0; i--){
+				temp_edificio = edificios_totales[i]
 				dis = distance_sqr(xpos, ypos, temp_edificio.center_x, temp_edificio.center_y)
 				if dis < PLANTA_NUCLEAR_RANGE_SQR
 					herir_edificio(9_000_000 / max(1, dis) * random_range(0.7, 1.3), temp_edificio)
