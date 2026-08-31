@@ -40,7 +40,7 @@ function step(){
 				energia_consumida_time = 0
 				array_push(energia_perdida, energia_perdida_time)
 				energia_perdida_time = 0
-				if auto_guardado and tutorial = 0 and os_browser = browser_not_a_browser and not mapa_editado{
+				if auto_guardado and os_browser = browser_not_a_browser and not mapa_editado{
 					if tutorial = 0{
 						buffer = buffer_create(1024, buffer_grow, 1)
 						save_game_buffer(buffer)

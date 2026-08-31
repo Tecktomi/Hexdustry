@@ -11,7 +11,7 @@ function handle_add_edificio(buffer){
 			liquido_choose_array = array_create(2, real(buffer_read(buffer, buffer_u8)))
 			liquido_choose = 0
 		}
-		if server{
+		if servidor{
 			construir(index, dir, a, b,, true, _cheat, _jugador)
 			server_add_edificio(index, dir, a, b, _cheat, _jugador)
 		}

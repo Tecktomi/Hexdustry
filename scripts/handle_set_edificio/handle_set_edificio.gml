@@ -5,7 +5,7 @@ function handle_set_edificio(buffer){
 		var select = real(buffer_read(buffer, buffer_s8))
 		var a = real(buffer_read(buffer, buffer_u16))
 		var b = real(buffer_read(buffer, buffer_u16))
-		if server{
+		if servidor{
 			set_edificio(mode, select, edificio_id[# a, b], false)
 			server_set_edificio(mode, select, edificio_id[# a, b])
 		}

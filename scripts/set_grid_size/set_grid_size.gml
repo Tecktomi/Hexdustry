@@ -84,7 +84,11 @@ function set_grid_size(){
 		ds_grid_clear(chunk_edificios_dirty, true)
 		for(a = 0; a < chunk_xsize; a++)
 			for(b = 0; b < chunk_ysize; b++){
+				if background[# a, b] != spr_hexagono
+					sprite_delete(background[# a, b])
 				ds_grid_set(background, a, b, spr_hexagono)
+				if chunk_edificios_background[# a, b] != spr_hexagono
+					sprite_delete(chunk_edificios_background[# a, b])
 				ds_grid_set(chunk_edificios_background, a, b, spr_hexagono)
 				ds_grid_set(chunk_dron, a, b, array_create(0, null_dron))
 				ds_grid_set(chunk_edificios, a, b, array_create(0, null_edificio))
