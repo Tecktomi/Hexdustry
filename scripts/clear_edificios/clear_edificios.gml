@@ -2,8 +2,12 @@ function clear_edificios(){
 	with control{
 		array_resize(edificios_activos, 0)
 		array_resize(edificios_pendientes, 0)
+		var a, b, edificio
+		for(a = array_length(edificios_totales) - 1; a >= 0; a--){
+			edificio = edificios_totales[a]
+			ds_grid_destroy(edificio.coordenadas_dis)
+		}
 		array_resize(edificios_totales, 0)
-		var a, b
 		for(a = 0; a < EQUIPOS; a++){
 			array_resize(puerto_carga_array[a], 0)
 			array_resize(edificios_jugador[a], 0)
@@ -16,6 +20,8 @@ function clear_edificios(){
 				array_resize(chunk_edificios_estatico[# a, b], 0)
 				array_resize(chunk_edificios_dinamico[# a, b], 0)
 				array_resize(chunk_edificios_draw[# a, b], 0)
+				if chunk_edificios_background[# a, b] != spr_hexagono
+					sprite_delete(chunk_edificios_background[# a, b])
 			}
 		array_resize(edificios, 0)
 		array_resize(edificios_salida_drones, 0)

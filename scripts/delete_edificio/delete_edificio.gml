@@ -365,6 +365,8 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			show_menu = false
 			show_menu_build = null_edificio
 		}
+		if index = id_pantalla and edificio.imagen != spr_hexagono
+			sprite_delete(edificio.imagen)
 		delete(edificio)
 	}
 }

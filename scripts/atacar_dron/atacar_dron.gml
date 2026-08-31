@@ -115,6 +115,7 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 					var dis = distance(a, b, target_x, target_y)
 					var municion = add_municion(a, b, vel * (target_x - a) / dis, vel * (target_y - b) / dis, municion_tipo_normal, dis / vel, 20,, target, edificio, dron.enemigo,,, _jugador)
 					array_push(municiones, municion)
+					sound_play(snd_disparo, a, b, 0.1)
 				}
 			}
 			return false

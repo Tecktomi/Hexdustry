@@ -7,6 +7,8 @@ function resize_grid(minx = 0, miny = 0){
 		var a, aplus, b, temp_complex_2, temp_priority
 		for(a = floor(minx / CHUNK_WIDTH); a < chunk_xsize; a++)
 			for(b = floor(miny / CHUNK_HEIGHT); b < chunk_ysize; b++){
+				if background[# a, b] != spr_hexagono
+					sprite_delete(background[# a, b])
 				ds_grid_set(background, a, b, spr_hexagono)
 				ds_grid_set(background_bool, a, b, false)
 				update_background(a * CHUNK_WIDTH, b * CHUNK_HEIGHT)

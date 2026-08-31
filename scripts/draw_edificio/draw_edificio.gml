@@ -24,9 +24,9 @@ function draw_edificio(x, y, index, dir, alpha = 1, _jugador = jugador){
 				else if dir = 3
 					draw_sprite_off(edificio_sprite[index], 0, x, y, -1,,,, alpha)
 				else if dir = 4
-					draw_sprite_off(edificio_sprite_2[index], 0, x, y + TILE_WIDTH,, -1,,, alpha)
+					draw_sprite_off(edificio_sprite_2[index], 0, x, y + TILE_HEIGHT,, -1,,, alpha)
 				else if dir = 5
-					draw_sprite_off(edificio_sprite_2[index], 0, x, y + TILE_WIDTH, -1, -1,,, alpha)
+					draw_sprite_off(edificio_sprite_2[index], 0, x, y + TILE_HEIGHT, -1, -1,,, alpha)
 			}
 			else
 				draw_sprite_off(edificio_sprite[index], 0, x, y, -1 + 2 * (dir = 0),,,, alpha)

@@ -4,7 +4,7 @@ function handle_delete_edificio(buffer){
 		var a = real(buffer_read(buffer, buffer_u16))
 		var b = real(buffer_read(buffer, buffer_u16))
 		var _cheat = bool(buffer_read(buffer, buffer_bool))
-		if server{
+		if servidor{
 			if edificio_bool[# a, b]{
 				delete_edificio(edificio_id[# a, b], false, true, _cheat)
 				server_delete_edificio(a, b, _cheat)

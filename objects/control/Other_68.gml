@@ -58,7 +58,7 @@ if type = network_type_data{
 	else if msg = net_investigar
 		handle_investigar(buffer)
 	else if msg = net_jugador_unido
-		handle_nuevo_jugador(buffer)
+		handle_jugador_nuevo(buffer)
 	else if msg = net_jugador_ido
 		handle_jugador_ido(buffer)
 	else if msg = net_jugador_eliminado

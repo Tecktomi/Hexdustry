@@ -107,6 +107,7 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 					for(b = 0; b < ysize; b++)
 						if random1[# a, b] < dat3 and terreno[# a, b] = dat2
 							terreno[# a, b] = dat1
+				ds_grid_destroy(random1)
 			}
 			//SCCR
 			else if tipo = 5
@@ -120,6 +121,7 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 					for(b = 0; b < ysize; b++)
 						if random1[# a, b] < dat3 and terreno[# a, b] = dat2
 							terreno[# a, b] = dat1
+				ds_grid_destroy(random1)
 			}
 			//Automata
 			else if tipo = 7{

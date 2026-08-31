@@ -3,7 +3,7 @@ function scr_draw_default(edificio = control.null_edificio, offset_x = 0, offset
 		var index = edificio.index, dir = edificio.dir, aa = edificio.x + offset_x, bb = edificio.y + offset_y
 		//Dibujo predeterminado tamaño par
 		if edificio_size[index] mod 2 = 0
-			draw_edificio(aa, bb, index, dir, edificio.jugador)
+			draw_edificio(aa, bb, index, dir,,  edificio.jugador)
 		//Dibujo predeterminado tamaño 2.5
 		else if edificio_size[index] = 2.5{
 			var sprite = edificio_sprite[index]

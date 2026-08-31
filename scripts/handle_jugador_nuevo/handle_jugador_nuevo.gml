@@ -1,4 +1,4 @@
-function handle_nuevo_jugador(buffer){
+function handle_jugador_nuevo(buffer){
 	with control{
 		var player_name = string(buffer_read(buffer, buffer_string))
 		var slot = real(buffer_read(buffer, buffer_u8))
