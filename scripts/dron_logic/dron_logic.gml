@@ -13,8 +13,8 @@ function dron_logic(){
 			dron_x = dron.x
 			dron_y = dron.y
 			temp_complex = xytoab(dron_x, dron_y)
-			dron_a = temp_complex[0]
-			dron_b = temp_complex[1]
+			dron_a = clamp(temp_complex[0], 0, xsize - 1)
+			dron_b = clamp(temp_complex[1], 0, ysize - 1)
 			index = dron.index
 			vel = dron_vel[index]
 			enemigo = dron.enemigo
@@ -286,7 +286,8 @@ function dron_logic(){
 				edificio = dron.target
 				dir = -1
 				ataque = false
-				if index != idd_bombardero and (aereo or point_distance(dron_x, dron_y, edificio.center_x, edificio.center_y) < dron_alcance[index])
+				dis = point_distance(dron_x, dron_y, edificio.center_x, edificio.center_y)
+				if index != idd_bombardero and (aereo or dis < dron_alcance[index])
 					dron.dir += 0.1 * angle_difference(point_direction(dron_x, dron_y, edificio.center_x, edificio.center_y), dron.dir)
 				//Seguir instrucciones
 				if dron.modo >= 1{
@@ -374,8 +375,8 @@ function dron_logic(){
 								dron.step = 0
 						}
 						else if index = idd_kamikaze or dis > 100{
-							dron.x += vel * (edificio.center_x - dron.x) / dis_2
-							dron.y += vel * (edificio.center_y - dron.y) / dis_2
+							dron.x += vel * (edificio.center_x - dron.x) / dis
+							dron.y += vel * (edificio.center_y - dron.y) / dis
 						}
 					}
 					else if tag_dron_marino[index] and dis > dron_alcance[index] * 0.9{
@@ -434,7 +435,8 @@ function dron_logic(){
 						}
 					}
 					else if dron.target_dron.vida > 0{
-						if point_distance(dron_x, dron_y, dron.target_dron.x, dron.target_dron.y) < dron_alcance[index]{
+						dis = point_distance(dron_x, dron_y, dron.target_dron.x, dron.target_dron.y)
+						if dis < dron_alcance[index]{
 							ataque = true
 							if atacar_dron(dron,, dron.target_dron)
 								continue
@@ -473,9 +475,10 @@ function dron_logic(){
 						if edificio.vida <= 0
 							dron.temp_target = null_edificio
 						else{
+							dis = point_distance(dron_x, dron_y, edificio.center_x, edificio.center_y)
 							if index != idd_bombardero
 								dron.dir += 0.05 * angle_difference(point_direction(dron_x, dron_y, edificio.center_x, edificio.center_y), dron.dir)
-							if point_distance(dron_x, dron_y, edificio.center_x, edificio.center_y) > dron_alcance[index]
+							if dis > dron_alcance[index]
 								dron.temp_target = null_edificio
 							else{
 								ataque = true
