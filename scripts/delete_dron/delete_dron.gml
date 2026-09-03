@@ -29,7 +29,7 @@ function delete_dron(dron = control.null_dron){
 				if edificio.target = dron{
 					edificio.target = null_dron
 					if edificio.index = id_mortero
-						turret_target(edificio, 10_000)//100^2
+						turret_target(edificio, MORTERO_MIN_RANGE)
 					else
 						turret_target(edificio)
 				}
@@ -49,7 +49,7 @@ function delete_dron(dron = control.null_dron){
 		//Ser reciclado
 		for(a = array_length(edificios_index[id_planta_de_reciclaje]) - 1; a >= 0; a--){
 			edificio = edificios_index[id_planta_de_reciclaje][a]
-			if edificio.select = -1 and edificio.jugador = _jugador and distance_sqr(dron.x, dron.y, edificio.center_x, edificio.center_y) < PLANTA_RECICLAJE_RANGE_SQR{
+			if edificio.select = -1 and edificio.jugador = _jugador and point_distance(dron.x, dron.y, edificio.center_x, edificio.center_y) < PLANTA_RECICLAJE_RANGE{
 				edificio.mode = false
 				edificio.select = dron.index
 				break

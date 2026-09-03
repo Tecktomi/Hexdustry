@@ -18,7 +18,7 @@ function scr_laser(edificio = control.null_edificio){
 			target_x = enemigo_edificio.center_x
 			target_y = enemigo_edificio.center_y
 		}
-		if (enemigo != null_dron or enemigo_edificio != null_edificio) and distance_sqr(edificio.center_x, edificio.center_y, target_x, target_y) < edificio_alcance_sqr[edificio.index]{
+		if (enemigo != null_dron or enemigo_edificio != null_edificio) and point_distance(edificio.center_x, edificio.center_y, target_x, target_y) < edificio_alcance[edificio.index]{
 			edificio.select = radtodeg(-arctan2(edificio.center_x - target_x, target_y - edificio.center_y)) - 90
 			change_energia(edificio_energia_consumo[index], edificio)
 			edificio_encender(edificio,,, false)

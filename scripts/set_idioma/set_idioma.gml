@@ -55,7 +55,7 @@ function set_idioma(){
 				dron_descripcion[idd_barco] = "Fires artillery and can only move on water"
 				dron_descripcion[idd_bombardero] = "Flies over its enemies, dropping devastating explosives in a straight line"
 				dron_descripcion[idd_destructor] = "Basically a heavy artillery battery that attacks from the sea"
-				dron_descripcion[idd_helicoptero] = "Advanced aerial unit, attacks from a distance"
+				dron_descripcion[idd_helicoptero] = "Advanced aerial unit, attacks from a point_distance"
 				dron_descripcion[idd_kamikaze] = "Approaches its target and explodes, dealing damage"
 				dron_descripcion[idd_minero] = "Mines resources on the map and delivers them to a nearby Storage"
 				dron_descripcion[idd_mula] = "Transports resources between Cargo Ports"

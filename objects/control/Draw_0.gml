@@ -1813,14 +1813,14 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		temp_array_dron = ds_grid_get(chunk_dron, aa, bb)
 		for(a = 0; a < array_length(temp_array_dron); a++){
 			dron = temp_array_dron[a]
-			dis = distance_sqr(dron.x, dron.y, xmouse, ymouse)
+			dis = point_distance(dron.x, dron.y, xmouse, ymouse)
 			if dis < min_dis{
 				min_dis = dis
 				min_dron = dron
 			}
 		}
 	}
-	if min_dis < 900{
+	if min_dis < 30{
 		dron = min_dron
 		draw_set_color(c_white)
 		draw_circle_off(dron.x, dron.y, 20, true)
@@ -1919,7 +1919,7 @@ if sonido
 		menu_y = room_height / 2
 		android_building = false
 	}
-	var just_pressed = false, _size = DEVISE ? 100 : 200, _size_sqr = DEVISE ? 10_000 : 40_000, _size_sqrx = DEVISE ? 32 : 64, _size_sqry = DEVISE ? TILE_WIDTH : 56
+	var just_pressed = false, _size = DEVISE ? 100 : 200, _size_sqr = DEVISE ? 100 : 200, _size_sqrx = DEVISE ? 32 : 64, _size_sqry = DEVISE ? TILE_WIDTH : 56
 	if DEVISE and mouse_check_button_pressed(mb_right) and build_index = 0 and not edificio_bool[# mx, my] and not keyboard_check(CONTROL_REPARAR) and pausa != 1{
 		mouse_clear(mb_right)
 		if build_menu = 0{
@@ -1961,7 +1961,7 @@ if sonido
 			draw_sprite_stretched(spr_items, categoria_index_disponible[a], menu_x - 15 + _size * cos(angle + b / 2), menu_y - 15 - _size * sin(angle + b / 2), _size_sqrx, _size_sqry)
 			draw_line(menu_x, menu_y, menu_x + _size * cos(angle), menu_y - _size * sin(angle))
 		}
-		if distance_sqr(mouse_x, mouse_y, menu_x, menu_y) < _size_sqr{//100^2
+		if point_distance(mouse_x, mouse_y, menu_x, menu_y) < _size_sqr{
 			temp_text = ""
 			a = floor((array_length(categoria_nombre_disponible) - arctan2(mouse_y - menu_y, mouse_x - menu_x) / b) mod array_length(categoria_nombre_disponible))
 			draw_set_alpha(0.5)
@@ -2007,7 +2007,7 @@ if sonido
 			draw_sprite_stretched(edificio_sprite[index], 0, menu_x - 15 + _size * cos(angle + b / 2), menu_y - 15 - _size * sin(angle + b / 2), _size_sqrx, _size_sqry)
 		}
 		draw_circle(menu_x, menu_y, 10, false)
-		if distance_sqr(mouse_x, mouse_y, menu_x, menu_y) < _size_sqr{//100^2
+		if point_distance(mouse_x, mouse_y, menu_x, menu_y) < _size_sqr{
 			a = floor((array_length(menu_array) - arctan2(mouse_y - menu_y, mouse_x - menu_x) / b) mod array_length(menu_array))
 			draw_set_alpha(0.5)
 			draw_arco(menu_x, menu_y, _size, a * b, (a + 1) * b)
@@ -2284,7 +2284,7 @@ if build_index > 0 and win = 0{
 					var enemigo = drones[a]
 					if enemigo.jugador != jugador{
 						draw_circle_off(enemigo.x, enemigo.y, ENEMIGO_CERCA, true)
-						if not flag_3 and distance_sqr(mouse_x, mouse_y, enemigo.x * zoom - camx, enemigo.y * zoom - camy) < ENEMIGO_CERCA_SQR * sqr(zoom){
+						if not flag_3 and point_distance(mouse_x, mouse_y, enemigo.x * zoom - camx, enemigo.y * zoom - camy) < ENEMIGO_CERCA * zoom{
 							temp_text += $"{L.construir_enemigos_cerca}\n"
 							_comprable = false
 							flag_3 = true
@@ -2301,7 +2301,7 @@ if build_index > 0 and win = 0{
 			if _change{
 				comprable_texto = ""
 				//Detectar zona de spawn
-				if distance_sqr(mouse_x, mouse_y, aaa * zoom - camx, bbb * zoom - camy) < 62_500 * sqr(zoom){
+				if point_distance(mouse_x, mouse_y, aaa * zoom - camx, bbb * zoom - camy) < ENEMIGO_CERCA * zoom{
 					comprable_texto += $"{L.construir_zona_enemigos}\n"
 					comprable = false
 				}
@@ -2733,7 +2733,7 @@ if build_index > 0 and win = 0{
 					else{
 						//Confirmar
 						if clicked{
-							if mouse_check_button_released(mb_left) and distance(mouse_x, mouse_y, android_mouse_x, android_mouse_y) < 10{
+							if mouse_check_button_released(mb_left) and point_distance(mouse_x, mouse_y, android_mouse_x, android_mouse_y) < 10{
 								for(i = array_length(pre_build_list) - 1; i >= 0; i--){
 									var temp_complex2 = pre_build_list[i]
 									if mx = temp_complex2[0] and my = temp_complex2[1]{
@@ -2768,7 +2768,7 @@ if build_index > 0 and win = 0{
 							draw_edificio(temp_complex3[0], temp_complex3[1], build_index, build_dir, 0.5)
 						}
 						//Iniciar
-						else if mouse_check_button_released(mb_left) and android_clic and distance(mouse_x, mouse_y, android_mouse_x, android_mouse_y) < 10{
+						else if mouse_check_button_released(mb_left) and android_clic and point_distance(mouse_x, mouse_y, android_mouse_x, android_mouse_y) < 10{
 							mx_clic = mx
 							my_clic = my
 							clicked = true
@@ -2819,7 +2819,7 @@ if build_index > 0 and win = 0{
 							continue
 						if (aaaa != temp_mx or bbbb != temp_my) and edificio_bool[# aaaa, bbbb]{
 							var temp_edificio = edificio_id[# aaaa, bbbb]
-							if temp_edificio.enemigo = build_enemigo and edificio_energia[temp_edificio.index] and distance_sqr(aa, bb, temp_edificio.center_x, temp_edificio.center_y) <= CABLE_RANGE_SQR
+							if temp_edificio.enemigo = build_enemigo and edificio_energia[temp_edificio.index] and point_distance(aa, bb, temp_edificio.center_x, temp_edificio.center_y) <= CABLE_RANGE
 								draw_line_off(aa, bb, temp_edificio.center_x, temp_edificio.center_y)
 						}
 					}
@@ -2931,7 +2931,7 @@ if build_index > 0 and win = 0{
 							draw_circle_off(temp_complex[0], temp_complex[1], TORRE_TENSION_RANGE, true)
 							for(c = array_length(edificios_index[id_torre_de_alta_tension]) - 1; c >= 0; c--){
 								var temp_edificio = edificios_index[id_torre_de_alta_tension][c]
-								if temp_edificio.jugador = jugador and distance_sqr(temp_edificio.center_x, temp_edificio.center_y, temp_complex[0], temp_complex[1]) < TORRE_TENSION_RANGE_SQR{
+								if temp_edificio.jugador = jugador and point_distance(temp_edificio.center_x, temp_edificio.center_y, temp_complex[0], temp_complex[1]) < TORRE_TENSION_RANGE{
 									draw_line_off(temp_edificio.center_x, temp_edificio.center_y, temp_complex[0],temp_complex[1])
 									draw_edificio_borde(temp_edificio, c_blue, _parpadeo)
 								}
@@ -2954,7 +2954,7 @@ if build_index > 0 and win = 0{
 										temp_array_edificio = ds_grid_get(chunk_edificios, i, j)
 										for(k = array_length(temp_array_edificio) - 1; k >= 0; k--){
 											temp_edificio = temp_array_edificio[k]
-											if temp_edificio.jugador = jugador and distance_sqr(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y) < edificio_alcance_sqr[build_index]
+											if temp_edificio.jugador = jugador and point_distance(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y) < edificio_alcance[build_index]
 												array_push(build_array_edificios, temp_edificio)
 										}
 									}
@@ -3035,7 +3035,7 @@ if build_index > 0 and win = 0{
 											temp_array_edificio = ds_grid_get(chunk_edificios, i, j)
 											for(k = array_length(temp_array_edificio) - 1; k >= 0; k--){
 												temp_edificio = temp_array_edificio[k]
-												if temp_edificio.jugador = jugador and distance_sqr(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y) < PLANTA_RECICLAJE_RANGE_SQR
+												if temp_edificio.jugador = jugador and point_distance(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y) < PLANTA_RECICLAJE_RANGE
 													array_push(build_array_edificios, temp_edificio)
 											}
 										}
@@ -3109,7 +3109,7 @@ if build_index > 0 and win = 0{
 						}
 					}
 					//Construir
-					if ((DEVISE and mouse_check_button_pressed(mb_left)) or (not DEVISE and mouse_check_button_released(mb_left) and android_building and construible and distance(mouse_x, mouse_y, android_mouse_x, android_mouse_y) < 10)) and flag_camino and _comprable and (not edificio_bool[# temp_mx, temp_my] or (build_index = id_cruce and edificio_camino[edificio_id[# temp_mx, temp_my].index])){
+					if ((DEVISE and mouse_check_button_pressed(mb_left)) or (not DEVISE and mouse_check_button_released(mb_left) and android_building and construible and point_distance(mouse_x, mouse_y, android_mouse_x, android_mouse_y) < 10)) and flag_camino and _comprable and (not edificio_bool[# temp_mx, temp_my] or (build_index = id_cruce and edificio_camino[edificio_id[# temp_mx, temp_my].index])){
 						android_building = false
 						var temp_edificio = construir(build_index, build_dir, temp_mx, temp_my, build_enemigo)
 						if temp_edificio != null_edificio and tag_dron_encima[temp_edificio.index]{

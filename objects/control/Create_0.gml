@@ -6,17 +6,12 @@ var a, b, c, flag
 	#macro TILE_WIDTH 32
 	#macro TILE_HEIGHT 28
 	#macro CABLE_RANGE 90
-	#macro CABLE_RANGE_SQR 8_100
 	#macro TORRE_TENSION_RANGE 1_000
-	#macro TORRE_TENSION_RANGE_SQR 1_000_000
 	#macro PLANTA_NUCLEAR_RANGE 400
-	#macro PLANTA_NUCLEAR_RANGE_SQR 160_000
 	#macro PLANTA_RECICLAJE_RANGE 250
-	#macro PLANTA_RECICLAJE_RANGE_SQR 62_500
 	#macro ENEMIGO_CERCA 100
-	#macro ENEMIGO_CERCA_SQR 10_000
 	#macro HEX_FAST_THRESHOLD 64
-	#macro MORTERO_MIN_RANGE_SQR 10_000
+	#macro MORTERO_MIN_RANGE 100
 	SIZE_SIZE = [1, 3, 7, 12, 19, 27, 37]
 	SIZE_BORDE = [6, 9, 12, 15, 18, 21]
 	DESFACE = [[[0, -1], [0, -2], [-1, -1], [-1, 1], [0, 2], [0, 1]], [[1, -1], [0, -2], [0, -1], [0, 1], [0, 2], [1, 1]]]
@@ -1000,9 +995,8 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 	array_push(dron_vida_max, vida)
 	array_push(dron_size, size)
 	array_push(dron_alcance, alcance)
-	var alcance_sqrt = sqrt(alcance)
-	array_push(dron_alcance_chunk_x, ceil(alcance_sqrt / CHUNK_WIDTH / 48))
-	array_push(dron_alcance_chunk_y, ceil(alcance_sqrt / CHUNK_HEIGHT / 14))
+	array_push(dron_alcance_chunk_x, ceil(alcance / CHUNK_WIDTH / 48))
+	array_push(dron_alcance_chunk_y, ceil(alcance / CHUNK_HEIGHT / 14))
 	array_push(dron_precio_id, precio_id)
 	array_push(dron_precio_num, precio_num)
 	array_push(dron_aereo, aereo)
@@ -1012,18 +1006,18 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 	return array_length(dron_nombre) - 1
 }
 #region Definicion
-	idd_arana = def_dron("Araña", spr_arana,, 100, 400, 10_000, [idr_bronce, idr_bateria, idr_electronicos], [6, 1, 3], 600,, 1, 12)
-	idd_mula = def_dron("Mula", spr_dron,, 40, 400, 100, [idr_bronce, idr_hierro, idr_electronicos], [10, 20, 3], 900, true, 2)
-	idd_reparador = def_dron("Reparador", spr_reparador,, 120, 900, 3600, [idr_silicio, idr_bateria, idr_electronicos], [10, 5, 5], 1200, true, 2)
-	idd_kamikaze = def_dron("Kamikaze", spr_dron_explosivo,, 50, 400, 400, [idr_hierro, idr_explosivo, idr_electronicos], [15, 2, 2], 450, true, 2.5)
-	idd_tanque = def_dron("Tanque", spr_tanque, spr_tanque_2, 1500, 1600, 90_000, [idr_hierro, idr_acero, idr_electronicos], [60, 25, 10], 1800,, 0.8, 150)
-	idd_helicoptero = def_dron("Helicóptero", spr_helicoptero, spr_helicoptero_2, 400, 900, 40_000, [idr_acero, idr_electronicos, idr_plastico], [15, 15, 40], 1800, true, 2, 110)
-	idd_titan = def_dron("Titán", spr_titan, spr_titan_leg, 1500, 2500, 160_000, [idr_bronce, idr_acero, idr_uranio_bruto, idr_modulos], [30, 40, 75, 5], 3000,, 1.1, 75)
-	idd_bombardero = def_dron("Bombardero", spr_bombardero,, 800, 900, 1_600, [idr_bronce, idr_acero, idr_uranio_bruto, idr_modulos], [30, 40, 50, 5], 6000, true, 3, 80)
-	idd_reconstructor = def_dron("Reconstructor", spr_reconstructor,, 100, 1_600, 1_600, [idr_plastico, idr_bateria, idr_modulos], [30, 20, 1], 100, true, 2)
-	idd_minero = def_dron("Minero", spr_tanque, spr_minero, 200, 1600, 90_000, [idr_hierro, idr_acero, idr_electronicos, idr_modulos], [50, 25, 10, 1], 1200,, 0.7, 60)
-	idd_barco = def_dron("Barco", spr_barco,, 300, 900, 160_000, [idr_acero, idr_silicio, idr_electronicos], [40, 60, 20], 800,, 1.8, 15)
-	idd_destructor = def_dron("Destructuor", spr_destructor,, 1200, 1_600, 202_500, [idr_acero, idr_silicio, idr_electronicos, idr_uranio_bruto], [150, 100, 50, 50], 1600,, 1.2, 200)
+	idd_arana = def_dron("Araña", spr_arana,, 100, 20, 100, [idr_bronce, idr_bateria, idr_electronicos], [6, 1, 3], 600,, 1, 12)
+	idd_mula = def_dron("Mula", spr_dron,, 40, 20, 10, [idr_bronce, idr_hierro, idr_electronicos], [10, 20, 3], 900, true, 2)
+	idd_reparador = def_dron("Reparador", spr_reparador,, 120, 30, 50, [idr_silicio, idr_bateria, idr_electronicos], [10, 5, 5], 1200, true, 2)
+	idd_kamikaze = def_dron("Kamikaze", spr_dron_explosivo,, 50, 20, 10, [idr_hierro, idr_explosivo, idr_electronicos], [15, 2, 2], 450, true, 2.5)
+	idd_tanque = def_dron("Tanque", spr_tanque, spr_tanque_2, 1500, 50, 250, [idr_hierro, idr_acero, idr_electronicos], [60, 25, 10], 1800,, 0.8, 150)
+	idd_helicoptero = def_dron("Helicóptero", spr_helicoptero, spr_helicoptero_2, 400, 50, 250, [idr_acero, idr_electronicos, idr_plastico], [15, 15, 40], 1800, true, 2, 110)
+	idd_titan = def_dron("Titán", spr_titan, spr_titan_leg, 1500, 80, 400, [idr_bronce, idr_acero, idr_uranio_bruto, idr_modulos], [30, 40, 75, 5], 3000,, 1.1, 75)
+	idd_bombardero = def_dron("Bombardero", spr_bombardero,, 800, 50, 40, [idr_bronce, idr_acero, idr_uranio_bruto, idr_modulos], [30, 40, 50, 5], 6000, true, 3, 80)
+	idd_reconstructor = def_dron("Reconstructor", spr_reconstructor,, 100, 30, 40, [idr_plastico, idr_bateria, idr_modulos], [30, 20, 1], 100, true, 2)
+	idd_minero = def_dron("Minero", spr_tanque, spr_minero, 200, 50, 250, [idr_hierro, idr_acero, idr_electronicos, idr_modulos], [50, 25, 10, 1], 1200,, 0.7, 60)
+	idd_barco = def_dron("Barco", spr_barco,, 300, 30, 400, [idr_acero, idr_silicio, idr_electronicos], [40, 60, 20], 800,, 1.8, 15)
+	idd_destructor = def_dron("Destructuor", spr_destructor,, 1200, 50, 450, [idr_acero, idr_silicio, idr_electronicos, idr_uranio_bruto], [150, 100, 50, 50], 1600,, 1.2, 200)
 #endregion
 dron_max = array_length(dron_nombre)
 //Liquidos
@@ -1154,7 +1148,6 @@ dron_max = array_length(dron_nombre)
 	edificio_alcance = array_create(0, 0)
 	edificio_alcance_chunk_x = array_create(0, 0)
 	edificio_alcance_chunk_y = array_create(0, 0)
-	edificio_alcance_sqr = array_create(0, 0)
 	edificio_armas = array_create(0, false)
 	edificio_inerte = array_create(0, false)
 	edificio_index = ds_map_create()
@@ -1208,7 +1201,6 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 	array_push(edificio_alcance, alcance)
 	array_push(edificio_alcance_chunk_x, ceil(alcance / CHUNK_WIDTH / 48))
 	array_push(edificio_alcance_chunk_y, ceil(alcance / CHUNK_HEIGHT / 14))
-	array_push(edificio_alcance_sqr, sqr(alcance))
 	array_push(edificio_armas, bool(alcance > 0))
 	array_push(edificio_inerte, inerte)
 	array_push(edificio_prioridad, prioridad)
