@@ -17,7 +17,7 @@ function check_reconstruible(index = 0, _dibujo = true, _jugador = jugador){
 				continue
 			if _dibujo
 				draw_circle_off(enemigo.x, enemigo.y, 100, true)
-			if not flag_3 and distance_sqr(mouse_x, mouse_y, enemigo.x * zoom - camx, enemigo.y * zoom - camy) < ENEMIGO_CERCA_SQR * sqr(zoom){
+			if not flag_3 and point_distance(mouse_x, mouse_y, enemigo.x * zoom - camx, enemigo.y * zoom - camy) < ENEMIGO_CERCA * zoom{
 				if _dibujo
 					temp_text += $"{L.construir_enemigos_cerca}\n"
 				_comprable = false

@@ -43,7 +43,7 @@ function construir(index, dir, mx, my, enemigo = false, _server = false, _cheat 
 		if flag and not _cheat and not enemigo{
 			for(a = array_length(drones) - 1; a >= 0; a--){
 				dron = drones[a]
-				if dron.jugador != _jugador and distance_sqr(dron.x, dron.y, temp_complex[0], temp_complex[1]) < 10_000{//100^2
+				if dron.jugador != _jugador and point_distance(dron.x, dron.y, temp_complex[0], temp_complex[1]) < ENEMIGO_CERCA{
 					flag = false
 					break
 				}

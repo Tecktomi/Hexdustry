@@ -3,7 +3,7 @@ function far_from_nucleus(a, b){
 	with control{
 		for(i = array_length(edificios_index[id_nucleo]) - 1; i >= 0; i--){
 			edificio = edificios_index[id_nucleo, i]
-			if distance_sqr(aa, bb, edificio.center_x, edificio.center_y) < 640_000
+			if point_distance(aa, bb, edificio.center_x, edificio.center_y) < 800
 				return false
 		}
 		return true

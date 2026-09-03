@@ -32,14 +32,14 @@ function mover_dron(dron = control.null_dron, x, y, _server = false){
 				dron.target = edificio_id[# aa, bb]
 			}
 			else{
-				var dis = distance(dron.x, dron.y, x, y)
+				var dis = point_distance(dron.x, dron.y, x, y)
 				dron.move_xmove = (x - dron.x) / dis
 				dron.move_ymove = (y - dron.y) / dis
 				dron.move_dis = dis / dron_vel[index]
 			}
 		}
 		else{
-			var dis = distance(dron.x, dron.y, x, y)
+			var dis = point_distance(dron.x, dron.y, x, y)
 			dron.move_xmove = (x - dron.x) / dis
 			dron.move_ymove = (y - dron.y) / dis
 			dron.move_dis = dis / dron_vel[index]

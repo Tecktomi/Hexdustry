@@ -113,7 +113,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		if edificio_size[index] <= 3 and tag_edificio_construible[index]{
 			for(a = array_length(edificios_index[id_planta_de_reciclaje]) - 1; a >= 0; a--){
 				temp_edificio = edificios_index[id_planta_de_reciclaje][a]
-				if temp_edificio.select = -1 and temp_edificio.jugador = _jugador and distance_sqr(edificio.center_x, edificio.center_y, temp_edificio.center_x, temp_edificio.center_y) < PLANTA_RECICLAJE_RANGE_SQR{
+				if temp_edificio.select = -1 and temp_edificio.jugador = _jugador and point_distance(edificio.center_x, edificio.center_y, temp_edificio.center_x, temp_edificio.center_y) < PLANTA_RECICLAJE_RANGE{
 					temp_edificio.mode = true
 					temp_edificio.select = index
 					break
@@ -302,16 +302,16 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			//Daño edificios
 			for(i = array_length(edificios_totales) - 1; i >= 0; i--){
 				temp_edificio = edificios_totales[i]
-				dis = distance_sqr(xpos, ypos, temp_edificio.center_x, temp_edificio.center_y)
-				if dis < PLANTA_NUCLEAR_RANGE_SQR
-					herir_edificio(9_000_000 / max(1, dis) * random_range(0.7, 1.3), temp_edificio)
+				dis = point_distance(xpos, ypos, temp_edificio.center_x, temp_edificio.center_y)
+				if dis < PLANTA_NUCLEAR_RANGE
+					herir_edificio(3000 / max(1, dis) * random_range(0.7, 1.3), temp_edificio)
 			}
 			//Daño drones
 			for(i = array_length(drones) - 1; i >= 0; i--){
 				dron = drones[i]
-				dis = distance_sqr(xpos, ypos, dron.x, dron.y)
-				if dis < PLANTA_NUCLEAR_RANGE_SQR
-					herir_dron(1_000_000 / max(1, dis) * random_range(0.7, 1.3), dron)
+				dis = point_distance(xpos, ypos, dron.x, dron.y)
+				if dis < PLANTA_NUCLEAR_RANGE
+					herir_dron(1000 / max(1, dis) * random_range(0.7, 1.3), dron)
 			}
 			nuclear_x = xpos
 			nuclear_y = ypos
@@ -324,7 +324,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				y : edificio.y,
 				edificio : null_edificio,
 				enemigo : not enemigo,
-				radio : 4900,
+				radio : 70,
 				dmg : 200 + 30 * edificio.carga[idr_explosivo],
 				incendiario : false,
 				jugador : -1})
@@ -347,7 +347,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			if temp_edificio.target_edificio = edificio{
 				temp_edificio.target_edificio = null_edificio
 				if temp_edificio.index = id_mortero
-					turret_target(temp_edificio, 10_000)//100^2
+					turret_target(temp_edificio, MORTERO_MIN_RANGE)
 				else
 					turret_target(temp_edificio)
 			}

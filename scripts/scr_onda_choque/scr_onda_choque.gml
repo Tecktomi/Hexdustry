@@ -10,7 +10,7 @@ function scr_onda_choque(edificio = control.null_edificio){
 			var dis, center_x, center_y, a, temp_complex, temp_array_dron, b, dron, temp_dis, _jugador = edificio.jugador
 			edificio_encender(edificio, false,, false)
 			if edificio.select = 0{
-				dis = edificio_alcance_sqr[index]
+				dis = edificio_alcance[index]
 				center_x = edificio.center_x
 				center_y = edificio.center_y
 				for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
@@ -18,12 +18,9 @@ function scr_onda_choque(edificio = control.null_edificio){
 					temp_array_dron = ds_grid_get(chunk_dron, temp_complex[0], temp_complex[1])
 					for(b = array_length(temp_array_dron) - 1; b >= 0; b--){
 						dron = temp_array_dron[b]
-						if dron.jugador != _jugador{
-							temp_dis = distance_sqr(center_x, center_y, dron.x, dron.y)
-							if temp_dis < dis{
-								edificio.select = 20
-								break
-							}
+						if dron.jugador != _jugador and point_distance(center_x, center_y, dron.x, dron.y) < dis{
+							edificio.select = 20
+							break
 						}
 					}
 					if edificio.select > 0
@@ -32,7 +29,7 @@ function scr_onda_choque(edificio = control.null_edificio){
 			}
 			else if --edificio.select <= 0{
 				edificio.select = 0
-				dis = edificio_alcance_sqr[index] + 10
+				dis = edificio_alcance[index] + 10
 				var stun = 30 + 10 * edificio.modulo, total_dmg = 0
 				center_x = edificio.center_x
 				center_y = edificio.center_y
@@ -41,12 +38,9 @@ function scr_onda_choque(edificio = control.null_edificio){
 					temp_array_dron = ds_grid_get(chunk_dron, temp_complex[0], temp_complex[1])
 					for(b = array_length(temp_array_dron) - 1; b >= 0; b--){
 						dron = temp_array_dron[b]
-						if dron.jugador != _jugador{
-							temp_dis = distance_sqr(center_x, center_y, dron.x, dron.y)
-							if temp_dis < dis{
-								aplicar_efecto(0, stun, dron)
-								herir_dron(130, dron)
-							}
+						if dron.jugador != _jugador and point_distance(center_x, center_y, dron.x, dron.y) < dis{
+							aplicar_efecto(0, stun, dron)
+							herir_dron(130, dron)
 						}
 					}
 				}

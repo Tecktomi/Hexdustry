@@ -200,17 +200,17 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		array_disorder_push(chunk_edificios[# chunk_x, chunk_y], edificio, ptre_chunk)
 		edificios_counter[index]++
 		if edificio_armas[index]{
-			var dis = edificio_alcance_sqr[index], chunk_size_x = CHUNK_WIDTH * 48, chunk_size_y = CHUNK_HEIGHT * 14
+			var dis = edificio_alcance[index], chunk_size_x = CHUNK_WIDTH * 48, chunk_size_y = CHUNK_HEIGHT * 14
 			var mini = max(chunk_x - edificio_alcance_chunk_x[index], 0), minj = max(chunk_y - edificio_alcance_chunk_y[index], 0)
 			var maxi = min(chunk_x + edificio_alcance_chunk_x[index], chunk_xsize - 1), maxj = min(chunk_y + edificio_alcance_chunk_y[index], chunk_ysize - 1)
 			for(i = mini; i <= maxi; i++)
 				for(j = minj; j <= maxj; j++){
 					_chunk_x = i * chunk_size_x
 					_chunk_y = j * chunk_size_y
-					if distance_sqr(center_x, center_y, _chunk_x, _chunk_y) < dis or
-						distance_sqr(center_x, center_y, _chunk_x + chunk_size_x, _chunk_y) < dis or
-						distance_sqr(center_x, center_y, _chunk_x, _chunk_y + chunk_size_y) < dis or
-						distance_sqr(center_x, center_y, _chunk_x + chunk_size_x, _chunk_y + chunk_size_y) < dis
+					if point_distance(center_x, center_y, _chunk_x, _chunk_y) < dis or
+						point_distance(center_x, center_y, _chunk_x + chunk_size_x, _chunk_y) < dis or
+						point_distance(center_x, center_y, _chunk_x, _chunk_y + chunk_size_y) < dis or
+						point_distance(center_x, center_y, _chunk_x + chunk_size_x, _chunk_y + chunk_size_y) < dis
 						array_push(edificio.target_chunks, [i, j])
 				}
 			if index = id_lanzallamas{
@@ -231,11 +231,11 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 				edificio.draw_rot = (dir - 1) * 60
 		}
 		#region Torres reparadoras
-			var alc = edificio_alcance_sqr[id_torre_reparadora]
+			var alc = edificio_alcance[id_torre_reparadora]
 			if index = id_torre_reparadora{
 				for(c = array_length(edificios_jugador[_jugador]) - 2; c >= 0; c--){
 					temp_edificio = edificios_jugador[_jugador][c]
-					if distance_sqr(temp_edificio.center_x, temp_edificio.center_y, x, y) < alc{
+					if point_distance(temp_edificio.center_x, temp_edificio.center_y, x, y) < alc{
 						array_push(edificio.edificios_cercanos, temp_edificio)
 						array_push(temp_edificio.reparadores_cercanos, edificio)
 						if temp_edificio.vida < edificio_vida[temp_edificio.index]
@@ -245,7 +245,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			}
 			for(c = array_length(edificios_index[id_torre_reparadora]) - 1; c >= 0; c--){
 				temp_edificio = edificios_index[id_torre_reparadora][c]
-				if temp_edificio != edificio and temp_edificio.jugador = _jugador and distance_sqr(temp_edificio.center_x, temp_edificio.center_y, x, y) < alc{
+				if temp_edificio != edificio and temp_edificio.jugador = _jugador and point_distance(temp_edificio.center_x, temp_edificio.center_y, x, y) < alc{
 					array_push(temp_edificio.edificios_cercanos, edificio)
 					array_push(edificio.reparadores_cercanos, temp_edificio)
 				}
@@ -357,7 +357,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 					continue
 				if (aa != a or bb != b) and edificio_bool[# aa, bb]{
 					temp_edificio = edificio_id[# aa, bb]
-					if ((index = id_cable and edificio_energia[temp_edificio.index]) or temp_edificio.index = id_cable) and distance_sqr(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y) <= CABLE_RANGE_SQR and not array_contains(edificio.energia_link, temp_edificio) and temp_edificio.jugador = _jugador{
+					if ((index = id_cable and edificio_energia[temp_edificio.index]) or temp_edificio.index = id_cable) and point_distance(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y) <= CABLE_RANGE and not array_contains(edificio.energia_link, temp_edificio) and temp_edificio.jugador = _jugador{
 						array_push(edificio.energia_link, temp_edificio)
 						array_push(temp_edificio.energia_link, edificio)
 						if not array_contains(temp_list_redes, temp_edificio.red)
@@ -369,7 +369,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			if index = id_torre_de_alta_tension{
 				for(c = array_length(edificios_index[id_torre_de_alta_tension]) - 1; c >= 0; c--){
 					temp_edificio = edificios_index[id_torre_de_alta_tension][c]
-					if temp_edificio != edificio and temp_edificio.jugador = _jugador and distance_sqr(temp_edificio.center_x, temp_edificio.center_y, center_x, center_y) < TORRE_TENSION_RANGE_SQR{
+					if temp_edificio != edificio and temp_edificio.jugador = _jugador and point_distance(temp_edificio.center_x, temp_edificio.center_y, center_x, center_y) < TORRE_TENSION_RANGE{
 						array_push(edificio.energia_link, temp_edificio)
 						array_push(temp_edificio.energia_link, edificio)
 						if not array_contains(temp_list_redes, temp_edificio.red)

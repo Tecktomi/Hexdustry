@@ -129,8 +129,6 @@
     {"id":{"name":"deselect_drones","path":"scripts/deselect_drones/deselect_drones.yy",},},
     {"id":{"name":"dibujar_edificios","path":"scripts/dibujar_edificios/dibujar_edificios.yy",},},
     {"id":{"name":"dibujar_fondo","path":"scripts/dibujar_fondo/dibujar_fondo.yy",},},
-    {"id":{"name":"distance_sqr","path":"scripts/distance_sqr/distance_sqr.yy",},},
-    {"id":{"name":"distance","path":"scripts/distance/distance.yy",},},
     {"id":{"name":"draw_arco","path":"scripts/draw_arco/draw_arco.yy",},},
     {"id":{"name":"draw_arrow_off","path":"scripts/draw_arrow_off/draw_arrow_off.yy",},},
     {"id":{"name":"draw_boton_text_list_end","path":"scripts/draw_boton_text_list_end/draw_boton_text_list_end.yy",},},

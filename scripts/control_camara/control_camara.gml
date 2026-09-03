@@ -4,18 +4,16 @@ function control_camara(min_camx = 0){
 		if DEVISE{
 			var cam_vel = 8
 			if keyboard_check(vk_lcontrol) and mouse_wheel_up() and zoom < 4{
-				camx -= xsize * 48 * zoom / 2
-				camy -= ysize * 14 * zoom / 2
-				zoom *= power(2, 0.2)
-				camx += xsize * 48 * zoom / 2
-				camy += ysize * 14 * zoom / 2
+			    var k = power(2, 0.2)
+			    zoom *= k
+			    camx = (camx + room_width / 2) * k - room_width / 2
+			    camy = (camy + room_height / 2) * k - room_height / 2
 			}
 			if keyboard_check(vk_lcontrol) and mouse_wheel_down() and zoom > 1{
-				camx -= xsize * 48 * zoom / 2
-				camy -= ysize * 14 * zoom / 2
-				zoom /= power(2, 0.2)
-				camx = clamp(camx + xsize * 48 * zoom / 2, min_camx, xsize * 48 * zoom - room_width)
-				camy = clamp(camy + ysize * 14 * zoom / 2, min_camx, ysize * 14 * zoom - room_height)
+				var k = power(2, -0.2)
+			    zoom *= k
+			    camx = (camx + room_width / 2) * k - room_width / 2
+			    camy = (camy + room_height / 2) * k - room_height / 2
 			}
 			if keyboard_check(CONTROL_RIGHT)
 				camx = min(camx + cam_vel * (1 + 1.5 * keyboard_check(vk_lshift)), xsize * 48 * zoom - room_width)
@@ -31,7 +29,7 @@ function control_camara(min_camx = 0){
 			//ZOOM
 			if (device_mouse_check_button(0, mb_left) and device_mouse_check_button(1, mb_left)){
 				if (device_mouse_check_button(0, mb_left) and device_mouse_check_button_pressed(1, mb_left)){
-					android_mouse_dis = distance(device_mouse_x(0), device_mouse_y(0), device_mouse_x(1), device_mouse_y(1))
+					android_mouse_dis = point_distance(device_mouse_x(0), device_mouse_y(0), device_mouse_x(1), device_mouse_y(1))
 					android_zoom = zoom
 					android_hovering = true
 					android_zooming = true
@@ -39,7 +37,7 @@ function control_camara(min_camx = 0){
 				if android_hovering{
 					camx -= xsize * 48 * zoom / 2
 					camy -= ysize * 14 * zoom / 2
-					zoom = clamp(android_zoom + 0.01 * (distance(device_mouse_x(0), device_mouse_y(0), device_mouse_x(1), device_mouse_y(1)) - android_mouse_dis), 1, 4)
+					zoom = clamp(android_zoom + 0.01 * (point_distance(device_mouse_x(0), device_mouse_y(0), device_mouse_x(1), device_mouse_y(1)) - android_mouse_dis), 1, 4)
 					camx = clamp(camx + xsize * 48 * zoom / 2, min_camx, xsize * 48 * zoom - room_width)
 					camy = clamp(camy + ysize * 14 * zoom / 2, min_camx, ysize * 14 * zoom - room_height)
 				}

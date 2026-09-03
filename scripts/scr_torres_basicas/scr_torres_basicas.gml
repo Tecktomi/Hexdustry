@@ -12,7 +12,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 			edificio.target = null_dron
 			if array_length(drones_jugador[_jugador]) < array_length(drones){
 				if index = id_mortero
-					turret_target(edificio, MORTERO_MIN_RANGE_SQR)
+					turret_target(edificio, MORTERO_MIN_RANGE)
 				else
 					turret_target(edificio)
 			}
@@ -25,7 +25,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 			edificio.target_edificio = null_edificio
 			if array_length(edificios_jugador[_jugador]) < array_length(edificios_totales){
 				if index = id_mortero
-					turret_target(edificio, MORTERO_MIN_RANGE_SQR)
+					turret_target(edificio, MORTERO_MIN_RANGE)
 				else
 					turret_target(edificio)
 			}
@@ -59,8 +59,8 @@ function scr_torres_basicas(edificio = control.null_edificio){
 			//Disparo
 			if ++edificio.proceso >= edificio_proceso[index]{
 				edificio.proceso = 0
-				var dis = distance_sqr(center_x, center_y, target_x, target_y)
-				if dis > edificio_alcance_sqr[index]{
+				var dis = point_distance(center_x, center_y, target_x, target_y)
+				if dis > edificio_alcance[index]{
 					array_disorder_remove(edificio.target.torres, edificio, ptre_torre_dron)
 					edificio.target = null_dron
 					continue
@@ -114,7 +114,6 @@ function scr_torres_basicas(edificio = control.null_edificio){
 							sound_play(snd_rifle, center_x, center_y, 0.2)
 						edificio.carga[tiro_struct.recurso] -= tiro_struct.cantidad
 						edificio.carga_total -= tiro_struct.cantidad
-						dis = sqrt(dis)
 						var municion
 						if index = id_lanzallamas
 							municion = add_municion(center_x, center_y, 20 * (target_x - center_x) / dis, 20 * (target_y - center_y) / dis, municion_tipo_fuego, dis / 20, tiro_struct.dmg * dmg_factor,, dron, target_edificio, enemigo,,, _jugador)
@@ -122,10 +121,10 @@ function scr_torres_basicas(edificio = control.null_edificio){
 							if edificio.carga[idr_compuesto_incendiario] > 0{
 								edificio.carga[idr_compuesto_incendiario]--
 								edificio.carga_total--
-								municion = add_municion(center_x, center_y, 20 * (target_x - center_x) / dis, 20 * (target_y - center_y) / dis, municion_tipo_misil_incendiario, dis / 20, tiro_struct.dmg * dmg_factor, 10_000, dron, target_edificio, enemigo,,, _jugador)
+								municion = add_municion(center_x, center_y, 20 * (target_x - center_x) / dis, 20 * (target_y - center_y) / dis, municion_tipo_misil_incendiario, dis / 20, tiro_struct.dmg * dmg_factor, 100, dron, target_edificio, enemigo,,, _jugador)
 							}
 							else
-								municion = add_municion(center_x, center_y, 20 * (target_x - center_x) / dis, 20 * (target_y - center_y) / dis, municion_tipo_misil, dis / 20, tiro_struct.dmg * dmg_factor, 4900, dron, target_edificio, enemigo,,, _jugador)
+								municion = add_municion(center_x, center_y, 20 * (target_x - center_x) / dis, 20 * (target_y - center_y) / dis, municion_tipo_misil, dis / 20, tiro_struct.dmg * dmg_factor, 70, dron, target_edificio, enemigo,,, _jugador)
 						}
 						else if index = id_rifle
 							municion = add_municion(center_x, center_y, 45 * (target_x - center_x) / dis, 45 * (target_y - center_y) / dis, municion_tipo_perforadora, dis / 45 + 2, tiro_struct.dmg * dmg_factor,, dron, target_edificio, enemigo,,, _jugador)
@@ -145,7 +144,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 						edificio.target = null_dron
 						if array_length(drones_jugador[_jugador]) < array_length(drones){
 							if index = id_mortero
-								turret_target(edificio, MORTERO_MIN_RANGE_SQR)
+								turret_target(edificio, MORTERO_MIN_RANGE)
 							else
 								turret_target(edificio)
 						}

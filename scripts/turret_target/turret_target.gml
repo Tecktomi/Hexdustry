@@ -1,6 +1,6 @@
 function turret_target(edificio = control.null_edificio, alc_min = 0){
 	with control{
-		var dis = edificio_alcance_sqr[edificio.index], dron_final = null_dron, center_x = edificio.center_x, center_y = edificio.center_y
+		var dis = edificio_alcance[edificio.index], dron_final = null_dron, center_x = edificio.center_x, center_y = edificio.center_y
 		var temp_array_dron, _jugador = edificio.jugador
 		var a, b, temp_complex, temp_dis, dron, temp_edificio, temp_array_edificio
 		//Disparo normal
@@ -13,7 +13,7 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 					if dron.vida <= 0
 						continue
 					if dron.jugador != _jugador{
-						temp_dis = distance_sqr(center_x, center_y, dron.x, dron.y)
+						temp_dis = point_distance(center_x, center_y, dron.x, dron.y)
 						if temp_dis < dis{
 							dis = temp_dis
 							dron_final = dron
@@ -31,7 +31,7 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 				if dron.vida < 0
 					continue
 				if dron.jugador != _jugador{
-					temp_dis = distance_sqr(center_x, center_y, dron.x, dron.y)
+					temp_dis = point_distance(center_x, center_y, dron.x, dron.y)
 					if temp_dis < dis and temp_dis > alc_min{
 						dis = temp_dis
 						dron_final = dron
@@ -65,7 +65,7 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 					if temp_edificio.vida <= 0
 						continue
 					if temp_edificio.jugador != _jugador{
-						temp_dis = distance_sqr(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y)
+						temp_dis = point_distance(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y)
 						if temp_dis < dis{
 							dis = temp_dis
 							edificio_final = temp_edificio
@@ -83,7 +83,7 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 				if temp_edificio.vida < 0
 					continue
 				if temp_edificio.jugador != _jugador{
-					temp_dis = distance_sqr(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y)
+					temp_dis = point_distance(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y)
 					if temp_dis < dis and temp_dis > alc_min{
 						dis = temp_dis
 						edificio_final = temp_edificio
