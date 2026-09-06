@@ -1,7 +1,7 @@
 function cinta_grande_check(a, b, dir, index){
 	with control{
 		var build_size = get_size(a, b, dir, edificio_size[index]), build_arround = get_arround(a, b, dir, edificio_size[index]), inputs = array_create(0, null_edificio), outputs = array_create(0, null_edificio)
-		var c, temp_complex, aa, bb, flag, flag_2, edificio, temp_Array, d, e, aaa, bbb, temp_complex_2, aaaa, bbbb
+		var c, temp_complex, aa, bb, flag, flag_2, edificio, temp_Array, d, e, aaa, bbb, temp_complex_2, aaaa, bbbb, agua = false
 		//INPUTS
 		for(c = array_length(build_arround) - 1; c >= 0; c--){
 			temp_complex = build_arround[c]
@@ -53,13 +53,18 @@ function cinta_grande_check(a, b, dir, index){
 							array_push(outputs, edificio)
 						else
 							prev_build = edificio
+						if edificio.array_real[2] = 1
+							agua = true
 					}
 				}
+				if tag_agua[terreno[# aa, bb]]
+					agua = true
 			}
 		}
 		return {
 			inputs : inputs,
-			outputs : outputs
+			outputs : outputs,
+			agua : agua
 		}
 	}
 }

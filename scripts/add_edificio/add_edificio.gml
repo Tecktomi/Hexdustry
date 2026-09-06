@@ -445,6 +445,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		if in(index, id_fabrica_de_drones, id_cinta_grande, id_fabrica_de_drones_grande){
 			edificio.array_real[0] = -1
 			edificio.array_real[1] = -1
+			edificio.array_real[2] = 0
 		}
 		return edificio
 	}

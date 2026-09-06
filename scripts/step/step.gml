@@ -89,7 +89,7 @@ function step(){
 			_tipo = municion.tipo
 			_dmg = municion.dmg
 			if _tipo != municion_tipo_fuego{
-				if draw_once{
+				if draw_once and municion.x >= world_minx and municion.y >= world_miny and municion.x <= world_maxx and municion.y <= world_maxy{
 					draw_set_color(c_black)
 					draw_circle_off(municion.x, municion.y, 2, false)
 					draw_set_color(c_yellow)
@@ -168,7 +168,7 @@ function step(){
 		len = array_length(efectos)
 		for(a = 0; a < len; a++){
 			efecto = efectos[a]
-			if show_smoke and draw_once
+			if show_smoke and draw_once and efecto.x >= world_minx and efecto.y >= world_miny and efecto.x <= world_maxx and efecto.y <= world_maxy
 				draw_sprite_off(efecto.sprite, efecto.subsprite, efecto.x, efecto.y)
 			efecto.subsprite += efecto.frame_speed
 			if --efecto.tiempo <= 0{

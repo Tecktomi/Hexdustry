@@ -34,7 +34,7 @@ function mover_carga(edificio = control.null_edificio){
 				if temp_edificio.waiting_dron and mover_carga(temp_edificio)
 					break
 			}
-			if in(edificio.index, id_fabrica_de_drones, id_fabrica_de_drones_grande)
+			if tag_edificio_fabrica_drones[edificio.index]
 				edificio.waiting = not mover_in(edificio)
 		}
 		return flag

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"mover_light",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"mover_light",
+  "parent":{
+    "name":"EDIFICIOS",
+    "path":"folders/SCRIPTS/EDIFICIOS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
