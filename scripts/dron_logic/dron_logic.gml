@@ -22,8 +22,9 @@ function dron_logic(){
 			chunk_y = dron.chunk_y
 			aereo = dron_aereo[index]
 			if draw_once{
-				draw_dron(dron, enemigo)
-				if point_distance(cam_center_x, cam_center_y, dron_x, dron_y) > 500{
+				 if dron_a >= mina and dron_b >= minb and dron_a < maxa and dron_b < maxb
+					draw_dron(dron, enemigo)
+				else{
 					draw_set_color(enemigo ? c_red : c_blue)
 					angle = arctan2(cam_center_y - dron_y, cam_center_x - dron_x)
 					cosa = cos(angle)
@@ -550,7 +551,8 @@ function dron_logic(){
 		if draw_once
 			for(a = array_length(drones) - 1; a >= 0; a--){
 				dron = drones[a]
-				draw_vida(dron.x * zoom - camx, dron.y * zoom - camy, dron.vida, dron.vida_max)
+				if dron.a >= mina and dron.b >= minb and dron.a < maxa and dron.b < maxb
+					draw_vida(dron.x * zoom - camx, dron.y * zoom - camy, dron.vida, dron.vida_max)
 			}
 	}
 }

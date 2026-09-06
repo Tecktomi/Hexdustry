@@ -7,6 +7,10 @@
 	min_chunkb = max(0, floor(minb / CHUNK_HEIGHT))
 	max_chunka = min(ceil(maxa / CHUNK_WIDTH), chunk_xsize)
 	max_chunkb = min(ceil(maxb / CHUNK_HEIGHT), chunk_ysize)
+	world_minx = camx / zoom
+	world_maxx = (camx + room_width) / zoom
+	world_miny = camy / zoom
+	world_maxy = (camy + room_height) / zoom
 	if keyboard_check_pressed(vk_f4){
 		keyboard_clear(vk_f4)
 		window_set_fullscreen(not window_get_fullscreen())
@@ -368,7 +372,7 @@ if in(menu, 1, 3){
 					draw_sprite_off(planta_quimica_sprite[edificio.select], 0, aa, bb)
 				//Humo
 				if show_humo and tag_generadores_de_humo[index]{
-					if ((tag_generadores_de_humo_combustion[index] and edificio.fuel > 0) or (index = id_generador_geotermico and in(edificio.flujo.liquido, idl_agua, idl_agua_salada)) or (index = id_refineria_de_petroleo and edificio.flujo.liquido = idl_petroleo and edificio.red.eficiencia > 0)) and image_index & 3{
+					if ((tag_generadores_de_humo_combustion[index] and edificio.fuel > 0) or (index = id_generador_geotermico and tag_liquido_agua[edificio.flujo.liquido]) or (index = id_refineria_de_petroleo and edificio.flujo.liquido = idl_petroleo and edificio.red.eficiencia > 0)) and image_index & 3{
 						var dir = viento_dir + random_range(-pi / 4, pi / 4)
 						array_push(humos, add_humo(center_x, center_y, edificio.a, edificio.b, cos(dir) * viento_mag, sin(dir) * viento_mag, irandom_range(70, 100)))
 					}
@@ -445,7 +449,7 @@ if in(menu, 1, 3){
 	}
 	draw_set_halign(fa_center)
 	if mision_actual >= 0 and win = 0
-		for(b = 0; b < array_length(mision.texto); b++){
+		for(b = array_length(mision.texto) - 1; b >= 0; b--){
 			var texto = mision.texto[b]
 			draw_text_background(texto.x * zoom - camx, texto.y * zoom - camy, text_wrap(texto.texto_idioma[idioma], 250),, false)
 		}
@@ -935,7 +939,7 @@ if show_menu{
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * liquido_max) * zoom, false)
 		else if index = id_planta_quimica
 			draw_rectangle(aa - 90 * zoom, bb + 40 * zoom, aa + 90 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, false)
-		else if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
+		else if tag_edificio_fabrica_drones[index]{
 			temp_array_real = (index = id_fabrica_de_drones) ? fabrica_de_drones_array : fabrica_de_drones_grande_array
 			len = array_length(temp_array_real)
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * len) * zoom, false)
@@ -970,7 +974,7 @@ if show_menu{
 				draw_text(aa - 70 * zoom, bb + (40 + 20 * a) * zoom, planta_quimica_receta[a])
 			}
 		}
-		if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
+		if tag_edificio_fabrica_drones[index]{
 			temp_array_real = (index = id_fabrica_de_drones) ? fabrica_de_drones_array : fabrica_de_drones_grande_array
 			len = array_length(temp_array_real)
 			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * len) * zoom, true)
@@ -1052,7 +1056,7 @@ if show_menu{
 					}
 				}
 			}
-			else if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande){
+			else if tag_edificio_fabrica_drones[index]{
 				temp_array_real = (index = id_fabrica_de_drones) ? fabrica_de_drones_array : fabrica_de_drones_grande_array
 				len = array_length(temp_array_real)
 				if mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * len) * zoom{
@@ -1547,7 +1551,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 				}
 			}
 			//Mostrar rutas de tuneles
-			if in(index, id_tunel, id_tunel_salida){
+			if tag_edificio_tunel[index]{
 				if keyboard_check_pressed(CONTROL_ROTAR) and edificio.link != null_edificio{
 					keyboard_clear(CONTROL_ROTAR)
 					if edificio.index = id_tunel_salida{
@@ -1575,7 +1579,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 				}
 			}
 			else if tag_dron_encima[index]{
-				if in(index, id_fabrica_de_drones, id_fabrica_de_drones_grande) and edificio.select >= 0{
+				if tag_edificio_fabrica_drones[index] and edificio.select >= 0{
 					temp_text += $"{L.game_creando_dron} {dron_nombre[edificio.select]} ({array_length(drones_propios)}/{8 + 2 * nucleo.modulo})\n"
 					for(a = 0; a < array_length(dron_precio_id[edificio.select]); a++)
 						temp_text += $"  {recurso_nombre[dron_precio_id[edificio.select, a]]} {edificio.carga[dron_precio_id[edificio.select, a]]}/{dron_precio_num[edificio.select, a]}\n"
@@ -1663,7 +1667,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			if edificio_energia[index] or edificio_flujo[index]{
 				var capacidad = 0, red = edificio.red, flujo = edificio.flujo
 				if edificio_energia[index] and edificio_energia_consumo[index] > 0{
-					if flujo.liquido != -1 and edificio_flujo_consumo[index] > 0
+					if flujo.liquido != -1 and edificio_flujo_consumo[index] > 0 and tag_liquido_obligatorio[index]
 						capacidad = min(clamp((red.generacion + red.bateria) / max(red.consumo, 1), 0, 1), clamp((flujo.generacion + flujo.almacen) / max(flujo.consumo, 1), 0, 1))
 					else
 						capacidad = clamp((red.generacion + red.bateria) / max(red.consumo, 1), 0, 1)
@@ -2633,7 +2637,7 @@ if build_index > 0 and win = 0{
 									temp_complex_3 = abtoxy(a, b)
 									aaa = temp_complex_3[0]
 									bbb = temp_complex_3[1]
-									if in(build_index, id_cinta_transportadora, id_cinta_magnetica) and (a != temp_mx or b != temp_my) and (a != mx_clic or b != my_clic) and edificio_bool[# a, b] and not in(edificio_id[# a, b].dir, build_dir, (build_dir + 3) mod 6) and in(edificio_id[# a, b].index, id_cinta_transportadora, id_cinta_magnetica){
+									if tag_edificio_cinta[build_index] and (a != temp_mx or b != temp_my) and (a != mx_clic or b != my_clic) and edificio_bool[# a, b] and not in(edificio_id[# a, b].dir, build_dir, (build_dir + 3) mod 6) and tag_edificio_cinta[edificio_id[# a, b].index]{
 										draw_edificio(aaa, bbb, id_cruce, 0, 0.5)
 										array_push(pre_build_list_cruce, true)
 									}
@@ -2889,7 +2893,7 @@ if build_index > 0 and win = 0{
 				}
 				//Vista previa no caminos
 				else{
-					if in(build_index, id_tunel, id_tunel_salida){
+					if tag_edificio_tunel[build_index]{
 						temp_complex_2 = abtoxy(temp_mx, temp_my)
 						var flag_2 = false
 						a = temp_mx
@@ -2905,7 +2909,7 @@ if build_index > 0 and win = 0{
 								break
 							if edificio_bool[# a, b]{
 								var edificio_2 = edificio_id[# a, b]
-								if edificio_2.enemigo = build_enemigo and in(edificio_2.index, id_tunel, id_tunel_salida) and edificio_2.dir = (build_dir + 3) mod 6{
+								if edificio_2.enemigo = build_enemigo and tag_edificio_tunel[edificio_2.index] and edificio_2.dir = (build_dir + 3) mod 6{
 									build_target = edificio_2
 									build_able = true
 									break
@@ -3022,6 +3026,7 @@ if build_index > 0 and win = 0{
 								var temp_complex_array = cinta_grande_check(temp_mx, temp_my, build_dir, build_index), k
 								build_array_edificios_input = temp_complex_array.inputs
 								build_array_edificios_output = temp_complex_array.outputs
+								build_agua = temp_complex_array.agua
 								if build_index = id_planta_de_reciclaje{
 									temp_complex = abtoxy(mx, my)
 									var chunk_x = clamp(floor(mx / CHUNK_WIDTH), 0, chunk_xsize - 1), chunk_y = clamp(floor(my / CHUNK_HEIGHT), 0, chunk_ysize - 1)
@@ -3491,7 +3496,6 @@ if menu = 1{
 		draw_set_alpha(min(++win_step / 100, 0.5))
 		draw_rectangle(0, 0, room_width, room_height, false)
 		draw_set_color(c_white)
-		show_debug_message($"pasar_mision: actual={mision_actual} objetivo={mision.objetivo} counter={mision_counter}")
 		if win_step > 25{
 			draw_set_alpha(min((win_step - 25) / 100, 1))
 			draw_set_font(font_titulo)

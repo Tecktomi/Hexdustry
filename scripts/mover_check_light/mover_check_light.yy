@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"ds_list_in",
+  "%Name":"mover_check_light",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"ds_list_in",
+  "name":"mover_check_light",
   "parent":{
-    "name":"GENERAL",
-    "path":"folders/SCRIPTS/CORE/GENERAL.yy",
+    "name":"EDIFICIOS",
+    "path":"folders/SCRIPTS/EDIFICIOS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

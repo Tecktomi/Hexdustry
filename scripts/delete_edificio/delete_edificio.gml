@@ -176,7 +176,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				array_disorder_remove(edificio.target.torres, edificio, ptre_torre_dron)
 		}
 		//Eliminar tuneles
-		if in(index, id_tunel, id_tunel_salida) and not edificio.idle
+		if tag_edificio_tunel[index] and not edificio.idle
 			edificio.link.idle = true
 		//Cancelar outputs
 		for(a = array_length(edificio.outputs) - 1; a >= 0; a--){
@@ -331,9 +331,8 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		//Cruce de caminos
 		if index = id_cruce
 			for(a = 0; a < 3; a++){
-				temp_complex = next_to(aa, bb, a)
-				aaa = temp_complex[0]
-				bbb = temp_complex[1]
+				aaa = aa + DESFACE_A[bb & 1, a]
+				bbb = bb + DESFACE_B[bb & 1, a]
 				if aaa < 0 or bbb < 0 or aaa >= xsize or bbb >= ysize
 					continue
 				if edificio_bool[# aaa, bbb]{

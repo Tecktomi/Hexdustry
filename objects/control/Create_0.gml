@@ -205,6 +205,7 @@ L = {}
 	build_array_edificios_input = []
 	build_array_edificios_output = []
 	build_menu = 0
+	build_agua = false
 	menu_x = 0
 	menu_y = 0
 	clicked = false
@@ -245,6 +246,10 @@ L = {}
 	minb = 0
 	maxa = 0
 	maxb = 0
+	world_minx = 0
+	world_maxx = 0
+	world_miny = 0
+	world_maxy = 0
 	SONIDOS = [snd_motor, snd_maquina, snd_horno, snd_taladro]
 	SONIDOS_MAX = array_length(SONIDOS)
 	MUSICA = [snd_theme_1, snd_theme_2, snd_theme_3, snd_theme_4, snd_theme_5]
@@ -876,6 +881,12 @@ usable_rss_bool = array_create(rss_max, false)
 jugador_recursos = array_create(EQUIPOS)
 for(a = 0; a < EQUIPOS; a++)
 	jugador_recursos[a] = array_create(rss_max, 0)
+recurso_keyword_orden = array_create(rss_max, 0)
+for(var a = 0; a < rss_max; a++)
+    recurso_keyword_orden[a] = a
+array_sort(recurso_keyword_orden, function(i1, i2){
+    return string_length(recurso_keyword[i2]) - string_length(recurso_keyword[i1])
+})
 //Disparos
 null_municion = add_municion()
 municiones = array_create(0, null_municion)
@@ -1154,6 +1165,7 @@ dron_max = array_length(dron_nombre)
 	edificio_precio = array_create(0, 0)
 	edificio_prioridad = array_create(0, 0)
 	edificio_temperatura = array_create(0, 0)
+	
 #endregion
 function def_edificio(name, size = 1, sprite = spr_base, sprite_2 = spr_base, vida = 100, proceso = 0, accion = scr_null, draw_function = scr_draw_default, draw_estatico = true, camino = false, precio_id = array_create(0, 0), precio_num = array_create(0, 0), carga = 0, receptor = false, in_all = true, in_id = array_create(0, 0), in_num = array_create(0, 0), emisor = false, out_all = true, out_id = array_create(0, 0)){
 	array_push(edificio_nombre, string(name))
@@ -1183,8 +1195,16 @@ function def_edificio(name, size = 1, sprite = spr_base, sprite_2 = spr_base, vi
 	}
 	array_push(edificio_emisor, emisor)
 	array_push(edificio_output_all, emisor ? out_all : false)
-	if emisor and not out_all
-		array_push(edificio_output_id, out_id)
+	if emisor{
+		if not out_all
+			array_push(edificio_output_id, out_id)
+		else{
+			var temp_edificio_output_all = array_create(rss_max)
+			for(var a = 0; a < rss_max; a++)
+				temp_edificio_output_all[a] = a
+			array_push(edificio_output_id, temp_edificio_output_all)
+		}
+	}
 	else
 		array_push(edificio_output_id, array_create(0, 0))
 	ds_map_add(edificio_index, string_lower(name), array_length(edificio_energia))
@@ -1518,6 +1538,12 @@ edificio_key[id_recurso_infinito] = "1z"
 		tag_edificio_salida_triple[id_overflow] = true
 		tag_edificio_salida_triple[id_tunel_salida] = true
 	#endregion
+	#region edificio_entrada_triple
+		tag_edificio_entrada_triple = array_create(edificio_max, false)
+		tag_edificio_entrada_triple[id_enrutador] = true
+		tag_edificio_entrada_triple[id_selector] = true
+		tag_edificio_entrada_triple[id_overflow] = true
+	#endregion
 	#region dron_marino
 		tag_dron_marino = array_create(dron_max, false)
 		tag_dron_marino[idd_barco] = true
@@ -1532,6 +1558,26 @@ edificio_key[id_recurso_infinito] = "1z"
 		tag_dron_seleccionable[idd_minero] = true
 		tag_dron_seleccionable[idd_tanque] = true
 		tag_dron_seleccionable[idd_titan] = true
+	#endregion
+	#region edificio_cinta
+		tag_edificio_cinta = array_create(edificio_max, false)
+		tag_edificio_cinta[id_cinta_magnetica] = true
+		tag_edificio_cinta[id_cinta_transportadora] = true
+	#endregion
+	#region edificio_tunel
+		tag_edificio_tunel = array_create(edificio_max, false)
+		tag_edificio_tunel[id_tunel] = true
+		tag_edificio_tunel[id_tunel_salida] = true
+	#endregion
+	#region edificio_fabrica_drones
+		tag_edificio_fabrica_drones = array_create(edificio_max, false)
+		tag_edificio_fabrica_drones[id_fabrica_de_drones] = true
+		tag_edificio_fabrica_drones[id_fabrica_de_drones_grande] = true
+	#endregion
+	#region agua
+		tag_liquido_agua = array_create(liquido_max, false)
+		tag_liquido_agua[idl_agua] = true
+		tag_liquido_agua[idl_agua_salada] = true
 	#endregion
 	fabrica_de_drones_array = [idd_mula, idd_kamikaze, idd_arana]
 	fabrica_de_drones_grande_array = [idd_tanque, idd_titan, idd_reparador, idd_helicoptero, idd_bombardero, idd_reconstructor, idd_minero]

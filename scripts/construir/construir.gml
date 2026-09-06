@@ -51,7 +51,7 @@ function construir(index, dir, mx, my, enemigo = false, _server = false, _cheat 
 		}
 		if not flag
 			return null_edificio
-		if in(index, id_tunel, id_tunel_salida) and build_able and build_target.index = id_tunel
+		if tag_edificio_tunel[index] and build_able and build_target.index = id_tunel
 			index = id_tunel_salida
 		if online and not _server{
 			server_add_edificio(real(index), real(dir), real(mx), real(my), _cheat)
@@ -61,8 +61,10 @@ function construir(index, dir, mx, my, enemigo = false, _server = false, _cheat 
 		if jugador != _jugador
 			enemigo = true
 		edificio = add_edificio(index, dir, mx, my, _jugador)
+		if in(index, id_fabrica_de_drones, id_cinta_grande)
+			edificio.array_real[2] = real(build_agua)
 		//Algoritmo link de tuneles
-		if in(index, id_tunel, id_tunel_salida){
+		if tag_edificio_tunel[index]{
 			build_able = false
 			a = mx
 			b = my
@@ -74,7 +76,7 @@ function construir(index, dir, mx, my, enemigo = false, _server = false, _cheat 
 					break
 				if edificio_bool[# a, b]{
 					temp_edificio = edificio_id[# a, b]
-					if in(temp_edificio.index, id_tunel, id_tunel_salida) and temp_edificio.dir = (dir + 3) mod 6{
+					if tag_edificio_tunel[temp_edificio.index] and temp_edificio.dir = (dir + 3) mod 6{
 						build_target = temp_edificio
 						build_able = true
 						break

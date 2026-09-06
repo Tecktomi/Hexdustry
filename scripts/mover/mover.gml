@@ -2,10 +2,13 @@ function mover(edificio = control.null_edificio){
 	with control{
 		if not edificio.emisor
 			exit
-		var index = edificio.index, flag = false, out = 0, temp_edificio = null_edificio, b = 0, bmod = edificio.b & 1, aaa, bbb, a, dir = edificio.dir
-		var _mina = (index = id_cinta_transportadora ? edificio.carga_id : 0), _maxa = (index = id_cinta_transportadora ? edificio.carga_id + 1 : rss_max)
+		var index = edificio.index
+		if tag_edificio_cinta[index]
+			return mover_light(edificio)
+		var flag = false, out = 0, temp_edificio = null_edificio, b = 0, bmod = edificio.b & 1, aaa, bbb, a, dir = edificio.dir, len
 		//Selección de recursos
-		for(out = _mina; out < _maxa; out++)
+		for(var i = array_length(edificio_output_id[index]) - 1; i >= 0; i--){
+			out = edificio_output_id[index, i]
 			if edificio.carga_output[out] and edificio.carga[out] > 0{
 				//Output selector
 				if index = id_selector{
@@ -85,11 +88,12 @@ function mover(edificio = control.null_edificio){
 				}
 				//Output general
 				else{
-					for(a = 0; a < array_length(edificio.outputs); a++){
-						temp_edificio = edificio.outputs[(edificio.output_index + a) mod array_length(edificio.outputs)]
-						if mover_check(out, edificio, temp_edificio){
+					len = array_length(edificio.outputs)
+					for(a = 0; a < len; a++){
+						temp_edificio = edificio.outputs[(edificio.output_index + a) mod len]
+						if mover_check_light(out, temp_edificio){
 							flag = true
-							edificio.output_index = (edificio.output_index + a + 1) mod array_length(edificio.outputs)
+							edificio.output_index = (edificio.output_index + a + 1) mod len
 							break
 						}
 					}
@@ -97,6 +101,7 @@ function mover(edificio = control.null_edificio){
 				if flag
 					break
 			}
+		}
 		//Movimiento de recursos
 		if flag{
 			index = temp_edificio.index

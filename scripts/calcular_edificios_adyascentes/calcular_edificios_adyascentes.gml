@@ -70,11 +70,11 @@ function calcular_edificios_adyascentes(edificio = control.null_edificio, set_re
 									break
 								}
 							if flag{
-								if in(temp_edificio_2.index, id_cinta_transportadora, id_cinta_magnetica) and temp_edificio_2.dir != c
+								if tag_edificio_cinta[temp_edificio_2.index] and temp_edificio_2.dir != c
 									flag = false
 								if flag and (tag_edificio_salida_triple[temp_edificio_2.index] or temp_edificio_2.index = id_tunel) and in(temp_edificio_2.dir, c + 2, c + 3, (c + 4) mod 6)
 									flag = false
-								if flag and in(temp_edificio.index, id_cinta_transportadora, id_cinta_magnetica) and temp_edificio.dir = c + 3
+								if flag and tag_edificio_cinta[temp_edificio.index] and temp_edificio.dir = c + 3
 									flag = false
 								if flag and tag_edificio_salida_triple[temp_edificio.index] and in(temp_edificio.dir, c + 2, c + 3, (c + 4) mod 6)
 									flag = false
@@ -98,11 +98,11 @@ function calcular_edificios_adyascentes(edificio = control.null_edificio, set_re
 									break
 								}
 							if flag{
-								if in(temp_edificio.index, id_cinta_transportadora, id_cinta_magnetica) and temp_edificio.dir != c + 3
+								if tag_edificio_cinta[temp_edificio.index] and temp_edificio.dir != c + 3
 									flag = false
 								if flag and (tag_edificio_salida_triple[temp_edificio.index] or temp_edificio.index = id_tunel) and in(temp_edificio.dir, c, c + 1, (c + 5) mod 6)
 									flag = false
-								if flag and in(temp_edificio_2.index, id_cinta_transportadora, id_cinta_magnetica) and temp_edificio_2.dir = c
+								if flag and tag_edificio_cinta[temp_edificio_2.index] and temp_edificio_2.dir = c
 									flag = false
 								if flag and tag_edificio_salida_triple[temp_edificio_2.index] and in(temp_edificio_2.dir, c, c + 1, (c + 5) mod 6)
 									flag = false
@@ -166,13 +166,13 @@ function calcular_edificios_adyascentes(edificio = control.null_edificio, set_re
 							break
 						}
 					if flag and index != id_tunel and not array_contains(edificio.outputs, temp_edificio){
-						if in(index, id_cinta_transportadora, id_cinta_magnetica) and not complex_equal(temp_complex, par_dir)
+						if tag_edificio_cinta[index] and not complex_equal(temp_complex, par_dir)
 							flag = false
-						if flag and in(temp_index, id_cinta_transportadora, id_cinta_magnetica) and next_to_build(par_dir_a, edificio)
+						if flag and tag_edificio_cinta[temp_index] and next_to_build(par_dir_a, edificio)
 							flag = false
-						if flag and in(index, id_enrutador, id_selector, id_overflow) and not(complex_equal(temp_complex, par_dir_5) or complex_equal(temp_complex, par_dir) or complex_equal(temp_complex, par_dir_1))
+						if flag and tag_edificio_entrada_triple[index] and not(complex_equal(temp_complex, par_dir_5) or complex_equal(temp_complex, par_dir) or complex_equal(temp_complex, par_dir_1))
 							flag = false
-						if flag and in(index, id_tunel_salida) and not(complex_equal(temp_complex, par_dir_2) or complex_equal(temp_complex, par_dir_3) or complex_equal(temp_complex, par_dir_4))
+						if flag and index = id_tunel_salida and not(complex_equal(temp_complex, par_dir_2) or complex_equal(temp_complex, par_dir_3) or complex_equal(temp_complex, par_dir_4))
 							flag = false
 						if flag and in(temp_index, id_enrutador, id_selector, id_overflow, id_tunel)
 							for(d = array_length(edificio.coordenadas) - 1; d >= 0; d--){
@@ -199,13 +199,13 @@ function calcular_edificios_adyascentes(edificio = control.null_edificio, set_re
 							break
 						}
 					if flag and temp_index != id_tunel and not array_contains(edificio.inputs, temp_edificio){
-						if in(index, id_cinta_transportadora, id_cinta_magnetica) and complex_equal(temp_complex, par_dir)
+						if tag_edificio_cinta[index] and complex_equal(temp_complex, par_dir)
 							flag = false
-						if flag and in(temp_index, id_cinta_transportadora, id_cinta_magnetica) and not next_to_build(par_dir_a, edificio)
+						if flag and tag_edificio_cinta[temp_index] and not next_to_build(par_dir_a, edificio)
 							flag = false
 						if flag and in(index, id_enrutador, id_selector, id_overflow, id_tunel) and (complex_equal(temp_complex, par_dir_5) or complex_equal(temp_complex, par_dir) or complex_equal(temp_complex, par_dir_1))
 							flag = false
-						if flag and in(temp_index, id_enrutador, id_selector, id_overflow){
+						if flag and tag_edificio_entrada_triple[temp_index]{
 							flag = false
 							for(d = array_length(edificio.coordenadas) - 1; d >= 0; d--){
 								temp_complex_2 = edificio.coordenadas[d]

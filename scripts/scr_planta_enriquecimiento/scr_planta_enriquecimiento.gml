@@ -4,7 +4,7 @@ function scr_planta_enriquecimiento(edificio = control.null_edificio){
 		var red = edificio.red, red_power = red.eficiencia
 		var flujo = edificio.flujo, flujo_power = flujo.eficiencia
 		if edificio.carga[idr_uranio_enriquecido] = 20 and edificio.carga[idr_uranio_empobrecido] = 1{
-			if in(flujo.liquido, -1, idl_agua, idl_agua_salada){
+			if flujo.liquido = -1 or tag_liquido_agua[flujo.liquido]{
 				//Encender
 				if not edificio.start{
 					edificio_encender(edificio)
