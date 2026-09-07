@@ -1,6 +1,6 @@
 function herir_dron(dmg, dron = control.null_dron){
 	var a = min(dron.vida, dmg)
-	if dron.enemigo
+	if dron.jugador != jugador
 		control.dmg_causado += a
 	else
 		control.dmg_recibido += a

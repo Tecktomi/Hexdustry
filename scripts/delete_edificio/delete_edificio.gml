@@ -4,17 +4,17 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			show_debug_message($"###ADVERTENCIA###\n  Intentando eliminar {edificio.index = -1 ? "??" : edificio_nombre[edificio.index]} en {edificio.a}, {edificio.b}")
 			exit
 		}
-		var index = edificio.index, pre_vida = edificio.vida, aa = edificio.a, bb = edificio.b, enemigo = edificio.enemigo
+		var index = edificio.index, pre_vida = edificio.vida, aa = edificio.a, bb = edificio.b, _jugador = edificio.jugador
 		if online and not _server and not destruccion{
 			server_delete_edificio(aa, bb)
 			if not servidor
 				exit
 		}
-		var chunk_x = edificio.chunk_x, chunk_y = edificio.chunk_y, _jugador = real(edificio.jugador)
+		var chunk_x = edificio.chunk_x, chunk_y = edificio.chunk_y
 		var a, b, flag, temp_edificio, temp_coordenada_2, temp_priority, i, dis, temp_complex, dron, aaa, bbb
 		edificio.vida = 0
 		array_disorder_remove(edificios_index[index], edificio, ptre_index)
-		if index = id_nucleo and menu = 1 and not enemigo{
+		if index = id_nucleo and menu = 1 and _jugador = jugador{
 			if nucleos[_jugador] = edificio
 				nucleos[_jugador] = null_edificio
 			flag = true
@@ -32,9 +32,10 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			}
 			ds_grid_clear(edificio_cercano_dir, -1)
 		}
-		if enemigo and mision_actual >= 0 and mision.objetivo = idm_destruir_edificio and mision.target_id = index and ++mision_counter >= mision.target_num
+		if jugador != _jugador and mision_actual >= 0 and mision.objetivo = idm_destruir_edificio and mision.target_id = index and ++mision_counter >= mision.target_num
 			pasar_mision()
 		array_disorder_remove(edificios_jugador[_jugador], edificio, ptre_jugador)
+		array_disorder_remove(edificios_jugador_index[_jugador, index], edificio, ptre_jugador_index)
 		array_disorder_remove(chunk_edificios[# chunk_x, chunk_y], edificio, ptre_chunk)
 		for(a = edificio.chunk_mina; a <= edificio.chunk_maxa; a++)
 			for(b = edificio.chunk_minb; b <= edificio.chunk_maxb; b++){
@@ -50,7 +51,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		array_disorder_remove(edificios_totales, edificio, ptre_total)
 		ds_grid_destroy(edificio.coordenadas_dis)
 		if destruccion{
-			if enemigo
+			if jugador != _jugador
 				edificios_destruidos++
 			else
 				edificios_perdidos++
@@ -125,7 +126,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			temp_coordenada_2 = edificio.coordenadas[i]
 			a = temp_coordenada_2[0]
 			b = temp_coordenada_2[1]
-			if index = id_nucleo{
+			if index = id_nucleo and _jugador != jugador_IA{
 				ds_grid_set(edificio_cercano, a, b, null_edificio)
 				ds_grid_set(edificio_cercano_dis, a, b, infinity)
 			}
@@ -135,7 +136,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		}
 		if grafic_luz
 			encender_luz(false, edificio)
-		if destruccion and not enemigo{
+		if destruccion and _jugador = jugador{
 			ds_grid_set(repair_id, aa, bb, index)
 			ds_grid_set(repair_dir, aa, bb, edificio.dir)
 			if tag_edificio_seteable[index]{
@@ -143,7 +144,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				ds_grid_set(repair_select, aa, bb, edificio.select)
 			}
 		}
-		if menu = 1 and index = id_nucleo and array_length(edificios_index[id_nucleo]) > 0
+		if menu = 1 and index = id_nucleo and _jugador != jugador_IA and array_length(edificios_index[id_nucleo]) > 0
 			for(a = 0; a < xsize; a++)
 				for(b = 0; b < ysize; b++)
 					if terreno_caminable[terreno[# a, b]]{
@@ -282,7 +283,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				jugador_recursos[_jugador, edificio_precio_id[index, a]] += floor(b * edificio_precio_num[index, a] / 2)
 		}
 		//Camiar target de enemigos
-		if index != id_nucleo
+		if index != id_nucleo and _jugador != jugador_IA
 			for(a = array_length(drones) - 1; a >= 0; a--){
 				var temp_enemigo = drones[a]
 				if temp_enemigo.jugador != _jugador and temp_enemigo.target = edificio{
@@ -323,7 +324,6 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				x : edificio.x,
 				y : edificio.y,
 				edificio : null_edificio,
-				enemigo : not enemigo,
 				radio : 70,
 				dmg : 200 + 30 * edificio.carga[idr_explosivo],
 				incendiario : false,

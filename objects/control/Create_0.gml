@@ -213,6 +213,7 @@ L = {}
 	cheat = false
 	info = false
 	zoom = 1
+	zooming = 1
 	camx = (xsize * 48 - room_width) / 2
 	camy = (ysize * 14 - room_height) / 2
 	oleada_count = 0
@@ -313,7 +314,6 @@ L = {}
 	mapa = -1
 	dificultad = 0
 	clic_sound = false
-	build_enemigo = false
 	panel_xpos = 0
 	panel_ypos = 0
 	partidas = array_create(0, "")
@@ -332,6 +332,8 @@ L = {}
 	comprable_texto = ""
 	draw_once = true
 	light_surface = surface_create(room_width, room_height)
+	spawn_x = 0
+	spawn_y = 0
 #endregion
 #region Misiones
 	null_mision = def_mision()
@@ -357,17 +359,15 @@ L = {}
 	#macro idm_destruir_edificio 6
 	#macro idm_sobrevivir_oleadas 7
 	#macro idm_apretar_ADWS 8
-	objetivos_nombre = [
-		"conseguir",
-		"tener almacenado",
-		"construir",
-		"tener construido",
-		"sobrevivir oleadas",
-		"sin objetivo",
-		"apretar ADWS",
-		"cargar edificio",
-		"destruir edificio"
-	]
+	objetivos_nombre[idm_sin_objetivo] = "sin objetivo"
+	objetivos_nombre[idm_conseguir] = "conseguir"
+	objetivos_nombre[idm_tener_acumulado] = "tener almacenado"
+	objetivos_nombre[idm_cargar_edificio] = "cargar edificio"
+	objetivos_nombre[idm_construir] = "construir"
+	objetivos_nombre[idm_tener_construido] = "tener construido"
+	objetivos_nombre[idm_destruir_edificio] = "destruir edificio"
+	objetivos_nombre[idm_sobrevivir_oleadas] = "sobrevivir oleadas"
+	objetivos_nombre[idm_apretar_ADWS] = "apretar ADWS"
 #endregion
 #region Procesador
 	PROCESADOR_INSTRUCCIONES_LENGTH = [1, 4, 5, 7, 8, 7, 6, 6, 7, 16]
@@ -528,6 +528,32 @@ L = {}
 	android_building = false
 	android_clic = false
 #endregion
+#region IA
+	IA = true
+	ia_grid_real = ds_grid_create(xsize, ysize)
+	ds_grid_clear(ia_grid_real, infinity)
+	ia_grid_camino = ds_grid_create(xsize, ysize)
+	ds_grid_clear(ia_grid_camino, false)
+	ia_build_queue = array_create(0, array_create(0, 0))
+	ia_build_pos = 0
+	#macro ia_queue_cobre 0
+	#macro ia_queue_hierro 1
+	#macro ia_queue_defender 2
+	ia_queue_nombre = ["Obtener cobre", "Obtener hierro", "Construir defensas"]
+	ia_queue = [
+		ia_queue_cobre, ia_queue_cobre, ia_queue_cobre, ia_queue_cobre, ia_queue_cobre,
+		ia_queue_hierro, ia_queue_hierro, ia_queue_hierro, ia_queue_hierro,
+		ia_queue_defender, ia_queue_defender, ia_queue_defender,
+		ia_queue_cobre, ia_queue_cobre, ia_queue_cobre, ia_queue_cobre, ia_queue_cobre,
+		ia_queue_hierro, ia_queue_hierro, ia_queue_hierro, ia_queue_hierro,
+		ia_queue_defender, ia_queue_defender, ia_queue_defender,]
+	ia_queue_count = 0
+	ia_chunk_construidos = ds_grid_create(chunk_xsize, chunk_ysize)
+	ds_grid_clear(ia_chunk_construidos, false)
+	ia_chunk_construidos_array = array_create(0, [0, 0])
+	ia_chunk_defendidos = ds_grid_create(chunk_xsize, chunk_ysize)
+	ds_grid_clear(ia_chunk_defendidos, false)
+#endregion
 null_sound = sound_play(snd_explosion, 0, 0, 0)
 null_edificio = {
 	index : -1,
@@ -598,7 +624,6 @@ null_edificio = {
 	sound : null_sound,
 	modulo : false,
 	punteros : array_create(ptre_MAX, -1),
-	enemigo : false,
 	prioridad : 0,
 	inputs_carga : [],
 	outputs_carga : [],
@@ -625,7 +650,8 @@ null_edificio = {
 #macro ptre_torre_edificio 10
 #macro ptre_puerto 11
 #macro ptre_salida_drones 12
-#macro ptre_MAX 13
+#macro ptre_jugador_index 13
+#macro ptre_MAX 14
 null_edificio.link = null_edificio
 null_edificio.energia_link = array_create(0, null_edificio)
 null_edificio.flujo_link = array_create(0, null_edificio)
@@ -660,7 +686,6 @@ null_dron = {
 	a : 0,
 	b : 0,
 	index : 0,
-	enemigo : true,
 	x : 0,
 	y : 0,
 	vida_max : 5,
@@ -882,7 +907,7 @@ jugador_recursos = array_create(EQUIPOS)
 for(a = 0; a < EQUIPOS; a++)
 	jugador_recursos[a] = array_create(rss_max, 0)
 recurso_keyword_orden = array_create(rss_max, 0)
-for(var a = 0; a < rss_max; a++)
+for(a = 0; a < rss_max; a++)
     recurso_keyword_orden[a] = a
 array_sort(recurso_keyword_orden, function(i1, i2){
     return string_length(recurso_keyword[i2]) - string_length(recurso_keyword[i1])
@@ -964,6 +989,9 @@ function def_ore(recurso, sprite = spr_cobre, cantidad = 50){
 	ido_uranio = def_ore(idr_uranio_bruto, spr_uranio, 30)
 #endregion
 ore_max = array_length(ore_sprite)
+ia_ores = array_create(ore_max)
+for(a = 0; a < ore_max; a++)
+	ia_ores[a] = array_create(0, [0, 0])
 //Drones
 #region Descripción
 	dron_descripcion = [
@@ -1306,7 +1334,8 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 		[id_tuberia, id_tuberia_subterranea, id_bomba_de_evaporacion, id_bomba_hidraulica, id_deposito, id_planta_desalinizadora],
 		[id_torre_basica, id_rifle, id_lanzallamas, id_laser, id_mortero, id_onda_de_choque, id_torre_reparadora, id_muro, id_muro_reforzado, id_silo_de_misiles, id_mina],
 		[id_procesador, id_mensaje, id_memoria, id_pantalla, id_modulo],
-		[id_fabrica_de_drones, id_fabrica_de_drones_grande, id_cinta_grande, id_puerto_de_carga, id_planta_de_reciclaje]]
+		[id_fabrica_de_drones, id_fabrica_de_drones_grande, id_cinta_grande, id_puerto_de_carga, id_planta_de_reciclaje],
+		[id_nucleo, id_recurso_infinito, id_energia_infinita, id_liquido_infinito]]
 	for(a = 0; a < array_length(categoria_edificios); a++)
 		for(b = 0; b < array_length(categoria_edificios[a]); b++){
 			if b < 10
@@ -1314,9 +1343,9 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 			else
 				edificio_key[categoria_edificios[a, b]] = $"{a + 1}{chr(ord("A") + b - 10)}"
 		}
-	categoria_nombre = ["Transporte", "Extracción", "Producción", "Electricidad", "Líquidos", "Defensa", "Lógica", "Drones"]
+	categoria_nombre = ["Transporte", "Extracción", "Producción", "Electricidad", "Líquidos", "Defensa", "Lógica", "Drones", "Especial"]
 	categoria_nombre_disponible = array_create(0, "")
-	array_copy(categoria_nombre_disponible, 0, categoria_nombre, 0, array_length(categoria_nombre))
+	array_copy(categoria_nombre_disponible, 0, categoria_nombre, 0, array_length(categoria_nombre) - 1)
 	categoria_edificios_disponible = array_create(0, array_create(0, 0))
 	array_copy(categoria_edificios_disponible, 0, categoria_edificios, 0, array_length(categoria_edificios))
 	categoria_index_disponible = array_create(0, 0)
@@ -1628,8 +1657,13 @@ for(a = 0; a < array_length(categoria_nombre); a++)
 	edificios_construibles = array_concat(edificios_construibles, categoria_edificios[a])
 edificios = array_create(0, null_edificio)
 edificios_jugador = array_create(EQUIPOS)
-for(a = 0; a < EQUIPOS; a++)
+edificios_jugador_index = array_create(EQUIPOS)
+for(a = 0; a < EQUIPOS; a++){
 	edificios_jugador[a] = array_create(0, null_edificio)
+	edificios_jugador_index[a] = array_create(edificio_max, array_create(0, null_edificio))
+	for(b = 0; b < edificio_max; b++)
+		array_set(edificios_jugador_index[a], b, array_create(0, null_edificio))
+}
 edificios_counter = array_create(edificio_max, 0)
 edificios_salida_drones = array_create(0, null_edificio)
 edi_sort = array_create(edificio_max, 0)
@@ -1905,7 +1939,6 @@ null_explosion = {
 	x : 0,
 	y : 0,
 	edificio : null_edificio,
-	enemigo : false,
 	radio : 0,
 	dmg : 0,
 	incendiario : false,

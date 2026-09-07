@@ -3,17 +3,15 @@ function control_camara(min_camx = 0){
 		//WINDOWS
 		if DEVISE{
 			var cam_vel = 8
-			if keyboard_check(vk_lcontrol) and mouse_wheel_up() and zoom < 4{
-			    var k = power(2, 0.2)
-			    zoom *= k
-			    camx = (camx + room_width / 2) * k - room_width / 2
-			    camy = (camy + room_height / 2) * k - room_height / 2
-			}
-			if keyboard_check(vk_lcontrol) and mouse_wheel_down() and zoom > 1{
-				var k = power(2, -0.2)
-			    zoom *= k
-			    camx = (camx + room_width / 2) * k - room_width / 2
-			    camy = (camy + room_height / 2) * k - room_height / 2
+			if keyboard_check(vk_lcontrol) and mouse_wheel_up() and zooming < 4
+				zooming *= power(2, 0.2)
+			if keyboard_check(vk_lcontrol) and mouse_wheel_down() and zooming > 1
+				zooming *= power(2, -0.2)
+			if zoom != zooming{
+				var k = zoom < zooming ? power(2, 0.05) : power(2, -0.05)
+				zoom *= k
+			    camx = clamp((camx + room_width / 2) * k - room_width / 2, min_camx, xsize * 48 * zoom - room_width)
+			    camy = clamp((camy + room_height / 2) * k - room_height / 2, 0, ysize * 14 * zoom - room_height)
 			}
 			if keyboard_check(CONTROL_RIGHT)
 				camx = min(camx + cam_vel * (1 + 1.5 * keyboard_check(vk_lshift)), xsize * 48 * zoom - room_width)

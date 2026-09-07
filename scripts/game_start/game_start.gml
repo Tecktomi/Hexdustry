@@ -24,7 +24,6 @@ function game_start(_nucleo = true, mision_cumplida = false){
 				for(b = 0; b < array_length(temp_array); b++)
 					temp_array[b] = round(tecnologia_precio_multiplicador * temp_array[b])
 			}
-		clear_edit()
 		pausa = 0
 		input_layer = 0
 		get_file = 0
@@ -62,5 +61,11 @@ function game_start(_nucleo = true, mision_cumplida = false){
 				update_background(a * CHUNK_WIDTH, b * CHUNK_HEIGHT)
 		grafic_hideui = false
 		check_water_target()
+		if flow = 6{
+			if array_length(edificios_jugador_index[jugador_IA, id_nucleo]) = 0
+				add_edificio(id_nucleo, 0, spawn_x, spawn_y, jugador_IA)
+			ia_start()
+		}
+		clear_edit()
 	}
 }

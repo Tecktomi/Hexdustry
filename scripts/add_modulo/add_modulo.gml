@@ -11,7 +11,7 @@ function add_modulo(edificio = control.null_edificio, _server = false, _cheat = 
 			if not servidor
 				exit
 		}
-		if not _cheat and not build_enemigo
+		if not _cheat
 			for(a = array_length(modulo_precio_id[b]) - 1; a >= 0; a--)
 				jugador_recursos[_jugador, modulo_precio_id[b, a]] -= modulo_precio_num[b, a]
 		edificio.modulo = true

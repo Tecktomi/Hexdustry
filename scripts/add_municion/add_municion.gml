@@ -1,4 +1,4 @@
-function add_municion(x = 0, y = 0, hmove = 0, vmove = 0, tipo = municion_tipo_normal, dis = 0, dmg = 0, radio = 50, target = control.null_dron, target_build = control.null_edificio, enemigo = false, humo = false, rastreador = false, _jugador = bool(jugador)){
+function add_municion(x = 0, y = 0, hmove = 0, vmove = 0, tipo = municion_tipo_normal, dis = 0, dmg = 0, radio = 50, target = control.null_dron, target_build = control.null_edificio, humo = false, rastreador = false, _jugador = bool(jugador)){
 	var offset = random(0.3)
 	var municion = {
 		x : x + offset * hmove,
@@ -13,7 +13,6 @@ function add_municion(x = 0, y = 0, hmove = 0, vmove = 0, tipo = municion_tipo_n
 		radio : radio,
 		target : target,
 		target_build : target_build,
-		enemigo : (jugador != _jugador),
 		humo : humo,
 		rastreador : rastreador,
 		jugador : _jugador

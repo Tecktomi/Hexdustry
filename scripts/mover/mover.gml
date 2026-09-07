@@ -107,17 +107,19 @@ function mover(edificio = control.null_edificio){
 			index = temp_edificio.index
 			edificio.carga[out]--
 			edificio.carga_total--
-			if mision_actual >= 0 and mision.objetivo = idm_cargar_edificio and mision.target_id = index
+			if temp_edificio.jugador = jugador and mision_actual >= 0 and mision.objetivo = idm_cargar_edificio and mision.target_id = index
 				pasar_mision()
 			if tag_recurso_piedra[out] and tag_edificio_piedra[index]
 				out = idr_piedra
 			else if tag_recurso_uranio[out] and tag_edificio_uranio[index]
 				out = idr_uranio_bruto
 			if index = id_nucleo{
-				recursos_obtenidos_time_temp[out]++
 				jugador_recursos[edificio.jugador, out]++
-				if mision_actual >= 0 and mision.objetivo = idm_conseguir and mision.target_id = out and ++mision_counter >= mision.target_num
-					pasar_mision()
+				if temp_edificio.jugador = jugador{
+					recursos_obtenidos_time_temp[out]++
+					if mision_actual >= 0 and mision.objetivo = idm_conseguir and mision.target_id = out and ++mision_counter >= mision.target_num
+						pasar_mision()
+				}
 			}
 			temp_edificio.carga[out]++
 			temp_edificio.carga_total++

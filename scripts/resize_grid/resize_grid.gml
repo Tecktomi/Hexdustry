@@ -36,6 +36,8 @@ function resize_grid(minx = 0, miny = 0){
 		ds_grid_resize(background_bool, chunk_xsize, chunk_ysize)
 		ds_grid_resize(beta, xsize, ysize)
 		ds_grid_resize(temperatura, xsize, ysize)
+		ds_grid_resize(ia_grid_real, xsize, ysize)
+		ds_grid_resize(ia_grid_camino, xsize, ysize)
 		ds_grid_set_region(terreno, minx, miny, xsize, ysize, 1)
 		ds_grid_set_region(ore, minx, miny, xsize, ysize, -1)
 		ds_grid_set_region(ore_amount, minx, miny, xsize, ysize, 0)

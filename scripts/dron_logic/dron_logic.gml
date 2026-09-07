@@ -1,7 +1,7 @@
 function dron_logic(){
 	with control{
 		var cam_center_x = (camx + room_width * zoom / 2), cam_center_y = (camy + room_height * zoom / 2)
-		var a, b, dron, dron_x, dron_y, index, vel, enemigo, chunk_x, chunk_y, temp_complex, edificio, i, j
+		var a, b, dron, dron_x, dron_y, index, vel, chunk_x, chunk_y, temp_complex, edificio, i, j
 		var u, v, dis, min_dis, aa, bb, angle, cosa, sina, dir, c, d, _comprable, flag, temp_beta, temp_terreno, temp_complex_2
 		var min_puerto, temp_almacenes, minu, minv, maxu, maxv, ataque, min_dis_eu, aaa, bbb, disi, dis_2, _posibles, closest_dis, chunk, max_prioridad
 		var temp_chunk_dron, temp_dron_2, temp_dron_size, temp_array, temp_enemigo, temp_dis, temp_dron, _jugador, dron_a, dron_b, bmod, aereo
@@ -17,15 +17,14 @@ function dron_logic(){
 			dron_b = clamp(temp_complex[1], 0, ysize - 1)
 			index = dron.index
 			vel = dron_vel[index]
-			enemigo = dron.enemigo
 			chunk_x = dron.chunk_x
 			chunk_y = dron.chunk_y
 			aereo = dron_aereo[index]
 			if draw_once{
 				 if dron_a >= mina and dron_b >= minb and dron_a < maxa and dron_b < maxb
-					draw_dron(dron, enemigo)
+					draw_dron(dron, EQUIPO_COLOR[_jugador])
 				else{
-					draw_set_color(enemigo ? c_red : c_blue)
+					draw_set_color(EQUIPO_COLOR[_jugador])
 					angle = arctan2(cam_center_y - dron_y, cam_center_x - dron_x)
 					cosa = cos(angle)
 					sina = sin(angle)
@@ -68,7 +67,7 @@ function dron_logic(){
 				dron.y--
 			if dron.target != null_edificio and dron.target.vida <= 0
 				dron.target = null_edificio
-			if enemigo and tag_drones_terrestres[index] and dron.target = null_edificio and array_length(edificios_jugador[_jugador]) < array_length(edificios_totales)
+			if _jugador = jugador_IA and tag_drones_terrestres[index] and dron.target = null_edificio and array_length(edificios_jugador[_jugador]) < array_length(edificios_totales)
 				dron.target = edificio_cercano[# dron.a, dron.b]
 			if not aereo{
 				if terreno[# dron.a, dron.b] = idt_hielo
@@ -200,7 +199,7 @@ function dron_logic(){
 						if _comprable and not cheat
 							_comprable = check_reconstruible(b, false, _jugador)._comprable
 						if _comprable{
-							edificio = construir(b, repair_dir[# i, j], i, j)
+							edificio = construir(b, repair_dir[# i, j], i, j,,, _jugador)
 							if tag_edificio_seteable[b]
 								set_edificio(repair_mode[# i, j], repair_select[# i, j], edificio)
 						}
