@@ -2,7 +2,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 	with control{
 		if edificio_bool[# a, b]
 			exit
-		var temp_complex = abtoxy(a, b), chunk_x = clamp(floor(a / CHUNK_WIDTH), 0, chunk_xsize - 1), chunk_y = clamp(floor(b / CHUNK_HEIGHT), 0, chunk_ysize - 1), enemigo = (jugador != _jugador)
+		var temp_complex = abtoxy(a, b), chunk_x = clamp(floor(a / CHUNK_WIDTH), 0, chunk_xsize - 1), chunk_y = clamp(floor(b / CHUNK_HEIGHT), 0, chunk_ysize - 1)
 		x = temp_complex[0]
 		y = temp_complex[1]
 		var edificio = {
@@ -76,7 +76,6 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			sound : null_sound,
 			modulo : false,
 			punteros : array_create(ptre_MAX, 0),
-			enemigo : (jugador != _jugador),
 			prioridad : edificio_prioridad[index],
 			inputs_carga : array_create(0, null_edificio),
 			outputs_carga : array_create(0, null_edificio),
@@ -96,13 +95,13 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			else if in(dir, 3, 4)
 				edificio.center_x -= 12
 			if in(dir, 0, 4)
-				edificio.center_y += 7
+				edificio.center_y += TILE_HEIGHT / 4
 			else if in(dir, 1, 3)
-				edificio.center_y -= 7
+				edificio.center_y -= TILE_HEIGHT / 4
 			else if dir = 2
-				edificio.center_y -= 14
+				edificio.center_y -= TILE_HEIGHT / 2
 			else if dir = 5
-				edificio.center_y += 14
+				edificio.center_y += TILE_HEIGHT / 2
 		}
 		else if edificio_size[index] mod 2 = 0{
 			if edificio_rotable[index]{
@@ -110,23 +109,24 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 					edificio.center_x += 8
 				else
 					edificio.center_x -= 8
-				edificio.center_y += 14
+				edificio.center_y += TILE_HEIGHT / 2
 			}
 			else{
 				if edificio.dir = 0
 					edificio.center_x += 8
 				else
 					edificio.center_x -= 8
-				edificio.center_y += 14
+				edificio.center_y += TILE_HEIGHT / 2
 				edificio.xscale = -1 + 2 * (dir = 0)
 			}
 		}
 		array_disorder_push(edificios_totales, edificio, ptre_total)
 		var center_x = edificio.center_x, center_y = edificio.center_y, dron
 		ds_grid_clear(edificio.coordenadas_dis, infinity)
-		if not enemigo
+		if _jugador = jugador
 			edificios_construidos++
 		array_disorder_push(edificios_index[index], edificio, ptre_index)
+		array_disorder_push(edificios_jugador_index[_jugador, index], edificio, ptre_jugador_index)
 		if mision_actual >= 0 and mision.objetivo = idm_construir and mision.target_id = index and ++mision_counter >= mision.target_num
 			pasar_mision()
 		temp_complex = [0, 0]
@@ -148,7 +148,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		else if index = id_memoria
 			edificio.variables = array_create(128)
 		array_push(efectos, add_efecto(size_fx[edificio_size[index] - 1], 0, x, y, 3))
-		if index = id_nucleo{
+		if index = id_nucleo and _jugador != jugador_IA{
 			ds_grid_resize(edificio.coordenadas_dis, xsize, ysize)
 			nucleos[_jugador] = edificio
 		}
@@ -251,7 +251,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 				}
 			}
 		#endregion
-		if index = id_nucleo and menu = 1{
+		if index = id_nucleo and menu = 1 and _jugador != jugador_IA{
 			edificio_pathfind(edificio)
 			for(c = array_length(drones) - 1; c >= 0; c--){
 				dron = drones[c]
@@ -318,7 +318,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			ds_grid_set(edificio_bool, aa, bb, true)
 			ds_grid_set(edificio_id, aa, bb, edificio)
 			ds_grid_set(repair_id, aa, bb, -1)
-			if index = id_nucleo{
+			if index = id_nucleo and _jugador != jugador_IA{
 				ds_grid_set(edificio.coordenadas_dis, aa, bb, 0)
 				ds_grid_set(edificio_cercano_dis, aa, bb, 0)
 				ds_grid_set(edificio_cercano, aa, bb, edificio)

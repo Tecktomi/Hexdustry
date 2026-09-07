@@ -96,7 +96,7 @@ function load_game_buffer(buffer){
 			if index = id_nucleo
 				var edificio = add_edificio(index, dir, a, b, _jugador)
 			else
-				edificio = construir(index, dir, a, b,, true, true, _jugador)
+				edificio = construir(index, dir, a, b, true, true, _jugador)
 			if index = id_procesador
 				load_procesador(buffer, edificio)
 		}
@@ -196,7 +196,7 @@ function load_game_buffer(buffer){
 			if mask & (1 << c++) _jugador = real(buffer_read(buffer, buffer_u8))
 			if mask & (1 << c++) _target = buffer_read(buffer, buffer_u16)
 			if mask & (1 << c++) _target_build = buffer_read(buffer, buffer_u16)
-			var municion = add_municion(a, b, hmove, vmove, tipo, dis, dmg, radio,,,, humo, rastreador, _jugador)
+			var municion = add_municion(a, b, hmove, vmove, tipo, dis, dmg, radio,,, humo, rastreador, _jugador)
 			municion.origen_x = a
 			municion.origen_y = b
 			if _target != -1
@@ -204,6 +204,11 @@ function load_game_buffer(buffer){
 			if _target_build != -1
 				municion.target_build = edificios_totales[_target_build]
 		}
+		var temp_text = ""
+		for(a = 0; a < edificio_max; a++)
+			if array_length(edificios_index[a]) > 0
+				temp_text += $"{edificio_nombre[a]}: {array_length(edificios_index[a])}, "
+		show_debug_message(temp_text)
 		return true
 	}
 }

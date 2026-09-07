@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ia_step",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ia_step",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

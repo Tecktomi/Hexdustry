@@ -204,6 +204,8 @@
     {"id":{"name":"herir_hexagono","path":"scripts/herir_hexagono/herir_hexagono.yy",},},
     {"id":{"name":"hex_perlin","path":"scripts/hex_perlin/hex_perlin.yy",},},
     {"id":{"name":"hover_sprite_boton_text","path":"scripts/hover_sprite_boton_text/hover_sprite_boton_text.yy",},},
+    {"id":{"name":"ia_start","path":"scripts/ia_start/ia_start.yy",},},
+    {"id":{"name":"ia_step","path":"scripts/ia_step/ia_step.yy",},},
     {"id":{"name":"in","path":"scripts/in/in.yy",},},
     {"id":{"name":"investigar","path":"scripts/investigar/investigar.yy",},},
     {"id":{"name":"is_comprable","path":"scripts/is_comprable/is_comprable.yy",},},

@@ -11,8 +11,10 @@ function redo_pathfind(){
 		ds_grid_clear(edificio_cercano_dir, -1)
 		for(a = array_length(edificios_index[id_nucleo]) - 1; a >= 0; a--){
 			edificio = edificios_index[id_nucleo][a]
-			ds_grid_clear(edificio.coordenadas_dis, infinity)
-			edificio_pathfind(edificio)
+			if edificio.jugador != jugador_IA{
+				ds_grid_clear(edificio.coordenadas_dis, infinity)
+				edificio_pathfind(edificio)
+			}
 		}
 	}
 }

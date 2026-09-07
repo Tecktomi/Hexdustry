@@ -12,7 +12,7 @@ function handle_add_edificio(buffer){
 			liquido_choose = 0
 		}
 		if servidor{
-			construir(index, dir, a, b,, true, _cheat, _jugador)
+			construir(index, dir, a, b, true, _cheat, _jugador)
 			server_add_edificio(index, dir, a, b, _cheat, _jugador)
 		}
 		else{

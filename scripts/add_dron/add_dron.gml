@@ -1,11 +1,10 @@
 function add_dron(a, b, index, _jugador = jugador){
 	with control{
-		var temp_complex = abtoxy(a, b), enemigo = (_jugador != jugador)
+		var temp_complex = abtoxy(a, b)
 		var dron = {
 			a : a,
 			b : b,
 			index : real(index),
-			enemigo : enemigo,
 			x : temp_complex[0] + random_range(-4, 4),
 			y : temp_complex[1] + random_range(-4, 4),
 			vida_max : dron_vida_max[index],

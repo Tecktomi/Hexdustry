@@ -11,14 +11,14 @@ function scr_laser(edificio = control.null_edificio){
 			edificio.target_edificio = null_edificio
 			turret_target(edificio)
 		}
-		var enemigo = edificio.target, enemigo_edificio = edificio.target_edificio
-		if enemigo != null_dron
-			var target_x = enemigo.x, target_y = enemigo.y
+		var dron = edificio.target, enemigo_edificio = edificio.target_edificio
+		if dron != null_dron
+			var target_x = dron.x, target_y = dron.y
 		else if enemigo_edificio != null_edificio{
 			target_x = enemigo_edificio.center_x
 			target_y = enemigo_edificio.center_y
 		}
-		if (enemigo != null_dron or enemigo_edificio != null_edificio) and point_distance(edificio.center_x, edificio.center_y, target_x, target_y) < edificio_alcance[edificio.index]{
+		if (dron != null_dron or enemigo_edificio != null_edificio) and point_distance(edificio.center_x, edificio.center_y, target_x, target_y) < edificio_alcance[edificio.index]{
 			edificio.select = radtodeg(-arctan2(edificio.center_x - target_x, target_y - edificio.center_y)) - 90
 			change_energia(edificio_energia_consumo[index], edificio)
 			edificio_encender(edificio,,, false)
@@ -29,9 +29,9 @@ function scr_laser(edificio = control.null_edificio){
 			draw_set_color(c_red)
 			draw_line_off(edificio.center_x, edificio.center_y, target_x, target_y)
 			draw_set_alpha(1)
-			if dmg > 6 and enemigo != null_dron
-				aplicar_efecto(1, 60, enemigo)
-			if (enemigo != null_dron and herir_dron(dmg, enemigo)) or (enemigo_edificio != null_edificio and herir_edificio(dmg, enemigo_edificio)){
+			if dmg > 6 and dron != null_dron
+				aplicar_efecto(1, 60, dron)
+			if (dron != null_dron and herir_dron(dmg, dron)) or (enemigo_edificio != null_edificio and herir_edificio(dmg, enemigo_edificio)){
 				edificio_encender(edificio, false,, false)
 				edificio.fuel = 0
 				if edificio.target != null_dron

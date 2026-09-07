@@ -399,8 +399,8 @@ if in(menu, 1, 3){
 				}
 				draw_vida(aaa, bbb, edificio.vida, edificio_vida[index])
 				//Dibujo estados
-				if _jugador != jugador or edificio.enemigo
-					draw_edificio_borde(edificio, (_jugador = -1) ? c_ltgray : EQUIPO_COLOR[_jugador])
+				if _jugador != jugador
+					draw_edificio_borde(edificio, EQUIPO_COLOR[_jugador])
 				if info and edificio.waiting{
 					draw_set_color(c_yellow)
 					draw_circle_off(aa, bb + 16, 4, false)
@@ -408,6 +408,14 @@ if in(menu, 1, 3){
 				if edificio.idle{
 					draw_set_color(c_red)
 					draw_circle_off(aa, bb + 8, 4, false)
+				}
+				if cheat and  index = id_nucleo and edificio.jugador = jugador_IA{
+					temp_text = $"{ia_queue_nombre[ia_queue[ia_queue_count]]}: {ia_queue_count}/{array_length(ia_queue)}\n"+
+						$"construyendo: {edificio_nombre[ia_build_queue[ia_build_pos, 0]]}: {ia_build_pos}/{array_length(ia_build_queue)}\n"
+					for(i = 0; i < rss_max; i++)
+						if jugador_recursos[jugador_IA, i] > 0
+							temp_text += $"{recurso_nombre[i]}: {jugador_recursos[jugador_IA, i]}, "
+					draw_text_background(center_x, center_y, temp_text)
 				}
 			}
 		}
@@ -483,8 +491,10 @@ if in(menu, 1, 3){
 	clic_sound = false
 	if menu = 3{
 		draw_set_halign(fa_right)
-		if draw_boton(room_width - 40, 20, build_enemigo ? "ENEMIGO" : "ALIADO", build_enemigo ? ui_rojo : ui_azul)
-			build_enemigo = not build_enemigo
+		if jugador = jugador_IA and draw_boton(room_width - 40, 20, L.enemigo, ui_rojo)
+			jugador = 2
+		else if jugador = 2 and draw_boton(room_width - 40, 20, "ALIADO", ui_verde)
+			jugador = jugador_IA
 		draw_set_halign(fa_left)
 	}
 }
@@ -579,9 +589,9 @@ if pausa = 1{
 				exit
 			}
 			else if menu = 3{
+				array_copy(categoria_nombre_disponible, 0, categoria_nombre, 0, array_length(categoria_nombre) - 1)
 				menu = 2
 				build_index = -1
-				build_enemigo = false
 				draw_set_halign(fa_left)
 				draw_set_color(color)
 				exit
@@ -1292,11 +1302,11 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 	if edificio_bool[# mx, my]{
 		var index = edificio.index
 		temp_text += $"{edificio_nombre[index]}\n"
-		if (edificio.jugador != jugador or edificio.enemigo) and menu = 1 and not cheat{
+		if edificio.jugador != jugador and menu = 1 and not cheat{
 			if online and edificio.jugador > jugador_IA
 				temp_text += server_jugadores_nombre[edificio.jugador - 2]
 			else
-				temp_text += (edificio.jugador = jugador_salvaje) ? "SALVAJE\n" : "ENEMIGO\n"
+				temp_text += (edificio.jugador = jugador_salvaje) ? "SALVAJE\n" : $"{L.enemigo}\n"
 		}
 		else{
 			//Blueprint
@@ -1326,7 +1336,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 					activar_edificio(edificio)
 			}
 			//Seleccionar edificios
-			if mouse_check_button_pressed(mb_left) and build_index = 0 and build_menu = 0{
+			if mouse_check_button_pressed(mb_left) and build_index = -1 and build_menu = 0{
 				if procesador_select != null_edificio{
 					mouse_clear(mb_left)
 					if procesador_select != edificio{
@@ -1769,12 +1779,12 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		}
 	}
 	//Seleccionar drones
-	else if DEVISE and mouse_check_button_pressed(mb_left) and build_index = 0{
+	else if DEVISE and mouse_check_button_pressed(mb_left) and build_index = -1{
 		mx_clic = xmouse
 		my_clic = ymouse
 		clicked = true
 	}
-	if DEVISE and mouse_check_button(mb_left) and clicked and build_index = 0 and not keyboard_check(CONTROL_REPARAR){
+	if DEVISE and mouse_check_button(mb_left) and clicked and build_index = -1 and not keyboard_check(CONTROL_REPARAR){
 		draw_set_alpha(0.5)
 		draw_set_color(c_black)
 		draw_rectangle_off(mx_clic, my_clic, xmouse, ymouse, false)
@@ -1790,7 +1800,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		}
 		draw_set_alpha(1)
 	}
-	if DEVISE and mouse_check_button_released(mb_left) and clicked and build_index = 0{
+	if DEVISE and mouse_check_button_released(mb_left) and clicked and build_index = -1{
 		deselect_drones()
 		var minx = min(mx_clic, xmouse), miny = min(my_clic, ymouse), maxx = max(mx_clic, xmouse), maxy = max(my_clic, ymouse)
 		for(a = array_length(drones_propios) - 1; a >= 0; a--){
@@ -1829,7 +1839,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		draw_set_color(c_white)
 		draw_circle_off(dron.x, dron.y, 20, true)
 		temp_text += $"{dron_nombre[dron.index]}\n"
-		temp_text += $"{dron.jugador != jugador ? "ENEMIGO" : "ALIADO"}\n"
+		temp_text += $"{dron.jugador != jugador ? L.enemigo : "ALIADO"}\n"
 		temp_text += $"vida: {dron.vida}/{dron.vida_max}\n"
 		var flag_dron = false
 		for(a = 0; a < rss_max; a++)
@@ -1917,14 +1927,14 @@ if sonido
 		volumen[a] = 0
 #region Menú de edificios
 	//ANDROID
-	if not DEVISE and build_menu = 0 and build_index = 0 and draw_sprite_boton(spr_construir, 0, room_width - 80, room_height - 80, 68, 68){
+	if not DEVISE and build_menu = 0 and build_index = -1 and draw_sprite_boton(spr_construir, 0, room_width - 80, room_height - 80, 68, 68){
 		build_menu = 1
 		menu_x = room_width / 2
 		menu_y = room_height / 2
 		android_building = false
 	}
 	var just_pressed = false, _size = DEVISE ? 100 : 200, _size_sqr = DEVISE ? 100 : 200, _size_sqrx = DEVISE ? 32 : 64, _size_sqry = DEVISE ? TILE_WIDTH : 56
-	if DEVISE and mouse_check_button_pressed(mb_right) and build_index = 0 and not edificio_bool[# mx, my] and not keyboard_check(CONTROL_REPARAR) and pausa != 1{
+	if DEVISE and mouse_check_button_pressed(mb_right) and build_index = -1 and not edificio_bool[# mx, my] and not keyboard_check(CONTROL_REPARAR) and pausa != 1{
 		mouse_clear(mb_right)
 		if build_menu = 0{
 			build_menu = 1
@@ -2074,13 +2084,13 @@ if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastchar, CONTROL_LEFT
 if keyboard_step-- = 0 and not show_menu
 	keyboard_string = ""
 //Cancelar construcción o cerrar menú del selector
-if DEVISE and (mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape)) and (build_index > 0 or show_menu) and selected_dron = null_dron{
+if DEVISE and (mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape)) and (build_index >= 0 or show_menu) and selected_dron = null_dron{
 	mouse_clear(mb_right)
 	keyboard_clear(vk_escape)
 	clear_edit()
 }
 //CONSTRUCCIÓN
-if build_index > 0 and win = 0{
+if build_index >= 0 and win = 0{
 	var construible = true
 	if just_pressed{
 		if not edificio_rotable[build_index]
@@ -2116,7 +2126,7 @@ if build_index > 0 and win = 0{
 	else{
 		xpos = room_width - 80
 		if draw_sprite_boton(spr_construir, 1, xpos, room_height - 80, 64, 56){
-			build_index = 0
+			build_index = -1
 			clicked = false
 		}
 		xpos -= 80
@@ -2209,7 +2219,7 @@ if build_index > 0 and win = 0{
 					temp_text = L.modulo_edificio_con_modulo
 					flag_2 = false
 				}
-				if flag_2 and temp_edificio.enemigo = build_enemigo{
+				if flag_2 and temp_edificio.jugador = jugador{
 					#region Efectos
 						//Más extracción
 						if in(index, id_taladro, id_taladro_electrico, id_taladro_de_explosion)
@@ -2285,10 +2295,10 @@ if build_index > 0 and win = 0{
 				draw_set_color(c_red)
 				var flag_3 = false
 				for(a = array_length(drones) - 1; a >= 0; a--){
-					var enemigo = drones[a]
-					if enemigo.jugador != jugador{
-						draw_circle_off(enemigo.x, enemigo.y, ENEMIGO_CERCA, true)
-						if not flag_3 and point_distance(mouse_x, mouse_y, enemigo.x * zoom - camx, enemigo.y * zoom - camy) < ENEMIGO_CERCA * zoom{
+					var dron = drones[a]
+					if dron.jugador != jugador{
+						draw_circle_off(dron.x, dron.y, ENEMIGO_CERCA, true)
+						if not flag_3 and point_distance(mouse_x, mouse_y, dron.x * zoom - camx, dron.y * zoom - camy) < ENEMIGO_CERCA * zoom{
 							temp_text += $"{L.construir_enemigos_cerca}\n"
 							_comprable = false
 							flag_3 = true
@@ -2726,9 +2736,9 @@ if build_index > 0 and win = 0{
 								if _comprable{
 									temp_complex_2 = pre_build_list[a]
 									if edificio_camino[build_index] and pre_build_list_cruce[a]
-										construir(id_cruce, 0, temp_complex_2[0], temp_complex_2[1], build_enemigo)
+										construir(id_cruce, 0, temp_complex_2[0], temp_complex_2[1])
 									else
-										construir(build_index, build_dir, temp_complex_2[0], temp_complex_2[1], build_enemigo)
+										construir(build_index, build_dir, temp_complex_2[0], temp_complex_2[1])
 								}
 							}
 						}
@@ -2747,9 +2757,9 @@ if build_index > 0 and win = 0{
 										b = my_clic
 										for(var k = 0; k <= j; k++){
 											if edificio_bool[# a, b] and edificio_camino[edificio_id[# a, b].index] and edificio_id[# a, b].dir mod 3 != build_dir mod 3
-												construir(id_cruce, build_dir, a, b, build_enemigo)
+												construir(id_cruce, build_dir, a, b)
 											else
-												construir(build_index, build_dir, a, b, build_enemigo)
+												construir(build_index, build_dir, a, b)
 											a += DESFACE_A[b & 1, build_dir]
 											b += DESFACE_B[b & 1, build_dir]
 										}
@@ -2823,7 +2833,7 @@ if build_index > 0 and win = 0{
 							continue
 						if (aaaa != temp_mx or bbbb != temp_my) and edificio_bool[# aaaa, bbbb]{
 							var temp_edificio = edificio_id[# aaaa, bbbb]
-							if temp_edificio.enemigo = build_enemigo and edificio_energia[temp_edificio.index] and point_distance(aa, bb, temp_edificio.center_x, temp_edificio.center_y) <= CABLE_RANGE
+							if temp_edificio.jugador = jugador and edificio_energia[temp_edificio.index] and point_distance(aa, bb, temp_edificio.center_x, temp_edificio.center_y) <= CABLE_RANGE
 								draw_line_off(aa, bb, temp_edificio.center_x, temp_edificio.center_y)
 						}
 					}
@@ -2886,7 +2896,7 @@ if build_index > 0 and win = 0{
 								_comprable = is_comprable(edificio_precio_id[build_index], edificio_precio_num[build_index])
 							if _comprable{
 								temp_complex_2 = pre_build_list[a]
-								construir(build_index, build_dir, temp_complex_2[0], temp_complex_2[1], build_enemigo)
+								construir(build_index, build_dir, temp_complex_2[0], temp_complex_2[1])
 							}
 						}
 					}
@@ -2909,7 +2919,7 @@ if build_index > 0 and win = 0{
 								break
 							if edificio_bool[# a, b]{
 								var edificio_2 = edificio_id[# a, b]
-								if edificio_2.enemigo = build_enemigo and tag_edificio_tunel[edificio_2.index] and edificio_2.dir = (build_dir + 3) mod 6{
+								if edificio_2.jugador = jugador and tag_edificio_tunel[edificio_2.index] and edificio_2.dir = (build_dir + 3) mod 6{
 									build_target = edificio_2
 									build_able = true
 									break
@@ -2988,7 +2998,7 @@ if build_index > 0 and win = 0{
 									continue
 								if edificio_bool[# aa, bb] and not (aa = temp_mx and bb = temp_my){
 									temp_edificio = edificio_id[# aa, bb]
-									if temp_edificio.index = build_index and temp_edificio.link = null_edificio and temp_edificio.enemigo = build_enemigo{
+									if temp_edificio.index = build_index and temp_edificio.link = null_edificio and temp_edificio.jugador = jugador{
 										flag = true
 										break
 									}
@@ -3011,7 +3021,7 @@ if build_index > 0 and win = 0{
 										continue
 									if edificio_bool[# aa, bb]{
 										var temp_edificio = edificio_id[# aa, bb]
-										if temp_edificio.index = id_ensambladora and not temp_edificio.mode and temp_edificio.enemigo = build_enemigo{
+										if temp_edificio.index = id_ensambladora and not temp_edificio.mode and temp_edificio.jugador = jugador{
 											draw_edificio_borde(temp_edificio, c_blue, _parpadeo)
 											temp_text += "Conectando\n"
 											break
@@ -3116,7 +3126,7 @@ if build_index > 0 and win = 0{
 					//Construir
 					if ((DEVISE and mouse_check_button_pressed(mb_left)) or (not DEVISE and mouse_check_button_released(mb_left) and android_building and construible and point_distance(mouse_x, mouse_y, android_mouse_x, android_mouse_y) < 10)) and flag_camino and _comprable and (not edificio_bool[# temp_mx, temp_my] or (build_index = id_cruce and edificio_camino[edificio_id[# temp_mx, temp_my].index])){
 						android_building = false
-						var temp_edificio = construir(build_index, build_dir, temp_mx, temp_my, build_enemigo)
+						var temp_edificio = construir(build_index, build_dir, temp_mx, temp_my)
 						if temp_edificio != null_edificio and tag_dron_encima[temp_edificio.index]{
 							array_copy(temp_edificio.inputs_carga, 0, build_array_edificios_input, 0, array_length(build_array_edificios_input))
 							for(a = array_length(temp_edificio.inputs_carga) - 1; a >= 0; a--){
@@ -3147,7 +3157,7 @@ if build_index > 0 and win = 0{
 							continue
 						if (aa != temp_mx or bb != temp_my) and edificio_draw[# aa, bb]{
 							var temp_edificio = edificio_id[# aa, bb]
-							if temp_edificio.enemigo = build_enemigo and temp_edificio.index = id_cable
+							if temp_edificio.jugador = jugador and temp_edificio.index = id_cable
 								draw_line_off(temp_complex_2[0], temp_complex_2[1], temp_edificio.center_x, temp_edificio.center_y)
 						}
 					}
@@ -3220,7 +3230,7 @@ else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
 	//Cancelar
 	if mouse_check_button_pressed(mb_right){
 		mouse_clear(mb_right)
-		build_index = 0
+		build_index = -1
 	}
 	//Rotar
 	if keyboard_check_pressed(CONTROL_ROTAR) or mouse_wheel_up() or mouse_wheel_down(){
@@ -3322,7 +3332,7 @@ else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
 	if mouse_check_button_pressed(mb_left){
 		mouse_clear(mb_left)
 		if not keyboard_check(vk_lshift)
-			build_index = 0
+			build_index = -1
 		for(a = 0; a < len; a++){
 			var temp_blueprint = blueprint[a], aaa = temp_blueprint.a + mx
 			if flip and (temp_blueprint.b & 1) = 1{
@@ -3340,7 +3350,7 @@ else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
 }
 //Destruir edificio
 else{
-	if ((mouse_check_button(mb_right) and prev_change) or mouse_check_button_pressed(mb_right)) and not outside and edificio_bool[# mx, my] and edificio.index != id_nucleo and edificio.enemigo = build_enemigo{
+	if ((mouse_check_button(mb_right) and prev_change) or mouse_check_button_pressed(mb_right)) and not outside and edificio_bool[# mx, my] and edificio.index != id_nucleo and edificio.jugador = jugador{
 		prev_change = true
 		delete_edificio(edificio)
 	}

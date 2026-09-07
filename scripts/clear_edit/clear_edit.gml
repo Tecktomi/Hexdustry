@@ -1,6 +1,6 @@
 function clear_edit(){
 	with control{
-		build_index = 0
+		build_index = -1
 		build_dir = 0
 		build_menu = 0
 		puerto_carga_bool = false

@@ -3,7 +3,7 @@ function step(){
 		//Detenerse por LAG
 		if online and not servidor and timer + LAG > server_timer
 			exit
-		var a, b, cambio, temp_array_real, buffer, edificio, municion, target, _jugador, _tipo, _dmg, temp_complex, muna, munb, len, efecto, humo, fuego, temp_time, flag, temp_complex_list, i, aa, bb, enemigo, temp_text_right, file, red, flujo, temp_explosion
+		var a, b, cambio, temp_array_real, buffer, edificio, municion, target, _jugador, _tipo, _dmg, temp_complex, muna, munb, len, efecto, humo, fuego, temp_time, flag, temp_complex_list, i, aa, bb, temp_text_right, file, red, flujo, temp_explosion
 		//Input multijugador
 		if online and not servidor
 			for(a = array_length(cambios) - 1; a >= 0; a--){
@@ -11,7 +11,7 @@ function step(){
 				if cambio.step <= timer{
 					array_delete(cambios, a, 1)
 					if cambio.tipo = cambio_construir
-						construir(cambio.data.index, cambio.data.dir, cambio.data.a, cambio.data.b,, true, cambio.data.cheat, cambio.data.jugador)
+						construir(cambio.data.index, cambio.data.dir, cambio.data.a, cambio.data.b, true, cambio.data.cheat, cambio.data.jugador)
 					else if cambio.tipo = cambio_delete_edificio
 						delete_edificio(edificio_id[# cambio.data.a, cambio.data.b], false, true, cambio.data.cheat)
 					else if cambio.tipo = cambio_set_edificio
@@ -245,38 +245,38 @@ function step(){
 					bb = clamp(temp_complex[1], 0, ysize - 1)
 					if grid_water_distance[# aa, bb] < infinity
 						if irandom(len) > i + 7{
-							enemigo = add_dron(aa, bb, idd_destructor, jugador_IA)
+							add_dron(aa, bb, idd_destructor, jugador_IA)
 							i += 8
 							continue
 						}
 						else if irandom(len) > i + 2{
-							enemigo = add_dron(aa, bb, idd_barco, jugador_IA)
+							add_dron(aa, bb, idd_barco, jugador_IA)
 							i += 3
 							continue
 						}
 					if not terreno_caminable[terreno[# aa, bb]] or edificio_cercano[# aa, bb] = null_edificio or (tutorial = 0 and random(1) < 0.15){
 						if irandom(len) > i + 11{
-							enemigo = add_dron(aa, bb, idd_bombardero, jugador_IA)
+							add_dron(aa, bb, idd_bombardero, jugador_IA)
 							i += 10
 						}
 						else if irandom(len) > i + 5{
-							enemigo = add_dron(aa, bb, idd_helicoptero, jugador_IA)
+							add_dron(aa, bb, idd_helicoptero, jugador_IA)
 							i += 4
 						}
 						else
-							enemigo = add_dron(aa, bb, idd_kamikaze, jugador_IA)
+							add_dron(aa, bb, idd_kamikaze, jugador_IA)
 					}
 					else{
 						if irandom(len) > i + 15{
-							enemigo = add_dron(aa, bb, idd_titan, jugador_IA)
+							add_dron(aa, bb, idd_titan, jugador_IA)
 							i += 14
 						}
 						else if irandom(len) > i + 6{
-							enemigo = add_dron(aa, bb, idd_tanque, jugador_IA)
+							add_dron(aa, bb, idd_tanque, jugador_IA)
 							i += 5
 						}
 						else
-							enemigo = add_dron(aa, bb, idd_arana, jugador_IA)
+							add_dron(aa, bb, idd_arana, jugador_IA)
 					}
 				}
 			}
@@ -381,9 +381,12 @@ function step(){
 			draw_set_color(c_black)
 			draw_set_alpha(1)
 		}
+		//Viento / IA
 		if image_index mod 20 = 0{
 			viento_dir += random_range(-0.01, 0.01)
 			viento_mag = clamp(viento_mag + random_range(-0.01, 0.01), 0.5, 2)
+			if IA
+				ia_step()
 		}
 		draw_once = false
 	}

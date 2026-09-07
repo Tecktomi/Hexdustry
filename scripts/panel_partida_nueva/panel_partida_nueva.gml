@@ -102,6 +102,14 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 				mision_actual = -1
 				flow = 5
 			}
+			xpos += text_x + 20
+			if draw_boton(xpos, ypos, "MODO IA", flow = 6 ? ui_azul : ui_gris,,,, 1){
+				misiones = array_create(1, null_mision)
+				misiones[0].objetivo = idm_destruir_edificio
+				misiones[0].target_id = id_nucleo
+				misiones[0].target_num = 1
+				flow = 6
+			}
 			if flow = 4{
 				ypos += text_y + 10
 				xpos = draw_text_xpos(160, ypos, L.menu_numero_oleadas)

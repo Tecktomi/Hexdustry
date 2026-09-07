@@ -1,7 +1,7 @@
 function edificio_pathfind(edificio = control.null_edificio){
 	var a = edificio.a, b = edificio.b, dir = edificio.dir, index = edificio.index
 	with control{
-		var visitado = usable_grid_bool, temp_queue = array_create(0), temp_list = get_size(a, b, dir, edificio_size[index]), size = array_length(temp_list), maxi = 6
+		var visitado = usable_grid_bool, temp_queue = array_create(0, 0), temp_list = get_size(a, b, dir, edificio_size[index]), size = array_length(temp_list), maxi = 6
 		ds_grid_clear(visitado, false)
 		var c, temp_complex, aa, bb, temp_priority, aaa, bbb, dis, desj, i, j, counter, bmod
 		for(c = 0; c < size; c++){

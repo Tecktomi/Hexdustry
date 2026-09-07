@@ -12,8 +12,8 @@ function menu_editor(){
 					aa = edificio.center_x
 					bb = edificio.center_y
 					_jugador = edificio.jugador
-					if _jugador != 2 or edificio.enemigo
-						draw_edificio_borde(edificio, (_jugador = -1) ? c_ltgray : EQUIPO_COLOR[_jugador])
+					if _jugador != 2
+						draw_edificio_borde(edificio, EQUIPO_COLOR[_jugador])
 				}
 			}
 		var xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / zoom
@@ -589,10 +589,11 @@ function menu_editor(){
 		}
 		ypos += text_y + 10
 		if draw_boton(10, ypos, L.editar_desde_adentro, ui_azul){
+			array_copy(categoria_nombre_disponible, 0, categoria_nombre, 0, array_length(categoria_nombre))
+			build_index = -1
 			clear_edit()
 			menu = 3
 			cheat = true
-			build_enemigo = true
 			camx = max(camx, 0)
 		}
 		ypos += text_y + 10
@@ -680,8 +681,9 @@ function menu_editor(){
 				keyboard_clear(vk_backspace)
 			menu = 0
 			camx = max(camx, 0)
-			build_enemigo = false
-			build_index = 0
+			jugador = 2
+			cheat = false
+			build_index = -1
 		}
 		control_camara(-200)
 		update_cursor()

@@ -1,5 +1,5 @@
 function draw_graph(x, y, width = 400, height = 100, variables = array_create(0, array_create(0, 0)), variables_color = array_create(0, c_black), reverse = false){
-	var tlen, vlen, altura = 0, a, b, ancho = width / tlen
+	var tlen, vlen, altura = 0, a, b
 	if reverse{
 		//[v1[t1, t2, t3], v2[t1, t2, t3]]
 		vlen = array_length(variables)
@@ -17,6 +17,7 @@ function draw_graph(x, y, width = 400, height = 100, variables = array_create(0,
 				altura = max(altura, variables[b, a])
 	}
 	altura = height / altura
+	var ancho = width / tlen
 	draw_set_color(c_white)
 	draw_line(x, y + height, x + width, y + height)
 	draw_line(x, y + height, x, y)

@@ -1,15 +1,13 @@
-function construir(index, dir, mx, my, enemigo = false, _server = false, _cheat = control.cheat, _jugador = jugador){
+function construir(index, dir, mx, my, _server = false, _cheat = control.cheat, _jugador = jugador){
 	with control{
-		if enemigo
-			_jugador = jugador_IA
 		var edificio = control.null_edificio, temp_complex = abtoxy(mx, my), flag = check_colision(mx, my, index, dir)
 		var temp_edificio, a, dron, b, temp_jugador
-		if flag and not _cheat and not enemigo
+		if flag and not _cheat
 			flag = is_comprable(edificio_precio_id[index], edificio_precio_num[index], _jugador)
 		//Reemplazar caminos
 		if flag and (tag_camino_o_tunel[index] or index = id_cruce) and edificio_bool[# mx, my]{
 			temp_edificio = edificio_id[# mx, my]
-			if edificio_camino[temp_edificio.index] or temp_edificio.index = id_cruce{
+			if temp_edificio.jugador = _jugador and (edificio_camino[temp_edificio.index] or temp_edificio.index = id_cruce){
 				if index = temp_edificio.index{
 					temp_edificio.dir = dir
 					calcular_edificios_adyascentes(temp_edificio)
@@ -40,7 +38,7 @@ function construir(index, dir, mx, my, enemigo = false, _server = false, _cheat 
 			}
 		}
 		//Detectar enemigos cerca
-		if flag and not _cheat and not enemigo{
+		if flag and not _cheat{
 			for(a = array_length(drones) - 1; a >= 0; a--){
 				dron = drones[a]
 				if dron.jugador != _jugador and point_distance(dron.x, dron.y, temp_complex[0], temp_complex[1]) < ENEMIGO_CERCA{
@@ -58,8 +56,6 @@ function construir(index, dir, mx, my, enemigo = false, _server = false, _cheat 
 			if not servidor
 				return null_edificio
 		}
-		if jugador != _jugador
-			enemigo = true
 		edificio = add_edificio(index, dir, mx, my, _jugador)
 		if in(index, id_fabrica_de_drones, id_cinta_grande)
 			edificio.array_real[2] = real(build_agua)
@@ -76,7 +72,7 @@ function construir(index, dir, mx, my, enemigo = false, _server = false, _cheat 
 					break
 				if edificio_bool[# a, b]{
 					temp_edificio = edificio_id[# a, b]
-					if tag_edificio_tunel[temp_edificio.index] and temp_edificio.dir = (dir + 3) mod 6{
+					if temp_edificio.jugador = _jugador and tag_edificio_tunel[temp_edificio.index] and temp_edificio.dir = (dir + 3) mod 6{
 						build_target = temp_edificio
 						build_able = true
 						break
@@ -113,16 +109,14 @@ function construir(index, dir, mx, my, enemigo = false, _server = false, _cheat 
 			}
 		}
 		//Actualizar recursos
-		if not enemigo or (online and servidor){
-			if not _cheat{
-				for(a = 0; a < array_length(edificio_precio_id[index]); a++)
-					jugador_recursos[_jugador, edificio_precio_id[index, a]] -= edificio_precio_num[index, a]
-			}
-			if not _server and in(index, id_planta_quimica, id_fabrica_de_drones, id_silo_de_misiles, id_fabrica_de_drones_grande){
-				clear_edit()
-				show_menu = true
-				show_menu_build = edificio
-			}
+		if not _cheat{
+			for(a = 0; a < array_length(edificio_precio_id[index]); a++)
+				jugador_recursos[_jugador, edificio_precio_id[index, a]] -= edificio_precio_num[index, a]
+		}
+		if not _server and in(index, id_planta_quimica, id_fabrica_de_drones, id_silo_de_misiles, id_fabrica_de_drones_grande){
+			clear_edit()
+			show_menu = true
+			show_menu_build = edificio
 		}
 		return edificio
 	}
