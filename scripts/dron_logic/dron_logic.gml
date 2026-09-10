@@ -229,7 +229,7 @@ function dron_logic(){
 								if ++dron.carga[ore_recurso[ore[# temp_complex[0], temp_complex[1]]]] >= 20
 									flag = true
 								if minar(temp_complex[0], temp_complex[1]){
-									temp_beta = beta[# temp_complex[0], temp_complex[1]]
+									temp_beta = beta_grid[# temp_complex[0], temp_complex[1]]
 									temp_terreno = array_choose(temp_beta.terrenos)
 									temp_complex_2 = abtoxy(temp_terreno[0], temp_terreno[1])
 									dron.move_x = temp_complex_2[0]
@@ -489,6 +489,7 @@ function dron_logic(){
 					}
 				}
 			}
+			//Seguir instrucciones
 			else if dron.modo >= 1{
 				if index = idd_bombardero{
 					if dron.step <= dron_step[index]{
@@ -502,6 +503,8 @@ function dron_logic(){
 				}
 				else if tag_drones_terrestres[index]
 					dron_move_terrestre(dron)
+				else if tag_dron_marino[index]
+					dron_move_acuatico(dron)
 				else{
 					dron.dir += 0.05 * angle_difference(point_direction(dron_x, dron_y, dron.move_xmove, dron.move_ymove), dron.dir)
 					dron.x += vel * dron.move_xmove

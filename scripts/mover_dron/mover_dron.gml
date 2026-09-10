@@ -19,7 +19,7 @@ function mover_dron(dron = control.null_dron, x, y, _server = false){
 			dron.move_xmove = x
 			dron.move_ymove = y
 		}
-		else if tag_drones_terrestres[index]{
+		else if tag_drones_terrestres[index] or tag_dron_marino[index]{
 			dron.move_xmove = 0
 			dron.move_ymove = 0
 			dron.move_a = aa

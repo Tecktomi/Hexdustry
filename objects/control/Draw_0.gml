@@ -1141,7 +1141,7 @@ if mx != prev_x or my != prev_y{
 	prev_y = my
 	prev_change = true
 }
-var edificio = edificio_id[# mx, my], temp_coordenada = edificio.coordenadas
+var edificio = edificio_id[# mx, my]
 //Blueprint
 if keyboard_check(CONTROL_BLUEPRINT){
 	if keyboard_check_pressed(CONTROL_BLUEPRINT){
@@ -1590,13 +1590,13 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			}
 			else if tag_dron_encima[index]{
 				if tag_edificio_fabrica_drones[index] and edificio.select >= 0{
-					temp_text += $"{L.game_creando_dron} {dron_nombre[edificio.select]} ({array_length(drones_propios)}/{8 + 2 * nucleo.modulo})\n"
+					temp_text += $"{L.game_creando_dron} {dron_nombre[edificio.select]} ({array_length(drones_propios)}/{8 + 2 * edificios_jugador_index[edificio.jugador, id_nucleo][0].modulo})\n"
 					for(a = 0; a < array_length(dron_precio_id[edificio.select]); a++)
 						temp_text += $"  {recurso_nombre[dron_precio_id[edificio.select, a]]} {edificio.carga[dron_precio_id[edificio.select, a]]}/{dron_precio_num[edificio.select, a]}\n"
 					if edificio.proceso > 0
 						temp_text += $"  {L.game_creando_dron} {floor(100 * edificio.proceso / dron_time[edificio.select])}%\n"
-					else if array_length(drones_propios) = 8 + 2 * nucleo.modulo
-						temp_text += $"  {L.game_limite_dron} ({array_length(drones_propios)}/{8 + 2 * nucleos[jugador].modulo})\n"
+					else if array_length(drones_propios) = 8 + 2 * edificios_jugador_index[edificio.jugador, id_nucleo][0].modulo
+						temp_text += $"  {L.game_limite_dron} ({array_length(drones_propios)}/{8 + 2 * edificios_jugador_index[edificio.jugador, id_nucleo][0].modulo})\n"
 				}
 				else if index = id_planta_de_reciclaje{
 					draw_set_color(c_lime)
@@ -3037,6 +3037,8 @@ if build_index >= 0 and win = 0{
 								build_array_edificios_input = temp_complex_array.inputs
 								build_array_edificios_output = temp_complex_array.outputs
 								build_agua = temp_complex_array.agua
+								build_agua_x = temp_complex_array.agua_x
+								build_agua_y = temp_complex_array.agua_y
 								if build_index = id_planta_de_reciclaje{
 									temp_complex = abtoxy(mx, my)
 									var chunk_x = clamp(floor(mx / CHUNK_WIDTH), 0, chunk_xsize - 1), chunk_y = clamp(floor(my / CHUNK_HEIGHT), 0, chunk_ysize - 1)
@@ -3146,7 +3148,7 @@ if build_index >= 0 and win = 0{
 					}
 				}
 				//Arcos eléctricos
-				if edificio_energia[build_index] and build_index != id_cable{
+				if build_index >= 0 and edificio_energia[build_index] and build_index != id_cable{
 					temp_complex_2 = abtoxy(temp_mx, temp_my)
 					temp_list_complex = get_size(temp_mx, temp_my, build_dir, 7)
 					for(a = array_length(temp_list_complex) - 1; a >= 0; a--){
@@ -3773,3 +3775,5 @@ if keyboard_check(CONTROL_TAB) and online{
 	draw_set_halign(fa_left)
 }
 draw_sprite(spr_vineta, 0, 0, 0)
+if keyboard_check_pressed(ord("G"))
+	detect_features()

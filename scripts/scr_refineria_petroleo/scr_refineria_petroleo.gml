@@ -12,7 +12,7 @@ function scr_refineria_petroleo(edificio = control.null_edificio){
 			//Encender
 			if not edificio.start{
 				change_energia(edificio.energia_consumo_max * (1 - 0.25 * edificio.modulo), edificio)
-				edificio_encender(edificio,, false)
+				edificio_encender(edificio)
 				edificio.start = true
 				if edificio.carga[idr_sal] > 0{
 					edificio.carga[idr_sal] -= 0.1

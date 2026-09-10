@@ -174,7 +174,6 @@ function generar_bioma(bioma){
 		carga_inicial = array_create(rss_max, 0)
 		array_copy(carga_inicial, 0, jugador_recursos[jugador], 0, rss_max)
 		//Menas de recursos
-		betas = array_create(0, null_beta)
 		if bioma = 0
 			temp_peso_data = [[4, 30], [4, 30], [4, 25], [2, 30]]
 		else if bioma = 1
@@ -188,13 +187,6 @@ function generar_bioma(bioma){
 			for(j = 0; j < cantidad; j++){
 				a = j * xsize / cantidad + irandom(floor(xsize / cantidad))
 				b = irandom(ysize - 1)
-				var new_beta = {
-					recurso : i,
-					terrenos : array_create(0, [0, 0]),
-					center_x : 0,
-					center_y : 0
-				}
-				array_push(betas, new_beta)
 				repeat(magnitud){
 					temp_list = get_size(a, b, 0, 3)
 					for(k = 0; k < 7; k++){
@@ -210,8 +202,6 @@ function generar_bioma(bioma){
 								if tag_ore_piedras[i] and tag_terreno_piedras[temp_terreno]
 									terreno[# aa, bb] = i = ido_cobre ? idt_piedra_cuprica : idt_piedra_ferrica
 								ore[# aa, bb] = i
-								beta[# aa, bb] = new_beta
-								array_push(new_beta.terrenos, [real(aa), real(bb)])
 							}
 							ds_grid_add(ore_amount, aa, bb, floor(random_range(0.3, 1) * ore_size[i]))
 						}
@@ -221,18 +211,6 @@ function generar_bioma(bioma){
 					b = clamp(b + DESFACE_B[b & 1, d], 0, ysize - 1)
 				}
 			}
-		}
-		//Betas
-		
-		for(a = 0; a < array_length(betas); a++){
-			temp_beta = betas[a]
-			len = array_length(temp_beta.terrenos)
-			for(b = 0; b < len; b++){
-				temp_beta.center_x += temp_beta.terrenos[b, 0]
-				temp_beta.center_y += temp_beta.terrenos[b, 1]
-			}
-			temp_beta.center_x = round(temp_beta.center_x / len)
-			temp_beta.center_y = round(temp_beta.center_y / len)
 		}
 		//Limpiar al rededor del núcleo
 		for(a = array_length(temp_list_nucleo) - 1; a >= 0; a--){

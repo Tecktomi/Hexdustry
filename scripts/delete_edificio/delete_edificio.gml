@@ -195,7 +195,6 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				temp_edificio.output_index = 0
 		}
 		delete(edificio.inputs)
-		change_calor(0, edificio)
 		//Cancelar red
 		if edificio_energia[index]{
 			var temp_red = edificio.red, red_bateria, agregado, nodo, isla, temp_red_2, isla_bateria, pila, visitado

@@ -4,13 +4,10 @@ function ia_step(){
 			IA = false
 			exit
 		}
-		//array_set(jugador_recursos[jugador_IA], idr_cobre, 100)
-		//array_set(jugador_recursos[jugador_IA], idr_hierro, 100)
-		var instruction = ia_queue[ia_queue_count], nucleo = edificios_jugador_index[jugador_IA, id_nucleo][0]
 		var a = 0, b = 0, c = 0, aa = 0, bb = 0, i = 0, j = 0, temp_complex = array_create(0, 0), bmod = 0, dis = 0, dir = 0
-		if instruction = ia_queue_cobre or instruction = ia_queue_hierro{
-			//Crear plano
-			if array_length(ia_build_queue) = 0{
+		if array_length(ia_build_queue) = 0{
+			var instruction = ia_queue[ia_queue_count], nucleo = edificios_jugador_index[jugador_IA, id_nucleo][0]
+			if instruction = ia_queue_cobre or instruction = ia_queue_hierro{
 				var _ore = (instruction = ia_queue_cobre ? ido_cobre : ido_hierro)
 				c = 0
 				dis = infinity
@@ -31,7 +28,6 @@ function ia_step(){
 					aa = temp_complex[0]
 					bb = temp_complex[1]
 					dis = min(dis, ia_grid_real[# a, b])
-					ia_grid_real[# aa, bb] = infinity
 					for(j = 0; j < array_length(ia_ores[_ore]); j++)
 						if aa = ia_ores[_ore, j][0] and bb = ia_ores[_ore, j][1]
 							array_delete(ia_ores[_ore], j--, 1)
@@ -73,7 +69,6 @@ function ia_step(){
 							c = ia_grid_real[# aa, bb]
 							if c < dis{
 								array_push(ia_build_queue, [id_cinta_transportadora, j, a, b])
-								ia_grid_real[# a, b] = infinity
 								a = aa
 								b = bb
 								dis = c
@@ -93,36 +88,7 @@ function ia_step(){
 					}
 				}
 			}
-			//Construir
-			else{
-				temp_complex = ia_build_queue[ia_build_pos]
-				var index = temp_complex[0]
-				a = temp_complex[2]
-				b = temp_complex[3]
-				if construir(index, temp_complex[1], a, b,,, jugador_IA) != null_edificio{
-					ia_grid_real[# a, b] = infinity
-					if ++ia_build_pos = array_length(ia_build_queue){
-						for(i = array_length(ia_build_queue) - 1; i >= 0; i--){
-							temp_complex = ia_build_queue[i]
-							if temp_complex[0] = id_cinta_transportadora
-								ia_grid_camino[# temp_complex[2], temp_complex[3]] = true
-						}
-						array_resize(ia_build_queue, 0)
-						ia_build_pos = 0
-						if ++ia_queue_count = array_length(ia_queue)
-							IA = false
-					}
-					var chunk_a = floor(a / CHUNK_WIDTH), chunk_b = floor(b / CHUNK_HEIGHT)
-					if not ia_chunk_construidos[# chunk_a, chunk_b]{
-						array_push(ia_chunk_construidos_array, [chunk_a, chunk_b])
-						ia_chunk_construidos[# chunk_a, chunk_b] = true
-					}
-				}
-			}
-		}
-		else if instruction = ia_queue_defender{
-			//Crear plano
-			if array_length(ia_build_queue) = 0{
+			else if instruction = ia_queue_defender{
 				show_debug_message("Mejorando las defensas")
 				var len = array_length(ia_chunk_construidos_array), flag = false, exito = true
 				var temp_chunk_array = array_shuffle(ia_chunk_construidos_array)
@@ -137,8 +103,8 @@ function ia_step(){
 					}
 				}
 				show_debug_message($"chunk en {a}, {b}")
+				//Buscar posición libre dentro del chunk
 				if flag{
-					//Buscar posición libre dentro del chunk
 					flag = false
 					a *= CHUNK_WIDTH
 					b *= CHUNK_HEIGHT
@@ -262,32 +228,36 @@ function ia_step(){
 						IA = false
 				}
 			}
-			//Construir
-			else{
-				temp_complex = ia_build_queue[ia_build_pos]
-				var index = temp_complex[0]
-				a = temp_complex[2]
-				b = temp_complex[3]
-				if construir(index, temp_complex[1], a, b,,, jugador_IA) != null_edificio{
-					ia_grid_real[# a, b] = infinity
-					if ++ia_build_pos = array_length(ia_build_queue){
-						for(i = array_length(ia_build_queue) - 1; i >= 0; i--){
-							temp_complex = ia_build_queue[i]
-							if temp_complex[0] = id_cinta_transportadora
-								ia_grid_camino[# temp_complex[2], temp_complex[3]] = true
-						}
-						array_resize(ia_build_queue, 0)
-						ia_build_pos = 0
-						if ++ia_queue_count = array_length(ia_queue)
-							IA = false
+		}
+		else{
+			temp_complex = ia_build_queue[ia_build_pos]
+			var index = temp_complex[0]
+			a = temp_complex[2]
+			b = temp_complex[3]
+			var edificio = construir(index, temp_complex[1], a, b,,, jugador_IA)
+			if edificio != null_edificio{
+				ia_grid_real[# a, b] = infinity
+				if ++ia_build_pos = array_length(ia_build_queue){
+					for(i = array_length(ia_build_queue) - 1; i >= 0; i--){
+						temp_complex = ia_build_queue[i]
+						if temp_complex[0] = id_cinta_transportadora
+							ia_grid_camino[# temp_complex[2], temp_complex[3]] = true
 					}
-					var chunk_a = floor(a / CHUNK_WIDTH), chunk_b = floor(b / CHUNK_HEIGHT)
-					if not ia_chunk_construidos[# chunk_a, chunk_b]{
-						array_push(ia_chunk_construidos_array, [chunk_a, chunk_b])
-						ia_chunk_construidos[# chunk_a, chunk_b] = true
-					}
-					if index = id_torre_basica
-						ds_grid_set_region(ia_chunk_defendidos, max(chunk_a - 1, 0), max(chunk_b - 1, 0), min(chunk_a + 1, chunk_xsize - 1), min(chunk_b + 1, chunk_ysize - 1), true)
+					array_resize(ia_build_queue, 0)
+					ia_build_pos = 0
+					if ++ia_queue_count = array_length(ia_queue)
+						IA = false
+				}
+				var chunk_a = floor(a / CHUNK_WIDTH), chunk_b = floor(b / CHUNK_HEIGHT)
+				if not ia_chunk_construidos[# chunk_a, chunk_b]{
+					array_push(ia_chunk_construidos_array, [chunk_a, chunk_b])
+					ia_chunk_construidos[# chunk_a, chunk_b] = true
+				}
+				if index = id_torre_basica
+					ds_grid_set_region(ia_chunk_defendidos, max(chunk_a - 1, 0), max(chunk_b - 1, 0), min(chunk_a + 1, chunk_xsize - 1), min(chunk_b + 1, chunk_ysize - 1), true)
+				for(i = array_length(edificio.coordenadas) - 1; i >= 0; i--){
+					temp_complex = edificio.coordenadas[i]
+					ia_grid_real[# temp_complex[0], temp_complex[1]] = infinity
 				}
 			}
 		}

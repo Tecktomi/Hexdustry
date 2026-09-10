@@ -15,7 +15,6 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			center_x : x,
 			center_y : y,
 			coordenadas : get_size(a, b, dir, edificio_size[index]),
-			bordes : get_arround(a, b, dir, edificio_size[index]),
 			inputs : array_create(0, null_edificio),
 			input_index : 0,
 			outputs : array_create(0, null_edificio),
@@ -85,9 +84,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			chunk_minb : 0,
 			chunk_maxa : 0,
 			chunk_maxb : 0,
-			jugador : _jugador,
-			calor : 0,
-			calor_generado : 0
+			jugador : _jugador
 		}
 		if edificio_size[index] = 2.5{
 			if in(dir, 0, 1)

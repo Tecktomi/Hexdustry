@@ -5,7 +5,7 @@ function minar(a, b){
 		else if ore_amount[# a, b] <= 0{
 			update_background(a, b)
 			ore[# a, b] = -1
-			var temp_beta = beta[# a, b], len = array_length(temp_beta.terrenos), temp_terreno
+			var temp_beta = beta_grid[# a, b], len = array_length(temp_beta.terrenos), temp_terreno
 			for(var c = 0; c < len; c++){
 				temp_terreno = temp_beta.terrenos[c]
 				if temp_terreno[0] = a and temp_terreno[1] = b{

@@ -57,8 +57,11 @@ function construir(index, dir, mx, my, _server = false, _cheat = control.cheat, 
 				return null_edificio
 		}
 		edificio = add_edificio(index, dir, mx, my, _jugador)
-		if in(index, id_fabrica_de_drones, id_cinta_grande)
+		if in(index, id_fabrica_de_drones, id_cinta_grande, id_fabrica_de_drones_grande){
 			edificio.array_real[2] = real(build_agua)
+			edificio.array_real[3] = real(build_agua_x)
+			edificio.array_real[4] = real(build_agua_y)
+		}
 		//Algoritmo link de tuneles
 		if tag_edificio_tunel[index]{
 			build_able = false

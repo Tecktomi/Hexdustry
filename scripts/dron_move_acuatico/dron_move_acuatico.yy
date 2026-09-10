@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"change_calor",
+  "%Name":"dron_move_acuatico",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"change_calor",
+  "name":"dron_move_acuatico",
   "parent":{
-    "name":"EDIFICIOS",
-    "path":"folders/SCRIPTS/EDIFICIOS.yy",
+    "name":"DRONES",
+    "path":"folders/SCRIPTS/DRONES.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -7,14 +7,14 @@ function scr_planta_quimica(edificio = control.null_edificio){
 		if edificio.fuel > 0{
 			edificio.fuel--
 			if edificio.fuel = 0
-				edificio_encender(edificio, false, false)
+				edificio_encender(edificio, false, false, (edificio.flujo_consumo_max > 0))
 		}
 		if (edificio.select = 0 and edificio.carga[idr_piedra_sulfatada] >= 3 and in(flujo.liquido, -1, idl_acido) and flujo.almacen < flujo.almacen_max) or
 			(edificio.select = 1 and flujo.liquido = idl_acido and edificio.carga[idr_compuesto_incendiario] > 0 and edificio.carga[idr_explosivo] < 10) or
 			(edificio.select = 2 and flujo.liquido = idl_acido and edificio.carga[idr_cobre] > 0 and edificio.carga[idr_bateria] < 10){
 			//Apagar
 			if edificio.energia_consumo_max > 0 and red_power = 0{
-				edificio_encender(edificio, false)
+				edificio_encender(edificio, false,, (edificio.flujo_consumo_max > 0))
 				continue
 			}
 			//Encender
@@ -60,12 +60,12 @@ function scr_planta_quimica(edificio = control.null_edificio){
 					change_flujo(edificio.flujo_consumo_max, edificio)
 				edificio.proceso -= edificio_proceso[index]
 				edificio.start = false
-				edificio_encender(edificio, false,, false)
+				edificio_encender(edificio, false,, (edificio.flujo_consumo_max > 0))
 				edificio.waiting = not mover(edificio)
 			}
 		}
 		else if edificio.fuel = 0
-			edificio_encender(edificio, false)
+			edificio_encender(edificio, false,, (edificio.flujo_consumo_max > 0))
 		if edificio.emisor and edificio.carga_total > 0
 			edificio.waiting = not mover(edificio)
 	}
