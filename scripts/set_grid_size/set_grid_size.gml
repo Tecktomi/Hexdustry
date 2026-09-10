@@ -96,8 +96,8 @@ function set_grid_size(){
 				ds_grid_set(chunk_edificios_dinamico, a, b, array_create(0, null_edificio))
 				ds_grid_set(chunk_edificios_draw, a, b, array_create(0, null_edificio))
 			}
-		ds_grid_resize(beta, xsize, ysize)
-		ds_grid_clear(beta, null_beta)
+		ds_grid_resize(beta_grid, xsize, ysize)
+		ds_grid_clear(beta_grid, null_beta)
 		for(a = array_length(edificios_index[id_nucleo]) - 1; a >= 0; a--){
 			edificio = edificios_index[id_nucleo][a]
 			ds_grid_resize(edificio.coordenadas_dis, xsize, ysize)

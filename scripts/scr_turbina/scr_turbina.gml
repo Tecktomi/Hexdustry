@@ -22,7 +22,7 @@ function scr_turbina(edificio = control.null_edificio){
 					edificio.fuel = recurso_combustion_time[1]
 					edificio.carga[idr_carbon]--
 				}
-				edificio_encender(edificio,, false, false)
+				edificio_encender(edificio)
 				change_energia(edificio_energia_consumo[index] * flujo_power, edificio)
 				change_flujo(edificio_flujo_consumo[index] * (1 - 0.25 * edificio.modulo), edificio)
 				edificio.carga_total--

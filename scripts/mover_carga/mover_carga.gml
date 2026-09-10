@@ -5,10 +5,13 @@ function mover_carga(edificio = control.null_edificio){
 		var flag = false, a, temp_edificio, _jugador = edificio.jugador
 		//Liberar Dron
 		if array_length(edificio.outputs_carga) = 0{
-			if array_length(drones_jugador[_jugador]) < 8 + 2 * nucleos[_jugador].modulo{
-				var dron = add_dron(edificio.a, edificio.b, edificio.select, _jugador)
-				dron.x = edificio.center_x + random(0.1)
-				dron.y = edificio.center_y + random(0.1)
+			if array_length(drones_jugador[_jugador]) < 8 + 2 * nucleos[_jugador].modulo and (not tag_dron_marino[edificio.select] or edificio.array_real[2] = 1){
+				if tag_dron_marino[edificio.select]
+					var dron = add_dron(edificio.array_real[3], edificio.array_real[4], edificio.select, _jugador)
+				else
+					dron = add_dron(edificio.a, edificio.b, edificio.select, _jugador)
+				dron.x += random(0.1)
+				dron.y += random(0.1)
 				flag = true
 				if edificio.array_real[0] != -1
 					mover_dron(dron, edificio.array_real[0], edificio.array_real[1])

@@ -15,7 +15,7 @@ function scr_fabrica_drones(edificio = control.null_edificio){
 			if flag{
 				//Encender
 				if not edificio.start{
-					edificio_encender(edificio,,, index = id_fabrica_de_drones_grande)
+					edificio_encender(edificio,,, (index = id_fabrica_de_drones_grande))
 					edificio.start = true
 				}
 				if index = id_fabrica_de_drones_grande
@@ -35,7 +35,7 @@ function scr_fabrica_drones(edificio = control.null_edificio){
 						edificio.proceso -= dron_time[edificio.select]
 					else
 						edificio.proceso--
-					edificio_encender(edificio, false,, index = id_fabrica_de_drones_grande)
+					edificio_encender(edificio, false,, (index = id_fabrica_de_drones_grande))
 				}
 			}
 		}

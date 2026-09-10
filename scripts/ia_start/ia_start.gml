@@ -9,6 +9,7 @@ function ia_start(){
 			ia_chunk_construidos_array = array_create(0, [0, 0])
 			ds_grid_clear(ia_chunk_defendidos, false)
 			ds_grid_clear(ia_grid_camino, false)
+			ds_grid_clear(ia_grid_real, infinity)
 			var nucleo = edificios_jugador_index[jugador_IA, id_nucleo][0]
 			var visitado = usable_grid_bool, temp_queue = array_create(0, 0), counter = 0, temp_list = get_size(nucleo.a, nucleo.b, 0, edificio_size[id_nucleo]), size = array_length(temp_list), maxi = 6
 			ds_grid_clear(visitado, false)
@@ -33,7 +34,7 @@ function ia_start(){
 					bb = bbb + DESFACE_B[bmod, j]
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 						continue
-					if not visitado[# aa, bb]{
+					if not visitado[# aa, bb] and not edificio_bool[# aa, bb]{
 						visitado[# aa, bb] = true
 						if terreno_caminable[terreno[# aa, bb]]{
 							ia_grid_real[# aa, bb] = dis
