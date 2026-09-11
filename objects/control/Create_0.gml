@@ -13,7 +13,6 @@ var a, b, c, flag
 	#macro HEX_FAST_THRESHOLD 8
 	#macro MORTERO_MIN_RANGE 100
 	SIZE_SIZE = [1, 3, 7, 12, 19, 27, 37]
-	DESFACE = [[[0, -1], [0, -2], [-1, -1], [-1, 1], [0, 2], [0, 1]], [[1, -1], [0, -2], [0, -1], [0, 1], [0, 2], [1, 1]]]
 	DESFACE_A = [[0, 0, -1, -1, 0, 0], [1, 0, 0, 0, 0, 1]]
 	DESFACE_B = [[-1, -2, -1, 1, 2, 1], [-1, -2, -1, 1, 2, 1]]
 	DEFAULT_MAPS = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas"]
@@ -554,6 +553,7 @@ L = {}
 	ia_chunk_construidos_array = array_create(0, [0, 0])
 	ia_chunk_defendidos = ds_grid_create(chunk_xsize, chunk_ysize)
 	ds_grid_clear(ia_chunk_defendidos, false)
+	ia_tiles_nucleo = array_create(0, 0)
 #endregion
 null_sound = sound_play(snd_explosion, 0, 0, 0)
 null_edificio = {
@@ -565,7 +565,7 @@ null_edificio = {
 	y : 0,
 	center_x : 0,
 	center_y : 0,
-	coordenadas : array_create(0, [0, 0]),
+	coordenadas : array_create(0, 0),
 	inputs : [],
 	input_index : 0,
 	outputs : [],
@@ -1940,21 +1940,6 @@ sort_drones()
 			array_set(edificio_tecnologia_desbloqueable[jugador], b, true)
 	}
 #endregion
-//
-show_debug_message("- - - - EDIFICIOS - - - -")
-for(a = 0; a < edificio_max; a++){
-	var temp_text = $"{edificio_nombre[a]} ["
-	for(b = array_length(edificio_precio_id[a]) - 1; b >= 0; b--)
-		temp_text += $"{recurso_nombre[edificio_precio_id[a, b]]}: {edificio_precio_num[a, b]} "
-	show_debug_message($"{temp_text}] tier {edificio_tecnologia_nivel[a]}")
-}
-show_debug_message("- - - - UNIDADES - - - -")
-for(a = 0; a < dron_max; a++){
-	var temp_text = $"{dron_nombre[a]} ["
-	for(b = array_length(dron_precio_id[a]) - 1; b >= 0; b--)
-		temp_text += $"{recurso_nombre[dron_precio_id[a, b]]}: {dron_precio_num[a, b]} "
-	show_debug_message($"{temp_text}] <- fábrica de drones {array_contains(fabrica_de_drones_array, a) ? "pequeña" : "grande" }")
-}
 //Redes electricas
 null_red = def_red()
 null_edificio.red = null_red
@@ -2035,9 +2020,3 @@ for(a = 0; a < array_length(consejos_texto); a++)
 biome_seed = 0
 seed = random_get_seed()
 generar_bioma(biome_seed)
-get_arround(10, 10, 0, 1)
-get_arround(10, 10, 0, 2)
-get_arround(10, 10, 0, 2.5)
-get_arround(10, 10, 0, 3)
-get_arround(10, 10, 0, 4)
-get_arround(10, 10, 0, 5)

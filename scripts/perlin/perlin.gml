@@ -1,7 +1,7 @@
 function perlin(xsize, ysize, octava = 3, xw = 2, yh = 2){
 	var chunkx = ceil(xsize / xw) + 1, chunky = ceil(ysize / yh) + 1
 	//MASK
-	var mask = ds_grid_create(chunkx, chunky), a, b
+	var mask = ds_grid_create(chunkx, chunky), a, b, aa
 	for(a = 0; a < chunkx; a++)
 		for(b = 0; b < chunky; b++)
 			mask[# a, b] = irandom(1)
@@ -16,26 +16,31 @@ function perlin(xsize, ysize, octava = 3, xw = 2, yh = 2){
 	var add1 = ds_grid_create(xw, yh)
 	var add2 = ds_grid_create(xw, yh)
 	var add3 = ds_grid_create(xw, yh)
-	for(a = 0; a < xw; a++)
+	for(a = 0; a < xw; a++){
+		aa = xw - a
 		for(b = 0; b < yh; b++){
-			add0[# a, b] = xw - a + yh - b
+			add0[# a, b] = aa + yh - b
 			add1[# a, b] = a + yh - b
-			add2[# a, b] = xw - a + b
+			add2[# a, b] = aa + b
 			add3[# a, b] = a + b
 		}
+	}
 	//OUTPUT
-	var grid = ds_grid_create(xw * chunkx, yh * chunky), aa, bb, mask0, mask1, mask2, mask3, c, d
+	var grid = ds_grid_create(xw * chunkx, yh * chunky), bb, mask0, mask1, mask2, mask3, c, d, aaa, aplus
 	for(a = 0; a < chunkx; a++){
 		aa = a * xw
+		aplus = a + 1
 		for(b = 0; b < chunky; b++){
 			bb = b * yh
 			mask0 = mask[# a, b]
-			mask1 = mask[# a + 1, b]
+			mask1 = mask[# aplus, b]
 			mask2 = mask[# a, b + 1]
-			mask3 = mask[# a + 1, b + 1]
-			for(c = 0; c < xw; c++)
+			mask3 = mask[# aplus, b + 1]
+			for(c = 0; c < xw; c++){
+				aaa = aa + c
 				for(d = 0; d < yh; d++)
-					grid[# aa + c, bb + d] = mask0 * add0[# c, d] + mask1 * add1[# c, d] + mask2 * add2[# c, d] + mask3 * add3[# c, d]
+					grid[# aaa, bb + d] = mask0 * add0[# c, d] + mask1 * add1[# c, d] + mask2 * add2[# c, d] + mask3 * add3[# c, d]
+			}
 		}
 	}
 	ds_grid_resize(grid, xsize, ysize)

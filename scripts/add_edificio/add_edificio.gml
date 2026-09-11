@@ -307,6 +307,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 				}
 			}
 		}
+		len = array_length(temp_list_size)
 		for(c = 0; c < len;){
 			aa = temp_list_size[c++]
 			bb = temp_list_size[c++]

@@ -1,5 +1,6 @@
 function ia_step(){
 	with control{
+		var t = get_timer()
 		if array_length(edificios_jugador_index[jugador_IA, id_nucleo]) = 0{
 			IA = false
 			exit
@@ -7,6 +8,7 @@ function ia_step(){
 		var a = 0, b = 0, c = 0, aa = 0, bb = 0, i = 0, j = 0, temp_complex = array_create(0, 0), bmod = 0, dis = 0, dir = 0
 		if array_length(ia_build_queue) = 0{
 			var instruction = ia_queue[ia_queue_count], nucleo = edificios_jugador_index[jugador_IA, id_nucleo][0]
+			var _tiles_usados = array_create(0, 0)
 			if instruction = ia_queue_cobre or instruction = ia_queue_hierro{
 				var _ore = (instruction = ia_queue_cobre ? ido_cobre : ido_hierro)
 				c = 0
@@ -22,7 +24,8 @@ function ia_step(){
 				if c = array_length(ia_ores[_ore])
 					show_error($"ERROR IA\nNo se ha podido encontrar {recurso_nombre[ore_recurso[_ore]]}", true)
 				array_push(ia_build_queue, [id_taladro, dir, a, b])
-				var temp_list = get_size(a, b, dir, edificio_size[id_taladro]), angle, flag, len = array_length(temp_list)
+				var temp_list = get_size(a, b, dir, edificio_size[id_taladro]), angle
+				var len = array_length(temp_list)
 				for(i = 0; i < len;){
 					aa = temp_list[i++]
 					bb = temp_list[i++]
@@ -30,16 +33,34 @@ function ia_step(){
 					for(j = 0; j < array_length(ia_ores[_ore]); j++)
 						if aa = ia_ores[_ore, j][0] and bb = ia_ores[_ore, j][1]
 							array_delete(ia_ores[_ore], j--, 1)
+					array_push(_tiles_usados, aa, bb)
 				}
 				temp_list = get_arround(a, b, dir, edificio_size[id_taladro])
-				for(i = 0; i < array_length(temp_list);){
+				var flag = false
+				len = array_length(temp_list)
+				for(i = 0; i < len;){
 					a = temp_list[i++]
 					b = temp_list[i++]
-					if ia_grid_real[# a, b] < dis
-						break
+					if a < 0 or b < 0 or a >= xsize or b >= ysize
+						continue
+					if ia_grid_real[# a, b] < dis and (not edificio_bool[# a, b] or check_tile_usado(a, b, ia_tiles_nucleo)) and not check_tile_usado(a, b, _tiles_usados){
+						dis = ia_grid_real[# a, b]
+						aa = a
+						bb = b
+						flag = true
+					}
 				}
+				if not flag{
+					array_resize(ia_build_queue, 0)
+					if ++ia_queue_count = array_length(ia_queue)
+						IA = false
+					exit
+				}
+				a = aa
+				b = bb
+				var pasos = xsize + ysize
 				//Crear camino
-				while dis > 0{
+				while dis > 0 and --pasos > 0{
 					temp_complex = abtoxy(a, b)
 					angle = floor(point_direction(temp_complex[0], temp_complex[1], nucleo.center_x, nucleo.center_y) / 30)
 					bmod = b & 1
@@ -65,8 +86,9 @@ function ia_step(){
 							if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 								continue
 							c = ia_grid_real[# aa, bb]
-							if c < dis{
+							if c < dis and (not edificio_bool[# aa, bb] or check_tile_usado(aa, bb, ia_tiles_nucleo)) and not check_tile_usado(aa, bb, _tiles_usados){
 								array_push(ia_build_queue, [id_cinta_transportadora, j, a, b])
+								array_push(_tiles_usados, aa, bb)
 								a = aa
 								b = bb
 								dis = c
@@ -87,8 +109,8 @@ function ia_step(){
 				}
 			}
 			else if instruction = ia_queue_defender{
-				show_debug_message("Mejorando las defensas")
-				var len = array_length(ia_chunk_construidos_array), flag = false, exito = true
+				var len = array_length(ia_chunk_construidos_array)
+				var flag = false, exito = true
 				var temp_chunk_array = array_shuffle(ia_chunk_construidos_array)
 				//Buscar chunks indefensos
 				for(i = 0; i < len; i++){
@@ -100,7 +122,6 @@ function ia_step(){
 						break
 					}
 				}
-				show_debug_message($"chunk en {a}, {b}")
 				//Buscar posición libre dentro del chunk
 				if flag{
 					flag = false
@@ -116,12 +137,12 @@ function ia_step(){
 						bb = temp_chunk_array[i, 1]
 						if ia_grid_real[# aa, bb] < infinity and check_colision(aa, bb, id_torre_basica, 0){
 							array_push(ia_build_queue, [id_torre_basica, 0, aa, bb])
+							array_push(_tiles_usados, aa, bb)
 							temp_complex = abtoxy(aa, bb)
 							flag = true
 							break
 						}
 					}
-					show_debug_message($"torre en {aa}, {bb}")
 					//Crear camino
 					if flag{
 						var visitado = usable_grid_bool, _distances = usable_grid_real, temp_queue = array_create(0, 0), counter = 0, maxi = 6, aaa, bbb, desj, edificio
@@ -149,7 +170,6 @@ function ia_step(){
 										if ia_grid_camino[# aa, bb]{
 											edificio = edificio_id[# aa, bb]
 											if j != edificio.dir{
-												show_debug_message($"Enrutador en {aa}, {bb}")
 												if j = (edificio.dir + 5) mod 6
 												    j = (edificio.dir + 1) mod 6
 												else if j = (edificio.dir + 1) mod 6
@@ -170,14 +190,12 @@ function ia_step(){
 							}
 							maxi = 3
 						}
-						show_debug_message($"mapa de {array_length(temp_queue) / 4} tiles")
 						//Se creó un camino
 						if is_infinity(counter){
-							var temp_complex_2, angle
+							var temp_complex_2, angle, pasos = xsize + ysize
 							a = aa
 							b = bb
-							while dis > 0{
-								show_debug_message($"{a}, {b}, {dis}")
+							while dis > 0 and --pasos > 0{
 								temp_complex_2 = abtoxy(a, b)
 								angle = floor(point_direction(temp_complex_2[0], temp_complex_2[1], temp_complex[0], temp_complex[1]) / 30)
 								flag = true
@@ -189,8 +207,9 @@ function ia_step(){
 									if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 										continue
 									c = _distances[# aa, bb]
-									if c < dis{
+									if c < dis and (not edificio_bool[# aa, bb] or check_tile_usado(aa, bb, ia_tiles_nucleo)) and not check_tile_usado(a, b, _tiles_usados){
 										array_push(ia_build_queue, [id_cinta_transportadora, j, a, b])
+										array_push(_tiles_usados, a, b)
 										_distances[# a, b] = infinity
 										a = aa
 										b = bb
@@ -200,26 +219,19 @@ function ia_step(){
 									}
 								}
 								if flag{
-									show_debug_message("Construcción cancelada - No pudo generar el camino específico")
 									exito = false
 									break
 								}
 							}
 						}
-						else{
-							show_debug_message("Construcción cancelada - No encontró una ruta disponible desde la torre a algún camino")
+						else
 							exito = false
-						}
 					}
-					else{
-						show_debug_message("Construcción cancelada - No encontró una posición disponible para la torre dentro del chunk")
+					else
 						exito = false
-					}
 				}
-				else{
-					show_debug_message("Construcción cancelada - No encontró un chunk disponible")
+				else
 					exito = false
-				}
 				if not exito{
 					array_resize(ia_build_queue, 0)
 					if ++ia_queue_count = array_length(ia_queue)
@@ -230,36 +242,32 @@ function ia_step(){
 		else{
 			temp_complex = ia_build_queue[ia_build_pos]
 			var index = temp_complex[0]
-			a = temp_complex[2]
-			b = temp_complex[3]
-			var edificio = construir(index, temp_complex[1], a, b,,, jugador_IA)
-			if edificio != null_edificio{
-				ia_grid_real[# a, b] = infinity
-				if ++ia_build_pos = array_length(ia_build_queue){
-					for(i = array_length(ia_build_queue) - 1; i >= 0; i--){
-						temp_complex = ia_build_queue[i]
-						if temp_complex[0] = id_cinta_transportadora
-							ia_grid_camino[# temp_complex[2], temp_complex[3]] = true
+			if is_comprable(edificio_precio_id[index], edificio_precio_num[index], jugador_IA){
+				a = temp_complex[2]
+				b = temp_complex[3]
+				var edificio = construir(index, temp_complex[1], a, b,,, jugador_IA)
+				if edificio != null_edificio{
+					if ++ia_build_pos = array_length(ia_build_queue){
+						for(i = array_length(ia_build_queue) - 1; i >= 0; i--){
+							temp_complex = ia_build_queue[i]
+							if temp_complex[0] = id_cinta_transportadora
+								ia_grid_camino[# temp_complex[2], temp_complex[3]] = true
+						}
+						array_resize(ia_build_queue, 0)
+						ia_build_pos = 0
+						if ++ia_queue_count = array_length(ia_queue)
+							IA = false
 					}
-					array_resize(ia_build_queue, 0)
-					ia_build_pos = 0
-					if ++ia_queue_count = array_length(ia_queue)
-						IA = false
-				}
-				var chunk_a = floor(a / CHUNK_WIDTH), chunk_b = floor(b / CHUNK_HEIGHT)
-				if not ia_chunk_construidos[# chunk_a, chunk_b]{
-					array_push(ia_chunk_construidos_array, [chunk_a, chunk_b])
-					ia_chunk_construidos[# chunk_a, chunk_b] = true
-				}
-				if index = id_torre_basica
-					ds_grid_set_region(ia_chunk_defendidos, max(chunk_a - 1, 0), max(chunk_b - 1, 0), min(chunk_a + 1, chunk_xsize - 1), min(chunk_b + 1, chunk_ysize - 1), true)
-				var len = array_length(edificio.coordenadas)
-				for(i = 0; i < len;){
-					aa = edificio.coordenadas[i++]
-					bb = edificio.coordenadas[i++]
-					ia_grid_real[# aa, bb] = infinity
+					var chunk_a = floor(a / CHUNK_WIDTH), chunk_b = floor(b / CHUNK_HEIGHT)
+					if not ia_chunk_construidos[# chunk_a, chunk_b]{
+						array_push(ia_chunk_construidos_array, [chunk_a, chunk_b])
+						ia_chunk_construidos[# chunk_a, chunk_b] = true
+					}
+					if index = id_torre_basica
+						ds_grid_set_region(ia_chunk_defendidos, max(chunk_a - 1, 0), max(chunk_b - 1, 0), min(chunk_a + 1, chunk_xsize - 1), min(chunk_b + 1, chunk_ysize - 1), true)
 				}
 			}
 		}
+		show_debug_message(get_timer() - t)
 	}
 }
