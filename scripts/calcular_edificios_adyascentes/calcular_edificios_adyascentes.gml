@@ -1,7 +1,7 @@
 function calcular_edificios_adyascentes(edificio = control.null_edificio, set_receptor = true){
 	var index = edificio.index, a = edificio.a, b = edificio.b, dir = edificio.dir, _jugador = edificio.jugador
 	with control{
-		var i, temp_edificio, c, aa, bb, temp_complex, flag, temp_list, temp_edificio_2, d, temp_complex_2
+		var i, temp_edificio, c, aa, bb, flag, temp_list, temp_edificio_2, d, len, aaa, bbb
 		for(i = array_length(edificio.inputs) - 1; i >= 0; i--){
 			temp_edificio = edificio.inputs[i]
 			array_remove(temp_edificio.outputs, edificio)
@@ -124,10 +124,9 @@ function calcular_edificios_adyascentes(edificio = control.null_edificio, set_re
 		else{
 			var temp_a, temp_b, temp_index, temp_dir, par_dir, par_dir_1, par_dir_2, par_dir_3, par_dir_4, par_dir_5, par_dir_a, par_dir_a_1, par_dir_a_2, par_dir_a_3, par_dir_a_4, par_dir_a_5
 			temp_list = get_arround(a, b, dir, edificio_size[index])
-			for(c = array_length(temp_list) - 1; c >= 0; c--){
-				temp_complex = temp_list[c]
-				aa = temp_complex[0]
-				bb = temp_complex[1]
+			for(c = 0; c < array_length(temp_list);){
+				aa = temp_list[c++]
+				bb = temp_list[c++]
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if not edificio_bool[# aa, bb]
@@ -166,22 +165,25 @@ function calcular_edificios_adyascentes(edificio = control.null_edificio, set_re
 							break
 						}
 					if flag and index != id_tunel and not array_contains(edificio.outputs, temp_edificio){
-						if tag_edificio_cinta[index] and not complex_equal(temp_complex, par_dir)
+						if tag_edificio_cinta[index] and not complex_equal(aa, bb, par_dir)
 							flag = false
 						if flag and tag_edificio_cinta[temp_index] and next_to_build(par_dir_a, edificio)
 							flag = false
-						if flag and tag_edificio_entrada_triple[index] and not(complex_equal(temp_complex, par_dir_5) or complex_equal(temp_complex, par_dir) or complex_equal(temp_complex, par_dir_1))
+						if flag and tag_edificio_entrada_triple[index] and not(complex_equal(aa, bb, par_dir_5) or complex_equal(aa, bb, par_dir) or complex_equal(aa, bb, par_dir_1))
 							flag = false
-						if flag and index = id_tunel_salida and not(complex_equal(temp_complex, par_dir_2) or complex_equal(temp_complex, par_dir_3) or complex_equal(temp_complex, par_dir_4))
+						if flag and index = id_tunel_salida and not(complex_equal(aa, bb, par_dir_2) or complex_equal(aa, bb, par_dir_3) or complex_equal(aa, bb, par_dir_4))
 							flag = false
-						if flag and in(temp_index, id_enrutador, id_selector, id_overflow, id_tunel)
-							for(d = array_length(edificio.coordenadas) - 1; d >= 0; d--){
-								temp_complex_2 = edificio.coordenadas[d]
-								if complex_equal(par_dir_a_5, temp_complex_2) or complex_equal(par_dir_a, temp_complex_2) or complex_equal(par_dir_a_1, temp_complex_2){
+						if flag and in(temp_index, id_enrutador, id_selector, id_overflow, id_tunel){
+							len = array_length(edificio.coordenadas)
+							for(d = 0; d < len;){
+								aaa = edificio.coordenadas[d++]
+								bbb = edificio.coordenadas[d++]
+								if (par_dir_a_5[0] = aaa and par_dir_a_5[1] = bbb) or (par_dir_a[0] = aaa and par_dir_a[1] = bbb) or (par_dir_a_1[0] = aaa and par_dir_a_1[1] = bbb){
 									flag = false
 									break
 								}
 							}
+						}
 						if flag{
 							array_push(temp_edificio.inputs, edificio)
 							array_push(edificio.outputs, temp_edificio)
@@ -199,17 +201,19 @@ function calcular_edificios_adyascentes(edificio = control.null_edificio, set_re
 							break
 						}
 					if flag and temp_index != id_tunel and not array_contains(edificio.inputs, temp_edificio){
-						if tag_edificio_cinta[index] and complex_equal(temp_complex, par_dir)
+						if tag_edificio_cinta[index] and complex_equal(aa, bb, par_dir)
 							flag = false
 						if flag and tag_edificio_cinta[temp_index] and not next_to_build(par_dir_a, edificio)
 							flag = false
-						if flag and in(index, id_enrutador, id_selector, id_overflow, id_tunel) and (complex_equal(temp_complex, par_dir_5) or complex_equal(temp_complex, par_dir) or complex_equal(temp_complex, par_dir_1))
+						if flag and in(index, id_enrutador, id_selector, id_overflow, id_tunel) and (complex_equal(aa, bb, par_dir_5) or complex_equal(aa, bb, par_dir) or complex_equal(aa, bb, par_dir_1))
 							flag = false
 						if flag and tag_edificio_entrada_triple[temp_index]{
 							flag = false
-							for(d = array_length(edificio.coordenadas) - 1; d >= 0; d--){
-								temp_complex_2 = edificio.coordenadas[d]
-								if complex_equal(par_dir_a_5, temp_complex_2) or complex_equal(par_dir_a, temp_complex_2) or complex_equal(par_dir_a_1, temp_complex_2){
+							len = array_length(edificio.coordenadas)
+							for(d = 0; d < len;){
+								aaa = edificio.coordenadas[d++]
+								bbb = edificio.coordenadas[d++]
+								if (par_dir_a_5[0] = aaa and par_dir_a_5[1] = bbb) or (par_dir_a[0] = aaa and par_dir_a[1] = bbb) or (par_dir_a_1[0] = aaa and par_dir_a_1[1] = bbb){
 									flag = true
 									break
 								}
@@ -217,9 +221,11 @@ function calcular_edificios_adyascentes(edificio = control.null_edificio, set_re
 						}
 						if flag and temp_index = id_tunel_salida{
 							flag = false
-							for(d = array_length(edificio.coordenadas) - 1; d >= 0; d--){
-								temp_complex_2 = edificio.coordenadas[d]
-								if complex_equal(par_dir_a_2, temp_complex_2) or complex_equal(par_dir_a_3, temp_complex_2) or complex_equal(par_dir_a_4, temp_complex_2){
+							len = array_length(edificio.coordenadas)
+							for(d = 0; d < len;){
+								aaa = edificio.coordenadas[d++]
+								bbb = edificio.coordenadas[d++]
+								if (par_dir_a_2[0] = aaa and par_dir_a_2[1] = bbb) or (par_dir_a_3[0] = aaa and par_dir_a_3[1] = bbb) or (par_dir_a_4[0] = aaa and par_dir_a_4[1] = bbb){
 									flag = true
 									break
 								}

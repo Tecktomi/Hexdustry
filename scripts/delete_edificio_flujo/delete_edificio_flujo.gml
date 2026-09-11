@@ -95,10 +95,9 @@ function delete_edificio_flujo(edificio = control.null_edificio, flujo = control
 		if index = id_tuberia_subterranea
 			edificio.link.link = null_edificio
 		var temp_list = get_arround(edificio.a, edificio.b, edificio.dir, edificio_size[index]), aaa, bbb
-		for(a = array_length(temp_list) - 1; a >= 0; a--){
-			temp_complex = temp_list[a]
-			aaa = temp_complex[0]
-			bbb = temp_complex[1]
+		for(a = 0; a < array_length(temp_list);){
+			aaa = temp_list[a++]
+			bbb = temp_list[a++]
 			if aaa < 0 or bbb < 0 or aaa >= xsize or bbb >= ysize or not edificio_bool[# aaa, bbb]
 				continue
 			temp_edificio = edificio_id[# aaa, bbb]

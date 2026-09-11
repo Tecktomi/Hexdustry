@@ -14,10 +14,9 @@ function ia_start(){
 			var visitado = usable_grid_bool, temp_queue = array_create(0, 0), counter = 0, temp_list = get_size(nucleo.a, nucleo.b, 0, edificio_size[id_nucleo]), size = array_length(temp_list), maxi = 6
 			ds_grid_clear(visitado, false)
 			var a, aa, bb, dis, desj, i, j, bmod, aaa, bbb
-			for(a = 0; a < size; a++){
-				temp_complex = temp_list[a]
-				aa = temp_complex[0]
-				bb = temp_complex[1]
+			for(a = 0; a < size;){
+				aa = temp_list[a++]
+				bb = temp_list[a++]
 				ds_grid_set(visitado, aa, bb, true)
 				array_push(temp_queue, aa, bb, 0, 0)//a, b, dis, dir
 				ia_grid_real[# aa, bb] = 0

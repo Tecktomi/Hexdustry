@@ -4,10 +4,9 @@ function edificio_pathfind(edificio = control.null_edificio){
 		var visitado = usable_grid_bool, temp_queue = array_create(0, 0), temp_list = get_size(a, b, dir, edificio_size[index]), size = array_length(temp_list), maxi = 6
 		ds_grid_clear(visitado, false)
 		var c, temp_complex, aa, bb, temp_priority, aaa, bbb, dis, desj, i, j, counter, bmod
-		for(c = 0; c < size; c++){
-			temp_complex = temp_list[c]
-			aa = temp_complex[0]
-			bb = temp_complex[1]
+		for(c = 0; c < size;){
+			aa = temp_list[c++]
+			bb = temp_list[c++]
 			temp_priority = ds_grid_get(edificio_cercano_priority, aa, bb)
 			ds_grid_set(visitado, aa, bb, true)
 			array_push(temp_queue, aa, bb, 0, 0)//a, b, dis, dir

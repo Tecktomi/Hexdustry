@@ -2,7 +2,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 	with control{
 		if edificio_bool[# a, b]
 			exit
-		var temp_complex = abtoxy(a, b), chunk_x = clamp(floor(a / CHUNK_WIDTH), 0, chunk_xsize - 1), chunk_y = clamp(floor(b / CHUNK_HEIGHT), 0, chunk_ysize - 1)
+		var temp_complex = abtoxy(a, b), chunk_x = clamp(floor(a / CHUNK_WIDTH), 0, chunk_xsize - 1), chunk_y = clamp(floor(b / CHUNK_HEIGHT), 0, chunk_ysize - 1), len
 		x = temp_complex[0]
 		y = temp_complex[1]
 		var edificio = {
@@ -154,12 +154,12 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		set_camino_dir(edificio)
 		//Añadir coordenadas
 		var temp_list_size = get_size(a, b, dir, edificio_size[index]), chunk_mina = chunk_x, chunk_minb = chunk_y, chunk_maxa = chunk_x, chunk_maxb = chunk_y
+		len = array_length(temp_list_size)
 		var c, aa, bb, d, i, j, _chunk_x, _chunk_y, temp_array, temp_edificio, temp_list
 		if edificio_size[index] != 1
-			for(c = array_length(temp_list_size) - 1; c >= 0; c--){
-				temp_complex = temp_list_size[c]
-				aa = clamp(floor(temp_complex[0] / CHUNK_WIDTH), 0, chunk_xsize - 1)
-				bb = clamp(floor(temp_complex[1] / CHUNK_HEIGHT), 0, chunk_ysize - 1)
+			for(c = 0; c < len;){
+				aa = clamp(floor(temp_list_size[c++] / CHUNK_WIDTH), 0, chunk_xsize - 1)
+				bb = clamp(floor(temp_list_size[c++] / CHUNK_HEIGHT), 0, chunk_ysize - 1)
 				chunk_mina = min(chunk_mina, aa)
 				chunk_minb = min(chunk_minb, bb)
 				chunk_maxa = max(chunk_maxa, aa)
@@ -181,10 +181,9 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			}
 		if in(index, id_taladro, id_taladro_electrico){
 			edificio.select = 0.8
-			for(c = array_length(temp_list_size) - 1; c >= 0; c--){
-				temp_complex = temp_list_size[c]
-				aa = temp_complex[0]
-				bb = temp_complex[1]
+			for(c = 0; c < len;){
+				aa = temp_list_size[c++]
+				bb = temp_list_size[c++]
 				if ore[# aa, bb] >= 0
 					edificio.select += 0.05
 				if index = id_taladro_electrico and terreno_recurso_bool[terreno[# aa, bb]]
@@ -259,10 +258,10 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		else if index = id_ensambladora{
 			edificio.mode = false
 			if (edificio_tecnologia[_jugador, id_modulo] or not tecnologia){
-				for(c = array_length(temp_list_arround) - 1; c >= 0; c--){
-					temp_complex = temp_list_arround[c]
-					aa = temp_complex[0]
-					bb = temp_complex[1]
+				len = array_length(temp_list_arround)
+				for(c = 0; c < len;){
+					aa = temp_list_arround[c++]
+					bb = temp_list_arround[c++]
 					if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 						continue
 					if edificio_bool[# aa, bb]{
@@ -308,10 +307,9 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 				}
 			}
 		}
-		for(c = array_length(temp_list_size) - 1; c >= 0; c--){
-			temp_complex = temp_list_size[c]
-			aa = temp_complex[0]
-			bb = temp_complex[1]
+		for(c = 0; c < len;){
+			aa = temp_list_size[c++]
+			bb = temp_list_size[c++]
 			ds_grid_set(edificio_bool, aa, bb, true)
 			ds_grid_set(edificio_id, aa, bb, edificio)
 			ds_grid_set(repair_id, aa, bb, -1)
@@ -328,10 +326,10 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 				edificio.energia_consumo = edificio_energia_consumo[index]
 			//Buscar edificios electricos colindantes
 			var temp_list_redes = array_create(0, null_red)
-			for(c = array_length(temp_list_arround) - 1; c >= 0; c--){
-				temp_complex = temp_list_arround[c]
-				aa = temp_complex[0]
-				bb = temp_complex[1]
+			len = array_length(temp_list_arround)
+			for(c = 0; c < len;){
+				aa = temp_list_arround[c++]
+				bb = temp_list_arround[c++]
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if edificio_bool[# aa, bb]{
@@ -346,10 +344,10 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			}
 			//Buscar cables cerca
 			temp_list = get_size(a, b, dir, 7)
-			for(c = array_length(temp_list) - 1; c >= 0; c--){
-				temp_complex = temp_list[c]
-				aa = temp_complex[0]
-				bb = temp_complex[1]
+			len = array_length(temp_list)
+			for(c = 0; c < len;){
+				aa = temp_list[c++]
+				bb = temp_list[c++]
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if (aa != a or bb != b) and edificio_bool[# aa, bb]{

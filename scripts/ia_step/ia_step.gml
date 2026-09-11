@@ -22,21 +22,19 @@ function ia_step(){
 				if c = array_length(ia_ores[_ore])
 					show_error($"ERROR IA\nNo se ha podido encontrar {recurso_nombre[ore_recurso[_ore]]}", true)
 				array_push(ia_build_queue, [id_taladro, dir, a, b])
-				var temp_list = get_size(a, b, dir, edificio_size[id_taladro]), angle, flag
-				for(i = array_length(temp_list) - 1; i >= 0; i--){
-					temp_complex = temp_list[i]
-					aa = temp_complex[0]
-					bb = temp_complex[1]
+				var temp_list = get_size(a, b, dir, edificio_size[id_taladro]), angle, flag, len = array_length(temp_list)
+				for(i = 0; i < len;){
+					aa = temp_list[i++]
+					bb = temp_list[i++]
 					dis = min(dis, ia_grid_real[# a, b])
 					for(j = 0; j < array_length(ia_ores[_ore]); j++)
 						if aa = ia_ores[_ore, j][0] and bb = ia_ores[_ore, j][1]
 							array_delete(ia_ores[_ore], j--, 1)
 				}
 				temp_list = get_arround(a, b, dir, edificio_size[id_taladro])
-				for(i = array_length(temp_list) - 1; i >= 0; i--){
-					temp_complex = temp_list[i]
-					a = temp_complex[0]
-					b = temp_complex[1]
+				for(i = 0; i < array_length(temp_list);){
+					a = temp_list[i++]
+					b = temp_list[i++]
 					if ia_grid_real[# a, b] < dis
 						break
 				}
@@ -255,9 +253,11 @@ function ia_step(){
 				}
 				if index = id_torre_basica
 					ds_grid_set_region(ia_chunk_defendidos, max(chunk_a - 1, 0), max(chunk_b - 1, 0), min(chunk_a + 1, chunk_xsize - 1), min(chunk_b + 1, chunk_ysize - 1), true)
-				for(i = array_length(edificio.coordenadas) - 1; i >= 0; i--){
-					temp_complex = edificio.coordenadas[i]
-					ia_grid_real[# temp_complex[0], temp_complex[1]] = infinity
+				var len = array_length(edificio.coordenadas)
+				for(i = 0; i < len;){
+					aa = edificio.coordenadas[i++]
+					bb = edificio.coordenadas[i++]
+					ia_grid_real[# aa, bb] = infinity
 				}
 			}
 		}

@@ -122,10 +122,10 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			}
 		}
 		//Cancelar coordenadas
-		for(i = array_length(edificio.coordenadas) - 1; i >= 0; i--){
-			temp_coordenada_2 = edificio.coordenadas[i]
-			a = temp_coordenada_2[0]
-			b = temp_coordenada_2[1]
+		var len = array_length(edificio.coordenadas)
+		for(i = 0; i < len;){
+			a = edificio.coordenadas[i++]
+			b = edificio.coordenadas[i++]
 			if index = id_nucleo and _jugador != jugador_IA{
 				ds_grid_set(edificio_cercano, a, b, null_edificio)
 				ds_grid_set(edificio_cercano_dis, a, b, infinity)

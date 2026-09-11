@@ -239,10 +239,9 @@ function step(){
 					b = array_length(SIZE_SIZE)
 				temp_complex_list = get_size(spawn_x, spawn_y, 0, b)
 				len = min(array_length(temp_complex_list), a)
-				for(i = 0; i < len; i++){
-					temp_complex = temp_complex_list[i]
-					aa = clamp(temp_complex[0], 0, xsize - 1)
-					bb = clamp(temp_complex[1], 0, ysize - 1)
+				for(i = 0; i < len;){
+					aa = clamp(temp_complex_list[i++], 0, xsize - 1)
+					bb = clamp(temp_complex_list[i++], 0, ysize - 1)
 					if grid_water_distance[# aa, bb] < infinity
 						if irandom(len) > i + 7{
 							add_dron(aa, bb, idd_destructor, jugador_IA)
