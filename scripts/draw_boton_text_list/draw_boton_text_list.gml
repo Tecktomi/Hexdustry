@@ -1,5 +1,6 @@
 function draw_boton_text_list(xpos, ypos, variable = 0, array_name = array_create(0, ""), array = array_create(0, 0), max_height = DEVISE ? 25 : 15){
 	with control{
+		variable = clamp(variable, 0, array_length(array_name) - 1)
 		if draw_boton(xpos, ypos, array_name[variable],,,, false){
 			get_keyboard_string = draw_boton_text_counter
 			input_layer = 1

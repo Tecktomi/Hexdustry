@@ -50,7 +50,7 @@ function step(){
 					else{
 						buffer = buffer_create(1024, buffer_grow, 1)
 						save_game_buffer(buffer)
-						buffer_save(buffer, $"Tutorial/mision{world_tutorial[# a, b]}.save")
+						buffer_save(buffer, $"Tutorial/mision{tutorial}.save")
 						buffer_delete(buffer)
 					}
 				}
@@ -224,7 +224,7 @@ function step(){
 		if oleadas and (++oleadas_timer >= 60 * oleadas_tiempo_primera or (not chat_input and keyboard_check_pressed(vk_enter))){
 			temp_time = oleadas_timer / 60 - oleadas_tiempo_primera
 			if (temp_time mod oleadas_tiempo) = 0 or keyboard_check_pressed(vk_enter){
-				a = ++oleada_count + 2
+				a = 2 * (++oleada_count + 2)
 				b = 1
 				flag = false
 				if mision_actual >= 0 and mision.objetivo = idm_sobrevivir_oleadas and ++mision_counter >= mision.target_num
