@@ -3,7 +3,7 @@ function scr_taladro(edificio = control.null_edificio){
 		var index = edificio.index
 		if edificio_energia[index]
 			var red = edificio.red, red_power = red.eficiencia
-		var flujo = edificio.flujo, temp_list, aa, bb, temp_complex, flag, i
+		var flujo = edificio.flujo, aa, bb, temp_complex, flag, i, j, len
 		if edificio.carga_total < edificio_carga_max[index]{
 			if index = id_taladro_electrico{
 				change_energia(edificio_energia_consumo[index], edificio)
@@ -16,12 +16,12 @@ function scr_taladro(edificio = control.null_edificio){
 			sound_play_edificio(3, edificio.center_x, edificio.center_y, 0.4)
 			if edificio.proceso >= edificio_proceso[index]{
 				edificio.proceso = 0
-				temp_list = array_shuffle(edificio.coordenadas)
+				len = array_length(edificio.coordenadas)
+				j = 2 * irandom(len / 2 - 1)
 				flag = false
-				for(i = array_length(temp_list) - 1; i >= 0; i--){
-					temp_complex = temp_list[i]
-					aa = temp_complex[0]
-					bb = temp_complex[1]
+				for(i = 0; i < len;){
+					aa = edificio.coordenadas[(i++ + j) mod len]
+					bb = edificio.coordenadas[(i++ + j) mod len]
 					if in(ore[# aa, bb], ido_cobre, ido_hierro, ido_carbon){
 						edificio.carga[ore_recurso[ore[# aa, bb]]]++
 						edificio.carga_total++

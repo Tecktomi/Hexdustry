@@ -23,7 +23,7 @@ function generar_bioma(bioma){
 			temp_peso_data = [[idt_piedra_cuprica, 3, 30], [idt_piedra_ferrica, 3, 30], [idt_agua, 2, 30], [idt_petroleo, 2, 20], [idt_pared_de_piedra, 6, 150], [idt_lava, 3, 25]]
 			borde_agua = idt_piedra_cuprica
 		}
-		var size = array_length(temp_peso_data), temp_terreno, cantidad, magnitud, temp_j, j, a, b, temp_list, k, temp_complex, aa, bb, c
+		var size = array_length(temp_peso_data), temp_terreno, cantidad, magnitud, temp_j, j, a, b, temp_list, k, temp_complex, aa, bb, c, len
 		for(i = 0; i < size; i++){
 			temp_terreno = temp_peso_data[i, 0]
 			cantidad = temp_peso_data[i, 1]
@@ -34,10 +34,10 @@ function generar_bioma(bioma){
 				b = irandom(ysize - 1)
 				repeat(magnitud){
 					temp_list = get_size(a, b, 0, 3)
-					for(k = 0; k < 7; k++){
-						temp_complex = temp_list[k]
-						aa = temp_complex[0]
-						bb = temp_complex[1]
+					len = array_length(temp_list)
+					for(k = 0; k < len;){
+						aa = temp_list[k++]
+						bb = temp_list[k++]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if terreno[# aa, bb] != idt_agua{
@@ -145,6 +145,7 @@ function generar_bioma(bioma){
 			}
 		//Limpiar zona del núcleo
 		var temp_list_nucleo = get_size(floor(xsize / 2), floor(ysize / 2), 0, 7)
+		len = array_length(temp_list_nucleo)
 		var temp_terreno_change = array_create(terreno_max, idt_pasto)
 		temp_terreno_change[idt_pared_de_arena] = idt_arena
 		temp_terreno_change[idt_agua] = idt_arena
@@ -157,10 +158,9 @@ function generar_bioma(bioma){
 		temp_terreno_change[idt_hielo] = idt_nieve
 		temp_terreno_change[idt_pared_de_pasto] = idt_pasto
 		temp_terreno_change[idt_lava] = idt_basalto
-		for(a = array_length(temp_list_nucleo) - 1; a >= 0; a--){
-			temp_complex = temp_list_nucleo[a]
-			aa = temp_complex[0]
-			bb = temp_complex[1]
+		for(a = 0; a < len;){
+			aa = temp_list_nucleo[a++]
+			bb = temp_list_nucleo[a++]
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 				continue
 			if not terreno_caminable[terreno[# aa, bb]]
@@ -189,10 +189,10 @@ function generar_bioma(bioma){
 				b = irandom(ysize - 1)
 				repeat(magnitud){
 					temp_list = get_size(a, b, 0, 3)
-					for(k = 0; k < 7; k++){
-						temp_complex = temp_list[k]
-						aa = temp_complex[0]
-						bb = temp_complex[1]
+					len = array_length(temp_list)
+					for(k = 0; k < len;){
+						aa = temp_list[k++]
+						bb = temp_list[k++]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						temp_terreno = terreno[# aa, bb]
@@ -213,10 +213,10 @@ function generar_bioma(bioma){
 			}
 		}
 		//Limpiar al rededor del núcleo
-		for(a = array_length(temp_list_nucleo) - 1; a >= 0; a--){
-			temp_complex = temp_list_nucleo[a]
-			aa = temp_complex[0]
-			bb = temp_complex[1]
+		len = array_length(temp_list_nucleo)
+		for(a = 0; a < len;){
+			aa = temp_list_nucleo[a++]
+			bb = temp_list_nucleo[a++]
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 				continue
 			ore[# aa, bb] = -1

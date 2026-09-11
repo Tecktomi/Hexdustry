@@ -4,7 +4,7 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 		ds_grid_clear(terreno, fondo)
 		ds_grid_clear(ore, -1)
 		ds_grid_clear(ore_amount, 0)
-		var size = array_length(instrucciones), i, instruccion, tipo, dat1, dat2, dat3, a, b, temp_list, j, temp_complex, aa, bb, c, bmod, random1, temp_bool, temp_real
+		var size = array_length(instrucciones), i, instruccion, tipo, dat1, dat2, dat3, a, b, temp_list, j, temp_complex, aa, bb, c, bmod, random1, temp_bool, temp_real, len
 		for(i = 0; i < size; i++){
 			instruccion = instrucciones[i]
 			tipo = instruccion[0]
@@ -18,10 +18,10 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 					b = irandom(ysize - 1)
 					repeat(dat2){
 						temp_list = get_size(a, b, 0, 3)
-						for(j = 0; j < 7; j++){
-							temp_complex = temp_list[j]
-							aa = temp_complex[0]
-							bb = temp_complex[1]
+						len = array_length(temp_list)
+						for(j = 0; j < len;){
+							aa = temp_list[j++]
+							bb = temp_list[j++]
 							if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 								continue
 							terreno[# aa, bb] = dat1
@@ -78,10 +78,10 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 					b = irandom(ysize - 1)
 					repeat(dat2){
 						temp_list = get_size(a, b, 0, 3)
-						for(j = 0; j < 7; j++){
-							temp_complex = temp_list[j]
-							aa = temp_complex[0]
-							bb = temp_complex[1]
+						len = array_length(temp_list)
+						for(j = 0; j < len;){
+							aa = temp_list[j++]
+							bb = temp_list[j++]
 							if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize or not terreno_caminable[terreno[# aa, bb]]
 								continue
 							if ore[# aa, bb] = dat1

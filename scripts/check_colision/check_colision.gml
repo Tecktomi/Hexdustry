@@ -9,9 +9,9 @@ function check_colision(a, b, index, dir){
 		var i, aa, bb, edificio, temp_terreno
 		if es_taladro or in(index, id_bomba_hidraulica, id_bomba_de_evaporacion, id_generador_geotermico)
 			flag = false
-		for(i = 0; i < array_length(size); i++){
-			aa = size[i, 0]
-			bb = size[i, 1]
+		for(i = 0; i < array_length(size);){
+			aa = size[i++]
+			bb = size[i++]
 			if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 				return false
 			if edificio_bool[# aa, bb]{
