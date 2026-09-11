@@ -10,11 +10,21 @@ function ia_start(){
 			ds_grid_clear(ia_chunk_defendidos, false)
 			ds_grid_clear(ia_grid_camino, false)
 			ds_grid_clear(ia_grid_real, infinity)
-			var nucleo = edificios_jugador_index[jugador_IA, id_nucleo][0]
-			var visitado = usable_grid_bool, temp_queue = array_create(0, 0), counter = 0, temp_list = get_size(nucleo.a, nucleo.b, 0, edificio_size[id_nucleo]), size = array_length(temp_list), maxi = 6
+			var nucleo = edificios_jugador_index[jugador_IA, id_nucleo][0], a, b, i
+			var len = array_length(nucleo.coordenadas)
+			array_resize(ia_tiles_nucleo, 0)
+			for(i = 0; i < len;){
+				a = nucleo.coordenadas[i++]
+				b = nucleo.coordenadas[i++]
+				array_push(ia_tiles_nucleo, a, b)
+			}
+			var visitado = usable_grid_bool, temp_queue = array_create(0, 0), counter = 0, temp_list = get_size(nucleo.a, nucleo.b, 0, edificio_size[id_nucleo]), maxi = 6
+			len = array_length(temp_list)
 			ds_grid_clear(visitado, false)
-			var a, aa, bb, dis, desj, i, j, bmod, aaa, bbb
-			for(a = 0; a < size;){
+			var aa, bb, dis, desj, j, bmod, aaa, bbb
+			for(a = 0; a < ore_max; a++)
+				array_resize(ia_ores[a], 0)
+			for(a = 0; a < len;){
 				aa = temp_list[a++]
 				bb = temp_list[a++]
 				ds_grid_set(visitado, aa, bb, true)

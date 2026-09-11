@@ -133,6 +133,22 @@ function draw_flow(){
 				draw_text_off(temp_complex[0], temp_complex[1], $"{a}, {len_2 / 2}")
 			}
 		}
+		else if flow = 10{
+			draw_set_halign(fa_left)
+			draw_set_valign(fa_top)
+			draw_text(0, 0, "ia_grid_real")
+			draw_set_halign(fa_center)
+			draw_set_valign(fa_middle)
+			for(a = mina; a < maxa; a++) for(b = minb; b < maxb; b++){
+				temp_complex = abtoxy(a, b)
+				draw_text_off(temp_complex[0], temp_complex[1], ia_grid_real[# a, b])
+			}
+			if IA and array_length(ia_build_queue) > ia_build_pos{
+				temp_complex = ia_build_queue[ia_build_pos]
+				var temp_complex_2 = abtoxy(temp_complex[2], temp_complex[3])
+				draw_sprite_off(edificio_sprite[temp_complex[0]], 0, temp_complex_2[0], temp_complex_2[1],,,,, 0.5)
+			}
+		}
 		draw_set_halign(h)
 		draw_set_valign(v)
 	}

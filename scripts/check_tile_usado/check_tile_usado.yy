@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"check_tile_usado",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"check_tile_usado",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

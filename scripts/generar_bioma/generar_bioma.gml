@@ -225,12 +225,12 @@ function generar_bioma(bioma){
 		//Spawn point
 		do{
 			if irandom(1) = 0{
-				spawn_x = (xsize - 1) * irandom(1)
-				spawn_y = irandom(ysize - 1)
+				spawn_x = 2 + (xsize - 5) * irandom(1)
+				spawn_y = irandom_range(2, ysize - 3)
 			}
 			else{
-				spawn_x = irandom(xsize - 1)
-				spawn_y = 1 + (ysize - 3) * irandom(1)
+				spawn_x = irandom_range(2, xsize - 3)
+				spawn_y = 2 + (ysize - 5) * irandom(1)
 			}
 		}
 		until terreno_caminable[terreno[# spawn_x, spawn_y]]

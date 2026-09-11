@@ -62,8 +62,17 @@ function game_start(_nucleo = true, mision_cumplida = false){
 		grafic_hideui = false
 		check_water_target()
 		if flow = 6{
-			if array_length(edificios_jugador_index[jugador_IA, id_nucleo]) = 0
+			if array_length(edificios_jugador_index[jugador_IA, id_nucleo]) = 0{
+				var temp_list = get_size(spawn_x, spawn_y, 0, 7), len = array_length(temp_list)
+				for(var i = 0; i < len;){
+					a = temp_list[i++]
+					b = temp_list[i++]
+					if a < 0 or b < 0 or a >= xsize or b >= ysize
+						continue
+					set_terreno(a, b, idt_piedra)
+				}
 				add_edificio(id_nucleo, 0, spawn_x, spawn_y, jugador_IA)
+			}
 			ia_start()
 		}
 		clear_edit()

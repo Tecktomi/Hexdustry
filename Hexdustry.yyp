@@ -107,6 +107,7 @@
     {"id":{"name":"change_flujo","path":"scripts/change_flujo/change_flujo.yy",},},
     {"id":{"name":"check_colision","path":"scripts/check_colision/check_colision.yy",},},
     {"id":{"name":"check_reconstruible","path":"scripts/check_reconstruible/check_reconstruible.yy",},},
+    {"id":{"name":"check_tile_usado","path":"scripts/check_tile_usado/check_tile_usado.yy",},},
     {"id":{"name":"check_water_target","path":"scripts/check_water_target/check_water_target.yy",},},
     {"id":{"name":"cinta_grande_check_output","path":"scripts/cinta_grande_check_output/cinta_grande_check_output.yy",},},
     {"id":{"name":"clear_edificios","path":"scripts/clear_edificios/clear_edificios.yy",},},
