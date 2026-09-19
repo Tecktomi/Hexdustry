@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ia_bfs",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ia_bfs",
+  "parent":{
+    "name":"IA",
+    "path":"folders/SCRIPTS/IA.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

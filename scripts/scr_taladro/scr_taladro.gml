@@ -7,12 +7,17 @@ function scr_taladro(edificio = control.null_edificio){
 		if edificio.carga_total < edificio_carga_max[index]{
 			if index = id_taladro_electrico{
 				change_energia(edificio_energia_consumo[index], edificio)
-				if red_power > 0 and flujo.liquido = idl_agua
+				if red_power > 0 and flujo.liquido = idl_lubricante
 					change_flujo(edificio_flujo_consumo[index], edificio)
-				edificio.proceso += red_power * (1 + 0.6 * (flujo.liquido = idl_agua ? flujo.eficiencia : 0)) * edificio.select * (1 + 0.4 * edificio.modulo)
+				edificio.proceso += red_power * edificio.select * (1 + 0.4 * edificio.modulo)
 			}
-			else if index = id_taladro
+			else if index = id_taladro{
+				if flujo.liquido = idl_lubricante
+					change_flujo(edificio_flujo_consumo[index], edificio)
 				edificio.proceso += edificio.select * (1 + 0.4 * edificio.modulo)
+			}
+			if flujo.liquido = idl_lubricante
+				edificio.proceso += flujo.eficiencia
 			sound_play_edificio(3, edificio.center_x, edificio.center_y, 0.4)
 			if edificio.proceso >= edificio_proceso[index]{
 				edificio.proceso = 0
@@ -47,7 +52,7 @@ function scr_taladro(edificio = control.null_edificio){
 					edificio.idle = true
 					change_energia(0, edificio)
 				}
-				if index = id_taladro_electrico and flujo.liquido = idl_agua
+				if flujo.liquido = idl_lubricante
 					change_flujo(0, edificio)
 			}
 		}

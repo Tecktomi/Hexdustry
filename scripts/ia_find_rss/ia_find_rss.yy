@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ia_find_rss",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ia_find_rss",
+  "parent":{
+    "name":"IA",
+    "path":"folders/SCRIPTS/IA.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

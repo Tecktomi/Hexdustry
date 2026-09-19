@@ -1,92 +1,9 @@
 function get_arround(a, b, dir, size){
 	with control{
-		var bmod = b & 1, c, d, temp_complex, temp_complex_2, temp_complex_3, temp_array
-		var output = array_create(0, 0)
-		if size = 1{
-			for(c = 0; c < 6; c++)
-				array_push(output, a + DESFACE_A[bmod, c], b + DESFACE_B[bmod, c])
-		}
-		else if size = 2{
-			dir = 6 - (dir mod 2)
-			for(c = 0; c < 6; c++){
-				temp_complex = next_to(a, b, (dir + c) mod 6)
-				if c = 4{
-					for(d = 3; d < 6; d++){
-						temp_complex_2 = next_to(temp_complex[0], temp_complex[1], (dir + d) mod 6)
-						array_push(output, temp_complex_2[0], temp_complex_2[1])
-					}
-				}
-				else if c = 5{
-					for(d = 5; d < 7 ; d++){
-						temp_complex_2 = next_to(temp_complex[0], temp_complex[1], (dir + d) mod 6)
-						array_push(output, temp_complex_2[0], temp_complex_2[1])
-					}
-				}
-				else
-					array_push(output, temp_complex[0], temp_complex[1])
-			}
-		}
-		else if size = 2.5{
-			temp_complex = next_to(a, b, (dir + 2) mod 6)
-			array_push(output, temp_complex[0], temp_complex[1])
-			temp_array = [4, 4, 5, 0, 0, 1, 1, 2, 3]
-			for(c = 0; c < array_length(temp_array); c++){
-				temp_complex = next_to(temp_complex[0], temp_complex[1], (dir + temp_array[c]) mod 6)
-				array_push(output, temp_complex[0], temp_complex[1])
-			}
-		}
-		else if size = 3{
-			for(c = 0; c < 6; c++){
-				temp_complex = next_to(a, b, (dir + c) mod 6)
-				temp_complex_2 = next_to(temp_complex[0], temp_complex[1], c)
-				array_push(output, temp_complex_2[0], temp_complex_2[1])
-				temp_complex_2 = next_to(temp_complex[0], temp_complex[1], (c + 1) mod 6)
-				array_push(output, temp_complex_2[0], temp_complex_2[1])
-			}
-		}
-		else if size = 4{
-			if dir = 0{
-				c = 0
-				temp_complex = [a, b + 6]
-				repeat(3){
-					repeat(3){
-						temp_complex = next_to(temp_complex[0], temp_complex[1], c)
-						array_push(output, temp_complex[0], temp_complex[1])
-					}
-					repeat(2){
-						temp_complex = next_to(temp_complex[0], temp_complex[1], c + 1)
-						array_push(output, temp_complex[0], temp_complex[1])
-					}
-					c += 2
-				}
-			}
-			else{
-				c = 0
-				temp_complex = [a, b + 6]
-				repeat(3){
-					repeat(2){
-						temp_complex = next_to(temp_complex[0], temp_complex[1], c)
-						array_push(output, temp_complex[0], temp_complex[1])
-					}
-					repeat(3){
-						temp_complex = next_to(temp_complex[0], temp_complex[1], c + 1)
-						array_push(output, temp_complex[0], temp_complex[1])
-					}
-					c += 2
-				}
-			}
-		}
-		else if size = 5{
-			for(c = 0; c < 6; c++){
-				temp_complex = next_to(a, b, (dir + c) mod 6)
-				temp_complex_2 = next_to(temp_complex[0], temp_complex[1], c)
-				temp_complex_3 = next_to(temp_complex_2[0], temp_complex_2[1], (c + 5) mod 6)
-				array_push(output, temp_complex_3[0], temp_complex_3[1])
-				temp_complex_3 = next_to(temp_complex_2[0], temp_complex_2[1], c)
-				array_push(output, temp_complex_3[0], temp_complex_3[1])
-				temp_complex_3 = next_to(temp_complex_2[0], temp_complex_2[1], (c + 1) mod 6)
-				array_push(output, temp_complex_3[0], temp_complex_3[1])
-			}
+		var src = GET_ARROUND[b & 1, dir & 1][--size], len = array_length(src), output = array_create(len, 0)
+		for(var i = 0; i < len;){
+			output[i++] = src[i] + a
+			output[i++] = src[i] + b
 		}
 		return output
 	}

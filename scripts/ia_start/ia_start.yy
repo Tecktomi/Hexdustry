@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"ia_start",
   "parent":{
-    "name":"SCRIPTS",
-    "path":"folders/SCRIPTS.yy",
+    "name":"IA",
+    "path":"folders/SCRIPTS/IA.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -15,13 +15,13 @@ function scr_fabrica_drones(edificio = control.null_edificio){
 			if flag{
 				//Encender
 				if not edificio.start{
-					edificio_encender(edificio,,, (index = id_fabrica_de_drones_grande))
+					edificio_encender(edificio,,, (index = id_fabrica_de_drones_grande or (index = id_fabrica_de_drones and flujo.liquido = idl_lubricante)))
 					edificio.start = true
 				}
 				if index = id_fabrica_de_drones_grande
 					edificio.proceso += min(red_power, flujo_power) * (1 + 0.3 * edificio.modulo)
 				else
-					edificio.proceso += red_power * (1 + 0.3 * edificio.modulo)
+					edificio.proceso += red_power * (1 + 0.3 * edificio.modulo) * (1 + 0.6 * (flujo.liquido = idl_lubricante ? flujo.eficiencia : 0))
 				//Producir / Apagar
 				if edificio.proceso >= dron_time[edificio.select]{
 					edificio.start = false
@@ -35,11 +35,11 @@ function scr_fabrica_drones(edificio = control.null_edificio){
 						edificio.proceso -= dron_time[edificio.select]
 					else
 						edificio.proceso--
-					edificio_encender(edificio, false,, (index = id_fabrica_de_drones_grande))
+					edificio_encender(edificio, false,, (index = id_fabrica_de_drones_grande or (index = id_fabrica_de_drones and flujo.liquido = idl_lubricante)))
 				}
 			}
 		}
 		else
-			edificio_encender(edificio, false,, (index = id_fabrica_de_drones_grande))
+			edificio_encender(edificio, false,, (index = id_fabrica_de_drones_grande or (index = id_fabrica_de_drones and flujo.liquido = idl_lubricante)))
 	}
 }

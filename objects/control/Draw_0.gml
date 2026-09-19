@@ -2524,9 +2524,9 @@ if build_index >= 0 and win = 0{
 					var temp_array_2 = array_create(rss_max, 0)
 					flag = false
 					len = array_length(build_list_arround)
-					for(a = 0; a < len;){
-						aa = build_list_arround[a++]
-						bb = build_list_arround[a++]
+					for(i = 0; i < len;){
+						aa = build_list_arround[i++]
+						bb = build_list_arround[i++]
 						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 							continue
 						if ore[# aa, bb] >= 0{
@@ -3774,5 +3774,3 @@ if keyboard_check(CONTROL_TAB) and online{
 	draw_set_halign(fa_left)
 }
 draw_sprite(spr_vineta, 0, 0, 0)
-if keyboard_check_pressed(ord("G"))
-	detect_features()

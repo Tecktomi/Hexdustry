@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ia_cancelar_proyecto",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ia_cancelar_proyecto",
+  "parent":{
+    "name":"IA",
+    "path":"folders/SCRIPTS/IA.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

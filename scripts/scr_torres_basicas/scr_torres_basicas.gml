@@ -43,7 +43,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 			}
 			var dmg_factor = 1, angle = -arctan2(center_x - target_x, target_y - edificio.center_y) - pi / 2
 			edificio.select = radtodeg(angle)
-			if ((in(index, id_torre_basica, id_rifle) and flujo.liquido = idl_agua) or (index = id_lanzallamas and flujo.liquido = idl_petroleo)){
+			if ((index = id_torre_basica or index = id_rifle) and flujo.liquido = idl_lubricante) or (index = id_lanzallamas and flujo.liquido = idl_petroleo){
 				change_flujo(edificio_flujo_consumo[index], edificio)
 				if in(index, id_torre_basica, id_rifle)
 					edificio.proceso += 0.5

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_fabrica_de_lubricante",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_fabrica_de_lubricante",
+  "parent":{
+    "name":"ACCIONES",
+    "path":"folders/SCRIPTS/EDIFICIOS/ACCIONES.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

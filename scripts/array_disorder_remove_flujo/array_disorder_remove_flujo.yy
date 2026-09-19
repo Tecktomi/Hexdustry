@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"array_disorder_remove_flujo",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"array_disorder_remove_flujo",
+  "parent":{
+    "name":"GENERAL",
+    "path":"folders/SCRIPTS/CORE/GENERAL.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

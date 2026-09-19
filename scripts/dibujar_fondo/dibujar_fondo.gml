@@ -5,7 +5,7 @@ function dibujar_fondo(editor = 0){
 			temp_step = image_index / 10
 			for(a = mina; a < maxa; a++)
 				for(b = minb; b < maxb; b++){
-					temp_complex = pre_abtoxy[# clamp(a + 1, 0, xsizeplus), clamp(b + 1, 0, ysizeplus)]//abtoxy
+					temp_complex = pre_abtoxy[# min(a + 1, xsizeplus), min(b + 1, ysizeplus)]//abtoxy
 					aa = temp_complex[0]
 					bb = temp_complex[1]
 					c = terreno[# a, b]
@@ -30,11 +30,11 @@ function dibujar_fondo(editor = 0){
 				for(b = minb; b < maxb; b++){
 					c = terreno[# a, b]
 					if c = 14{
-						temp_complex = pre_abtoxy[# clamp(a + 1, 0, xsizeplus), clamp(b + 1, 0, ysizeplus)]//abtoxy
+						temp_complex = pre_abtoxy[# min(a + 1, xsizeplus), min(b + 1, ysizeplus)]//abtoxy
 						draw_sprite_off(spr_lava_animacion, temp_step + 16 * ore_random[# a, b], temp_complex[0], temp_complex[1])
 					}
 					else if c = 18{
-						temp_complex = pre_abtoxy[# clamp(a + 1, 0, xsizeplus), clamp(b + 1, 0, ysizeplus)]//abtoxy
+						temp_complex = pre_abtoxy[# min(a + 1, xsizeplus), min(b + 1, ysizeplus)]//abtoxy
 						draw_sprite_off(olas[terreno_pared_index[# a, b]], temp_step + 16 * ore_random[# a, b], temp_complex[0], temp_complex[1])
 					}
 				}
@@ -59,7 +59,7 @@ function dibujar_fondo(editor = 0){
 					for(c = minc; c < maxc; c++){
 						cplus = c + 1
 						for(d = mind; d < maxd; d++){
-							temp_complex = pre_abtoxy[# clamp(cplus, 0, xsizeplus), clamp(d + 1, 0, ysizeplus)]//abtoxy
+							temp_complex = pre_abtoxy[# min(cplus, xsizeplus), min(d + 1, ysizeplus)]//abtoxy
 							aa = temp_complex[0] - des_a
 							bb = temp_complex[1] - des_b
 							f = terreno[# c, d]

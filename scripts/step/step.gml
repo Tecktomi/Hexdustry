@@ -3,7 +3,8 @@ function step(){
 		//Detenerse por LAG
 		if online and not servidor and timer + LAG > server_timer
 			exit
-		var a, b, cambio, temp_array_real, buffer, edificio, municion, target, _jugador, _tipo, _dmg, temp_complex, muna, munb, len, efecto, humo, fuego, temp_time, flag, temp_complex_list, i, aa, bb, temp_text_right, file, red, flujo, temp_explosion
+		var a, b, cambio, temp_array_real, buffer, edificio, municion, target, _jugador, _tipo, _dmg, temp_complex, muna, munb, len, efecto, humo, fuego, temp_time, flag
+		var temp_complex_list, i, aa, bb, temp_text_right, file, red, flujo, temp_explosion, temp_script
 		//Input multijugador
 		if online and not servidor
 			for(a = array_length(cambios) - 1; a >= 0; a--){
@@ -59,11 +60,14 @@ function step(){
 				server_sync_timer()
 		}
 		//Ciclo edificios
-		for(a = array_length(edificios_activos) - 1; a >= 0; a--){
-			edificio = edificios_activos[a]
-			if edificio.idle or edificio.vida <= 0
-				continue
-			edificio_script[edificio.index](edificio)
+		for(a = 0; a < edificio_max; a++) if not edificio_inerte[a] and array_length(edificios_index[a]) > 0{
+			temp_script = edificio_script[a]
+			for(b = array_length(edificios_index[a]) - 1; b >= 0; b--){
+				edificio = edificios_index[a, b]
+				if edificio.idle or edificio.vida < 0
+					continue
+				temp_script(edificio)
+			}
 		}
 		for(a = array_length(edificios_pendientes) - 1; a >= 0; a--){
 			edificio = array_pop(edificios_pendientes)

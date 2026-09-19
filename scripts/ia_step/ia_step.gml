@@ -5,259 +5,251 @@ function ia_step(){
 			IA = false
 			exit
 		}
+		array_set(jugador_recursos[jugador_IA], idr_cobre, 100)
+		array_set(jugador_recursos[jugador_IA], idr_hierro, 100)
 		var a = 0, b = 0, c = 0, aa = 0, bb = 0, i = 0, j = 0, temp_complex = array_create(0, 0), bmod = 0, dis = 0, dir = 0
 		if array_length(ia_build_queue) = 0{
 			var instruction = ia_queue[ia_queue_count], nucleo = edificios_jugador_index[jugador_IA, id_nucleo][0]
-			var _tiles_usados = array_create(0, 0)
+			var _tiles_usados = usable_grid_bool
+			ds_grid_clear(_tiles_usados, false)
 			if instruction = ia_queue_cobre or instruction = ia_queue_hierro{
 				var _ore = (instruction = ia_queue_cobre ? ido_cobre : ido_hierro)
-				c = 0
-				dis = infinity
-				//Buscar ores
-				do{
-					temp_complex = ia_ores[_ore, c++]
-					a = temp_complex[0]
-					b = temp_complex[1]
-					dir = irandom(1)
-				}
-				until check_colision(a, b, id_taladro, dir) or c >= array_length(ia_ores[_ore])
-				if c = array_length(ia_ores[_ore])
-					show_error($"ERROR IA\nNo se ha podido encontrar {recurso_nombre[ore_recurso[_ore]]}", true)
-				array_push(ia_build_queue, [id_taladro, dir, a, b])
-				var temp_list = get_size(a, b, dir, edificio_size[id_taladro]), angle
-				var len = array_length(temp_list)
-				for(i = 0; i < len;){
-					aa = temp_list[i++]
-					bb = temp_list[i++]
-					dis = min(dis, ia_grid_real[# a, b])
-					for(j = 0; j < array_length(ia_ores[_ore]); j++)
-						if aa = ia_ores[_ore, j][0] and bb = ia_ores[_ore, j][1]
-							array_delete(ia_ores[_ore], j--, 1)
-					array_push(_tiles_usados, aa, bb)
-				}
-				temp_list = get_arround(a, b, dir, edificio_size[id_taladro])
-				var flag = false
-				len = array_length(temp_list)
-				for(i = 0; i < len;){
-					a = temp_list[i++]
-					b = temp_list[i++]
-					if a < 0 or b < 0 or a >= xsize or b >= ysize
-						continue
-					if ia_grid_real[# a, b] < dis and (not edificio_bool[# a, b] or check_tile_usado(a, b, ia_tiles_nucleo)) and not check_tile_usado(a, b, _tiles_usados){
-						dis = ia_grid_real[# a, b]
-						aa = a
-						bb = b
-						flag = true
-					}
-				}
-				if not flag{
-					array_resize(ia_build_queue, 0)
-					if ++ia_queue_count = array_length(ia_queue)
-						IA = false
+				ia_build_rss = (instruction = ia_queue_cobre ? idr_cobre : idr_hierro)
+				var _struct_find_rss = ia_find_rss(_ore, _tiles_usados)
+				if not _struct_find_rss.flag{
+					ia_cancelar_proyecto()
 					exit
 				}
-				a = aa
-				b = bb
-				var pasos = xsize + ysize
-				//Crear camino
-				while dis > 0 and --pasos > 0{
-					temp_complex = abtoxy(a, b)
-					angle = floor(point_direction(temp_complex[0], temp_complex[1], nucleo.center_x, nucleo.center_y) / 30)
-					bmod = b & 1
-					flag = true
-					for(i = 0; i < 6; i++){
-						j = preset_dir[angle, i]
-						aa = a + DESFACE_A[bmod, j]
-						bb = b + DESFACE_B[bmod, j]
-						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
-							continue
-						if ia_grid_camino[# aa, bb]{
-							array_push(ia_build_queue, [id_cinta_transportadora, j, a, b])
-							flag = false
-							dis = 0
-							break
-						}
-					}
-					if flag repeat(3){
-						for(i = 0; i < 6; i++){
-							j = preset_dir[angle, i]
-							aa = a + DESFACE_A[bmod, j]
-							bb = b + DESFACE_B[bmod, j]
-							if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
-								continue
-							c = ia_grid_real[# aa, bb]
-							if c < dis and (not edificio_bool[# aa, bb] or check_tile_usado(aa, bb, ia_tiles_nucleo)) and not check_tile_usado(aa, bb, _tiles_usados){
-								array_push(ia_build_queue, [id_cinta_transportadora, j, a, b])
-								array_push(_tiles_usados, aa, bb)
-								a = aa
-								b = bb
-								dis = c
-								flag = false
-								break
-							}
-						}
-						if not flag
-							break
-						dis++
-					}
-					if flag{
-						array_resize(ia_build_queue, 0)
-						if ++ia_queue_count = array_length(ia_queue)
-							IA = false
-						break
-					}
-				}
+				if not ia_camino_nucleo(_struct_find_rss.a, _struct_find_rss.b, _struct_find_rss.dis, ia_build_rss, _tiles_usados)
+					ia_cancelar_proyecto()
 			}
 			else if instruction = ia_queue_defender{
 				var len = array_length(ia_chunk_construidos_array)
-				var flag = false, exito = true
-				var temp_chunk_array = array_shuffle(ia_chunk_construidos_array)
+				var flag = false, temp_chunk_array = array_shuffle(ia_chunk_construidos_array)
 				//Buscar chunks indefensos
 				for(i = 0; i < len; i++){
-					temp_complex = temp_chunk_array[i]
-					a = temp_complex[0]
-					b = temp_complex[1]
+					a = temp_chunk_array[i, 0]
+					b = temp_chunk_array[i, 1]
 					if not ia_chunk_defendidos[# a, b]{
 						flag = true
 						break
 					}
 				}
+				if not flag{
+					ia_cancelar_proyecto()
+					exit
+				}
 				//Buscar posición libre dentro del chunk
-				if flag{
-					flag = false
-					a *= CHUNK_WIDTH
-					b *= CHUNK_HEIGHT
-					array_resize(temp_chunk_array, 0)
-					for(aa = 0; aa < CHUNK_WIDTH; aa++)
-						for(bb = 0; bb < CHUNK_HEIGHT; bb++)
-							array_push(temp_chunk_array, [a + aa, b + bb])
-					temp_chunk_array = array_shuffle(temp_chunk_array)
-					for(i = array_length(temp_chunk_array) - 1; i >= 0; i--){
-						aa = temp_chunk_array[i, 0]
-						bb = temp_chunk_array[i, 1]
-						if ia_grid_real[# aa, bb] < infinity and check_colision(aa, bb, id_torre_basica, 0){
-							array_push(ia_build_queue, [id_torre_basica, 0, aa, bb])
-							array_push(_tiles_usados, aa, bb)
-							temp_complex = abtoxy(aa, bb)
-							flag = true
-							break
-						}
+				a *= CHUNK_WIDTH
+				b *= CHUNK_HEIGHT
+				temp_chunk_array = array_create(0, [0])
+				for(aa = 0; aa < CHUNK_WIDTH; aa++)
+					for(bb = 0; bb < CHUNK_HEIGHT; bb++)
+						array_push(temp_chunk_array, [a + aa, b + bb])
+				temp_chunk_array = array_shuffle(temp_chunk_array)
+				for(i = array_length(temp_chunk_array) - 1; i >= 0; i--){
+					aa = temp_chunk_array[i, 0]
+					bb = temp_chunk_array[i, 1]
+					if ia_grid_real[# aa, bb] < infinity and check_colision(aa, bb, id_torre_basica, 0){
+						array_push(ia_build_queue, [id_torre_basica, 0, aa, bb])
+						_tiles_usados[# aa, bb] = true
+						temp_complex = abtoxy(aa, bb)
+						flag = true
+						break
 					}
-					//Crear camino
-					if flag{
-						var visitado = usable_grid_bool, _distances = usable_grid_real, temp_queue = array_create(0, 0), counter = 0, maxi = 6, aaa, bbb, desj, edificio
-						ds_grid_clear(visitado, false)
-						ds_grid_clear(_distances, infinity)
-						ds_grid_set(visitado, aa, bb, true)
-						array_push(temp_queue, aa, bb, 0, 0)//a, b, dis, dir
-						_distances[# aa, bb] = 0
-						for(counter = 0; array_length(temp_queue) > counter;){
-							aaa = temp_queue[counter++]
-							bbb = temp_queue[counter++]
-							dis = temp_queue[counter++] + 1
-							desj = temp_queue[counter++] + 5
-							bmod = bbb & 1
-							for(i = 0; i < maxi; i++){
-								j = (i + desj) mod 6
-								aa = aaa + DESFACE_A[bmod, j]
-								bb = bbb + DESFACE_B[bmod, j]
-								if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
-									continue
-								if not visitado[# aa, bb]{
-									visitado[# aa, bb] = true
-									if terreno_caminable[terreno[# aa, bb]]{
-										_distances[# aa, bb] = dis
-										if ia_grid_camino[# aa, bb]{
-											edificio = edificio_id[# aa, bb]
-											if j != edificio.dir{
-												if j = (edificio.dir + 5) mod 6
-												    j = (edificio.dir + 1) mod 6
-												else if j = (edificio.dir + 1) mod 6
-												    j = (edificio.dir + 5) mod 6
-												else
-												    j = edificio.dir
-												array_push(ia_build_queue, [id_enrutador, j, aa, bb])
-												counter = infinity
-												aa = aaa
-												bb = bbb
-												break
-											}
-											visitado[# aa, bb] = false
-										}
-										array_push(temp_queue, aa, bb, dis, j)
-									}
-								}
+				}
+				if not flag{
+					ia_cancelar_proyecto()
+					exit
+				}
+				//Crear camino
+				var _distances = usable_grid_real
+				ds_grid_clear(_distances, infinity)
+				var temp_struct = ia_camino_recurso(aa, bb, [idr_cobre, idr_hierro], _distances)
+				if not temp_struct.done{
+					ia_cancelar_proyecto()
+					exit
+				}
+				if not ia_camino_atob(temp_struct.a, temp_struct.b, aa, bb, _distances, _tiles_usados){
+					ia_cancelar_proyecto()
+					exit
+				}
+			}
+			else if instruction = ia_queue_bronce{
+				//Buscar carbón
+				show_debug_message(random(1))
+				var _struct_find_rss = ia_find_rss(ido_carbon, _tiles_usados)
+				if not _struct_find_rss.flag{
+					ia_cancelar_proyecto()
+					exit
+				}
+				//Buscar camino más cercano
+				show_debug_message(1 + random(1))
+				var _distances = usable_grid_real
+				ds_grid_clear(_distances, infinity)
+				var _struct_enrutador = ia_camino_recurso(_struct_find_rss.a, _struct_find_rss.b, [idr_cobre], _distances)
+				if not _struct_enrutador.done{
+					ia_cancelar_proyecto()
+					exit
+				}
+				var enrutador_a = _struct_enrutador.a, enrutador_b = _struct_enrutador.b
+				var enrutador_salida_a = _struct_enrutador.salida_a, enrutador_salida_b = _struct_enrutador.salida_b
+				//Construir Horno
+				show_debug_message(2 + random(1))
+				var flag = false, pasos = 6
+				dis = _distances[# _struct_enrutador.a, _struct_enrutador.b]
+				temp_complex = abtoxy(_struct_find_rss.a, _struct_find_rss.b)
+				var temp_complex_2, angle, flag2, temp_array_arround, k, aaa, bbb, len2, flag3
+				var ia_check_horno_arround = function(a, b, dir){
+					if check_colision(a, b, id_horno, dir){
+						var temp_array_arround = get_arround(a, b, dir, 2)
+						var len2 = array_length(temp_array_arround)
+						var flag3 = true
+						for(var k = 0; k < len2;){
+							var aaa = temp_array_arround[k++]
+							var bbb = temp_array_arround[k++]
+							if aaa < 0 or bbb < 0 or aaa >= xsize or bbb >= ysize
+								continue
+							if ia_grid_camino[# aaa, bbb] != idr_bronce and ia_grid_camino[# aaa, bbb] != -1{
+								flag3 = false
+								break
 							}
-							maxi = 3
 						}
-						//Se creó un camino
-						if is_infinity(counter){
-							var temp_complex_2, angle, pasos = xsize + ysize
-							a = aa
-							b = bb
-							while dis > 0 and --pasos > 0{
-								temp_complex_2 = abtoxy(a, b)
-								angle = floor(point_direction(temp_complex_2[0], temp_complex_2[1], temp_complex[0], temp_complex[1]) / 30)
-								flag = true
-								bmod = b & 1
-								for(i = 0; i < 6; i++){
-									j = preset_dir[angle, i]
-									aa = a + DESFACE_A[bmod, j]
-									bb = b + DESFACE_B[bmod, j]
-									if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
-										continue
-									c = _distances[# aa, bb]
-									if c < dis and (not edificio_bool[# aa, bb] or check_tile_usado(aa, bb, ia_tiles_nucleo)) and not check_tile_usado(a, b, _tiles_usados){
-										array_push(ia_build_queue, [id_cinta_transportadora, j, a, b])
-										array_push(_tiles_usados, a, b)
-										_distances[# a, b] = infinity
-										a = aa
-										b = bb
-										dis = c
-										flag = false
+						if flag3
+							return true
+					}
+					return false
+				}
+				while not flag and pasos-- > 0{
+					temp_complex_2 = abtoxy(_struct_enrutador.a, _struct_enrutador.b)
+					flag2 = true
+					angle = floor(point_direction(temp_complex_2[0], temp_complex_2[1], temp_complex[0], temp_complex[1]) / 30)
+					bmod = _struct_enrutador.b & 1
+					for(i = 0; i < 6; i++){
+						j = preset_dir[angle, i]
+						aa = _struct_enrutador.a + DESFACE_A[bmod, j]
+						bb = _struct_enrutador.b + DESFACE_B[bmod, j]
+						if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
+							continue
+						c = _distances[# aa, bb]
+						if c < dis and not edificio_bool[# aa, bb] and not _tiles_usados[# aa, bb]{
+							flag2 = false
+							dis = c
+							if pasos < 5{
+								dir = irandom(1)
+								if ia_check_horno_arround(_struct_enrutador.a, _struct_enrutador.b, dir){
+									flag = true
+									break
+								}
+								else{
+									dir = 1 - dir
+									if ia_check_horno_arround(_struct_enrutador.a, _struct_enrutador.b, dir){
+										flag = true
 										break
 									}
 								}
-								if flag{
-									exito = false
-									break
-								}
 							}
+							_struct_enrutador.a = aa
+							_struct_enrutador.b = bb
 						}
-						else
-							exito = false
 					}
-					else
-						exito = false
+					if flag2
+						break
 				}
-				else
-					exito = false
-				if not exito{
-					array_resize(ia_build_queue, 0)
-					if ++ia_queue_count = array_length(ia_queue)
-						IA = false
+				if not flag{
+					ia_cancelar_proyecto()
+					exit
 				}
+				array_push(ia_build_queue, [id_horno, dir, _struct_enrutador.a, _struct_enrutador.b])
+				//Limpiar terreno
+				show_debug_message(3 + random(1))
+				var temp_list = get_size(_struct_enrutador.a, _struct_enrutador.b, dir, edificio_size[id_horno])
+				//Buscar mejor salida
+				show_debug_message(4 + random(1))
+				var temp_arround = get_arround(_struct_enrutador.a, _struct_enrutador.b, dir, edificio_size[id_horno])
+				var len = array_length(temp_arround)
+				var dis2 = infinity, nucleo_a, nucleo_b
+				flag2 = false
+				dis = infinity
+				for(i = 0; i < len;){
+					a = temp_arround[i++]
+					b = temp_arround[i++]
+					if a < 0 or b < 0 or a >= xsize or b >= ysize
+						continue
+					if not edificio_bool[# a, b] and not _tiles_usados[# a, b] and ia_grid_real[# a, b] < dis2{
+						dis2 = ia_grid_real[# a, b]
+						nucleo_a = a
+						nucleo_b = b
+						flag2 = true
+					}
+				}
+				if not flag2{
+					ia_cancelar_proyecto()
+					exit
+				}
+				//Construir enrutador - horno
+				show_debug_message(5 + random(1))
+				var struct_bfs = ia_bfs([enrutador_salida_a, enrutador_salida_b], temp_list, _tiles_usados)
+				if not struct_bfs.done{
+					ia_cancelar_proyecto()
+					ds_grid_destroy(struct_bfs.bfs)
+					exit
+				}
+				show_debug_message(6 + random(1))
+				array_push(ia_build_queue, [-1, idr_cobre])
+				if not ia_camino_atob(struct_bfs.a, struct_bfs.b, enrutador_a, enrutador_b, struct_bfs.bfs, _tiles_usados){
+					ia_cancelar_proyecto()
+					ds_grid_destroy(struct_bfs.bfs)
+					exit
+				}
+				//Construir carbón - horno
+				show_debug_message(7 + random(1))
+				var arround_taladro = get_arround(_struct_find_rss.a, _struct_find_rss.b, _struct_find_rss.dir, edificio_size[id_taladro])
+				ds_grid_destroy(struct_bfs.bfs)
+				struct_bfs = ia_bfs(arround_taladro, temp_list, _tiles_usados)
+				if not struct_bfs.done{
+					ia_cancelar_proyecto()
+					ds_grid_destroy(struct_bfs.bfs)
+					exit
+				}
+				show_debug_message(8 + random(1))
+				array_push(ia_build_queue, [-1, idr_carbon])
+				if not ia_camino_atob(_struct_find_rss.a, _struct_find_rss.b, aa, bb, struct_bfs.bfs, _tiles_usados){
+					ia_cancelar_proyecto()
+					ds_grid_destroy(struct_bfs.bfs)
+					exit
+				}
+				//Construir chorno - núcleo
+				show_debug_message(9 + random(1))
+				len = array_length(temp_list)
+				for(i = 0; i < len;){
+					aa = temp_list[i++]
+					bb = temp_list[i++]
+					_tiles_usados[# aa, bb] = true
+				}
+				array_push(ia_build_queue, [-1, idr_bronce])
+				if not ia_camino_nucleo(nucleo_a, nucleo_b, dis2, idr_bronce, _tiles_usados)
+					ia_cancelar_proyecto()
+				ds_grid_destroy(struct_bfs.bfs)
+				show_debug_message(10 + random(1))
 			}
 		}
 		else{
 			temp_complex = ia_build_queue[ia_build_pos]
 			var index = temp_complex[0]
+			if index = -1{
+				ia_build_rss = temp_complex[1]
+				exit
+			}
 			if is_comprable(edificio_precio_id[index], edificio_precio_num[index], jugador_IA){
 				a = temp_complex[2]
 				b = temp_complex[3]
 				var edificio = construir(index, temp_complex[1], a, b,,, jugador_IA)
 				if edificio != null_edificio{
-					if ++ia_build_pos = array_length(ia_build_queue){
-						for(i = array_length(ia_build_queue) - 1; i >= 0; i--){
-							temp_complex = ia_build_queue[i]
-							if temp_complex[0] = id_cinta_transportadora
-								ia_grid_camino[# temp_complex[2], temp_complex[3]] = true
-						}
-						array_resize(ia_build_queue, 0)
-						ia_build_pos = 0
-						if ++ia_queue_count = array_length(ia_queue)
-							IA = false
-					}
+					if index = id_cinta_transportadora
+						ia_grid_camino[# temp_complex[2], temp_complex[3]] = ia_build_rss
+					if ++ia_build_pos = array_length(ia_build_queue)
+						ia_cancelar_proyecto()
 					var chunk_a = floor(a / CHUNK_WIDTH), chunk_b = floor(b / CHUNK_HEIGHT)
 					if not ia_chunk_construidos[# chunk_a, chunk_b]{
 						array_push(ia_chunk_construidos_array, [chunk_a, chunk_b])
