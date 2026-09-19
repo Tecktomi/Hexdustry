@@ -91,6 +91,8 @@ function save_game_buffer(buffer){
 			buffer_write(buffer, buffer_u16, real(edificio.a))
 			buffer_write(buffer, buffer_u16, real(edificio.b))
 			buffer_write(buffer, buffer_u8, real(edificio.jugador))
+			if tag_edificio_tuberia[edificio.index]
+				buffer_write(buffer, buffer_s8, real(edificio.flujo.liquido))
 			if edificio.index = id_procesador
 				save_procesador(buffer, edificio)
 		}
@@ -110,6 +112,7 @@ function save_game_buffer(buffer){
 		buffer_write(buffer, buffer_u16, len)
 		for(a = 0; a < len; a++){
 			flujo = flujos[a]
+			buffer_write(buffer, buffer_u8, flujo.edificios[0].flujo = flujo ? 0 : 1)
 			buffer_write(buffer, buffer_u16, real(flujo.edificios[0].punteros[ptre_total]))
 			buffer_write(buffer, buffer_f64, real(flujo.almacen))
 			buffer_write(buffer, buffer_u8, real(flujo.liquido))

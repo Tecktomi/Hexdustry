@@ -50,7 +50,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 			pc[1] = procesador_var(xpos, ypos, pc, 1)
 			xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to} ")
 			pc[2] = draw_boton_text_list(xpos, ypos, pc[2], signs,, 10)
-			if not in(signs[pc[2]], "pi"){
+			if not signs[pc[2]] = "pi"{
 				xpos = draw_text_xpos(xpos + text_x, ypos, $" ")
 				procesador_valor(xpos, ypos, pc, 3, 4)
 			}

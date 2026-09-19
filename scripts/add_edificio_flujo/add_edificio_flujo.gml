@@ -5,7 +5,7 @@ function add_edificio_flujo(edificio = control.null_edificio, flujo_name = "fluj
 		var forzado = (array_length(edificio_flujo_liquido[index]) > iter), len = array_length(temp_list_size)
 		var my_liquido = forzado ? edificio_flujo_liquido[index, iter] : -1
 		var puntero = (flujo_name = "flujo" ? ptre_flujo_1 : ptre_flujo_2)
-		if in(index, id_tuberia, id_deposito) and array_length(liquido_choose_array) > 1{
+		if tag_edificio_tuberia[index] and array_length(liquido_choose_array) > 1{
 			forzado = true
 			my_liquido = liquido_choose_array[liquido_choose]
 		}
@@ -145,12 +145,12 @@ function add_edificio_flujo(edificio = control.null_edificio, flujo_name = "fluj
 			struct_set(edificio, flujo_name, flujo)
 			array_disorder_push_flujo(flujo, edificio)
 		}
-		if not in(index, id_tuberia, id_deposito, id_tuberia_subterranea, id_liquido_infinito)
+		if not tag_edificio_tuberia[index]
 			flujo.liquido_forzado++
 		flujo.almacen_max += edificio_flujo_almacen[index]
-		if index = id_bomba_hidraulica and in(flujo.liquido, -1, edificio.fuel)
+		if index = id_bomba_hidraulica and (flujo.liquido = -1 or flujo.liquido = edificio.fuel)
 			change_flujo(edificio_flujo_consumo[index], edificio)
-		else if in(index, id_bomba_de_evaporacion, id_generador_geotermico, id_extractor_atmosferico) and in(flujo.liquido, -1, idl_agua){
+		else if (index = id_bomba_de_evaporacion or index = id_generador_geotermico or index = id_extractor_atmosferico) and (flujo.liquido = -1 or flujo.liquido = idl_agua){
 			change_flujo(edificio_flujo_consumo[index], edificio)
 			if index = id_generador_geotermico{
 				edificio.select = 0

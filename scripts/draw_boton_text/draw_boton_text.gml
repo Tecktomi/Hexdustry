@@ -10,7 +10,6 @@ function draw_boton_text(xpos, ypos, variable, es_real = true, detect_real = fal
 			get_keyboard_string = draw_boton_text_counter
 			get_keyboard_cursor = string_length(keyboard_string) + 1
 			get_keyboard_text = keyboard_string
-			input_layer = 0
 			editor_list = false
 		}
 		if get_keyboard_string = draw_boton_text_counter++{

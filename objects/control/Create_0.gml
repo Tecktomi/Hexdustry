@@ -53,6 +53,11 @@ var a, b, c, flag
 	#macro municion_tipo_perforadora 4
 	#macro jugador_salvaje 0
 	#macro jugador_IA 1
+	#macro MENU_PRINCIPAL 0
+	#macro MENU_JUEGO 1
+	#macro MENU_EDITOR 2
+	#macro MENU_EDITOR_JUEGO 3
+	#macro MENU_CAMPANNA 4
 #endregion
 DEVISE = (os_type = os_windows)
 var arr0 = array_create(0, 0)
@@ -207,7 +212,7 @@ L = {}
 	descubrir_zona(4, 7)
 #endregion
 #region Metadatos
-	menu = 0
+	menu = MENU_PRINCIPAL
 	cursor = cr_arrow
 	deslizante_id = -1
 	xsize = 72
@@ -851,6 +856,8 @@ selected_dron = null_dron
 	ds_grid_clear(beta_grid, null_beta)
 	lago_grid = ds_grid_create(xsize, ysize)
 	ds_grid_clear(lago_grid, null_lago)
+	tile_animado_chunk = ds_grid_create(chunk_xsize, chunk_ysize)
+	ds_grid_clear(tile_animado_chunk, 0)
 	background = ds_grid_create(chunk_xsize, chunk_ysize)
 	chunk_dron = ds_grid_create(chunk_xsize, chunk_ysize)
 	chunk_edificios = ds_grid_create(chunk_xsize, chunk_ysize)
@@ -1338,7 +1345,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 	id_bomba_de_evaporacion = def_edificio("Bomba de Evaporación", 1, spr_bomba_evaporacion, spr_tuberia_color, 30,, scr_bomba_evaporacion, scr_draw_liquido_sin_bomba, false,, [idr_bronce, idr_hierro], [10, 15]); def_edificio_2(, 10, -5, [idl_agua],,,, 2)
 	id_horno_de_lava = def_edificio("Horno de Lava", 2.5, spr_horno_lava, spr_horno_lava_encendido, 400, 70, scr_horno_lava,,,, [idr_acero, idr_concreto], [20, 15], 70, true, false, [idr_cobre, idr_hierro, idr_arena, idr_sal], [10, 10, 10, 10], true, false, [idr_bronce, idr_acero, idr_silicio]); def_edificio_2(, 10, 45, [idl_lava],,,, 1)
 	id_generador_geotermico = def_edificio("Generador Geotérmico", 2, spr_generador_geotermico,, 200,, scr_generador_geotermico, scr_draw_bomba_par, false,, [idr_cobre, idr_acero, idr_concreto], [50, 20, 20]); def_edificio_2(-90, 10, 30, [idl_agua, idl_agua_salada],,,, 2)
-	id_taladro_de_explosion = def_edificio("Taladro de Explosión", 3, spr_taladro_explosivo,, 300, 300, scr_taladro_explosion,,,, [idr_hierro, idr_acero, idr_concreto], [100, 40, 30], 40, true, false, [13], [10], true, false, [idr_cobre, idr_carbon, idr_hierro, idr_piedra, idr_arena, idr_piedra_cuprica, idr_piedra_ferrica, idr_piedra_sulfatada, idr_uranio_bruto, idr_sal]); def_edificio_2(,,,,,,, 1)
+	id_taladro_de_explosion = def_edificio("Taladro de Explosión", 3, spr_taladro_explosivo,, 300, 300, scr_taladro_explosion,,,, [idr_hierro, idr_acero, idr_concreto], [100, 40, 30], 40, true, false, [idr_explosivo], [10], true, false, [idr_cobre, idr_carbon, idr_hierro, idr_piedra, idr_arena, idr_piedra_cuprica, idr_piedra_ferrica, idr_piedra_sulfatada, idr_uranio_bruto, idr_sal]); def_edificio_2(,,,,,,, 1)
 	id_muro = def_edificio("Muro", 1, spr_hexagono,, 500,,,,,, [idr_concreto], [2]); def_edificio_2(,,,,,, true, -1)
 	id_puerto_de_carga = def_edificio("Puerto de Carga", 2, spr_punto_carga,, 150,, scr_puerto_carga,,,, [idr_cobre, idr_bronce, idr_electronicos], [25, 10, 1], 25,, true,,,, true); def_edificio_2(,,,,,,, 1)
 	id_ensambladora = def_edificio("Ensambladora", 2.5, spr_ensambladora,, 250, 240, scr_ensambladora,,,, [idr_hierro, idr_bronce, idr_acero, idr_silicio], [25, 15, 10, 10], 40, true, false, [idr_cobre, idr_silicio], [10, 10], true, false, [idr_electronicos]); def_edificio_2(70,,,,,,, 1)
@@ -1355,7 +1362,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 	id_onda_de_choque = def_edificio("Onda de Choque", 2, spr_onda_de_choque,, 800, 150, scr_onda_choque, scr_draw_armas_no_laser,,, [idr_cobre, idr_bateria, idr_electronicos], [80, 10, 10]); def_edificio_2(300,,,, 0, 100,, 3)
 	id_muro_reforzado = def_edificio("Muro Reforzado", 2, spr_muro_reforzado,, 2400,,,,,, [idr_acero, idr_concreto, idr_uranio_bruto], [3, 3, 1]); def_edificio_2(,,,,,, true, -1)
 	id_silo_de_misiles = def_edificio("Silo de Misiles", 4, spr_silo_de_misiles,, 1600, 1200, scr_silo_misiles,,,, [idr_cobre, idr_bronce, idr_hierro, idr_concreto, idr_electronicos], [500, 100, 500, 100, 50], 200, true, false); def_edificio_2(300, 10, 200, [idl_petroleo],,,, 4)
-	id_planta_de_enriquecimiento = def_edificio("Planta de Enriquecimiento", 4, spr_planta_breeding,, 600, 600, scr_planta_enriquecimiento,,,, [idr_cobre, idr_acero, idr_concreto, idr_electronicos, idr_uranio_bruto], [250, 80, 120, 50, 100], 21, true, false, [idr_uranio_enriquecido, idr_uranio_empobrecido], [20, 1], true, false, [18]); def_edificio_2(200, 10, 150, [idl_agua, idl_agua_salada],,,, 2)
+	id_planta_de_enriquecimiento = def_edificio("Planta de Enriquecimiento", 4, spr_planta_breeding,, 600, 600, scr_planta_enriquecimiento,,,, [idr_cobre, idr_acero, idr_concreto, idr_electronicos, idr_uranio_bruto], [250, 80, 120, 50, 100], 21, true, false, [idr_uranio_enriquecido, idr_uranio_empobrecido], [20, 1], true, false, [idr_uranio_enriquecido]); def_edificio_2(200, 10, 150, [idl_agua, idl_agua_salada],,,, 2)
 	//50
 	id_almacen = def_edificio("Almacén", 2, spr_almacen,, 400,, scr_almacen,,,, [idr_hierro, idr_acero], [20, 10], 100, true, true,,, true, true); def_edificio_2(,,,,,,, 1)
 	id_fabrica_de_concreto = def_edificio("Fábrica de Concreto", 3, spr_fabrica_de_concreto,, 300, 60, scr_fabrica_de_concreto, scr_draw_bomba_impar, false,, [idr_hierro, idr_bronce, idr_acero], [40, 25, 10], 60, true, false, [idr_arena, idr_piedra, idr_piedra_cuprica, idr_piedra_ferrica, idr_piedra_sulfatada], [10, 10, 10, 10, 10], true, false, [idr_concreto]); def_edificio_2(, 10, 30, [idl_agua],,,, 1)
@@ -1370,7 +1377,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 	//60
 	id_cinta_grande = def_edificio("Cinta Grande", 2, spr_cinta_grande, spr_cinta_grande_diagonal, 80, 30, scr_cinta_grande,,,, [idr_bronce, idr_hierro], [5, 15]); def_edificio_2()
 	id_mina = def_edificio("Mina", 1, spr_mina,,,,,,,, [idr_hierro, idr_explosivo], [5, 2]); def_edificio_2(,,,,,, true, -2)
-	id_fabrica_de_lubricante = def_edificio("Fábrica de Lubricante", 3, spr_fabrica_de_lubricante,, 200, 30, scr_fabrica_de_lubricante, scr_draw_bomba_impar, false,, [idr_acero, idr_silicio, idr_bronce], [20, 20, 30], 10, true, false, [idr_sal], [10]); def_edificio_2(50, 10, 30, [idl_petroleo, idl_lubricante],,,,, -30)
+	id_fabrica_de_lubricante = def_edificio("Fábrica de Lubricante", 3, spr_fabrica_de_lubricante,, 200, 30, scr_fabrica_de_lubricante, scr_draw_bomba_impar, false,, [idr_acero, idr_silicio, idr_bronce], [20, 20, 30]); def_edificio_2(50, 10, 30, [idl_petroleo, idl_lubricante],,,,, -30)
 #endregion
 #region Categorias
 	categoria_edificios = [

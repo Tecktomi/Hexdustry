@@ -6,7 +6,7 @@ function scr_triturador(edificio = control.null_edificio){
 		if edificio.carga[idr_piedra] > 0 and edificio.carga[idr_arena] < 10{
 			//Encender
 			if not edificio.start{
-				edificio_encender(edificio,,, false)
+				edificio_encender(edificio)
 				edificio.start = true
 			}
 			edificio.proceso += red_power * (1 + 0.3 * edificio.modulo)
@@ -23,7 +23,7 @@ function scr_triturador(edificio = control.null_edificio){
 					edificio.carga[idr_piedra]--
 				edificio.carga[idr_arena]++
 				edificio.waiting = not mover(edificio)
-				edificio_encender(edificio, false,, false)
+				edificio_encender(edificio, false)
 			}
 		}
 		if edificio.carga_total > 0

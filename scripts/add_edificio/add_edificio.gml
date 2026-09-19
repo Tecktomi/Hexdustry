@@ -87,13 +87,13 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			jugador : _jugador
 		}
 		if edificio_size[index] = 2.5{
-			if in(dir, 0, 1)
+			if dir = 0 or dir = 1
 				edificio.center_x += 12
-			else if in(dir, 3, 4)
+			else if dir = 3 or dir = 4
 				edificio.center_x -= 12
-			if in(dir, 0, 4)
+			if dir = 0 or dir = 4
 				edificio.center_y += TILE_HEIGHT / 4
-			else if in(dir, 1, 3)
+			else if dir = 1 or dir = 3
 				edificio.center_y -= TILE_HEIGHT / 4
 			else if dir = 2
 				edificio.center_y -= TILE_HEIGHT / 2
@@ -127,7 +127,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		if mision_actual >= 0 and mision.objetivo = idm_construir and mision.target_id = index and ++mision_counter >= mision.target_num
 			pasar_mision()
 		temp_complex = [0, 0]
-		if in(index, id_planta_quimica, id_fabrica_de_drones, id_fabrica_de_drones_grande){
+		if index = id_planta_quimica or index = id_fabrica_de_drones or index = id_fabrica_de_drones_grande{
 			edificio.carga_max = array_create(rss_max, 0)
 			edificio.carga_output = array_create(rss_max, 0)
 			if index = id_planta_quimica
@@ -179,7 +179,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 					array_push(chunk_edificios_dinamico[# c, d], edificio)
 				array_push(chunk_edificios_draw[# c, d], edificio)
 			}
-		if in(index, id_taladro, id_taladro_electrico){
+		if index =  id_taladro or index = id_taladro_electrico{
 			edificio.select = 0.8
 			for(c = 0; c < len;){
 				aa = temp_list_size[c++]
@@ -215,7 +215,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			}
 		}
 		if tag_camino_o_tunel[index]{
-			if in(index, id_cinta_transportadora, id_enrutador, id_cinta_magnetica){
+			if index = id_cinta_transportadora or index = id_enrutador or index = id_cinta_magnetica{
 				if (dir mod 3) = 1
 					edificio.yscale = power(-1, dir > 1)
 				else{
@@ -247,7 +247,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 				}
 			}
 		#endregion
-		if index = id_nucleo and menu = 1 and _jugador != jugador_IA{
+		if index = id_nucleo and menu = MENU_JUEGO and _jugador != jugador_IA{
 			edificio_pathfind(edificio)
 			for(c = array_length(drones) - 1; c >= 0; c--){
 				dron = drones[c]
@@ -396,7 +396,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			//Modificar valores de la red resultante
 			edificio.red = temp_red
 			if edificio_energia_consumo[index] > 0{
-				if in(index, id_cable, id_bateria, id_taladro_electrico)
+				if index = id_cable or index = id_bateria or index = id_taladro_electrico
 					change_energia(abs(edificio_energia_consumo[index]), edificio)
 			}
 			else
@@ -406,7 +406,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 				if _jugador = jugador_IA
 					temp_red.bateria += 2500
 			}
-			else if in(index, id_panel_solar, id_procesador, id_planta_de_reciclaje)
+			else if index = id_panel_solar or index = id_procesador or index = id_planta_de_reciclaje
 				change_energia(edificio_energia_consumo[index], edificio)
 			array_disorder_push(temp_red.edificios, edificio, ptre_red)
 			array_disorder_push(redes, temp_red, 0)
@@ -420,7 +420,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		//Datos específicos
 		if index = id_laser
 			edificio.mode = true
-		if in(index, id_rifle, id_mortero, id_onda_de_choque)
+		if index = id_rifle or index = id_mortero or index = id_onda_de_choque
 			edificio.select = 0
 		if index = id_silo_de_misiles{
 			edificio.select = -1
@@ -430,15 +430,15 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			edificio.array_real[2] = -1
 			edificio.array_real[3] = -1
 		}
-		if in(index, id_planta_quimica, id_fabrica_de_drones, id_fabrica_de_drones_grande, id_cinta_grande, id_planta_de_reciclaje)
+		if index = id_planta_quimica or index = id_fabrica_de_drones or index = id_fabrica_de_drones_grande or index = id_cinta_grande or index = id_planta_de_reciclaje
 			edificio.select = -1
-		if in(index, id_planta_de_enriquecimiento, id_fabrica_de_drones, id_planta_de_reciclaje)
+		if index = id_planta_de_enriquecimiento or index = id_fabrica_de_drones or index = id_planta_de_reciclaje
 			edificio.proceso = -1
 		if index = id_laser
 			edificio.fuel = 1
 		if index = id_refineria_de_petroleo
 			edificio.select = 60
-		if in(index, id_fabrica_de_drones, id_cinta_grande, id_fabrica_de_drones_grande){
+		if index = id_fabrica_de_drones or index = id_cinta_grande or index = id_fabrica_de_drones_grande{
 			edificio.array_real[0] = -1
 			edificio.array_real[1] = -1
 			edificio.array_real[2] = 0

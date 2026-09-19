@@ -28,7 +28,7 @@ function game_start(_nucleo = true, mision_cumplida = false){
 		input_layer = 0
 		get_file = 0
 		win_step = 0
-		menu = 1
+		menu = MENU_JUEGO
 		image_index = 0
 		mision_counter = 0
 		oleadas_timer = 0

@@ -31,7 +31,7 @@ function scr_taladro(edificio = control.null_edificio){
 						edificio.carga[ore_recurso[ore[# aa, bb]]]++
 						edificio.carga_total++
 						if edificio.carga_total = edificio_carga_max[index]
-							change_energia(0, edificio)
+							edificio_encender(edificio, false,,, false)
 						if minar(aa, bb)
 							edificio.select -= 0.05
 						flag = true
@@ -41,7 +41,7 @@ function scr_taladro(edificio = control.null_edificio){
 						edificio.carga[terreno_recurso_id[terreno[# aa, bb]]]++
 						edificio.carga_total++
 						if edificio.carga_total = edificio_carga_max[index]
-							change_energia(0, edificio)
+							edificio_encender(edificio, false,,, false)
 						flag = true
 						break
 					}
@@ -50,10 +50,8 @@ function scr_taladro(edificio = control.null_edificio){
 					edificio.waiting = not mover(edificio)
 				else{
 					edificio.idle = true
-					change_energia(0, edificio)
+					edificio_encender(edificio, false,,, false)
 				}
-				if flujo.liquido = idl_lubricante
-					change_flujo(0, edificio)
 			}
 		}
 		if edificio.carga_total > 0

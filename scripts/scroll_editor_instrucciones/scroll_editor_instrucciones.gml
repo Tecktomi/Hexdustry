@@ -5,9 +5,7 @@ function scroll_editor_instrucciones(a, param = {xpos : 0, ypos : 0, ore_names :
 		xpos = 140
 		if draw_sprite_boton(spr_basura,, xpos, ypos, 20, 20){
 			array_delete(editor_instrucciones, a, 1)
-			size--
-			a--
-			continue
+			return infinity
 		}
 		xpos += 20
 		if draw_sprite_boton(spr_flecha,, xpos, ypos, 20, 20)

@@ -69,6 +69,8 @@ function save_escenario_buffer(filename){
 			buffer_write(buffer, buffer_u8, edificio.a)
 			buffer_write(buffer, buffer_u8, edificio.b)
 			buffer_write(buffer, buffer_u8, edificio.jugador)
+			if tag_edificio_tuberia[edificio.index]
+				buffer_write(buffer, buffer_s8, real(edificio.flujo.liquido))
 			if tag_edificio_seteable[edificio.index]{
 				buffer_write(buffer, buffer_bool, edificio.mode)
 				buffer_write(buffer, buffer_f64, edificio.select)

@@ -14,7 +14,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		var a, b, flag, temp_edificio, temp_coordenada_2, temp_priority, i, dis, temp_complex, dron, aaa, bbb
 		edificio.vida = 0
 		array_disorder_remove(edificios_index[index], edificio, ptre_index)
-		if index = id_nucleo and menu = 1 and _jugador = jugador{
+		if index = id_nucleo and menu = MENU_JUEGO and _jugador = jugador{
 			if nucleos[_jugador] = edificio
 				nucleos[_jugador] = null_edificio
 			flag = true
@@ -144,7 +144,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				ds_grid_set(repair_select, aa, bb, edificio.select)
 			}
 		}
-		if menu = 1 and index = id_nucleo and _jugador != jugador_IA and array_length(edificios_index[id_nucleo]) > 0
+		if menu = MENU_JUEGO and index = id_nucleo and _jugador != jugador_IA and array_length(edificios_index[id_nucleo]) > 0
 			for(a = 0; a < xsize; a++)
 				for(b = 0; b < ysize; b++)
 					if terreno_caminable[terreno[# a, b]]{

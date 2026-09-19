@@ -19,333 +19,50 @@
 #endregion
 var a, b, c, temp_text, temp_complex, aa = 0, bb = 0, xpos, ypos, temp_array_real, flag, buffer, i, j, temp_complex_2 = array_create(0, 0)
 var _parpadeo = abs(sin(image_index / 20)), len
-//Primera vez jugando
 if FIRST_TIME{
-	dibujar_fondo(1)
-	var text_array = ["English", "Español", "Русски"]
-	ypos = 200
-	draw_set_halign(fa_center)
-	draw_set_font(font_titulo)
-	for(a = 0; a < IDIOMAS; a++){
-		if draw_boton(room_width / 2, ypos, text_array[a], ui_verde){
-			FIRST_TIME = false
-			idioma = a
-			set_idioma()
-			load_escenario_buffer("mision_1.txt")
-			game_start()
-			tutorial = 1
-			tecnologia = true
-			cheat = false
-		}
-		ypos += text_y * 1.2
-	}
-	draw_text(room_width / 2, 40, L.menu_hexdustry)
-	draw_set_halign(fa_left)
-	draw_set_font(font_normal)
+	menu_first_time()
 	exit
 }
-//Menú principal
-if menu = 0{
-	dibujar_fondo(1)
-	draw_set_alpha(0.5)
-	draw_set_color(c_black)
-	draw_rectangle(0, 0, room_width, room_height, false)
-	draw_set_alpha(1)
-	draw_set_halign(fa_center)
-	draw_set_font(font_titulo)
-	draw_set_color(c_white)
-	ypos = 100
-	draw_text_ypos(room_width / 2, ypos, L.menu_hexdustry)
-	draw_set_font(font_normal)
-	if os_browser != browser_not_a_browser{
-		ypos += text_y
-		draw_text_ypos(room_width / 2, ypos, L.menu_html)
-		ypos += 3 * text_y
-	}
-	else
-		ypos += 3 * text_y
-	if draw_boton(room_width / 2, ypos, L.menu_juego_rapido, ui_verde){
-		input_layer = 1
-		get_file = 2
-		if array_length(misiones) = 0{
-			tecnologia = false
-			oleadas_tiempo_primera = 240
-			oleadas_tiempo = 90
-			multiplicador_vida_enemigos = 50
-			cheat = false
-			misiones = array_create(1, null_mision)
-			mision = misiones[0]
-			mision.objetivo = idm_sobrevivir_oleadas
-			mision.target_num = 15
-			flow = 0
-			dificultad = 0
-		}
-		else{
-			flow = 4
-			dificultad = -1
-		}
-		if mapa >= 0 and load_escenario_buffer($"{DEFAULT_MAPS[mapa]}.txt", false) = ""
-			mapa = -1
-	}
-	if os_browser = browser_not_a_browser and DEVISE and file_exists("last_save.save"){
-		ypos += text_y * 1.2
-		if draw_boton(room_width / 2, ypos, L.continuar, ui_verde){
-			buffer = buffer_load("last_save.save")
-			load_game_buffer(buffer)
-			buffer_delete(buffer)
-		}
-	}
-	ypos += text_y * 2
-	if draw_boton(room_width / 2, ypos, L.menu_tutorial, ui_verde)
-		menu = 4
-	ypos += text_y * 2
-	if draw_boton(room_width / 2, ypos, L.menu_editor, ui_azul){
-		build_index = -1
-		mapa_editado = true
-		menu = 2
-	}
-	ypos += text_y * 2
-	//Configuración online
-	if os_browser = browser_not_a_browser{
-		if draw_boton(room_width / 2, ypos, L.multijugador, ui_azul){
-			input_layer = 1
-			get_file = 4
-			server_buscar_lan()
-		}
-	}
-	else
-		draw_boton(room_width / 2, ypos, L.descargar_para_jugar_en_LAN, ui_gris)
-	ypos += text_y * 2
-	if draw_boton(room_width / 2, ypos, L.game_enciclopedia, ui_gris){
-		input_layer = 1
-		enciclopedia = 1
-	}
-	if enciclopedia > 0{
-		draw_enciclopedia(false, 1)
-		if enciclopedia = 0
-			input_layer = 0
-	}
-	draw_set_halign(fa_left)
-	if get_file > 0{
-		draw_set_color(c_dkgray)
-		draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
-		draw_set_color(c_white)
-		draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
-		draw_set_halign(fa_center)
-		draw_text(room_width / 2, 110, get_file = 1 ? L.menu_cargar_escenario : L.menu_juego_rapido)
-		draw_set_halign(fa_left)
-		//Cargar Escenarios
-		if get_file = 1{
-			draw_set_valign(fa_bottom)
-			xpos = 120
-			ypos = 200
-			for(a = 0; a < array_length(save_files); a++){
-				temp_text = file_format(save_files[a])
-				if draw_sprite_boton(save_files_png[a],, xpos, ypos, 96, 96, 1){
-					tecnologia = true
-					load_escenario_buffer("Scenarios/" + save_files[a])
-					game_start()
-				}
-				if draw_sprite_boton(spr_basura,, xpos - 10, ypos - 30,,, 1){
-					file_delete("Scenarios/" + temp_text + ".txt")
-					file_delete("Scenarios/" + temp_text + ".png")
-					array_delete(save_files, a, 1)
-					array_delete(save_files_png, a, 1)
-					continue
-				}
-				draw_text(xpos + 20, ypos, text_wrap(temp_text, 100))
-				xpos += 120
-				if (a mod 9) = 8{
-					xpos = 120
-					ypos += 150
-				}
-			}
-			draw_set_valign(fa_top)
-			if array_length(save_files) = 0{
-				draw_set_halign(fa_center)
-				draw_text(room_width / 2, 200, L.menu_sin_archivos)
-				draw_set_halign(fa_left)
-			}
-			if draw_boton(120, 120, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape) or (not DEVISE and keyboard_check(vk_backspace)){
-				if not DEVISE
-					keyboard_clear(vk_backspace)
-				keyboard_clear(vk_escape)
-				get_file = 2
-			}
-		}
-		//Partida Nueva
-		else if get_file = 2{
-			ypos = 110
-			if draw_boton(120, ypos, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape) or (not DEVISE and keyboard_check(vk_backspace)){
-				if not DEVISE
-					keyboard_clear(vk_backspace)
-				keyboard_clear(vk_escape)
-				get_file = 0
-				input_layer = 0
-				misiones = array_create(0, null_mision)
-				exit
-			}
-			ypos += text_y * 1.2
-			draw_panel(110, ypos, room_width - 220, room_height - 200 - ypos, 0, 1, 1, panel_partida_nueva)
-			ypos = room_height - 180
-			draw_set_halign(fa_right)
-			//Cargar esenarios / partidas
-			if BROWSER{
-				if draw_boton(room_width / 2 - 200, ypos, L.menu_cargar_escenario, ui_azul,,,, 1){
-					if not nucleos[jugador].vivo
-						game_restart()
-					get_file = 1
-					scan_files_save()
-				}
-				if draw_boton(room_width / 2 - 200, ypos + text_y, L.cargar_partida, ui_azul,,,, 1){
-					if not nucleos[jugador].vivo
-						game_restart()
-					get_file = 3
-					partidas = scan_files("Saves/*.save", fa_none)
-					var temp_image
-					for(a = array_length(partidas) - 1; a >= 0; a--){
-						if array_length(partidas_png) > a and partidas_png[a] != spr_null_image
-							sprite_delete(partidas_png[a])
-						temp_text = file_format(partidas[a])
-						if file_exists("Saves/" + temp_text + ".png")
-							temp_image = sprite_add("Saves/" + temp_text + ".png", 1, false, false, 0, 0)
-						else
-							temp_image = spr_null_image
-						partidas_png[a] = temp_image
-					}
-				}
-			}
-			draw_set_halign(fa_left)
-			if draw_boton(room_width / 2 + 200, ypos, L.menu_juego_rapido, ui_verde,,,, 1)
-				game_start()
-		}
-		//Cargar partidas
-		else if get_file = 3{
-			draw_set_valign(fa_bottom)
-			xpos = 120
-			ypos = 200
-			for(a = 0; a < array_length(partidas); a++){
-				temp_text = file_format(partidas[a])
-				if draw_sprite_boton(partidas_png[a],, xpos, ypos, 96, 96, 1){
-					buffer = buffer_load("Saves/" + partidas[a])
-					if not load_game_buffer(buffer)
-						show_message(L.archivo_obsoleto)
-					buffer_delete(buffer)
-				}
-				if draw_sprite_boton(spr_basura,, xpos - 10, ypos - 30,,, 1){
-					file_delete("Saves/" + temp_text + ".png")
-					file_delete("Saves/" + temp_text + ".save")
-					array_delete(partidas, a, 1)
-					continue
-				}
-				draw_text(xpos + 20, ypos, text_wrap(temp_text, 100))
-				xpos += 120
-				if a mod 9 = 8{
-					xpos = 120
-					ypos += 150
-				}
-			}
-			draw_set_valign(fa_top)
-			if array_length(partidas) = 0{
-				draw_set_halign(fa_center)
-				draw_text(room_width / 2, 200, L.menu_sin_archivos)
-				draw_set_halign(fa_left)
-			}
-			if draw_boton(120, 120, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape) or (not DEVISE and keyboard_check(vk_backspace)){
-				if not DEVISE
-					keyboard_clear(vk_backspace)
-				keyboard_clear(vk_escape)
-				get_file = 2
-			}
-		}
-		//Multijugador
-		else if get_file = 4{
-			ypos = 110
-			if draw_boton(120, ypos, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape) or (not DEVISE and keyboard_check(vk_backspace)){
-				if not DEVISE
-					keyboard_clear(vk_backspace)
-				keyboard_clear(vk_escape)
-				get_file = 0
-				input_layer = 0
-				exit
-			}
-			draw_set_halign(fa_center)
-			draw_boton_text_counter = 0
-			ypos += text_y * 1.2
-			var prev_online_nombre = online_nombre
-			online_nombre = draw_boton_text(room_width / 2, ypos, online_nombre, false,, true, 1)
-			if draw_sprite_boton(spr_random, 0, (room_width + text_x) / 2, ypos,,, 1){
-				online_nombre = $"jugador_{irandom(255)}"
-				ini_open("Settings.ini")
-				ini_key_delete("", "online_nombre")
-				ini_close()
-			}
-			else if online_nombre != prev_online_nombre
-				save_setting("", "online_nombre", online_nombre, false)
-			ypos += text_y * 1.2
-			if draw_boton(room_width / 2, ypos, $"{L.buscar_servidores_en_LAN}{server_buscando_lan ? " ..." : ""}", ui_azul,,,, 1)
-				server_buscar_lan()
-			ypos += text_y * 1.2
-			if server_ip != "" and draw_boton(room_width / 2, ypos, $"{L.conectarse_a} {server_ip}", ui_verde,,,, 1){
-				server = network_connect(socket, server_ip, 6500)
-				if server != -1
-					server_hello()
-			}
-			ypos += text_y * 2
-			server_ip = draw_boton_text(room_width / 2, ypos, server_ip, false,, true, 1)
-			input_layer = 1
-			get_file = 4
-			if --server_buscando_lan_step <= 0
-				server_buscando_lan = false
-		}
-	}
-	else if not DEVISE and keyboard_check(vk_backspace)
-		game_end()
-	draw_set_valign(fa_bottom)
-	draw_text(10, room_height - 10, "Tomás Ramdohr")
-	draw_set_valign(fa_top)
-	update_cursor()
-	if keyboard_check_pressed(vk_escape)
-		game_end()
-	for(a = 0; a < IDIOMAS; a++)
-		if draw_sprite_boton(spr_bandera, a, 20 + 80 * a, 20, 64, 48,, function(data){draw_text_background(0, 80, IDIOMA_NAME[data.a])}, {a : a}){
-			idioma = a
-			save_setting("", "Idioma", idioma, true)
-			set_idioma()
-		}
+if menu = MENU_PRINCIPAL{
+	menu_principal()
 	exit
 }
-//Editor
-if menu = 2{
+if menu = MENU_EDITOR{
 	menu_editor()
 	exit
 }
-//Campaña
-if menu = 4{
+if menu = MENU_CAMPANNA{
 	menu_campanna()
 	exit
 }
 //Dibujo
-if in(menu, 1, 3){
+if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 	dibujar_fondo()
 	if grafic_tile_animation
 		dibujar_fondo(2)
 	dibujar_edificios()
 	var show_humo = (grafic_humo and pausa = 0 and enciclopedia = 0 and ((image_index mod 5) = 0))
+	var chunk, edificio, index, aaa, bbb, center_x, center_y, alert_count, _jugador, proceso, d, edificio_2, dir
 	//DIBUJO SECUNDARIO
 	for(a = min_chunka; a < max_chunka; a++)
 		for(b = min_chunkb; b < max_chunkb; b++){
-			var chunk = chunk_edificios_draw[# a, b]
+			chunk = chunk_edificios_draw[# a, b]
 			len = array_length(chunk)
 			for(c = 0; c < len; c++){
-				var edificio = chunk[c], index = edificio.index
+				edificio = chunk[c]
+				index = edificio.index
 				aa = edificio.x
 				bb = edificio.y
-				var aaa = aa * zoom - camx, bbb = bb * zoom - camy, center_x = edificio.center_x, center_y = edificio.center_y, alert_count = 0, _jugador = edificio.jugador
+				aaa = aa * zoom - camx
+				bbb = bb * zoom - camy
+				center_x = edificio.center_x
+				center_y = edificio.center_y
+				alert_count = 0
+				_jugador = edificio.jugador
 				//Recursos sobre caminos
 				if tag_camino_o_tunel[index] and edificio.carga_total > 0{
-					var proceso = edificio_proceso[index]
-					var d = 1.2 * (max(edificio.proceso, edificio.waiting * proceso) - proceso / 2) * 24 / proceso
+					proceso = edificio_proceso[index]
+					d = 1.2 * (max(edificio.proceso, edificio.waiting * proceso) - proceso / 2) * 24 / proceso
 					draw_sprite_off(recurso_sprite[edificio.carga_id], 0, aa + d * edificio.array_real[0], bb + d * edificio.array_real[1])
 				}
 				//Munición armas
@@ -357,8 +74,8 @@ if in(menu, 1, 3){
 				else if edificio_energia[index]{
 					if grafic_energia{
 						draw_set_color(c_yellow)
-						for(var d = array_length(edificio.energia_link) - 1; d >= 0; d--){
-							var edificio_2 = edificio.energia_link[d]
+						for(d = array_length(edificio.energia_link) - 1; d >= 0; d--){
+							edificio_2 = edificio.energia_link[d]
 							draw_line_off(center_x, center_y, edificio_2.center_x, edificio_2.center_y)
 						}
 					}
@@ -373,7 +90,7 @@ if in(menu, 1, 3){
 				//Humo
 				if show_humo and tag_generadores_de_humo[index]{
 					if ((tag_generadores_de_humo_combustion[index] and edificio.fuel > 0) or (index = id_generador_geotermico and tag_liquido_agua[edificio.flujo.liquido]) or (index = id_refineria_de_petroleo and edificio.flujo.liquido = idl_petroleo and edificio.red.eficiencia > 0)) and image_index & 3{
-						var dir = viento_dir + random_range(-pi / 4, pi / 4)
+						dir = viento_dir + random_range(-pi / 4, pi / 4)
 						array_push(humos, add_humo(center_x, center_y, edificio.a, edificio.b, cos(dir) * viento_mag, sin(dir) * viento_mag, irandom_range(70, 100)))
 					}
 				}
@@ -489,7 +206,7 @@ if in(menu, 1, 3){
 	}
 	sprite_boton_text = ""
 	clic_sound = false
-	if menu = 3{
+	if menu = MENU_EDITOR_JUEGO{
 		draw_set_halign(fa_right)
 		if jugador = jugador_IA and draw_boton(room_width - 40, 20, L.enemigo, ui_rojo)
 			jugador = 2
@@ -527,10 +244,10 @@ if pausa = 1{
 			get_file = 2
 		ypos += text_y * 1.2
 		//Guardar / Abrir en LAN
-		if menu = 1{
+		if menu = MENU_JUEGO{
 			if os_browser = browser_not_a_browser{
 				if not mapa_editado{
-					if server = -1 and menu = 1{
+					if server = -1 and menu = MENU_JUEGO{
 						if draw_boton(xpos, ypos, L.abrir_en_LAN, ui_azul)
 							get_file = 1
 					}
@@ -571,14 +288,14 @@ if pausa = 1{
 			clear_edit()
 			pausa = 0
 			cheat = false
-			if menu = 1{
+			if menu = MENU_JUEGO{
 				if tutorial = 0 and os_browser = browser_not_a_browser and not mapa_editado{
 					buffer = buffer_create(1024, buffer_grow, 1)
 					save_game_buffer(buffer)
 					buffer_save(buffer, "last_save.save")
 					buffer_delete(buffer)
 				}
-				menu = 0
+				menu = MENU_PRINCIPAL
 				if online{
 					if servidor
 						server_break()
@@ -588,9 +305,9 @@ if pausa = 1{
 				clear_edificios()
 				exit
 			}
-			else if menu = 3{
+			else if menu = MENU_EDITOR_JUEGO{
 				array_copy(categoria_nombre_disponible, 0, categoria_nombre, 0, array_length(categoria_nombre) - 1)
-				menu = 2
+				menu = MENU_EDITOR
 				build_index = -1
 				draw_set_halign(fa_left)
 				draw_set_color(color)
@@ -1302,7 +1019,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 	if edificio_bool[# mx, my]{
 		var index = edificio.index
 		temp_text += $"{edificio_nombre[index]}\n"
-		if edificio.jugador != jugador and menu = 1 and not cheat{
+		if edificio.jugador != jugador and menu = MENU_JUEGO and not cheat{
 			if online and edificio.jugador > jugador_IA
 				temp_text += server_jugadores_nombre[edificio.jugador - 2]
 			else
@@ -2065,7 +1782,7 @@ if sonido
 	}
 #endregion
 //Acceso directo
-if keyboard_check_pressed(vk_anykey) and (not in(keyboard_lastchar, CONTROL_LEFT, CONTROL_RIGHT, CONTROL_UP, CONTROL_DOWN, " ") or cheat) and win = 0 and not show_menu{
+if keyboard_check_pressed(vk_anykey) and (not in(ord(keyboard_lastchar), CONTROL_LEFT, CONTROL_RIGHT, CONTROL_UP, CONTROL_DOWN, ord(" ")) or cheat) and win = 0 and not show_menu{
 	for(a = 1; a < edificio_max; a++)
 		if edificio_key[a] != "" and string_ends_with(keyboard_string, edificio_key[a]){
 			if tecnologia and not cheat and not edificio_tecnologia[jugador, a]{
@@ -2477,7 +2194,7 @@ if build_index >= 0 and win = 0{
 					for(a = 0; a < len;){
 						aa = build_list[a++]
 						bb = build_list[a++]
-						if in(ore[# aa, bb], 0, 1, 2){
+						if in(ore[# aa, bb], ido_cobre, ido_hierro, ido_carbon){
 							temp_array_real[ore_recurso[ore[# aa, bb]]]++
 							temp_array_2[ore_recurso[ore[# aa, bb]]] += ore_amount[# aa, bb]
 							b++
@@ -2492,7 +2209,7 @@ if build_index >= 0 and win = 0{
 							bb = build_list[a++]
 							if terreno_recurso_bool[terreno[# aa, bb]]{
 								u += 0.05
-								if not in(ore[# aa, bb], 0, 1, 2){
+								if not in(ore[# aa, bb], ido_cobre, ido_hierro, ido_carbon){
 									temp_array_real[terreno_recurso_id[terreno[# aa, bb]]]++
 									temp_array_2[terreno_recurso_id[terreno[# aa, bb]]] = -1
 									b++
@@ -2676,47 +2393,9 @@ if build_index >= 0 and win = 0{
 							}
 							//Elegir entre varios líquidos
 							if build_index = id_tuberia{
-								if _change{
-									var _temp_array_liquidos = array_create(liquido_max, false)
-									for(a = 0; a < 6; a++){
-										aaa = mx + DESFACE_A[my & 1, a]
-										bbb = my + DESFACE_B[my & 1, a]
-										if aaa < 0 or bbb < 0 or aaa >= xsize or bbb >= ysize
-											continue
-										if edificio_bool[# aaa, bbb]{
-											var temp_edificio = edificio_id[# aaa, bbb]
-											if edificio_flujo[temp_edificio.index]{
-												if temp_edificio.flujo != null_flujo and temp_edificio.flujo.liquido != -1
-													_temp_array_liquidos[temp_edificio.flujo.liquido] = true
-												if temp_edificio.flujo_2 != null_flujo and temp_edificio.flujo_2.liquido != -1
-													_temp_array_liquidos[temp_edificio.flujo_2.liquido] = true
-											}
-										}
-									}
-									array_resize(liquido_choose_array, 0)
-									for(a = 0; a < liquido_max; a++)
-										if _temp_array_liquidos[a]
-											array_push(liquido_choose_array, a)
-								}
-								var _len = array_length(liquido_choose_array)
-								if _len > 1{
-									temp_complex = abtoxy(temp_mx, temp_my)
-									aa = temp_complex[0]
-									bb = temp_complex[1]
-									b = 2 * pi / _len
-									draw_set_color(c_white)
-									draw_set_alpha(0.5)
-									draw_circle_off(aa, bb, 60, false)
-									for(a = -5; a < 5; a++)
-										draw_triangle_off(aa, bb, aa + 60 * cos((liquido_choose + 0.1 * a) * b), bb + 60 * sin((liquido_choose + 0.1 * a) * b), aa + 60 * cos((liquido_choose + 0.1 * (a + 1)) * b), bb + 60 * sin((liquido_choose + 0.1 * (a + 1)) * b), false)
-									draw_set_alpha(1)
-									for(a = 0; a < _len; a++)
-										draw_sprite_off(liquido_sprite[liquido_choose_array[a]], 0, aa + 50 * cos(a * b), bb + 50 * sin(a * b))
-									if mouse_wheel_up()
-										liquido_choose = (liquido_choose + 1) mod _len
-									if mouse_wheel_down()
-										liquido_choose = (liquido_choose + _len - 1) mod _len
-								}
+								if _change
+									build_list_arround = get_arround(mx, my, 0, 1)
+								build_rueda_flujos(_change)
 							}
 						}
 						//Construir en cadena
@@ -3077,50 +2756,8 @@ if build_index >= 0 and win = 0{
 							}
 						}
 						//Depósitos
-						else if build_index = id_deposito{
-							if _change{
-								var _temp_array_liquidos = array_create(liquido_max, false)
-								len = array_length(build_list_arround)
-								for(a = 0; a < len;){
-									aaa = build_list_arround[a++]
-									bbb = build_list_arround[a++]
-									if aaa < 0 or bbb < 0 or aaa >= xsize or bbb >= ysize
-										continue
-									if edificio_bool[# aaa, bbb]{
-										var temp_edificio = edificio_id[# aaa, bbb]
-										if edificio_flujo[temp_edificio.index]{
-											if temp_edificio.flujo != null_flujo and temp_edificio.flujo.liquido != -1
-												_temp_array_liquidos[temp_edificio.flujo.liquido] = true
-											if temp_edificio.flujo_2 != null_flujo and temp_edificio.flujo_2.liquido != -1
-												_temp_array_liquidos[temp_edificio.flujo_2.liquido] = true
-										}
-									}
-								}
-								array_resize(liquido_choose_array, 0)
-								for(a = 0; a < liquido_max; a++)
-									if _temp_array_liquidos[a]
-										array_push(liquido_choose_array, a)
-							}
-							var _len = array_length(liquido_choose_array)
-							if _len > 1{
-								temp_complex = abtoxy(temp_mx, temp_my)
-								aa = temp_complex[0]
-								bb = temp_complex[1]
-								b = 2 * pi / _len
-								draw_set_color(c_white)
-								draw_set_alpha(0.5)
-								draw_circle_off(aa, bb, 60, false)
-								for(a = -5; a < 5; a++)
-									draw_triangle_off(aa, bb, aa + 60 * cos((liquido_choose + 0.1 * a) * b), bb + 60 * sin((liquido_choose + 0.1 * a) * b), aa + 60 * cos((liquido_choose + 0.1 * (a + 1)) * b), bb + 60 * sin((liquido_choose + 0.1 * (a + 1)) * b), false)
-								draw_set_alpha(1)
-								for(a = 0; a < _len; a++)
-									draw_sprite_off(liquido_sprite[liquido_choose_array[a]], 0, aa + 50 * cos(a * b), bb + 50 * sin(a * b))
-								if mouse_wheel_up()
-									liquido_choose = (liquido_choose + 1) mod _len
-								if mouse_wheel_down()
-									liquido_choose = (liquido_choose + _len - 1) mod _len
-							}
-						}
+						else if build_index = id_deposito
+							build_rueda_flujos(_change)
 					}
 					//Construir
 					if ((DEVISE and mouse_check_button_pressed(mb_left)) or (not DEVISE and mouse_check_button_released(mb_left) and android_building and construible and point_distance(mouse_x, mouse_y, android_mouse_x, android_mouse_y) < 10)) and flag_camino and _comprable and (not edificio_bool[# temp_mx, temp_my] or (build_index = id_cruce and edificio_camino[edificio_id[# temp_mx, temp_my].index])){
@@ -3358,7 +2995,7 @@ else{
 }
 var temp_text_right = ""
 //Juego
-if menu = 1{
+if menu = MENU_JUEGO{
 	//Ciclo principal
 	if pausa = 0 or online{
 		var frame_time = min(delta_time / 1_000_000, 0.25)
@@ -3657,7 +3294,7 @@ if menu = 1{
 }
 else if not chat_input
 	control_camara()
-if menu = 1 or menu = 3{
+if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 	if win = 0 and not show_menu and (not chat_input and keyboard_check_pressed(vk_anykey)){
 		if (keyboard_check_pressed(CONTROL_MENU) or (not DEVISE and keyboard_check_pressed(vk_backspace))) and pausa != 1{
 			if not DEVISE

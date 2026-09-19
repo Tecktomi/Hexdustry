@@ -9,7 +9,7 @@ function menu_campanna(){
 		draw_roundrect(100, 100, room_width - 100, room_height - 100, false)
 		if draw_boton(110, 110, L.volver, ui_rojo) or keyboard_check_pressed(vk_escape){
 			keyboard_clear(vk_escape)
-			menu = 0
+			menu = MENU_PRINCIPAL
 		}
 		var total_width = WORLD_WIDTH * 96, total_height = WORLD_HEIGHT * TILE_WIDTH
 		var a, b, view, temp_complex, aa, bb, buffer, escenario, file

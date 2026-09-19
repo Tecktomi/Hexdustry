@@ -23,7 +23,7 @@ function load_edificio(buffer, edificio = control.null_edificio){
 		if mask & (1 << c++) edificio.waiting = true
 		if mask & (1 << c++) edificio.idle = true
 		if mask & (1 << c++) edificio.link = edificios_totales[real(buffer_read(buffer, buffer_u16))]
-		if mask & (1 << c++) herir_edificio(edificio_vida[edificio.index] - real(buffer_read(buffer, buffer_f16)), edificio)
+		if mask & (1 << c++) herir_edificio(edificio_vida[edificio.index] - real(buffer_read(buffer, buffer_f16)), edificio, false)
 		if mask & (1 << c++) temp_target_dron = real(buffer_read(buffer, buffer_u16))
 		if mask & (1 << c++) edificio.target_edificio = edificios_totales[real(buffer_read(buffer, buffer_u16))]
 		if mask & (1 << c++) change_flujo(real(buffer_read(buffer, buffer_f16)), edificio)
@@ -31,7 +31,7 @@ function load_edificio(buffer, edificio = control.null_edificio){
 		if mask & (1 << c++) change_energia(real(buffer_read(buffer, buffer_f16)), edificio)
 		if mask & (1 << c++) edificio.energia_consumo_max = real(buffer_read(buffer, buffer_f16))
 		if mask & (1 << c++) edificio.edificio_index = real(buffer_read(buffer, buffer_u16))
-		if mask & (1 << c++) encender_luz(edificio.luz)
+		if mask & (1 << c++) encender_luz(edificio.luz, edificio)
 		if mask & (1 << c++){
 			var len = real(buffer_read(buffer, buffer_u16))
 			for(a = 0; a < len; a++)

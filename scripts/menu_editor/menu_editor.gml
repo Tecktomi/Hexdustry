@@ -591,7 +591,7 @@ function menu_editor(){
 			array_copy(categoria_nombre_disponible, 0, categoria_nombre, 0, array_length(categoria_nombre))
 			build_index = -1
 			clear_edit()
-			menu = 3
+			menu = MENU_EDITOR_JUEGO
 			cheat = true
 			camx = max(camx, 0)
 		}
@@ -678,7 +678,7 @@ function menu_editor(){
 		if draw_boton(10, room_height - 140, L.volver, ui_rojo) or keyboard_check_pressed(vk_escape) or (not DEVISE and keyboard_check(vk_backspace)){
 			if not DEVISE
 				keyboard_clear(vk_backspace)
-			menu = 0
+			menu = MENU_PRINCIPAL
 			camx = max(camx, 0)
 			jugador = 2
 			cheat = false

@@ -21,8 +21,8 @@ function draw_boton(x, y, texto, back_color = ui_gris, text_color = control.ui_t
 			}
 		}
 		draw_set_color(text_color)
-		text_xtext = string_delete(texto, 0, string_last_pos("\n", texto))
-		text_ytext = string_delete(texto, string_last_pos("\n", texto), string_length(texto))
+		var text_xtext = string_delete(texto, 0, string_last_pos("\n", texto))
+		var text_ytext = string_delete(texto, string_last_pos("\n", texto), string_length(texto))
 		if box{
 			draw_text(x + offset / 2, y + offset / 2, texto)
 			text_x = width + offset

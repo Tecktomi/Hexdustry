@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"build_rueda_flujos",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"build_rueda_flujos",
+  "parent":{
+    "name":"EDIFICIOS",
+    "path":"folders/SCRIPTS/EDIFICIOS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

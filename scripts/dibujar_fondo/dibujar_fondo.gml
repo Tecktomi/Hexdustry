@@ -24,24 +24,28 @@ function dibujar_fondo(editor = 0){
 			exit
 		}
 		//Fondos animados
+		var e
 		if editor = 2{
 			temp_step = image_index / 10
-			for(a = mina; a < maxa; a++)
-				for(b = minb; b < maxb; b++){
-					c = terreno[# a, b]
-					if c = 14{
-						temp_complex = pre_abtoxy[# min(a + 1, xsizeplus), min(b + 1, ysizeplus)]//abtoxy
-						draw_sprite_off(spr_lava_animacion, temp_step + 16 * ore_random[# a, b], temp_complex[0], temp_complex[1])
-					}
-					else if c = 18{
-						temp_complex = pre_abtoxy[# min(a + 1, xsizeplus), min(b + 1, ysizeplus)]//abtoxy
-						draw_sprite_off(olas[terreno_pared_index[# a, b]], temp_step + 16 * ore_random[# a, b], temp_complex[0], temp_complex[1])
-					}
-				}
+			for(a = min_chunka; a < max_chunka; a++)
+				for(b = min_chunkb; b < max_chunkb; b++)
+					if tile_animado_chunk[# a, b] > 0
+						for(c = a * CHUNK_WIDTH; c < min((a + 1) * CHUNK_WIDTH, xsize); c++)
+							for(d = b * CHUNK_HEIGHT; d < min((b + 1) * CHUNK_HEIGHT, ysize); d++){
+								e = terreno[# c, d]
+								if e = idt_lava{
+									temp_complex = pre_abtoxy[# min(c + 1, xsizeplus), min(d + 1, ysizeplus)]//abtoxy
+									draw_sprite_off(spr_lava_animacion, temp_step + 16 * ore_random[# c, d], temp_complex[0], temp_complex[1])
+								}
+								else if e = idt_agua_salada{
+									temp_complex = pre_abtoxy[# min(c + 1, xsizeplus), min(d + 1, ysizeplus)]//abtoxy
+									draw_sprite_off(olas[terreno_pared_index[# c, d]], temp_step + 16 * ore_random[# c, d], temp_complex[0], temp_complex[1])
+								}
+							}
 			exit
 		}
 		var chunkwplus = CHUNK_WIDTH + 1, chunkhplus = CHUNK_HEIGHT + 1, xsize2 = chunkwplus * 48 * zoom, ysize2 = chunkhplus * 14 * zoom, xpos = CHUNK_WIDTH * 48 * zoom, ypos = CHUNK_HEIGHT * 14 * zoom
-		var minc, mind, maxc, maxd, e, f, des_a, des_b, surf_created = false, cplus
+		var minc, mind, maxc, maxd, f, des_a, des_b, surf_created = false, cplus
 		for(a = min_chunka; a < max_chunka; a++)
 			for(b = min_chunkb; b < max_chunkb; b++){
 				if not background_bool[# a, b]{

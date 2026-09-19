@@ -29,7 +29,7 @@ function load_game_buffer(buffer){
 		multiplicador_vida_enemigos = buffer_read(buffer, buffer_f64)
 		dificultad = buffer_read(buffer, buffer_s8)
 		modo_misiones = buffer_read(buffer, buffer_bool)
-		var a, b, c, d, _texto
+		var a, b, c, d, e, _texto
 		#region Misiones
 			var len = buffer_read(buffer, buffer_u8)
 			misiones = array_create(len, null_mision)
@@ -93,6 +93,10 @@ function load_game_buffer(buffer){
 			a = real(buffer_read(buffer, buffer_u16))
 			b = real(buffer_read(buffer, buffer_u16))
 			var _jugador = real(buffer_read(buffer, buffer_u8))
+			if tag_edificio_tuberia[index]{
+				liquido_choose_array = array_create(2, real(buffer_read(buffer, buffer_s8)))
+				liquido_choose = 0
+			}
 			if index = id_nucleo
 				var edificio = add_edificio(index, dir, a, b, _jugador)
 			else
@@ -114,11 +118,12 @@ function load_game_buffer(buffer){
 		//Flujos
 		len = real(buffer_read(buffer, buffer_u16))
 		for(a = 0; a < len; a++){
+			e = real(buffer_read(buffer, buffer_u8))
 			b = real(buffer_read(buffer, buffer_u16))
 			c = real(buffer_read(buffer, buffer_f64))
 			d = real(buffer_read(buffer, buffer_u8))
 			if b < 65535{
-				var flujo = edificios_totales[b].flujo
+				var flujo = (e = 0 ? edificios_totales[b].flujo : edificios_totales[b].flujo_2)
 				flujo.almacen = c
 				flujo.liquido = (d = 255) ? -1 : d
 			}

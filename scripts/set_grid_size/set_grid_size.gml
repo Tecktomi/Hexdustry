@@ -103,6 +103,8 @@ function set_grid_size(){
 			ds_grid_resize(edificio.coordenadas_dis, xsize, ysize)
 			ds_grid_clear(edificio.coordenadas_dis, 0)
 		}
+		ds_grid_resize(tile_animado_chunk, chunk_xsize, chunk_ysize)
+		ds_grid_clear(tile_animado_chunk, 0)
 		ds_grid_resize(ia_grid_real, xsize, ysize)
 		ds_grid_resize(ia_grid_camino, xsize, ysize)
 	}

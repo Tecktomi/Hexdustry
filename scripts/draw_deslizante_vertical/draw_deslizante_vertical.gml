@@ -1,4 +1,6 @@
 function draw_deslizante_vertical(x, y1, y2, val, val_min, val_max, id, input_layer = 0){
+	if val_max = val_min or y1 = y2
+		show_error($"{val_max} = {val_min} or {y1} = {y2}", true)
 	draw_line(x, y1, x, y2)
 	draw_circle(x, y1 + (y2 - y1) * (val - val_min) / (val_max - val_min), 4, false)
 	if control.input_layer = input_layer and mouse_x > x - 3 and mouse_y > y1 - 5 and mouse_x <  x + 3 and mouse_y < y2 + 5{

@@ -6,7 +6,7 @@ function handle_jugador_expulsado(buffer, timeout = false){
 			server = -1
 			servidor = false
 			clear_edit()
-			menu = 0
+			menu = MENU_PRINCIPAL
 			if timeout
 				show_message(L.server_desconectado)
 			else

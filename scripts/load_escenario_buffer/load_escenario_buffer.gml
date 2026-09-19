@@ -108,6 +108,10 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 				a = real(buffer_read(buffer, buffer_u8))
 				b = real(buffer_read(buffer, buffer_u8))
 				var _jugador = real(buffer_read(buffer, buffer_u8))
+				if tag_edificio_tuberia[index]{
+					liquido_choose_array = array_create(2, real(buffer_read(buffer, buffer_u8)))
+					liquido_choose = 0
+				}
 				var edificio = add_edificio(index, dir, a, b, _jugador)
 				if tag_edificio_seteable[index]{
 					var mode = bool(buffer_read(buffer, buffer_bool))
