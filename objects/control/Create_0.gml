@@ -369,7 +369,7 @@ L = {}
 	chat_input = false
 	temp_mx = 0
 	temp_my = 0
-	flow_max = 11
+	flow_max = 8
 	liquido_choose = 0
 	liquido_choose_array = array_create(0, 0)
 	comprable = true
@@ -807,32 +807,20 @@ selected_dron = null_dron
 	ds_grid_clear(ore_random, 0)
 	terreno = ds_grid_create(xsize, ysize)
 	ds_grid_clear(terreno, 1)
-	edificio_cercano = ds_grid_create(xsize, ysize)
-	ds_grid_clear(edificio_cercano, null_edificio)
-	edificio_cercano_dis = ds_grid_create(xsize, ysize)
-	ds_grid_clear(edificio_cercano_dis, infinity)
-	edificio_cercano_dir = ds_grid_create(xsize, ysize)
-	ds_grid_clear(edificio_cercano_dir, -1)
-	edificio_cercano_priority = ds_grid_create(xsize, ysize)
 	pre_abtoxy = ds_grid_create(xsize + 2, ysize + 2)
 	ds_grid_clear(pre_abtoxy, [0, 0])
-	var temp_priority, temp_complex
+	var temp_complex
 	for(a = 0; a < xsize; a++){
 		ds_grid_set(pre_abtoxy, a, 0, [real(a + 0.5) * 48 + 16, 0])
 		ds_grid_set(pre_abtoxy, a, ysize + 1, [real(a + 0.5) * 48 + 16, (ysize + 2) * 14])
 		for(b = 0; b < ysize; b++){
-			temp_priority = ds_priority_create()
-			ds_priority_add(temp_priority, null_edificio, 0)
-			ds_priority_delete_max(temp_priority)
-			ds_grid_set(edificio_cercano_priority, a, b, temp_priority)
-			temp_complex = [real(a + (b & 1) / 2) * 48 + 16, real(b + 1) * 14]
-			ds_grid_set(pre_abtoxy, a + 1, b + 1, temp_complex)
+			ds_grid_set(pre_abtoxy, a + 1, b + 1, [real(a + (b & 1) / 2) * 48 + 16, real(b + 1) * 14])
 			ds_grid_set(ore_random, a, b, random(1))
 		}
 	}
 	for(b = 0; b < ysize; b++){
-		ds_grid_set(pre_abtoxy, 0, b, [real((b mod 2) / 2) * 48 + 16, real(b + 1) * 14])
-		ds_grid_set(pre_abtoxy, xsize + 1, b, [real(xsize + 1 + (b mod 2) / 2) * 48 + 16, real(b + 1) * 14])
+		ds_grid_set(pre_abtoxy, 0, b, [real((b & 1) / 2) * 48 + 16, real(b + 1) * 14])
+		ds_grid_set(pre_abtoxy, xsize + 1, b, [real(xsize + 1 + (b & 1) / 2) * 48 + 16, real(b + 1) * 14])
 	}
 	terreno_pared_index = ds_grid_create(xsize, ysize)
 	ds_grid_clear(terreno_pared_index, 0)

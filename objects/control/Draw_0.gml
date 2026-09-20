@@ -182,7 +182,7 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 	b = 0
 	for(a = 0; a < rss_max; a++)
 		if jugador_recursos[jugador, rss_sort[a]] != 0{
-			if ++b mod 2
+			if ++b & 1
 				temp_text += "\n"
 			temp_text += $"/{recurso_keyword[rss_sort[a]]}{jugador_recursos[jugador, rss_sort[a]]} "
 		}

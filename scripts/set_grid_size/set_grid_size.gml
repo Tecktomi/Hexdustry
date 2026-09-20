@@ -1,5 +1,6 @@
 function set_grid_size(){
 	with control{
+		clear_edificios()
 		chunk_xsize = ceil(xsize / CHUNK_WIDTH)
 		chunk_ysize = ceil(ysize / CHUNK_HEIGHT)
 		ds_grid_resize(null_edificio.coordenadas_dis, xsize, ysize)
@@ -20,40 +21,21 @@ function set_grid_size(){
 		ds_grid_clear(ore_random, 0)
 		ds_grid_resize(terreno, xsize, ysize)
 		ds_grid_clear(terreno, 1)
-		ds_grid_resize(edificio_cercano, xsize, ysize)
-		ds_grid_clear(edificio_cercano, null_edificio)
-		ds_grid_resize(edificio_cercano_dis, xsize, ysize)
-		ds_grid_clear(edificio_cercano_dis, infinity)
-		ds_grid_resize(edificio_cercano_dir, xsize, ysize)
-		ds_grid_clear(edificio_cercano_dir, -1)
-		var a, b, a2, a3, temp_priority, temp_complex, edificio, prev_width = ds_grid_width(edificio_cercano_priority), prev_height = ds_grid_height(edificio_cercano_priority)
-		for(a = 0; a < prev_width; a++)
-			for(b = 0; b < prev_height; b++)
-				if a >= xsize or b >= ysize
-					ds_priority_destroy(edificio_cercano_priority[# a, b])
-		ds_grid_resize(edificio_cercano_priority, xsize, ysize)
+		var a, b, a2, a3, temp_complex, edificio, prev_width = ds_grid_width(background_bool), prev_height = ds_grid_height(background_bool)
 		ds_grid_resize(pre_abtoxy, xsize + 2, ysize + 2)
 		ds_grid_clear(pre_abtoxy, [0, 0])
 		for(a = 0; a < xsize; a++){
-			a2 = a + 0.5
 			a3 = a + 1
-			ds_grid_set(pre_abtoxy, a, 0, [a2 * 48 + 16, 0])
-			ds_grid_set(pre_abtoxy, a, ysize + 1, [a2 * 48 + 16, (ysize + 2) * 14])
+			pre_abtoxy[# a, 0] = [a * 48 + 40, 0]
+			pre_abtoxy[# a, ysize + 1] = [a * 48 + 40, (ysize + 2) * 14]
 			for(b = 0; b < ysize; b++){
-				temp_complex = [real(a + (b mod 2) / 2) * 48 + 16, real(b + 1) * 14]
-				ds_grid_set(pre_abtoxy, a3, b + 1, temp_complex)
-				ds_grid_set(ore_random, a, b, random(1))
-				if a >= prev_width or b >= prev_height{
-					temp_priority = ds_priority_create()
-					ds_priority_add(temp_priority, null_edificio, 0)
-					ds_priority_delete_max(temp_priority)
-					ds_grid_set(edificio_cercano_priority, a, b, temp_priority)
-				}
+				pre_abtoxy[# a3, b + 1] = [(a + (b & 1) / 2) * 48 + 16, (b + 1) * 14]
+				ore_random[# a, b] = random(1)
 			}
 		}
 		for(b = 0; b < ysize; b++){
-			ds_grid_set(pre_abtoxy, 0, b, [real((b mod 2) / 2) * 48 + 16, real(b + 1) * 14])
-			ds_grid_set(pre_abtoxy, xsize + 1, b, [real(xsize + 1 + (b mod 2) / 2) * 48 + 16, real(b + 1) * 14])
+			pre_abtoxy[# 0, b] = [real((b & 1) / 2) * 48 + 16, real(b + 1) * 14]
+			pre_abtoxy[# xsize + 1, b] = [real(xsize + 1 + (b & 1) / 2) * 48 + 16, real(b + 1) * 14]
 		}
 		ds_grid_resize(terreno_pared_index, xsize, ysize)
 		ds_grid_clear(terreno_pared_index, 0)

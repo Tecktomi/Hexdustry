@@ -1,6 +1,6 @@
 function draw_flow(){
 	with control{
-		var h = draw_get_halign(), v = draw_get_valign(), a, b, temp_complex, aa, bb, temp_priority, edificio, dir, temp_array_dron, temp_array_dron_2, temp_array_1
+		var h = draw_get_halign(), v = draw_get_valign(), a, b, temp_complex, aa, bb, edificio, dir, temp_array_dron, temp_array_dron_2, temp_array_1
 		var temp_array_2, temp_array_3, len, len_2, color, temp_terreno, temp_beta, temp_lago
 		if flow = 1{
 			draw_set_halign(fa_left)
@@ -16,45 +16,6 @@ function draw_flow(){
 		else if flow = 2{
 			draw_set_halign(fa_left)
 			draw_set_valign(fa_top)
-			draw_text(0, 0, "edificio_cercano_dis")
-			draw_set_halign(fa_center)
-			draw_set_valign(fa_middle)
-			for(a = mina; a < maxa; a++) for(b = minb; b < maxb; b++) if terreno_caminable[terreno[# a, b]]{
-				temp_complex = abtoxy(a, b)
-				draw_text_off(temp_complex[0], temp_complex[1], edificio_cercano_dis[# a, b])
-			}
-		}
-		else if flow = 3{
-			draw_set_halign(fa_left)
-			draw_set_valign(fa_top)
-			draw_text(0, 0, "edificio_cercano_priority")
-			draw_set_halign(fa_center)
-			draw_set_valign(fa_middle)
-			for(a = mina; a < maxa; a++) for(b = minb; b < maxb; b++) if terreno_caminable[terreno[# a, b]]{
-				temp_complex = abtoxy(a, b)
-				temp_priority = ds_grid_get(edificio_cercano_priority, a, b)
-				draw_text_off(temp_complex[0], temp_complex[1], ds_priority_size(temp_priority))
-			}
-		}
-		else if flow = 4{
-			draw_set_halign(fa_left)
-			draw_set_valign(fa_top)
-			draw_text(0, 0, "edificio_cercano_dir")
-			draw_set_halign(fa_center)
-			draw_set_valign(fa_middle)
-			for(a = mina; a < maxa; a++) for(b = minb; b < maxb; b++) if terreno_caminable[terreno[# a, b]]{
-				dir = edificio_cercano_dir[# a, b]
-				if dir != -1{
-					temp_complex = abtoxy(a, b)
-					aa = temp_complex[0]
-					bb = temp_complex[1]
-					draw_arrow_off(aa, bb, aa + 10 * COS_ANGLE_DIR[dir], bb - 10 * SIN_ANGLE_DIR[dir], 4)
-				}
-			}
-		}
-		else if flow = 5{
-			draw_set_halign(fa_left)
-			draw_set_valign(fa_top)
 			draw_text(0, 0, "chunk_dron")
 			draw_set_halign(fa_center)
 			draw_set_valign(fa_middle)
@@ -64,7 +25,7 @@ function draw_flow(){
 				draw_text_off(temp_complex[0], temp_complex[1], $"{array_length(temp_array_dron)}")
 			}
 		}
-		else if flow = 6{
+		else if flow = 3{
 			draw_set_halign(fa_left)
 			draw_set_valign(fa_top)
 			draw_text(0, 0, "chunk_edificios_estatico, chunk_edificios_dinamico, chunk_edificios_draw")
@@ -78,7 +39,7 @@ function draw_flow(){
 				draw_text_off(temp_complex[0], temp_complex[1], $"{array_length(temp_array_1)}\n{array_length(temp_array_2)}\n{array_length(temp_array_3)}")
 			}
 		}
-		else if flow = 7{
+		else if flow = 4{
 			draw_set_halign(fa_left)
 			draw_set_valign(fa_top)
 			draw_text(0, 0, $"betas: {array_length(betas)}")
@@ -100,7 +61,7 @@ function draw_flow(){
 				draw_text_off(temp_complex[0], temp_complex[1], $"{a}, {temp_beta.cantidad}")
 			}
 		}
-		else if flow = 8{
+		else if flow = 5{
 			draw_set_halign(fa_left)
 			draw_set_valign(fa_top)
 			draw_text(0, 0, "grid_water_distance")
@@ -111,7 +72,7 @@ function draw_flow(){
 				draw_text_off(temp_complex[0], temp_complex[1], grid_water_distance[# a, b])
 			}
 		}
-		else if flow = 9{
+		else if flow = 6{
 			draw_set_halign(fa_left)
 			draw_set_valign(fa_top)
 			draw_text(0, 0, $"lagos: {array_length(lagos)}")
@@ -133,7 +94,7 @@ function draw_flow(){
 				draw_text_off(temp_complex[0], temp_complex[1], $"{a}, {len_2 / 2}")
 			}
 		}
-		else if flow = 10{
+		else if flow = 7{
 			draw_set_halign(fa_left)
 			draw_set_valign(fa_top)
 			draw_text(0, 0, "ia_grid_real")

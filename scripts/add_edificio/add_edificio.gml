@@ -247,12 +247,11 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 				}
 			}
 		#endregion
-		if index = id_nucleo and menu = MENU_JUEGO and _jugador != jugador_IA{
+		if index = id_nucleo and menu = MENU_JUEGO{
 			edificio_pathfind(edificio)
 			for(c = array_length(drones) - 1; c >= 0; c--){
 				dron = drones[c]
-				if dron.jugador != _jugador
-					dron.target = edificio_cercano[# dron.a, dron.b]
+				dron_target_nucleo(dron)
 			}
 		}
 		else if index = id_ensambladora{
@@ -314,11 +313,8 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			ds_grid_set(edificio_bool, aa, bb, true)
 			ds_grid_set(edificio_id, aa, bb, edificio)
 			ds_grid_set(repair_id, aa, bb, -1)
-			if index = id_nucleo and _jugador != jugador_IA{
+			if index = id_nucleo
 				ds_grid_set(edificio.coordenadas_dis, aa, bb, 0)
-				ds_grid_set(edificio_cercano_dis, aa, bb, 0)
-				ds_grid_set(edificio_cercano, aa, bb, edificio)
-			}
 		}
 		calcular_edificios_adyascentes(edificio)
 		//Añadir a la red electrica

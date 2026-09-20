@@ -171,6 +171,7 @@
     {"id":{"name":"dron_move_acuatico","path":"scripts/dron_move_acuatico/dron_move_acuatico.yy",},},
     {"id":{"name":"dron_move_terrestre","path":"scripts/dron_move_terrestre/dron_move_terrestre.yy",},},
     {"id":{"name":"dron_set_target","path":"scripts/dron_set_target/dron_set_target.yy",},},
+    {"id":{"name":"dron_target_nucleo","path":"scripts/dron_target_nucleo/dron_target_nucleo.yy",},},
     {"id":{"name":"edificio_curar","path":"scripts/edificio_curar/edificio_curar.yy",},},
     {"id":{"name":"edificio_encender","path":"scripts/edificio_encender/edificio_encender.yy",},},
     {"id":{"name":"edificio_pathfind","path":"scripts/edificio_pathfind/edificio_pathfind.yy",},},

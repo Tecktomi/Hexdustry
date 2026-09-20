@@ -246,7 +246,8 @@ function step(){
 				for(i = 0; i < len;){
 					aa = clamp(temp_complex_list[i++], 0, xsize - 1)
 					bb = clamp(temp_complex_list[i++], 0, ysize - 1)
-					if grid_water_distance[# aa, bb] < infinity
+					if grid_water_distance[# aa, bb] < infinity{
+						//Drones marítimos
 						if irandom(len) > i + 7{
 							add_dron(aa, bb, idd_destructor, jugador_IA)
 							i += 8
@@ -257,8 +258,8 @@ function step(){
 							i += 3
 							continue
 						}
-					if not terreno_caminable[terreno[# aa, bb]] or edificio_cercano[# aa, bb] = null_edificio or (tutorial = 0 and random(1) < 0.15){
-						if irandom(len) > i + 11{
+						//Drones aéreos
+						else if irandom(len) > i + 11{
 							add_dron(aa, bb, idd_bombardero, jugador_IA)
 							i += 10
 						}
@@ -270,16 +271,38 @@ function step(){
 							add_dron(aa, bb, idd_kamikaze, jugador_IA)
 					}
 					else{
-						if irandom(len) > i + 15{
-							add_dron(aa, bb, idd_titan, jugador_IA)
-							i += 14
+						var max_dis = infinity
+						for(var j = array_length(edificios_index[id_nucleo]) - 1; j >= 0; j--){
+							edificio = edificios_index[id_nucleo, j]
+							if edificio.jugador != jugador_IA
+								max_dis = min(max_dis, edificio.coordenadas_dis[# aa, bb])
 						}
-						else if irandom(len) > i + 6{
-							add_dron(aa, bb, idd_tanque, jugador_IA)
-							i += 5
+						//Drones aéreos
+						if is_infinity(max_dis) or not terreno_caminable[terreno[# aa, bb]] or (tutorial = 0 and random(1) < 0.15){
+							if irandom(len) > i + 11{
+								add_dron(aa, bb, idd_bombardero, jugador_IA)
+								i += 10
+							}
+							else if irandom(len) > i + 5{
+								add_dron(aa, bb, idd_helicoptero, jugador_IA)
+								i += 4
+							}
+							else
+								add_dron(aa, bb, idd_kamikaze, jugador_IA)
 						}
-						else
-							add_dron(aa, bb, idd_arana, jugador_IA)
+						//Drones terrestres
+						else{
+							if irandom(len) > i + 15{
+								add_dron(aa, bb, idd_titan, jugador_IA)
+								i += 14
+							}
+							else if irandom(len) > i + 6{
+								add_dron(aa, bb, idd_tanque, jugador_IA)
+								i += 5
+							}
+							else
+								add_dron(aa, bb, idd_arana, jugador_IA)
+						}
 					}
 				}
 			}

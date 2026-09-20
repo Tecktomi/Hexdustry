@@ -38,18 +38,17 @@ function add_dron(a, b, index, _jugador = jugador){
 			move_dir : 0,
 			punteros : array_create(ptrd_MAX, -1),
 		}
-		if _jugador = 1{
+		if _jugador = jugador_IA{
 			dron.vida_max = ceil(dron.vida * power((oleada_count + 3) / 3, 1.1) * multiplicador_vida_enemigos / 100)
 			dron.vida = dron.vida_max
-			dron.target = edificio_cercano[# a, b]
 			if dron_aereo[dron.index]{
 				if brandom()
-					dron_set_target(dron, [id_nucleo])
+					dron_target_nucleo(dron)
 				else
 					dron_set_target(dron, [id_silo_de_misiles, id_planta_nuclear, id_generador_geotermico, id_turbina, id_generador, id_panel_solar, id_nucleo])
 			}
-			else if tag_dron_marino[index]
-				dron_set_target(dron, [id_nucleo])
+			else
+				dron_target_nucleo(dron)
 		}
 		else
 			drones_construidos++

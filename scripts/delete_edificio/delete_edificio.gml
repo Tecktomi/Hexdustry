@@ -11,7 +11,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				exit
 		}
 		var chunk_x = edificio.chunk_x, chunk_y = edificio.chunk_y
-		var a, b, flag, temp_edificio, temp_coordenada_2, temp_priority, i, dis, temp_complex, dron, aaa, bbb
+		var a, b, flag, temp_edificio, temp_coordenada_2, i, dis, temp_complex, dron, aaa, bbb
 		edificio.vida = 0
 		array_disorder_remove(edificios_index[index], edificio, ptre_index)
 		if index = id_nucleo and menu = MENU_JUEGO and _jugador = jugador{
@@ -30,7 +30,6 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				selected_dron = null_dron
 				pausa = 0
 			}
-			ds_grid_clear(edificio_cercano_dir, -1)
 		}
 		if jugador != _jugador and mision_actual >= 0 and mision.objetivo = idm_destruir_edificio and mision.target_id = index and ++mision_counter >= mision.target_num
 			pasar_mision()
@@ -126,10 +125,6 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		for(i = 0; i < len;){
 			a = edificio.coordenadas[i++]
 			b = edificio.coordenadas[i++]
-			if index = id_nucleo and _jugador != jugador_IA{
-				ds_grid_set(edificio_cercano, a, b, null_edificio)
-				ds_grid_set(edificio_cercano_dis, a, b, infinity)
-			}
 			ds_grid_set(edificio_bool, a, b, false)
 			ds_grid_set(edificio_id, a, b, null_edificio)
 			ds_grid_set(edificio_draw, a, b, false)
@@ -144,33 +139,12 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				ds_grid_set(repair_select, aa, bb, edificio.select)
 			}
 		}
-		if menu = MENU_JUEGO and index = id_nucleo and _jugador != jugador_IA and array_length(edificios_index[id_nucleo]) > 0
-			for(a = 0; a < xsize; a++)
-				for(b = 0; b < ysize; b++)
-					if terreno_caminable[terreno[# a, b]]{
-						temp_priority = ds_grid_get(edificio_cercano_priority, a, b)
-						if not ds_priority_empty(temp_priority){
-							temp_edificio = ds_priority_find_min(temp_priority)
-							while not temp_edificio.vivo{
-								ds_priority_delete_min(temp_priority)
-								temp_edificio = ds_priority_find_min(temp_priority)
-							}
-							if temp_edificio = edificio{
-								ds_priority_delete_min(temp_priority)
-								temp_edificio = ds_priority_find_min(temp_priority)
-								while not ds_priority_empty(temp_priority) and not temp_edificio.vivo{
-									ds_priority_delete_min(temp_priority)
-									temp_edificio = ds_priority_find_min(temp_priority)
-								}
-								if not ds_priority_empty(temp_priority){
-									ds_grid_set(edificio_cercano, a, b, temp_edificio)
-									ds_grid_set(edificio_cercano_dis, a, b, temp_edificio.coordenadas_dis[# a, b])
-								}
-								else
-									show_debug_message("!!")
-							}
-						}
-					}
+		if menu = MENU_JUEGO and index = id_nucleo and array_length(edificios_index[id_nucleo]) > 0
+			for(i = array_length(drones) - 1; i >= 0; i--){
+				dron = drones[i]
+				if dron.target = edificio
+					dron_target_nucleo(dron)
+			}
 		edificio.vivo = false
 		if edificio_armas[index]{
 			if edificio.target != null_dron and edificio.target.vida > 0
@@ -282,19 +256,10 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				jugador_recursos[_jugador, edificio_precio_id[index, a]] += floor(b * edificio_precio_num[index, a] / 2)
 		}
 		//Camiar target de enemigos
-		if index != id_nucleo and _jugador != jugador_IA
+		if index != id_nucleo
 			for(a = array_length(drones) - 1; a >= 0; a--){
-				var temp_enemigo = drones[a]
-				if temp_enemigo.jugador != _jugador and temp_enemigo.target = edificio{
-					temp_complex = xytoab(temp_enemigo.x, temp_enemigo.y)
-					if temp_complex[0] >= 0{
-						temp_edificio = edificio_cercano[# temp_complex[0], temp_complex[1]]
-						if temp_edificio = null_edificio and array_length(edificios_index[id_nucleo]) > 0
-							temp_enemigo.target = edificios_index[id_nucleo][0]
-						else
-							temp_enemigo.target = temp_edificio
-					}
-				}
+				dron = drones[a]
+				dron_target_nucleo(dron)
 			}
 		//Explosión Nuclear
 		if destruccion and index = id_planta_nuclear and edificio.fuel > 0{

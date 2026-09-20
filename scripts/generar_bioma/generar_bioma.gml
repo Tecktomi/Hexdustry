@@ -1,10 +1,8 @@
 function generar_bioma(bioma){
 	with control{
+		var multiplicador = xsize * ysize / 10000
 		ds_grid_clear(ore, -1)
 		ds_grid_clear(ore_amount, 0)
-		ds_grid_clear(edificio_cercano, null_edificio)
-		ds_grid_clear(edificio_cercano_dis, infinity)
-		ds_grid_clear(edificio_cercano_dir, -1)
 		ds_grid_clear(terreno_pared_index, 0)
 		var temp_peso_data, borde_agua = idt_arena, i
 		random_set_seed(seed)
@@ -26,7 +24,7 @@ function generar_bioma(bioma){
 		var size = array_length(temp_peso_data), temp_terreno, cantidad, magnitud, temp_j, j, a, b, temp_list, k, temp_complex, aa, bb, c, len
 		for(i = 0; i < size; i++){
 			temp_terreno = temp_peso_data[i, 0]
-			cantidad = temp_peso_data[i, 1]
+			cantidad = temp_peso_data[i, 1] * multiplicador
 			magnitud = temp_peso_data[i, 2]
 			temp_j = xsize / cantidad + irandom(floor(xsize / cantidad))
 			for(j = 0; j < cantidad; j++){
@@ -182,7 +180,7 @@ function generar_bioma(bioma){
 			temp_peso_data = [[6, 20], [6, 20], [3, 30], [3, 25]]
 		var d
 		for(i = 0; i < ore_max; i++){
-			cantidad = temp_peso_data[i, 0]
+			cantidad = temp_peso_data[i, 0] * multiplicador
 			magnitud = temp_peso_data[i, 1]
 			for(j = 0; j < cantidad; j++){
 				a = j * xsize / cantidad + irandom(floor(xsize / cantidad))
@@ -225,12 +223,12 @@ function generar_bioma(bioma){
 		//Spawn point
 		do{
 			if irandom(1) = 0{
-				spawn_x = 2 + (xsize - 5) * irandom(1)
-				spawn_y = irandom_range(2, ysize - 3)
+				spawn_x = 3 + (xsize - 7) * irandom(1)
+				spawn_y = irandom_range(3, ysize - 4)
 			}
 			else{
-				spawn_x = irandom_range(2, xsize - 3)
-				spawn_y = 2 + (ysize - 5) * irandom(1)
+				spawn_x = irandom_range(3, xsize - 4)
+				spawn_y = 3 + (ysize - 7) * irandom(1)
 			}
 		}
 		until terreno_caminable[terreno[# spawn_x, spawn_y]]
