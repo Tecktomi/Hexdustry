@@ -25,9 +25,9 @@ function draw_boton_text_list(xpos, ypos, variable = 0, array_name = array_creat
 			for(i = 0; i < min(max_height, size); i++)
 				max_width = max(max_width, string_width(array_name[deslizante[des_index] + i]))
 			var color = draw_get_color(), item_height = DEVISE ? 20 : 40
-			draw_set_color(c_ltgray)
+			draw_set_color(ui_fondo)
 			draw_rectangle(xpos, ypos + item_height, xpos + max_width + item_height, ypos + item_height * (min(max_height, size) + 1), false)
-			draw_set_color(c_black)
+			draw_set_color(ui_borde)
 			draw_rectangle(xpos, ypos + item_height, xpos + max_width + item_height, ypos + item_height * (min(max_height, size) + 1), true)
 			draw_set_color(color)
 			ypos += item_height

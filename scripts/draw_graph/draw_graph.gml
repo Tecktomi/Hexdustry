@@ -18,7 +18,7 @@ function draw_graph(x, y, width = 400, height = 100, variables = array_create(0,
 	}
 	altura = height / altura
 	var ancho = width / tlen
-	draw_set_color(c_white)
+	draw_set_color(ui_texto)
 	draw_line(x, y + height, x + width, y + height)
 	draw_line(x, y + height, x, y)
 	if reverse{
@@ -47,7 +47,7 @@ function draw_graph(x, y, width = 400, height = 100, variables = array_create(0,
 								y + height - altura * variables[b + 1, a])
 		}
 	}
-	draw_set_color(c_white)
+	draw_set_color(ui_texto)
 	for(a = 0; a <= tlen / 5; a++)
 		draw_text(x + 5 * ancho * a, y + height, 5 * a)
 }

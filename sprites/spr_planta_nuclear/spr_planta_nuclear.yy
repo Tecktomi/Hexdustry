@@ -19,6 +19,7 @@
   "height":112,
   "HTile":false,
   "layers":[
+    {"$GMImageLayer":"","%Name":"3853b0f1-25ee-4c8d-bcad-535a50e0042e","blendMode":0,"displayName":"Layer 1","isLocked":false,"name":"3853b0f1-25ee-4c8d-bcad-535a50e0042e","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
     {"$GMImageLayer":"","%Name":"1dc0e133-92a8-494e-9b74-effab04200bc","blendMode":0,"displayName":"default","isLocked":false,"name":"1dc0e133-92a8-494e-9b74-effab04200bc","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"spr_planta_nuclear",

@@ -37,12 +37,12 @@ function draw_text_background(x, y, text, sprites = false, dinamic = true){
 		x = clamp(x, xx, room_width + xx - width)
 		y = clamp(y, yy, room_height + yy - height)
 	}
-	draw_set_color(c_black)
+	draw_set_color(ui_sombra)
 	draw_set_alpha(0.5)
 	draw_rectangle(x - xx, y - yy, x + width - xx, y + height - yy, false)
 	draw_set_alpha(1)
 	draw_rectangle(x - xx, y - yy, x + width - xx, y + height - yy, true)
-	draw_set_color(c_white)
+	draw_set_color(ui_texto)
 	draw_text(x, y, text)
 	if sprites{
 		var line_height = string_height("A"), text_len = string_length(text)

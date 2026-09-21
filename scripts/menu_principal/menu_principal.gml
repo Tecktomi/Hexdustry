@@ -8,7 +8,7 @@ function menu_principal(){
 		draw_set_halign(fa_center)
 		draw_set_font(font_titulo)
 		draw_set_color(c_white)
-		var ypos = 100
+		var ypos = 100, a
 		draw_text_ypos(room_width / 2, ypos, L.menu_hexdustry)
 		draw_set_font(font_normal)
 		if os_browser != browser_not_a_browser{
@@ -74,6 +74,11 @@ function menu_principal(){
 			input_layer = 1
 			enciclopedia = 1
 		}
+		ypos += text_y * 2
+		if draw_boton(room_width / 2, ypos, "AJUSTES", ui_azul){
+			input_layer = 1
+			get_file = 5
+		}
 		if enciclopedia > 0{
 			draw_enciclopedia(false, 1)
 			if enciclopedia = 0
@@ -93,7 +98,7 @@ function menu_principal(){
 				draw_set_valign(fa_bottom)
 				var xpos = 120
 				ypos = 200
-				for(var a = 0; a < array_length(save_files); a++){
+				for(a = 0; a < array_length(save_files); a++){
 					var temp_text = file_format(save_files[a])
 					if draw_sprite_boton(save_files_png[a],, xpos, ypos, 96, 96, 1){
 						tecnologia = true
@@ -157,7 +162,7 @@ function menu_principal(){
 						get_file = 3
 						partidas = scan_files("Saves/*.save", fa_none)
 						var temp_image
-						for(var a = array_length(partidas) - 1; a >= 0; a--){
+						for(a = array_length(partidas) - 1; a >= 0; a--){
 							if array_length(partidas_png) > a and partidas_png[a] != spr_null_image
 								sprite_delete(partidas_png[a])
 							var temp_text = file_format(partidas[a])
@@ -178,7 +183,7 @@ function menu_principal(){
 				draw_set_valign(fa_bottom)
 				var xpos = 120
 				ypos = 200
-				for(var a = 0; a < array_length(partidas); a++){
+				for(a = 0; a < array_length(partidas); a++){
 					var temp_text = file_format(partidas[a])
 					if draw_sprite_boton(partidas_png[a],, xpos, ypos, 96, 96, 1){
 						var buffer = buffer_load("Saves/" + partidas[a])
@@ -252,6 +257,9 @@ function menu_principal(){
 				if --server_buscando_lan_step <= 0
 					server_buscando_lan = false
 			}
+			//Ajustes
+			else if get_file = 5
+				menu_pausa(false, 1)
 		}
 		else if not DEVISE and keyboard_check(vk_backspace)
 			game_end()
@@ -261,7 +269,7 @@ function menu_principal(){
 		update_cursor()
 		if keyboard_check_pressed(vk_escape)
 			game_end()
-		for(var a = 0; a < IDIOMAS; a++)
+		for(a = 0; a < IDIOMAS; a++)
 			if draw_sprite_boton(spr_bandera, a, 20 + 80 * a, 20, 64, 48,, function(data){draw_text_background(0, 80, IDIOMA_NAME[data.a])}, {a : a}){
 				idioma = a
 				save_setting("", "Idioma", idioma, true)

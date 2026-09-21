@@ -11,7 +11,7 @@ var a, b, c, flag
 	buffer_delete(buffer)
 #endregion
 #region MACROS
-	#macro FILE_VERSION 2026_08_28
+	#macro FILE_VERSION 2026_09_20
 	#macro PROCESADOR_VERSION 2026_03_25
 	#macro TILE_WIDTH 32
 	#macro TILE_HEIGHT 28
@@ -46,18 +46,31 @@ var a, b, c, flag
 	DIGITS[47] = false
 	#macro MAX_JUGADORES 9
 	#macro EQUIPOS (MAX_JUGADORES + 2)
+	//Tipos de municiones
 	#macro municion_tipo_normal 0
 	#macro municion_tipo_misil 1
 	#macro municion_tipo_fuego 2
 	#macro municion_tipo_misil_incendiario 3
 	#macro municion_tipo_perforadora 4
+	//Jgadores predeterminados
 	#macro jugador_salvaje 0
 	#macro jugador_IA 1
+	//Menús
 	#macro MENU_PRINCIPAL 0
 	#macro MENU_JUEGO 1
 	#macro MENU_EDITOR 2
 	#macro MENU_EDITOR_JUEGO 3
 	#macro MENU_CAMPANNA 4
+	//Instrucciones del editor
+	#macro EDITOR_INSTRUCCION_CLEAR 0
+	#macro EDITOR_INSTRUCCION_MANCHAS 1
+	#macro EDITOR_INSTRUCCION_BORDES 2
+	#macro EDITOR_INSTRUCCION_RUIDO 3
+	#macro EDITOR_INSTRUCCION_MENAS 4
+	#macro EDITOR_INSTRUCCION_PERLIN 5
+	#macro EDITOR_INSTRUCCION_SCCR 6
+	#macro EDITOR_INSTRUCCION_CONTORNO 7
+	#macro EDITOR_INSTRUCCION_AUTOMATA 8
 #endregion
 DEVISE = (os_type = os_windows)
 var arr0 = array_create(0, 0)
@@ -128,6 +141,7 @@ ini_open("settings.ini")
 #endregion
 #region Settings
 	sonido = bool(ini_read_real("", "sonido", 1))
+	musica = bool(ini_read_real("", "musica", 1))
 	info = bool(ini_read_real("", "info", 0))
 	grafic_tile_animation = bool(ini_read_real("", "grafic_tile_animation", 1))
 	grafic_luz = bool(ini_read_real("", "grafic_luz", 0))
@@ -215,8 +229,8 @@ L = {}
 	menu = MENU_PRINCIPAL
 	cursor = cr_arrow
 	deslizante_id = -1
-	xsize = 72
-	ysize = 144
+	xsize = 128
+	ysize = 256
 	#macro CHUNK_WIDTH 4
 	#macro CHUNK_HEIGHT 12
 	chunk_xsize = ceil(xsize / CHUNK_WIDTH)
@@ -309,9 +323,9 @@ L = {}
 	show_smoke = true
 	oleadas_timer = 0
 	multiplicador_vida_enemigos = 75
+	permitir_nuclear = true
 	save_file = ""
 	editor_seed = random_get_seed()
-	editor_fondo = 0
 	editor_instrucciones = array_create(0, array_create(4, 0))
 	draw_boton_text_counter = 0
 	editor_xpos = 0
@@ -376,8 +390,10 @@ L = {}
 	comprable_texto = ""
 	draw_once = true
 	light_surface = surface_create(room_width, room_height)
+	background_surface = surface_create((CHUNK_WIDTH * 48 + 8), (CHUNK_HEIGHT + 1) * 14)
 	spawn_x = 0
 	spawn_y = 0
+	pausa_setting = 0
 #endregion
 #region Misiones
 	null_mision = def_mision()
@@ -515,27 +531,35 @@ L = {}
 	#macro cambio_investigar 5
 #endregion
 #region UI
-	ui_fondo = #282828
-	ui_panel_secundario = #383838
-	ui_borde = #606060
-	ui_sombra = #141414
-	ui_texto = #E9E9E9
-	ui_texto_secundario = #B3B3B3
-	ui_texto_inhabilitado = #7F7F7F
-	ui_boton_verde = #448A20
-	ui_boton_verde_hover = make_color_hsv(color_get_hue(ui_boton_verde), color_get_saturation(ui_boton_verde), 0.8 * color_get_value(ui_boton_verde))
-	ui_boton_azul = #4169E1
-	ui_boton_azul_hover = make_color_hsv(color_get_hue(ui_boton_azul), color_get_saturation(ui_boton_azul), 0.8 * color_get_value(ui_boton_azul))
-	ui_boton_gris = #606060
-	ui_boton_gris_hover = make_color_hsv(color_get_hue(ui_boton_gris), color_get_saturation(ui_boton_gris), 0.8 * color_get_value(ui_boton_gris))
-	ui_boton_rojo = #A00000
-	ui_boton_rojo_hover = make_color_hsv(color_get_hue(ui_boton_rojo), color_get_saturation(ui_boton_rojo), 0.8 * color_get_value(ui_boton_rojo))
+	#macro ui_fondo #282828
+	#macro ui_panel_secundario #383838
+	#macro ui_borde #606060
+	#macro ui_sombra #141414
+	#macro ui_texto #E9E9E9
+	#macro ui_texto_secundario #B3B3B3
+	#macro ui_texto_inhabilitado #7F7F7F
+	#macro ui_boton_verde #448A20
+	#macro ui_boton_verde_hover #366E1A
+	#macro ui_boton_azul #4169E1
+	#macro ui_boton_azul_hover #3454B4
+	#macro ui_boton_gris #606060
+	#macro ui_boton_gris_hover #4D4D4D
+	#macro ui_boton_rojo #A00000
+	#macro ui_boton_rojo_hover #800000
 	#macro ui_verde 0
 	#macro ui_azul 1
 	#macro ui_gris 2
 	#macro ui_rojo 3
 	ui_boton_color = [ui_boton_verde, ui_boton_azul, ui_boton_gris, ui_boton_rojo]
 	ui_boton_color_hover = [ui_boton_verde_hover, ui_boton_azul_hover, ui_boton_gris_hover, ui_boton_rojo_hover]
+	#macro ui_color_energia #FFF899
+	#macro ui_color_flujo #7ACDC8
+	#macro ui_color_reciclaje #00A651
+	#macro ui_color_reparadora #00FF00
+	#macro ui_color_lava #FAAD81
+	#macro ui_color_nuclear #F0BA32
+	#macro ui_color_procesador #BD8CBF
+	#macro ui_height string_height("A")
 #endregion
 #region Blueprint
 	blueprint_mod2 = false
@@ -1681,7 +1705,7 @@ for(a = 0; a < edificio_max; a++){
 			edificio_precio[a] += edificio_precio_num[a, b] * (1 + recurso_tier[edificio_precio_id[a, b]])
 }
 size_fx = [fx_construir_1, fx_construir_2, fx_construir_3, fx_construir_4, spr_hexagono_5]
-misiles_descripcion = ["Un simple misil teledirigido", "Destruye un área con múltiples explosiones", "Destruye la base enemiga y gana la partida instantánemanetes"]
+misiles_descripcion = ["Un simple misil teledirigido", "Destruye un área con múltiples explosiones", "Destruye la base enemiga y gana la partida instantánemanete"]
 misiles_nombre = ["Misil de Crucero", "Misil de Racimo", "Misil Nuclear"]
 misiles_precio_id = [[idr_acero, idr_explosivo], [idr_acero, idr_explosivo, idr_electronicos], [idr_acero, idr_explosivo, idr_electronicos, idr_uranio_enriquecido]]
 misiles_precio_num = [[30, 10], [60, 30, 5], [120, 80, 20, 40]]

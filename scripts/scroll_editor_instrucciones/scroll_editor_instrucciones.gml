@@ -12,8 +12,11 @@ function scroll_editor_instrucciones(a, param = {xpos : 0, ypos : 0, ore_names :
 			procesador_move = a
 		
 		xpos += 20
-		//Bloques de Terreno
-		if tipo = 0{
+		if tipo = EDITOR_INSTRUCCION_CLEAR{
+			xpos = draw_text_xpos(xpos, ypos, $"Aplanar con ")
+			instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
+		}
+		if tipo = EDITOR_INSTRUCCION_MANCHAS{
 			xpos = draw_text_xpos(xpos, ypos, $"{L.editor_add} ")
 			instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
 			xpos += text_x
@@ -25,8 +28,7 @@ function scroll_editor_instrucciones(a, param = {xpos : 0, ypos : 0, ore_names :
 			xpos += text_x
 			xpos = draw_text_xpos(xpos, ypos, $" {L.editor_veces}")
 		}
-		//Bordes de Terreno
-		else if tipo = 1{
+		else if tipo = EDITOR_INSTRUCCION_BORDES{
 			var temp_text
 			xpos = draw_text_xpos(xpos, ypos, $"{L.editor_al_rededor} ")
 			instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
@@ -43,8 +45,7 @@ function scroll_editor_instrucciones(a, param = {xpos : 0, ypos : 0, ore_names :
 			xpos = draw_text_xpos(xpos, ypos, $" {L.editor_con} ")
 			instruccion[3] = draw_boton_text_list(xpos, ypos, dat3, terreno_nombre,, 10)
 		}
-		//Ruido Aleatorio
-		else if tipo = 2{
+		else if tipo = EDITOR_INSTRUCCION_RUIDO{
 			xpos = draw_text_xpos(xpos, ypos, $"{L.editor_Reemplazar} ")
 			instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
 			xpos += text_x
@@ -56,8 +57,7 @@ function scroll_editor_instrucciones(a, param = {xpos : 0, ypos : 0, ore_names :
 			xpos += text_x
 			xpos = draw_text_xpos(xpos, ypos, $"% {L.editor_del_tiempo}")
 		}
-		//Menas de Recursos
-		else if tipo = 3{
+		else if tipo = EDITOR_INSTRUCCION_MENAS{
 			xpos = draw_text_xpos(xpos, ypos, $"{L.editor_add} ")
 			instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, ore_names,, 10)
 			xpos += text_x
@@ -69,8 +69,7 @@ function scroll_editor_instrucciones(a, param = {xpos : 0, ypos : 0, ore_names :
 			xpos += text_x
 			xpos = draw_text_xpos(xpos, ypos, $" {L.editor_veces}")
 		}
-		//Perlin
-		else if tipo = 4{
+		else if tipo = EDITOR_INSTRUCCION_PERLIN{
 			xpos = draw_text_xpos(xpos, ypos, $"Añadir manchas de ")
 			instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
 			xpos += text_x
@@ -80,8 +79,7 @@ function scroll_editor_instrucciones(a, param = {xpos : 0, ypos : 0, ore_names :
 			xpos = draw_text_xpos(xpos, ypos, $" tamaño ")
 			instruccion[3] = draw_boton_text(xpos, ypos, dat3, true)
 		}
-		//Small Continous Coponents Remove
-		else if tipo = 5{
+		else if tipo = EDITOR_INSTRUCCION_SCCR{
 			xpos = draw_text_xpos(xpos, ypos, $"Eliminar manchas de ")
 			instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
 			xpos += text_x
@@ -91,8 +89,7 @@ function scroll_editor_instrucciones(a, param = {xpos : 0, ypos : 0, ore_names :
 			xpos = draw_text_xpos(xpos, ypos, $" más pequeñas que ")
 			instruccion[3] = draw_boton_text(xpos, ypos, dat3, true)
 		}
-		//Contorno
-		else if tipo = 6{
+		else if tipo = EDITOR_INSTRUCCION_CONTORNO{
 			xpos = draw_text_xpos(xpos, ypos, $"Añadir contorno de ")
 			instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
 			xpos += text_x
@@ -102,8 +99,7 @@ function scroll_editor_instrucciones(a, param = {xpos : 0, ypos : 0, ore_names :
 			xpos = draw_text_xpos(xpos, ypos, $" tamaño ")
 			instruccion[3] = draw_boton_text(xpos, ypos, dat3, true)
 		}
-		//Autómata
-		else if tipo = 7{
+		else if tipo = EDITOR_INSTRUCCION_AUTOMATA{
 			xpos = draw_text_xpos(xpos, ypos, $"Añadir ")
 			instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
 			xpos += text_x

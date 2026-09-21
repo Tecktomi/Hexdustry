@@ -56,7 +56,7 @@ function draw_flow(){
 					temp_complex = abtoxy(aa, bb)
 					draw_sprite_off(spr_hexagono, 0, temp_complex[0], temp_complex[1],,,, color, 0.5)
 				}
-				draw_set_color(c_white)
+				draw_set_color(ui_texto)
 				temp_complex = abtoxy(temp_beta.center_x, temp_beta.center_y)
 				draw_text_off(temp_complex[0], temp_complex[1], $"{a}, {temp_beta.cantidad}")
 			}
@@ -89,7 +89,7 @@ function draw_flow(){
 					temp_complex = abtoxy(aa, bb)
 					draw_sprite_off(spr_hexagono, 0, temp_complex[0], temp_complex[1],,,, color, 0.5)
 				}
-				draw_set_color(c_white)
+				draw_set_color(ui_texto)
 				temp_complex = abtoxy(temp_lago.center_x, temp_lago.center_y)
 				draw_text_off(temp_complex[0], temp_complex[1], $"{a}, {len_2 / 2}")
 			}

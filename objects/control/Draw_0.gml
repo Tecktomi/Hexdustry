@@ -38,7 +38,7 @@ if menu = MENU_CAMPANNA{
 //Dibujo
 if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 	dibujar_fondo()
-	if grafic_tile_animation
+	if grafic_tile_animation and zoom >= 1
 		dibujar_fondo(2)
 	dibujar_edificios()
 	var show_humo = (grafic_humo and pausa = 0 and enciclopedia = 0 and ((image_index mod 5) = 0))
@@ -73,7 +73,7 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 				//Dibujo de los links eléctricos
 				else if edificio_energia[index]{
 					if grafic_energia{
-						draw_set_color(c_yellow)
+						draw_set_color(ui_color_energia)
 						for(d = array_length(edificio.energia_link) - 1; d >= 0; d--){
 							edificio_2 = edificio.energia_link[d]
 							draw_line_off(center_x, center_y, edificio_2.center_x, edificio_2.center_y)
@@ -119,11 +119,11 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 				if _jugador != jugador
 					draw_edificio_borde(edificio, EQUIPO_COLOR[_jugador])
 				if info and edificio.waiting{
-					draw_set_color(c_yellow)
+					draw_set_color(ui_color_lava)
 					draw_circle_off(aa, bb + 16, 4, false)
 				}
 				if edificio.idle{
-					draw_set_color(c_red)
+					draw_set_color(ui_boton_rojo)
 					draw_circle_off(aa, bb + 8, 4, false)
 				}
 				if cheat and  index = id_nucleo and edificio.jugador = jugador_IA{
@@ -216,270 +216,14 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 	}
 }
 //Pausa - Menú
-if pausa = 1{
-	for(a = array_length(drones) - 1; a >= 0; a--)
-		draw_dron(drones[a], true)
-	image_index--
-	var color = draw_get_color()
-	draw_set_color(c_black)
-	draw_set_alpha(0.2)
-	draw_rectangle(0, 0, room_width, room_height, false)
-	draw_set_alpha(1)
-	draw_set_color(c_white)
-	draw_set_halign(fa_center)
-	draw_set_font(font_titulo)
-	draw_text(room_width / 2, 100, L.pausa)
-	draw_set_font(font_normal)
-	xpos = room_width / 2
-	ypos = 300
-	//Ajustes generales
-	if get_file = 0{
-		draw_text(room_width / 2, 150,	$"\"{chr(CONTROL_REDES)}\" {L.pausa_red}\n\"{chr(CONTROL_FLUJO)}\" {L.pausa_liquido}\n\"{chr(CONTROL_ENCICLOPEDIA)}\" {L.pausa_enciclopedia}\n\"{chr(CONTROL_REPARAR)}\" {L.pausa_reparar}")
-		if DEVISE{
-			if draw_boton(xpos, ypos, L.controles, ui_azul)
-				get_file = 3
-			ypos += text_y * 1.2
-		}
-		if draw_boton(xpos, ypos, "AJUSTES", ui_azul)
-			get_file = 2
-		ypos += text_y * 1.2
-		//Guardar / Abrir en LAN
-		if menu = MENU_JUEGO{
-			if os_browser = browser_not_a_browser{
-				if not mapa_editado{
-					if server = -1 and menu = MENU_JUEGO{
-						if draw_boton(xpos, ypos, L.abrir_en_LAN, ui_azul)
-							get_file = 1
-					}
-					else{
-						b = 0
-						for(a = 0; a < MAX_JUGADORES; a++)
-							b += (server_jugadores[a] != -1)
-						draw_boton(xpos, ypos, $"{b} {L.jugadores}", ui_verde)
-					}
-					ypos += text_y * 1.2
-					if guardado
-						draw_boton(xpos, ypos, "Guardado", ui_verde)
-					else if tutorial = 0 and draw_boton(xpos, ypos, L.guardar, ui_azul){
-						guardado = true
-						buffer = buffer_create(4096, buffer_grow, 1)
-						save_game_buffer(buffer)
-						temp_text = $"Saves/{day_format()}"
-						buffer_save(buffer, $"{temp_text}.save")
-						buffer_delete(buffer)
-						var temp_sprite = minimapa()
-						sprite_save(temp_sprite, 0, $"{temp_text}.png")
-						sprite_delete(temp_sprite)
-					}
-					ypos += text_y * 1.2
-				}
-			}
-			else{
-				draw_boton(xpos, ypos, L.descargar_para_jugar_en_LAN, ui_gris)
-				ypos += text_y * 1.2
-			}
-		}
-		if draw_boton(xpos, ypos, L.pausa_continuar, ui_verde){
-			pausa = 0
-			guardado = false
-		}
-		ypos += text_y * 1.2
-		if draw_boton(xpos, ypos, L.salir, ui_rojo){
-			clear_edit()
-			pausa = 0
-			cheat = false
-			if menu = MENU_JUEGO{
-				if tutorial = 0 and os_browser = browser_not_a_browser and not mapa_editado{
-					buffer = buffer_create(1024, buffer_grow, 1)
-					save_game_buffer(buffer)
-					buffer_save(buffer, "last_save.save")
-					buffer_delete(buffer)
-				}
-				menu = MENU_PRINCIPAL
-				if online{
-					if servidor
-						server_break()
-					else
-						server_jugador_irse()
-				}
-				clear_edificios()
-				exit
-			}
-			else if menu = MENU_EDITOR_JUEGO{
-				array_copy(categoria_nombre_disponible, 0, categoria_nombre, 0, array_length(categoria_nombre) - 1)
-				menu = MENU_EDITOR
-				build_index = -1
-				draw_set_halign(fa_left)
-				draw_set_color(color)
-				exit
-			}
-			jugador = 2
-			exit
-		}
-	}
-	//Ajustes ONLINE
-	else if get_file = 1{
-		if draw_boton(xpos, ypos, L.abrir_en_LAN, ui_azul){
-			open_server()
-			get_file = 0
-		}
-		ypos += text_y * 1.2
-		if draw_boton(xpos, ypos, server_pvp ? "PVP" : "COOP", server_pvp ? ui_rojo : ui_verde)
-			server_pvp = not server_pvp
-		if draw_boton(xpos, room_height - 200, L.volver, ui_rojo) or (not DEVISE and keyboard_check_pressed(vk_backspace)){
-			if not DEVISE
-				keyboard_clear(vk_backspace)
-			get_file = 0
-		}
-	}
-	//Ajustes
-	else if get_file = 2{
-		if draw_boton(xpos, ypos, (info ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_info}", info ? ui_verde : ui_rojo){
-			info = not info
-			save_setting("", "info", info)
-		}
-		ypos += text_y * 1.2
-		if draw_boton(xpos, ypos, (grafic_tile_animation ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_animacion}", grafic_tile_animation ? ui_verde : ui_rojo){
-			grafic_tile_animation = not grafic_tile_animation
-			save_setting("", "grafic_tile_animation", grafic_tile_animation)
-		}
-		ypos += text_y * 1.2
-		if draw_boton(xpos, ypos, (grafic_luz ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_iluminacion}", grafic_luz ? ui_verde : ui_rojo){
-			grafic_luz = not grafic_luz
-			save_setting("", "grafic_luz", grafic_luz)
-		}
-		ypos += text_y * 1.2
-		if draw_boton(xpos, ypos, (grafic_humo ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_humo}", grafic_humo ? ui_verde : ui_rojo){
-			grafic_humo = not grafic_humo
-			save_setting("", "grafic_humo", grafic_humo)
-		}
-		ypos += text_y * 1.2
-		if draw_boton(xpos, ypos, (grafic_hideui ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_UI}", grafic_hideui ? ui_rojo : ui_verde)
-			grafic_hideui = not grafic_hideui
-		ypos += text_y * 1.2
-		if draw_boton(xpos, ypos, (sonido ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_sonido}", sonido ? ui_verde : ui_rojo)
-			sound_change()
-		ypos += text_y * 1.2
-		if draw_boton(xpos, ypos, (grafic_energia ? L.pausa_desactivar : L.pausa_activar) + $" {L.red_energia}", grafic_energia ? ui_verde : ui_rojo){
-			grafic_energia = not grafic_energia
-			save_setting("", "grafic_energia", grafic_energia)
-		}
-		ypos += text_y * 1.2
-		if draw_boton(xpos, ypos, (auto_guardado ? L.pausa_desactivar : L.pausa_activar) + $" {L.autoguardado}", auto_guardado ? ui_verde : ui_rojo){
-			auto_guardado = not auto_guardado
-			save_setting("", "auto_guardado", auto_guardado)
-		}
-		if draw_boton(xpos, room_height - 200, L.volver, ui_rojo) or (not DEVISE and keyboard_check_pressed(vk_backspace)){
-			if not DEVISE
-				keyboard_clear(vk_backspace)
-			get_file = 0
-		}
-	}
-	//Controles
-	else{
-		ypos = 200
-		for(a = 0; a < CONTROL_MAX; a++){
-			var key = CONTROL_USADAS[a]
-			if key = vk_space
-				var char = "Espacio"
-			else if key = vk_escape
-				char = "Escape"
-			else if key >= vk_f1 and key <= vk_f12
-				char = $"F{chr(key - ord("p") + ord(1))}"
-			else if key = vk_tab
-				char = "TAB"
-			else
-				char = chr(key)
-			draw_set_halign((a & 1) ? fa_left : fa_right)
-			if draw_boton(xpos + 40 * (a & 1) - 20, ypos, $"{CONTROL_NOMBRE[a]} \"{char}\"")
-				get_file = 4 + a
-			if (a & 1)
-				ypos += text_y * 1.2
-		}
-		draw_set_halign(fa_center)
-		if get_file > 3{
-			draw_set_color(c_black)
-			draw_set_alpha(0.5)
-			draw_rectangle(0, 0, room_width, room_height, false)
-			draw_set_color(c_white)
-			draw_set_alpha(1)
-			draw_text(xpos, ypos, "PRESIONA CUALQUIER TECLA")
-			if keyboard_check_pressed(vk_anykey) and (keyboard_lastkey = CONTROL_USADAS[get_file - 4] or not array_contains(CONTROL_USADAS, keyboard_lastkey)){
-				get_file -= 2
-				if get_file = 2
-					CONTROL_LEFT = keyboard_lastkey
-				else if get_file = 3
-					CONTROL_RIGHT = keyboard_lastkey
-				else if get_file = 4
-					CONTROL_UP = keyboard_lastkey
-				else if get_file = 5
-					CONTROL_DOWN = keyboard_lastkey
-				else if get_file = 6
-					CONTROL_PAUSE = keyboard_lastkey
-				else if get_file = 7
-					CONTROL_MENU = keyboard_lastkey
-				else if get_file = 8
-					CONTROL_MUSIC = keyboard_lastkey
-				else if get_file = 9
-					CONTROL_WAVES = keyboard_lastkey
-				else if get_file = 10
-					CONTROL_HIDEUI = keyboard_lastkey
-				else if get_file = 11
-					CONTROL_INFO = keyboard_lastkey
-				else if get_file = 12
-					CONTROL_FLOW = keyboard_lastkey
-				else if get_file = 13
-					CONTROL_ENCICLOPEDIA = keyboard_lastkey
-				else if get_file = 14
-					CONTROL_ROTAR = keyboard_lastkey
-				else if get_file = 15
-					CONTROL_REPARAR = keyboard_lastkey
-				else if get_file = 16
-					CONTROL_REDES = keyboard_lastkey
-				else if get_file = 17
-					CONTROL_FLUJO = keyboard_lastkey
-				else if get_file = 18
-					CONTROL_BLUEPRINT = keyboard_lastkey
-				else if get_file = 19
-					CONTROL_TAB = keyboard_lastkey
-				CONTROL_USADAS[get_file - 2] = keyboard_lastkey
-				save_setting("Controles", $"{get_file - 2}", keyboard_lastkey, false)
-				keyboard_clear(keyboard_lastkey)
-				get_file = 1
-			}
-		}
-		if draw_boton(xpos, room_height - 200, L.volver, ui_rojo) or (not DEVISE and keyboard_check_pressed(vk_backspace)){
-			if not DEVISE
-				keyboard_clear(vk_backspace)
-			get_file = 0
-		}
-	}
-	draw_set_halign(fa_left)
-	for(a = 0; a < IDIOMAS; a++)
-		if draw_sprite_boton(spr_bandera, a, 20 + 80 * a, 20, 64, 48,, function(data){draw_text_background(0, 80, IDIOMA_NAME[data.a])}, {a : a}){
-			idioma = a
-			save_setting("", "Idioma", idioma, true)
-			set_idioma()
-		}
-	draw_set_color(color)
-	if keyboard_check_pressed(CONTROL_MENU) or (not DEVISE and keyboard_check_pressed(vk_backspace)){
-		if not DEVISE
-			keyboard_clear(vk_backspace)
-		keyboard_clear(CONTROL_MENU)
-		if get_file = 0{
-			pausa = 0
-			guardado = false
-		}
-		else if get_file = 1
-			get_file = 0
-	}
-}
+if pausa = 1 and menu_pausa()
+	exit
 //Solo pausa
 if pausa = 2{
 	for(a = array_length(drones) - 1; a >= 0; a--)
 		draw_dron(drones[a], true)
 	image_index--
-	draw_set_color(c_white)
+	draw_set_color(ui_texto)
 	draw_set_halign(fa_center)
 	draw_set_font(font_titulo)
 	draw_text(room_width / 2, 100, L.pausa)
@@ -488,364 +232,8 @@ if pausa = 2{
 }
 var xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / zoom
 //Editar edificio
-if show_menu{
-	var edificio = show_menu_build, index = edificio.index
-	if index = id_procesador{
-		draw_boton_text_counter = 0
-		show_smoke = false
-		draw_set_color(make_color_rgb(189, 140, 191))
-		draw_roundrect(100, 100, room_width - 100, room_height - 100, false)
-		draw_set_color(c_white)
-		draw_roundrect(100, 100, room_width - 100, room_height - 100, true)
-		b = 0
-		draw_set_halign(fa_center)
-		if draw_boton(room_width / 2, 110, L.procesador_vincular,,,, false){
-			procesador_select = edificio
-			show_menu = false
-		}
-		draw_set_halign(fa_left)
-		ypos = 150
-		var size = array_length(edificio.instruccion)
-		//SCROLL
-		scroll(110, ypos, size, DEVISE ? 25 : 12, DEVISE ? 20 : 40, scroll_procesador, {xpos : 150, ypos : ypos, edificio : edificio, size : size, b : 0})
-		draw_boton_text_list_end()
-		xpos = 150
-		ypos += min(size, 25) * 20
-		if draw_boton(xpos, ypos, L.procesador_add, ui_azul,,, false) or keyboard_check_pressed(vk_enter){
-			keyboard_clear(vk_enter)
-			procesador_add = true
-			input_layer = 1
-		}
-		if procesador_add{
-			var width = 0
-			for(a = 0; a < array_length(PROCESADOR_INSTRUCCIONES_LENGTH); a++)
-				width = max(width, string_width($"{procesador_instrucciones_nombre[a]} ({a})"))
-			draw_set_color(c_gray)
-			draw_rectangle((room_width - width) / 2, 200, (room_width + width) / 2, 200 + 20 * array_length(PROCESADOR_INSTRUCCIONES_LENGTH), false)
-			draw_set_color(c_white)
-			draw_rectangle((room_width - width) / 2, 200, (room_width + width) / 2, 200 + 20 * array_length(PROCESADOR_INSTRUCCIONES_LENGTH), true)
-			draw_set_halign(fa_center)
-			for(a = 0; a < array_length(PROCESADOR_INSTRUCCIONES_LENGTH); a++)
-				if draw_boton(room_width / 2, 200 + 20 * a, $"{procesador_instrucciones_nombre[a]} ({a})",,,, false, 1) or keyboard_check_pressed(ord(string(a))){
-					var new_instruccion = array_create(PROCESADOR_INSTRUCCIONES_LENGTH[a], 0)
-					for(i = 0; i < array_length(procesador_default_instruccion[a]); i++)
-						new_instruccion[i] = procesador_default_instruccion[a, i]
-					new_instruccion[0] = a
-					array_push(edificio.instruccion, new_instruccion)
-					procesador_add = false
-					input_layer = 0
-					break
-				}
-			draw_set_halign(fa_left)
-			if mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_enter){
-				keyboard_clear(vk_enter)
-				mouse_clear(mb_right)
-				procesador_add = false
-				input_layer = 0
-			}
-		}
-		ypos = 150
-		for(a = 0; a < array_length(edificio.variables); a++){
-			draw_set_halign(fa_right)
-			draw_text(room_width - 120, ypos, $"VAR_{a}: ")
-			draw_set_halign(fa_left)
-			edificio.variables[a] = draw_boton_text(room_width - 120, ypos, edificio.variables[a],, true)
-			ypos += 20
-		}
-		draw_set_halign(fa_right)
-		if draw_boton(room_width - 120, 500, L.procesador_next_step, ui_azul,,, false) or keyboard_check_pressed(vk_space){
-			keyboard_clear(vk_space)
-			edificio.proceso = 1
-		}
-		if BROWSER and draw_boton(room_width - 120, 530, L.procesador_guardar, ui_azul,,, false) or (keyboard_check(vk_control) and keyboard_check_pressed(ord("S"))){
-			save_codes = scan_files("Codes/*.txt", fa_none)
-			get_file = 1
-			input_layer = 1
-			keyboard_clear(ord("S"))
-		}
-		if BROWSER and draw_boton(room_width - 120, 560, L.procesador_cargar, ui_azul,,, false) or (keyboard_check(vk_control) and keyboard_check_pressed(ord("A"))){
-			save_codes = scan_files("Codes/*.txt", fa_none)
-			get_file = 2
-			input_layer = 1
-			keyboard_clear(ord("A"))
-		}
-		draw_set_halign(fa_left)
-		if get_file > 0{
-			draw_set_color(c_dkgray)
-			draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
-			draw_set_color(c_white)
-			//Cargar
-			if get_file = 2{
-				for(a = 0; a < array_length(save_codes); a++)
-					if draw_boton(140, 160 + 30 * a, save_codes[a],,,,, 1){
-						input_layer = 0
-						get_file = 0
-						buffer = buffer_load("Codes/" + save_codes[a])
-						load_procesador(buffer, edificio)
-						buffer_delete(buffer)
-						edificio.select = 0
-					}
-			}
-			//Guardar
-			else if get_file = 1{
-				flag = false
-				for(a = 0; a < array_length(save_codes); a++)
-					if draw_boton(140, 160 + 30 * a, save_codes[a],,,,, 1){
-						save_file = save_codes[a]
-						if string_count(".txt", save_file)
-							save_file = string_delete(save_file, string_pos(".txt", save_file), string_length(save_file))
-						flag = true
-					}
-				save_file = string(draw_boton_text(140, 160 + 30 * (array_length(save_codes) + 1), save_file, false,,, 1))
-				draw_text(140 + text_x, 160 + 30 * (array_length(save_codes) + 1), ".txt")
-				input_layer = 1
-				if save_file != "" and (draw_boton(120, 160 + 30 * array_length(save_codes), L.nuevo_archivo,,,,, 1) or keyboard_check_pressed(vk_enter)){
-					keyboard_clear(vk_enter)
-					save_file += ".txt"
-					flag = true
-					input_layer = 0
-					get_file = 0
-				}
-				if flag{
-					buffer = buffer_create(6, buffer_grow, 1)
-					save_procesador(buffer, edificio)
-					buffer_save(buffer, "Codes/" + save_file)
-					buffer_delete(buffer)
-				}
-			}
-			if draw_boton(120, 120, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape){
-				keyboard_clear(vk_escape)
-				input_layer = 0
-				get_file = 0
-			}
-		}
-	}
-	else if index = id_memoria{
-		draw_boton_text_counter = 0
-		show_smoke = false
-		draw_set_color(make_color_rgb(189, 140, 191))
-		draw_rectangle((room_width - 840) / 2, 100, (room_width + 840) / 2, 480, false)
-		draw_set_color(c_white)
-		draw_rectangle((room_width - 840) / 2, 100, (room_width + 840) / 2, 480, true)
-		draw_set_halign(fa_center)
-		draw_text(room_width / 2, 110, edificio_nombre[edificio.index])
-		draw_set_halign(fa_left)
-		for(a = 0; a < 128; a++){
-			xpos = (a mod 8) * 100 + (room_width - 800) / 2
-			ypos = (a div 8) * 20 + 140
-			if is_real(edificio.variables[a]){
-				draw_set_color(make_color_rgb(127, 127, 255))
-				draw_set_halign(fa_right)
-			}
-			else{
-				draw_set_color(make_color_rgb(255, 91, 91))
-				draw_set_halign(fa_left)
-			}
-			draw_rectangle(xpos, ypos, xpos + 100, ypos + 20, false)
-			draw_set_color(c_white)
-			draw_rectangle(xpos, ypos, xpos + 100, ypos + 20, true)
-			if string_length(edificio.variables[a]) > 9
-				temp_text = string_copy(edificio.variables[a], 1, 6) + "..."
-			else
-				temp_text = edificio.variables[a]
-			edificio.variables[a] = draw_boton_text(xpos + 100 * (is_real(edificio.variables[a])), ypos, temp_text,, true)
-		}
-		draw_set_halign(fa_left)
-	}
-	else{
-		temp_complex = abtoxy(edificio.a, edificio.b)
-		var width = 80 * zoom, height = 80 * zoom
-		aa = clamp(temp_complex[0] * zoom - camx, width, room_width - width)
-		bb = clamp(temp_complex[1] * zoom - camy, 0, room_height - height)
-		draw_set_color(c_gray)
-		draw_triangle(aa - 10 * zoom, bb + 20 * zoom, aa + 10 * zoom, bb + 20 * zoom, aa, bb + 10 * zoom, false)
-		draw_rectangle(aa - 80 * zoom, bb + 20 * zoom, aa + 80 * zoom, bb + 40 * zoom, false)
-		if in(index, id_selector, id_recurso_infinito)
-			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + TILE_WIDTH * ceil(rss_max / 5)) * zoom, false)
-		else if index = id_liquido_infinito
-			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * liquido_max) * zoom, false)
-		else if index = id_planta_quimica
-			draw_rectangle(aa - 90 * zoom, bb + 40 * zoom, aa + 90 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, false)
-		else if tag_edificio_fabrica_drones[index]{
-			temp_array_real = (index = id_fabrica_de_drones) ? fabrica_de_drones_array : fabrica_de_drones_grande_array
-			len = array_length(temp_array_real)
-			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * len) * zoom, false)
-		}
-		else if index = id_refineria_de_petroleo{
-			c = max(max(string_width(recurso_nombre[idr_compuesto_incendiario]), string_width(recurso_nombre[idr_plastico]), string_width(recurso_nombre[idr_piedra_sulfatada])) + string_width(": 100%"), 200)
-			draw_rectangle(aa - c * zoom / 2, bb + 40 * zoom, aa + c * zoom / 2, bb + 120 * zoom, false)
-		}
-		else if index = id_silo_de_misiles
-			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * array_length(misiles_nombre)) * zoom, false)
-		draw_set_color(c_dkgray)
-		draw_triangle(aa - 10 * zoom, bb + 20 * zoom, aa + 10 * zoom, bb + 20 * zoom, aa, bb + 10 * zoom, true)
-		draw_rectangle(aa - 80 * zoom, bb + 20 * zoom, aa + 80 * zoom, bb + 40 * zoom, true)
-		if in(index, id_selector, id_overflow)
-			draw_text(aa - 80 * zoom, bb + 20 * zoom, L.show_menu_invertir)
-		if in(index, id_selector, id_recurso_infinito){
-			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + TILE_WIDTH * ceil(rss_max / 5)) * zoom, true)
-			for(a = 0; a < rss_max; a++)
-				draw_sprite_stretched(recurso_sprite[a], 0, aa + (-80 + 32 * (a mod 5)) * zoom, bb + (40 + TILE_WIDTH * floor(a / 5)) * zoom, 32 * zoom, TILE_WIDTH * zoom)
-		}
-		if index = id_liquido_infinito{
-			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * liquido_max) * zoom, true)
-			draw_text(aa - 80 * zoom, bb + 20 * zoom, L.show_menu_ningun_liquido)
-			for(a = 0; a < liquido_max; a++)
-				draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, liquido_nombre[a])
-		}
-		if index = id_planta_quimica{
-			draw_rectangle(aa - 90 * zoom, bb + 40 * zoom, aa + 90 * zoom, bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom, true)
-			draw_text(aa - 80 * zoom, bb + 20 * zoom, L.show_menu_receta)
-			for(a = 0; a < array_length(planta_quimica_receta); a++){
-				draw_sprite(planta_quimica_sprite[a], 0, aa - 80 * zoom, bb + (50 + 20 * a) * zoom)
-				draw_text(aa - 70 * zoom, bb + (40 + 20 * a) * zoom, planta_quimica_receta[a])
-			}
-		}
-		if tag_edificio_fabrica_drones[index]{
-			temp_array_real = (index = id_fabrica_de_drones) ? fabrica_de_drones_array : fabrica_de_drones_grande_array
-			len = array_length(temp_array_real)
-			draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * len) * zoom, true)
-			draw_text(aa - 80 * zoom, bb + 20 * zoom, L.show_menu_unidad)
-			for(a = 0; a < len; a++)
-				draw_text(aa - 80 * zoom, bb + (40 + 20 * a) * zoom, dron_nombre[temp_array_real[a]])
-			if edificio.array_real[0] != -1
-				draw_sprite_off(spr_target, 0, edificio.array_real[0], edificio.array_real[1])
-			if mouse_check_button_pressed(mb_right){
-				mouse_clear(mb_right)
-				if edificio.array_real[0] = -1{
-					edificio.array_real[0] = xmouse
-					edificio.array_real[1] = ymouse
-				}
-				else{
-					edificio.array_real[0] = -1
-					edificio.array_real[1] = -1
-				}
-			}
-		}
-		else if index = id_deposito
-			draw_text(aa - 80 * zoom, bb + 20 * zoom, "Vaciar")
-		else if index = id_refineria_de_petroleo{
-			edificio.select = round(draw_deslizante(aa - 100 * zoom, aa + 100 * zoom, bb + 50 * zoom, edificio.select, 0, 100, 0))
-			draw_set_halign(fa_center)
-			if draw_boton(aa, bb + 60 * zoom, $"{recurso_nombre[idr_compuesto_incendiario]}: {edificio.select}%",,,, false)
-				edificio.select = 100
-			if draw_boton(aa, bb + 80 * zoom, $"{recurso_nombre[idr_plastico]}: {round(100 * (1 - edificio.select / 100) * (sqr(1 - abs(edificio.select - 50) / 100)))}%",,,, false)
-				edificio.select = 50
-			if draw_boton(aa, bb + 100 * zoom, $"{recurso_nombre[idr_piedra_sulfatada]}: {100 - edificio.select - round(100 * (1 - edificio.select / 100) * (sqr(1 - abs(edificio.select - 50) / 100)))}%",,,, false)
-				edificio.select = 0
-			draw_set_halign(fa_left)
-		}
-		else if index = id_silo_de_misiles{
-			draw_rectangle(aa - 90 * zoom, bb + 40 * zoom, aa + 90 * zoom, bb + (40 + 20 * array_length(misiles_nombre)) * zoom, true)
-			draw_text(aa - 80 * zoom, bb + 20 * zoom, L.show_menu_receta)
-			for(a = 0; a < array_length(misiles_nombre); a++)
-				draw_text(aa - 70 * zoom, bb + (40 + 20 * a) * zoom, misiles_nombre[a])
-		}
-		if mouse_x > aa - 80 * zoom and mouse_y > bb + 20 * zoom and mouse_x < aa + 80 * zoom{
-			if in(index, id_selector, id_overflow){
-				if mouse_check_button_pressed(mb_left) and mouse_y < bb + 40 * zoom{
-					mouse_clear(mb_left)
-					show_menu = false
-					set_edificio(not edificio.mode, edificio.select, edificio)
-				}
-			}
-			if in(index, id_selector, id_recurso_infinito){
-				if mouse_y < bb + (40 + TILE_WIDTH * ceil(rss_max / 5)) * zoom{
-					a = floor((mouse_x - (aa - 80 * zoom)) / (32 * zoom)) + 5 * floor((mouse_y - (bb + 40 * zoom)) / (TILE_WIDTH * zoom))
-					if a >= 0 and a < rss_max{
-						draw_text_background(mouse_x + 20, mouse_y, recurso_nombre[a])
-						cursor = cr_handpoint
-						if mouse_check_button_pressed(mb_left){
-							mouse_clear(mb_left)
-							show_menu = false
-							set_edificio(edificio.mode, a, edificio)
-						}
-					}
-				}
-			}
-			else if index = id_liquido_infinito{
-				if mouse_check_button_pressed(mb_left) and mouse_y < bb + (40 + 20 * liquido_max) * zoom{
-					mouse_clear(mb_left)
-					show_menu = false
-					a = floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))
-					set_edificio(edificio.mode, a, edificio)
-				}
-			}
-			else if index = id_planta_quimica{
-				if mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom{
-					a = clamp(floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom)), 0, array_length(planta_quimica_receta) - 1)
-					draw_text_background(mouse_x + 20, mouse_y, planta_quimica_descripcion[a])
-					cursor = cr_handpoint
-					if mouse_check_button_pressed(mb_left){
-						mouse_clear(mb_left)
-						show_menu = false
-						set_edificio(edificio.mode, a, edificio)
-					}
-				}
-			}
-			else if tag_edificio_fabrica_drones[index]{
-				temp_array_real = (index = id_fabrica_de_drones) ? fabrica_de_drones_array : fabrica_de_drones_grande_array
-				len = array_length(temp_array_real)
-				if mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * len) * zoom{
-					a = temp_array_real[floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))]
-					temp_text = $"{dron_descripcion[a]}\n"
-					for(b = array_length(dron_precio_id[a]) - 1; b >= 0; b--)
-						temp_text += $"  {recurso_nombre[dron_precio_id[a, b]]}: {dron_precio_num[a, b]}\n"
-					draw_text_background(mouse_x + 20, mouse_y, temp_text)
-					cursor = cr_handpoint
-					if mouse_check_button_pressed(mb_left){
-						mouse_clear(mb_left)
-						show_menu = false
-						set_edificio(edificio.mode, a, edificio)
-					}
-				}
-			}
-			else if index = id_deposito{
-				if edificio.flujo.liquido >= 0{
-					if edificio.flujo.liquido_forzado = 0{
-						if mouse_check_button_pressed(mb_left){
-							mouse_clear(mb_left)
-							show_menu = false
-							edificio.flujo.almacen = 0
-							edificio.flujo.liquido = -1
-						}
-					}
-					else{
-						draw_set_halign(fa_center)
-						draw_text_background(aa + 80 * zoom, bb + 80 * zoom, $"No se puede vaciar\nHay edificios que aún fuerzan {liquido_nombre[edificio.flujo.liquido]}")
-						draw_set_halign(fa_left)
-						for(a = array_length(edificio.flujo.edificios) - 1; a >= 0; a--){
-							var temp_edificio = edificio.flujo.edificios[a]
-							if not tag_edificio_tuberia[temp_edificio.index]
-								draw_edificio_borde(temp_edificio, c_red, _parpadeo)
-						}
-					}
-				}
-			}
-			else if index = id_silo_de_misiles{
-				if mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * array_length(misiles_nombre)) * zoom{
-					a = clamp(floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom)), 0, array_length(misiles_nombre) - 1)
-					draw_text_background(mouse_x + 20, mouse_y, misiles_descripcion[a])
-					cursor = cr_handpoint
-					if mouse_check_button_pressed(mb_left){
-						mouse_clear(mb_left)
-						show_menu = false
-						set_edificio(edificio.mode, a, edificio)
-					}
-				}
-			}
-		}
-		else if mouse_check_button_pressed(mb_left)
-			show_menu = false
-	}
-	if mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape){
-		show_smoke = true
-		keyboard_clear(vk_escape)
-		mouse_clear(mb_right)
-		show_menu = false
-		input_layer = 0
-	}
-}
+if show_menu
+	menu_editar_edificio()
 //Terreno bajo el mouse
 var temp_complex_mouse = xytoab(xmouse, ymouse), mx = temp_complex_mouse[0], my = temp_complex_mouse[1], outside = false, prev_change = false
 if mx < 0 or my < 0 or mx >= xsize or my >= ysize{
@@ -888,7 +276,7 @@ if keyboard_check(CONTROL_BLUEPRINT){
 		for(b = temp_minb; b < temp_maxb; b++)
 			if blueprint_grid[# a, b]{
 				temp_complex = abtoxy(a, b)
-				draw_sprite_off(spr_hexagono, 0, temp_complex[0], temp_complex[1],,,, c_blue, 0.5)
+				draw_sprite_off(spr_hexagono, 0, temp_complex[0], temp_complex[1],,,, ui_boton_azul, 0.5)
 			}
 	if mouse_check_button_released(mb_left){
 		blueprint_safe = false
@@ -1090,7 +478,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			//Modificar puertos de carga
 			if index = id_puerto_de_carga{
 				if edificio.link != null_edificio{
-					draw_set_color(c_green)
+					draw_set_color(ui_boton_verde)
 					if edificio.receptor
 						draw_arrow_off(edificio.center_x, edificio.center_y, edificio.link.center_x, edificio.link.center_y, 8)
 					else
@@ -1146,22 +534,22 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			else if index = id_procesador{
 				for(a = 1; a < array_length(edificio.procesador_link); a++){
 					var temp_edificio = edificio.procesador_link[a]
-					draw_set_color(c_green)
+					draw_set_color(ui_boton_verde)
 					draw_arrow_off(edificio.center_x, edificio.center_y, temp_edificio.center_x, temp_edificio.center_y, 8)
-					draw_set_color(c_black)
+					draw_set_color(ui_fondo)
 					draw_text_off((edificio.center_x + temp_edificio.center_x) / 2, (edificio.center_y + temp_edificio.center_y) / 2, a)
 				}
 			}
 			if info{
 				var center_x = edificio.center_x, center_y = edificio.center_y
 				//Mostrar inputs
-				draw_set_color(c_blue)
+				draw_set_color(ui_boton_azul)
 				for(a = array_length(edificio.inputs) - 1; a >= 0; a--){
 					var edificio_2 = edificio.inputs[a]
 					draw_arrow_off(edificio_2.center_x, edificio_2.center_y, center_x, center_y, 12)
 				}
 				//Mostrar outputs
-				draw_set_color(c_red)
+				draw_set_color(ui_boton_verde)
 				for(a = array_length(edificio.outputs) - 1; a >= 0; a--){
 					var edificio_2 = edificio.outputs[a]
 					draw_arrow_off(center_x, center_y, edificio_2.center_x, edificio_2.center_y, 12)
@@ -1254,13 +642,13 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 				temp_text += $"{L.almacen_combustion}: {floor(edificio.fuel / 30)} s\n"
 			//Mostrar rango de cables
 			if index = id_cable{
-				draw_set_color(c_white)
+				draw_set_color(ui_color_energia)
 				draw_circle_off(edificio.center_x, edificio.center_y, CABLE_RANGE, true)
 			}
 			//Mostrar rango de torres
 			if edificio_armas[index]{
 				var alc = edificio_alcance[index]
-				draw_set_color(c_white)
+				draw_set_color(ui_texto)
 				draw_circle_off(edificio.center_x, edificio.center_y, alc, true)
 				if index = id_mortero
 					draw_circle_off(edificio.center_x, edificio.center_y, 100, true)
@@ -1274,7 +662,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 						temp_coord = abtoxy(CHUNK_WIDTH * temp_coord[0], CHUNK_HEIGHT * temp_coord[1])
 						draw_rectangle_off(temp_coord[0], temp_coord[1], temp_coord_2[0], temp_coord_2[1], false)
 					}
-					draw_set_color(c_red)
+					draw_set_color(ui_fondo)
 					var temp_coord = abtoxy(CHUNK_WIDTH * edificio.chunk_x, CHUNK_HEIGHT * edificio.chunk_y)
 					draw_rectangle_off(temp_coord[0], temp_coord[1], temp_coord[0] + CHUNK_WIDTH * 48, temp_coord[1] + CHUNK_HEIGHT * 14, false)
 					draw_set_alpha(1)
@@ -1319,7 +707,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 						temp_text += $"  {L.game_limite_dron} ({array_length(drones_propios)}/{8 + 2 * edificios_jugador_index[edificio.jugador, id_nucleo][0].modulo})\n"
 				}
 				else if index = id_planta_de_reciclaje{
-					draw_set_color(c_lime)
+					draw_set_color(ui_color_reciclaje)
 					draw_circle_off(edificio.center_x, edificio.center_y, PLANTA_RECICLAJE_RANGE, true)
 					if edificio.select >= 0{
 						if edificio.mode
@@ -1328,12 +716,12 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 							temp_text += $"{L.almacen_consumiendo} {dron_nombre[edificio.select]}: {floor(100 * edificio.proceso / dron_time[edificio.select])}%\n"
 					}
 				}
-				draw_set_color(c_blue)
+				draw_set_color(ui_boton_azul)
 				for(a = array_length(edificio.inputs_carga) - 1; a >= 0; a--){
 					var temp_edificio = edificio.inputs_carga[a]
 					draw_arrow_off(temp_edificio.center_x, temp_edificio.center_y, edificio.center_x, edificio.center_y, 10)
 				}
-				draw_set_color(c_red)
+				draw_set_color(ui_boton_verde)
 				for(a = array_length(edificio.outputs_carga) - 1; a >= 0; a--){
 					var temp_edificio = edificio.outputs_carga[a]
 					draw_arrow_off(edificio.center_x, edificio.center_y, temp_edificio.center_x, temp_edificio.center_y, 10)
@@ -1342,7 +730,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			else if index = id_mensaje
 				temp_text += $"{edificio.variables[0]}\n"
 			else if index = id_tuberia_subterranea and edificio.link != null_edificio{
-				draw_set_color(c_blue)
+				draw_set_color(ui_color_flujo)
 				draw_line_off(edificio.center_x, edificio.center_y, edificio.link.center_x, edificio.link.center_y)
 			}
 			else if index = id_planta_quimica{
@@ -1419,7 +807,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 						temp_text += $"  {L.red_bateria}: {round(red.bateria)}/{round(red.bateria_max)}\n"
 					if info
 						temp_text += red_text(red)
-					draw_set_color(c_red)
+					draw_set_color(ui_color_energia)
 					for(a = array_length(edificio.energia_link) - 1; a >= 0; a--){
 						var edificio_2 = edificio.energia_link[a]
 						draw_line_off(center_x, center_y, edificio_2.center_x, edificio_2.center_y)
@@ -1506,9 +894,9 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 	}
 	if DEVISE and mouse_check_button(mb_left) and clicked and build_index = -1 and not keyboard_check(CONTROL_REPARAR){
 		draw_set_alpha(0.5)
-		draw_set_color(c_black)
+		draw_set_color(ui_fondo)
 		draw_rectangle_off(mx_clic, my_clic, xmouse, ymouse, false)
-		draw_set_color(c_white)
+		draw_set_color(EQUIPO_COLOR[jugador])
 		var minx = min(mx_clic, xmouse), miny = min(my_clic, ymouse), maxx = max(mx_clic, xmouse), maxy = max(my_clic, ymouse)
 		for(a = array_length(drones_propios) - 1; a >= 0; a--){
 			var dron = drones_propios[a]
@@ -1556,7 +944,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 	}
 	if min_dis < 30{
 		dron = min_dron
-		draw_set_color(c_white)
+		draw_set_color(EQUIPO_COLOR[jugador])
 		draw_circle_off(dron.x, dron.y, 20, true)
 		temp_text += $"{dron_nombre[dron.index]}\n"
 		temp_text += $"{dron.jugador != jugador ? L.enemigo : "ALIADO"}\n"
@@ -1582,7 +970,7 @@ if array_length(selected_drones) > 0{
 	var right_clicked = mouse_check_button_pressed(mb_right)
 	for(a = array_length(selected_drones) - 1; a >= 0; a--){
 		var dron = selected_drones[a]
-		draw_set_color(c_white)
+		draw_set_color(EQUIPO_COLOR[jugador])
 		draw_circle_off(dron.x, dron.y, 30, true)
 		if dron.modo = 1 and not dron.index = idd_minero
 			draw_sprite_off(spr_target, 0, dron.move_x, dron.move_y)
@@ -1615,9 +1003,9 @@ if puerto_carga_bool or (procesador_select != null_edificio) or (misil_set_targe
 		temp_text = L.game_vincular_procesador
 		for(a = 1; a < array_length(procesador_select.procesador_link); a++){
 			var temp_edificio = procesador_select.procesador_link[a]
-			draw_set_color(c_green)
+			draw_set_color(ui_boton_verde)
 			draw_arrow_off(procesador_select.center_x, procesador_select.center_y, temp_edificio.center_x, temp_edificio.center_y, 8)
-			draw_set_color(c_black)
+			draw_set_color(ui_fondo)
 			draw_text_off((procesador_select.center_x + temp_edificio.center_x) / 2, (procesador_select.center_y + temp_edificio.center_y) / 2, a)
 		}
 	}
@@ -1670,11 +1058,11 @@ if sonido
 		if not DEVISE and draw_sprite_boton(spr_construir, 1, room_width - 80, room_height - 80, 64, 56)
 			build_menu = 0
 		b = 2 * pi / array_length(categoria_nombre_disponible)
-		draw_set_color(c_white)
+		draw_set_color(ui_texto)
 		draw_circle(menu_x, menu_y, _size, true)
 		if mision_actual >= 0 and in(mision.objetivo, idm_construir, idm_tener_construido){
 			flag = false
-			draw_set_color(c_blue)
+			draw_set_color(ui_boton_azul)
 			draw_set_alpha(0.5)
 			for(a = 0; a < array_length(categoria_index_disponible); a++){
 				for(i = 0; i < array_length(categoria_edificios[categoria_index_disponible[a]]); i++)
@@ -1686,7 +1074,7 @@ if sonido
 				if flag
 					break
 			}
-			draw_set_color(c_white)
+			draw_set_color(ui_texto)
 			draw_set_alpha(1)
 		}
 		draw_circle(menu_x, menu_y, _size / 10, false)
@@ -1721,7 +1109,7 @@ if sonido
 		if not DEVISE and draw_sprite_boton(spr_construir, 1, room_width - 80, room_height - 80, 64, 56)
 			build_menu = 1
 		b = 2 * pi / array_length(menu_array)
-		draw_set_color(c_white)
+		draw_set_color(ui_texto)
 		draw_circle(menu_x, menu_y, _size, true)
 		for(a = 0; a < array_length(menu_array); a++){
 			var angle = a * b, _comprable = true, index = menu_array[a]
@@ -1732,10 +1120,10 @@ if sonido
 					_comprable = is_comprable(edificio_precio_id[index], edificio_precio_num[index])
 				if not _comprable{
 					draw_set_alpha(0.5)
-					draw_set_color(c_red)
+					draw_set_color(ui_boton_rojo)
 					draw_arco(menu_x, menu_y, _size, angle, angle + b)
 					draw_set_alpha(1)
-					draw_set_color(c_white)
+					draw_set_color(ui_texto)
 				}
 			}
 			draw_sprite_stretched(edificio_sprite[index], 0, menu_x - 15 + _size * cos(angle + b / 2), menu_y - 15 - _size * sin(angle + b / 2), _size_sqrx, _size_sqry)
@@ -2013,7 +1401,7 @@ if build_index >= 0 and win = 0{
 					}
 				if not _comprable
 					temp_text = $"{L.construir_recursos_insuficientes}\n{temp_text}"
-				draw_set_color(c_red)
+				draw_set_color(ui_boton_rojo)
 				var flag_3 = false
 				for(a = array_length(drones) - 1; a >= 0; a--){
 					var dron = drones[a]
@@ -2026,9 +1414,9 @@ if build_index >= 0 and win = 0{
 						}
 					}
 				}
-				draw_set_color(c_white)
+				draw_set_color(ui_texto)
 			}
-			draw_set_color(c_red)
+			draw_set_color(ui_boton_rojo)
 			temp_complex = abtoxy(spawn_x, spawn_y)
 			var aaa = temp_complex[0], bbb = temp_complex[1]
 			draw_circle_off(aaa, bbb, 250, true)
@@ -2380,7 +1768,7 @@ if build_index >= 0 and win = 0{
 							bb = temp_complex_2[1]
 							var temp_complex_3 = abtoxy(temp_complex[0], temp_complex[1])
 							if not in(build_index, id_tuberia, id_muro){
-								draw_set_color(c_black)
+								draw_set_color(ui_fondo)
 								draw_arrow_off(aa, bb, temp_complex_3[0], temp_complex_3[1], 8)
 							}
 							if in(build_index, id_enrutador, id_selector, id_overflow){
@@ -2498,6 +1886,7 @@ if build_index >= 0 and win = 0{
 						clicked = true
 					}
 					//Dibujar nodos cercanos
+					draw_set_color(ui_color_energia)
 					temp_complex_2 = abtoxy(temp_mx, temp_my)
 					aa = temp_complex_2[0]
 					bb = temp_complex_2[1]
@@ -2618,18 +2007,19 @@ if build_index >= 0 and win = 0{
 						draw_edificio(temp_complex[0], temp_complex[1], build_index, build_dir, 0.5)
 						//Torres de alta tensión
 						if build_index = id_torre_de_alta_tension{
+							draw_set_color(ui_color_energia)
 							draw_circle_off(temp_complex[0], temp_complex[1], TORRE_TENSION_RANGE, true)
 							for(c = array_length(edificios_index[id_torre_de_alta_tension]) - 1; c >= 0; c--){
 								var temp_edificio = edificios_index[id_torre_de_alta_tension][c]
 								if temp_edificio.jugador = jugador and point_distance(temp_edificio.center_x, temp_edificio.center_y, temp_complex[0], temp_complex[1]) < TORRE_TENSION_RANGE{
 									draw_line_off(temp_edificio.center_x, temp_edificio.center_y, temp_complex[0],temp_complex[1])
-									draw_edificio_borde(temp_edificio, c_blue, _parpadeo)
+									draw_edificio_borde(temp_edificio, ui_color_energia, _parpadeo)
 								}
 							}
 						}
 						//Torre reparadora
 						else if build_index = id_torre_reparadora{
-							draw_set_color(c_lime)
+							draw_set_color(ui_color_reparadora)
 							draw_circle_off(temp_complex[0], temp_complex[1], edificio_alcance[build_index], true)
 							if _change{
 								temp_complex = abtoxy(mx, my)
@@ -2651,12 +2041,13 @@ if build_index >= 0 and win = 0{
 							}
 							for(a = array_length(build_array_edificios) - 1; a >= 0; a--){
 								var temp_edificio = build_array_edificios[a]
-								draw_edificio_borde(temp_edificio, c_lime, _parpadeo)
+								draw_edificio_borde(temp_edificio, ui_color_reparadora, _parpadeo)
 							}
 							
 						}
 						//Vista previa Alcance de torres
 						else if edificio_armas[build_index]{
+							draw_set_color(ui_texto)
 							draw_circle_off(temp_complex[0], temp_complex[1], edificio_alcance[build_index], true)
 							if build_index = id_mortero
 								draw_circle_off(temp_complex[0], temp_complex[1], 100, true)
@@ -2681,9 +2072,9 @@ if build_index >= 0 and win = 0{
 								}
 							}
 							if flag{
-								draw_set_color(c_blue)
+								draw_set_color(ui_color_flujo)
 								draw_line_off(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y)
-								draw_edificio_borde(temp_edificio, c_blue, _parpadeo)
+								draw_edificio_borde(temp_edificio, ui_color_flujo, _parpadeo)
 							}
 						}
 						//Ensambladora
@@ -2698,7 +2089,7 @@ if build_index >= 0 and win = 0{
 									if edificio_bool[# aa, bb]{
 										var temp_edificio = edificio_id[# aa, bb]
 										if temp_edificio.index = id_ensambladora and not temp_edificio.mode and temp_edificio.jugador = jugador{
-											draw_edificio_borde(temp_edificio, c_blue, _parpadeo)
+											draw_edificio_borde(temp_edificio, ui_boton_verde, _parpadeo)
 											temp_text += "Conectando\n"
 											break
 										}
@@ -2734,24 +2125,24 @@ if build_index >= 0 and win = 0{
 										}
 								}
 							}
-							draw_set_color(c_red)
+							draw_set_color(ui_boton_azul)
 							for(a = array_length(build_array_edificios_input) - 1; a >= 0; a--){
 								var temp_edificio = build_array_edificios_input[a]
 								draw_arrow_off(temp_edificio.center_x, temp_edificio.center_y, temp_complex[0], temp_complex[1], 10)
-								draw_edificio_borde(temp_edificio, c_red, _parpadeo)
+								draw_edificio_borde(temp_edificio, ui_boton_azul, _parpadeo)
 							}
-							draw_set_color(c_blue)
+							draw_set_color(ui_boton_verde)
 							for(a = array_length(build_array_edificios_output) - 1; a >= 0; a--){
 								var temp_edificio = build_array_edificios_output[a]
 								draw_arrow_off(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y, 10)
-								draw_edificio_borde(temp_edificio, c_blue, _parpadeo)
+								draw_edificio_borde(temp_edificio, ui_boton_verde, _parpadeo)
 							}
 							if build_index = id_planta_de_reciclaje{
-								draw_set_color(c_lime)
+								draw_set_color(ui_color_reciclaje)
 								draw_circle_off(temp_complex[0], temp_complex[1], PLANTA_RECICLAJE_RANGE, true)
 								for(a = array_length(build_array_edificios) - 1; a >= 0; a--){
 									var temp_edificio = build_array_edificios[a]
-									draw_edificio_borde(temp_edificio, c_lime, _parpadeo)
+									draw_edificio_borde(temp_edificio, ui_color_reciclaje, _parpadeo)
 								}
 							}
 						}
@@ -3140,10 +2531,10 @@ if menu = MENU_JUEGO{
 		control_camara()
 	//Victoria / Derrota
 	if win > 0{
-		draw_set_color(c_black)
+		draw_set_color(ui_fondo)
 		draw_set_alpha(min(++win_step / 100, 0.5))
 		draw_rectangle(0, 0, room_width, room_height, false)
-		draw_set_color(c_white)
+		draw_set_color(ui_texto)
 		if win_step > 25{
 			draw_set_alpha(min((win_step - 25) / 100, 1))
 			draw_set_font(font_titulo)
@@ -3221,16 +2612,16 @@ if menu = MENU_JUEGO{
 					temp_cons += energia_consumida[a]
 					temp_perd += energia_perdida[a]
 				}
-				draw_set_color(#FFF899)
+				draw_set_color(ui_color_energia)
 				ypos = draw_text_ypos(xpos, ypos, $"{L.energia_producida}: {num_format(temp_prod)}")
-				draw_set_color(c_black)
+				draw_set_color(ui_fondo)
 				ypos = draw_text_ypos(xpos, ypos, $"{L.energia_consumida}: {num_format(temp_cons)}")
 				if (temp_prod + temp_perd) > 0{
-					draw_set_color(c_red)
+					draw_set_color(ui_boton_rojo)
 					ypos = draw_text_ypos(xpos, ypos, $"{L.energia_perdida}: {num_format(temp_perd)} ({100 - floor(100 * temp_prod / (temp_prod + temp_perd))}%)")
 				}
-				draw_set_color(c_white)
-				draw_graph(xpos - 200, ypos, 400, 100, [energia_producida, energia_consumida, energia_perdida], [ #FFF899, c_black, c_red], true)
+				draw_set_color(ui_texto)
+				draw_graph(xpos - 200, ypos, 400, 100, [energia_producida, energia_consumida, energia_perdida], [ ui_color_energia, ui_fondo, ui_boton_rojo], true)
 			}
 			//Info militar
 			else if win < 40{
@@ -3331,18 +2722,18 @@ if sonido{
 			audio_resume_sound(sonido_id[a])
 		audio_sound_gain(sonido_id[a], volumen[a], 0)
 	}
-	if random(3600) < 1{
-		flag = true
-		for(a = array_length(MUSICA) - 1; a >= 0; a--)
-			if audio_is_playing(MUSICA[a]){
-				flag = false
-				break
-			}
-		if flag
-			audio_play_sound(MUSICA[irandom(array_length(MUSICA) - 1)], 1, false)
-	}
 	if clic_sound
 		audio_play_sound(snd_click, 1, false, 0.3)
+}
+if musica and random(3600) < 1{
+	flag = true
+	for(a = array_length(MUSICA) - 1; a >= 0; a--)
+		if audio_is_playing(MUSICA[a]){
+			flag = false
+			break
+		}
+	if flag
+		audio_play_sound(MUSICA[irandom(array_length(MUSICA) - 1)], 1, false)
 }
 if array_length(chat) > 0{
 	var max_width = 0, pos = 0
@@ -3369,45 +2760,37 @@ if array_length(chat) > 0{
 		if keyboard_check_pressed(vk_escape)
 			chat_input = false
 	}
-	draw_set_color(c_black)
+	draw_set_color(ui_fondo)
 	draw_set_alpha(0.5)
-	draw_rectangle(0, room_height, max_width, room_height - 20 * (array_length(chat) - pos) - 20, false)
-	draw_set_color(c_white)
+	draw_rectangle(0, room_height, max_width, room_height - ui_height * (array_length(chat) - pos) - ui_height, false)
+	draw_set_color(ui_texto)
 	draw_set_alpha(1)
 	for(a = pos; a < array_length(chat); a++)
-		draw_text(0, room_height + 20 * (a - array_length(chat)) - 20, string(chat[a]))
+		draw_text(0, room_height + ui_height * (a - array_length(chat)) - ui_height, string(chat[a]))
 	draw_boton_text_counter = 0
-	chat_text = draw_boton_text(0, room_height - 20, chat_text, false,, false)
+	chat_text = draw_boton_text(0, room_height - ui_height, chat_text, false,, false)
 }
 if keyboard_check(CONTROL_TAB) and online{
-	draw_set_color(c_black)
+	draw_set_color(ui_fondo)
 	draw_set_halign(fa_center)
 	draw_set_alpha(0.5)
-	var max_width = 0, max_height = 20
+	var max_width = 0, max_height = ui_height
 	for(a = 0; a < MAX_JUGADORES; a++)
 		if server_jugadores[a] != -1{
 			max_width = max(max_width, string_width(server_jugadores_nombre[a]))
-			max_height += 40
+			max_height += 2 * ui_height
 		}
 	max_width += 30
 	draw_rectangle((room_width - max_width) / 2, 150, (room_width + max_width) / 2, 150 + max_height, false)
-	draw_set_color(c_white)
+	draw_set_color(ui_texto)
 	draw_set_alpha(1)
 	ypos = 160
-	if servidor{
-		for(a = 0; a < MAX_JUGADORES; a++)
-			if server_jugadores[a] != -1{
-				if draw_boton(room_width / 2, ypos, server_jugadores_nombre[a],,,, true) and a != 0
-					server_jugador_expulsar(a)
-				ypos += text_y * 1.5
-			}
-	}
-	else
-		for(a = 0; a < MAX_JUGADORES; a++)
-			if server_jugadores[a] != -1{
-				draw_boton(room_width / 2, ypos, server_jugadores_nombre[a],,,, true)
-				ypos += text_y * 1.5
-			}
+	for(a = 0; a < MAX_JUGADORES; a++)
+		if server_jugadores[a] != -1{
+			if draw_boton(room_width / 2, ypos, server_jugadores_nombre[a],,,, true) and a != 0 and servidor
+				server_jugador_expulsar(a)
+			ypos += text_y * 1.5
+		}
 	draw_set_halign(fa_left)
 }
 draw_sprite(spr_vineta, 0, 0, 0)

@@ -14,8 +14,10 @@ function handle_welcome(buffer){
 			nucleos[jugador] = edificio_id[# a, b]
 			for(a = 0; a < rss_max; a++)
 				array_set(jugador_recursos[jugador], a, carga_inicial[a])
-			camx = clamp(nucleos[jugador].a * 48 - room_width / 2, 0, xsize * 48 * zoom - room_width)
-			camy = clamp(nucleos[jugador].b * 14 - room_height / 2, 0, ysize * 14 * zoom - room_height)
+			if array_length(edificios_jugador_index[jugador, id_nucleo]) > 0{
+				camx = clamp(edificios_jugador_index[jugador, id_nucleo][0].a * 48 - room_width / 2, 0, xsize * 48 * zoom - room_width)
+				camy = clamp(edificios_jugador_index[jugador, id_nucleo][0].b * 14 - room_height / 2, 0, ysize * 14 * zoom - room_height)
+			}
 		}
 		for(var a = 0; a < MAX_JUGADORES; a++)
 			server_jugadores_nombre[a] = string(buffer_read(buffer, buffer_string))

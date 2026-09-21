@@ -1,5 +1,5 @@
 function draw_text_rich(xx, yy, width = room_width - xx, arguments = []){
-	//complex_text(0, 0, 200, ["Estes es un", #ff0000, " ejemplo", {}, function(){show_deubg_message("success")}, "\nDe uso.", spr_happy])
+	//draw_text_rich(0, 0, 200, ["Estes es un", #ff0000, " ejemplo", {}, function(){show_deubg_message("success")}, "\nDe uso.", spr_happy])
 	var xpos = xx, ypos = yy, a, argumento, param, funcion, arg_string, parrafos, primera_linea, trozos, xxx, spos, flag, i, segunda_linea, ultima_linea, arg_sprite, arg_real
 	for(a = 0; a < array_length(arguments); a++){
 		argumento = arguments[a]

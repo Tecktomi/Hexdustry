@@ -2,6 +2,7 @@ function menu_editor(){
 	with control{
 		dibujar_fondo(1)
 		dibujar_edificios()
+		draw_sprite(spr_vineta, 0, 0, 0)
 		var a, b, chunk, len, c, edificio, aa, bb, _jugador
 		for(a = min_chunka; a < max_chunka; a++)
 			for(b = min_chunkb; b < max_chunkb; b++){
@@ -17,7 +18,7 @@ function menu_editor(){
 				}
 			}
 		var xmouse = (mouse_x + camx) / zoom, ymouse = (mouse_y + camy) / zoom
-		var temp_complex_mouse = xytoab(xmouse, ymouse), mx = temp_complex_mouse[0], my = temp_complex_mouse[1], outside = false
+		var temp_complex_mouse = xytoab(xmouse, ymouse), mx = temp_complex_mouse[0], my = temp_complex_mouse[1], outside = false, temp_complex
 		if mx < 0 or my < 0 or mx >= xsize or my >= ysize{
 			outside = true
 			mx = clamp(mx, 0, xsize - 1)
@@ -26,10 +27,11 @@ function menu_editor(){
 		//Editor de objetivos
 		if editor_menu = 1 and not mision_choosing_coord{
 			draw_boton_text_counter = 0
-			draw_set_color(c_ltgray)
+			draw_set_color(ui_fondo)
 			draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
-			draw_set_color(c_black)
+			draw_set_color(ui_borde)
 			draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
+			draw_set_color(ui_texto)
 			var xpos = 110
 			if draw_boton(110, 110, L.volver, ui_rojo) or keyboard_check_pressed(vk_escape){
 				keyboard_clear(vk_escape)
@@ -56,10 +58,11 @@ function menu_editor(){
 				if save_file != ""
 					save_escenario_buffer(save_file + ".txt")
 			}
-			draw_set_color(c_ltgray)
+			draw_set_color(ui_fondo)
 			draw_rectangle(room_width / 2, 110, room_width - 110, room_height - 110, false)
-			draw_set_color(c_black)
+			draw_set_color(ui_borde)
 			draw_rectangle(room_width / 2, 110, room_width - 110, room_height - 110, true)
+			draw_set_color(ui_texto)
 			//Editar Objetivo
 			if mision_actual >= 0{
 				var i = mision_actual, ypos = 120
@@ -231,13 +234,13 @@ function menu_editor(){
 				for(a = 0; a < edificio_max; a++)
 					if tag_edificio_construible[a]{
 						if not mision_edificios[a]
-							draw_set_color(c_red)
+							draw_set_color(ui_boton_rojo)
 						else if edificio_tecnologia[jugador, a]
-							draw_set_color(c_green)
+							draw_set_color(ui_boton_verde)
 						else
-							draw_set_color(c_yellow)
+							draw_set_color(ui_color_lava)
 						draw_circle(xpos, ypos, 22, false)
-						draw_set_color(c_black)
+						draw_set_color(ui_fondo)
 						draw_circle(xpos, ypos, 22, true)
 						if draw_sprite_boton(edificio_sprite[a],, xpos - 18, ypos - 18, 36, 36){
 							if not mision_edificios[a]{
@@ -275,10 +278,11 @@ function menu_editor(){
 		}
 		//Editar Mapa
 		else if editor_menu = 2{
-			draw_set_color(c_ltgray)
+			draw_set_color(ui_fondo)
 			draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
-			draw_set_color(c_black)
+			draw_set_color(ui_borde)
 			draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
+			draw_set_color(ui_texto)
 			if draw_boton(110, 110, L.volver, ui_rojo) or keyboard_check_pressed(vk_escape){
 				keyboard_clear(vk_escape)
 				mision_actual = -1
@@ -286,18 +290,14 @@ function menu_editor(){
 				editor_menu = 0
 			}
 			if draw_boton(110, 180, L.editor_generar_terreno, ui_azul){
-				generar_mapa(editor_seed, editor_fondo, editor_instrucciones)
+				generar_mapa(editor_seed, editor_instrucciones)
 				mapa_editado = true
 			}
-			draw_set_color(c_dkgray)
 			var xpos = 120, ypos = 220
 			draw_boton_text_counter = 0
 			xpos = draw_text_xpos(xpos, ypos, $"{L.editor_seed}: ")
 			editor_seed = draw_boton_text(xpos, ypos, editor_seed)
 			xpos = 120
-			ypos += text_y
-			xpos = draw_text_xpos(xpos, ypos, $"{L.editor_terreno_base}: ")
-			editor_fondo = draw_boton_text_list(xpos, ypos, editor_fondo, terreno_nombre,, 10)
 			ypos += text_y
 			var ore_names = [], size = array_length(editor_instrucciones)
 			for(var j = 0; j < ore_max; j++)
@@ -306,9 +306,10 @@ function menu_editor(){
 			xpos = 120
 			ypos += 20 * min(18, size)
 			xpos = draw_text_xpos(xpos, ypos, $"{L.editor_add} ")
-			a = draw_boton_text_list(xpos, ypos, 0, ["...", L.editor_manchas, L.editor_borde, L.editor_ruido, L.editor_menas, "PERLIN", "Eliminar islas", "Contorno", "Autómata"])
+			a = draw_boton_text_list(xpos, ypos, 0, ["...", "Clear", L.editor_manchas, L.editor_borde, L.editor_ruido, L.editor_menas, "PERLIN", "Eliminar islas", "Contorno", "Autómata"])
 			if a > 0{
 				var temp_array_array = [
+					[a - 1, idt_pasto, 0, 0],
 					[a - 1, idt_piedra, 50, 5],
 					[a - 1, idt_agua_profunda, idt_piedra, idt_agua],
 					[a - 1, idt_piedra, idt_piedra_cuprica, 3],
@@ -320,37 +321,37 @@ function menu_editor(){
 				array_push(editor_instrucciones, temp_array_array[a - 1])
 				a = 0
 			}
-			draw_set_color(c_black)
+			draw_set_color(ui_texto)
 			xpos = room_width / 2 + 20
 			ypos = 120
 			draw_text(xpos, ypos, L.editor_size_map)
 			xpos += 20
 			ypos += text_y
 			var prev_xsize = xsize
-			xsize = round(draw_deslizante(xpos, xpos + 100, ypos + 10, xsize, TILE_WIDTH, 144, 0))
+			xsize = round(draw_deslizante(xpos, xpos + 100, ypos + 10, xsize, TILE_WIDTH, 256, 0))
 			chunk_xsize = ceil(xsize / CHUNK_WIDTH)
 			draw_text(xpos + 100, ypos, $"{xsize}")
-			if xsize > prev_xsize
+			if xsize > prev_xsize and mouse_check_button_released(mb_left)
 				resize_grid(prev_xsize, 0)
 			ypos += text_y
 			var prev_ysize = ysize
-			ysize = round(draw_deslizante(xpos, xpos + 100, ypos + 10, ysize, 60, 288, 1))
+			ysize = round(draw_deslizante(xpos, xpos + 100, ypos + 10, ysize, 60, 512, 1))
 			chunk_ysize = ceil(ysize / CHUNK_HEIGHT)
 			draw_text(xpos + 100, ypos, $"{ysize}")
-			if ysize > prev_ysize
+			if ysize > prev_ysize and mouse_check_button_released(mb_left)
 				resize_grid(0, prev_ysize)
 			draw_boton_text_list_end()
 			update_cursor()
 			exit
 		}
-		//click en mapa
+		//Click en mapa
 		if mouse_x > 200 and not outside{
 			if mision_choosing_coord{
 				draw_set_halign(fa_center)
 				draw_text((room_width + 200) / 2, 100, $"{L.editor_clic} {mision_choosing_coord_tipo = 0 ? L.editor_add_text : L.editor_mover_camara}")
 				draw_set_halign(fa_left)
 				if mouse_check_button_pressed(mb_left){
-					var temp_complex = abtoxy(mx, my)
+					temp_complex = abtoxy(mx, my)
 					if mision_choosing_coord_tipo = 0
 						array_push(misiones[mision_choosing_coord_i].texto, {x : temp_complex[0], y : temp_complex[1], texto : ""})
 					else if mision_choosing_coord_tipo = 1{
@@ -414,7 +415,7 @@ function menu_editor(){
 						}
 					}
 				if mx = last_mx and my = last_my{
-					var temp_sprite = terreno_sprite[build_index], temp_complex, temp_complex_2
+					var temp_sprite = terreno_sprite[build_index], temp_complex_2
 					len = array_length(build_list)
 					for(var i = 0; i < len;){
 						a = build_list[i++]
@@ -431,8 +432,8 @@ function menu_editor(){
 			else{
 				//Spawn point
 				if editor_herramienta = 1{
-					draw_set_color(c_red)
-					var temp_complex = abtoxy(mx, my)
+					draw_set_color(ui_boton_rojo)
+					temp_complex = abtoxy(mx, my)
 					draw_circle_off(temp_complex[0], temp_complex[1], 200, true)
 					if mouse_check_button_pressed(mb_left){
 						mouse_clear(mb_left)
@@ -443,13 +444,13 @@ function menu_editor(){
 				}
 				//Base
 				else if editor_herramienta = 2{
-					var temp_complex = abtoxy(mx, my)
+					temp_complex = abtoxy(mx, my)
 					draw_sprite_off(spr_base, 0, temp_complex[0], temp_complex[1],,,,, 0.5)
-					if mouse_check_button_pressed(mb_left){
+					if mouse_check_button_pressed(mb_left) and check_colision(mx, my, id_nucleo, 0){
 						mouse_clear(mb_left)
-						var temp_nucleo = add_edificio(0, 0, mx, my)
-						delete_edificio(nucleos[jugador], false)
-						nucleos[jugador] = temp_nucleo
+						var temp_nucleo = add_edificio(id_nucleo, 0, mx, my, 2)
+						delete_edificio(nucleos[2], false)
+						nucleos[2] = temp_nucleo
 						editor_herramienta = 0
 					}
 				}
@@ -459,7 +460,7 @@ function menu_editor(){
 						build_size++
 					if mouse_wheel_down() and build_size > 1
 						build_size--
-					var temp_list = get_size(mx, my, 0, build_size), temp_complex, offset
+					var temp_list = get_size(mx, my, 0, build_size), offset
 					len = array_length(temp_list)
 					for(var i = 0; i < len;){
 						a = temp_list[i++]
@@ -526,16 +527,17 @@ function menu_editor(){
 			else if editor_herramienta > 0
 				editor_herramienta = 0
 		}
-		draw_set_color(c_red)
-		var temp_complex = abtoxy(spawn_x, spawn_y)
+		draw_set_color(ui_boton_rojo)
+		temp_complex = abtoxy(spawn_x, spawn_y)
 		draw_circle_off(temp_complex[0], temp_complex[1], 200, true)
-		draw_set_color(c_ltgray)
+		draw_set_color(ui_fondo)
 		draw_rectangle(0, 0, 200, room_height, false)
-		draw_set_color(c_black)
+		draw_set_color(ui_texto)
 		var size = terreno_max + ore_max + 2, ypos = 10
 		sprite_boton_text = ""
 		if size > 40
 			deslizante[0] = 5 * floor(draw_deslizante_vertical(5, 10, 290, deslizante[0], 0, size - 40, 0) / 5)
+		deslizante[0] = clamp(deslizante[0], 0, max(0, size - 40))
 		for(a = deslizante[0]; a < min(deslizante[0] + 40, size); a++){
 			b = 0
 			if a < terreno_max and draw_sprite_boton(terreno_sprite[a],, 10 + (a mod 5) * 36, ypos,,,, hover_sprite_boton_text, {a : terreno_nombre[a]}){
@@ -610,9 +612,9 @@ function menu_editor(){
 			keyboard_clear(ord("A"))
 		}
 		if get_file > 0{
-			draw_set_color(c_dkgray)
+			draw_set_color(ui_fondo)
 			draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
-			draw_set_color(c_white)
+			draw_set_color(ui_texto)
 			//Cargar
 			if get_file = 1{
 				draw_set_valign(fa_bottom)

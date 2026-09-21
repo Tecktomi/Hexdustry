@@ -1,5 +1,6 @@
 function scroll(xpos, ypos, variable, cantidad_elementos, altura, funcion = null_function_scroll, param = {}, _deslizante = 0){
 	with control{
+		deslizante[_deslizante] = clamp(deslizante[_deslizante], 0, max(0, variable - cantidad_elementos))
 		if DEVISE{
 			if variable > cantidad_elementos
 				deslizante[_deslizante] = floor(draw_deslizante_vertical(xpos, ypos, ypos + cantidad_elementos * altura, deslizante[_deslizante], 0, variable - cantidad_elementos, 0))

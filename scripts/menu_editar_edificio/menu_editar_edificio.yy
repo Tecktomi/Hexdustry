@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"menu_principal",
+  "%Name":"menu_editar_edificio",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"menu_principal",
+  "name":"menu_editar_edificio",
   "parent":{
     "name":"Menus",
     "path":"folders/SCRIPTS/Menus.yy",

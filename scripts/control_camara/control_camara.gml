@@ -5,7 +5,7 @@ function control_camara(min_camx = 0){
 			var cam_vel = 8
 			if keyboard_check(vk_lcontrol) and mouse_wheel_up() and zooming < 4
 				zooming *= power(2, 0.2)
-			if keyboard_check(vk_lcontrol) and mouse_wheel_down() and zooming > 1
+			if keyboard_check(vk_lcontrol) and mouse_wheel_down() and zooming > 0.5
 				zooming *= power(2, -0.2)
 			if zoom != zooming{
 				var k = zoom < zooming ? power(2, 0.05) : power(2, -0.05)
@@ -35,7 +35,7 @@ function control_camara(min_camx = 0){
 				if android_hovering{
 					camx -= xsize * 48 * zoom / 2
 					camy -= ysize * 14 * zoom / 2
-					zoom = clamp(android_zoom + 0.01 * (point_distance(device_mouse_x(0), device_mouse_y(0), device_mouse_x(1), device_mouse_y(1)) - android_mouse_dis), 1, 4)
+					zoom = clamp(android_zoom + 0.01 * (point_distance(device_mouse_x(0), device_mouse_y(0), device_mouse_x(1), device_mouse_y(1)) - android_mouse_dis), 0.5, 4)
 					camx = clamp(camx + xsize * 48 * zoom / 2, min_camx, xsize * 48 * zoom - room_width)
 					camy = clamp(camy + ysize * 14 * zoom / 2, min_camx, ysize * 14 * zoom - room_height)
 				}

@@ -8,6 +8,7 @@ function perlin(xsize, ysize, octava = 3, xw = 2, yh = 2){
 	if octava > 0{
 		var temp_octava = perlin(chunkx, chunky, octava - 1, xw, yh)
 		ds_grid_add_grid_region(mask, temp_octava, 0, 0, chunkx, chunky, 0, 0)
+		ds_grid_destroy(temp_octava)
 	}
 	chunkx -= 1
 	chunky -= 1

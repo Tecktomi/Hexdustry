@@ -55,13 +55,13 @@ function draw_enciclopedia(_tecnologia = true, _this_input_layer = 0){
 				for(b = 0; b < width; b++){
 					c = tecnologia_nivel_edificios[a, b]
 					if edificio_tecnologia[jugador, c]
-						draw_set_color(c_green)
+						draw_set_color(ui_boton_verde)
 					else if edificio_tecnologia_desbloqueable[jugador, c]
-						draw_set_color(c_yellow)
+						draw_set_color(ui_color_lava)
 					else
-						draw_set_color(c_red)
+						draw_set_color(ui_boton_rojo)
 					draw_circle(xpos + 60 * b - 30 * (width - 1), ypos, 25, false)
-					draw_set_color(c_black)
+					draw_set_color(ui_fondo)
 					draw_circle(xpos + 60 * b - 30 * (width - 1), ypos, 25, true)
 					if draw_sprite_boton(edificio_sprite[c],, xpos - 20 + 60 * b - 30 * (width - 1), ypos - 20, 40, 40,, hover_sprite_boton_text, {a : edificio_nombre[c]}){
 						enciclopedia_link(4, c)

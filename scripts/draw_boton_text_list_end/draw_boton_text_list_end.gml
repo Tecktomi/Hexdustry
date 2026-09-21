@@ -12,9 +12,9 @@ function draw_boton_text_list_end(){
 			for(a = 0; a < min(editor_max_height, size); a++)
 				max_width = max(max_width, string_width(editor_array_name[deslizante[get_keyboard_string] + a]))
 			var color = draw_get_color(), item_height = DEVISE ? 20 : 40
-			draw_set_color(c_ltgray)
+			draw_set_color(ui_fondo)
 			draw_rectangle(editor_xpos, editor_ypos + item_height, editor_xpos + max_width + item_height, editor_ypos + item_height * (min(editor_max_height, size) + 1), false)
-			draw_set_color(c_black)
+			draw_set_color(ui_borde)
 			draw_rectangle(editor_xpos, editor_ypos + item_height, editor_xpos + max_width + item_height, editor_ypos + item_height * (min(editor_max_height, size) + 1), true)
 			draw_set_color(color)
 			editor_ypos += item_height

@@ -1,7 +1,6 @@
-function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array_create(0, array_create(4, 0))){
+function generar_mapa(seed = random_get_seed(), instrucciones = array_create(0, array_create(4, 0))){
 	with control{
 		random_set_seed(seed)
-		ds_grid_clear(terreno, fondo)
 		ds_grid_clear(ore, -1)
 		ds_grid_clear(ore_amount, 0)
 		var size = array_length(instrucciones), i, instruccion, tipo, dat1, dat2, dat3, a, b, temp_list, j, temp_complex, aa, bb, c, bmod, random1, temp_bool, temp_real, len
@@ -11,8 +10,9 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 			dat1 = instruccion[1]
 			dat2 = instruccion[2]
 			dat3 = instruccion[3]
-			//Menas de Terrenos
-			if tipo = 0{
+			if tipo = EDITOR_INSTRUCCION_CLEAR
+				ds_grid_clear(terreno, dat1)
+			if tipo = EDITOR_INSTRUCCION_MANCHAS{
 				repeat(dat3){
 					a = irandom(xsize - 1)
 					b = irandom(ysize - 1)
@@ -34,8 +34,7 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 					}
 				}
 			}
-			//Bordes de Terrenos
-			else if tipo = 1{
+			else if tipo = EDITOR_INSTRUCCION_BORDES{
 				if dat1 = dat2{
 					for(a = 0; a < xsize; a++)
 						for(b = 0; b < ysize; b++)
@@ -64,15 +63,13 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 								}
 							}
 			}
-			//Ruido Aleatorio
-			else if tipo = 2{
+			else if tipo = EDITOR_INSTRUCCION_RUIDO{
 				for(a = 0; a < xsize; a++)
 					for(b = 0; b < ysize; b++)
 						if irandom(99) < dat3 and terreno[# a, b] = dat1
 							terreno[# a, b] = dat2
 			}
-			//Menas de Recursos
-			else if tipo = 3{
+			else if tipo = EDITOR_INSTRUCCION_MENAS{
 				repeat(dat3){
 					a = irandom(xsize - 1)
 					b = irandom(ysize - 1)
@@ -98,8 +95,7 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 					}
 				}
 			}
-			//Perlin
-			else if tipo = 4{
+			else if tipo = EDITOR_INSTRUCCION_PERLIN{
 				random1 = hex_perlin(xsize, ysize, 0)
 				ds_grid_multiply_region(random1, 0, 0, xsize, ysize, 1 / ds_grid_get_max(random1, 0, 0, xsize, ysize))
 				dat3 /= 100
@@ -109,11 +105,9 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 							terreno[# a, b] = dat1
 				ds_grid_destroy(random1)
 			}
-			//SCCR
-			else if tipo = 5
+			else if tipo = EDITOR_INSTRUCCION_SCCR
 				small_connected_components_removal(dat1, dat2, dat3)
-			//Contorno
-			else if tipo = 6{
+			else if tipo = EDITOR_INSTRUCCION_CONTORNO{
 				random1 = hex_perlin(xsize, ysize, 0, true)
 				ds_grid_multiply_region(random1, 0, 0, xsize, ysize, 1 / ds_grid_get_max(random1, 0, 0, xsize, ysize))
 				dat3 /= 100
@@ -123,8 +117,7 @@ function generar_mapa(seed = random_get_seed(), fondo = 0, instrucciones = array
 							terreno[# a, b] = dat1
 				ds_grid_destroy(random1)
 			}
-			//Automata
-			else if tipo = 7{
+			else if tipo = EDITOR_INSTRUCCION_AUTOMATA{
 				temp_bool = usable_grid_bool
 				temp_real = usable_grid_real
 				for(a = 0; a < xsize; a++)

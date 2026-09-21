@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"menu_editor",
   "parent":{
-    "name":"SCRIPTS",
-    "path":"folders/SCRIPTS.yy",
+    "name":"Menus",
+    "path":"folders/SCRIPTS/Menus.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

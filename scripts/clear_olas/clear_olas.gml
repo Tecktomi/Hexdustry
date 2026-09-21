@@ -4,11 +4,6 @@ function clear_olas(){
 		ds_grid_clear(terreno_pared_index, 0)
 		ds_grid_clear(background_bool, false)
 		ds_grid_clear(tile_animado_chunk, 0)
-		for(a = 0; a < chunk_xsize; a++)
-			for(b = 0; b < chunk_ysize; b++)
-				if background[# a, b] != spr_hexagono
-					sprite_delete(background[# a, b])
-		ds_grid_clear(background, spr_hexagono)
 		for(b = 0; b < ysize; b++){
 			bmod = b & 1
 			for(a = 0; a < xsize; a++){

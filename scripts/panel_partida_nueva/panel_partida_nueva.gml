@@ -75,6 +75,12 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 			xpos = draw_text_xpos(140, ypos, $"{L.editor_multiplicador_vida}")
 			multiplicador_vida_enemigos = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, multiplicador_vida_enemigos, 20, 200, des_count++, 1))
 			ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{multiplicador_vida_enemigos}%")
+			//Permitir nuclear
+			xpos = 140
+			draw_text_xpos(xpos, ypos, $"{misiles_nombre[2]}: {permitir_nuclear ? L.activado : L.desactivado}")
+			xpos += max(string_width($"{misiles_nombre[2]}: {L.activado}"), string_width($"{L.enciclopedia_tecnologia}: {L.desactivado}"))
+			permitir_nuclear = draw_toggle(xpos + 10, ypos - 5, permitir_nuclear, 1)
+			ypos += text_y * 1.2
 			//Modo creativo
 			xpos = 140
 			draw_text_xpos(xpos, ypos, $"{L.menu_claves}: {cheat ? L.activado : L.desactivado}")
@@ -121,7 +127,7 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 		//Mapas
 		xpos = 200
 		if mapa = -1{
-			draw_set_color(c_blue)
+			draw_set_color(ui_boton_azul)
 			draw_rectangle(xpos - 2, ypos - 2, xpos + 97, ypos + 97, false)
 		}
 		if draw_sprite_boton(spr_random_map,, xpos, ypos, 96, 96, 1){
@@ -134,7 +140,7 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 		xpos += 120
 		for(a = 0; a < array_length(DEFAULT_MAPS); a++){
 			if mapa = a{
-				draw_set_color(c_blue)
+				draw_set_color(ui_boton_azul)
 				draw_rectangle(xpos - 2, ypos - 2, xpos + 97, ypos + 97, false)
 			}
 			if draw_sprite_boton(default_maps_image[a],, xpos, ypos, 96, 96, 1, hover_sprite_boton_text, {a : a}) and mapa != a{
@@ -175,6 +181,16 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 			if draw_boton(xpos, ypos, L.menu_size_large, xsize = 128 ? ui_azul : ui_gris,,,, 1) and xsize != 128{
 				xsize = 128
 				ysize = 256
+				set_grid_size()
+				biome_seed = irandom(2)
+				seed = random_get_seed()
+				generar_bioma(biome_seed)
+				randomize()
+			}
+			xpos += text_x * 1.2
+			if DEVISE and draw_boton(xpos, ypos, L.menu_size_huge, xsize = 256 ? ui_azul : ui_gris,,,, 1) and xsize != 256{
+				xsize = 256
+				ysize = 512
 				set_grid_size()
 				biome_seed = irandom(2)
 				seed = random_get_seed()

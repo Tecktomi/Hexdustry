@@ -76,5 +76,9 @@ function game_start(_nucleo = true, mision_cumplida = false){
 			ia_start()
 		}
 		clear_edit()
+		if array_length(edificios_jugador_index[jugador, id_nucleo]) > 0{
+			camx = clamp(edificios_jugador_index[jugador, id_nucleo][0].a * 48 - room_width / 2, 0, xsize * 48 * zoom - room_width)
+			camy = clamp(edificios_jugador_index[jugador, id_nucleo][0].b * 14 - room_height / 2, 0, ysize * 14 * zoom - room_height)
+		}
 	}
 }

@@ -125,9 +125,9 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 		for(a = 0; a < chunk_xsize; a++)
 			for(b = 0; b < chunk_ysize; b++)
 				update_background(CHUNK_WIDTH * a, CHUNK_HEIGHT * b)
-		if array_length(edificios_index[id_nucleo]) > 0{
-			camx = clamp(edificios_index[id_nucleo][0].a * 48 - room_width / 2, 0, xsize * 48 * zoom - room_width)
-			camy = clamp(edificios_index[id_nucleo][0].b * 14 - room_height / 2, 0, ysize * 14 * zoom - room_height)
+		if array_length(edificios_jugador_index[jugador, id_nucleo]) > 0{
+			camx = clamp(edificios_jugador_index[jugador, id_nucleo][0].a * 48 - room_width / 2, 0, xsize * 48 * zoom - room_width)
+			camy = clamp(edificios_jugador_index[jugador, id_nucleo][0].b * 14 - room_height / 2, 0, ysize * 14 * zoom - room_height)
 		}
 		return filename
 	}

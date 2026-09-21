@@ -1,4 +1,4 @@
-function draw_boton(x, y, texto, back_color = ui_gris, text_color = control.ui_texto, boton = mb_left, box = true, input_layer = 0, round_box = true){
+function draw_boton(x, y, texto, back_color = ui_gris, text_color = ui_texto, boton = mb_left, box = true, input_layer = 0, round_box = true){
 	with control{
 		if texto = ""
 			return false

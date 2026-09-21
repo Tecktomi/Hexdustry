@@ -33,6 +33,7 @@ function ia_camino_recurso(a = 0, b = 0, rss = array_create(0, 0), _distances){
 							else
 								j = edificio.dir
 							array_push(ia_build_queue, [id_enrutador, j, aa, bb])
+							ds_grid_destroy(visitado)
 							return{a : aa, b : bb, done : true, salida_a : a, salida_b : b}
 						}
 						_distances[# aa, bb] = infinity
@@ -42,6 +43,7 @@ function ia_camino_recurso(a = 0, b = 0, rss = array_create(0, 0), _distances){
 			}
 			maxi = 3
 		}
+		ds_grid_destroy(visitado)
 		return {a : 0, b : 0, done : false, salida_a : 0, salida_b : 0}
 	}
 }

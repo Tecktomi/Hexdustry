@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"draw_text_sprites",
+  "%Name":"menu_pausa",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"draw_text_sprites",
+  "name":"menu_pausa",
   "parent":{
-    "name":"DRAW",
-    "path":"folders/SCRIPTS/DRAW.yy",
+    "name":"Menus",
+    "path":"folders/SCRIPTS/Menus.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

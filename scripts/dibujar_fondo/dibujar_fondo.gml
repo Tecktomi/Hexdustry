@@ -44,16 +44,15 @@ function dibujar_fondo(editor = 0){
 							}
 			exit
 		}
-		var chunkwplus = CHUNK_WIDTH + 1, chunkhplus = CHUNK_HEIGHT + 1, xsize2 = chunkwplus * 48 * zoom, ysize2 = chunkhplus * 14 * zoom, xpos = CHUNK_WIDTH * 48 * zoom, ypos = CHUNK_HEIGHT * 14 * zoom
-		var minc, mind, maxc, maxd, f, des_a, des_b, surf_created = false, cplus
+		var chunkhplus = CHUNK_HEIGHT + 1, xsize2 = (CHUNK_WIDTH * 48 + 8) * zoom, ysize2 = chunkhplus * 14 * zoom, xpos = CHUNK_WIDTH * 48 * zoom, ypos = CHUNK_HEIGHT * 14 * zoom
+		var minc, mind, maxc, maxd, f, des_a, des_b, cplus
 		for(a = min_chunka; a < max_chunka; a++)
 			for(b = min_chunkb; b < max_chunkb; b++){
 				if not background_bool[# a, b]{
-					if is_undefined(surf){
-						surf = surface_create(chunkwplus * 48, chunkhplus * 14)
-						surf_created = true
-					}
-					surface_set_target(surf)
+					if not surface_exists(background_surface)
+						background_surface = surface_create((CHUNK_WIDTH * 48 + 8), (CHUNK_HEIGHT + 1) * 14)
+					surface_set_target(background_surface)
+					draw_clear_alpha(c_black, 0)
 					minc = a * CHUNK_WIDTH
 					mind = b * CHUNK_HEIGHT
 					maxc = min((a + 1) * CHUNK_WIDTH, xsize)
@@ -77,13 +76,11 @@ function dibujar_fondo(editor = 0){
 							}
 						}
 					}
-					background[# a, b] = sprite_create_from_surface(surf, 0, 0, chunkwplus * 48, chunkhplus * 14, false, false, 0, 0)
+					background[# a, b] = sprite_create_from_surface(background_surface, 0, 0, CHUNK_WIDTH * 48 + 8, chunkhplus * 14, false, false, 0, 0)
 					background_bool[# a, b] = true
 					surface_reset_target()
 				}
 				draw_sprite_stretched(background[# a, b], 0, -camx + a * xpos, -camy + b * ypos, xsize2, ysize2)
 			}
-	if surf_created
-		surface_free(surf)
 	}
 }

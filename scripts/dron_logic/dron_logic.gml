@@ -159,7 +159,7 @@ function dron_logic(){
 					}
 					else if ++dron.step >= 30{
 						dron.step = 0
-						draw_set_color(c_green)
+						draw_set_color(ui_color_reparadora)
 						draw_line_off(dron_x, dron_y, edificio.center_x, edificio.center_y)
 						if edificio_curar(edificio, 30)
 							dron.modo = 0

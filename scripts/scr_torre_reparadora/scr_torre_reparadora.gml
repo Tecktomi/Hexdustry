@@ -20,7 +20,7 @@ function scr_torre_reparadora(edificio = control.null_edificio){
 			else{
 				var target = edificio.link
 				change_energia(edificio_energia_consumo[index], edificio)
-				draw_set_color(c_green)
+				draw_set_color(ui_color_reparadora)
 				draw_set_alpha(red_power)
 				draw_line_off(edificio.center_x, edificio.center_y, target.center_x, target.center_y)
 				edificio_curar(target, red_power * (1 + 0.2 * edificio.modulo))

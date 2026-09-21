@@ -26,7 +26,7 @@ function scr_laser(edificio = control.null_edificio){
 			var dmg = red_power * edificio.fuel, temp_vel = 75 - 25 * edificio.modulo
 			edificio.fuel = ((temp_vel - 1) * edificio.fuel + 8) / temp_vel
 			draw_set_alpha(dmg / 8)
-			draw_set_color(c_red)
+			draw_set_color(ui_boton_rojo)
 			draw_line_off(edificio.center_x, edificio.center_y, target_x, target_y)
 			draw_set_alpha(1)
 			if dmg > 6 and dron != null_dron

@@ -22,6 +22,8 @@ function clear_edificios(){
 				array_resize(chunk_edificios_draw[# a, b], 0)
 				if chunk_edificios_background[# a, b] != spr_hexagono
 					sprite_delete(chunk_edificios_background[# a, b])
+				if background[# a, b] != spr_hexagono
+					sprite_delete(background[# a, b])
 			}
 		array_resize(edificios, 0)
 		array_resize(edificios_salida_drones, 0)
@@ -35,5 +37,6 @@ function clear_edificios(){
 		array_resize(cambios, 0)
 		ds_grid_clear(chunk_edificios_dirty, true)
 		ds_grid_clear(chunk_edificios_background, spr_hexagono)
+		ds_grid_clear(background, spr_hexagono)
 	}
 }

@@ -57,5 +57,10 @@ Temporary Items
 # GameMaker temporary files
 *.resource_order
 *.old
-Hexdustry/
-Hexdustry_HTML5/
+
+# Salidas de compilación
+/Hexdustry/
+/Hexdustry_HTML5/
+*.zip
+*.apk
+*.yyz

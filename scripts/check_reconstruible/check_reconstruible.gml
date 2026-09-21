@@ -9,7 +9,7 @@ function check_reconstruible(index = 0, _dibujo = true, _jugador = jugador){
 			}
 		if _dibujo and not _comprable
 			temp_text = $"{L.construir_recursos_insuficientes}\n" + temp_text
-		draw_set_color(c_red)
+		draw_set_color(ui_boton_rojo)
 		flag_3 = false
 		for(a = array_length(drones) - 1; a >= 0; a--){
 			dron = drones[a]

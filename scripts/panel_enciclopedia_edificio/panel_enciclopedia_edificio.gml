@@ -82,14 +82,14 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 			for(a = 0; a < size; a++){
 				b = tecnologia_prev[ei, a]
 				if edificio_tecnologia[jugador, b]
-					draw_set_color(c_green)
+					draw_set_color(ui_boton_verde)
 				else if edificio_tecnologia_desbloqueable[jugador, b]
-					draw_set_color(c_yellow)
+					draw_set_color(ui_color_lava)
 				else
-					draw_set_color(c_red)
+					draw_set_color(ui_boton_rojo)
 				draw_line(xpos + 50 * a - 25 * (size - 1), ypos, xpos + 10, ypos + 100)
 				draw_circle(xpos + 50 * a - 25 * (size - 1), ypos, 25, false)
-				draw_set_color(c_black)
+				draw_set_color(ui_fondo)
 				draw_circle(xpos + 50 * a - 25 * (size - 1), ypos, 25, true)
 				if draw_sprite_boton(edificio_sprite[b],, xpos - 20 + 50 * a - 25 * (size - 1), ypos - 20, 40, 40,, hover_sprite_boton_text, {a : edificio_nombre[b]}){
 					enciclopedia_link(4, b)
@@ -101,14 +101,14 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 			for(a = 0; a < size; a++){
 				b = tecnologia_next[ei, a]
 				if edificio_tecnologia[jugador, b]
-					draw_set_color(c_green)
+					draw_set_color(ui_boton_verde)
 				else if edificio_tecnologia_desbloqueable[jugador, b]
-					draw_set_color(c_yellow)
+					draw_set_color(ui_color_lava)
 				else
-					draw_set_color(c_red)
+					draw_set_color(ui_boton_rojo)
 				draw_line(xpos + 50 * a - 25 * (size - 1), ypos + 200, xpos + 10, ypos + 100)
 				draw_circle(xpos + 50 * a - 25 * (size - 1), ypos + 200, 25, false)
-				draw_set_color(c_black)
+				draw_set_color(ui_fondo)
 				draw_circle(xpos + 50 * a - 25 * (size - 1), ypos + 200, 25, true)
 				if draw_sprite_boton(edificio_sprite[b],, xpos - 20 + 50 * a - 25 * (size - 1), ypos + 180, 40, 40,, hover_sprite_boton_text, {a : edificio_nombre[b]}){
 					enciclopedia_link(4, b)
@@ -117,7 +117,7 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 				draw_text_background(mouse_x + 20, mouse_y, sprite_boton_text)
 			}
 			if edificio_tecnologia[jugador, ei]
-				draw_set_color(c_green)
+				draw_set_color(ui_boton_verde)
 			else if edificio_tecnologia_desbloqueable[jugador, ei]{
 				var flag = true, temp_text = ""
 				if not cheat
@@ -132,12 +132,12 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 				if draw_boton(xpos + 100, ypos + 100, (flag ? L.enciclopedia_investigar : L.almacen_sin_recursos) + temp_text, flag ? ui_verde : ui_rojo,,,, _this_input_layer) and flag
 					investigar(ei)
 				draw_set_valign(fa_top)
-				draw_set_color(c_yellow)
+				draw_set_color(ui_color_lava)
 			}
 			else
-				draw_set_color(c_red)
+				draw_set_color(ui_boton_rojo)
 			draw_circle(xpos + 10, ypos + 100, 25, false)
-			draw_set_color(c_black)
+			draw_set_color(ui_fondo)
 			draw_circle(xpos + 10, ypos + 100, 25, true)
 			draw_sprite_stretched(edificio_sprite[ei], 0, xpos - 20, ypos + 80, 40, 40)
 		}
