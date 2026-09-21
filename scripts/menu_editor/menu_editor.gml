@@ -384,7 +384,7 @@ function menu_editor(){
 					}
 					//Calcular tarro de pintura
 					else{
-						build_list = get_size(0, 0, 0, 0)
+						build_list = array_create(0, 0)
 						last_mx = mx
 						last_my = my
 						mouse_clear(mb_left)
@@ -448,8 +448,10 @@ function menu_editor(){
 					draw_sprite_off(spr_base, 0, temp_complex[0], temp_complex[1],,,,, 0.5)
 					if mouse_check_button_pressed(mb_left) and check_colision(mx, my, id_nucleo, 0){
 						mouse_clear(mb_left)
+						var nucleo_viejo = nucleos[2]
 						var temp_nucleo = add_edificio(id_nucleo, 0, mx, my, 2)
-						delete_edificio(nucleos[2], false)
+						if nucleo_viejo != null_edificio
+							delete_edificio(nucleo_viejo, false)
 						nucleos[2] = temp_nucleo
 						editor_herramienta = 0
 					}
