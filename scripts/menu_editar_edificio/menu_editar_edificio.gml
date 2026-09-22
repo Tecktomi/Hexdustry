@@ -234,7 +234,7 @@ function menu_editar_edificio(){
 				}
 			}
 			else if index = id_deposito
-				draw_text(aa - 80 * zoom, bb + 20 * zoom, "Vaciar")
+				draw_text(aa - 80 * zoom, bb + 20 * zoom, L.vaciar)
 			else if index = id_refineria_de_petroleo{
 				edificio.select = round(draw_deslizante(aa - 100 * zoom, aa + 100 * zoom, bb + 50 * zoom, edificio.select, 0, 100, 0))
 				draw_set_halign(fa_center)
@@ -324,7 +324,7 @@ function menu_editar_edificio(){
 						}
 						else{
 							draw_set_halign(fa_center)
-							draw_text_background(aa + 80 * zoom, bb + 80 * zoom, $"No se puede vaciar\nHay edificios que aún fuerzan {liquido_nombre[edificio.flujo.liquido]}")
+							draw_text_background(aa + 80 * zoom, bb + 80 * zoom, $"{L.no_se_puede_vaciar} {liquido_nombre[edificio.flujo.liquido]}")
 							draw_set_halign(fa_left)
 							for(a = array_length(edificio.flujo.edificios) - 1; a >= 0; a--){
 								var temp_edificio = edificio.flujo.edificios[a]

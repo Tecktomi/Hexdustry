@@ -3,6 +3,9 @@ function menu_editor(){
 		dibujar_fondo(1)
 		dibujar_edificios()
 		draw_sprite(spr_vineta, 0, 0, 0)
+		draw_boton_text_counter = 0
+		if deslizante_id != -1 and not mouse_check_button(mb_left)
+			deslizante_id = -1
 		var a, b, chunk, len, c, edificio, aa, bb, _jugador
 		for(a = min_chunka; a < max_chunka; a++)
 			for(b = min_chunkb; b < max_chunkb; b++){
@@ -113,7 +116,7 @@ function menu_editor(){
 					ypos += 30
 					xpos = draw_text_xpos(xpos, ypos, $"{L.editor_luego_de} ")
 					mision.tiempo = draw_boton_text(xpos, ypos, mision.tiempo)
-					xpos = 20 + draw_text_xpos(xpos + text_x, ypos, "s")
+					xpos = 20 + draw_text_xpos(xpos + text_x, ypos, L.editor_segundos)
 					if draw_boton(xpos, ypos, mision.tiempo_victoria ? L.win_victoria : L.win_derrota)
 						mision.tiempo_victoria = not mision.tiempo_victoria
 					if draw_boton(xpos + text_x + 20, ypos, mision.tiempo_show ? L.editor_mostrar : L.editor_ocultar)
@@ -294,7 +297,6 @@ function menu_editor(){
 				mapa_editado = true
 			}
 			var xpos = 120, ypos = 220
-			draw_boton_text_counter = 0
 			xpos = draw_text_xpos(xpos, ypos, $"{L.editor_seed}: ")
 			editor_seed = draw_boton_text(xpos, ypos, editor_seed)
 			xpos = 120
@@ -306,7 +308,7 @@ function menu_editor(){
 			xpos = 120
 			ypos += 20 * min(18, size)
 			xpos = draw_text_xpos(xpos, ypos, $"{L.editor_add} ")
-			a = draw_boton_text_list(xpos, ypos, 0, ["...", "Clear", L.editor_manchas, L.editor_borde, L.editor_ruido, L.editor_menas, "PERLIN", "Eliminar islas", "Contorno", "Autómata"])
+			a = draw_boton_text_list(xpos, ypos, 0, ["...", L.editor_aplanar, L.editor_manchas, L.editor_borde, L.editor_ruido, L.editor_menas, "PERLIN", L.editor_del_islas, L.editor_contorno, L.editor_automata, L.editor_borrar_menas])
 			if a > 0{
 				var temp_array_array = [
 					[a - 1, idt_pasto, 0, 0],
@@ -317,7 +319,8 @@ function menu_editor(){
 					[a - 1, idt_agua_profunda, idt_pasto, 30],
 					[a - 1, idt_agua_profunda, idt_pasto, 25],
 					[a - 1, idt_agua_profunda, idt_pasto, 25],
-					[a - 1, idt_pared_de_piedra, 3, 5]]
+					[a - 1, idt_pared_de_piedra, 3, 5],
+					[a - 1, 0, 0, 0]]
 				array_push(editor_instrucciones, temp_array_array[a - 1])
 				a = 0
 			}
@@ -486,7 +489,7 @@ function menu_editor(){
 							//Terrenos
 							if build_index < terreno_max{
 								draw_sprite_off(terreno_sprite[build_index], 0, aa, bb,,,,, 0.5)
-								if mouse_check_button(mb_left)
+								if mouse_check_button(mb_left) and not build_ignore[terreno[# a, b]]
 									set_terreno(a, b, build_index)
 							}
 							//Minerales
@@ -511,7 +514,6 @@ function menu_editor(){
 					temp_text += $"\n{recurso_nombre[ore_recurso[ore[# mx, my]]]}: {ore_amount[# mx, my]}"
 				if edificio_bool[# mx, my]
 					temp_text += $"\n{edificio_nombre[edificio_id[# mx, my].index]}"
-				
 				draw_text_background(200, 0, temp_text)
 			}
 			//Borrar edificio
@@ -535,7 +537,7 @@ function menu_editor(){
 		draw_set_color(ui_fondo)
 		draw_rectangle(0, 0, 200, room_height, false)
 		draw_set_color(ui_texto)
-		var size = terreno_max + ore_max + 2, ypos = 10
+		var size = terreno_max + ore_max + 3, ypos = 10
 		sprite_boton_text = ""
 		if size > 40
 			deslizante[0] = 5 * floor(draw_deslizante_vertical(5, 10, 290, deslizante[0], 0, size - 40, 0) / 5)
@@ -552,8 +554,12 @@ function menu_editor(){
 				editor_herramienta = 0
 			}
 			b += ore_max
+			if a = b++ and draw_sprite_boton(spr_equis,, 10 + (a mod 5) * 36, ypos,,,, hover_sprite_boton_text, {a : L.editor_borrar_menas}){
+			    build_index = -1
+			    editor_herramienta = 3
+			}
 			if a = b++ and draw_sprite_boton(dron_sprite[idd_arana],, 10 + (a mod 5) * 36, ypos,,,, hover_sprite_boton_text, {a : L.editor_cambiar_zona})
-				editor_herramienta = 1
+			    editor_herramienta = 1
 			if a = b++ and draw_sprite_boton(edificio_sprite[id_nucleo],, 10 + (a mod 5) * 36, ypos,,,, hover_sprite_boton_text, {a : L.editor_cambiar_base})
 				editor_herramienta = 2
 			if (a mod 5) = 4
@@ -568,10 +574,10 @@ function menu_editor(){
 		ypos = room_height - 400
 		if array_length(misiones) > 0{
 			var xpos = 10
-			if draw_boton(xpos, ypos - 40, "prev") and mision_actual > 0
+			if draw_boton(xpos, ypos - 40, L.editor_prev) and mision_actual > 0
 				mision = misiones[--mision_actual]
 			xpos = draw_text_xpos(xpos + 1.2 * text_x, ypos - 35, $"{mision_actual + 1}/{array_length(misiones)}")
-			if draw_boton(xpos + 0.2 * text_x, ypos - 40, "next") and mision_actual < array_length(misiones) - 1
+			if draw_boton(xpos + 0.2 * text_x, ypos - 40, L.editor_next) and mision_actual < array_length(misiones) - 1
 				mision = misiones[++mision_actual]
 			draw_set_halign(fa_center)
 			var _texto
@@ -585,12 +591,12 @@ function menu_editor(){
 			editor_menu = 1
 			exit
 		}
-		ypos += text_y + 10
+		ypos += text_y * 1.2
 		if draw_boton(10, ypos, L.editor_editar_mapa, ui_azul){
 			editor_menu = 2
 			exit
 		}
-		ypos += text_y + 10
+		ypos += text_y * 1.2
 		if draw_boton(10, ypos, L.editar_desde_adentro, ui_azul){
 			array_copy(categoria_nombre_disponible, 0, categoria_nombre, 0, array_length(categoria_nombre))
 			build_index = -1
@@ -599,8 +605,23 @@ function menu_editor(){
 			cheat = true
 			camx = max(camx, 0)
 		}
-		ypos += text_y + 10
+		ypos += text_y * 1.5
 		build_size = round(draw_deslizante(50, 150, ypos, build_size, 1, 5, 2))
+		ypos += 20
+		var xpos = 10
+		xpos = draw_text_xpos(xpos, ypos, $"{L.editor_ignorar} ")
+		a = draw_boton_text_list(xpos, ypos, 0, array_concat(["..."], terreno_nombre))
+		ypos += text_y
+		if a > 0{
+			build_ignore[a - 1] = not build_ignore[a - 1]
+			a = 0
+		}
+		for(a = 0; a < terreno_max; a++)
+			if build_ignore[a]{
+				if draw_boton(40, ypos, terreno_nombre[a],,,, false)
+					build_ignore[a] = false
+				ypos += text_y
+			}
 		if BROWSER and draw_boton(10, room_height - 100, L.editor_guardar, ui_azul) or (keyboard_check(vk_lcontrol) and keyboard_check_pressed(ord("S"))){
 			get_file = 2
 			input_layer = 1
@@ -620,7 +641,8 @@ function menu_editor(){
 			//Cargar
 			if get_file = 1{
 				draw_set_valign(fa_bottom)
-				var xpos = 120, temp_text
+				xpos = 120
+				var temp_text
 				ypos = 200
 				for(a = 0; a < array_length(save_files); a++){
 					temp_text = file_format(save_files[a])
@@ -663,7 +685,7 @@ function menu_editor(){
 					save_file = string(draw_boton_text(140, 160 + 30 * (array_length(save_files) + 1), save_file, false,,, 1))
 					draw_text(140 + text_x, 160 + 30 * (array_length(save_files) + 1), ".txt")
 					input_layer = 1
-					if save_file != "" and (draw_boton(120, 160 + 30 * array_length(save_files), L.nuevo_archivo,,,,, 1) or keyboard_check_pressed(vk_enter)){
+					if save_file != "" and (draw_boton(120, 160 + 30 * array_length(save_files), L.nuevo_archivo, ui_verde,,,, 1) or keyboard_check_pressed(vk_enter)){
 						keyboard_clear(vk_enter)
 						if not string_count(".txt", save_file)
 							save_file += ".txt"
@@ -689,6 +711,7 @@ function menu_editor(){
 			build_index = -1
 		}
 		control_camara(-200)
+		draw_boton_text_list_end()
 		update_cursor()
 		if keyboard_check_pressed(ord("V"))
 			clear_olas()

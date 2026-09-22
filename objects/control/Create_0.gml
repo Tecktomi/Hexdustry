@@ -1,17 +1,16 @@
 randomize()
 var a, b, c, flag
 #region xytoab
-	grid_xytoa = ds_grid_create(48, 28)
-	ds_grid_clear(grid_xytoa, 0)
-	grid_xytob = ds_grid_create(48, 28)
-	ds_grid_clear(grid_xytob, 0)
-	var buffer = buffer_load("xytoab.txt")
-	ds_grid_read(grid_xytoa, buffer_read(buffer, buffer_string))
-	ds_grid_read(grid_xytob, buffer_read(buffer, buffer_string))
-	buffer_delete(buffer)
+	array_xytoa = [ [ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,-1,-1,-1,-1,-1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,-1,-1,-1 ],[ -1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,-1,-1 ],[ -1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1 ],[ -1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1 ],[ -1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],
+		[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ] ]
+	array_xytob = [ [ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,1,1,1,1,1,1,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1 ],[ -1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1 ],[ -1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1 ],[ -1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ -2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ -2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ -2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ -2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ -2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ -2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ -2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+		,0,0,0,0,0 ],[ -2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ -2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ -2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ -2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ -2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ -2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ -2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ -2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ -1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ],[ -1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1 ],[ -1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1 ],[ -1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,1,1,1,1,1,1,1,1
+		,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,1,1,1,1,1,1,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-
+		1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1 ],[ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1 ] ]
 #endregion
 #region MACROS
-	#macro FILE_VERSION 2026_09_20
+	#macro FILE_VERSION 2026_09_21
 	#macro PROCESADOR_VERSION 2026_03_25
 	#macro TILE_WIDTH 32
 	#macro TILE_HEIGHT 28
@@ -26,6 +25,7 @@ var a, b, c, flag
 	DESFACE_A = [[0, 0, -1, -1, 0, 0], [1, 0, 0, 0, 0, 1]]
 	DESFACE_B = [[-1, -2, -1, 1, 2, 1], [-1, -2, -1, 1, 2, 1]]
 	DEFAULT_MAPS = ["Pradera", "Cuevas", "Desierto", "Nieve", "Islas"]
+DEFAULT_MAPS_L = ["praderas", "cuevas", "desierto", "nieve", "islas"]
 	#macro IDIOMAS 3
 	IDIOMA_NAME = ["en", "es", "ru"]
 	var angle_dir = [pi / 6, pi / 2, 5 * pi / 6, 7 * pi / 6, 3 * pi / 2, 11 * pi / 6]
@@ -71,6 +71,11 @@ var a, b, c, flag
 	#macro EDITOR_INSTRUCCION_SCCR 6
 	#macro EDITOR_INSTRUCCION_CONTORNO 7
 	#macro EDITOR_INSTRUCCION_AUTOMATA 8
+	#macro EDITOR_INSTRUCCION_CLEAR_RSS 9
+	//Idiomas
+	#macro idioma_ingles 0
+	#macro idioma_espanol 1
+	#macro idioma_ruso 2
 #endregion
 DEVISE = (os_type = os_windows)
 var arr0 = array_create(0, 0)
@@ -891,36 +896,6 @@ selected_dron = null_dron
 		}
 #endregion
 //Recursos
-#region Definición
-	recurso_descripcion = [
-		"Recurso básico, escencial para los primeros edificios. Puede ser refinado para obtener Bronce",
-		"Combustible básico, útil para el funcionamiento de Hornos y Generadores",
-		"Recurso útil para la construcción de infrastructura intermedia",
-		"Recurso básico, escencial para los primeros edificios",
-		"Recurso útil para la construcción de infrastructura intermedia",
-		"Recurso necesario para la producción de bienes refinados como Silicio o Concreto",
-		"Recurso necesario para la producción de Concreto. Puede ser transformado en Arena en un Triturador",
-		"Recurso útil en la producción de Paneles Solares, Drones y Circuitos",
-		"Recurso útil para la construcción de infrastructura intermedia",
-		"Puede ser utilizada como Piedra normal o purificada para obtener Cobre",
-		//10
-		"Puede ser utilizada como Piedra normal o porificada para obtener Hierro",
-		"Puede ser utilizada como Piedra normal. Pero es escencial en la producción de bienes más refinados",
-		"Combustible avanzado, más eficiente y dduradero que el Carbón",
-		"Munición avanzada para Morteros y necesario para el funcionamiento de Taladros de Explosión",
-		"Recurso necesario para la producción de todo tipo de Drones",
-		"Material ligero, útil en la producción de Drones",
-		"Circuito básico, necesario para la producción de todo tipo de Drones y edificios eléctricos avanzados",
-		"Uranio sin refinar, útil como munición. Puede ser refinado para dividir el Uranio Empobrecido del Enriquecido",
-		"Uranio 235, útil para la generación de energía en Plantas Nucleares",
-		"Uranio 238, necesario para acompañar la producción de energía en Plantas Nucleares. Y útil como munición",
-		//20
-		"Recurso útil para mejorar otros procesos industriales como la planta química, refinería de petróleo y producción de Silicio",
-		"Investiga los Módulos y construye dos Ensambladores juntos para empezar a producirlos"
-	]
-	for(a = array_length(recurso_descripcion) - 1; a >= 0; a--)
-		recurso_descripcion[a] = text_wrap(recurso_descripcion[a], 400)
-#endregion
 #region Arreglos
 	recurso_sprite = []
 	recurso_nombre = []
@@ -967,6 +942,7 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 	idr_modulos = def_recurso("Módulos", spr_item_modulo, c_red,, 4)
 #endregion
 rss_max = array_length(recurso_nombre)
+recurso_descripcion = array_create(rss_max, "")
 sort_recursos()
 usable_rss_bool = array_create(rss_max, false)
 jugador_recursos = array_create(EQUIPOS)
@@ -1036,6 +1012,7 @@ function def_terreno(nombre, sprite = spr_piedra, recurso = -1, caminable = true
 	idt_salar = def_terreno("Salar", spr_salar, idr_sal,,,, #CFCBC2)
 #endregion
 terreno_max = array_length(terreno_nombre)
+build_ignore = array_create(terreno_max, false)
 //Ores
 #region Arreglos
 	ore_sprite = []
@@ -1059,24 +1036,6 @@ ia_ores = array_create(ore_max)
 for(a = 0; a < ore_max; a++)
 	ia_ores[a] = array_create(0, [0, 0])
 //Drones
-#region Descripción
-	dron_descripcion = [
-			"Dispara un láser a los enemigos cercanos",
-			"Transporta recursos entre Puertos de Carga",
-			"Repara los edificios dañados",
-			"Se acerca a su objetivo y explota infilgiendo daño",
-			"Unidad de asedio superior, dispara explosivos dañando todo a su alrededor",
-			"Unidad aerea superior, dispara a distancia",
-			"Unidad terrestre máxima, dispara una ráfaga de explosivos de largo alcance",
-			"Vuela sobre sus enemigos soltando devastadores explosivos en línea recta",
-			"Reconstruye edificios destruidos",
-			"Mina recursos en el mapa y los lleva a un Almacén cercano",
-			"Dispara artillería, solo puede desplazarse desde el agua",
-			"Básicamente es una batería de artillería pesada que ataca desde el mar"
-		]
-	for(a = array_length(dron_descripcion) - 1; a >= 0; a--)
-		dron_descripcion[a] = text_wrap(dron_descripcion[a], 400)
-#endregion
 #region Arreglos
 	dron_nombre = array_create(0, "")
 	dron_sprite = array_create(0, spr_hexagono)
@@ -1125,6 +1084,7 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 	idd_destructor = def_dron("Destructuor", spr_destructor,, 1200, 50, 450, [idr_acero, idr_plastico, idr_electronicos, idr_uranio_bruto], [150, 100, 50, 50], 1600,, 1.2, 200)
 #endregion
 dron_max = array_length(dron_nombre)
+dron_descripcion = array_create(dron_max, "")
 //Liquidos
 #region Líquidos
 	liquido_nombre = array_create(0, "")
@@ -1145,81 +1105,6 @@ dron_max = array_length(dron_nombre)
 	liquido_max = array_length(liquido_nombre)
 #endregion
 //Edificios
-#region Descripciones
-	edificio_descripcion = [
-		"Es el centro de mando, aquí se almacenan todos los recursos y debes protegerlo a toda costa",
-		"Permite minar cobre, hierro y carbón sin coste alguno.    Puede potenciarse con Lubricante",
-		"Mueve recursos de un lugar a otro",
-		"Distribuye recursos en una dirección",
-		"Permite el paso de un recurso específico mientras desvía al resto",
-		"Desvía los recursos una vez que la línea esté saturada",
-		"Pasa recursos bajo tierra permitiendo construir encima",
-		"Utiliza combustible para fundir Bronce, Acero y Silicio",
-		"Taladro mejorado que también extrae piedra y arena del suelo pero consume energía. Puede potenciarse con Lubricante",
-		"Tritura la piedra para hacerla arena",
-		//10
-		"Genera energía utlizando combustible",
-		"Conecta edificios cercanos a la red de energía",
-		"Almacena el excedente de energía para usarlo más tarde",
-		"Genera energía limpia del sol",
-		"Extrae líquidos del terreno usando energía",
-		"Conecta estructuras para llevar líquidos",
-		"Pasa recursos bajo tierra permitiendo construir encima",
-		"Genera energía a partir de magia",
-		"Versión mejorada de la Cinta Transportadora que permite transportar más cosas",
-		"Defensa simple, puede disparar Cobre o Hierro",
-		//20
-		"Defensa de largo alcance que dispara Bronce, Acero o Uranio",
-		"Utiliza recursos combustibles para quemar a los enemigos. Puede ser potenciado con Petróleo",
-		"Produce y procesa varios recursos relacionados al Ácido",
-		"Dispara un láser constante cuyo daño depende de la cantidad de energía disponible",
-		"Almacena grandes cantidades de líquidos",
-		"Genera el líquido a elección a partir de magia",
-		"Genera energía a partir de un combustible y Agua",
-		"Refina la Piedra Cúprica o Férrica en Cobre o Hierro usando Ácido",
-		"Fabrica drones de transporte utilizando Silicio, Baterías y bastante energía",
-		"Genera recursos a partir de magia",
-		//30
-		"Extrae lentamente Agua por evaporación",
-		"Similar al horno normal, pero utiliza el calor de la lava para cocinar más rápido",
-		"Genera energía a partir de evaporar Agua, debe ser construido sobre lava",
-		"Utiliza explosivos para extraer un recurso de cada terreno minable en su área",
-		"Distrae a los enemigos mientras tus defensas se encargan de ellos",
-		"Conceta Puertos de Carga para que tus drones muevan recursos entre ellos",
-		"Utiliza Cobre y Silicio para producir electrónicos",
-		"Consume 1 parte de Uranio Enriquecido por 20 partes de Uranio Empobrecido y mucha Agua para generar mucha energía",
-		"Conecta redes eléctricas a través de largas distancias",
-		"Produce petróleo a alto coste en cualquier lugar",
-		//40
-		"Dispara explosivos a largo alcance, devastando un área de enemigos",
-		"Procesa instrucciones lógicas",
-		"Permite escribir mensajes",
-		"Permite almacenar hasta 128 datos",
-		"Proyecta un láser de reparación a los edificios cercanos usando energía",
-		"Conecta líneas de líquidos por debajo tierra",
-		"Carga y libera una gran onda de choque que daña y ralentiza a todos los enemigos en su rango",
-		"Versión mejorada del muro, más duro y mejor",
-		"Aquí se puede construir un misíl nuclear usándo acero, explosivos, petróleo y uranio enriquecido al 90%",
-		"Permite reciclar el uranio consumiendo grandes cantidades de agua y energía de manera constante",
-		//50
-		"Almacena recursos para usarlos más tarde",
-		"Fabrica concreto a partir de Arena, Piedra y Agua",
-		"Permite dibujar imágenes enviadas desde un procesador",
-		"Mediante la destilación fraccionada permite extraer Plástico, Combustible y Azufre del Petróleo",
-		"Permite reciclar parte de los recursos de los enemigos destruidos cercanos",
-		"Purifica el Agua Salada para extraer la Sal y el Agua dulce",
-		"Extrae agua de la atmósfera, ideal para terrenos donde no es fácil obtenerla",
-		"Permite realizar conexiones de cintas transportadoras que se curcen",
-		"Mejora las características de algún edificio",
-		"Permite fabricar drones más grandes usando Ácido",
-		//60
-		"Transporta drones entre fábricas",
-		"Se coloca en un sitio y explota cuando los enemigos terrestres pasan encima",
-		"Crear lubricante a partir del petróleo"
-	]
-	for(a = array_length(edificio_descripcion) - 1; a >= 0; a--)
-		edificio_descripcion[a] = text_wrap(edificio_descripcion[a], 400)
-#endregion
 #region Arreglos
 	edificio_sprite = array_create(0, spr_hexagono)
 	edificio_sprite_2 = array_create(0, spr_hexagono)
@@ -1429,6 +1314,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 		planta_quimica_descripcion[a] = text_wrap(planta_quimica_descripcion[a], 300)
 #endregion
 edificio_max = array_length(edificio_nombre)
+edificio_descripcion = array_create(edificio_max, "")
 edificio_tecnologia = array_create(EQUIPOS)
 edificio_tecnologia_desbloqueable = array_create(EQUIPOS)
 for(a = 0; a < EQUIPOS; a++){

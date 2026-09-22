@@ -1,8 +1,6 @@
 function generar_mapa(seed = random_get_seed(), instrucciones = array_create(0, array_create(4, 0))){
 	with control{
 		random_set_seed(seed)
-		ds_grid_clear(ore, -1)
-		ds_grid_clear(ore_amount, 0)
 		var size = array_length(instrucciones), i, instruccion, tipo, dat1, dat2, dat3, a, b, temp_list, j, temp_complex, aa, bb, c, bmod, random1, temp_bool, temp_real, len
 		for(i = 0; i < size; i++){
 			instruccion = instrucciones[i]
@@ -10,9 +8,14 @@ function generar_mapa(seed = random_get_seed(), instrucciones = array_create(0, 
 			dat1 = instruccion[1]
 			dat2 = instruccion[2]
 			dat3 = instruccion[3]
-			if tipo = EDITOR_INSTRUCCION_CLEAR
+			if tipo = EDITOR_INSTRUCCION_CLEAR{
 				ds_grid_clear(terreno, dat1)
-			if tipo = EDITOR_INSTRUCCION_MANCHAS{
+				if not terreno_caminable[dat1]{
+					ds_grid_clear(ore, -1)
+					ds_grid_clear(ore_amount, 0)
+				}
+			}
+			else if tipo = EDITOR_INSTRUCCION_MANCHAS{
 				repeat(dat3){
 					a = irandom(xsize - 1)
 					b = irandom(ysize - 1)
@@ -145,6 +148,10 @@ function generar_mapa(seed = random_get_seed(), instrucciones = array_create(0, 
 					for(b = 0; b < ysize; b++)
 						if temp_bool[# a, b]
 							terreno[# a, b] = dat1
+			}
+			else if tipo = EDITOR_INSTRUCCION_CLEAR_RSS{
+				ds_grid_clear(ore, -1)
+				ds_grid_clear(ore_amount, 0)
 			}
 		}
 	}

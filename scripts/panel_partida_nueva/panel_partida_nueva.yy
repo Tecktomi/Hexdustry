@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"panel_partida_nueva",
   "parent":{
-    "name":"Menus",
-    "path":"folders/SCRIPTS/Menus.yy",
+    "name":"MENUS",
+    "path":"folders/SCRIPTS/MENUS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

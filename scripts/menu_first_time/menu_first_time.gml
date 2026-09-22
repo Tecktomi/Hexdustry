@@ -1,7 +1,7 @@
 function menu_first_time(){
 	with control{
 		dibujar_fondo(1)
-		var text_array = ["English", "Español", "Русски"], ypos = 200
+		var text_array = ["English", "Español", "Русский"], ypos = 200
 		draw_set_halign(fa_center)
 		draw_set_font(font_titulo)
 		for(var a = 0; a < IDIOMAS; a++){

@@ -3,13 +3,13 @@ function save_escenario_buffer(filename){
 		var len_edi = array_length(edificios_totales), len_mis = array_length(misiones)
 		var buffer = buffer_create(1024, buffer_grow, 1)
 		//Variables globales
-		buffer_write(buffer, buffer_u8, xsize)
-		buffer_write(buffer, buffer_u8, ysize)
-		buffer_write(buffer, buffer_u8, spawn_x)
-		buffer_write(buffer, buffer_u8, spawn_y)
+		buffer_write(buffer, buffer_u16, xsize)
+		buffer_write(buffer, buffer_u16, ysize)
+		buffer_write(buffer, buffer_u16, spawn_x)
+		buffer_write(buffer, buffer_u16, spawn_y)
 		//Config
 		var seek_config = buffer_tell(buffer), a, b, _mision, len_text, c, temp_text
-		buffer_write(buffer, buffer_u16, 0) //Placeholder
+		buffer_write(buffer, buffer_u32, 0) //Placeholder
 		for(a = 0; a < rss_max; a++)
 			buffer_write(buffer, buffer_u16, carga_inicial[a])
 		for(a = 0; a < edificio_max; a++)
@@ -66,8 +66,8 @@ function save_escenario_buffer(filename){
 			var edificio = edificios_totales[a]
 			buffer_write(buffer, buffer_u8, edificio.index)
 			buffer_write(buffer, buffer_u8, edificio.dir)
-			buffer_write(buffer, buffer_u8, edificio.a)
-			buffer_write(buffer, buffer_u8, edificio.b)
+			buffer_write(buffer, buffer_u16, edificio.a)
+			buffer_write(buffer, buffer_u16, edificio.b)
 			buffer_write(buffer, buffer_u8, edificio.jugador)
 			if tag_edificio_tuberia[edificio.index]
 				buffer_write(buffer, buffer_s8, real(edificio.flujo.liquido))

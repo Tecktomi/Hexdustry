@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"menu_pausa",
   "parent":{
-    "name":"Menus",
-    "path":"folders/SCRIPTS/Menus.yy",
+    "name":"MENUS",
+    "path":"folders/SCRIPTS/MENUS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

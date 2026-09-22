@@ -28,7 +28,7 @@ function menu_pausa(_juego = true, _input_layer = 0){
 					pausa_setting = 3
 				ypos += text_y * 1.2
 			}
-			if draw_boton(xpos, ypos, "AJUSTES", ui_azul,,,, _input_layer)
+			if draw_boton(xpos, ypos, L.ajustes, ui_azul,,,, _input_layer)
 				pausa_setting = 2
 			ypos += text_y * 1.2
 			if _juego{
@@ -48,7 +48,7 @@ function menu_pausa(_juego = true, _input_layer = 0){
 							}
 							ypos += text_y * 1.2
 							if guardado
-								draw_boton(xpos, ypos, "Guardado", ui_verde,,,, _input_layer)
+								draw_boton(xpos, ypos, L.guardado, ui_verde,,,, _input_layer)
 							else if tutorial = 0 and draw_boton(xpos, ypos, L.guardar, ui_azul,,,, _input_layer){
 								guardado = true
 								buffer = buffer_create(4096, buffer_grow, 1)
@@ -208,7 +208,7 @@ function menu_pausa(_juego = true, _input_layer = 0){
 				draw_rectangle(0, 0, room_width, room_height, false)
 				draw_set_color(c_white)
 				draw_set_alpha(1)
-				draw_text(xpos, ypos, "PRESIONA CUALQUIER TECLA")
+				draw_text(xpos, ypos, L.presiona_tecla)
 				if keyboard_check_pressed(vk_anykey) and (keyboard_lastkey = CONTROL_USADAS[pausa_setting - 4] or not array_contains(CONTROL_USADAS, keyboard_lastkey)){
 					pausa_setting -= 2
 					if pausa_setting = 2

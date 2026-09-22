@@ -5,20 +5,30 @@ function menu_principal(){
 		draw_set_color(c_black)
 		draw_rectangle(0, 0, room_width, room_height, false)
 		draw_set_alpha(1)
-		draw_set_halign(fa_center)
+		draw_set_halign(fa_left)
 		draw_set_font(font_titulo)
 		draw_set_color(c_white)
-		var ypos = 100, a
-		draw_text_ypos(room_width / 2, ypos, L.menu_hexdustry)
+		var ypos = 160, a, xpos = 160
+		draw_text_ypos(xpos, ypos, L.menu_hexdustry)
 		draw_set_font(font_normal)
+		xpos = 180
 		if os_browser != browser_not_a_browser{
 			ypos += text_y
-			draw_text_ypos(room_width / 2, ypos, L.menu_html)
-			ypos += 3 * text_y
+			draw_text_ypos(xpos, ypos, L.menu_html)
+			ypos += 2 * text_y
 		}
 		else
-			ypos += 3 * text_y
-		if draw_boton(room_width / 2, ypos, L.menu_juego_rapido, ui_verde){
+			ypos += 2 * text_y
+		var _hay_guardado = (os_browser = browser_not_a_browser and DEVISE and file_exists("last_save.save"))
+		if _hay_guardado{
+			if draw_boton(xpos, ypos, L.continuar, ui_verde){
+				var buffer = buffer_load("last_save.save")
+				load_game_buffer(buffer)
+				buffer_delete(buffer)
+			}
+			ypos += text_y * 1.2
+		}
+		if draw_boton(xpos, ypos, L.menu_juego_rapido, _hay_guardado ? ui_azul : ui_verde){
 			input_layer = 1
 			get_file = 2
 			if array_length(misiones) = 0{
@@ -41,43 +51,25 @@ function menu_principal(){
 			if mapa >= 0 and load_escenario_buffer($"{DEFAULT_MAPS[mapa]}.txt", false) = ""
 				mapa = -1
 		}
-		if os_browser = browser_not_a_browser and DEVISE and file_exists("last_save.save"){
-			ypos += text_y * 1.2
-			if draw_boton(room_width / 2, ypos, L.continuar, ui_verde){
-				var buffer = buffer_load("last_save.save")
-				load_game_buffer(buffer)
-				buffer_delete(buffer)
-			}
-		}
-		ypos += text_y * 2
-		if draw_boton(room_width / 2, ypos, L.menu_tutorial, ui_verde)
+		ypos += text_y * 1.2
+		if draw_boton(xpos, ypos, L.menu_tutorial, ui_azul)
 			menu = MENU_CAMPANNA
-		ypos += text_y * 2
-		if draw_boton(room_width / 2, ypos, L.menu_editor, ui_azul){
-			build_index = -1
-			mapa_editado = true
-			menu = MENU_EDITOR
-		}
-		ypos += text_y * 2
+		ypos += text_y * 1.2
 		//Configuración online
 		if os_browser = browser_not_a_browser{
-			if draw_boton(room_width / 2, ypos, L.multijugador, ui_azul){
+			if draw_boton(xpos, ypos, L.multijugador, ui_azul){
 				input_layer = 1
 				get_file = 4
 				server_buscar_lan()
 			}
 		}
 		else
-			draw_boton(room_width / 2, ypos, L.descargar_para_jugar_en_LAN, ui_gris)
+			draw_boton(xpos, ypos, L.descargar_para_jugar_en_LAN, ui_gris)
 		ypos += text_y * 2
-		if draw_boton(room_width / 2, ypos, L.game_enciclopedia, ui_gris){
-			input_layer = 1
-			enciclopedia = 1
-		}
-		ypos += text_y * 2
-		if draw_boton(room_width / 2, ypos, "AJUSTES", ui_azul){
-			input_layer = 1
-			get_file = 5
+		if draw_boton(xpos, ypos, L.menu_editor, ui_azul){
+			build_index = -1
+			mapa_editado = true
+			menu = MENU_EDITOR
 		}
 		if enciclopedia > 0{
 			draw_enciclopedia(false, 1)
@@ -96,7 +88,7 @@ function menu_principal(){
 			//Cargar Escenarios
 			if get_file = 1{
 				draw_set_valign(fa_bottom)
-				var xpos = 120
+				xpos = 120
 				ypos = 200
 				for(a = 0; a < array_length(save_files); a++){
 					var temp_text = file_format(save_files[a])
@@ -181,7 +173,7 @@ function menu_principal(){
 			//Cargar partidas
 			else if get_file = 3{
 				draw_set_valign(fa_bottom)
-				var xpos = 120
+				xpos = 120
 				ypos = 200
 				for(a = 0; a < array_length(partidas); a++){
 					var temp_text = file_format(partidas[a])
@@ -266,6 +258,14 @@ function menu_principal(){
 		draw_set_valign(fa_bottom)
 		draw_text(10, room_height - 10, "Tomás Ramdohr")
 		draw_set_valign(fa_top)
+		if draw_sprite_boton(spr_manual, 1, room_width - 64, 0, 64, 64){
+			input_layer = 1
+			get_file = 5
+		}	
+		if draw_sprite_boton(spr_manual, 0, room_width - 64, 64, 64, 64){
+			input_layer = 1
+			enciclopedia = 1
+		}
 		update_cursor()
 		if keyboard_check_pressed(vk_escape)
 			game_end()

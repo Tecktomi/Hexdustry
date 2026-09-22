@@ -1,8 +1,12 @@
-function draw_boton(x, y, texto, back_color = ui_gris, text_color = ui_texto, boton = mb_left, box = true, input_layer = 0, round_box = true){
+function draw_boton(x, y, texto, back_color = ui_gris, text_color = ui_texto, boton = mb_left, box = true, input_layer = 0, round_box = true, width = 0){
 	with control{
 		if texto = ""
 			return false
-		var color = draw_get_color(), width = string_width(texto), height = string_height(texto)
+		var color = draw_get_color(), height = string_height(texto)
+		if width = 0
+			width = string_width(texto)
+		else
+			width = max(width, string_width(texto))
 		var xx = draw_get_halign() = fa_left ? 0 : (draw_get_halign() = fa_center ? width / 2 : width)
 		var yy = draw_get_valign() = fa_top ? 0 : (draw_get_valign() = fa_middle ? height / 2 : height)
 		var offset = 8 + 24 * not DEVISE

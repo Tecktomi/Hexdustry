@@ -13,7 +13,7 @@ function scroll_editor_instrucciones(a, param = {xpos : 0, ypos : 0, ore_names :
 		
 		xpos += 20
 		if tipo = EDITOR_INSTRUCCION_CLEAR{
-			xpos = draw_text_xpos(xpos, ypos, $"Aplanar con ")
+			xpos = draw_text_xpos(xpos, ypos, $"{L.editor_aplanar_con} ")
 			instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
 		}
 		if tipo = EDITOR_INSTRUCCION_MANCHAS{
@@ -70,45 +70,47 @@ function scroll_editor_instrucciones(a, param = {xpos : 0, ypos : 0, ore_names :
 			xpos = draw_text_xpos(xpos, ypos, $" {L.editor_veces}")
 		}
 		else if tipo = EDITOR_INSTRUCCION_PERLIN{
-			xpos = draw_text_xpos(xpos, ypos, $"Añadir manchas de ")
+			xpos = draw_text_xpos(xpos, ypos, $"{L.editor_add_manchas} ")
 			instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
 			xpos += text_x
-			xpos = draw_text_xpos(xpos, ypos, $" sobre ")
+			xpos = draw_text_xpos(xpos, ypos, $" {L.editor_sobre} ")
 			instruccion[2] = draw_boton_text_list(xpos, ypos, dat2, terreno_nombre,, 10)
 			xpos += text_x
-			xpos = draw_text_xpos(xpos, ypos, $" tamaño ")
+			xpos = draw_text_xpos(xpos, ypos, $" {L.editor_size} ")
 			instruccion[3] = draw_boton_text(xpos, ypos, dat3, true)
 		}
 		else if tipo = EDITOR_INSTRUCCION_SCCR{
-			xpos = draw_text_xpos(xpos, ypos, $"Eliminar manchas de ")
+			xpos = draw_text_xpos(xpos, ypos, $"{L.editor_del_manchas} ")
 			instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
 			xpos += text_x
-			xpos = draw_text_xpos(xpos, ypos, $" sobre ")
+			xpos = draw_text_xpos(xpos, ypos, $" {L.editor_sobre} ")
 			instruccion[2] = draw_boton_text_list(xpos, ypos, dat2, terreno_nombre,, 10)
 			xpos += text_x
-			xpos = draw_text_xpos(xpos, ypos, $" más pequeñas que ")
+			xpos = draw_text_xpos(xpos, ypos, $" {L.editor_mas_pequenas} ")
 			instruccion[3] = draw_boton_text(xpos, ypos, dat3, true)
 		}
 		else if tipo = EDITOR_INSTRUCCION_CONTORNO{
-			xpos = draw_text_xpos(xpos, ypos, $"Añadir contorno de ")
+			xpos = draw_text_xpos(xpos, ypos, $"{L.editor_add_contorno} ")
 			instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
 			xpos += text_x
-			xpos = draw_text_xpos(xpos, ypos, $" sobre ")
+			xpos = draw_text_xpos(xpos, ypos, $" {L.editor_sobre} ")
 			instruccion[2] = draw_boton_text_list(xpos, ypos, dat2, terreno_nombre,, 10)
 			xpos += text_x
-			xpos = draw_text_xpos(xpos, ypos, $" tamaño ")
+			xpos = draw_text_xpos(xpos, ypos, $" {L.editor_size} ")
 			instruccion[3] = draw_boton_text(xpos, ypos, dat3, true)
 		}
 		else if tipo = EDITOR_INSTRUCCION_AUTOMATA{
-			xpos = draw_text_xpos(xpos, ypos, $"Añadir ")
+			xpos = draw_text_xpos(xpos, ypos, $"{L.editor_add} ")
 			instruccion[1] = draw_boton_text_list(xpos, ypos, dat1, terreno_nombre,, 10)
 			xpos += text_x
-			xpos = draw_text_xpos(xpos, ypos, $" autómata ")
+			xpos = draw_text_xpos(xpos, ypos, $" {L.editor_automata} ")
 			instruccion[2] = draw_boton_text(xpos, ypos, dat2, true)
 			xpos += text_x
-			xpos = draw_text_xpos(xpos, ypos, $" repetir ")
+			xpos = draw_text_xpos(xpos, ypos, $" {L.editor_repetir} ")
 			instruccion[3] = draw_boton_text(xpos, ypos, dat3, true)
 		}
+		if tipo = EDITOR_INSTRUCCION_CLEAR_RSS
+			xpos = draw_text_xpos(xpos, ypos, L.editor_borrar_menas)
 		if procesador_move >= 0 and mouse_y > ypos and mouse_y < ypos + text_y{
 			draw_set_alpha(0.3)
 			draw_rectangle(140, ypos, xpos + text_x, ypos + text_y, false)

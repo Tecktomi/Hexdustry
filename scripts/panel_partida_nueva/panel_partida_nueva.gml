@@ -2,8 +2,111 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 	with control{
 		var des_count = 0, a, b, file
 		draw_boton_text_counter = 0
-		ypos = draw_text_ypos(xpos, ypos, L.dificultad)
-		if draw_boton(xpos, ypos, L.facil, flow = 0 ? ui_azul : ui_gris,,,, 1){
+		//Mapas
+		var _xpos = xpos + 10
+		ypos = draw_text_ypos(_xpos + 10, ypos, "MAPA")
+		if mapa = -1{
+			draw_set_color(ui_boton_azul)
+			draw_rectangle(_xpos - 2, ypos - 2, _xpos + 97, ypos + 97, false)
+		}
+		if draw_sprite_boton(spr_random_map,, _xpos, ypos, 96, 96, 1){
+			biome_seed = irandom(2)
+			seed = random_get_seed()
+			generar_bioma(biome_seed)
+			randomize()
+			mapa = -1
+		}
+		_xpos += 120
+		for(a = 0; a < array_length(DEFAULT_MAPS); a++){
+			if mapa = a{
+				draw_set_color(ui_boton_azul)
+				draw_rectangle(_xpos - 2, ypos - 2, _xpos + 97, ypos + 97, false)
+			}
+			if draw_sprite_boton(default_maps_image[a],, _xpos, ypos, 96, 96, 1, hover_sprite_boton_text, {a : variable_struct_get(L, DEFAULT_MAPS_L[a])}) and mapa != a{
+				file = load_escenario_buffer($"{DEFAULT_MAPS[a]}.txt", false)
+				if file != ""
+					mapa = a
+			}
+			for(b = 0; b < 3; b++)
+				if medallas[a, b]
+					draw_sprite(spr_medallas, b, _xpos + 32 * b + 16, ypos + 110)
+			_xpos += 120
+		}
+		draw_set_color(ui_texto)
+		ypos += 140
+		//Tamaño del mapa
+		_xpos = xpos + 50
+		var _change_size = false
+		if draw_boton(_xpos, ypos, L.menu_size_little, xsize = 48 ? ui_azul : ui_gris,,,, 1) and xsize != 48 and mapa = -1{
+			xsize = 48
+			ysize = 96
+			_change_size = true
+		}
+		_xpos += text_x * 1.2
+		if draw_boton(_xpos, ypos, L.menu_size_medium, xsize = 72 ? ui_azul : ui_gris,,,, 1) and xsize != 72 and mapa = -1{
+			xsize = 72
+			ysize = 144
+			_change_size = true
+		}
+		_xpos += text_x * 1.2
+		if draw_boton(_xpos, ypos, L.menu_size_large, xsize = 128 ? ui_azul : ui_gris,,,, 1) and xsize != 128 and mapa = -1{
+			xsize = 128
+			ysize = 256
+			_change_size = true
+		}
+		_xpos += text_x * 1.2
+		if DEVISE and draw_boton(_xpos, ypos, L.menu_size_huge, xsize = 256 ? ui_azul : ui_gris,,,, 1) and xsize != 256 and mapa = -1{
+			xsize = 256
+			ysize = 512
+			_change_size = true
+		}
+		if _change_size{
+			set_grid_size()
+			biome_seed = irandom(2)
+			seed = random_get_seed()
+			generar_bioma(biome_seed)
+			randomize()
+		}
+		ypos += text_y * 1.2
+		//Modos de Juego
+		_xpos = xpos + 50
+		if draw_boton(_xpos, ypos, L.menu_modo_infinito, flow = 3 ? ui_azul : ui_gris,,,, 1){
+			misiones = array_create(0, null_mision)
+			flow = 3
+		}
+		_xpos += text_x + 20
+		if draw_boton(_xpos, ypos, L.menu_modo_oleadas, flow = 4 ? ui_azul : ui_gris,,,, 1){
+			misiones = array_create(1, null_mision)
+			misiones[0].objetivo = idm_sobrevivir_oleadas
+			misiones[0].target_num = 20
+			flow = 4
+		}
+		_xpos += text_x + 20
+		if draw_boton(_xpos, ypos, L.menu_modo_misiones, flow = 5 ? ui_azul : ui_gris,,,, 1){
+			modo_misiones = true
+			add_mision()
+			mision_actual = -1
+			flow = 5
+		}
+		_xpos += text_x + 20
+		if draw_boton(_xpos, ypos, L.modo_ia, flow = 6 ? ui_azul : ui_gris,,,, 1){
+			misiones = array_create(1, null_mision)
+			misiones[0].objetivo = idm_destruir_edificio
+			misiones[0].target_id = id_nucleo
+			misiones[0].target_num = 1
+			flow = 6
+		}
+		ypos += text_y * 1.2
+		//Modo oleadas
+		if flow = 4{
+			_xpos = draw_text_xpos(xpos + 30, ypos, L.menu_numero_oleadas)
+			misiones[0].target_num = round(draw_deslizante(_xpos + 10, _xpos + 135, ypos + 10, misiones[0].target_num, 10, 50, des_count++, 1))
+			draw_text_ypos(_xpos + 145, ypos, misiones[0].target_num)
+			ypos += text_y * 1.2
+		}
+		_xpos = xpos + 10
+		ypos = draw_text_ypos(_xpos, ypos, L.dificultad)
+		if draw_boton(_xpos, ypos, L.facil, flow = 0 ? ui_azul : ui_gris,,,, 1){
 			tecnologia = false
 			oleadas_tiempo_primera = 240
 			oleadas_tiempo = 90
@@ -15,8 +118,8 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 			flow = 0
 			dificultad = 0
 		}
-		xpos += text_x + 20
-		if draw_boton(xpos, ypos, L.medio, flow = 1 ? ui_azul : ui_gris,,,, 1){
+		_xpos += text_x + 20
+		if draw_boton(_xpos, ypos, L.medio, flow = 1 ? ui_azul : ui_gris,,,, 1){
 			tecnologia = true
 			tecnologia_precio_multiplicador = 1 
 			oleadas_tiempo_primera = 180
@@ -29,8 +132,8 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 			flow = 1
 			dificultad = 1
 		}
-		xpos += text_x + 20
-		if draw_boton(xpos, ypos, L.dificil, flow = 2 ? ui_azul : ui_gris,,,, 1){
+		_xpos += text_x + 20
+		if draw_boton(_xpos, ypos, L.dificil, flow = 2 ? ui_azul : ui_gris,,,, 1){
 			tecnologia = true
 			tecnologia_precio_multiplicador = 1.5 
 			oleadas_tiempo_primera = 150
@@ -43,8 +146,8 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 			flow = 2
 			dificultad = 2
 		}
-		xpos += text_x + 20
-		if draw_boton(xpos, ypos, L.personalizado, flow > 2 ? ui_azul : ui_gris,,,, 1){
+		_xpos += text_x + 20
+		if draw_boton(_xpos, ypos, L.personalizado, flow > 2 ? ui_azul : ui_gris,,,, 1){
 			flow = 4
 			dificultad = -1
 		}
@@ -78,7 +181,7 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 			//Permitir nuclear
 			xpos = 140
 			draw_text_xpos(xpos, ypos, $"{misiles_nombre[2]}: {permitir_nuclear ? L.activado : L.desactivado}")
-			xpos += max(string_width($"{misiles_nombre[2]}: {L.activado}"), string_width($"{L.enciclopedia_tecnologia}: {L.desactivado}"))
+			xpos += max(string_width($"{misiles_nombre[2]}: {L.activado}"), string_width($"{misiles_nombre[2]}: {L.desactivado}"))
 			permitir_nuclear = draw_toggle(xpos + 10, ypos - 5, permitir_nuclear, 1)
 			ypos += text_y * 1.2
 			//Modo creativo
@@ -88,117 +191,8 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 			cheat = draw_toggle(xpos + 10, ypos - 5, cheat, 1)
 			oleadas = not cheat
 			ypos += text_y + 20
-			//Modos de Juego
-			xpos = 200
-			if draw_boton(xpos, ypos, L.menu_modo_infinito, flow = 3 ? ui_azul : ui_gris,,,, 1){
-				misiones = array_create(0, null_mision)
-				flow = 3
-			}
-			xpos += text_x + 20
-			if draw_boton(xpos, ypos, L.menu_modo_oleadas, flow = 4 ? ui_azul : ui_gris,,,, 1){
-				misiones = array_create(1, null_mision)
-				misiones[0].objetivo = idm_sobrevivir_oleadas
-				misiones[0].target_num = 20
-				flow = 4
-			}
-			xpos += text_x + 20
-			if draw_boton(xpos, ypos, L.menu_modo_misiones, flow = 5 ? ui_azul : ui_gris,,,, 1){
-				modo_misiones = true
-				add_mision()
-				mision_actual = -1
-				flow = 5
-			}
-			xpos += text_x + 20
-			if draw_boton(xpos, ypos, "MODO IA", flow = 6 ? ui_azul : ui_gris,,,, 1){
-				misiones = array_create(1, null_mision)
-				misiones[0].objetivo = idm_destruir_edificio
-				misiones[0].target_id = id_nucleo
-				misiones[0].target_num = 1
-				flow = 6
-			}
-			if flow = 4{
-				ypos += text_y + 10
-				xpos = draw_text_xpos(160, ypos, L.menu_numero_oleadas)
-				misiones[0].target_num = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, misiones[0].target_num, 10, 50, des_count++, 1))
-				draw_text_ypos(xpos + 145, ypos, misiones[0].target_num)
-			}
 		}
 		ypos += text_y * 1.25
-		//Mapas
-		xpos = 200
-		if mapa = -1{
-			draw_set_color(ui_boton_azul)
-			draw_rectangle(xpos - 2, ypos - 2, xpos + 97, ypos + 97, false)
-		}
-		if draw_sprite_boton(spr_random_map,, xpos, ypos, 96, 96, 1){
-			biome_seed = irandom(2)
-			seed = random_get_seed()
-			generar_bioma(biome_seed)
-			randomize()
-			mapa = -1
-		}
-		xpos += 120
-		for(a = 0; a < array_length(DEFAULT_MAPS); a++){
-			if mapa = a{
-				draw_set_color(ui_boton_azul)
-				draw_rectangle(xpos - 2, ypos - 2, xpos + 97, ypos + 97, false)
-			}
-			if draw_sprite_boton(default_maps_image[a],, xpos, ypos, 96, 96, 1, hover_sprite_boton_text, {a : a}) and mapa != a{
-				file = load_escenario_buffer($"{DEFAULT_MAPS[a]}.txt", false)
-				if file != ""
-					mapa = a
-			}
-			for(b = 0; b < 3; b++)
-				if medallas[a, b]
-					draw_sprite(spr_medallas, b, xpos + 32 * b + 16, ypos + 110)
-			xpos += 120
-		}
-		draw_set_color(c_white)
-		ypos += 140
-		//Tamaño del mapa aleatorio
-		if mapa = -1{
-			xpos = 200
-			if draw_boton(xpos, ypos, L.menu_size_little, xsize = 48 ? ui_azul : ui_gris,,,, 1) and xsize != 48{
-				xsize = 48
-				ysize = 96
-				set_grid_size()
-				biome_seed = irandom(2)
-				seed = random_get_seed()
-				generar_bioma(biome_seed)
-				randomize()
-			}
-			xpos += text_x * 1.2
-			if draw_boton(xpos, ypos, L.menu_size_medium, xsize = 72 ? ui_azul : ui_gris,,,, 1) and xsize != 72{
-				xsize = 72
-				ysize = 144
-				set_grid_size()
-				biome_seed = irandom(2)
-				seed = random_get_seed()
-				generar_bioma(biome_seed)
-				randomize()
-			}
-			xpos += text_x * 1.2
-			if draw_boton(xpos, ypos, L.menu_size_large, xsize = 128 ? ui_azul : ui_gris,,,, 1) and xsize != 128{
-				xsize = 128
-				ysize = 256
-				set_grid_size()
-				biome_seed = irandom(2)
-				seed = random_get_seed()
-				generar_bioma(biome_seed)
-				randomize()
-			}
-			xpos += text_x * 1.2
-			if DEVISE and draw_boton(xpos, ypos, L.menu_size_huge, xsize = 256 ? ui_azul : ui_gris,,,, 1) and xsize != 256{
-				xsize = 256
-				ysize = 512
-				set_grid_size()
-				biome_seed = irandom(2)
-				seed = random_get_seed()
-				generar_bioma(biome_seed)
-				randomize()
-			}
-			ypos += text_y * 1.2
-		}
 		return [xpos, ypos]
 	}
 }

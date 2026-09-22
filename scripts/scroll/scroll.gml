@@ -1,9 +1,9 @@
-function scroll(xpos, ypos, variable, cantidad_elementos, altura, funcion = null_function_scroll, param = {}, _deslizante = 0){
+function scroll(xpos, ypos, variable, cantidad_elementos, altura, funcion = null_function_scroll, param = {}, _deslizante = 0, _input_layer = 0){
 	with control{
 		deslizante[_deslizante] = clamp(deslizante[_deslizante], 0, max(0, variable - cantidad_elementos))
 		if DEVISE{
 			if variable > cantidad_elementos
-				deslizante[_deslizante] = floor(draw_deslizante_vertical(xpos, ypos, ypos + cantidad_elementos * altura, deslizante[_deslizante], 0, variable - cantidad_elementos, 0))
+				deslizante[_deslizante] = floor(draw_deslizante_vertical(xpos, ypos, ypos + cantidad_elementos * altura, deslizante[_deslizante], 0, variable - cantidad_elementos, _deslizante, _input_layer))
 			if deslizante[_deslizante] + cantidad_elementos < variable and mouse_wheel_down()
 				deslizante[_deslizante]++
 			if deslizante[_deslizante] > 0 and mouse_wheel_up()

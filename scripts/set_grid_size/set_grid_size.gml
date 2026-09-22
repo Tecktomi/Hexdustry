@@ -3,8 +3,6 @@ function set_grid_size(){
 		clear_edificios()
 		chunk_xsize = ceil(xsize / CHUNK_WIDTH)
 		chunk_ysize = ceil(ysize / CHUNK_HEIGHT)
-		ds_grid_resize(null_edificio.coordenadas_dis, xsize, ysize)
-		ds_grid_clear(null_edificio.coordenadas_dis, 0)
 		ds_grid_resize(blueprint_grid, xsize, ysize)
 		ds_grid_clear(blueprint_grid, false)
 		ds_grid_resize(edificio_bool, xsize, ysize)

@@ -210,7 +210,7 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 		draw_set_halign(fa_right)
 		if jugador = jugador_IA and draw_boton(room_width - 40, 20, L.enemigo, ui_rojo)
 			jugador = 2
-		else if jugador = 2 and draw_boton(room_width - 40, 20, "ALIADO", ui_verde)
+		else if jugador = 2 and draw_boton(room_width - 40, 20, L.aliado, ui_verde)
 			jugador = jugador_IA
 		draw_set_halign(fa_left)
 	}
@@ -743,9 +743,9 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 				var select = edificio.select
 				if select != -1{
 					if edificio.mode
-						temp_text += $"{misiles_nombre[select]} listo\n"
+						temp_text += $"{misiles_nombre[select]} {L.misil_listo}\n"
 					else
-						temp_text += $"Fabricando {misiles_nombre[select]}\n"
+						temp_text += $"{L.fabricando} {misiles_nombre[select]}\n"
 					for(a = 0; a < array_length(misiles_precio_id[select]); a++)
 						temp_text += $"  {recurso_nombre[misiles_precio_id[select, a]]}: {edificio.carga[misiles_precio_id[select, a]]}/{misiles_precio_num[select, a]}\n"
 					temp_text += $"  {terreno_nombre[idt_petroleo]}: {misiles_petroleo[select] - edificio.array_real[0]}/{misiles_petroleo[select]}\n"
@@ -852,7 +852,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 						break
 					}
 				if flag_rss{
-					temp_text += "Almacén"
+					temp_text += L.almacen
 					for(a = 0; a < rss_max; a++)
 						if edificio.carga[a] != 0
 							temp_text += $"  {recurso_nombre[a]}: {edificio.carga[a]}\n"
@@ -947,7 +947,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		draw_set_color(EQUIPO_COLOR[jugador])
 		draw_circle_off(dron.x, dron.y, 20, true)
 		temp_text += $"{dron_nombre[dron.index]}\n"
-		temp_text += $"{dron.jugador != jugador ? L.enemigo : "ALIADO"}\n"
+		temp_text += $"{dron.jugador != jugador ? L.enemigo : L.aliado}\n"
 		temp_text += $"vida: {dron.vida}/{dron.vida_max}\n"
 		var flag_dron = false
 		for(a = 0; a < rss_max; a++)
@@ -956,7 +956,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 				break
 			}
 		if flag_dron{
-			temp_text += "Carga:\n"
+			temp_text += $"{L.carga}:\n"
 			for(a = 0; a < rss_max; a++)
 				if dron.carga[a] > 0
 					temp_text += $"  {recurso_nombre[a]}: {floor(dron.carga[a])}\n"
@@ -1137,10 +1137,10 @@ if sonido
 			draw_sprite_stretched(edificio_sprite[menu_array[a]], 0, menu_x - 15 + _size * cos((a + 0.5) * b), menu_y - 15 - _size * sin((a + 0.5) * b), _size_sqrx, _size_sqry)
 			a = menu_array[a]
 			if DEVISE{
-				temp_text = $"{edificio_nombre[a]} (hotkey: {edificio_key[a]})\n"
+				temp_text = $"{edificio_nombre[a]} ({L.hotkey}: {edificio_key[a]})\n"
 				if not cheat{
 					if tecnologia and not edificio_tecnologia[jugador, a]
-						temp_text += "  Falta Tecnología\n"
+						temp_text += $"  {L.falta_tecnologia}\n"
 					for(c = 0; c < array_length(edificio_precio_id[a]); c++)
 						temp_text += $"  {recurso_nombre[edificio_precio_id[a, c]]}: {edificio_precio_num[a, c]}\n"
 				}
@@ -2090,7 +2090,7 @@ if build_index >= 0 and win = 0{
 										var temp_edificio = edificio_id[# aa, bb]
 										if temp_edificio.index = id_ensambladora and not temp_edificio.mode and temp_edificio.jugador = jugador{
 											draw_edificio_borde(temp_edificio, ui_boton_verde, _parpadeo)
-											temp_text += "Conectando\n"
+											temp_text += $"{L.conectando}\n"
 											break
 										}
 									}

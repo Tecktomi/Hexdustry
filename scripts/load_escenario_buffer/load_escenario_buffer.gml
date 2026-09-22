@@ -4,15 +4,15 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 		var buffer = buffer_load(filename)
 		//Variables globales
 		var prev_xsize = xsize, prev_ysize = ysize
-		xsize = real(buffer_read(buffer, buffer_u8))
+		xsize = real(buffer_read(buffer, buffer_u16))
 		if prev_xsize != xsize
 			resize_grid(min(prev_xsize, xsize), 0)
-		ysize = real(buffer_read(buffer, buffer_u8))
+		ysize = real(buffer_read(buffer, buffer_u16))
 		if prev_ysize != ysize
 			resize_grid(0, min(prev_ysize, ysize))
-		spawn_x = real(buffer_read(buffer, buffer_u8))
-		spawn_y = real(buffer_read(buffer, buffer_u8))
-		var seek_config = real(buffer_read(buffer, buffer_u16)), a, b, c, temp_array_string
+		spawn_x = real(buffer_read(buffer, buffer_u16))
+		spawn_y = real(buffer_read(buffer, buffer_u16))
+		var seek_config = real(buffer_read(buffer, buffer_u32)), a, b, c, temp_array_string
 		if _misiones{
 			for(a = 0; a < rss_max; a++)
 				carga_inicial[a] = real(buffer_read(buffer, buffer_u16))
@@ -105,11 +105,12 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 			repeat(len_edi){
 				var index = real(buffer_read(buffer, buffer_u8))
 				var dir = real(buffer_read(buffer, buffer_u8))
-				a = real(buffer_read(buffer, buffer_u8))
-				b = real(buffer_read(buffer, buffer_u8))
+				a = real(buffer_read(buffer, buffer_u16))
+				b = real(buffer_read(buffer, buffer_u16))
 				var _jugador = real(buffer_read(buffer, buffer_u8))
 				if tag_edificio_tuberia[index]{
-					liquido_choose_array = array_create(2, real(buffer_read(buffer, buffer_u8)))
+					var _liquido = real(buffer_read(buffer, buffer_s8))
+					liquido_choose_array = array_create(2, _liquido)
 					liquido_choose = 0
 				}
 				var edificio = add_edificio(index, dir, a, b, _jugador)
