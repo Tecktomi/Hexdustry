@@ -41,20 +41,8 @@ function step(){
 				energia_consumida_time = 0
 				array_push(energia_perdida, energia_perdida_time)
 				energia_perdida_time = 0
-				if auto_guardado and os_browser = browser_not_a_browser and not mapa_editado{
-					if tutorial = 0{
-						buffer = buffer_create(1024, buffer_grow, 1)
-						save_game_buffer(buffer)
-						buffer_save(buffer, "last_save.save")
-						buffer_delete(buffer)
-					}
-					else{
-						buffer = buffer_create(1024, buffer_grow, 1)
-						save_game_buffer(buffer)
-						buffer_save(buffer, $"Tutorial/mision{tutorial}.save")
-						buffer_delete(buffer)
-					}
-				}
+				if auto_guardado and BROWSER and not mapa_editado
+					save()
 			}
 			if online and servidor and ((timer mod LAG) = 0 or (timer mod LAG) = LAG / 2)
 				server_sync_timer()

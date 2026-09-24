@@ -78,12 +78,14 @@ function menu_principal(){
 		}
 		draw_set_halign(fa_left)
 		if get_file > 0{
-			draw_set_color(c_dkgray)
-			draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
-			draw_set_color(c_white)
-			draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
-			draw_set_halign(fa_center)
-			draw_text(room_width / 2, 110, get_file = 1 ? L.menu_cargar_escenario : L.menu_juego_rapido)
+			if get_file != 5{
+				draw_set_color(ui_fondo)
+				draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
+				draw_set_color(ui_texto)
+				draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
+				draw_set_halign(fa_center)
+				draw_text(room_width / 2, 110, get_file = 1 ? L.menu_cargar_escenario : L.menu_juego_rapido)
+			}
 			draw_set_halign(fa_left)
 			//Cargar Escenarios
 			if get_file = 1{

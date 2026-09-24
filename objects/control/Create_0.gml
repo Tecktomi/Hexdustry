@@ -76,6 +76,21 @@ DEFAULT_MAPS_L = ["praderas", "cuevas", "desierto", "nieve", "islas"]
 	#macro idioma_ingles 0
 	#macro idioma_espanol 1
 	#macro idioma_ruso 2
+	//Gamemode
+	#macro gamemode_oleadas 0
+	#macro gamemode_infinito 1
+	#macro gamemode_misiones 2
+	#macro gamemode_ia 3
+	//Pausa settings
+	#macro pausa_general 0
+	#macro pausa_online 1
+	#macro pausa_ajuste 2
+	#macro pausa_control 3
+#endregion
+#region debug
+	debug_frame_time = false
+	debug_frame_time_value = 0
+	debug_frame_time_value_2 = 0
 #endregion
 DEVISE = (os_type = os_windows)
 var arr0 = array_create(0, 0)
@@ -399,6 +414,8 @@ L = {}
 	spawn_x = 0
 	spawn_y = 0
 	pausa_setting = 0
+	pausa_controles = -1
+	game_mode = 0
 #endregion
 #region Misiones
 	null_mision = def_mision()

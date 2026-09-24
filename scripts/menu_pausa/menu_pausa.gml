@@ -1,6 +1,7 @@
 function menu_pausa(_juego = true, _input_layer = 0){
 	with control{
 		var a, b, xpos, ypos, buffer, temp_text, temp_sprite, key, char
+		var _show_idioma = true
 		if _juego
 			for(a = array_length(drones) - 1; a >= 0; a--)
 				draw_dron(drones[a], true)
@@ -20,74 +21,64 @@ function menu_pausa(_juego = true, _input_layer = 0){
 		xpos = room_width / 2
 		ypos = 300
 		//Ajustes generales
-		if pausa_setting = 0{
-			if _juego
-				draw_text(room_width / 2, 150,	$"\"{chr(CONTROL_REDES)}\" {L.pausa_red}\n\"{chr(CONTROL_FLUJO)}\" {L.pausa_liquido}\n\"{chr(CONTROL_ENCICLOPEDIA)}\" {L.pausa_enciclopedia}\n\"{chr(CONTROL_REPARAR)}\" {L.pausa_reparar}")
-			if DEVISE{
-				if draw_boton(xpos, ypos, L.controles, ui_azul,,,, _input_layer)
-					pausa_setting = 3
-				ypos += text_y * 1.2
-			}
-			if draw_boton(xpos, ypos, L.ajustes, ui_azul,,,, _input_layer)
-				pausa_setting = 2
-			ypos += text_y * 1.2
+		if pausa_setting = pausa_general{
+			var _max_width = max(string_width(L.pausa_continuar), string_width(L.guardado), string_width(L.guardar), string_width(L.abrir_en_LAN),
+				string_width(L.descargar_para_jugar_en_LAN), string_width(L.ajustes), string_width(L.controles), string_width(L.salir)) + 8
 			if _juego{
-				//Guardar / Abrir en LAN
-				if menu = MENU_JUEGO{
-					if os_browser = browser_not_a_browser{
-						if not mapa_editado{
-							if server = -1 and menu = MENU_JUEGO{
-								if draw_boton(xpos, ypos, L.abrir_en_LAN, ui_azul,,,, _input_layer)
-									pausa_setting = 1
-							}
-							else{
-								b = 0
-								for(a = 0; a < MAX_JUGADORES; a++)
-									b += (server_jugadores[a] != -1)
-								draw_boton(xpos, ypos, $"{b} {L.jugadores}", ui_verde,,,, _input_layer)
-							}
-							ypos += text_y * 1.2
-							if guardado
-								draw_boton(xpos, ypos, L.guardado, ui_verde,,,, _input_layer)
-							else if tutorial = 0 and draw_boton(xpos, ypos, L.guardar, ui_azul,,,, _input_layer){
-								guardado = true
-								buffer = buffer_create(4096, buffer_grow, 1)
-								save_game_buffer(buffer)
-								temp_text = $"Saves/{day_format()}"
-								buffer_save(buffer, $"{temp_text}.save")
-								buffer_delete(buffer)
-								temp_sprite = minimapa()
-								sprite_save(temp_sprite, 0, $"{temp_text}.png")
-								sprite_delete(temp_sprite)
-							}
-							ypos += text_y * 1.2
-						}
-					}
-					else{
-						draw_boton(xpos, ypos, L.descargar_para_jugar_en_LAN, ui_gris,,,, _input_layer)
-						ypos += text_y * 1.2
-					}
-				}
-				if draw_boton(xpos, ypos, L.pausa_continuar, ui_verde,,,, _input_layer){
+				//Continuar
+				if draw_boton(xpos, ypos, L.pausa_continuar, ui_verde,,,, _input_layer,, _max_width) or keyboard_check_pressed(CONTROL_MENU){
+					keyboard_clear(CONTROL_MENU)
 					pausa = 0
 					guardado = false
 				}
-				ypos += text_y * 1.2
+				ypos += text_y * 1.5
+				//Guardar
+				if BROWSER{
+					if guardado{
+						draw_boton(xpos, ypos, L.guardado, ui_verde,,,, _input_layer,, _max_width)
+						ypos += text_y * 1.2
+					}
+					else if not mapa_editado{
+						if draw_boton(xpos, ypos, L.guardar, ui_azul,,,, _input_layer,, _max_width)
+							save()
+						ypos += text_y * 1.2
+					}
+					//Online
+					if server = -1 and menu = MENU_JUEGO{
+						if draw_boton(xpos, ypos, L.abrir_en_LAN, ui_azul,,,, _input_layer,, _max_width)
+							pausa_setting = pausa_online
+					}
+					else{
+						b = 0
+						for(a = 0; a < MAX_JUGADORES; a++)
+							b += (server_jugadores[a] != -1)
+						draw_boton(xpos, ypos, $"{b} {L.jugadores}", ui_verde,,,, _input_layer,, _max_width)
+					}
+				}
+				else
+					draw_boton(xpos, ypos, L.descargar_para_jugar_en_LAN, ui_gris,,,, _input_layer,, _max_width)
+				ypos += text_y * 1.5
 			}
-			if draw_boton(xpos, ypos, L.salir, ui_rojo,,,, _input_layer){
+			//Ajustes
+			if draw_boton(xpos, ypos, L.ajustes, ui_azul,,,, _input_layer,, _max_width)
+				pausa_setting = pausa_ajuste
+			//Controles
+			if DEVISE{
+				ypos += text_y * 1.2
+				if draw_boton(xpos, ypos, L.controles, ui_azul,,,, _input_layer,, _max_width)
+					pausa_setting = pausa_control
+			}
+			ypos += text_y * 1.5
+			//Salir
+			if draw_boton(xpos, ypos, L.salir, ui_rojo,,,, _input_layer,, _max_width){
 				clear_edit()
 				pausa = 0
 				cheat = false
-				pausa_setting = 0
 				jugador = 2
 				if _juego{
 					if menu = MENU_JUEGO{
-						if tutorial = 0 and os_browser = browser_not_a_browser and not mapa_editado{
-							buffer = buffer_create(1024, buffer_grow, 1)
-							save_game_buffer(buffer)
-							buffer_save(buffer, "last_save.save")
-							buffer_delete(buffer)
-						}
+						if BROWSER and not mapa_editado
+							save()
 						if online{
 							if servidor
 								server_break()
@@ -115,10 +106,10 @@ function menu_pausa(_juego = true, _input_layer = 0){
 			}
 		}
 		//Ajustes ONLINE
-		else if pausa_setting = 1{
+		else if pausa_setting = pausa_online{
 			if draw_boton(xpos, ypos, L.abrir_en_LAN, ui_azul,,,, _input_layer){
 				open_server()
-				pausa_setting = 0
+				pausa_setting = pausa_general
 			}
 			ypos += text_y * 1.2
 			if draw_boton(xpos, ypos, server_pvp ? "PVP" : "COOP", server_pvp ? ui_rojo : ui_verde,,,, _input_layer)
@@ -126,157 +117,162 @@ function menu_pausa(_juego = true, _input_layer = 0){
 			if draw_boton(xpos, room_height - 200, L.volver, ui_rojo,,,, _input_layer) or (not DEVISE and keyboard_check_pressed(vk_backspace)){
 				if not DEVISE
 					keyboard_clear(vk_backspace)
-				pausa_setting = 0
+				pausa_setting = pausa_general
 			}
 		}
 		//Ajustes
-		else if pausa_setting = 2{
-			if draw_boton(xpos, ypos, (info ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_info}", info ? ui_verde : ui_rojo,,,, _input_layer){
-				info = not info
-				save_setting("", "info", info)
+		else if pausa_setting = pausa_ajuste{
+			draw_set_color(ui_fondo)
+			draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
+			draw_set_color(ui_texto)
+			draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
+			draw_set_halign(fa_center)
+			draw_text(room_width / 2, 120, L.ajustes)
+			draw_set_halign(fa_left)
+			xpos = 140
+			ypos = 200
+			draw_text(xpos, ypos, L.pausa_graficos)
+			ypos += 40
+			draw_text(xpos, ypos, L.pausa_animacion)
+			grafic_tile_animation = draw_toggle(room_width / 2 - 40 - 48, ypos, grafic_tile_animation)
+			ypos += 40
+			draw_text(xpos, ypos, L.pausa_iluminacion)
+			grafic_luz = draw_toggle(room_width / 2 - 40 - 48, ypos, grafic_luz)
+			ypos += 40
+			draw_text(xpos, ypos, L.pausa_humo)
+			grafic_humo = draw_toggle(room_width / 2 - 40 - 48, ypos, grafic_humo)
+			ypos += 40
+			draw_text(xpos, ypos, L.pausa_red_electrica)
+			grafic_energia = draw_toggle(room_width / 2 - 40 - 48, ypos, grafic_energia)
+			ypos += 80
+			draw_text(xpos, ypos, L.pausa_interfaz)
+			ypos += 40
+			draw_text(xpos, ypos, L.pausa_info)
+			info = draw_toggle(room_width / 2 - 40 - 48, ypos, info)
+			ypos += 40
+			draw_text(xpos, ypos, L.pausa_UI)
+			grafic_hideui = draw_toggle(room_width / 2 - 40 - 48, ypos, grafic_hideui)
+			ypos += 80
+			if draw_boton(xpos, ypos, L.volver, ui_rojo,,,, _input_layer) or (not DEVISE and keyboard_check_pressed(vk_backspace)) or keyboard_check_pressed(CONTROL_MENU){
+				keyboard_clear(CONTROL_MENU)
+				if not DEVISE
+					keyboard_clear(vk_backspace)
+				pausa_setting = pausa_general
 			}
-			ypos += text_y * 1.2
-			if draw_boton(xpos, ypos, (grafic_tile_animation ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_animacion}", grafic_tile_animation ? ui_verde : ui_rojo,,,, _input_layer){
-				grafic_tile_animation = not grafic_tile_animation
-				save_setting("", "grafic_tile_animation", grafic_tile_animation)
-			}
-			ypos += text_y * 1.2
-			if draw_boton(xpos, ypos, (grafic_luz ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_iluminacion}", grafic_luz ? ui_verde : ui_rojo,,,, _input_layer){
-				grafic_luz = not grafic_luz
-				save_setting("", "grafic_luz", grafic_luz)
-			}
-			ypos += text_y * 1.2
-			if draw_boton(xpos, ypos, (grafic_humo ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_humo}", grafic_humo ? ui_verde : ui_rojo,,,, _input_layer){
-				grafic_humo = not grafic_humo
-				save_setting("", "grafic_humo", grafic_humo)
-			}
-			ypos += text_y * 1.2
-			if draw_boton(xpos, ypos, (grafic_hideui ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_UI}", grafic_hideui ? ui_rojo : ui_verde,,,, _input_layer)
-				grafic_hideui = not grafic_hideui
-			ypos += text_y * 1.2
-			if draw_boton(xpos, ypos, (sonido ? L.pausa_desactivar : L.pausa_activar) + $" {L.pausa_sonido}", sonido ? ui_verde : ui_rojo,,,, _input_layer)
+			xpos = room_width / 2 + 40
+			ypos = 200
+			draw_text(xpos, ypos, L.pausa_audio)
+			ypos += 40
+			draw_text(xpos, ypos, L.pausa_sonido)
+			if sonido != draw_toggle(room_width - 140 - 48, ypos, sonido)
 				sound_change()
-			ypos += text_y * 1.2
-			if draw_boton(xpos, ypos, (musica ? L.pausa_desactivar : L.pausa_activar) + $" Music", musica ? ui_verde : ui_rojo,,,, _input_layer){
+			ypos += 40
+			draw_text(xpos, ypos, L.pausa_musica)
+			if musica != draw_toggle(room_width - 140 - 48, ypos, musica){
 				musica = not musica
 				if not musica
 					for(a = 0; a < MUSICA_MAX; a++)
 						audio_pause_sound(MUSICA[a])
 				save_setting("", "musica", musica)
 			}
-			ypos += text_y * 1.2
-			if draw_boton(xpos, ypos, (grafic_energia ? L.pausa_desactivar : L.pausa_activar) + $" {L.red_energia}", grafic_energia ? ui_verde : ui_rojo,,,, _input_layer){
-				grafic_energia = not grafic_energia
-				save_setting("", "grafic_energia", grafic_energia)
-			}
-			ypos += text_y * 1.2
-			if draw_boton(xpos, ypos, (auto_guardado ? L.pausa_desactivar : L.pausa_activar) + $" {L.autoguardado}", auto_guardado ? ui_verde : ui_rojo,,,, _input_layer){
-				auto_guardado = not auto_guardado
-				save_setting("", "auto_guardado", auto_guardado)
-			}
-			if draw_boton(xpos, room_height - 200, L.volver, ui_rojo,,,, _input_layer) or (not DEVISE and keyboard_check_pressed(vk_backspace)){
-				if not DEVISE
-					keyboard_clear(vk_backspace)
-				pausa_setting = 0
-			}
+			ypos += 80
+			draw_text(xpos, ypos, L.pausa_partida)
+			ypos += 40
+			draw_text(xpos, ypos, L.autoguardado)
+			auto_guardado = draw_toggle(room_width - 140 - 48, ypos, auto_guardado)
 		}
 		//Controles
 		else{
 			ypos = 200
-			for(a = 0; a < CONTROL_MAX; a++){
-				key = CONTROL_USADAS[a]
-				if key = vk_space
-					char = "Espacio"
-				else if key = vk_escape
-					char = "Escape"
-				else if key >= vk_f1 and key <= vk_f12
-					char = $"F{chr(key - ord("p") + ord(1))}"
-				else if key = vk_tab
-					char = "TAB"
-				else
-					char = chr(key)
-				draw_set_halign((a & 1) ? fa_left : fa_right)
-				if draw_boton(xpos + 40 * (a & 1) - 20, ypos, $"{CONTROL_NOMBRE[a]} \"{char}\"",,,,, _input_layer)
-					pausa_setting = 4 + a
-				if (a & 1)
-					ypos += text_y * 1.2
-			}
+			if pausa_controles = -1
+				for(a = 0; a < CONTROL_MAX; a++){
+					key = CONTROL_USADAS[a]
+					if key = vk_space
+						char = "Espacio"
+					else if key = vk_escape
+						char = "Escape"
+					else if key >= vk_f1 and key <= vk_f12
+						char = $"F{key - vk_f1 + 1}"
+					else if key = vk_tab
+						char = "TAB"
+					else
+						char = chr(key)
+					draw_set_halign((a & 1) ? fa_left : fa_right)
+					if draw_boton(xpos + 40 * (a & 1) - 20, ypos, $"{CONTROL_NOMBRE[a]} \"{char}\"",,,,, _input_layer)
+						pausa_controles = a
+					if (a & 1)
+						ypos += text_y * 1.2
+				}
 			draw_set_halign(fa_center)
-			if pausa_setting > 3{
+			if pausa_controles >= 0{
+				_show_idioma = false
 				draw_set_color(c_black)
 				draw_set_alpha(0.5)
 				draw_rectangle(0, 0, room_width, room_height, false)
 				draw_set_color(c_white)
 				draw_set_alpha(1)
 				draw_text(xpos, ypos, L.presiona_tecla)
-				if keyboard_check_pressed(vk_anykey) and (keyboard_lastkey = CONTROL_USADAS[pausa_setting - 4] or not array_contains(CONTROL_USADAS, keyboard_lastkey)){
-					pausa_setting -= 2
-					if pausa_setting = 2
+				ypos += text_y * 1.5
+				if keyboard_check_pressed(vk_anykey) and (keyboard_lastkey = CONTROL_USADAS[pausa_controles] or not array_contains(CONTROL_USADAS, keyboard_lastkey)){
+					if pausa_controles = 0
 						CONTROL_LEFT = keyboard_lastkey
-					else if pausa_setting = 3
+					else if pausa_controles = 1
 						CONTROL_RIGHT = keyboard_lastkey
-					else if pausa_setting = 4
+					else if pausa_controles = 2
 						CONTROL_UP = keyboard_lastkey
-					else if pausa_setting = 5
+					else if pausa_controles = 3
 						CONTROL_DOWN = keyboard_lastkey
-					else if pausa_setting = 6
+					else if pausa_controles = 4
 						CONTROL_PAUSE = keyboard_lastkey
-					else if pausa_setting = 7
+					else if pausa_controles = 5
 						CONTROL_MENU = keyboard_lastkey
-					else if pausa_setting = 8
+					else if pausa_controles = 6
 						CONTROL_MUSIC = keyboard_lastkey
-					else if pausa_setting = 9
+					else if pausa_controles = 7
 						CONTROL_WAVES = keyboard_lastkey
-					else if pausa_setting = 10
+					else if pausa_controles = 8
 						CONTROL_HIDEUI = keyboard_lastkey
-					else if pausa_setting = 11
+					else if pausa_controles = 9
 						CONTROL_INFO = keyboard_lastkey
-					else if pausa_setting = 12
+					else if pausa_controles = 10
 						CONTROL_FLOW = keyboard_lastkey
-					else if pausa_setting = 13
+					else if pausa_controles = 11
 						CONTROL_ENCICLOPEDIA = keyboard_lastkey
-					else if pausa_setting = 14
+					else if pausa_controles = 12
 						CONTROL_ROTAR = keyboard_lastkey
-					else if pausa_setting = 15
+					else if pausa_controles = 13
 						CONTROL_REPARAR = keyboard_lastkey
-					else if pausa_setting = 16
+					else if pausa_controles = 14
 						CONTROL_REDES = keyboard_lastkey
-					else if pausa_setting = 17
+					else if pausa_controles = 15
 						CONTROL_FLUJO = keyboard_lastkey
-					else if pausa_setting = 18
+					else if pausa_controles = 16
 						CONTROL_BLUEPRINT = keyboard_lastkey
-					else if pausa_setting = 19
+					else if pausa_controles = 17
 						CONTROL_TAB = keyboard_lastkey
-					CONTROL_USADAS[pausa_setting - 2] = keyboard_lastkey
-					save_setting("Controles", $"{pausa_setting - 2}", keyboard_lastkey, false)
+					CONTROL_USADAS[pausa_controles] = keyboard_lastkey
+					save_setting("Controles", $"{pausa_controles}", keyboard_lastkey, false)
 					keyboard_clear(keyboard_lastkey)
-					pausa_setting = 1
+					pausa_controles = -1
+					pausa_setting = pausa_control
 				}
 			}
-			if draw_boton(xpos, room_height - 200, L.volver, ui_rojo,,,, _input_layer) or (not DEVISE and keyboard_check_pressed(vk_backspace)){
+			if draw_boton(xpos, ypos, L.volver, ui_rojo,,,, _input_layer) or (not DEVISE and keyboard_check_pressed(vk_backspace)) or keyboard_check_pressed(CONTROL_MENU){
+				keyboard_clear(CONTROL_MENU)
 				if not DEVISE
 					keyboard_clear(vk_backspace)
-				pausa_setting = 0
+				pausa_setting = pausa_general
 			}
 		}
 		draw_set_halign(fa_left)
-		for(a = 0; a < IDIOMAS; a++)
-			if draw_sprite_boton(spr_bandera, a, 20 + 80 * a, 20, 64, 48,, function(data){draw_text_background(0, 80, IDIOMA_NAME[data.a])}, {a : a}){
-				idioma = a
-				save_setting("", "Idioma", idioma, true)
-				set_idioma()
-			}
 		draw_set_color(color)
-		if keyboard_check_pressed(CONTROL_MENU) or (not DEVISE and keyboard_check_pressed(vk_backspace)){
-			if not DEVISE
-				keyboard_clear(vk_backspace)
-			keyboard_clear(CONTROL_MENU)
-			if pausa_setting = 0{
-				pausa = 0
-				guardado = false
-			}
-			else if pausa_setting = 1
-				pausa_setting = 0
+		if _show_idioma{
+			for(a = 0; a < IDIOMAS; a++)
+				if draw_sprite_boton(spr_bandera, a, 20 + 80 * a, 20, 64, 48, input_layer, function(data){draw_text_background(0, 80, IDIOMA_NAME[data.a])}, {a : a}){
+					idioma = a
+					save_setting("", "Idioma", idioma, true)
+					set_idioma()
+				}
 		}
 		return false
 	}

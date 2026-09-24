@@ -2,8 +2,8 @@ function show_area(arreglo = array_create(0, 0)){
 	with control{
 		var mask = usable_grid_bool, len = array_length(arreglo), a, b, c, aa, bb, aaa, bbb, bmod, temp_complex
 		ds_grid_clear(mask, false)
-		for(a = 0; a < len;)
-			mask[# arreglo[a++], arreglo[a++]] = true
+		for(a = 0; a < len; a += 2)
+			mask[# arreglo[a], arreglo[a + 1]] = true
 		for(a = 0; a < len; a++){
 			aa = arreglo[a++]
 			bb = arreglo[a++]

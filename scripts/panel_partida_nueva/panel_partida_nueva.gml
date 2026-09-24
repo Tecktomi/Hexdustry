@@ -67,38 +67,32 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 			generar_bioma(biome_seed)
 			randomize()
 		}
+		_change_size = false
 		ypos += text_y * 1.2
 		//Modos de Juego
 		_xpos = xpos + 50
-		if draw_boton(_xpos, ypos, L.menu_modo_infinito, flow = 3 ? ui_azul : ui_gris,,,, 1){
-			misiones = array_create(0, null_mision)
-			flow = 3
+		if draw_boton(_xpos, ypos, L.menu_modo_oleadas, game_mode = gamemode_oleadas ? ui_azul : ui_gris,,,, 1){
+			_change_size = true
+			game_mode = gamemode_oleadas
 		}
-		_xpos += text_x + 20
-		if draw_boton(_xpos, ypos, L.menu_modo_oleadas, flow = 4 ? ui_azul : ui_gris,,,, 1){
-			misiones = array_create(1, null_mision)
-			misiones[0].objetivo = idm_sobrevivir_oleadas
-			misiones[0].target_num = 20
-			flow = 4
+		_xpos += text_x * 1.2
+		if draw_boton(_xpos, ypos, L.menu_modo_infinito, game_mode = gamemode_infinito ? ui_azul : ui_gris,,,, 1){
+			_change_size = true
+			game_mode = gamemode_infinito
 		}
-		_xpos += text_x + 20
-		if draw_boton(_xpos, ypos, L.menu_modo_misiones, flow = 5 ? ui_azul : ui_gris,,,, 1){
-			modo_misiones = true
-			add_mision()
-			mision_actual = -1
-			flow = 5
+		_xpos += text_x * 1.2
+		if draw_boton(_xpos, ypos, L.menu_modo_misiones, game_mode = gamemode_misiones ? ui_azul : ui_gris,,,, 1){
+			_change_size = true
+			game_mode = gamemode_misiones
 		}
-		_xpos += text_x + 20
-		if draw_boton(_xpos, ypos, L.modo_ia, flow = 6 ? ui_azul : ui_gris,,,, 1){
-			misiones = array_create(1, null_mision)
-			misiones[0].objetivo = idm_destruir_edificio
-			misiones[0].target_id = id_nucleo
-			misiones[0].target_num = 1
-			flow = 6
+		_xpos += text_x * 1.2
+		if draw_boton(_xpos, ypos, L.modo_ia, game_mode = gamemode_ia ? ui_azul : ui_gris,,,, 1){
+			_change_size = true
+			game_mode = gamemode_ia
 		}
 		ypos += text_y * 1.2
 		//Modo oleadas
-		if flow = 4{
+		if game_mode = gamemode_oleadas and array_length(misiones) > 0{
 			_xpos = draw_text_xpos(xpos + 30, ypos, L.menu_numero_oleadas)
 			misiones[0].target_num = round(draw_deslizante(_xpos + 10, _xpos + 135, ypos + 10, misiones[0].target_num, 10, 50, des_count++, 1))
 			draw_text_ypos(_xpos + 145, ypos, misiones[0].target_num)
@@ -106,53 +100,79 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 		}
 		_xpos = xpos + 10
 		ypos = draw_text_ypos(_xpos, ypos, L.dificultad)
-		if draw_boton(_xpos, ypos, L.facil, flow = 0 ? ui_azul : ui_gris,,,, 1){
-			tecnologia = false
-			oleadas_tiempo_primera = 240
-			oleadas_tiempo = 90
-			multiplicador_vida_enemigos = 50
-			cheat = false
-			misiones = array_create(1, null_mision)
-			misiones[0].objetivo = idm_sobrevivir_oleadas
-			misiones[0].target_num = 15
-			flow = 0
+		if draw_boton(_xpos, ypos, L.facil, dificultad = 0 ? ui_azul : ui_gris,,,, 1){
+			_change_size = true
 			dificultad = 0
 		}
 		_xpos += text_x + 20
-		if draw_boton(_xpos, ypos, L.medio, flow = 1 ? ui_azul : ui_gris,,,, 1){
-			tecnologia = true
-			tecnologia_precio_multiplicador = 1 
-			oleadas_tiempo_primera = 180
-			oleadas_tiempo = 75
-			multiplicador_vida_enemigos = 100
-			cheat = false
-			misiones = array_create(1, null_mision)
-			misiones[0].objetivo = idm_sobrevivir_oleadas
-			misiones[0].target_num = 22
-			flow = 1
+		if draw_boton(_xpos, ypos, L.medio, dificultad = 1 ? ui_azul : ui_gris,,,, 1){
+			_change_size = true
 			dificultad = 1
 		}
 		_xpos += text_x + 20
-		if draw_boton(_xpos, ypos, L.dificil, flow = 2 ? ui_azul : ui_gris,,,, 1){
-			tecnologia = true
-			tecnologia_precio_multiplicador = 1.5 
-			oleadas_tiempo_primera = 150
-			oleadas_tiempo = 60
-			multiplicador_vida_enemigos = 160
-			cheat = false
-			misiones = array_create(1, null_mision)
-			misiones[0].objetivo = idm_sobrevivir_oleadas
-			misiones[0].target_num = 35
-			flow = 2
+		if draw_boton(_xpos, ypos, L.dificil, dificultad = 2 ? ui_azul : ui_gris,,,, 1){
+			_change_size = true
 			dificultad = 2
 		}
 		_xpos += text_x + 20
-		if draw_boton(_xpos, ypos, L.personalizado, flow > 2 ? ui_azul : ui_gris,,,, 1){
-			flow = 4
+		if draw_boton(_xpos, ypos, L.personalizado, dificultad = -1 ? ui_azul : ui_gris,,,, 1)
 			dificultad = -1
+		if _change_size{
+			if dificultad = 0{
+				tecnologia = false
+				oleadas_tiempo_primera = 240
+				oleadas_tiempo = 90
+				multiplicador_vida_enemigos = 50
+				cheat = false
+				if game_mode = gamemode_oleadas{
+					misiones = array_create(1, null_mision)
+					misiones[0].objetivo = idm_sobrevivir_oleadas
+					misiones[0].target_num = 15
+				}
+			}
+			else if dificultad = 1{
+				tecnologia = true
+				tecnologia_precio_multiplicador = 1 
+				oleadas_tiempo_primera = 180
+				oleadas_tiempo = 75
+				multiplicador_vida_enemigos = 100
+				cheat = false
+				if game_mode = gamemode_oleadas{
+					misiones = array_create(1, null_mision)
+					misiones[0].objetivo = idm_sobrevivir_oleadas
+					misiones[0].target_num = 22
+				}
+			}
+			else if dificultad = 2{
+				tecnologia = true
+				tecnologia_precio_multiplicador = 1.5 
+				oleadas_tiempo_primera = 150
+				oleadas_tiempo = 60
+				multiplicador_vida_enemigos = 160
+				cheat = false
+				if game_mode = gamemode_oleadas{
+					misiones = array_create(1, null_mision)
+					misiones[0].objetivo = idm_sobrevivir_oleadas
+					misiones[0].target_num = 35
+				}
+			}
+			if game_mode = gamemode_infinito
+				misiones = array_create(0, null_mision)
+			else if game_mode = gamemode_misiones{
+				modo_misiones = true
+				misiones = array_create(0, null_mision)
+				add_mision()
+				mision_actual = -1
+			}
+			else if game_mode = gamemode_ia{
+				misiones = array_create(1, null_mision)
+				misiones[0].objetivo = idm_destruir_edificio
+				misiones[0].target_id = id_nucleo
+				misiones[0].target_num = 1
+			}
 		}
 		//Personalizado
-		if flow > 2{
+		if dificultad = -1{
 			xpos = 140
 			ypos += text_y * 1.25
 			//Tecnología

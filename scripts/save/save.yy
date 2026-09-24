@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"file_write",
+  "%Name":"save",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"file_write",
+  "name":"save",
   "parent":{
-    "name":"FILE",
-    "path":"folders/SCRIPTS/FILE.yy",
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

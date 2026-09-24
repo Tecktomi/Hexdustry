@@ -1,4 +1,6 @@
 #region Pre-event
+	if debug_frame_time
+		var _frame_time = get_timer()
 	mina = max(0, floor(camx / zoom / 48))
 	minb = max(0, floor(camy / zoom / 14) - 1)
 	maxa = min(xsize, ceil(1 + (camx + room_width) / zoom / 48))
@@ -2794,3 +2796,27 @@ if keyboard_check(CONTROL_TAB) and online{
 	draw_set_halign(fa_left)
 }
 draw_sprite(spr_vineta, 0, 0, 0)
+if debug_frame_time{
+	draw_set_halign(fa_right)
+	draw_set_valign(fa_bottom)
+	draw_set_color(ui_texto)
+	draw_text(room_width, room_height, $"frame_time: {debug_frame_time_value}µs")
+	debug_frame_time_value_2 += get_timer() - _frame_time
+	if (image_index mod 60) = 0{
+		debug_frame_time_value = floor((debug_frame_time_value + debug_frame_time_value_2 / 60) / 2)
+		debug_frame_time_value_2 = 0
+	}
+}
+if keyboard_check_pressed(ord("G")){
+	var t = get_timer()
+	repeat(1_000){}
+	show_debug_message(get_timer() - t)
+	t = get_timer()
+	repeat(1_000)
+		draw_sprite(spr_hexagono, 0, 0, 0)
+	show_debug_message(get_timer() - t)
+	t = get_timer()
+	repeat(1_000)
+		draw_sprite_off(spr_hexagono, 0, 0, 0)
+	show_debug_message(get_timer() - t)
+}
