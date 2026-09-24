@@ -2,6 +2,8 @@ function resize_grid(minx = 0, miny = 0){
 	with control{
 		chunk_xsize = ceil(xsize / CHUNK_WIDTH)
 		chunk_ysize = ceil(ysize / CHUNK_HEIGHT)
+		xsizeplus = xsize + 1
+		ysizeplus = ysize + 1
 		ds_grid_resize(background, chunk_xsize, chunk_ysize)
 		ds_grid_resize(background_bool, chunk_xsize, chunk_ysize)
 		var a, aplus, b, temp_complex_2
@@ -21,7 +23,7 @@ function resize_grid(minx = 0, miny = 0){
 		ds_grid_resize(ore_random, xsize, ysize)
 		ds_grid_resize(terreno, xsize, ysize)
 		var prev_width = ds_grid_width(background_bool), prev_height = ds_grid_height(background_bool)
-		ds_grid_resize(pre_abtoxy, xsize + 1, ysize + 1)
+		ds_grid_resize(pre_abtoxy, xsizeplus, ysizeplus)
 		ds_grid_resize(terreno_pared_index, xsize, ysize)
 		ds_grid_resize(repair_id, xsize, ysize)
 		ds_grid_resize(repair_dir, xsize, ysize)

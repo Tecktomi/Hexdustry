@@ -19,7 +19,7 @@ function menu_principal(){
 		}
 		else
 			ypos += 2 * text_y
-		var _hay_guardado = (os_browser = browser_not_a_browser and DEVISE and file_exists("last_save.save"))
+		var _hay_guardado = (BROWSER and DEVISE and file_exists("last_save.save"))
 		if _hay_guardado{
 			if draw_boton(xpos, ypos, L.continuar, ui_verde){
 				var buffer = buffer_load("last_save.save")
@@ -56,7 +56,7 @@ function menu_principal(){
 			menu = MENU_CAMPANNA
 		ypos += text_y * 1.2
 		//Configuración online
-		if os_browser = browser_not_a_browser{
+		if BROWSER{
 			if draw_boton(xpos, ypos, L.multijugador, ui_azul){
 				input_layer = 1
 				get_file = 4

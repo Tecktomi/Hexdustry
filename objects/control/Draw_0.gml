@@ -49,8 +49,7 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 	for(a = min_chunka; a < max_chunka; a++)
 		for(b = min_chunkb; b < max_chunkb; b++){
 			chunk = chunk_edificios_draw[# a, b]
-			len = array_length(chunk)
-			for(c = 0; c < len; c++){
+			for(c = array_length(chunk) - 1; c >= 0; c--){
 				edificio = chunk[c]
 				index = edificio.index
 				aa = edificio.x
@@ -2806,17 +2805,4 @@ if debug_frame_time{
 		debug_frame_time_value = floor((debug_frame_time_value + debug_frame_time_value_2 / 60) / 2)
 		debug_frame_time_value_2 = 0
 	}
-}
-if keyboard_check_pressed(ord("G")){
-	var t = get_timer()
-	repeat(1_000){}
-	show_debug_message(get_timer() - t)
-	t = get_timer()
-	repeat(1_000)
-		draw_sprite(spr_hexagono, 0, 0, 0)
-	show_debug_message(get_timer() - t)
-	t = get_timer()
-	repeat(1_000)
-		draw_sprite_off(spr_hexagono, 0, 0, 0)
-	show_debug_message(get_timer() - t)
 }

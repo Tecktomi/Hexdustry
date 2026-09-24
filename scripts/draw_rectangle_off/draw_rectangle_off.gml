@@ -1,3 +1,4 @@
 function draw_rectangle_off(x1, y1, x2, y2, outline){
-	draw_rectangle(x1 * control.zoom - control.camx, y1 * control.zoom - control.camy, x2 * control.zoom - control.camx, y2 * control.zoom - control.camy, outline)
+	with control
+		draw_rectangle(x1 * zoom - camx, y1 * zoom - camy, x2 * zoom - camx, y2 * zoom - camy, outline)
 }

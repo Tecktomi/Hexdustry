@@ -1,4 +1,4 @@
-function draw_boton(x, y, texto, back_color = ui_gris, text_color = ui_texto, boton = mb_left, box = true, input_layer = 0, round_box = true, width = 0){
+function draw_boton(x, y, texto, back_color = ui_gris, text_color = ui_texto, boton = mb_left, box = true, _input_layer = 0, round_box = true, width = 0){
 	with control{
 		if texto = ""
 			return false
@@ -10,7 +10,7 @@ function draw_boton(x, y, texto, back_color = ui_gris, text_color = ui_texto, bo
 		var xx = draw_get_halign() = fa_left ? 0 : (draw_get_halign() = fa_center ? width / 2 : width)
 		var yy = draw_get_valign() = fa_top ? 0 : (draw_get_valign() = fa_middle ? height / 2 : height)
 		var offset = 8 + 24 * not DEVISE
-		var hover = (input_layer = control.input_layer and mouse_x > x - xx and mouse_y > y - yy and ((box and mouse_x < x + width + offset - xx and mouse_y < y + height + offset - yy) or (not box and mouse_x < x + width - xx and mouse_y < y + height - yy)))
+		var hover = (_input_layer = input_layer and mouse_x > x - xx and mouse_y > y - yy and ((box and mouse_x < x + width + offset - xx and mouse_y < y + height + offset - yy) or (not box and mouse_x < x + width - xx and mouse_y < y + height - yy)))
 		if box{
 			draw_set_color(hover ? ui_boton_color_hover[back_color] : ui_boton_color[back_color])
 			if round_box{

@@ -39,10 +39,10 @@ function generar_mapa(seed = random_get_seed(), instrucciones = array_create(0, 
 			}
 			else if tipo = EDITOR_INSTRUCCION_BORDES{
 				if dat1 = dat2{
-					for(a = 0; a < xsize; a++)
-						for(b = 0; b < ysize; b++)
+					for(b = 0; b < ysize; b++){
+						bmod = b & 1
+						for(a = 0; a < xsize; a++)
 							if terreno[# a, b] = dat1{
-								bmod = b & 1
 								for(j = 0; j < 6; j++){
 									aa = a + DESFACE_A[bmod, j]
 									bb = b + DESFACE_B[bmod, j]
@@ -51,12 +51,13 @@ function generar_mapa(seed = random_get_seed(), instrucciones = array_create(0, 
 									terreno[# aa, bb] = dat3
 								}
 							}
+					}
 				}
 				else
-					for(a = 0; a < xsize; a++)
-						for(b = 0; b < ysize; b++)
+					for(b = 0; b < ysize; b++){
+						bmod = b & 1
+						for(a = 0; a < xsize; a++)
 							if terreno[# a, b] = dat1{
-								bmod = b & 1
 								for(j = 0; j < 6; j++){
 									aa = a + DESFACE_A[bmod, j]
 									bb = b + DESFACE_B[bmod, j]
@@ -65,6 +66,7 @@ function generar_mapa(seed = random_get_seed(), instrucciones = array_create(0, 
 									terreno[# aa, bb] = dat3
 								}
 							}
+					}
 			}
 			else if tipo = EDITOR_INSTRUCCION_RUIDO{
 				for(a = 0; a < xsize; a++)

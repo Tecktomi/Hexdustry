@@ -1,6 +1,6 @@
 function add_edificio_flujo(edificio = control.null_edificio, flujo_name = "flujo", _jugador = 0, iter = 0){
 	with control{
-		var a = edificio.a, b = edificio.b, flujo = control.null_flujo
+		var a = edificio.a, b = edificio.b, flujo = null_flujo
 		var index = edificio.index, temp_list_size = get_size(a, b, edificio.dir, edificio_size[index]), temp_list_arround = get_arround(a, b, edificio.dir, edificio_size[index])
 		var forzado = (array_length(edificio_flujo_liquido[index]) > iter), len = array_length(temp_list_size)
 		var my_liquido = forzado ? edificio_flujo_liquido[index, iter] : -1

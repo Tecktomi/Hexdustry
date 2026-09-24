@@ -59,10 +59,10 @@ function generar_bioma(bioma){
 		}
 		var bmod
 		//Generar bordes
-		for(a = 0; a < xsize; a++)
-			for(b = 0; b < ysize; b++){
+		for(b = 0; b < ysize; b++){
+			bmod = b & 1
+			for(a = 0; a < xsize; a++){
 				temp_terreno = terreno[# a, b]
-				bmod = b & 1
 				//Añadir arena
 				if tag_agua_baja[temp_terreno]{
 					for(c = 0; c < 6; c++){
@@ -141,6 +141,7 @@ function generar_bioma(bioma){
 							terreno[# a, b] = idt_agua_salada_profunda
 				}
 			}
+		}
 		//Limpiar zona del núcleo
 		var temp_list_nucleo = get_size(floor(xsize / 2), floor(ysize / 2), 0, 7)
 		len = array_length(temp_list_nucleo)

@@ -1,6 +1,6 @@
 function dibujar_fondo(editor = 0){
 	with control{
-		var temp_step, a, b, temp_complex, aa, bb, c, d, surf = undefined, xsizeplus = xsize + 1, ysizeplus = ysize + 1
+		var temp_step, a, b, temp_complex, aa, bb, c, d, surf = undefined
 		if editor = 1{
 			temp_step = image_index / 10
 			for(a = mina; a < maxa; a++)

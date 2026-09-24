@@ -1,6 +1,6 @@
 function construir(index, dir, mx, my, _server = false, _cheat = control.cheat, _jugador = jugador){
 	with control{
-		var edificio = control.null_edificio, temp_complex = abtoxy(mx, my), flag = check_colision(mx, my, index, dir)
+		var edificio = null_edificio, temp_complex = abtoxy(mx, my), flag = check_colision(mx, my, index, dir)
 		var temp_edificio, a, dron, b, temp_jugador
 		if flag and not _cheat
 			flag = is_comprable(edificio_precio_id[index], edificio_precio_num[index], _jugador)

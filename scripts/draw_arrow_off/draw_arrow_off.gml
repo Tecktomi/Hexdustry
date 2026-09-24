@@ -1,3 +1,4 @@
 function draw_arrow_off(x1, y1, x2, y2, size){
-	draw_arrow(x1 * control.zoom - control.camx, y1 * control.zoom - control.camy, x2 * control.zoom - control.camx, y2 * control.zoom - control.camy, size * control.zoom)
+	with control
+		draw_arrow(x1 * zoom - camx, y1 * zoom - camy, x2 * zoom - camx, y2 * zoom - camy, size * zoom)
 }

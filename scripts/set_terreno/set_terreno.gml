@@ -2,6 +2,10 @@ function set_terreno(a, b, index){
 	with control{
 		var terreno_prev = terreno[# a, b], bmod = b & 1, aa, bb, i
 		if terreno_prev != index{
+			if terreno_prev = idt_agua_salada or terreno_prev = idt_lava
+				ds_grid_add(tile_animado_chunk, floor(a / CHUNK_WIDTH), floor(b / CHUNK_HEIGHT), -1)
+			if index = idt_agua_salada or index = idt_lava
+				ds_grid_add(tile_animado_chunk, floor(a / CHUNK_WIDTH), floor(b / CHUNK_HEIGHT), 1)
 			if terreno_liquido[terreno_prev] and not terreno_liquido[index]{
 				for(i = 0; i < 6; i++){
 					aa = a + DESFACE_A[bmod, i]
