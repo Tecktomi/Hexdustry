@@ -3,7 +3,8 @@ function scr_planta_enriquecimiento(edificio = control.null_edificio){
 		var index = edificio.index
 		var red = edificio.red, red_power = red.eficiencia
 		var flujo = edificio.flujo, flujo_power = flujo.eficiencia
-		if edificio.carga[idr_uranio_enriquecido] = 20 and edificio.carga[idr_uranio_empobrecido] = 1{
+		var carga = edificio.carga
+		if carga[idr_uranio_enriquecido] = 20 and carga[idr_uranio_empobrecido] = 1{
 			if flujo.liquido = -1 or tag_liquido_agua[flujo.liquido]{
 				//Encender
 				if not edificio.start{
@@ -16,8 +17,8 @@ function scr_planta_enriquecimiento(edificio = control.null_edificio){
 				if edificio.proceso >= edificio_proceso[index]{
 					edificio.proceso -= edificio_proceso[index]
 					edificio.start = false
-					edificio.carga[idr_uranio_enriquecido]++
-					edificio.carga[idr_uranio_empobrecido]--
+					carga[idr_uranio_enriquecido]++
+					carga[idr_uranio_empobrecido]--
 					edificio.waiting = not mover(edificio)
 					edificio_encender(edificio, false)
 				}
@@ -25,7 +26,7 @@ function scr_planta_enriquecimiento(edificio = control.null_edificio){
 			else
 				edificio.proceso = max(0, edificio.proceso - 1)
 		}
-		else if edificio.carga[idr_uranio_enriquecido] > 20
+		else if carga[idr_uranio_enriquecido] > 20
 			edificio.waiting = not mover(edificio)
 	}
 }

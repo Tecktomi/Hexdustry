@@ -4,6 +4,7 @@ function scr_planta_de_reciclaje(edificio = control.null_edificio){
 		var red = edificio.red, red_power = red.eficiencia
 		var flujo = edificio.flujo, flujo_power = flujo.eficiencia
 		if edificio.select >= 0 and flujo.liquido = idl_acido and edificio.carga_total < edificio_carga_max[index]{
+			var carga = edificio.carga
 			//Apagar
 			if red_power = 0{
 				edificio_encender(edificio, false)
@@ -25,14 +26,14 @@ function scr_planta_de_reciclaje(edificio = control.null_edificio){
 				if edificio.mode{
 					for(a = array_length(edificio_precio_id[edificio.select]) - 1; a >= 0; a--){
 						b = round(edificio_precio_num[edificio.select, a] / 2)
-						edificio.carga[edificio_precio_id[edificio.select, a]] += b
+						carga[edificio_precio_id[edificio.select, a]] += b
 						edificio.carga_total += b
 					}
 				}
 				else
 					for(a = array_length(dron_precio_id[edificio.select]) - 1; a >= 0; a--){
 						b = round(dron_precio_num[edificio.select, a] / 2)
-						edificio.carga[dron_precio_id[edificio.select, a]] += b
+						carga[dron_precio_id[edificio.select, a]] += b
 						edificio.carga_total += b
 					}
 				edificio_encender(edificio, false)

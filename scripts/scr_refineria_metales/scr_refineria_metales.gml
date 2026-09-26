@@ -3,7 +3,12 @@ function scr_refineria_metales(edificio = control.null_edificio){
 		var index = edificio.index
 		var red = edificio.red, red_power = red.eficiencia
 		var flujo = edificio.flujo, flujo_power = flujo.eficiencia
-		if flujo.liquido = idl_acido and (edificio.carga[idr_piedra_cuprica] > 2 or edificio.carga[idr_piedra_ferrica] > 2 or edificio.carga[idr_uranio_bruto] > 0){
+		var carga = edificio.carga
+		var _aluminio = (carga[idr_alumina] > 2 and carga[idr_aluminio] < 10)
+		if (flujo.liquido = idl_acido and ((carga[idr_piedra_cuprica] > 2 and carga[idr_cobre] < 10) or
+			(carga[idr_piedra_ferrica] > 2 and carga[idr_hierro] < 10) or
+			(carga[idr_uranio_bruto] > 0 and carga[idr_uranio_empobrecido] < 10 and carga[idr_uranio_enriquecido] < 10)))
+			or _aluminio{
 			//Apagar
 			if red_power = 0{
 				edificio_encender(edificio, false)
@@ -11,33 +16,47 @@ function scr_refineria_metales(edificio = control.null_edificio){
 			}
 			//Encender
 			if not edificio.start{
-				edificio_encender(edificio)
+				edificio_encender(edificio,, (1 + _aluminio) * edificio.energia_consumo_max, not _aluminio)
 				edificio.start = true
 			}
-			edificio.proceso += min(red_power, flujo_power) * (1 + 0.3 * edificio.modulo)
+			if _aluminio
+				edificio.proceso += red_power * (1 + 0.3 * edificio.modulo)
+			else
+				edificio.proceso += min(red_power, flujo_power) * (1 + 0.3 * edificio.modulo)
 			sound_play_edificio(2, edificio.center_x, edificio.center_y)
 			//Producir / Apagar
 			if edificio.proceso >= edificio_proceso[index]{
+				if carga[idr_sal] > 0.1{
+					carga[idr_sal] -= 0.1
+					edificio.carga_total -= 0.1
+					edificio.proceso += edificio_proceso[index] / 4
+				}
 				edificio.proceso -= edificio_proceso[index]
 				edificio.start = false
-				if edificio.carga[idr_uranio_bruto] > 0{
-					repeat(edificio.carga[idr_uranio_bruto]){
+				if _aluminio{
+					carga[idr_alumina] -= 3
+					carga[idr_aluminio]++
+					edificio.carga_total -= 2
+				}
+				else if carga[idr_uranio_bruto] > 0{
+					repeat(carga[idr_uranio_bruto]){
 						if random(1) < 0.99
-							edificio.carga[idr_uranio_empobrecido]++
+							carga[idr_uranio_empobrecido]++
 						else
-							edificio.carga[idr_uranio_enriquecido]++
+							carga[idr_uranio_enriquecido]++
 					}
-					edificio.carga[idr_uranio_bruto] = 0
+					carga[idr_uranio_bruto] = 0
 				}
-				else if edificio.carga[idr_piedra_ferrica] > 2{
-					edificio.carga[idr_piedra_ferrica] -= 3
-					edificio.carga[idr_hierro]++
+				else if carga[idr_piedra_ferrica] > 2{
+					carga[idr_piedra_ferrica] -= 3
+					carga[idr_hierro]++
+					edificio.carga_total -= 2
 				}
-				else if edificio.carga[idr_piedra_cuprica] > 2{
-					edificio.carga[idr_piedra_cuprica] -= 3
-					edificio.carga[idr_cobre]++
+				else if carga[idr_piedra_cuprica] > 2{
+					carga[idr_piedra_cuprica] -= 3
+					carga[idr_cobre]++
+					edificio.carga_total -= 2
 				}
-				edificio.carga_total -= 2
 				edificio.waiting = not mover(edificio)
 				edificio_encender(edificio, false)
 			}

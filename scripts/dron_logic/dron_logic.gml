@@ -333,12 +333,10 @@ function dron_logic(){
 									if disi < min_dis{
 										min_dis = disi
 										dir = i
-										temp_complex = abtoxy(aaa, bbb)
-										min_dis_eu = point_distance(temp_complex[0], temp_complex[1], edificio.center_x, edificio.center_y)
+										min_dis_eu = point_distance(pre_abtox[# aaa + 1, bbb + 1], pre_abtoy[# aaa + 1, bbb + 1], edificio.center_x, edificio.center_y)
 									}
 									else if disi = min_dis{
-										temp_complex = abtoxy(aaa, bbb)
-										c = point_distance(temp_complex[0], temp_complex[1], edificio.center_x, edificio.center_y)
+										c = point_distance(pre_abtox[# aaa + 1, bbb + 1], pre_abtoy[# aaa + 1, bbb + 1], edificio.center_x, edificio.center_y)
 										if c < min_dis_eu{
 											min_dis = disi
 											dir = i

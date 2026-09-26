@@ -1,9 +1,9 @@
 function edificio_encender(edificio = control.null_edificio, encender = true, energia = true, flujo = true, luz = true){
 	if encender{
 		if energia
-			change_energia(edificio.energia_consumo_max, edificio)
+			change_energia(energia * edificio.energia_consumo_max, edificio)
 		if flujo
-			change_flujo(edificio.flujo_consumo_max, edificio)
+			change_flujo(flujo * edificio.flujo_consumo_max, edificio)
 	}
 	else{
 		if energia

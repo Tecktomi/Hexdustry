@@ -423,10 +423,7 @@ function menu_editor(){
 					for(var i = 0; i < len;){
 						a = build_list[i++]
 						b = build_list[i++]
-						temp_complex_2 = abtoxy(a, b)
-						aa = temp_complex_2[0]
-						bb = temp_complex_2[1]
-						draw_sprite_off(temp_sprite, 0, aa, bb,,,,, 0.5)
+						draw_sprite_off(temp_sprite, 0, pre_abtox[# a + 1, b + 1], pre_abtoy[# a + 1, b + 1],,,,, 0.5)
 					}
 					draw_text_background(mouse_x, mouse_y + 20, L.editor_clic_aplicar)
 				}
@@ -472,9 +469,8 @@ function menu_editor(){
 						b = temp_list[i++]
 						if a < 0 or b < 0 or a >= xsize or b >= ysize
 							continue
-						temp_complex = abtoxy(a, b)
-						aa = temp_complex[0]
-						bb = temp_complex[1]
+						aa = pre_abtox[# a + 1, b + 1]
+						bb = pre_abtoy[# a + 1, b + 1]
 						//Eliminar minerales
 						if editor_herramienta = 3{
 							draw_sprite_off(spr_rojo, 0, aa, bb,,,,, 0.5)

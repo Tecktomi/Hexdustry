@@ -4,6 +4,7 @@ function scr_refineria_petroleo(edificio = control.null_edificio){
 		var red = edificio.red, red_power = red.eficiencia
 		var flujo = edificio.flujo, flujo_power = flujo.eficiencia
 		if flujo.liquido = idl_petroleo and edificio.carga_total < edificio_carga_max[index]{
+			var carga = edificio.carga
 			//Apagar
 			if edificio.energia_consumo_max > 0 and red_power = 0{
 				edificio_encender(edificio, false)
@@ -14,8 +15,8 @@ function scr_refineria_petroleo(edificio = control.null_edificio){
 				change_energia(edificio.energia_consumo_max * (1 - 0.25 * edificio.modulo), edificio)
 				edificio_encender(edificio)
 				edificio.start = true
-				if edificio.carga[idr_sal] > 0{
-					edificio.carga[idr_sal] -= 0.1
+				if carga[idr_sal] > 0{
+					carga[idr_sal] -= 0.1
 					edificio.carga_total -= 0.1
 					edificio.proceso += floor(edificio_proceso[index] / 4)
 				}
@@ -25,13 +26,13 @@ function scr_refineria_petroleo(edificio = control.null_edificio){
 			if edificio.proceso >= edificio_proceso[index]{
 				var a = random(1)
 				if a < edificio.select / 100
-					edificio.carga[idr_compuesto_incendiario]++
+					carga[idr_compuesto_incendiario]++
 				else{
 					a = random(1)
 					if a < sqr(1 - abs(edificio.select - 50) / 100)
-						edificio.carga[idr_plastico]++
+						carga[idr_plastico]++
 					else
-						edificio.carga[idr_piedra_sulfatada]++
+						carga[idr_piedra_sulfatada]++
 				}
 				edificio.carga_total++
 				edificio_encender(edificio, false)

@@ -39,6 +39,7 @@ if menu = MENU_CAMPANNA{
 }
 //Dibujo
 if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
+	var t = get_timer()
 	dibujar_fondo()
 	if grafic_tile_animation and zoom >= 1
 		dibujar_fondo(2)
@@ -141,10 +142,8 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 	if keyboard_check(CONTROL_REPARAR)
 		for(a = mina; a < maxa; a++)
 			for(b = minb; b < maxb; b++)
-				if repair_id[# a, b] >= 0{
-					temp_complex = abtoxy(a, b)
-					draw_edificio(temp_complex[0], temp_complex[1], repair_id[# a, b], repair_dir[# a, b], 0.5)
-				}
+				if repair_id[# a, b] >= 0
+					draw_edificio(pre_abtox[# a + 1, b + 1], pre_abtoy[# a + 1, b + 1], repair_id[# a, b], repair_dir[# a, b], 0.5)
 	//Luz
 	if energia_solar < 1{
 		var luz_alpha = 0.6 * (1 - energia_solar)
@@ -198,12 +197,8 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 	if sonido and random(1) < 0.1{
 		a = irandom_range(mina, maxa - 1)
 		b = irandom_range(minb, maxb - 1)
-		if terreno[# a, b] = idt_lava{
-			temp_complex = abtoxy(a, b)
-			aa = temp_complex[0]
-			bb = temp_complex[1]
-			sound_play(snd_lava, aa, bb, 0.5)
-		}
+		if terreno[# a, b] = idt_lava
+			sound_play(snd_lava, pre_abtox[# a + 1, b + 1], pre_abtoy[# a + 1, b + 1], 0.5)
 	}
 	sprite_boton_text = ""
 	clic_sound = false
@@ -275,10 +270,8 @@ if keyboard_check(CONTROL_BLUEPRINT){
 	var temp_mina = max(mina, blueprint_mina), temp_maxa = min(maxa, blueprint_maxa + 1), temp_minb = max(minb, blueprint_minb), temp_maxb = min(maxb, blueprint_maxb + 1)
 	for(a = temp_mina; a < temp_maxa; a++)
 		for(b = temp_minb; b < temp_maxb; b++)
-			if blueprint_grid[# a, b]{
-				temp_complex = abtoxy(a, b)
-				draw_sprite_off(spr_hexagono, 0, temp_complex[0], temp_complex[1],,,, ui_boton_azul, 0.5)
-			}
+			if blueprint_grid[# a, b]
+				draw_sprite_off(spr_hexagono, 0, pre_abtox[# a + 1, b + 1], pre_abtoy[# a + 1, b + 1],,,, ui_boton_azul, 0.5)
 	if mouse_check_button_released(mb_left){
 		blueprint_safe = false
 		blueprint_mod2 = (blueprint_minb & 1)

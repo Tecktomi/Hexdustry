@@ -3,7 +3,8 @@ function scr_planta_desalinizadora(edificio = control.null_edificio){
 		var index = edificio.index
 		var red = edificio.red, red_power = red.eficiencia
 		var flujo = edificio.flujo, flujo_power = flujo.eficiencia, flujo_2 = edificio.flujo_2
-		if flujo.liquido = idl_agua_salada and flujo_2.liquido = idl_agua and edificio.carga[idr_sal] < 10 and red_power > 0 and flujo_power > 0{
+		var carga = edificio.carga
+		if flujo.liquido = idl_agua_salada and flujo_2.liquido = idl_agua and carga[idr_sal] < 10 and red_power > 0 and flujo_power > 0{
 			change_flujo(edificio.flujo_consumo_max * red_power, edificio)
 			//Encender
 			if not edificio.start{
@@ -18,7 +19,7 @@ function scr_planta_desalinizadora(edificio = control.null_edificio){
 			edificio.draw_rot += consumo_real / edificio.flujo_consumo_max
 			//Producir / Apagar
 			if edificio.proceso >= edificio_proceso[index]{
-				edificio.carga[idr_sal] += 0.1 + 0.05 * edificio.modulo
+				carga[idr_sal] += 0.1 + 0.05 * edificio.modulo
 				edificio.carga_total += 0.1 + 0.05 * edificio.modulo
 				edificio.proceso -= edificio_proceso[index]
 				edificio.start = false

@@ -24,18 +24,31 @@ function set_grid_size(){
 		var a, b, a2, aplus, temp_complex, edificio, prev_width = ds_grid_width(background_bool), prev_height = ds_grid_height(background_bool)
 		ds_grid_resize(pre_abtoxy, xsize + 2, ysize + 2)
 		ds_grid_clear(pre_abtoxy, [0, 0])
+		pre_abtox = ds_grid_create(xsize + 2, ysize + 2)
+		ds_grid_clear(pre_abtox, 0)
+		pre_abtoy = ds_grid_create(xsize + 2, ysize + 2)
+		ds_grid_clear(pre_abtoy, 0)
 		for(a = 0; a < xsize; a++){
 			aplus = a + 1
 			pre_abtoxy[# a, 0] = [a * 48 + 40, 0]
 			pre_abtoxy[# a, ysizeplus] = [a * 48 + 40, (ysize + 2) * 14]
+			pre_abtox[# a, 0] = (a + 0.5) * 48 + 16
+			pre_abtox[# a, ysizeplus] = (a + 0.5) * 48 + 16
+			pre_abtoy[# a, ysizeplus] = (ysize + 2) * 14
 			for(b = 0; b < ysize; b++){
 				pre_abtoxy[# aplus, b + 1] = [(a + (b & 1) / 2) * 48 + 16, (b + 1) * 14]
+				pre_abtox[# aplus, b + 1] = (a + (b & 1) / 2) * 48 + 16
+				pre_abtoy[# aplus, b + 1] = (b + 1) * 14
 				ore_random[# a, b] = random(1)
 			}
 		}
 		for(b = 0; b < ysize; b++){
-			pre_abtoxy[# 0, b] = [real((b & 1) / 2) * 48 + 16, real(b + 1) * 14]
-			pre_abtoxy[# xsizeplus, b] = [real(xsizeplus + (b & 1) / 2) * 48 + 16, real(b + 1) * 14]
+			pre_abtoxy[# 0, b] = [((b & 1) / 2) * 48 + 16, (b + 1) * 14]
+			pre_abtoxy[# xsizeplus, b] = [(xsizeplus + (b & 1) / 2) * 48 + 16, (b + 1) * 14]
+			pre_abtox[# 0, b] = ((b & 1) / 2) * 48 + 16
+			pre_abtox[# xsizeplus, b] = (xsizeplus + (b & 1) / 2) * 48 + 16
+			pre_abtoy[# 0, b] = (b + 1) * 14
+			pre_abtoy[# xsizeplus, b] = (b + 1) * 14
 		}
 		ds_grid_resize(terreno_pared_index, xsize, ysize)
 		ds_grid_clear(terreno_pared_index, 0)

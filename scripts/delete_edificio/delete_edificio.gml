@@ -96,8 +96,8 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			temp_edificio.mode = false
 			temp_edificio.carga_max[idr_cobre] = 10
 			temp_edificio.carga_input[idr_cobre] = true
-			temp_edificio.carga_max[idr_silicio] = 10
-			temp_edificio.carga_input[idr_silicio] = true
+			temp_edificio.carga_max[idr_vidrio] = 10
+			temp_edificio.carga_input[idr_vidrio] = true
 			temp_edificio.carga_max[idr_electronicos] = 0
 			temp_edificio.carga_input[idr_electronicos] = false
 			temp_edificio.carga_max[idr_plastico] = 0

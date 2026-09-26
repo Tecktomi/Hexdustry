@@ -6,19 +6,21 @@ function generar_bioma(bioma){
 		ds_grid_clear(terreno_pared_index, 0)
 		var temp_peso_data, borde_agua = idt_arena, i
 		random_set_seed(seed)
-		//Generar terreno inicial
+		//Pradera
 		if bioma = 0{
 			ds_grid_clear(terreno, idt_pasto)
-			temp_peso_data = [[idt_piedra, 8, 60], [idt_agua, 3, 30], [idt_petroleo, 1, 20], [idt_pared_de_piedra, 4, 80], [idt_pared_de_pasto, 2, 80], [idt_lava, 1, 25], [idt_agua_salada, 1, 30]]
+			temp_peso_data = [[idt_piedra, 8, 60], [idt_agua, 3, 30], [idt_petroleo, 1, 20], [idt_pared_de_piedra, 4, 80], [idt_pared_de_pasto, 2, 80], [idt_lava, 1, 25], [idt_agua_salada, 1, 30], [idt_bauxita, 2, 60]]
 		}
+		//Desierto
 		else if bioma = 1{
 			ds_grid_clear(terreno, idt_arena)
-			temp_peso_data = [[idt_piedra, 5, 60], [idt_agua, 2, 30], [idt_petroleo, 2, 15], [idt_pared_de_piedra, 4, 80], [idt_pared_de_arena, 3, 80], [idt_lava, 1, 25], [idt_salar, 1, 30]]
+			temp_peso_data = [[idt_piedra, 5, 60], [idt_agua, 2, 30], [idt_petroleo, 2, 15], [idt_pared_de_piedra, 4, 80], [idt_pared_de_arena, 3, 80], [idt_lava, 1, 25], [idt_salar, 1, 30], [idt_bauxita, 2, 60]]
 			borde_agua = idt_pasto
 		}
+		//Cuevas
 		else if bioma = 2{
 			ds_grid_clear(terreno, idt_piedra)
-			temp_peso_data = [[idt_piedra_cuprica, 3, 30], [idt_piedra_ferrica, 3, 30], [idt_agua, 2, 30], [idt_petroleo, 2, 20], [idt_pared_de_piedra, 6, 150], [idt_lava, 3, 25]]
+			temp_peso_data = [[idt_piedra_cuprica, 3, 30], [idt_piedra_ferrica, 3, 30], [idt_agua, 2, 30], [idt_petroleo, 2, 20], [idt_pared_de_piedra, 6, 150], [idt_lava, 3, 25], [idt_bauxita, 2, 60]]
 			borde_agua = idt_piedra_cuprica
 		}
 		var size = array_length(temp_peso_data), temp_terreno, cantidad, magnitud, temp_j, j, a, b, temp_list, k, temp_complex, aa, bb, c, len

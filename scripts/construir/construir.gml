@@ -1,6 +1,6 @@
 function construir(index, dir, mx, my, _server = false, _cheat = control.cheat, _jugador = jugador){
 	with control{
-		var edificio = null_edificio, temp_complex = abtoxy(mx, my), flag = check_colision(mx, my, index, dir)
+		var edificio = null_edificio, xx = pre_abtox[# mx + 1, my + 1], yy = pre_abtoy[# mx + 1, my + 1], flag = check_colision(mx, my, index, dir)
 		var temp_edificio, a, dron, b, temp_jugador
 		if flag and not _cheat
 			flag = is_comprable(edificio_precio_id[index], edificio_precio_num[index], _jugador)
@@ -41,7 +41,7 @@ function construir(index, dir, mx, my, _server = false, _cheat = control.cheat, 
 		if flag and not _cheat{
 			for(a = array_length(drones) - 1; a >= 0; a--){
 				dron = drones[a]
-				if dron.jugador != _jugador and point_distance(dron.x, dron.y, temp_complex[0], temp_complex[1]) < ENEMIGO_CERCA{
+				if dron.jugador != _jugador and point_distance(dron.x, dron.y, xx, yy) < ENEMIGO_CERCA{
 					flag = false
 					break
 				}
@@ -68,9 +68,8 @@ function construir(index, dir, mx, my, _server = false, _cheat = control.cheat, 
 			a = mx
 			b = my
 			repeat(10){
-				temp_complex = next_to(a, b, dir)
-				a = temp_complex[0]
-				b = temp_complex[1]
+				a = a + DESFACE_A[b & 1, dir]
+				b = b + DESFACE_B[b & 1, dir]
 				if a < 0 or b < 0 or a >= xsize or b >= ysize
 					break
 				if edificio_bool[# a, b]{
