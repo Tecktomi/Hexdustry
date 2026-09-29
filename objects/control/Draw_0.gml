@@ -2671,7 +2671,7 @@ if menu = MENU_JUEGO{
 			}
 			if draw_boton(room_width / 2, room_height - 150, L.win_salir, ui_rojo) or keyboard_check_pressed(vk_escape){
 				keyboard_clear(vk_escape)
-				game_restart()
+				terminar_partida(fin_salir, MENU_PRINCIPAL)
 			}
 		}
 		draw_set_alpha(1)

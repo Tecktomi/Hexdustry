@@ -76,27 +76,10 @@ function menu_pausa(_juego = true, _input_layer = 0){
 				cheat = false
 				jugador = 2
 				if _juego{
-					if menu = MENU_JUEGO{
-						if BROWSER and not mapa_editado
-							save()
-						if online{
-							if servidor
-								server_break()
-							else
-								server_jugador_irse()
-						}
-						menu = MENU_PRINCIPAL
-						clear_edificios()
-						return true
-					}
-					else if menu = MENU_EDITOR_JUEGO{
-						array_copy(categoria_nombre_disponible, 0, categoria_nombre, 0, array_length(categoria_nombre) - 1)
-						menu = MENU_EDITOR
-						build_index = -1
-						draw_set_halign(fa_left)
-						draw_set_color(color)
-						return true
-					}
+					if menu = MENU_JUEGO
+						terminar_partida(fin_salir, MENU_PRINCIPAL)
+					else if menu = MENU_EDITOR_JUEGO
+						terminar_partida(fin_salir, MENU_EDITOR)
 				}
 				else{
 					input_layer = 0

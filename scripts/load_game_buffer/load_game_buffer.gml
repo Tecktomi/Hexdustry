@@ -15,6 +15,7 @@ function load_game_buffer(buffer){
 		}
 		else
 			load_escenario_buffer($"{DEFAULT_MAPS[mapa]}.txt", false)
+		sim_seed[0] = real(buffer_read(buffer, buffer_u32))
 		game_start(false)
 		camx = buffer_read(buffer, buffer_f64)
 		camy = buffer_read(buffer, buffer_f64)

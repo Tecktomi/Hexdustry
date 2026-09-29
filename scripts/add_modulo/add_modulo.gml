@@ -6,9 +6,9 @@ function add_modulo(edificio = control.null_edificio, _server = false, _cheat = 
 		b = edificio_modulo_tier[edificio.index]
 		if b = -1
 			exit
-		if online and not _server{
+		if (GRABANDO or online) and not _server{
 			server_add_modulo(edificio.a, edificio.b)
-			if not servidor
+			if online and not servidor
 				exit
 		}
 		if not _cheat

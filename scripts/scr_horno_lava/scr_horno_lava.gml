@@ -3,7 +3,10 @@ function scr_horno_lava(edificio = control.null_edificio){
 		var index = edificio.index
 		var flujo = edificio.flujo, flujo_power = flujo.eficiencia
 		var carga = edificio.carga
-		if flujo.liquido = idl_lava and (carga[idr_cobre] > 1 or carga[idr_hierro] > 1 or carga[idr_arena] > 1) and carga[idr_bronce] < 10 and carga[idr_acero] < 10 and carga[idr_vidrio] < 10{
+		if flujo.liquido = idl_lava and
+			((carga[idr_cobre] > 1  and carga[idr_bronce] < 10) or
+			(carga[idr_hierro] > 1 and carga[idr_acero] < 10) or
+			(carga[idr_arena] > 1 and carga[idr_vidrio] < 10)){
 			//Encender
 			if not edificio.start{
 				edificio_encender(edificio,, false)

@@ -11,10 +11,14 @@ function server_add_edificio(index, dir, a, b, _cheat = control.cheat, _jugador 
 		buffer_write(buffer, buffer_u8, _jugador)
 		if index = id_tuberia
 			buffer_write(buffer, buffer_u8, liquido_choose_array[liquido_choose])
-		if servidor
-			server_broadcast_buffer(buffer)
-		else
-			network_send_packet(socket, buffer, buffer_tell(buffer))
+		if online{
+			if servidor
+				server_broadcast_buffer(buffer)
+			else
+				network_send_packet(socket, buffer, buffer_tell(buffer))
+		}
+		if GRABANDO
+			grabar_buffer(buffer)
 		buffer_delete(buffer)
 	}
 }

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"grabar_buffer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"grabar_buffer",
+  "parent":{
+    "name":"ONLINE",
+    "path":"folders/SCRIPTS/ONLINE.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

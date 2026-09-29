@@ -5,9 +5,9 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			exit
 		}
 		var index = edificio.index, pre_vida = edificio.vida, aa = edificio.a, bb = edificio.b, _jugador = edificio.jugador
-		if online and not _server and not destruccion{
+		if (online or GRABANDO) and not _server and not destruccion{
 			server_delete_edificio(aa, bb)
-			if not servidor
+			if online and not servidor
 				exit
 		}
 		var chunk_x = edificio.chunk_x, chunk_y = edificio.chunk_y
@@ -269,14 +269,14 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				temp_edificio = edificios_totales[i]
 				dis = point_distance(xpos, ypos, temp_edificio.center_x, temp_edificio.center_y)
 				if dis < PLANTA_NUCLEAR_RANGE
-					herir_edificio(3000 / max(1, dis) * random_range(0.7, 1.3), temp_edificio)
+					herir_edificio(3000 / max(1, dis), temp_edificio)
 			}
 			//Daño drones
 			for(i = array_length(drones) - 1; i >= 0; i--){
 				dron = drones[i]
 				dis = point_distance(xpos, ypos, dron.x, dron.y)
 				if dis < PLANTA_NUCLEAR_RANGE
-					herir_dron(1000 / max(1, dis) * random_range(0.7, 1.3), dron)
+					herir_dron(1000 / max(1, dis), dron)
 			}
 			nuclear_x = xpos
 			nuclear_y = ypos

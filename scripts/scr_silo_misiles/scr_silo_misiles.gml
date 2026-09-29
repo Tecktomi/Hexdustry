@@ -45,8 +45,8 @@ function scr_silo_misiles(edificio = control.null_edificio){
 			if edificio.select = 0 and edificio.array_real[2] != -1{
 				if --edificio.fuel > 160
 					for(a = 0; a < 2; a++){
-						dir = random_range(a * pi, (a + 1) * pi)
-						array_push(humos, add_humo(edificio.center_x, edificio.center_y, edificio.a, edificio.b, cos(dir), sin(dir), irandom_range(120, 180)))
+						dir = sim_random_range(a * pi, (a + 1) * pi)
+						array_push(humos, add_humo(edificio.center_x, edificio.center_y, edificio.a, edificio.b, cos(dir), sin(dir), sim_irandom_range(120, 180)))
 					}
 				if edificio.fuel = 0{
 					explosion(edificio.array_real[2] + random_range(-10, 10), edificio.array_real[3] + random_range(-10, 10),,,,, edificio.jugador)
@@ -58,8 +58,8 @@ function scr_silo_misiles(edificio = control.null_edificio){
 			else if edificio.select = 1 and edificio.array_real[2] != -1{
 				if --edificio.fuel > 140
 					for(a = 0; a < 2; a++){
-						dir = random_range(a * pi, (a + 1) * pi)
-						array_push(humos, add_humo(edificio.center_x, edificio.center_y, edificio.a, edificio.b, cos(dir), sin(dir), irandom_range(120, 180)))
+						dir = sim_random_range(a * pi, (a + 1) * pi)
+						array_push(humos, add_humo(edificio.center_x, edificio.center_y, edificio.a, edificio.b, cos(dir), sin(dir), sim_irandom_range(120, 180)))
 					}
 				if edificio.fuel < 50 and edificio.fuel mod 10 = 0{
 					explosion(edificio.array_real[2] + random_range(-50, 50), edificio.array_real[3] + random_range(-50, 50),,,,, edificio.jugador)
@@ -84,8 +84,8 @@ function scr_silo_misiles(edificio = control.null_edificio){
 				else{
 					if --edificio.fuel > 300
 						for(a = 0; a < 2; a++){
-							dir = random_range(a * pi, (a + 1) * pi)
-							array_push(humos, add_humo(edificio.center_x, edificio.center_y, edificio.a, edificio.b, cos(dir), sin(dir), irandom_range(120, 180)))
+							dir = sim_random_range(a * pi, (a + 1) * pi)
+							array_push(humos, add_humo(edificio.center_x, edificio.center_y, edificio.a, edificio.b, cos(dir), sin(dir), sim_irandom_range(120, 180)))
 						}
 					if edificio.fuel = 0{
 						nuclear_x = -1

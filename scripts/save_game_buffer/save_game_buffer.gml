@@ -10,6 +10,7 @@ function save_game_buffer(buffer){
 				buffer_write(buffer, buffer_u8, biome_seed)
 			}
 		}
+		buffer_write(buffer, buffer_u32, sim_seed[0])
 		buffer_write(buffer, buffer_f64, camx)
 		buffer_write(buffer, buffer_f64, camy)
 		buffer_write(buffer, buffer_f64, zoom)

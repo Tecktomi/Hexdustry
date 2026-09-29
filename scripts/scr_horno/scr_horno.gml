@@ -6,9 +6,10 @@ function scr_horno(edificio = control.null_edificio){
 			edificio.fuel--
 			sound_play_edificio(2, edificio.center_x, edificio.center_y)
 		}
-		if (carga[idr_cobre] > 1 or carga[idr_hierro] > 1 or carga[idr_arena] > 1) and
-			(carga[idr_carbon] > 0 or carga[idr_compuesto_incendiario] > 0 or edificio.fuel > 0) and
-			(carga[idr_bronce] < 10 and carga[idr_acero] < 10 and carga[idr_vidrio] < 10){
+		if ((carga[idr_cobre] > 1 and carga[idr_bronce] < 10) or
+			(carga[idr_hierro] > 1 and carga[idr_acero] < 10) or
+			(carga[idr_arena] > 1 and carga[idr_vidrio] < 10)) and
+			(carga[idr_carbon] > 0 or carga[idr_compuesto_incendiario] > 0 or edificio.fuel > 0){
 			if edificio.fuel = 0{
 				if (carga[idr_carbon] > 0 or carga[idr_compuesto_incendiario] > 0){
 					if carga[idr_compuesto_incendiario] > 0{
@@ -43,7 +44,7 @@ function scr_horno(edificio = control.null_edificio){
 					carga[idr_hierro] -= 2
 					carga[idr_acero]++
 					edificio.carga_total--
-					edificio.proceso  -= 1.5 * edificio_proceso[index]
+					edificio.proceso -= 1.5 * edificio_proceso[index]
 				}
 				else if carga[idr_cobre] > 1{
 					carga[idr_cobre] -= 2

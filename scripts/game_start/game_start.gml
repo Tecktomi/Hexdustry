@@ -1,14 +1,26 @@
 function game_start(_nucleo = true, mision_cumplida = false){
 	with control{
+		if GRABANDO{
+			grabacion_end($"Grabaciones/grabacion_{day_format()}.rec")
+			buffer_write(buffer_grabacion, buffer_u32, GRABACION_VERSION)
+			buffer_write(buffer_grabacion, buffer_u32, sim_seed[0])
+			buffer_write(buffer_grabacion, buffer_s8, mapa)
+		}
 		var a, temp_array, b, temp_complex
 		if _nucleo and array_length(edificios_index[id_nucleo]) = 0{
 			if mapa >= 0
 			    load_escenario_buffer($"{DEFAULT_MAPS[mapa]}.txt", false)
 			else{
-			    biome_seed = irandom(2)
-			    seed = random_get_seed()
+				if not REPRODUCIENDO{
+				    biome_seed = irandom(2)
+				    seed = random_get_seed()
+				}
 			    generar_bioma(biome_seed)
 			}
+		}
+		if GRABANDO{
+			buffer_write(buffer_grabacion, buffer_u32, seed)
+			buffer_write(buffer_grabacion, buffer_s8, biome_seed)
 		}
 		redo_pathfind()
 		if mision_cumplida

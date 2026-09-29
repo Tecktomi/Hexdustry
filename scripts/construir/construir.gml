@@ -26,9 +26,9 @@ function construir(index, dir, mx, my, _server = false, _cheat = control.cheat, 
 					}
 					else
 						temp_edificio.draw_rot = (dir - 1) * 60
-					if online and not _server{
+					if (GRABANDO or online) and not _server{
 						server_add_edificio(real(index), real(dir), real(mx), real(my), _cheat)
-						if not servidor
+						if online and not servidor
 							return null_edificio
 					}
 					break
@@ -51,9 +51,9 @@ function construir(index, dir, mx, my, _server = false, _cheat = control.cheat, 
 			return null_edificio
 		if tag_edificio_tunel[index] and build_able and build_target.index = id_tunel
 			index = id_tunel_salida
-		if online and not _server{
+		if (online or GRABANDO) and not _server{
 			server_add_edificio(real(index), real(dir), real(mx), real(my), _cheat)
-			if not servidor
+			if online and not servidor
 				return null_edificio
 		}
 		edificio = add_edificio(index, dir, mx, my, _jugador)

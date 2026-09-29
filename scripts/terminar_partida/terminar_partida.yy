@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"explosion_fx",
+  "%Name":"terminar_partida",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"explosion_fx",
+  "name":"terminar_partida",
   "parent":{
     "name":"SCRIPTS",
     "path":"folders/SCRIPTS.yy",

@@ -1,8 +1,8 @@
 function mover_dron(dron = control.null_dron, x, y, _server = false){
 	with control{
-		if online and not _server{
+		if (GRABANDO or online) and not _server{
 			server_mover_dron(x, y, dron)
-			if not servidor
+			if online and not servidor
 				exit
 		}
 		var index = dron.index, temp_complex = xytoab(x, y), aa = temp_complex[0], bb = temp_complex[1]

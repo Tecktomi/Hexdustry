@@ -6,10 +6,14 @@ function server_investigar(index, _cheat = control.cheat, _jugador = jugador){
 		buffer_write(buffer, buffer_u8, real(index))
 		buffer_write(buffer, buffer_bool, bool(_cheat))
 		buffer_write(buffer, buffer_u8, real(_jugador))
-		if servidor
-			server_broadcast_buffer(buffer)
-		else
-			network_send_packet(socket, buffer, buffer_tell(buffer))
+		if online{
+			if servidor
+				server_broadcast_buffer(buffer)
+			else
+				network_send_packet(socket, buffer, buffer_tell(buffer))
+		}
+		if GRABANDO
+			grabar_buffer(buffer)
 		buffer_delete(buffer)
 	}
 }

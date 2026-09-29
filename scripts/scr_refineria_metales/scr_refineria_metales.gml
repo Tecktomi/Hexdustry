@@ -5,10 +5,10 @@ function scr_refineria_metales(edificio = control.null_edificio){
 		var flujo = edificio.flujo, flujo_power = flujo.eficiencia
 		var carga = edificio.carga
 		var _aluminio = (carga[idr_alumina] > 2 and carga[idr_aluminio] < 10)
-		if (flujo.liquido = idl_acido and ((carga[idr_piedra_cuprica] > 2 and carga[idr_cobre] < 10) or
+		if _aluminio or (flujo.liquido = idl_acido and (
+			(carga[idr_piedra_cuprica] > 2 and carga[idr_cobre] < 10) or
 			(carga[idr_piedra_ferrica] > 2 and carga[idr_hierro] < 10) or
-			(carga[idr_uranio_bruto] > 0 and carga[idr_uranio_empobrecido] < 10 and carga[idr_uranio_enriquecido] < 10)))
-			or _aluminio{
+			(carga[idr_uranio_bruto] > 0 and carga[idr_uranio_empobrecido] < 10 and carga[idr_uranio_enriquecido] < 10))){
 			//Apagar
 			if red_power = 0{
 				edificio_encender(edificio, false)
@@ -16,7 +16,7 @@ function scr_refineria_metales(edificio = control.null_edificio){
 			}
 			//Encender
 			if not edificio.start{
-				edificio_encender(edificio,, (1 + _aluminio) * edificio.energia_consumo_max, not _aluminio)
+				edificio_encender(edificio,, 1 + _aluminio, not _aluminio)
 				edificio.start = true
 			}
 			if _aluminio

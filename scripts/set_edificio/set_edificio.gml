@@ -3,9 +3,9 @@ function set_edificio(mode, select, edificio = control.null_edificio, _server = 
 		if edificio = null_edificio or edificio.vida <= 0 or (edificio.mode = mode and edificio.select = select)
 			exit
 		var index = edificio.index, a, b, c, temp_edificio
-		if online and not _server{
+		if (GRABANDO or online) and not _server{
 			server_set_edificio(mode, select, edificio)
-			if not servidor
+			if online and not servidor
 				exit
 		}
 		//Cambiar modo

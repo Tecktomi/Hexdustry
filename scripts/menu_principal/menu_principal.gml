@@ -128,7 +128,7 @@ function menu_principal(){
 			}
 			//Partida Nueva
 			else if get_file = 2{
-				ypos = 110
+				ypos = 120
 				if draw_boton(120, ypos, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape) or (not DEVISE and keyboard_check(vk_backspace)){
 					if not DEVISE
 						keyboard_clear(vk_backspace)
@@ -142,31 +142,30 @@ function menu_principal(){
 				draw_panel(110, ypos, room_width - 220, room_height - 200 - ypos, 0, 1, 1, panel_partida_nueva)
 				ypos = room_height - 180
 				draw_set_halign(fa_right)
-				//Cargar esenarios / partidas
-				if BROWSER{
-					if draw_boton(room_width / 2 - 200, ypos, L.menu_cargar_escenario, ui_azul,,,, 1){
-						if not nucleos[jugador].vivo
-							game_restart()
-						get_file = 1
-						scan_files_save()
+				//Cargar partidas
+				if BROWSER and draw_boton(room_width / 2 - 200, ypos, L.cargar_partida, ui_azul,,,, 1){
+					if not nucleos[jugador].vivo
+						terminar_partida(fin_cerrar_juego, MENU_PRINCIPAL)
+					get_file = 3
+					partidas = scan_files("Saves/*.save", fa_none)
+					var temp_image
+					for(a = array_length(partidas) - 1; a >= 0; a--){
+						if array_length(partidas_png) > a and partidas_png[a] != spr_null_image
+							sprite_delete(partidas_png[a])
+						var temp_text = file_format(partidas[a])
+						if file_exists("Saves/" + temp_text + ".png")
+							temp_image = sprite_add("Saves/" + temp_text + ".png", 1, false, false, 0, 0)
+						else
+							temp_image = spr_null_image
+						partidas_png[a] = temp_image
 					}
-					if draw_boton(room_width / 2 - 200, ypos + text_y, L.cargar_partida, ui_azul,,,, 1){
-						if not nucleos[jugador].vivo
-							game_restart()
-						get_file = 3
-						partidas = scan_files("Saves/*.save", fa_none)
-						var temp_image
-						for(a = array_length(partidas) - 1; a >= 0; a--){
-							if array_length(partidas_png) > a and partidas_png[a] != spr_null_image
-								sprite_delete(partidas_png[a])
-							var temp_text = file_format(partidas[a])
-							if file_exists("Saves/" + temp_text + ".png")
-								temp_image = sprite_add("Saves/" + temp_text + ".png", 1, false, false, 0, 0)
-							else
-								temp_image = spr_null_image
-							partidas_png[a] = temp_image
-						}
-					}
+				}
+				draw_set_halign(fa_center)
+				if BROWSER and draw_boton(room_width / 2, ypos, "Grabaciones", ui_azul,,,, 1){
+					if not nucleos[jugador].vivo
+						terminar_partida(fin_cerrar_juego, MENU_PRINCIPAL)
+					get_file = 6
+					grabaciones = scan_files("Grabaciones/*.rec", fa_none)
 				}
 				draw_set_halign(fa_left)
 				if draw_boton(room_width / 2 + 200, ypos, L.menu_juego_rapido, ui_verde,,,, 1)
@@ -254,9 +253,58 @@ function menu_principal(){
 			//Ajustes
 			else if get_file = 5
 				menu_pausa(false, 1)
+			//Grabaciones
+			else if get_file = 6{
+				xpos = 120
+				ypos = 200
+				if array_length(grabaciones) = 0{
+					draw_set_halign(fa_center)
+					draw_text(room_width / 2, ypos, "Sin Grabaciones")
+					draw_set_halign(fa_left)
+				}
+				else for(a = 0; a < array_length(grabaciones); a++){
+					if draw_boton(xpos, ypos, grabaciones[a],,,,, 1){
+						buffer_delete(buffer_grabacion)
+						buffer_grabacion = buffer_load($"Grabaciones/{grabaciones[a]}")
+						grabacion_size = buffer_get_size(buffer_grabacion)
+						buffer_seek(buffer_grabacion, buffer_seek_start, 0)
+						if buffer_read(buffer_grabacion, buffer_u32) != GRABACION_VERSION{
+							show_message(L.archivo_obsoleto)
+							exit
+						}
+						REPRODUCIENDO = true
+						GRABANDO = false
+						servidor = false
+						online = false
+						sim_seed[0] = buffer_read(buffer_grabacion, buffer_u32)
+						mapa = buffer_read(buffer_grabacion, buffer_s8)
+						if mapa < 0{
+							seed = buffer_read(buffer_grabacion, buffer_u32)
+							biome_seed = buffer_read(buffer_grabacion, buffer_s8)
+						}
+						grabacion_pos = buffer_tell(buffer_grabacion)
+						clear_edificios()
+						game_start()
+					}
+					if draw_sprite_boton(spr_basura,, xpos + text_x, ypos,,, 1){
+						file_delete($"Grabaciones/{grabaciones[a]}")
+						array_delete(grabaciones, a, 1)
+						continue
+					}
+					ypos += text_y * 1.2
+				}
+				if draw_boton(120, 120, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape) or (not DEVISE and keyboard_check(vk_backspace)){
+					if not DEVISE
+						keyboard_clear(vk_backspace)
+					keyboard_clear(vk_escape)
+					get_file = 2
+				}
+			}
 		}
-		else if not DEVISE and keyboard_check(vk_backspace)
+		else if not DEVISE and keyboard_check(vk_backspace){
+			terminar_partida(fin_cerrar_juego, MENU_PRINCIPAL)
 			game_end()
+		}
 		draw_set_valign(fa_bottom)
 		draw_text(10, room_height - 10, "Tomás Ramdohr")
 		draw_set_valign(fa_top)

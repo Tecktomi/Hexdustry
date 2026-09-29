@@ -3,10 +3,34 @@ function step(){
 		//Detenerse por LAG
 		if online and not servidor and timer + LAG > server_timer
 			exit
+		var _seed_vista = random_get_seed()
+		random_set_seed(sim_seed[0])
 		var a, b, cambio, temp_array_real, buffer, edificio, municion, target, _jugador, _tipo, _dmg, temp_complex, muna, munb, len, efecto, humo, fuego, temp_time, flag
 		var temp_complex_list, i, aa, bb, temp_text_right, file, red, flujo, temp_explosion, temp_script
-		//Input multijugador
-		if online and not servidor
+		//Input multijugador / grabación
+		if (online and not servidor) or REPRODUCIENDO{
+			//Carga perezosa grabación
+			if REPRODUCIENDO
+				while grabacion_pos < grabacion_size{
+					if buffer_peek(buffer_grabacion, grabacion_pos + 1, buffer_u32) > timer
+						break
+					buffer_seek(buffer_grabacion, buffer_seek_start, grabacion_pos)
+					var msg = buffer_read(buffer_grabacion, buffer_u8)
+					if msg = net_add_edificio
+						handle_add_edificio(buffer_grabacion)
+					else if msg = net_delete_edificio
+						handle_delete_edificio(buffer_grabacion)
+					else if msg = net_set_edificio
+						handle_set_edificio(buffer_grabacion)
+					else if msg = net_mover_dron
+						handle_mover_dron(buffer_grabacion)
+					else if msg = net_add_modulo
+						handle_add_modulo(buffer_grabacion)
+					else if msg = net_investigar
+						handle_investigar(buffer_grabacion)
+					grabacion_pos = buffer_tell(buffer_grabacion)
+				}
+			//Aplicar cambios
 			for(a = array_length(cambios) - 1; a >= 0; a--){
 				cambio = cambios[a]
 				if cambio.step <= timer{
@@ -25,6 +49,9 @@ function step(){
 						investigar(cambio.data.index, true, cambio.data.cheat, cambio.data.jugador)
 				}
 			}
+			if REPRODUCIENDO and grabacion_pos = grabacion_size and array_length(cambios) = 0
+				REPRODUCIENDO = false
+		}
 		acumulator -= LOGIC_DT
 		//Estadísticas / Guardado automático
 		if win = 0{
@@ -101,7 +128,7 @@ function step(){
 					municion.x += 0.2 * sign(municion.target_build.center_x - municion.x)
 					municion.y += 0.2 * sign(municion.target_build.center_y - municion.y)
 				}
-				if (image_index mod 10) < 5 and draw_once{
+				if (timer mod 10) < 5 and draw_once{
 					draw_set_color(c_red)
 					draw_set_alpha(0.3)
 					draw_circle(municion.x, municion.y, 10, false)
@@ -113,7 +140,7 @@ function step(){
 				muna = trazo[b, 0]
 				munb = trazo[b, 1]
 				if grafic_humo and municion.humo
-					array_push(humos, add_humo(municion.x, municion.y, muna, munb, random_range(-1, 1), random_range(-1, 1), irandom_range(20, 30)))
+					array_push(humos, add_humo(municion.x, municion.y, muna, munb, sim_random_range(-1, 1), sim_random_range(-1, 1), sim_irandom_range(20, 30)))
 				//Colisión Edificio
 				if edificio_bool[# muna, munb]{
 					edificio = edificio_id[# muna, munb]
@@ -153,62 +180,6 @@ function step(){
 					explosion(municion.x, municion.y, municion.target_build, municion.radio,,, _jugador)
 				else if _tipo = municion_tipo_misil_incendiario
 					explosion(municion.x, municion.y, municion.target_build, municion.radio,, true, _jugador)
-			}
-		}
-		draw_set_alpha(1)
-		//Efectos estáticos
-		len = array_length(efectos)
-		for(a = 0; a < len; a++){
-			efecto = efectos[a]
-			if show_smoke and draw_once and efecto.x >= world_minx and efecto.y >= world_miny and efecto.x <= world_maxx and efecto.y <= world_maxy
-				draw_sprite_off(efecto.sprite, efecto.subsprite, efecto.x, efecto.y)
-			efecto.subsprite += efecto.frame_speed
-			if --efecto.tiempo <= 0{
-				efectos[a--] = efectos[array_length(efectos) - 1]
-				array_pop(efectos)
-				len--
-			}
-		}
-		//Humo
-		len = array_length(humos)
-		for(a = 0; a < len; a++){
-			humo = humos[a]
-			if show_smoke and humo.a >= mina and humo.b >= minb and humo.a < maxa and humo.b < maxb{
-				if draw_once
-					draw_sprite_off(spr_blur_32, max(3 - humo.time / 10, 0), humo.x, humo.y)
-				humo.x += humo.hmove
-				humo.y += humo.vmove
-				humo.hmove *= 0.99
-				humo.vmove *= 0.99
-			}
-			if --humo.time <= 0{
-				humos[a--] = humos[--len]
-				array_pop(humos)
-			}
-		}
-		//Fuego
-		draw_set_alpha(0.4)
-		len = array_length(fuegos)
-		for(a = 0; a < len; a++){
-			fuego = fuegos[a]
-			if show_smoke and fuego.a >= mina and fuego.b >= minb and fuego.a < maxa and fuego.b < maxb{
-				if draw_once{
-					draw_set_color(make_color_hsv(fuego.intensidad, 127, 255))
-					draw_circle_off(fuego.x, fuego.y, 10, false)
-				}
-				fuego.x += fuego.hmove
-				fuego.y += fuego.vmove
-				fuego.hmove *= 0.9
-				fuego.vmove *= 0.9
-				if grafic_humo and random(1) < 0.05
-					array_push(humos, add_humo(fuego.x, fuego.y, fuego.a, fuego.b, random_range(-1, 1), random_range(-1, 1), 15))
-			}
-			if --fuego.intensidad <= 0{
-				fuegos[a--] = fuegos[array_length(fuegos) - 1]
-				array_pop(fuegos)
-				len--
-				if grafic_humo and fuego.a >= mina and fuego.b >= minb and fuego.a < maxa and fuego.b < maxb
-					array_push(humos, add_humo(fuego.x, fuego.y, fuego.a, fuego.b, random_range(-1, 1), random_range(-1, 1), 15))
 			}
 		}
 		draw_set_alpha(1)
@@ -343,7 +314,7 @@ function step(){
 			}
 			draw_set_halign(fa_left)
 		}
-		energia_solar = clamp(2 * sin((image_index + 900) / 1800), 0, 1)
+		energia_solar = clamp(2 * sin((timer + 900) / 1800), 0, 1)
 		//Ciclo de redes
 		for(a = array_length(redes) - 1; a >= 0; a--){
 			red = redes[a]
@@ -395,13 +366,80 @@ function step(){
 			draw_set_color(c_black)
 			draw_set_alpha(1)
 		}
-		//Viento / IA
-		if image_index mod 20 = 0{
+		//IA
+		if IA and timer mod 20 = 0
+			ia_step()
+		sim_seed[0] = random_get_seed()
+		random_set_seed(_seed_vista)
+		if REPRODUCIENDO{
+			draw_once = false
+			array_resize(efectos, 0)
+			array_resize(humos, 0)
+			array_resize(fuegos, 0)
+			exit
+		}
+		//--------------------------------------------EVENTOS-VISUALES--------------------------------------------
+		//Viento
+		if timer mod 20 = 0{
 			viento_dir += random_range(-0.01, 0.01)
 			viento_mag = clamp(viento_mag + random_range(-0.01, 0.01), 0.5, 2)
-			if IA
-				ia_step()
 		}
+		//Efectos estáticos
+		len = array_length(efectos)
+		for(a = 0; a < len; a++){
+			efecto = efectos[a]
+			if show_smoke and draw_once and efecto.x >= world_minx and efecto.y >= world_miny and efecto.x <= world_maxx and efecto.y <= world_maxy
+				draw_sprite_off(efecto.sprite, efecto.subsprite, efecto.x, efecto.y)
+			efecto.subsprite += efecto.frame_speed
+			if --efecto.tiempo <= 0{
+				efectos[a--] = efectos[array_length(efectos) - 1]
+				array_pop(efectos)
+				len--
+			}
+		}
+		//Humo
+		len = array_length(humos)
+		for(a = 0; a < len; a++){
+			humo = humos[a]
+			if show_smoke and humo.a >= mina and humo.b >= minb and humo.a < maxa and humo.b < maxb{
+				if draw_once
+					draw_sprite_off(spr_blur_32, max(3 - humo.time / 10, 0), humo.x, humo.y)
+				humo.x += humo.hmove
+				humo.y += humo.vmove
+				humo.hmove *= 0.99
+				humo.vmove *= 0.99
+			}
+			if --humo.time <= 0{
+				humos[a--] = humos[--len]
+				array_pop(humos)
+			}
+		}
+		//Fuego
+		draw_set_alpha(0.4)
+		len = array_length(fuegos)
+		for(a = 0; a < len; a++){
+			fuego = fuegos[a]
+			if show_smoke and fuego.a >= mina and fuego.b >= minb and fuego.a < maxa and fuego.b < maxb{
+				if draw_once{
+					draw_set_color(make_color_hsv(fuego.intensidad, 127, 255))
+					draw_circle_off(fuego.x, fuego.y, 10, false)
+				}
+				fuego.x += fuego.hmove
+				fuego.y += fuego.vmove
+				fuego.hmove *= 0.9
+				fuego.vmove *= 0.9
+				if random(1) < 0.05 and grafic_humo
+					array_push(humos, add_humo(fuego.x, fuego.y, fuego.a, fuego.b, random_range(-1, 1), random_range(-1, 1), 15))
+			}
+			if --fuego.intensidad <= 0{
+				fuegos[a--] = fuegos[array_length(fuegos) - 1]
+				array_pop(fuegos)
+				len--
+				if grafic_humo and fuego.a >= mina and fuego.b >= minb and fuego.a < maxa and fuego.b < maxb
+					array_push(humos, add_humo(fuego.x, fuego.y, fuego.a, fuego.b, random_range(-1, 1), random_range(-1, 1), 15))
+			}
+		}
+		draw_set_alpha(1)
 		draw_once = false
 	}
 }

@@ -3,9 +3,9 @@ function investigar(index, _server = false, _cheat = control.cheat, _jugador = j
 		var a, _next, flag, c, d, _mio = (jugador = _jugador)
 		if not edificio_tecnologia_desbloqueable[_jugador, index]
 			exit
-		if online and not _server{
+		if (GRABANDO or online) and not _server{
 			server_investigar(index, _cheat, _jugador)
-			if not servidor
+			if online and not servidor
 				exit
 		}
 		if not _cheat and (_mio or (online and servidor))

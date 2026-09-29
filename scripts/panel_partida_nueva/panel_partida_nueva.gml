@@ -32,6 +32,10 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 					draw_sprite(spr_medallas, b, _xpos + 32 * b + 16, ypos + 110)
 			_xpos += 120
 		}
+		if BROWSER and draw_sprite_boton(spr_load_map,, _xpos, ypos, 96, 96, 1){
+			get_file = 1
+			scan_files_save()
+		}
 		draw_set_color(ui_texto)
 		ypos += 140
 		//Tamaño del mapa

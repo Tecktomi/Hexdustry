@@ -1,0 +1,1 @@
+terminar_partida(fin_cerrar_juego, MENU_PRINCIPAL)

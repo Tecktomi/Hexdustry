@@ -46,8 +46,8 @@ function dron_logic(){
 							break
 						}
 						if grafic_humo and (image_index mod 10) = (a mod 10){
-							dir = viento_dir + random_range(-pi / 4, pi / 4)
-							array_push(humos, add_humo(dron_x, dron_y, dron.a, dron.b, cos(dir) * viento_mag, sin(dir) * viento_mag, irandom_range(40, 70)))
+							dir = viento_dir + sim_random_range(-pi / 4, pi / 4)
+							array_push(humos, add_humo(dron_x, dron_y, dron.a, dron.b, cos(dir) * viento_mag, sin(dir) * viento_mag, sim_irandom_range(40, 70)))
 						}
 					}
 				}

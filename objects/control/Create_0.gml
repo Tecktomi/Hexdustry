@@ -5,8 +5,9 @@ var a, b, c, flag
 	array_xytob = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1],[-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],[-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],[-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],[-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],[-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1]]
 #endregion
 #region MACROS
-	#macro FILE_VERSION 2026_09_25
+	#macro FILE_VERSION 2026_09_28
 	#macro PROCESADOR_VERSION 2026_03_25
+	#macro GRABACION_VERSION 2026_09_28
 	#macro TILE_WIDTH 32
 	#macro TILE_HEIGHT 28
 	#macro CABLE_RANGE 90
@@ -81,11 +82,25 @@ var a, b, c, flag
 	#macro pausa_online 1
 	#macro pausa_ajuste 2
 	#macro pausa_control 3
+	//Motivos cierre
+	#macro fin_salir 0
+	#macro fin_desconexion 1
+	#macro fin_cerrar_juego 2
+	//Menú principal
+	#macro menu_principal_nueva 0
+	
 #endregion
 #region debug
 	debug_frame_time = true
 	debug_frame_time_value = 0
 	debug_frame_time_value_2 = 0
+	REPRODUCIENDO = false
+	sim_seed = [irandom(100000), irandom(100000)]
+	GRABANDO = true
+	buffer_grabacion = buffer_create(0, buffer_grow, 1)
+	grabacion_pos = 0
+	grabacion_size = 0
+	grabacion_seed = sim_seed[0]
 #endregion
 DEVISE = (os_type = os_windows)
 var arr0 = array_create(0, 0)
@@ -202,6 +217,8 @@ if BROWSER{
 		directory_create("Blueprints")
 	if not directory_exists("Tutorial")
 		directory_create("Tutorial")
+	if not directory_exists("Grabaciones")
+		directory_create("Grabaciones")
 }
 else
 	default_maps_image = [spr_preset_maps_pradera, spr_preset_maps_cuevas, spr_preset_maps_desierto, spr_preset_maps_nieve, spr_preset_maps_islas]
@@ -393,6 +410,7 @@ L = {}
 	panel_ypos = 0
 	partidas = array_create(0, "")
 	partidas_png = array_create(0, "")
+	grabaciones = array_create(0, "")
 	guardado = false
 	chat = array_create(0, "")
 	chat_time = array_create(0, 0)
@@ -1298,7 +1316,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 	id_almacen = def_edificio("Almacén", 2, spr_almacen,, 400,, scr_almacen,,,, [idr_hierro, idr_acero], [20, 10], 100, true, true,,, true, true); def_edificio_2(,,,,,,, 1)
 	id_fabrica_de_concreto = def_edificio("Fábrica de Concreto", 3, spr_fabrica_de_concreto,, 300, 60, scr_fabrica_de_concreto, scr_draw_bomba_impar, false,, [idr_hierro, idr_bronce, idr_acero], [40, 25, 10], 60, true, false, [idr_arena, idr_piedra, idr_piedra_cuprica, idr_piedra_ferrica, idr_piedra_sulfatada], [10, 10, 10, 10, 10], true, false, [idr_concreto]); def_edificio_2(, 10, 30, [idl_agua],,,, 1)
 	id_pantalla = def_edificio("Pantalla", 3, spr_pantalla,, 100,,, scr_draw_pantalla, false,, [idr_cobre, idr_vidrio, idr_plastico, idr_electronicos], [40, 15, 10, 20]); def_edificio_2()
-	id_refineria_de_petroleo = def_edificio("Refinería de Petróleo", 4, spr_refineria_de_petroleo,, 400, 50, scr_refineria_petroleo,,,, [idr_cobre, idr_bronce, idr_acero, idr_concreto, idr_electronicos], [50, 30, 20, 40, 20], 40, true, false, [idr_sal], [10], true, false, [idr_piedra_sulfatada, idr_compuesto_incendiario, idr_plastico]); def_edificio_2(240, 10, 125, [idl_petroleo],,,, 2)
+	id_refineria_de_petroleo = def_edificio("Refinería de Petróleo", 4, spr_refineria_de_petroleo,, 400, 50, scr_refineria_petroleo,,,, [idr_cobre, idr_bronce, idr_acero, idr_concreto, idr_vidrio], [50, 30, 20, 40, 50], 40, true, false, [idr_sal], [10], true, false, [idr_piedra_sulfatada, idr_compuesto_incendiario, idr_plastico]); def_edificio_2(240, 10, 125, [idl_petroleo],,,, 2)
 	id_planta_de_reciclaje = def_edificio("Planta de Reciclaje", 3, spr_planta_de_reciclaje,, 300,, scr_planta_de_reciclaje,,,, [idr_bronce, idr_hierro, idr_vidrio, idr_concreto], [20, 50, 15, 15], 100,,,,, true, true); def_edificio_2(60, 10, 20, [idl_acido],,,, 1)
 	id_planta_desalinizadora = def_edificio("Planta Desalinizadora", 2, spr_planta_desalinizadora,, 200, 60, scr_planta_desalinizadora, scr_draw_bomba_par, false,, [idr_cobre, idr_bronce, idr_vidrio], [40, 10, 15], 10,,,,, true, false, [idr_sal]); def_edificio_2(20, 10, 30, [idl_agua_salada, idl_agua],,,, 1, -30)
 	id_extractor_atmosferico = def_edificio("Extractor Atmosférico", 2.5, spr_extractor_atmosferico,, 200,, scr_extractor_agua,,, false, [idr_cobre, idr_bronce, idr_vidrio, idr_electronicos], [30, 15, 10, 5]); def_edificio_2(40, 10, -6, [idl_agua],,,, 1)
@@ -1858,7 +1876,7 @@ sort_drones()
 	tec_almacen = def_tecnologia(id_almacen, id_cinta_magnetica)
 	tec_fabrica_de_concreto = def_tecnologia(id_fabrica_de_concreto, id_horno, id_bomba_hidraulica)
 	tec_pantalla = def_tecnologia(id_pantalla, id_procesador, id_refineria_de_petroleo)
-	tec_refineria_de_petroleo = def_tecnologia(id_refineria_de_petroleo, id_fabrica_de_concreto, id_ensambladora)
+	tec_refineria_de_petroleo = def_tecnologia(id_refineria_de_petroleo, id_fabrica_de_concreto)
 	tec_planta_de_reciclaje = def_tecnologia(id_planta_de_reciclaje, id_refineria_de_metales, id_horno_de_lava)
 	tec_planta_desalinizadora = def_tecnologia(id_planta_desalinizadora, id_bomba_de_evaporacion, id_generador)
 	tec_extractor_atmosferico = def_tecnologia(id_extractor_atmosferico, id_bomba_hidraulica, id_turbina, id_ensambladora)
@@ -1942,7 +1960,6 @@ null_explosion = {
 	jugador : 0
 }
 explosion_queue = array_create(0, null_explosion)
-explosion_fx_queue = array_create(0, explosion_fx(0, 0, 0))
 set_idioma()
 #region Consejos
 	consejos_nombre = ["Control de Cámara", "Construcción", "Redes Eléctricas", "Tuberías", "Procesadores", "Uranio"]
