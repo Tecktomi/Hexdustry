@@ -96,7 +96,7 @@ var a, b, c, flag
 	debug_frame_time_value_2 = 0
 	REPRODUCIENDO = false
 	sim_seed = [irandom(100000), irandom(100000)]
-	GRABANDO = true
+	GRABANDO = false
 	buffer_grabacion = buffer_create(0, buffer_grow, 1)
 	grabacion_pos = 0
 	grabacion_size = 0
@@ -1327,6 +1327,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 	id_cinta_grande = def_edificio("Cinta Grande", 2, spr_cinta_grande, spr_cinta_grande_diagonal, 80, 30, scr_cinta_grande,,,, [idr_bronce, idr_hierro], [5, 15]); def_edificio_2()
 	id_mina = def_edificio("Mina", 1, spr_mina,,,,,,,, [idr_hierro, idr_explosivo], [5, 2]); def_edificio_2(,,,,,, true, -2)
 	id_fabrica_de_lubricante = def_edificio("Fábrica de Lubricante", 3, spr_fabrica_de_lubricante,, 200, 30, scr_fabrica_de_lubricante, scr_draw_bomba_impar, false,, [idr_acero, idr_vidrio, idr_bronce], [20, 20, 30]); def_edificio_2(50, 10, 30, [idl_petroleo, idl_lubricante],,,,, -30)
+	id_antena = def_edificio("Antena", 1, spr_antena,, 80,,,,,, [idr_cobre, idr_hierro, idr_electronicos], [20, 10, 5]); def_edificio_2()
 #endregion
 #region Categorias
 	categoria_edificios = [
@@ -1336,7 +1337,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 		[id_cable, id_torre_de_alta_tension, id_bateria, id_generador, id_turbina, id_panel_solar, id_generador_geotermico, id_planta_nuclear],
 		[id_tuberia, id_tuberia_subterranea, id_bomba_de_evaporacion, id_bomba_hidraulica, id_deposito, id_planta_desalinizadora],
 		[id_torre_basica, id_rifle, id_lanzallamas, id_laser, id_mortero, id_onda_de_choque, id_torre_reparadora, id_muro, id_muro_reforzado, id_silo_de_misiles, id_mina],
-		[id_procesador, id_mensaje, id_memoria, id_pantalla, id_modulo],
+		[id_procesador, id_mensaje, id_memoria, id_pantalla, id_antena, id_modulo],
 		[id_fabrica_de_drones, id_fabrica_de_drones_grande, id_cinta_grande, id_puerto_de_carga, id_planta_de_reciclaje],
 		[id_nucleo, id_recurso_infinito, id_energia_infinita, id_liquido_infinito]]
 	for(a = 0; a < array_length(categoria_edificios); a++)
@@ -1511,6 +1512,7 @@ edificio_key[id_recurso_infinito] = "1z"
 		tag_edificio_seteable[id_fabrica_de_drones] = true
 		tag_edificio_seteable[id_silo_de_misiles] = true
 		tag_edificio_seteable[id_fabrica_de_drones_grande] = true
+		tag_edificio_seteable[id_antena] = true
 	#endregion
 	#region edificio_construible
 		tag_edificio_construible = array_create(edificio_max, true)
@@ -1682,6 +1684,7 @@ for(a = 0; a < EQUIPOS; a++){
 edificios_counter = array_create(edificio_max, 0)
 edificios_salida_drones = array_create(0, null_edificio)
 edi_sort = array_create(edificio_max, 0)
+frecuencias = array_create(100, 0)
 sort_edificios()
 sort_drones()
 #region Caminos
@@ -2019,4 +2022,4 @@ for(a = 0; a < array_length(consejos_texto); a++)
 #endregion
 biome_seed = 0
 seed = random_get_seed()
-generar_bioma(biome_seed)
+while not generar_bioma(biome_seed){}

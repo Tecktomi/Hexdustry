@@ -24,9 +24,9 @@ function set_grid_size(){
 		var a, b, a2, aplus, temp_complex, edificio, prev_width = ds_grid_width(background_bool), prev_height = ds_grid_height(background_bool)
 		ds_grid_resize(pre_abtoxy, xsize + 2, ysize + 2)
 		ds_grid_clear(pre_abtoxy, [0, 0])
-		pre_abtox = ds_grid_create(xsize + 2, ysize + 2)
+		ds_grid_resize(pre_abtox, xsize + 2, ysize + 2)
 		ds_grid_clear(pre_abtox, 0)
-		pre_abtoy = ds_grid_create(xsize + 2, ysize + 2)
+		ds_grid_resize(pre_abtoy, xsize + 2, ysize + 2)
 		ds_grid_clear(pre_abtoy, 0)
 		for(a = 0; a < xsize; a++){
 			aplus = a + 1

@@ -416,7 +416,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		//Datos específicos
 		if index = id_laser
 			edificio.mode = true
-		if index = id_rifle or index = id_mortero or index = id_onda_de_choque
+		if index = id_rifle or index = id_mortero or index = id_onda_de_choque or index = id_antena
 			edificio.select = 0
 		if index = id_silo_de_misiles{
 			edificio.select = -1

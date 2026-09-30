@@ -12,7 +12,7 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 		if draw_sprite_boton(spr_random_map,, _xpos, ypos, 96, 96, 1){
 			biome_seed = irandom(2)
 			seed = random_get_seed()
-			generar_bioma(biome_seed)
+			while not generar_bioma(biome_seed){}
 			randomize()
 			mapa = -1
 		}
@@ -68,7 +68,7 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 			set_grid_size()
 			biome_seed = irandom(2)
 			seed = random_get_seed()
-			generar_bioma(biome_seed)
+			while not generar_bioma(biome_seed){}
 			randomize()
 		}
 		_change_size = false
@@ -177,46 +177,49 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 		}
 		//Personalizado
 		if dificultad = -1{
-			xpos = 140
+			_xpos = 140
 			ypos += text_y * 1.25
 			//Tecnología
-			draw_text_xpos(xpos, ypos, $"{L.enciclopedia_tecnologia}: {tecnologia ? L.activado : L.desactivado}")
-			xpos += max(string_width($"{L.enciclopedia_tecnologia}: {L.activado}"), string_width($"{L.enciclopedia_tecnologia}: {L.desactivado}"))
-			tecnologia = draw_toggle(xpos + 10, ypos - 5, tecnologia, 1)
+			draw_text_xpos(_xpos, ypos, $"{L.enciclopedia_tecnologia}: {tecnologia ? L.activado : L.desactivado}")
+			_xpos += max(string_width($"{L.enciclopedia_tecnologia}: {L.activado}"), string_width($"{L.enciclopedia_tecnologia}: {L.desactivado}"))
+			tecnologia = draw_toggle(_xpos + 10, ypos - 5, tecnologia, 1)
 			ypos += text_y * 1.2
 			if tecnologia{
-				xpos = draw_text_xpos(160, ypos, $"{L.menu_precio_tecnologia}")
+				_xpos = draw_text_xpos(160, ypos, $"{L.menu_precio_tecnologia}")
 				tecnologia_precio_multiplicador = draw_deslizante(xpos + 10, xpos + 135, ypos + 10, tecnologia_precio_multiplicador, 0.5, 3, des_count++, 1)
 				ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{floor(100 * tecnologia_precio_multiplicador)}%")
 			}
 			//Primera oleada
 			ypos = draw_text_ypos(140, ypos, L.tiempo)
-			xpos = draw_text_xpos(160, ypos, $"{L.editor_primera_ronda}")
-			oleadas_tiempo_primera = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, oleadas_tiempo_primera, 60, 300, des_count++, 1))
-			ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{oleadas_tiempo_primera >= 60 ? string(floor(oleadas_tiempo_primera / 60)) + "m " : ""}{oleadas_tiempo_primera mod 60}s")
+			_xpos = draw_text_xpos(160, ypos, $"{L.editor_primera_ronda}")
+			oleadas_tiempo_primera = round(draw_deslizante(_xpos + 10, _xpos + 135, ypos + 10, oleadas_tiempo_primera, 60, 300, des_count++, 1))
+			ypos = 10 + draw_text_ypos(_xpos + 145, ypos, $"{oleadas_tiempo_primera >= 60 ? string(floor(oleadas_tiempo_primera / 60)) + "m " : ""}{oleadas_tiempo_primera mod 60}s")
 			//Siguientes oleadas
-			xpos = draw_text_xpos(160, ypos, $"{L.editor_siguiente_ronda}")
-			oleadas_tiempo = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, oleadas_tiempo, 30, 120, des_count++, 1))
-			ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{oleadas_tiempo >= 60 ? string(floor(oleadas_tiempo / 60)) + "m " : ""}{oleadas_tiempo mod 60}s")
+			_xpos = draw_text_xpos(160, ypos, $"{L.editor_siguiente_ronda}")
+			oleadas_tiempo = round(draw_deslizante(_xpos + 10, _xpos + 135, ypos + 10, oleadas_tiempo, 30, 120, des_count++, 1))
+			ypos = 10 + draw_text_ypos(_xpos + 145, ypos, $"{oleadas_tiempo >= 60 ? string(floor(oleadas_tiempo / 60)) + "m " : ""}{oleadas_tiempo mod 60}s")
 			//Multiplicador de vida
-			xpos = draw_text_xpos(140, ypos, $"{L.editor_multiplicador_vida}")
-			multiplicador_vida_enemigos = round(draw_deslizante(xpos + 10, xpos + 135, ypos + 10, multiplicador_vida_enemigos, 20, 200, des_count++, 1))
-			ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{multiplicador_vida_enemigos}%")
+			_xpos = draw_text_xpos(140, ypos, $"{L.editor_multiplicador_vida}")
+			multiplicador_vida_enemigos = round(draw_deslizante(_xpos + 10, _xpos + 135, ypos + 10, multiplicador_vida_enemigos, 20, 200, des_count++, 1))
+			ypos = 10 + draw_text_ypos(_xpos + 145, ypos, $"{multiplicador_vida_enemigos}%")
 			//Permitir nuclear
-			xpos = 140
-			draw_text_xpos(xpos, ypos, $"{misiles_nombre[2]}: {permitir_nuclear ? L.activado : L.desactivado}")
-			xpos += max(string_width($"{misiles_nombre[2]}: {L.activado}"), string_width($"{misiles_nombre[2]}: {L.desactivado}"))
-			permitir_nuclear = draw_toggle(xpos + 10, ypos - 5, permitir_nuclear, 1)
+			_xpos = xpos + 40
+			draw_text_xpos(_xpos, ypos, $"{misiles_nombre[2]}: {permitir_nuclear ? L.activado : L.desactivado}")
+			_xpos += max(string_width($"{misiles_nombre[2]}: {L.activado}"), string_width($"{misiles_nombre[2]}: {L.desactivado}"))
+			permitir_nuclear = draw_toggle(_xpos + 10, ypos - 5, permitir_nuclear, 1)
 			ypos += text_y * 1.2
 			//Modo creativo
-			xpos = 140
-			draw_text_xpos(xpos, ypos, $"{L.menu_claves}: {cheat ? L.activado : L.desactivado}")
-			xpos += max(string_width($"{L.menu_claves}: {L.activado}"), string_width($"{L.menu_claves}: {L.desactivado}"))
-			cheat = draw_toggle(xpos + 10, ypos - 5, cheat, 1)
+			_xpos = xpos + 40
+			draw_text_xpos(_xpos, ypos, $"{L.menu_claves}: {cheat ? L.activado : L.desactivado}")
+			_xpos += max(string_width($"{L.menu_claves}: {L.activado}"), string_width($"{L.menu_claves}: {L.desactivado}"))
+			cheat = draw_toggle(_xpos + 10, ypos - 5, cheat, 1)
 			oleadas = not cheat
-			ypos += text_y + 20
 		}
 		ypos += text_y * 1.25
+		_xpos = xpos + 10
+		_xpos = draw_text_xpos(_xpos, ypos, "Grabar")
+		GRABANDO = draw_toggle(_xpos + 20, ypos, GRABANDO, 1)
+		ypos += text_y * 1.2
 		return [xpos, ypos]
 	}
 }

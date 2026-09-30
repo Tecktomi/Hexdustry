@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"cinta_grande_check_output",
+  "%Name":"cinta_grande_check",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"cinta_grande_check_output",
+  "name":"cinta_grande_check",
   "parent":{
     "name":"EDIFICIOS",
     "path":"folders/SCRIPTS/EDIFICIOS.yy",

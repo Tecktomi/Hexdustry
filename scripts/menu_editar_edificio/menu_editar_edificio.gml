@@ -1,5 +1,6 @@
 function menu_editar_edificio(){
 	with control{
+		draw_set_valign(fa_top)
 		var edificio = show_menu_build, index = edificio.index, a, xpos, ypos, b, size, buffer, flag, temp_text, temp_complex, aa, bb, c, len, temp_array_real
 		if index = id_procesador{
 			draw_boton_text_counter = 0
@@ -187,6 +188,8 @@ function menu_editar_edificio(){
 			}
 			else if index = id_silo_de_misiles
 				draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * (array_length(misiles_nombre) - not permitir_nuclear)) * zoom, false)
+			else if index = id_antena
+				draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + 60 * zoom, false)
 			draw_set_color(ui_fondo)
 			draw_triangle(aa - 10 * zoom, bb + 20 * zoom, aa + 10 * zoom, bb + 20 * zoom, aa, bb + 10 * zoom, true)
 			draw_rectangle(aa - 80 * zoom, bb + 20 * zoom, aa + 80 * zoom, bb + 40 * zoom, true)
@@ -253,6 +256,12 @@ function menu_editar_edificio(){
 					if permitir_nuclear or a != 2
 						draw_text(aa - 70 * zoom, bb + (40 + 20 * a) * zoom, misiles_nombre[a])
 			}
+			else if index = id_antena{
+				draw_set_halign(fa_center)
+				draw_text(aa, bb + 20 * zoom, $"{88 + 0.3 * edificio.select}[MHz]")
+				draw_set_halign(fa_left)
+				edificio.select = round(draw_deslizante(aa - 70 * zoom, aa + 70 * zoom, bb + 50 * zoom, edificio.select, 0, 99, 0))
+			}
 			if mouse_x > aa - 80 * zoom and mouse_y > bb + 20 * zoom and mouse_x < aa + 80 * zoom{
 				if in(index, id_selector, id_overflow){
 					if mouse_check_button_pressed(mb_left) and mouse_y < bb + 40 * zoom{
@@ -279,13 +288,13 @@ function menu_editar_edificio(){
 					if mouse_check_button_pressed(mb_left) and mouse_y < bb + (40 + 20 * liquido_max) * zoom{
 						mouse_clear(mb_left)
 						show_menu = false
-						a = floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))
+						a = floor((mouse_y - (bb + 40 * zoom)) / (20 * zoom))
 						set_edificio(edificio.mode, a, edificio)
 					}
 				}
 				else if index = id_planta_quimica{
 					if mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * array_length(planta_quimica_receta)) * zoom{
-						a = clamp(floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom)), 0, array_length(planta_quimica_receta) - 1)
+						a = clamp(floor((mouse_y - (bb + 40 * zoom)) / (20 * zoom)), 0, array_length(planta_quimica_receta) - 1)
 						draw_text_background(mouse_x + 20, mouse_y, planta_quimica_descripcion[a])
 						cursor = cr_handpoint
 						if mouse_check_button_pressed(mb_left){
@@ -299,7 +308,7 @@ function menu_editar_edificio(){
 					temp_array_real = (index = id_fabrica_de_drones) ? fabrica_de_drones_array : fabrica_de_drones_grande_array
 					len = array_length(temp_array_real)
 					if mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * len) * zoom{
-						a = temp_array_real[floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom))]
+						a = temp_array_real[floor((mouse_y - (bb + 40 * zoom)) / (20 * zoom))]
 						temp_text = $"{dron_descripcion[a]}\n"
 						for(b = array_length(dron_precio_id[a]) - 1; b >= 0; b--)
 							temp_text += $"  {recurso_nombre[dron_precio_id[a, b]]}: {dron_precio_num[a, b]}\n"
@@ -336,7 +345,7 @@ function menu_editar_edificio(){
 				}
 				else if index = id_silo_de_misiles{
 					if mouse_y > bb + 40 * zoom and mouse_y < bb + (40 + 20 * (array_length(misiles_nombre) - not permitir_nuclear)) * zoom{
-						a = clamp(floor((mouse_y - (bb + 20 * (1 + zoom))) / (20 * zoom)), 0, array_length(misiles_nombre) - 1)
+						a = clamp(floor((mouse_y - (bb + 40 * zoom)) / (20 * zoom)), 0, array_length(misiles_nombre) - 1)
 						draw_text_background(mouse_x + 20, mouse_y, misiles_descripcion[a])
 						cursor = cr_handpoint
 						if mouse_check_button_pressed(mb_left){

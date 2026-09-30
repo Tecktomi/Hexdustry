@@ -77,6 +77,7 @@ function set_idioma(){
 			#endregion
 			#region Edificios
 				edificio_descripcion[id_almacen] = "Stores and distributes resources for later use"
+				edificio_descripcion[id_antena] = "Sends and Recibes data from a processor through a certain frecuence"
 				edificio_descripcion[id_bateria] = "Stores surplus energy so it can be used later"
 				edificio_descripcion[id_bomba_de_evaporacion] = "Slowly extracts Water through evaporation"
 				edificio_descripcion[id_bomba_hidraulica] = "Extracts liquids from the ground using energy"
@@ -140,6 +141,7 @@ function set_idioma(){
 				edificio_descripcion[id_tunel_salida] = "Links underground with another Tunnel to pass resources between them"
 				edificio_descripcion[id_turbina] = "Generates energy out of fuel and Water"
 				edificio_nombre[id_almacen] = "Warehouse"
+				edificio_nombre[id_antena] = "Antena"
 				edificio_nombre[id_bateria] = "Battery"
 				edificio_nombre[id_bomba_de_evaporacion] = "Evaporation Pump"
 				edificio_nombre[id_bomba_hidraulica] = "Hydraulic Pump"
@@ -489,7 +491,7 @@ function set_idioma(){
 			variable_struct_set(L, "flujo_consumo", "Consumption")
 			variable_struct_set(L, "flujo_flujo", "Pipeline")
 			variable_struct_set(L, "flujo_generacion", "Generation")
-			variable_struct_set(L, "flujo_liquido", "lÃ­quid")
+			variable_struct_set(L, "flujo_liquido", "liquid")
 			variable_struct_set(L, "flujo_sin_liquido", "No liquids")
 			variable_struct_set(L, "game_activar", "Activate")
 			variable_struct_set(L, "game_creando_dron", "Creating")
@@ -719,6 +721,7 @@ function set_idioma(){
 			#endregion
 			#region Edificios
 				edificio_descripcion[id_nucleo] = "Es el centro de mando, aquí se almacenan todos los recursos y debes protegerlo a toda costa"
+				edificio_descripcion[id_antena] = "Envía y recibe información del Procesador a una frecuencia específica"
 				edificio_descripcion[id_taladro] = "Permite minar Cobre, Hierro y Carbón. Puede potenciarse con Lubricante"
 				edificio_descripcion[id_cinta_transportadora] = "Mueve recursos de un lugar a otro"
 				edificio_descripcion[id_enrutador] = "Distribuye recursos en tres direcciones"
@@ -782,6 +785,7 @@ function set_idioma(){
 				edificio_descripcion[id_mina] = "Se coloca en un sitio y explota cuando los enemigos terrestres pasan encima"
 				edificio_descripcion[id_fabrica_de_lubricante] = "Crea Lubricante a partir del Petróleo, útil para acelerar taladros y torres"
 				edificio_nombre[id_almacen] = "Almacén"
+				edificio_nombre[id_antena] = "Antena"
 				edificio_nombre[id_bateria] = "Batería"
 				edificio_nombre[id_bomba_de_evaporacion] = "Bomba de Evaporación"
 				edificio_nombre[id_bomba_hidraulica] = "Bomba Hidráulica"
@@ -1361,6 +1365,7 @@ function set_idioma(){
 			#endregion
 			#region EDIFICIO
 				edificio_descripcion[id_almacen] = "Хранит и распределяет ресурсы для последующего использования"
+				edificio_descripcion[id_antena] = "Он отправляет и принимает данные от процессора с определенной частотой"
 				edificio_descripcion[id_bateria] = "Накапливает избыток энергии, чтобы использовать его позже"
 				edificio_descripcion[id_bomba_de_evaporacion] = "Медленно добывает воду через испарение"
 				edificio_descripcion[id_bomba_hidraulica] = "Добывает жидкости из земли, используя энергию"
@@ -1424,6 +1429,7 @@ function set_idioma(){
 				edificio_descripcion[id_tunel_salida] = "Соединяется под землёй с другим тоннелем, чтобы передавать ресурсы между ними"
 				edificio_descripcion[id_turbina] = "Производит энергию из топлива и воды"
 				edificio_nombre[id_almacen] = "Склад"
+				edificio_nombre[id_antena] = "Антенна"
 				edificio_nombre[id_bateria] = "Батарея"
 				edificio_nombre[id_bomba_de_evaporacion] = "Испаряющий насос"
 				edificio_nombre[id_bomba_hidraulica] = "Гидравлический насос"

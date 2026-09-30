@@ -15,12 +15,19 @@ function game_start(_nucleo = true, mision_cumplida = false){
 				    biome_seed = irandom(2)
 				    seed = random_get_seed()
 				}
-			    generar_bioma(biome_seed)
+			    while not generar_bioma(biome_seed){}
 			}
 		}
 		if GRABANDO{
 			buffer_write(buffer_grabacion, buffer_u32, seed)
 			buffer_write(buffer_grabacion, buffer_s8, biome_seed)
+			buffer_write(buffer_grabacion, buffer_u8, tutorial)
+			buffer_write(buffer_grabacion, buffer_u8, oleadas)
+			buffer_write(buffer_grabacion, buffer_u32, oleadas_tiempo)
+			buffer_write(buffer_grabacion, buffer_u32, oleadas_tiempo_primera)
+			buffer_write(buffer_grabacion, buffer_f64, multiplicador_vida_enemigos)
+			buffer_write(buffer_grabacion, buffer_s8, dificultad)
+			buffer_write(buffer_grabacion, buffer_bool, tecnologia)
 		}
 		redo_pathfind()
 		if mision_cumplida

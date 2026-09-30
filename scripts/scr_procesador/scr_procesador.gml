@@ -52,6 +52,8 @@ function scr_procesador(edificio = control.null_edificio){
 					val = sqrt(val2)
 				else if pc[2] = 9
 					val = pi
+				else if pc[2] = 10
+					val = array_length(edificio.procesador_link)
 				edificio.variables[pc[1]] = val
 			}
 			//Set {A} to [VAR]{b] [+, -, *, /, div, mod, or, and, xor, <<, >>, power] [VAR]{C}
@@ -245,8 +247,11 @@ function scr_procesador(edificio = control.null_edificio){
 					}
 					else if pc[3] = 1 and tag_edificio_seteable[temp_edificio.index]
 						set_edificio(bool(val), temp_edificio.select, temp_edificio)
-					else if pc[3] = 2 and tag_edificio_seteable[temp_edificio.index]
-						set_edificio(temp_edificio.mode, val, temp_edificio)
+					else if pc[3] = 2 and tag_edificio_seteable[temp_edificio.index]{
+						if temp_edificio.index = id_antena
+							val = clamp(val, 0, 99)
+						set_edificio(temp_edificio.mode, real(val), temp_edificio)
+					}
 				}
 			}
 			//Set VAR_{A} to value of cell [VAR]{B} of LINK[VAR]{C}
@@ -263,13 +268,21 @@ function scr_procesador(edificio = control.null_edificio){
 				}
 				else
 					temp_edificio = edificio.procesador_link[clamp(pc[5], 0, b - 1)]
-				if temp_edificio.index != id_memoria
+				if not (temp_edificio.index = id_memoria or temp_edificio.index = id_procesador or temp_edificio.index = id_antena)
 					continue
 				if pc[2] = 0
 					val = real(edificio.variables[pc[3]])
 				else
 					val = real(pc[3])
-				edificio.variables[pc[1]] = temp_edificio.variables[clamp(val, 0, 127)]
+				if temp_edificio.index = id_memoria
+					edificio.variables[pc[1]] = temp_edificio.variables[clamp(val, 0, 127)]
+				else if temp_edificio.index = id_procesador
+					edificio.variables[pc[1]] = temp_edificio.variables[clamp(val, 0, 15)]
+				else if temp_edificio.index = id_antena{
+					if temp_edificio.select < 0 or temp_edificio.select >= 100
+						continue
+					edificio.variables[pc[1]] = frecuencias[temp_edificio.select]
+				}
 			}
 			//Write [VAR]{A} into value of cell [VAR]{B} of LINK[VAR]{c}
 			else if pc0 = 8{
@@ -286,7 +299,7 @@ function scr_procesador(edificio = control.null_edificio){
 				}
 				else
 					temp_edificio = edificio.procesador_link[clamp(pc[6], 0, b - 1)]
-				if not in(temp_edificio.index, id_mensaje, id_procesador, id_memoria)
+				if not in(temp_edificio.index, id_mensaje, id_procesador, id_memoria, id_antena)
 					continue
 				if pc[3] = 0
 					val2 = edificio.variables[pc[4]]
@@ -304,6 +317,8 @@ function scr_procesador(edificio = control.null_edificio){
 					temp_edificio.variables[clamp(val2, 0, 15)] = val
 				else if temp_edificio.index = id_memoria
 					temp_edificio.variables[clamp(val2, 0, 127)] = val
+				else if temp_edificio.index = id_antena
+					frecuencias[temp_edificio.select] = val
 			}
 			//Draw to LINK[VAR]{A} [clear(), color(r, g, b), rectangle(x, y, w, h), line(x1, y1, x2, y2), triangle(x1, y1, x2, y2, x3, y3), ...]
 			else if pc0 = 9{

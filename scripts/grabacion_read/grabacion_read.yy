@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"array_clone",
+  "%Name":"grabacion_read",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"array_clone",
+  "name":"grabacion_read",
   "parent":{
-    "name":"GENERAL",
-    "path":"folders/SCRIPTS/CORE/GENERAL.yy",
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

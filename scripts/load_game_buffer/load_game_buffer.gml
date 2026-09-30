@@ -7,7 +7,7 @@ function load_game_buffer(buffer){
 		if mapa = -1{
 			seed = buffer_read(buffer, buffer_u32)
 			biome_seed = buffer_read(buffer, buffer_u8)
-			generar_bioma(biome_seed)
+			while not generar_bioma(biome_seed){}
 		}
 		else if mapa < -1{
 			tutorial = -1 - mapa

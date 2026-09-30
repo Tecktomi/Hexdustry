@@ -224,6 +224,7 @@ function generar_bioma(bioma){
 			ore_amount[# aa, bb] = 0
 		}
 		//Spawn point
+		a = 1000
 		do{
 			if irandom(1) = 0{
 				spawn_x = 3 + (xsize - 7) * irandom(1)
@@ -233,8 +234,11 @@ function generar_bioma(bioma){
 				spawn_x = irandom_range(3, xsize - 4)
 				spawn_y = 3 + (ysize - 7) * irandom(1)
 			}
+			if a-- = 0
+				return false
 		}
 		until terreno_caminable[terreno[# spawn_x, spawn_y]]
 		clear_olas()
+		return true
 	}
 }
