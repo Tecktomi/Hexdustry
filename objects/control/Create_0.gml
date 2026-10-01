@@ -5,7 +5,7 @@ var a, b, c, flag
 	array_xytob = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1],[-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],[-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],[-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],[-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],[-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1]]
 #endregion
 #region MACROS
-	#macro FILE_VERSION 2026_09_28
+	#macro FILE_VERSION 2026_09_30
 	#macro PROCESADOR_VERSION 2026_03_25
 	#macro GRABACION_VERSION 2026_09_28
 	#macro TILE_WIDTH 32
@@ -1272,18 +1272,18 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 	id_generador = def_edificio("Generador", 1, spr_generador, spr_generador_encendido, 100,, scr_generador, scr_draw_hornos, false,, [idr_cobre, idr_hierro], [20, 5], 20, true, false, [idr_carbon, idr_compuesto_incendiario], [10, 10], false); def_edificio_2(-30,,,,,,, 2)
 	id_cable = def_edificio("Cable", 1, spr_cable,, 30,,,,,, [idr_cobre, idr_hierro], [5, 1]); def_edificio_2(,,,,,, true)
 	id_bateria = def_edificio("Batería", 1, spr_bateria,, 60,,, scr_draw_bateria, false,, [idr_cobre, idr_bateria], [20, 3]); def_edificio_2(,,,,,, true, 2)
-	id_panel_solar = def_edificio("Panel Solar", 2, spr_panel_solar,, 150,, scr_panel_solar,,,, [idr_cobre, idr_hierro, idr_vidrio], [25, 5, 10]); def_edificio_2(-10,,,,,,, 2)
+	id_panel_solar = def_edificio("Panel Solar", 2, spr_panel_solar,, 150,, scr_panel_solar,,,, [idr_cobre, idr_hierro, idr_vidrio, idr_electronicos], [25, 5, 10, 10]); def_edificio_2(-30,,,,,,, 2)
 	id_bomba_hidraulica = def_edificio("Bomba Hidráulica", 2, spr_bomba,, 200,, scr_bomba_hidraulica, scr_draw_bomba_par, false,, [idr_bronce, idr_hierro], [30, 10]); def_edificio_2(40, 60, -80,,,,, 2)
 	id_tuberia = def_edificio("Tubería", 1, spr_tuberia, spr_tuberia_color, 30,,, scr_draw_tuberia, false,, [idr_bronce], [2]); def_edificio_2(, 10,,,,, true)
 	id_tunel_salida = def_edificio("Túnel salida", 1, spr_tunel_salida,, 60, 10, scr_caminos, scr_draw_camino, false,, [idr_cobre, idr_hierro], [8, 4], 1,,,,, true, true); def_edificio_2()
 	id_energia_infinita = def_edificio("Energía Infinita", 1, spr_energia_infinita,, 100); def_edificio_2(-999_999,,,,,, true, 99)
-	id_cinta_magnetica = def_edificio("Cinta Magnética", 1, spr_cinta_magnetica, spr_cinta_magnetica_diagonal, 60, 10, scr_caminos, scr_draw_enrutador, false, true, [idr_bronce, idr_hierro], [1, 2], 1, true,,,, true); def_edificio_2()
+	id_cinta_rapida = def_edificio("Cinta Rápida", 1, spr_camino_rapido, spr_camino_rapido_diagonal, 60, 10, scr_caminos, scr_draw_enrutador, false, true, [idr_bronce, idr_hierro], [1, 2], 1, true,,,, true); def_edificio_2()
 	id_torre_basica = def_edificio("Torre básica", 1, spr_torre, spr_torre_2, 300, 10, scr_torres_basicas, scr_draw_armas_no_laser, false,, [idr_cobre, idr_hierro], [10, 25], 30, true, false, [idr_cobre, idr_hierro, idr_plastico], [10, 10, 10]); def_edificio_2(, 10, 10, [idl_lubricante], 0, 180,, 3)
 	//20
 	id_rifle = def_edificio("Rifle", 2, spr_rifle, spr_rifle_2, 400, 30, scr_torres_basicas, scr_draw_armas_no_laser, false,, [idr_bronce, idr_hierro, idr_acero], [10, 40, 10], 30, true, false, [idr_bronce, idr_acero, idr_uranio_bruto, idr_uranio_enriquecido, idr_uranio_empobrecido], [10, 10, 10, 10, 10]); def_edificio_2(, 10, 10, [idl_lubricante], 1, 300,, 3)
 	id_lanzallamas = def_edificio("Lanzallamas", 2, spr_lanzallamas, spr_lanzallamas_2, 400, 1, scr_torres_basicas, scr_draw_armas_no_laser, false,, [idr_bronce, idr_hierro, idr_acero], [25, 10, 10], 20, true, false, [idr_carbon, idr_compuesto_incendiario], [10, 10]); def_edificio_2(, 10, 30, [idl_petroleo], 3, 130,, 3)
 	id_planta_quimica = def_edificio("Planta Química", 3, spr_planta_quimica,, 200, 60, scr_planta_quimica,,,, [idr_bronce, idr_hierro, idr_vidrio], [30, 30, 10], 30, true, false, [idr_cobre, idr_piedra_sulfatada, idr_compuesto_incendiario, idr_sal], [0, 0, 0, 10], true, false, [idr_explosivo, idr_bateria]); def_edificio_2(50, 10,, [idl_acido],,,, 1)
-	id_laser = def_edificio("Láser", 2.5, spr_laser, spr_laser_2, 400, 1, scr_laser,, false,, [idr_cobre, idr_acero, idr_vidrio], [50, 10, 25]); def_edificio_2(200,,,, 0, 320,, 3)
+	id_laser = def_edificio("Láser", 2.5, spr_laser, spr_laser_2, 400, 1, scr_laser,, false,, [idr_cobre, idr_acero, idr_vidrio, idr_aluminio], [30, 10, 25, 20]); def_edificio_2(200,,,, 0, 320,, 3)
 	id_deposito = def_edificio("Depósito", 3, spr_deposito, spr_deposito_color, 200,,, scr_draw_liquido_sin_bomba, false,, [idr_bronce, idr_acero], [20, 10]); def_edificio_2(, 1000,,,,, true, 1)
 	id_liquido_infinito = def_edificio("Líquido Infinito", 1, spr_liquido_infinito, spr_tuberia_color, 100,,, scr_draw_liquido_sin_bomba); def_edificio_2(, 10, -999_999,,,, true, 99)
 	id_turbina = def_edificio("Turbina", 2, spr_turbina,, 160,, scr_turbina, scr_draw_bomba_par, false,, [idr_cobre, idr_bronce, idr_acero], [50, 20, 10], 20, true, false, [idr_carbon, idr_compuesto_incendiario], [10, 10]); def_edificio_2(-120, 10, 40, [idl_agua],,,, 2)
@@ -1299,11 +1299,11 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 	id_puerto_de_carga = def_edificio("Puerto de Carga", 2, spr_punto_carga,, 150,, scr_puerto_carga,,,, [idr_cobre, idr_bronce, idr_electronicos], [25, 10, 1], 25,, true,,,, true); def_edificio_2(,,,,,,, 1)
 	id_ensambladora = def_edificio("Ensambladora", 2.5, spr_ensambladora,, 250, 240, scr_ensambladora,,,, [idr_hierro, idr_bronce, idr_acero, idr_vidrio], [25, 15, 10, 10], 40, true, false, [idr_cobre, idr_plastico], [10, 10], true, false, [idr_electronicos]); def_edificio_2(70,,,,,,, 1)
 	id_planta_nuclear = def_edificio("Planta Nuclear", 4, spr_planta_nuclear,, 500,, scr_planta_nuclear,,,, [idr_cobre, idr_acero, idr_concreto, idr_electronicos], [400, 80, 50, 20], 10, true, false, [idr_uranio_enriquecido], [10]); def_edificio_2(-500, 150, 200, [idl_agua, idl_agua_salada],,,, 3)
-	id_torre_de_alta_tension = def_edificio("Torre de Alta Tensión", 2, spr_cable_tension,, 100,,,,,, [idr_cobre, idr_acero, idr_vidrio], [30, 5, 3]); def_edificio_2(5,,,,,, true, 1)
+	id_torre_de_alta_tension = def_edificio("Torre de Alta Tensión", 2, spr_cable_tension,, 150,,,,,, [idr_cobre, idr_acero, idr_vidrio, idr_aluminio], [20, 5, 3, 5]); def_edificio_2(5,,,,,, true, 1)
 	id_perforadora_de_petroleo = def_edificio("Perforadora de Petróleo", 3, spr_perforadora,, 200,, scr_perforadora_petroleo, scr_draw_bomba_impar, false,, [idr_bronce, idr_acero, idr_concreto], [20, 15, 20]); def_edificio_2(80, 10, -40, [idl_petroleo],,,, 2)
 	//40
 	id_mortero = def_edificio("Mortero", 3, spr_mortero, spr_mortero_2, 600, 120, scr_torres_basicas, scr_draw_armas_no_laser, false,, [idr_acero, idr_concreto], [50, 30], 30, true, false, [idr_compuesto_incendiario, idr_explosivo, idr_uranio_bruto, idr_uranio_enriquecido, idr_uranio_empobrecido], [10, 10, 10, 10, 10]); def_edificio_2(,,,, 2, 600,, 3)
-	id_procesador = def_edificio("Procesador", 2, spr_procesador,, 80,, scr_procesador,,,, [idr_cobre, idr_plastico, idr_electronicos], [50, 20, 20]); def_edificio_2(10,,,,,,, 1)
+	id_procesador = def_edificio("Procesador", 2, spr_procesador,, 100,, scr_procesador,,,, [idr_cobre, idr_plastico, idr_electronicos, idr_aluminio], [50, 20, 20, 10]); def_edificio_2(10,,,,,,, 1)
 	id_mensaje = def_edificio("Mensaje", 1, spr_mensaje,, 50,,,,,, [idr_cobre, idr_electronicos], [15, 3]); def_edificio_2(,,,,,, true, 1)
 	id_memoria = def_edificio("Memoria", 1, spr_memoria,, 50,,,,,, [idr_cobre, idr_electronicos], [15, 3]); def_edificio_2(,,,,,, true, 1)
 	id_torre_reparadora = def_edificio("Torre Reparadora", 2, spr_torre_reparadora, spr_torre_reparadora_2, 100,, scr_torre_reparadora, scr_draw_armas_no_laser, false,, [idr_cobre, idr_hierro, idr_vidrio], [40, 25, 15]); def_edificio_2(40,,,, 0, 200,, 3)
@@ -1331,7 +1331,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 #endregion
 #region Categorias
 	categoria_edificios = [
-		[id_cinta_transportadora, id_cinta_magnetica, id_cruce, id_enrutador, id_selector, id_overflow, id_tunel, id_almacen],
+		[id_cinta_transportadora, id_cinta_rapida, id_cruce, id_enrutador, id_selector, id_overflow, id_tunel, id_almacen],
 		[id_taladro, id_taladro_electrico, id_taladro_de_explosion, id_perforadora_de_petroleo, id_extractor_atmosferico],
 		[id_horno, id_triturador, id_fabrica_de_concreto, id_ensambladora, id_planta_quimica, id_refineria_de_petroleo, id_refineria_de_metales, id_horno_de_lava, id_planta_de_enriquecimiento, id_fabrica_de_lubricante],
 		[id_cable, id_torre_de_alta_tension, id_bateria, id_generador, id_turbina, id_panel_solar, id_generador_geotermico, id_planta_nuclear],
@@ -1394,7 +1394,7 @@ edificio_key[id_recurso_infinito] = "1z"
 		tag_camino_o_tunel[id_enrutador] = true
 		tag_camino_o_tunel[id_selector] = true
 		tag_camino_o_tunel[id_overflow] = true
-		tag_camino_o_tunel[id_cinta_magnetica] = true
+		tag_camino_o_tunel[id_cinta_rapida] = true
 		tag_camino_o_tunel[id_tunel] = true
 		tag_camino_o_tunel[id_tunel_salida] = true
 	#endregion
@@ -1598,7 +1598,7 @@ edificio_key[id_recurso_infinito] = "1z"
 	#endregion
 	#region edificio_cinta
 		tag_edificio_cinta = array_create(edificio_max, false)
-		tag_edificio_cinta[id_cinta_magnetica] = true
+		tag_edificio_cinta[id_cinta_rapida] = true
 		tag_edificio_cinta[id_cinta_transportadora] = true
 	#endregion
 	#region edificio_tunel
@@ -1822,12 +1822,12 @@ sort_drones()
 	function def_tecnologia(edificio = 0){
 		tecnologia_precio_id[edificio] = array_create(0, 0)
 		tecnologia_precio_num[edificio] = array_create(0, 0)
-		for(a = 0; a < array_length(edificio_precio_id[edificio]); a++){
+		for(var a = 0; a < array_length(edificio_precio_id[edificio]); a++){
 			array_push(tecnologia_precio_id[edificio], edificio_precio_id[edificio, a])
 			array_push(tecnologia_precio_num[edificio], round(tecnologia_precio_multiplicador * (5 + edificio_precio_num[edificio, a])))
 		}
 		var temp_edificio
-		for(a = 1; a < argument_count; a++){
+		for(var a = 1; a < argument_count; a++){
 			temp_edificio = real(argument[a])
 			array_push(tecnologia_prev[edificio], temp_edificio)
 			array_push(tecnologia_next[temp_edificio], edificio)
@@ -1840,18 +1840,18 @@ sort_drones()
 	tec_tunel = def_tecnologia(id_tunel, id_enrutador, id_cruce)
 	tec_horno = def_tecnologia(id_horno, id_taladro)
 	tec_generador = def_tecnologia(id_generador, id_horno)
-	tec_taladro_electrico = def_tecnologia(id_taladro_electrico, id_generador, id_taladro)
+	tec_taladro_electrico = def_tecnologia(id_taladro_electrico, id_generador)
 	tec_triturador = def_tecnologia(id_triturador, id_taladro_electrico)
 	tec_cable = def_tecnologia(id_cable, id_generador)
 	tec_bateria = def_tecnologia(id_bateria, id_planta_quimica)
-	tec_panel_solar = def_tecnologia(id_panel_solar, id_generador)
+	tec_panel_solar = def_tecnologia(id_panel_solar, id_generador, id_ensambladora)
 	tec_bomba_hidraulica = def_tecnologia(id_bomba_hidraulica, id_bomba_de_evaporacion, id_generador)
 	tec_tuberia = def_tecnologia(id_tuberia, id_bomba_de_evaporacion)
-	tec_cinta_magnetica = def_tecnologia(id_cinta_magnetica, id_cinta_transportadora)
+	tec_cinta_rapida = def_tecnologia(id_cinta_rapida, id_cinta_transportadora)
 	tec_rifle = def_tecnologia(id_rifle, id_torre_basica)
-	tec_lanzallamas = def_tecnologia(id_lanzallamas, id_torre_basica)
-	tec_planta_quimica = def_tecnologia(id_planta_quimica, id_horno, id_bomba_hidraulica, id_generador)
-	tec_laser = def_tecnologia(id_laser, id_generador, id_torre_basica)
+	tec_lanzallamas = def_tecnologia(id_lanzallamas, id_rifle)
+	tec_planta_quimica = def_tecnologia(id_planta_quimica, id_horno, id_bomba_hidraulica)
+	tec_laser = def_tecnologia(id_laser, id_rifle, id_refineria_de_metales)
 	tec_deposito = def_tecnologia(id_deposito, id_tuberia)
 	tec_turbina = def_tecnologia(id_turbina, id_generador, id_bomba_hidraulica)
 	tec_refineria_de_metales = def_tecnologia(id_refineria_de_metales, id_planta_quimica)
@@ -1864,10 +1864,10 @@ sort_drones()
 	tec_puerto_de_carga = def_tecnologia(id_puerto_de_carga, id_fabrica_de_drones)
 	tec_ensambladora = def_tecnologia(id_ensambladora, id_refineria_de_petroleo, id_planta_quimica)
 	tec_planta_nuclear = def_tecnologia(id_planta_nuclear, id_horno_de_lava, id_taladro_de_explosion, id_refineria_de_metales)
-	tec_torre_de_alta_tension = def_tecnologia(id_torre_de_alta_tension, id_cable)
+	tec_torre_de_alta_tension = def_tecnologia(id_torre_de_alta_tension, id_cable, id_refineria_de_metales)
 	tec_perforadora_de_petroleo = def_tecnologia(id_perforadora_de_petroleo, id_bomba_hidraulica, id_fabrica_de_concreto)
 	tec_mortero = def_tecnologia(id_mortero, id_rifle, id_planta_quimica, id_fabrica_de_concreto)
-	tec_procesador = def_tecnologia(id_procesador, id_refineria_de_petroleo, id_ensambladora)
+	tec_procesador = def_tecnologia(id_procesador, id_refineria_de_petroleo, id_ensambladora, id_refineria_de_metales)
 	tec_mensaje = def_tecnologia(id_mensaje, id_procesador)
 	tec_memoria = def_tecnologia(id_memoria, id_procesador)
 	tec_torre_reparadora = def_tecnologia(id_torre_reparadora, id_torre_basica, id_generador)
@@ -1875,21 +1875,22 @@ sort_drones()
 	tec_onda_de_choque = def_tecnologia(id_onda_de_choque, id_laser, id_bateria)
 	tec_muro_reforzado = def_tecnologia(id_muro_reforzado, id_muro)
 	tec_silo_de_misiles = def_tecnologia(id_silo_de_misiles, id_planta_nuclear, id_procesador, id_mortero, id_fabrica_de_drones)
-	tec_planta_de_enriquecimiento = def_tecnologia(id_planta_de_enriquecimiento, id_planta_nuclear, id_procesador)
-	tec_almacen = def_tecnologia(id_almacen, id_cinta_magnetica)
+	tec_planta_de_enriquecimiento = def_tecnologia(id_planta_de_enriquecimiento, id_planta_nuclear, id_planta_de_reciclaje)
+	tec_almacen = def_tecnologia(id_almacen, id_cinta_rapida)
 	tec_fabrica_de_concreto = def_tecnologia(id_fabrica_de_concreto, id_horno, id_bomba_hidraulica)
-	tec_pantalla = def_tecnologia(id_pantalla, id_procesador, id_refineria_de_petroleo)
+	tec_pantalla = def_tecnologia(id_pantalla, id_procesador)
 	tec_refineria_de_petroleo = def_tecnologia(id_refineria_de_petroleo, id_fabrica_de_concreto)
 	tec_planta_de_reciclaje = def_tecnologia(id_planta_de_reciclaje, id_refineria_de_metales, id_horno_de_lava)
-	tec_planta_desalinizadora = def_tecnologia(id_planta_desalinizadora, id_bomba_de_evaporacion, id_generador)
+	tec_planta_desalinizadora = def_tecnologia(id_planta_desalinizadora, id_bomba_hidraulica)
 	tec_extractor_atmosferico = def_tecnologia(id_extractor_atmosferico, id_bomba_hidraulica, id_turbina, id_ensambladora)
-	tec_modulo = def_tecnologia(id_modulo, id_procesador, id_planta_quimica, id_refineria_de_petroleo)
+	tec_modulo = def_tecnologia(id_modulo, id_procesador)
 	tec_fabrica_de_lubricante = def_tecnologia(id_fabrica_de_lubricante, id_planta_quimica, id_refineria_de_petroleo)
+	tec_antena = def_tecnologia(id_antena, id_procesador)
 	array_set(tecnologia_precio_id, id_modulo, [idr_electronicos, idr_plastico,  idr_bateria])
 	array_set(tecnologia_precio_num, id_modulo, [20, 20, 20])
 	tec_fabrica_de_drones_grande = def_tecnologia(id_fabrica_de_drones_grande, id_fabrica_de_drones, id_procesador)
-	tec_cinta_grande = def_tecnologia(id_cinta_grande, id_cinta_magnetica, id_fabrica_de_drones)
-	tec_mina = def_tecnologia(id_mina, id_rifle)
+	tec_cinta_grande = def_tecnologia(id_cinta_grande, id_cinta_rapida, id_fabrica_de_drones)
+	tec_mina = def_tecnologia(id_mina, id_rifle, id_planta_quimica)
 	edificio_tecnologia_nivel = array_create(edificio_max, -1)
 	tecnologia_nivel_edificios = [array_create(0, 0)]
 	//Crear nivel mínimo tecnológico

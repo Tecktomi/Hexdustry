@@ -11,7 +11,7 @@ function panel_enciclopedia_recurso(xpos = 0, ypos = 0, param = {_this_input_lay
 		var a, b, aa
 		for(a = 0; a < edificio_max; a++){
 			aa = edi_sort[a]
-			for(b = 0; b < array_length(edificio_input_id[aa]); b++)
+			if not edificio_input_all[aa] for(b = 0; b < array_length(edificio_input_id[aa]); b++)
 				if edificio_input_id[aa, b] = ei{
 					if draw_boton(xpos + 20, ypos, edificio_nombre[aa],,,, false, _this_input_layer){
 						enciclopedia_link(4, aa)
@@ -24,7 +24,7 @@ function panel_enciclopedia_recurso(xpos = 0, ypos = 0, param = {_this_input_lay
 		ypos = draw_text_ypos(xpos + 10, ypos, $"{L.enciclopedia_producido_en}:")
 		for(a = 0; a < edificio_max; a++){
 			aa = edi_sort[a]
-			for(b = 0; b < array_length(edificio_output_id[aa]); b++)
+			if not edificio_output_all[aa] for(b = 0; b < array_length(edificio_output_id[aa]); b++)
 				if edificio_output_id[aa, b] = ei{
 					if draw_boton(xpos + 20, ypos, edificio_nombre[aa],,,, false, _this_input_layer){
 						enciclopedia_link(4, aa)

@@ -1,9 +1,10 @@
 function draw_enciclopedia(_tecnologia = true, _this_input_layer = 0){
 	with control{
+		draw_set_valign(fa_top)
 		draw_set_halign(fa_left)
-		draw_set_color(c_gray)
+		draw_set_color(ui_fondo)
 		draw_rectangle(100, 100, room_width - 100, room_height - 100, false)
-		draw_set_color(c_black)
+		draw_set_color(ui_texto)
 		draw_rectangle(100, 100, room_width - 100, room_height - 100, true)
 		var width = 100, ypos = 100
 		if draw_boton(width, ypos, L.enciclopedia_recursos,,,,, _this_input_layer)
@@ -42,42 +43,14 @@ function draw_enciclopedia(_tecnologia = true, _this_input_layer = 0){
 		else if enciclopedia = 6
 			draw_panel(120, ypos, room_width - 240, room_height - 120 - ypos, 0, 1, 1, panel_enciclopedia_dron, {_this_input_layer : _this_input_layer, _tecnologia : _tecnologia})
 		//Tecnología
-		else if enciclopedia = 7{
-			sprite_boton_text = ""
-			var xpos = room_width / 2, a, b, c
-			draw_set_font(font_titulo)
-			ypos = draw_text_ypos(120, ypos, L.enciclopedia_tecnologia)
-			draw_set_font(font_normal)
-			ypos = 140
-			for(a = 0; a < array_length(tecnologia_nivel_edificios); a++){
-				ypos += 60
-				width = array_length(tecnologia_nivel_edificios[a])
-				for(b = 0; b < width; b++){
-					c = tecnologia_nivel_edificios[a, b]
-					if edificio_tecnologia[jugador, c]
-						draw_set_color(ui_boton_verde)
-					else if edificio_tecnologia_desbloqueable[jugador, c]
-						draw_set_color(ui_color_lava)
-					else
-						draw_set_color(ui_boton_rojo)
-					draw_circle(xpos + 60 * b - 30 * (width - 1), ypos, 25, false)
-					draw_set_color(ui_fondo)
-					draw_circle(xpos + 60 * b - 30 * (width - 1), ypos, 25, true)
-					if draw_sprite_boton(edificio_sprite[c],, xpos - 20 + 60 * b - 30 * (width - 1), ypos - 20, 40, 40,, hover_sprite_boton_text, {a : edificio_nombre[c]}){
-						enciclopedia_link(4, c)
-						exit
-					}
-				}
-			}
-			draw_text_background(mouse_x + 20, mouse_y, sprite_boton_text)
-		}
+		else if enciclopedia = 7
+			draw_panel(120, ypos, room_width - 240, room_height - 120 - ypos, 0, 1, 1, panel_enciclopedia_tecnologia, {_this_input_layer : _this_input_layer})
 		//Menú Consejos
 		else if enciclopedia = 8
 			scroll(120, ypos, array_length(consejos_nombre), editor_max_height, editor_item_size, scroll_enciclopedia_consejos, {xpos : 140, ypos : ypos, _this_input_layer : _this_input_layer}, 0)
 		//Detalle Consejo
-		else if enciclopedia = 9{
+		else if enciclopedia = 9
 			draw_panel(120, ypos, room_width - 240, room_height - 120 - ypos, 0, 1, 1, panel_enciclopedia_consejo, {_this_input_layer : _this_input_layer})
-		}
 		if keyboard_check_pressed(vk_escape) or keyboard_check_pressed(CONTROL_ENCICLOPEDIA) or mouse_check_button_pressed(mb_right) or (mouse_check_button_pressed(mb_left) and (mouse_x < 100 or mouse_y < 100 or mouse_x > room_width - 100 or mouse_y > room_height - 100)){
 			mouse_clear(mouse_lastbutton)
 			keyboard_clear(vk_escape)

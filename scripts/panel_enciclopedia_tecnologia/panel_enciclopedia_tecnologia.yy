@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"scroll_enciclopedia_drones",
+  "%Name":"panel_enciclopedia_tecnologia",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scroll_enciclopedia_drones",
+  "name":"panel_enciclopedia_tecnologia",
   "parent":{
     "name":"ENCICLOPEDIA",
     "path":"folders/SCRIPTS/ENCICLOPEDIA.yy",

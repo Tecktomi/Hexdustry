@@ -1,9 +1,9 @@
 function draw_edificio(x, y, index, dir, alpha = 1, _jugador = jugador){
 	with control{
 		if tag_camino_o_tunel[index]{
-			if in(index, id_cinta_transportadora, id_enrutador, id_cinta_magnetica){
+			if in(index, id_cinta_transportadora, id_enrutador, id_cinta_rapida){
 				var c = image_index >> 1
-				if index = id_cinta_magnetica
+				if index = id_cinta_rapida
 					c = image_index
 				if dir mod 3 = 1
 					draw_sprite_off(edificio_sprite[index], c, x, y, 1, power(-1, dir > 1),,, alpha)

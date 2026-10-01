@@ -87,7 +87,7 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 					draw_set_color(ui_color_lava)
 				else
 					draw_set_color(ui_boton_rojo)
-				draw_line(xpos + 50 * a - 25 * (size - 1), ypos, xpos + 10, ypos + 100)
+				draw_line(xpos + 50 * a - 25 * (size - 1), ypos, xpos, ypos + 100)
 				draw_circle(xpos + 50 * a - 25 * (size - 1), ypos, 25, false)
 				draw_set_color(ui_fondo)
 				draw_circle(xpos + 50 * a - 25 * (size - 1), ypos, 25, true)
@@ -106,7 +106,7 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 					draw_set_color(ui_color_lava)
 				else
 					draw_set_color(ui_boton_rojo)
-				draw_line(xpos + 50 * a - 25 * (size - 1), ypos + 200, xpos + 10, ypos + 100)
+				draw_line(xpos + 50 * a - 25 * (size - 1), ypos + 200, xpos, ypos + 100)
 				draw_circle(xpos + 50 * a - 25 * (size - 1), ypos + 200, 25, false)
 				draw_set_color(ui_fondo)
 				draw_circle(xpos + 50 * a - 25 * (size - 1), ypos + 200, 25, true)
@@ -136,9 +136,9 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 			}
 			else
 				draw_set_color(ui_boton_rojo)
-			draw_circle(xpos + 10, ypos + 100, 25, false)
+			draw_circle(xpos, ypos + 100, 25, false)
 			draw_set_color(ui_fondo)
-			draw_circle(xpos + 10, ypos + 100, 25, true)
+			draw_circle(xpos, ypos + 100, 25, true)
 			draw_sprite_stretched(edificio_sprite[ei], 0, xpos - 20, ypos + 80, 40, 40)
 		}
 		return [xpos, ypos]

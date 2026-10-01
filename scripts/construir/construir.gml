@@ -16,7 +16,7 @@ function construir(index, dir, mx, my, _server = false, _cheat = control.cheat, 
 					temp_edificio.array_real[0] = cos(a)
 					temp_edificio.array_real[1] = -sin(a)
 					flag = false
-					if in(index, id_enrutador, id_cinta_magnetica){
+					if in(index, id_enrutador, id_cinta_rapida){
 						if (dir mod 3) = 1
 							temp_edificio.yscale = power(-1, dir > 1)
 						else{

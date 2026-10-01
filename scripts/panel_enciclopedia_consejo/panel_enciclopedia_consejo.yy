@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"panel_enciclopedia_consejo",
   "parent":{
-    "name":"PANEL",
-    "path":"folders/SCRIPTS/CORE/PANEL.yy",
+    "name":"ENCICLOPEDIA",
+    "path":"folders/SCRIPTS/ENCICLOPEDIA.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

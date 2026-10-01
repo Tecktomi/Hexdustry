@@ -6,7 +6,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 		if edificio_flujo[index]
 			var flujo = edificio.flujo, flujo_power = flujo.eficiencia
 		//Buscar enemigos
-		if ((image_index mod 10) = 0 and edificio.target = null_dron) or edificio.target.vida <= 0{
+		if ((timer mod 10) = 0 and edificio.target = null_dron) or edificio.target.vida <= 0{
 			if edificio.target != null_dron
 				array_disorder_remove(edificio.target.torres, edificio, ptre_torre_dron)
 			edificio.target = null_dron
@@ -19,7 +19,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 		}
 		var dron = edificio.target
 		//Buscar edificios
-		if dron = null_dron and (((image_index mod 10) = 0 and edificio.target_edificio = null_edificio) or (edificio.target_edificio != null_edificio and edificio.target_edificio.vida <= 0)){
+		if dron = null_dron and (((timer mod 10) = 0 and edificio.target_edificio = null_edificio) or (edificio.target_edificio != null_edificio and edificio.target_edificio.vida <= 0)){
 			if edificio.target_edificio != null_edificio
 				array_disorder_remove(edificio.target_edificio.torres, edificio, ptre_torre_edificio)
 			edificio.target_edificio = null_edificio
@@ -41,14 +41,15 @@ function scr_torres_basicas(edificio = control.null_edificio){
 				target_x = target_edificio.center_x
 				target_y = target_edificio.center_y
 			}
-			var dmg_factor = 1, angle = -arctan2(center_x - target_x, target_y - edificio.center_y) - pi / 2
-			edificio.select = radtodeg(angle)
+			var dmg_factor = 1, angle_spd = (index = id_mortero ? 2 : 3)
 			if ((index = id_torre_basica or index = id_rifle) and flujo.liquido = idl_lubricante) or (index = id_lanzallamas and flujo.liquido = idl_petroleo){
 				change_flujo(edificio_flujo_consumo[index], edificio)
-				if in(index, id_torre_basica, id_rifle)
-					edificio.proceso += 0.5
+				if index = id_torre_basica or index = id_rifle{
+					edificio.proceso += 0.5 * flujo.eficiencia
+					angle_spd *= 1 + flujo.eficiencia
+				}
 				else if index = id_lanzallamas
-					dmg_factor = 2
+					dmg_factor *= (1 + flujo.eficiencia)
 			}
 			if edificio.modulo{
 				if index = id_lanzallamas
@@ -57,7 +58,9 @@ function scr_torres_basicas(edificio = control.null_edificio){
 					edificio.proceso += 0.3
 			}
 			//Disparo
-			if ++edificio.proceso >= edificio_proceso[index]{
+			var angle = radtodeg(arctan2(center_y - target_y, target_x - center_x))
+			edificio.select += clamp(angle_difference(angle, edificio.select), -angle_spd, angle_spd)
+			if ++edificio.proceso >= edificio_proceso[index] and abs(angle_difference(angle, edificio.select)) < 0.5{
 				edificio.proceso = 0
 				var dis = point_distance(center_x, center_y, target_x, target_y)
 				if dis > edificio_alcance[index]{
@@ -80,18 +83,19 @@ function scr_torres_basicas(edificio = control.null_edificio){
 							edificio.array_real[4]++
 							edificio.array_real[5] = 1
 							if edificio.array_real[4] = 1{
-								if edificio.sound != undefined
+								if not is_undefined(edificio.sound)
 									audio_pause_sound(edificio.sound)
 								edificio.sound = sound_play(snd_flame_init, center_x, center_y, 0.1)
 							}
 							else if (edificio.array_real[4] - 60) mod 119 = 0{
-								if edificio.sound != undefined
+								if not is_undefined(edificio.sound)
 									audio_pause_sound(edificio.sound)
 								edificio.sound = sound_play(snd_flame_cont, center_x, center_y, 0.1)
 							}
 							if dron != null_dron{
 								var temp_array_dron = ds_grid_get(chunk_dron, dron.chunk_x, dron.chunk_y)
-								var disi = edificio_alcance[index], x1 = center_x + disi * cos(angle + pi / 6), y1 = center_y - disi * sin(angle + pi / 6), x2 = center_x + disi * cos(angle - pi / 6), y2 = center_y - disi * sin(angle - pi / 6), total_dmg = tiro_struct.dmg * dmg_factor
+								var disi = edificio_alcance[index], x1 = center_x + disi * cos(degtorad(angle) + pi / 6), y1 = center_y - disi * sin(degtorad(angle) + pi / 6)
+								var x2 = center_x + disi * cos(degtorad(angle) - pi / 6), y2 = center_y - disi * sin(degtorad(angle) - pi / 6), total_dmg = tiro_struct.dmg * dmg_factor
 								var c, temp_dron
 								for(c = array_length(temp_array_dron) - 1; c >= 0; c--){
 									temp_dron = temp_array_dron[c]
@@ -115,8 +119,10 @@ function scr_torres_basicas(edificio = control.null_edificio){
 						edificio.carga[tiro_struct.recurso] -= tiro_struct.cantidad
 						edificio.carga_total -= tiro_struct.cantidad
 						var municion
-						if index = id_lanzallamas
-							municion = add_municion(center_x, center_y, 20 * (target_x - center_x) / dis, 20 * (target_y - center_y) / dis, municion_tipo_fuego, dis / 20, tiro_struct.dmg * dmg_factor,, dron, target_edificio,,, _jugador)
+						if index = id_lanzallamas{
+							b = degtorad(angle) + random_range(-pi / 6, pi / 6)
+							municion = add_municion(center_x, center_y, 20 * cos(b), -20 * sin(b), municion_tipo_fuego, dis / 20, tiro_struct.dmg * dmg_factor,, dron, target_edificio,,, _jugador)
+						}
 						else if index = id_mortero{
 							if edificio.carga[idr_compuesto_incendiario] > 0{
 								edificio.carga[idr_compuesto_incendiario]--
@@ -132,9 +138,8 @@ function scr_torres_basicas(edificio = control.null_edificio){
 							municion = add_municion(center_x, center_y, 25 * (target_x - center_x) / dis, 25 * (target_y - center_y) / dis, municion_tipo_normal, dis / 25, tiro_struct.dmg * dmg_factor,, dron, target_edificio,,, _jugador)
 						array_push(municiones, municion)
 						if index = id_lanzallamas{
-							angle = arctan2(center_y - target_y, center_x - target_x)
-							b = angle + random_range(-pi / 16, pi / 16)
-							array_push(fuegos, add_fuego(center_x - 20 * cos(angle), center_y - 20 * sin(angle), edificio.a, edificio.b, 12 * -cos(b), 12 * -sin(b), 40))
+							b = degtorad(angle) + random_range(-pi / 6, pi / 6)
+							array_push(fuegos, add_fuego(center_x + 20 * cos(b), center_y - 20 * sin(b), edificio.a, edificio.b, 12 * cos(b), -12 * sin(b), 40))
 						}
 						mover_in(edificio)
 					}

@@ -215,7 +215,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			}
 		}
 		if tag_camino_o_tunel[index]{
-			if index = id_cinta_transportadora or index = id_enrutador or index = id_cinta_magnetica{
+			if index = id_cinta_transportadora or index = id_enrutador or index = id_cinta_rapida{
 				if (dir mod 3) = 1
 					edificio.yscale = power(-1, dir > 1)
 				else{

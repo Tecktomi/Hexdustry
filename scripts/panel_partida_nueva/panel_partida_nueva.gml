@@ -186,8 +186,8 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 			ypos += text_y * 1.2
 			if tecnologia{
 				_xpos = draw_text_xpos(160, ypos, $"{L.menu_precio_tecnologia}")
-				tecnologia_precio_multiplicador = draw_deslizante(xpos + 10, xpos + 135, ypos + 10, tecnologia_precio_multiplicador, 0.5, 3, des_count++, 1)
-				ypos = 10 + draw_text_ypos(xpos + 145, ypos, $"{floor(100 * tecnologia_precio_multiplicador)}%")
+				tecnologia_precio_multiplicador = draw_deslizante(_xpos + 10, _xpos + 135, ypos + 10, tecnologia_precio_multiplicador, 0.5, 3, des_count++, 1)
+				ypos = 10 + draw_text_ypos(_xpos + 145, ypos, $"{floor(100 * tecnologia_precio_multiplicador)}%")
 			}
 			//Primera oleada
 			ypos = draw_text_ypos(140, ypos, L.tiempo)

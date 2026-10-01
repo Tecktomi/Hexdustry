@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"draw_enciclopedia",
   "parent":{
-    "name":"DRAW",
-    "path":"folders/SCRIPTS/DRAW.yy",
+    "name":"ENCICLOPEDIA",
+    "path":"folders/SCRIPTS/ENCICLOPEDIA.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scroll_enciclopedia_edificios",
   "parent":{
-    "name":"SCROLL",
-    "path":"folders/SCRIPTS/CORE/SCROLL.yy",
+    "name":"ENCICLOPEDIA",
+    "path":"folders/SCRIPTS/ENCICLOPEDIA.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
