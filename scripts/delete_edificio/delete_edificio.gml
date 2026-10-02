@@ -179,7 +179,10 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 							else if dron.dir_move > b
 								dron.dir_move--
 					}
-					temp_edificio.select = temp_edificio.select mod array_length(temp_edificio.instruccion)
+					if array_length(temp_edificio.instruccion) = 0
+						temp_edificio.select = 0
+					else
+						temp_edificio.select = temp_edificio.select mod array_length(temp_edificio.instruccion)
 					continue
 				}
 		}

@@ -28,6 +28,8 @@ function step(){
 						handle_add_modulo(buffer_grabacion)
 					else if msg = net_investigar
 						handle_investigar(buffer_grabacion)
+					else if msg = net_set_instrucciones
+						handle_set_instrucciones(buffer_grabacion)
 					grabacion_pos = buffer_tell(buffer_grabacion)
 				}
 			//Aplicar cambios
@@ -47,7 +49,9 @@ function step(){
 						add_modulo(edificio_id[# cambio.data.a, cambio.data.b], true, cambio.data.cheat)
 					else if cambio.tipo = cambio_investigar
 						investigar(cambio.data.index, true, cambio.data.cheat, cambio.data.jugador)
-				}
+					else if cambio.tipo = cambio_instrucciones
+						set_edificio_instruccion(edificio_id[# cambio.data.a, cambio.data.b], cambio.data, true)
+				}		
 			}
 			if REPRODUCIENDO and grabacion_pos = grabacion_size and array_length(cambios) = 0
 				REPRODUCIENDO = false

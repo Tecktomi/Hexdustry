@@ -444,13 +444,19 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 					if edificio != puerto_carga_link and point_distance(edificio.x, edificio.y, puerto_carga_link.x, puerto_carga_link.y) < PUERTO_CARGA_RANGE{
 						if puerto_carga_select = 1{
 							if array_contains(edificio_output_id[index], puerto_carga_rss) or edificio_output_all[index]{
-								puerto_carga_link.instruccion[puerto_carga_instruccion, puerto_carga_select] = edificio.punteros[ptre_jugador]
+								set_edificio_instruccion(puerto_carga_link, {
+									cambio : cambio_instrucciones_cambio_input,
+									instruccion : puerto_carga_instruccion,
+									pointer : edificio.punteros[ptre_jugador]})
 								puerto_carga_select = 2
 							}
 						}
 						else{
 							if array_contains(edificio_input_id[index], puerto_carga_rss) or edificio_input_all[index]{
-								puerto_carga_link.instruccion[puerto_carga_instruccion, puerto_carga_select] = edificio.punteros[ptre_jugador]
+								set_edificio_instruccion(puerto_carga_link, {
+									cambio : cambio_instrucciones_cambio_output,
+									instruccion : puerto_carga_instruccion,
+									pointer : edificio.punteros[ptre_jugador]})
 								puerto_carga_select = 0
 							}
 						}

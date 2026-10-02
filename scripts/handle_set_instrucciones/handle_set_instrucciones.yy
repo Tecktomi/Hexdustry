@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"handle_set_instrucciones",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"handle_set_instrucciones",
+  "parent":{
+    "name":"HANDLE",
+    "path":"folders/SCRIPTS/ONLINE/HANDLE.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

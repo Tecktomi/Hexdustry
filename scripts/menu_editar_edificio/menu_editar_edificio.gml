@@ -275,7 +275,9 @@ function menu_editar_edificio(){
 				for(a = 0; a < array_length(edificio.instruccion); a++){
 					xpos = aa - width
 					xpos = draw_text_xpos(xpos, ypos, "Llevar ")
-					edificio.instruccion[a, 0] = draw_boton_text_list(xpos, ypos, edificio.instruccion[a, 0], recurso_nombre,, 10)
+					b = draw_boton_text_list(xpos, ypos, edificio.instruccion[a, 0], recurso_nombre,, 10)
+					if edificio.instruccion[a, 0] != b
+						set_edificio_instruccion(edificio, {cambio : cambio_instrucciones_cambio_recurso, rss : b, instruccion : a})
 					xpos += text_x
 					xpos = draw_text_xpos(xpos, ypos, " de ")
 					if draw_boton(xpos, ypos, edificio_nombre[edificios_jugador[_jugador, edificio.instruccion[a, 1]].index],,,, false){
@@ -294,14 +296,13 @@ function menu_editar_edificio(){
 					}
 					xpos += text_x
 					if draw_sprite_boton(spr_basura, 0, xpos, ypos){
-						array_delete(edificio.instruccion, a, 1)
-						edificio.select = edificio.select mod array_length(edificio.instruccion)
+						set_edificio_instruccion(edificio, {cambio : cambio_instrucciones_delete_comando, instruccion : a})
 						break
 					}	
 					ypos += 20 * zoom
 				}
 				if draw_boton(aa - width, ypos, L.procesador_add,,,, false)
-					array_push(edificio.instruccion, [0, 0, 0])
+					set_edificio_instruccion(edificio, {cambio : cambio_instrucciones_add_comando})
 				draw_boton_text_list_end()
 			}
 			if mouse_x > aa - 80 * zoom and mouse_y > bb + 20 * zoom and mouse_x < aa + 80 * zoom{

@@ -564,6 +564,7 @@ L = {}
 	#macro net_timeout 17
 	#macro net_heartbeat 18
 	#macro net_mensaje 19
+	#macro net_set_instrucciones 20
 	#macro net_error_nombre_usado 0
 	#macro net_error_server_lleno 1
 	#macro cambio_construir 0
@@ -572,6 +573,12 @@ L = {}
 	#macro cambio_mover_dron 3
 	#macro cambio_add_modulo 4
 	#macro cambio_investigar 5
+	#macro cambio_instrucciones 6
+	#macro cambio_instrucciones_add_comando 0
+	#macro cambio_instrucciones_delete_comando 1
+	#macro cambio_instrucciones_cambio_recurso 2
+	#macro cambio_instrucciones_cambio_input 3
+	#macro cambio_instrucciones_cambio_output 4
 #endregion
 #region UI
 	#macro ui_fondo #282828
@@ -999,6 +1006,8 @@ function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion
 	idr_aluminio = def_recurso("Aluminio", spr_item_aluminio, #DCDEE0,, 2)
 #endregion
 rss_max = array_length(recurso_nombre)
+if rss_max >= 38
+	show_error("OJO CON LOS RSS_MAX", true)
 recurso_descripcion = array_create(rss_max, "")
 sort_recursos()
 usable_rss_bool = array_create(rss_max, false)

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"set_edificio_instruccion",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"set_edificio_instruccion",
+  "parent":{
+    "name":"EDIFICIOS",
+    "path":"folders/SCRIPTS/EDIFICIOS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
