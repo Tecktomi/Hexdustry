@@ -10,7 +10,7 @@ function save_procesador(buffer, edificio = control.null_edificio){
 				esreal = is_real(edificio.instruccion[a, b])
 				buffer_write(buffer, buffer_bool, bool(esreal))
 				if esreal
-					buffer_write(buffer, buffer_f16, real(edificio.instruccion[a, b]))
+					buffer_write(buffer, buffer_f64, real(edificio.instruccion[a, b]))
 				else
 					buffer_write(buffer, buffer_string, string(edificio.instruccion[a, b]))
 			}

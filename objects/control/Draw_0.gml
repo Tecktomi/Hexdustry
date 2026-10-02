@@ -128,12 +128,12 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 					draw_set_color(ui_boton_rojo)
 					draw_circle_off(aa, bb + 8, 4, false)
 				}
-				if cheat and  index = id_nucleo and edificio.jugador = jugador_IA{
+				if cheat and  index = id_nucleo and edificio.jugador = JUGADOR_IA{
 					temp_text = $"{ia_queue_nombre[ia_queue[ia_queue_count]]}: {ia_queue_count}/{array_length(ia_queue)}\n"+
 						$"construyendo: {edificio_nombre[ia_build_queue[ia_build_pos, 0]]}: {ia_build_pos}/{array_length(ia_build_queue)}\n"
 					for(i = 0; i < rss_max; i++)
-						if jugador_recursos[jugador_IA, i] > 0
-							temp_text += $"{recurso_nombre[i]}: {jugador_recursos[jugador_IA, i]}, "
+						if jugador_recursos[JUGADOR_IA, i] > 0
+							temp_text += $"{recurso_nombre[i]}: {jugador_recursos[JUGADOR_IA, i]}, "
 					draw_text_background(center_x, center_y, temp_text)
 				}
 			}
@@ -204,10 +204,10 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 	clic_sound = false
 	if menu = MENU_EDITOR_JUEGO{
 		draw_set_halign(fa_right)
-		if jugador = jugador_IA and draw_boton(room_width - 40, 20, L.enemigo, ui_rojo)
+		if jugador = JUGADOR_IA and draw_boton(room_width - 40, 20, L.enemigo, ui_rojo)
 			jugador = 2
 		else if jugador = 2 and draw_boton(room_width - 40, 20, L.aliado, ui_verde)
-			jugador = jugador_IA
+			jugador = JUGADOR_IA
 		draw_set_halign(fa_left)
 	}
 }
@@ -402,10 +402,10 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		var index = edificio.index
 		temp_text += $"{edificio_nombre[index]}\n"
 		if edificio.jugador != jugador and menu = MENU_JUEGO and not cheat{
-			if online and edificio.jugador > jugador_IA
+			if online and edificio.jugador > JUGADOR_IA
 				temp_text += server_jugadores_nombre[edificio.jugador - 2]
 			else
-				temp_text += (edificio.jugador = jugador_salvaje) ? "SALVAJE\n" : $"{L.enemigo}\n"
+				temp_text += (edificio.jugador = JUGADOR_SALVAJE) ? "SALVAJE\n" : $"{L.enemigo}\n"
 		}
 		else{
 			//Blueprint
@@ -439,6 +439,23 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			}
 			//Seleccionar edificios
 			if mouse_check_button_pressed(mb_left) and build_index = -1 and build_menu = 0{
+				if puerto_carga_select > 0{
+					mouse_clear(mb_left)
+					if edificio != puerto_carga_link and point_distance(edificio.x, edificio.y, puerto_carga_link.x, puerto_carga_link.y) < PUERTO_CARGA_RANGE{
+						if puerto_carga_select = 1{
+							if array_contains(edificio_output_id[index], puerto_carga_rss) or edificio_output_all[index]{
+								puerto_carga_link.instruccion[puerto_carga_instruccion, puerto_carga_select] = edificio.punteros[ptre_jugador]
+								puerto_carga_select = 2
+							}
+						}
+						else{
+							if array_contains(edificio_input_id[index], puerto_carga_rss) or edificio_input_all[index]{
+								puerto_carga_link.instruccion[puerto_carga_instruccion, puerto_carga_select] = edificio.punteros[ptre_jugador]
+								puerto_carga_select = 0
+							}
+						}
+					}
+				}
 				if procesador_select != null_edificio{
 					mouse_clear(mb_left)
 					if procesador_select != edificio{
@@ -466,62 +483,6 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 						show_menu_build = edificio
 						show_menu_x = edificio.center_x * zoom
 						show_menu_y = edificio.center_y * zoom
-					}
-				}
-			}
-			//Modificar puertos de carga
-			if index = id_puerto_de_carga{
-				if edificio.link != null_edificio{
-					draw_set_color(ui_boton_verde)
-					if edificio.receptor
-						draw_arrow_off(edificio.center_x, edificio.center_y, edificio.link.center_x, edificio.link.center_y, 8)
-					else
-						draw_arrow_off(edificio.link.center_x, edificio.link.center_y, edificio.center_x, edificio.center_y, 8)
-				}
-				if mouse_check_button_pressed(mb_left){
-					mouse_clear(mb_left)
-					if puerto_carga_bool and edificio != puerto_carga_link{
-						if puerto_carga_link.link != null_edificio{
-							if puerto_carga_link.receptor
-								array_disorder_remove(puerto_carga_array[jugador], puerto_carga_link, ptre_puerto)
-							else
-								array_disorder_remove(puerto_carga_array[jugador], puerto_carga_link.link, ptre_puerto)
-							if puerto_carga_atended[jugador] >= array_length(puerto_carga_array[jugador])
-								puerto_carga_atended[jugador] = 0
-							puerto_carga_link.link.receptor = false
-							puerto_carga_link.link.emisor = false
-							calcular_edificios_adyascentes(puerto_carga_link.link)
-							puerto_carga_link.link.link = null_edificio
-						}
-						puerto_carga_link.receptor = true
-						puerto_carga_link.emisor = false
-						puerto_carga_link.link = edificio
-						calcular_inputs_outputs(puerto_carga_link)
-						calcular_edificios_adyascentes(puerto_carga_link, false)
-						if edificio.link != null_edificio{
-							if edificio.receptor
-								array_disorder_remove(puerto_carga_array[jugador], edificio, ptre_puerto)
-							else
-								array_disorder_remove(puerto_carga_array[jugador], edificio.link, ptre_puerto)
-							if puerto_carga_atended[jugador] >= array_length(puerto_carga_array[jugador])
-								puerto_carga_atended[jugador] = 0
-							edificio.link.receptor = false
-							edificio.link.emisor = false
-							calcular_edificios_adyascentes(edificio.link)
-							edificio.link.link = null_edificio
-						}
-						edificio.receptor = false
-						edificio.emisor = true
-						edificio.link = puerto_carga_link
-						calcular_inputs_outputs(edificio)
-						calcular_edificios_adyascentes(edificio, false)
-						array_disorder_push(puerto_carga_array[jugador], puerto_carga_link, ptre_puerto)
-						puerto_carga_link = null_edificio
-						puerto_carga_bool = false
-					}
-					else{
-						puerto_carga_link = edificio
-						puerto_carga_bool = true
 					}
 				}
 			}
@@ -964,8 +925,17 @@ if array_length(selected_drones) > 0{
 	var right_clicked = mouse_check_button_pressed(mb_right)
 	for(a = array_length(selected_drones) - 1; a >= 0; a--){
 		var dron = selected_drones[a]
-		draw_set_color(EQUIPO_COLOR[jugador])
+		draw_set_color(EQUIPO_COLOR[dron.jugador])
 		draw_circle_off(dron.x, dron.y, 30, true)
+		if dron.index = idd_mula and right_clicked{
+			mouse_clear(mb_right)
+			if edificio.index = id_puerto_de_carga{
+				dron.modo = MULA_BUSCAR_INSTRUCCION
+				dron.target = edificio
+				dron.temp_target = edificio
+			}
+			continue
+		}
 		if dron.modo = 1 and not dron.index = idd_minero
 			draw_sprite_off(spr_target, 0, dron.move_x, dron.move_y)
 		if right_clicked and tag_dron_seleccionable[dron.index]{
@@ -989,10 +959,35 @@ if array_length(selected_drones) > 0{
 	}
 }
 //Seleccionar target edificio
-if puerto_carga_bool or (procesador_select != null_edificio) or (misil_set_target != null_edificio){
+if puerto_carga_select > 0 or (procesador_select != null_edificio) or (misil_set_target != null_edificio){
 	draw_set_halign(fa_center)
-	if puerto_carga_bool
+	if puerto_carga_select > 0{
 		temp_text = L.game_puerto_carga
+		draw_circle_off(puerto_carga_link.center_x, puerto_carga_link.center_y, PUERTO_CARGA_RANGE, true)
+		if puerto_carga_select = 1{
+			for(a = 0; a < edificio_max; a++)
+				if edificio_output_all[a] or array_contains(edificio_output_id[a], puerto_carga_rss)
+					for(b = 0; b < array_length(edificios_jugador_index[jugador, a]); b++){
+						var temp_edificio = edificios_jugador_index[jugador, a][b]
+						if temp_edificio.a > mina and temp_edificio.b > minb and temp_edificio.a < maxa and temp_edificio.b < maxb and point_distance(temp_edificio.x, temp_edificio.y, puerto_carga_link.x, puerto_carga_link.y) < PUERTO_CARGA_RANGE
+							draw_edificio_borde(temp_edificio, ui_boton_verde, _parpadeo)
+					}
+		}
+		else if puerto_carga_select = 2{
+			var temp_edificio_2 = edificios_jugador[puerto_carga_link.jugador, puerto_carga_link.instruccion[puerto_carga_instruccion, 1]]
+			draw_edificio_borde(temp_edificio_2, ui_boton_verde, 1)
+			for(a = 0; a < edificio_max; a++)
+				if edificio_input_all[a] or array_contains(edificio_input_id[a], puerto_carga_rss)
+					for(b = 0; b < array_length(edificios_jugador_index[jugador, a]); b++){
+						var temp_edificio = edificios_jugador_index[jugador, a][b]
+						if temp_edificio.a > mina and temp_edificio.b > minb and temp_edificio.a < maxa and temp_edificio.b < maxb and
+							point_distance(temp_edificio.x, temp_edificio.y, puerto_carga_link.x, puerto_carga_link.y) < PUERTO_CARGA_RANGE and temp_edificio != temp_edificio_2
+							draw_edificio_borde(temp_edificio, ui_boton_azul, _parpadeo)
+							if temp_edificio = edificio
+								draw_arrow_off(temp_edificio_2.center_x, temp_edificio_2.center_y, edificio.center_x, edificio.center_y, 8)
+					}
+		}
+	}
 	else if procesador_select != null_edificio{
 		temp_text = L.game_vincular_procesador
 		for(a = 1; a < array_length(procesador_select.procesador_link); a++){
@@ -1020,7 +1015,7 @@ if puerto_carga_bool or (procesador_select != null_edificio) or (misil_set_targe
 	}
 	else if mouse_check_button_pressed(mb_any){
 		mouse_clear(mouse_lastbutton)
-		puerto_carga_bool = false
+		puerto_carga_select = 0
 		procesador_select = null_edificio
 	}
 }

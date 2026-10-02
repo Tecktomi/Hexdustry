@@ -3,7 +3,7 @@ function clear_edit(){
 		build_index = -1
 		build_dir = 0
 		build_menu = 0
-		puerto_carga_bool = false
+		puerto_carga_select = 0
 		procesador_select = null_edificio
 		selected_dron = null_dron
 		show_menu = false

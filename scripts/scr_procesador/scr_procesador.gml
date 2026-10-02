@@ -249,7 +249,7 @@ function scr_procesador(edificio = control.null_edificio){
 						set_edificio(bool(val), temp_edificio.select, temp_edificio)
 					else if pc[3] = 2 and tag_edificio_seteable[temp_edificio.index]{
 						if temp_edificio.index = id_antena
-							val = clamp(val, 0, 99)
+							val = clamp(val, 0, frecuencia_max - 1)
 						set_edificio(temp_edificio.mode, real(val), temp_edificio)
 					}
 				}
@@ -279,7 +279,7 @@ function scr_procesador(edificio = control.null_edificio){
 				else if temp_edificio.index = id_procesador
 					edificio.variables[pc[1]] = temp_edificio.variables[clamp(val, 0, 15)]
 				else if temp_edificio.index = id_antena{
-					if temp_edificio.select < 0 or temp_edificio.select >= 100
+					if temp_edificio.select < 0 or temp_edificio.select >= frecuencia_max
 						continue
 					edificio.variables[pc[1]] = frecuencias[temp_edificio.select]
 				}

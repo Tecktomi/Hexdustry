@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scroll_editor_misiones",
   "parent":{
-    "name":"SCROLL",
-    "path":"folders/SCRIPTS/CORE/SCROLL.yy",
+    "name":"MENUS",
+    "path":"folders/SCRIPTS/MENUS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -5,15 +5,16 @@ var a, b, c, flag
 	array_xytob = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1],[-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],[-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],[-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],[-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],[-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1]]
 #endregion
 #region MACROS
-	#macro FILE_VERSION 2026_09_30
-	#macro PROCESADOR_VERSION 2026_03_25
+	#macro FILE_VERSION 2026_10_02
+	#macro PROCESADOR_VERSION 2026_10_02
 	#macro GRABACION_VERSION 2026_09_28
 	#macro TILE_WIDTH 32
 	#macro TILE_HEIGHT 28
 	#macro CABLE_RANGE 90
-	#macro TORRE_TENSION_RANGE 1_000
+	#macro TORRE_TENSION_RANGE 1000
 	#macro PLANTA_NUCLEAR_RANGE 400
 	#macro PLANTA_RECICLAJE_RANGE 250
+	#macro PUERTO_CARGA_RANGE 500
 	#macro ENEMIGO_CERCA 100
 	#macro HEX_FAST_THRESHOLD 8
 	#macro MORTERO_MIN_RANGE 100
@@ -49,8 +50,8 @@ var a, b, c, flag
 	#macro municion_tipo_misil_incendiario 3
 	#macro municion_tipo_perforadora 4
 	//Jgadores predeterminados
-	#macro jugador_salvaje 0
-	#macro jugador_IA 1
+	#macro JUGADOR_SALVAJE 0
+	#macro JUGADOR_IA 1
 	//Menús
 	#macro MENU_PRINCIPAL 0
 	#macro MENU_JUEGO 1
@@ -69,14 +70,14 @@ var a, b, c, flag
 	#macro EDITOR_INSTRUCCION_AUTOMATA 8
 	#macro EDITOR_INSTRUCCION_CLEAR_RSS 9
 	//Idiomas
-	#macro idioma_ingles 0
-	#macro idioma_espanol 1
-	#macro idioma_ruso 2
+	#macro IDIOMA_INGLES 0
+	#macro IDIOMA_ESPANOL 1
+	#macro IDIOMA_RUSO 2
 	//Gamemode
-	#macro gamemode_oleadas 0
-	#macro gamemode_infinito 1
-	#macro gamemode_misiones 2
-	#macro gamemode_ia 3
+	#macro GAMEMODE_OLEADAS 0
+	#macro GAMEMODE_INFINITO 1
+	#macro GAMEMODE_MISIONES 2
+	#macro GAMEMODE_IA 3
 	//Pausa settings
 	#macro pausa_general 0
 	#macro pausa_online 1
@@ -88,7 +89,12 @@ var a, b, c, flag
 	#macro fin_cerrar_juego 2
 	//Menú principal
 	#macro menu_principal_nueva 0
-	
+	//Mula
+	#macro MULA_IDLE 0
+	#macro MULA_BUSCAR_RSS 1
+	#macro MULA_DEJAR_RSS 2
+	#macro MULA_BUSCAR_INSTRUCCION 3
+	#macro MULA_CARGA_MAX 10
 #endregion
 #region debug
 	debug_frame_time = true
@@ -741,6 +747,7 @@ null_edificio = {
 	chunk_maxa : 0,
 	chunk_maxb : 0,
 	jugador : -1,
+	fuego : 0
 }
 #macro ptre_jugador 0
 #macro ptre_chunk 1
@@ -777,8 +784,9 @@ nucleos = array_create(EQUIPOS, null_edificio)
 show_menu_build = null_edificio
 luces = array_create(0, {a : 0, b : 0, x : 0, y : 0, r : 0, source : null_edificio})
 //Puertos de Carga
-puerto_carga_bool = false
 puerto_carga_link = null_edificio
+puerto_carga_rss = 0
+puerto_carga_select = 0
 puerto_carga_array = array_create(EQUIPOS)
 puerto_carga_atended = array_create(EQUIPOS, 0)
 for(a = 0; a < EQUIPOS; a++)
@@ -1296,7 +1304,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 	id_generador_geotermico = def_edificio("Generador Geotérmico", 2, spr_generador_geotermico,, 200,, scr_generador_geotermico, scr_draw_bomba_par, false,, [idr_cobre, idr_acero, idr_concreto], [50, 20, 20]); def_edificio_2(-90, 10, 30, [idl_agua, idl_agua_salada],,,, 2)
 	id_taladro_de_explosion = def_edificio("Taladro de Explosión", 3, spr_taladro_explosivo,, 300, 300, scr_taladro_explosion,,,, [idr_hierro, idr_acero, idr_concreto], [100, 40, 30], 40, true, false, [idr_explosivo], [10], true, false, [idr_cobre, idr_carbon, idr_hierro, idr_piedra, idr_arena, idr_piedra_cuprica, idr_piedra_ferrica, idr_piedra_sulfatada, idr_uranio_bruto, idr_sal, idr_bauxita]); def_edificio_2(,,,,,,, 1)
 	id_muro = def_edificio("Muro", 1, spr_hexagono,, 500,,,,,, [idr_concreto], [2]); def_edificio_2(,,,,,, true, -1)
-	id_puerto_de_carga = def_edificio("Puerto de Carga", 2, spr_punto_carga,, 150,, scr_puerto_carga,,,, [idr_cobre, idr_bronce, idr_electronicos], [25, 10, 1], 25,, true,,,, true); def_edificio_2(,,,,,,, 1)
+	id_puerto_de_carga = def_edificio("Puerto de Carga", 2, spr_punto_carga,, 150,,,,,, [idr_cobre, idr_bronce, idr_electronicos], [25, 10, 5]); def_edificio_2(,,,,,,, 1)
 	id_ensambladora = def_edificio("Ensambladora", 2.5, spr_ensambladora,, 250, 240, scr_ensambladora,,,, [idr_hierro, idr_bronce, idr_acero, idr_vidrio], [25, 15, 10, 10], 40, true, false, [idr_cobre, idr_plastico], [10, 10], true, false, [idr_electronicos]); def_edificio_2(70,,,,,,, 1)
 	id_planta_nuclear = def_edificio("Planta Nuclear", 4, spr_planta_nuclear,, 500,, scr_planta_nuclear,,,, [idr_cobre, idr_acero, idr_concreto, idr_electronicos], [400, 80, 50, 20], 10, true, false, [idr_uranio_enriquecido], [10]); def_edificio_2(-500, 150, 200, [idl_agua, idl_agua_salada],,,, 3)
 	id_torre_de_alta_tension = def_edificio("Torre de Alta Tensión", 2, spr_cable_tension,, 150,,,,,, [idr_cobre, idr_acero, idr_vidrio, idr_aluminio], [20, 5, 3, 5]); def_edificio_2(5,,,,,, true, 1)
@@ -1381,8 +1389,6 @@ edificio_rotable[id_cinta_grande] = true
 edificio_input_all[id_tunel_salida] = true
 edificio_energia[id_cable] = true
 edificio_energia[id_bateria] = true
-edificio_input_all[id_puerto_de_carga] = true
-edificio_output_all[id_puerto_de_carga] = true
 edificio_energia[id_torre_de_alta_tension] = true
 edificio_key[id_energia_infinita] = "4z"
 edificio_key[id_liquido_infinito] = "5z"
@@ -1513,6 +1519,7 @@ edificio_key[id_recurso_infinito] = "1z"
 		tag_edificio_seteable[id_silo_de_misiles] = true
 		tag_edificio_seteable[id_fabrica_de_drones_grande] = true
 		tag_edificio_seteable[id_antena] = true
+		tag_edificio_seteable[id_puerto_de_carga] = true
 	#endregion
 	#region edificio_construible
 		tag_edificio_construible = array_create(edificio_max, true)
@@ -1595,6 +1602,7 @@ edificio_key[id_recurso_infinito] = "1z"
 		tag_dron_seleccionable[idd_titan] = true
 		tag_dron_seleccionable[idd_barco] = true
 		tag_dron_seleccionable[idd_destructor] = true
+		tag_dron_seleccionable[idd_mula] = true
 	#endregion
 	#region edificio_cinta
 		tag_edificio_cinta = array_create(edificio_max, false)
@@ -1684,7 +1692,8 @@ for(a = 0; a < EQUIPOS; a++){
 edificios_counter = array_create(edificio_max, 0)
 edificios_salida_drones = array_create(0, null_edificio)
 edi_sort = array_create(edificio_max, 0)
-frecuencias = array_create(100, 0)
+frecuencia_max = 101
+frecuencias = array_create(frecuencia_max, 0)
 sort_edificios()
 sort_drones()
 #region Caminos

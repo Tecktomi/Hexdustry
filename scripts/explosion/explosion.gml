@@ -22,7 +22,10 @@ function explosion(aa = 0, bb = 0, edificio = control.null_edificio, radio = 120
 						if edificio.jugador != _jugador{
 							dis = point_distance(aa, bb, edificio.center_x, edificio.center_y)
 							if dis < radio
-								herir_edificio(dmg / (10 + dis), edificio)
+								if herir_edificio(dmg / (10 + dis), edificio)
+									flag = true
+								else
+									edificio.fuego = 300
 						}
 					}
 					//Herir drones
@@ -50,7 +53,10 @@ function explosion(aa = 0, bb = 0, edificio = control.null_edificio, radio = 120
 						if edificio.jugador != _jugador{
 							dis = point_distance(aa, bb, edificio.center_x, edificio.center_y)
 							if dis < radio
-								herir_edificio(dmg / (10 + dis), edificio)
+								if herir_edificio(dmg / (10 + dis), edificio)
+									flag = true
+								else
+									edificio.fuego = 300
 						}
 					}
 					//Herir drones

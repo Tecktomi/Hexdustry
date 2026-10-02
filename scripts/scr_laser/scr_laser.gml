@@ -2,7 +2,7 @@ function scr_laser(edificio = control.null_edificio){
 	with control{
 		var index = edificio.index
 		var red = edificio.red, red_power = red.eficiencia
-		if ((image_index mod 10) = (edificio.a mod 10) and edificio.target = null_dron and edificio.target_edificio = null_edificio) or edificio.target.vida <= 0 or (edificio.target_edificio != null_edificio and edificio.target_edificio.vida <= 0){
+		if ((timer mod 10) = (edificio.a mod 10) and edificio.target = null_dron and edificio.target_edificio = null_edificio) or edificio.target.vida <= 0 or (edificio.target_edificio != null_edificio and edificio.target_edificio.vida <= 0){
 			if edificio.target != null_dron
 				array_disorder_remove(edificio.target.torres, edificio, ptre_torre_dron)
 			edificio.target = null_dron

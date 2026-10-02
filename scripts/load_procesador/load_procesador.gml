@@ -2,7 +2,6 @@ function load_procesador(buffer, edificio = control.null_edificio){
 	with control{
 		var _version = buffer_read(buffer, buffer_u32)
 		if _version < PROCESADOR_VERSION{
-			//Retrocompatibilidad
 			show_debug_message(L.archivo_obsoleto)
 			return false
 		}
@@ -14,7 +13,7 @@ function load_procesador(buffer, edificio = control.null_edificio){
 			for(b = 0; b < size_2; b++){
 				esreal = buffer_read(buffer, buffer_bool)
 				if esreal
-					temp_array[b] = real(buffer_read(buffer, buffer_f16))
+					temp_array[b] = real(buffer_read(buffer, buffer_f64))
 				else
 					temp_array[b] = string(buffer_read(buffer, buffer_string))
 			}

@@ -1,15 +1,15 @@
 function ia_step(){
 	with control{
 		var t = get_timer()
-		if array_length(edificios_jugador_index[jugador_IA, id_nucleo]) = 0{
+		if array_length(edificios_jugador_index[JUGADOR_IA, id_nucleo]) = 0{
 			IA = false
 			exit
 		}
-		array_set(jugador_recursos[jugador_IA], idr_cobre, 100)
-		array_set(jugador_recursos[jugador_IA], idr_hierro, 100)
+		array_set(jugador_recursos[JUGADOR_IA], idr_cobre, 100)
+		array_set(jugador_recursos[JUGADOR_IA], idr_hierro, 100)
 		var a = 0, b = 0, c = 0, aa = 0, bb = 0, i = 0, j = 0, temp_complex = array_create(0, 0), bmod = 0, dis = 0, dir = 0
 		if array_length(ia_build_queue) = 0{
-			var instruction = ia_queue[ia_queue_count], nucleo = edificios_jugador_index[jugador_IA, id_nucleo][0]
+			var instruction = ia_queue[ia_queue_count], nucleo = edificios_jugador_index[JUGADOR_IA, id_nucleo][0]
 			var _tiles_usados = usable_grid_bool
 			ds_grid_clear(_tiles_usados, false)
 			if instruction = ia_queue_cobre or instruction = ia_queue_hierro{
@@ -241,10 +241,10 @@ function ia_step(){
 				ia_build_rss = temp_complex[1]
 				exit
 			}
-			if is_comprable(edificio_precio_id[index], edificio_precio_num[index], jugador_IA){
+			if is_comprable(edificio_precio_id[index], edificio_precio_num[index], JUGADOR_IA){
 				a = temp_complex[2]
 				b = temp_complex[3]
-				var edificio = construir(index, temp_complex[1], a, b,,, jugador_IA)
+				var edificio = construir(index, temp_complex[1], a, b,,, JUGADOR_IA)
 				if edificio != null_edificio{
 					if index = id_cinta_transportadora
 						ia_grid_camino[# temp_complex[2], temp_complex[3]] = ia_build_rss

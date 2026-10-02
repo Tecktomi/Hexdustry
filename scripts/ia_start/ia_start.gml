@@ -1,6 +1,6 @@
 function ia_start(){
 	with control{
-		if array_length(edificios_jugador_index[jugador_IA, id_nucleo]) > 0{
+		if array_length(edificios_jugador_index[JUGADOR_IA, id_nucleo]) > 0{
 			IA = true
 			ia_build_queue = array_create(0, array_create(0, 0))
 			ia_build_pos = 0
@@ -10,7 +10,7 @@ function ia_start(){
 			ds_grid_clear(ia_chunk_defendidos, false)
 			ds_grid_clear(ia_grid_camino, -1)
 			ds_grid_clear(ia_grid_real, infinity)
-			var nucleo = edificios_jugador_index[jugador_IA, id_nucleo][0], a, b, i
+			var nucleo = edificios_jugador_index[JUGADOR_IA, id_nucleo][0], a, b, i
 			ia_chunk_construidos_array = [[floor(nucleo.a / CHUNK_WIDTH), floor(nucleo.b / CHUNK_HEIGHT)]]
 			var len = array_length(nucleo.coordenadas)
 			array_resize(ia_tiles_nucleo, 0)

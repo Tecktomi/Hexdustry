@@ -3,17 +3,17 @@ function load_edificio(buffer, edificio = control.null_edificio){
 		var mask = buffer_read(buffer, buffer_u64), c = 0, temp_target_dron = -1, flag = false, a
 		if mask & (1 << c++) edificio.input_index = real(buffer_read(buffer, buffer_u8))
 		if mask & (1 << c++) edificio.output_index = real(buffer_read(buffer, buffer_u8))
-		if mask & (1 << c++) edificio.proceso = real(buffer_read(buffer, buffer_f16))
+		if mask & (1 << c++) edificio.proceso = real(buffer_read(buffer, buffer_f64))
 		if mask & (1 << c++) edificio.start = true
 		for(a = 0; a < rss_max; a++)
 			if mask & (1 << c++){
-				edificio.carga[a] = real(buffer_read(buffer, buffer_f16))
+				edificio.carga[a] = real(buffer_read(buffer, buffer_f64))
 				edificio.carga_total += edificio.carga[a]
 			}
 		if mask & (1 << c++) edificio.carga_id = real(buffer_read(buffer, buffer_u8))
 		if mask & (1 << c++) edificio.fuel = real(buffer_read(buffer, buffer_u16))
 		if mask & (1 << c++){
-			edificio.select = real(buffer_read(buffer, buffer_f16))
+			edificio.select = real(buffer_read(buffer, buffer_f64))
 			flag = true
 		}
 		if mask & (1 << c++){
@@ -23,13 +23,13 @@ function load_edificio(buffer, edificio = control.null_edificio){
 		if mask & (1 << c++) edificio.waiting = true
 		if mask & (1 << c++) edificio.idle = true
 		if mask & (1 << c++) edificio.link = edificios_totales[real(buffer_read(buffer, buffer_u16))]
-		if mask & (1 << c++) herir_edificio(edificio_vida[edificio.index] - real(buffer_read(buffer, buffer_f16)), edificio, false)
+		if mask & (1 << c++) herir_edificio(edificio_vida[edificio.index] - real(buffer_read(buffer, buffer_f64)), edificio, false)
 		if mask & (1 << c++) temp_target_dron = real(buffer_read(buffer, buffer_u16))
 		if mask & (1 << c++) edificio.target_edificio = edificios_totales[real(buffer_read(buffer, buffer_u16))]
-		if mask & (1 << c++) change_flujo(real(buffer_read(buffer, buffer_f16)), edificio)
-		if mask & (1 << c++) edificio.flujo_consumo_max = real(buffer_read(buffer, buffer_f16))
-		if mask & (1 << c++) change_energia(real(buffer_read(buffer, buffer_f16)), edificio)
-		if mask & (1 << c++) edificio.energia_consumo_max = real(buffer_read(buffer, buffer_f16))
+		if mask & (1 << c++) change_flujo(real(buffer_read(buffer, buffer_f64)), edificio)
+		if mask & (1 << c++) edificio.flujo_consumo_max = real(buffer_read(buffer, buffer_f64))
+		if mask & (1 << c++) change_energia(real(buffer_read(buffer, buffer_f64)), edificio)
+		if mask & (1 << c++) edificio.energia_consumo_max = real(buffer_read(buffer, buffer_f64))
 		if mask & (1 << c++) edificio.edificio_index = real(buffer_read(buffer, buffer_u16))
 		if mask & (1 << c++) encender_luz(edificio.luz, edificio)
 		if mask & (1 << c++){

@@ -33,24 +33,24 @@ function save_edificio(buffer, edificio = control.null_edificio){
 		//DEMASK
 		if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(edificio.input_index))
 		if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(edificio.output_index))
-		if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(edificio.proceso))
+		if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(edificio.proceso))
 		c++
 		for(a = 0; a < rss_max; a++)
-			if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(edificio.carga[a]))
+			if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(edificio.carga[a]))
 		if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(edificio.carga_id))
 		if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(edificio.fuel))
-		if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(edificio.select))
+		if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(edificio.select))
 		c++
 		c++
 		c++
 		if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(edificio.link.punteros[ptre_total]))
-		if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(edificio.vida))
+		if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(edificio.vida))
 		if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(edificio.target.punteros[ptrd_total]))
 		if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(edificio.target_edificio.punteros[ptre_total]))
-		if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(edificio.flujo_consumo))
-		if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(edificio.flujo_consumo_max))
-		if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(edificio.energia_consumo))
-		if mask & (1 << c++) buffer_write(buffer, buffer_f16, real(edificio.energia_consumo_max))
+		if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(edificio.flujo_consumo))
+		if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(edificio.flujo_consumo_max))
+		if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(edificio.energia_consumo))
+		if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(edificio.energia_consumo_max))
 		if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(edificio.edificio_index))
 		c++
 		if mask & (1 << c++){

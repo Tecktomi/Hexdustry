@@ -38,7 +38,7 @@ function add_dron(a, b, index, _jugador = jugador){
 			move_dir : 0,
 			punteros : array_create(ptrd_MAX, -1),
 		}
-		if _jugador = jugador_IA{
+		if _jugador = JUGADOR_IA{
 			dron.vida_max = ceil(dron.vida * power((oleada_count + 3) / 3, 1.1) * multiplicador_vida_enemigos / 100)
 			dron.vida = dron.vida_max
 			if dron_aereo[dron.index]{

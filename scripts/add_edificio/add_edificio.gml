@@ -84,7 +84,8 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			chunk_minb : 0,
 			chunk_maxa : 0,
 			chunk_maxb : 0,
-			jugador : _jugador
+			jugador : _jugador,
+			fuego : 0
 		}
 		if edificio_size[index] = 2.5{
 			if dir = 0 or dir = 1
@@ -145,7 +146,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		else if index = id_memoria
 			edificio.variables = array_create(128)
 		array_push(efectos, add_efecto(size_fx[edificio_size[index] - 1], 0, x, y, 3))
-		if index = id_nucleo and _jugador != jugador_IA{
+		if index = id_nucleo and _jugador != JUGADOR_IA{
 			ds_grid_resize(edificio.coordenadas_dis, xsize, ysize)
 			nucleos[_jugador] = edificio
 		}
@@ -399,7 +400,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 				temp_red.generacion += abs(edificio.energia_consumo)
 			if index = id_bateria{
 				temp_red.bateria_max += 2500
-				if _jugador = jugador_IA
+				if _jugador = JUGADOR_IA
 					temp_red.bateria += 2500
 			}
 			else if index = id_panel_solar or index = id_procesador or index = id_planta_de_reciclaje
@@ -416,7 +417,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		//Datos específicos
 		if index = id_laser
 			edificio.mode = true
-		if index = id_rifle or index = id_mortero or index = id_onda_de_choque or index = id_antena
+		if index = id_rifle or index = id_mortero or index = id_onda_de_choque or index = id_antena or index = id_puerto_de_carga
 			edificio.select = 0
 		if index = id_silo_de_misiles{
 			edificio.select = -1

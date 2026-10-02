@@ -217,5 +217,23 @@ function save_game_buffer(buffer){
 			if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(municion.target.punteros[ptrd_total]))
 			if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(municion.target_build.punteros[ptre_total]))
 		}
+		//Frecuencias
+		b = 0
+		for(a = 0; a < frecuencia_max; a++)
+			if frecuencias[a] != 0
+				b++
+		buffer_write(buffer, buffer_u8, b)
+		for(a = 0; a < frecuencia_max; a++)
+			if frecuencias[a] != 0{
+				buffer_write(buffer, buffer_u8, a)
+				if is_real(frecuencias[a]){
+					buffer_write(buffer, buffer_bool, true)
+					buffer_write(buffer, buffer_f64, real(frecuencias[a]))
+				}
+				else{
+					buffer_write(buffer, buffer_bool, false)
+					buffer_write(buffer, buffer_string, string(frecuencias[a]))
+				}
+			}
 	}
 }

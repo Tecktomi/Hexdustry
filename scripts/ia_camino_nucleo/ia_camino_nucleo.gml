@@ -1,7 +1,7 @@
 function ia_camino_nucleo(a, b, dis, rss, _tiles_usados){
 	with control{
 		var c, aa, bb, i, j, bmod, temp_complex, angle, flag = true
-		var nucleo = edificios_jugador_index[jugador_IA, id_nucleo][0]
+		var nucleo = edificios_jugador_index[JUGADOR_IA, id_nucleo][0]
 		for(var pasos = xsize + ysize; dis > 0 and --pasos > 0;){
 			temp_complex = abtoxy(a, b)
 			angle = floor(point_direction(temp_complex[0], temp_complex[1], nucleo.center_x, nucleo.center_y) / 30)

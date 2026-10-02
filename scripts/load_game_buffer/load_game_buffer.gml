@@ -210,6 +210,18 @@ function load_game_buffer(buffer){
 			if _target_build != -1
 				municion.target_build = edificios_totales[_target_build]
 		}
+		//Frecuencias
+		b = buffer_read(buffer, buffer_u8)
+		var isreal
+		for(a = 0; a < b; a++){
+			c = buffer_read(buffer, buffer_u8)
+			isreal = buffer_read(buffer, buffer_bool)
+			if isreal
+				frecuencias[c] = real(buffer_read(buffer, buffer_f64))
+			else
+				frecuencias[c] = string(buffer_read(buffer, buffer_string))
+		}
+		//Debug
 		var temp_text = ""
 		for(a = 0; a < edificio_max; a++)
 			if array_length(edificios_index[a]) > 0

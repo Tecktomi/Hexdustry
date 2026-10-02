@@ -75,28 +75,28 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 		ypos += text_y * 1.2
 		//Modos de Juego
 		_xpos = xpos + 50
-		if draw_boton(_xpos, ypos, L.menu_modo_oleadas, game_mode = gamemode_oleadas ? ui_azul : ui_gris,,,, 1){
+		if draw_boton(_xpos, ypos, L.menu_modo_oleadas, game_mode = GAMEMODE_OLEADAS ? ui_azul : ui_gris,,,, 1){
 			_change_size = true
-			game_mode = gamemode_oleadas
+			game_mode = GAMEMODE_OLEADAS
 		}
 		_xpos += text_x * 1.2
-		if draw_boton(_xpos, ypos, L.menu_modo_infinito, game_mode = gamemode_infinito ? ui_azul : ui_gris,,,, 1){
+		if draw_boton(_xpos, ypos, L.menu_modo_infinito, game_mode = GAMEMODE_INFINITO ? ui_azul : ui_gris,,,, 1){
 			_change_size = true
-			game_mode = gamemode_infinito
+			game_mode = GAMEMODE_INFINITO
 		}
 		_xpos += text_x * 1.2
-		if draw_boton(_xpos, ypos, L.menu_modo_misiones, game_mode = gamemode_misiones ? ui_azul : ui_gris,,,, 1){
+		if draw_boton(_xpos, ypos, L.menu_modo_misiones, game_mode = GAMEMODE_MISIONES ? ui_azul : ui_gris,,,, 1){
 			_change_size = true
-			game_mode = gamemode_misiones
+			game_mode = GAMEMODE_MISIONES
 		}
 		_xpos += text_x * 1.2
-		if draw_boton(_xpos, ypos, L.modo_ia, game_mode = gamemode_ia ? ui_azul : ui_gris,,,, 1){
+		if draw_boton(_xpos, ypos, L.modo_ia, game_mode = GAMEMODE_IA ? ui_azul : ui_gris,,,, 1){
 			_change_size = true
-			game_mode = gamemode_ia
+			game_mode = GAMEMODE_IA
 		}
 		ypos += text_y * 1.2
 		//Modo oleadas
-		if game_mode = gamemode_oleadas and array_length(misiones) > 0{
+		if game_mode = GAMEMODE_OLEADAS and array_length(misiones) > 0{
 			_xpos = draw_text_xpos(xpos + 30, ypos, L.menu_numero_oleadas)
 			misiones[0].target_num = round(draw_deslizante(_xpos + 10, _xpos + 135, ypos + 10, misiones[0].target_num, 10, 50, des_count++, 1))
 			draw_text_ypos(_xpos + 145, ypos, misiones[0].target_num)
@@ -128,7 +128,7 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 				oleadas_tiempo = 90
 				multiplicador_vida_enemigos = 50
 				cheat = false
-				if game_mode = gamemode_oleadas{
+				if game_mode = GAMEMODE_OLEADAS{
 					misiones = array_create(1, null_mision)
 					misiones[0].objetivo = idm_sobrevivir_oleadas
 					misiones[0].target_num = 15
@@ -141,7 +141,7 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 				oleadas_tiempo = 75
 				multiplicador_vida_enemigos = 100
 				cheat = false
-				if game_mode = gamemode_oleadas{
+				if game_mode = GAMEMODE_OLEADAS{
 					misiones = array_create(1, null_mision)
 					misiones[0].objetivo = idm_sobrevivir_oleadas
 					misiones[0].target_num = 22
@@ -154,21 +154,21 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 				oleadas_tiempo = 60
 				multiplicador_vida_enemigos = 160
 				cheat = false
-				if game_mode = gamemode_oleadas{
+				if game_mode = GAMEMODE_OLEADAS{
 					misiones = array_create(1, null_mision)
 					misiones[0].objetivo = idm_sobrevivir_oleadas
 					misiones[0].target_num = 35
 				}
 			}
-			if game_mode = gamemode_infinito
+			if game_mode = GAMEMODE_INFINITO
 				misiones = array_create(0, null_mision)
-			else if game_mode = gamemode_misiones{
+			else if game_mode = GAMEMODE_MISIONES{
 				modo_misiones = true
 				misiones = array_create(0, null_mision)
 				add_mision()
 				mision_actual = -1
 			}
-			else if game_mode = gamemode_ia{
+			else if game_mode = GAMEMODE_IA{
 				misiones = array_create(1, null_mision)
 				misiones[0].objetivo = idm_destruir_edificio
 				misiones[0].target_id = id_nucleo

@@ -55,18 +55,6 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			else
 				edificios_perdidos++
 		}
-		if index = id_puerto_de_carga and edificio.link != null_edificio{
-			if edificio.receptor
-				array_disorder_remove(puerto_carga_array[_jugador], edificio, ptre_puerto)
-			else
-				array_disorder_remove(puerto_carga_array[_jugador], edificio.link, ptre_puerto)
-			if puerto_carga_atended[_jugador] >= array_length(puerto_carga_array[_jugador])
-				puerto_carga_atended[_jugador] = 0
-			edificio.link.receptor = false
-			edificio.link.emisor = false
-			calcular_edificios_adyascentes(edificio.link)
-			edificio.link.link = null_edificio
-		}
 		desactivar_edificio(edificio)
 		for(a = real(index = id_procesador); a < array_length(edificio.procesador_link); a++)
 			array_remove(edificio.procesador_link[a].procesador_link, edificio)
@@ -169,6 +157,41 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				temp_edificio.output_index = 0
 		}
 		delete(edificio.inputs)
+		//Eliminar instrucciones de Puertos de Carga
+		for(a = array_length(edificios_jugador_index[_jugador, id_puerto_de_carga]) - 1; a >= 0; a--){
+			temp_edificio = edificios_jugador_index[_jugador, id_puerto_de_carga][a]
+			for(b = array_length(temp_edificio.instruccion) - 1; b >= 0; b--)
+				if temp_edificio.instruccion[b, 1] = edificio.punteros[ptre_jugador] or temp_edificio.instruccion[b, 2] = edificio.punteros[ptre_jugador]{
+					array_delete(temp_edificio.instruccion, b, 1)
+					for(var c = array_length(drones_jugador[_jugador]) - 1; c >= 0; c--){
+						dron = drones_jugador[_jugador, c]
+						if dron.index = idd_mula and dron.target = temp_edificio
+							if dron.dir_move = b{
+								if array_length(temp_edificio.instruccion) = 0{
+									dron.modo = MULA_IDLE
+									dron.target = null_edificio
+								}
+								else{
+									dron.modo = MULA_BUSCAR_INSTRUCCION
+									dron.temp_target = dron.target
+								}
+							}
+							else if dron.dir_move > b
+								dron.dir_move--
+					}
+					temp_edificio.select = temp_edificio.select mod array_length(temp_edificio.instruccion)
+					continue
+				}
+		}
+		if index = id_puerto_de_carga
+			for(a = array_length(drones_jugador[_jugador]) - 1; a >= 0; a--){
+				dron = drones_jugador[_jugador, a]
+				if dron.index = idd_mula and dron.target = edificio{
+					dron.target = null_edificio
+					dron.temp_target = null_edificio
+					dron.modo = MULA_IDLE
+				}
+			}
 		//Cancelar red
 		if edificio_energia[index]{
 			var temp_red = edificio.red, red_bateria, agregado, nodo, isla, temp_red_2, isla_bateria, pila, visitado

@@ -79,6 +79,12 @@ function step(){
 			temp_script = edificio_script[a]
 			for(b = array_length(edificios_index[a]) - 1; b >= 0; b--){
 				edificio = edificios_index[a, b]
+				if edificio.fuego > 0{
+					edificio.fuego--
+					herir_edificio(0.2, edificio)
+					if grafic_humo and image_index mod 10 = b mod 10
+						add_humo(edificio.center_x, edificio.center_y, edificio.a, edificio.b, sim_random_range(-1, 1), sim_random_range(-1, 1), 30)
+				}
 				if edificio.idle or edificio.vida < 0
 					continue
 				temp_script(edificio)
@@ -146,13 +152,15 @@ function step(){
 					edificio = edificio_id[# muna, munb]
 					if _tipo != municion_tipo_perforadora and edificio.jugador != municion.jugador{
 						municion.dis = 0
+						if _tipo = municion_tipo_fuego
+							edificio.fuego = 300
 						break
 					}
 				}
 				//Colisión Dron
 				if _tipo != municion_tipo_fuego and target != null_dron and target.vida > 0 and muna = target.a and munb = target.b{
 					herir_dron(_dmg, target)
-					if _tipo != 4{
+					if _tipo != municion_tipo_perforadora{
 						municion.dis = 0
 						break
 					}
@@ -208,59 +216,59 @@ function step(){
 					if grid_water_distance[# aa, bb] < infinity{
 						//Drones marítimos
 						if irandom(len) > i + 7{
-							add_dron(aa, bb, idd_destructor, jugador_IA)
+							add_dron(aa, bb, idd_destructor, JUGADOR_IA)
 							i += 8
 							continue
 						}
 						else if irandom(len) > i + 2{
-							add_dron(aa, bb, idd_barco, jugador_IA)
+							add_dron(aa, bb, idd_barco, JUGADOR_IA)
 							i += 3
 							continue
 						}
 						//Drones aéreos
 						else if irandom(len) > i + 11{
-							add_dron(aa, bb, idd_bombardero, jugador_IA)
+							add_dron(aa, bb, idd_bombardero, JUGADOR_IA)
 							i += 10
 						}
 						else if irandom(len) > i + 5{
-							add_dron(aa, bb, idd_helicoptero, jugador_IA)
+							add_dron(aa, bb, idd_helicoptero, JUGADOR_IA)
 							i += 4
 						}
 						else
-							add_dron(aa, bb, idd_kamikaze, jugador_IA)
+							add_dron(aa, bb, idd_kamikaze, JUGADOR_IA)
 					}
 					else{
 						var max_dis = infinity
 						for(var j = array_length(edificios_index[id_nucleo]) - 1; j >= 0; j--){
 							edificio = edificios_index[id_nucleo, j]
-							if edificio.jugador != jugador_IA
+							if edificio.jugador != JUGADOR_IA
 								max_dis = min(max_dis, edificio.coordenadas_dis[# aa, bb])
 						}
 						//Drones aéreos
 						if is_infinity(max_dis) or not terreno_caminable[terreno[# aa, bb]] or (tutorial = 0 and random(1) < 0.15){
 							if irandom(len) > i + 11{
-								add_dron(aa, bb, idd_bombardero, jugador_IA)
+								add_dron(aa, bb, idd_bombardero, JUGADOR_IA)
 								i += 10
 							}
 							else if irandom(len) > i + 5{
-								add_dron(aa, bb, idd_helicoptero, jugador_IA)
+								add_dron(aa, bb, idd_helicoptero, JUGADOR_IA)
 								i += 4
 							}
 							else
-								add_dron(aa, bb, idd_kamikaze, jugador_IA)
+								add_dron(aa, bb, idd_kamikaze, JUGADOR_IA)
 						}
 						//Drones terrestres
 						else{
 							if irandom(len) > i + 15{
-								add_dron(aa, bb, idd_titan, jugador_IA)
+								add_dron(aa, bb, idd_titan, JUGADOR_IA)
 								i += 14
 							}
 							else if irandom(len) > i + 6{
-								add_dron(aa, bb, idd_tanque, jugador_IA)
+								add_dron(aa, bb, idd_tanque, JUGADOR_IA)
 								i += 5
 							}
 							else
-								add_dron(aa, bb, idd_arana, jugador_IA)
+								add_dron(aa, bb, idd_arana, JUGADOR_IA)
 						}
 					}
 				}

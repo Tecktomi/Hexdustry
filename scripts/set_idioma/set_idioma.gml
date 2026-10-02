@@ -1,6 +1,6 @@
 function set_idioma(){
 	with control{
-		if idioma = idioma_ingles{
+		if idioma = IDIOMA_INGLES{
 			CONTROL_NOMBRE = ["Left", "Right", "Up", "Down", "Pause", "Menu", "Toggle Sound", "Toggle Waves", "Hide Interface", "Show Information", "Show Vectors", "Encyclopedia", "Rotate Building", "Rebuild Buildings", "Show Networks", "Show Flows", "Create Blueprint", "See Players"]
 			categoria_nombre[0] = "Transport"
 			categoria_nombre[1] = "Extraction"
@@ -121,7 +121,7 @@ function set_idioma(){
 				edificio_descripcion[id_planta_nuclear] = "Consumes Enriched Uranium and a lot of Water to generate a lot of energy"
 				edificio_descripcion[id_planta_quimica] = "Produces and processes several Acid-related resources"
 				edificio_descripcion[id_procesador] = "Runs logic instructions"
-				edificio_descripcion[id_puerto_de_carga] = "Link Charging Ports together so your drones move resources between them"
+				edificio_descripcion[id_puerto_de_carga] = "Add transport instructions for Mule drones"
 				edificio_descripcion[id_recurso_infinito] = "Generates resources out of magic"
 				edificio_descripcion[id_refineria_de_metales] = "Refines Cupric Stone, Ferric Stone or Raw Uranium using Acid"
 				edificio_descripcion[id_refineria_de_petroleo] = "Uses fractional distillation to extract Plastic, Incendiary Compound and Sulfur from Oil"
@@ -644,7 +644,7 @@ function set_idioma(){
 			variable_struct_set(L, "win_tiempo", "Time")
 			variable_struct_set(L, "win_victoria", "Victory")
 		}
-		else if idioma = idioma_espanol{
+		else if idioma = IDIOMA_ESPANOL{
 			CONTROL_NOMBRE = ["Izquierda", "Derecha", "Arriba", "Abajo", "Pausa", "Menú", "Activar Sonido", "Activar Oleadas", "Esconder Interfaz", "Mostrar Información", "Mostrar vectores", "Enciclopedia", "Rotar edificio", "Reconstruir edificios", "Mostrar Redes", "Mostrar Flujos", "Crear Planos", "Ver Jugadores"]
 			categoria_nombre[0] = "Transporte"
 			categoria_nombre[1] = "Extracción"
@@ -756,7 +756,7 @@ function set_idioma(){
 				edificio_descripcion[id_generador_geotermico] = "Genera energía a partir de evaporar Agua, debe ser construido sobre Lava"
 				edificio_descripcion[id_taladro_de_explosion] = "Utiliza Explosivos para extraer un recurso de cada terreno minable en su área"
 				edificio_descripcion[id_muro] = "Bloquea disparos de los enemigos mientras deja pasar los de tus defensas"
-				edificio_descripcion[id_puerto_de_carga] = "Conecta Puertos de Carga para que tus drones muevan recursos entre ellos"
+				edificio_descripcion[id_puerto_de_carga] = "Añade instrucciones de transporte para los drones Mulas"
 				edificio_descripcion[id_ensambladora] = "Utiliza Cobre y Plástico para producir Electrónicos"
 				edificio_descripcion[id_planta_nuclear] = "Consume Uranio Enriquecido y mucha Agua para generar mucha energía"
 				edificio_descripcion[id_torre_de_alta_tension] = "Conecta redes eléctricas a largas distancias"
@@ -1288,7 +1288,7 @@ function set_idioma(){
 			variable_struct_set(L, "win_tiempo", "Tiempo")
 			variable_struct_set(L, "win_victoria", "Victoria")
 		}
-		else if idioma = idioma_ruso{
+		else if idioma = IDIOMA_RUSO{
 			CONTROL_NOMBRE = ["Влево", "Вправо", "Вверх", "Вниз", "Пауза", "Меню", "Вкл/выкл звук", "Вкл/выкл волны", "Скрыть интерфейс", "Показать информацию", "Показать векторы", "Энциклопедия", "Повернуть здание", "Перестроить здания", "Показать сети", "Показать потоки", "Создать проект", "Просмотреть Игроков"]
 			categoria_nombre[0] = "Транспорт"
 			categoria_nombre[1] = "Добыча"
@@ -1409,7 +1409,7 @@ function set_idioma(){
 				edificio_descripcion[id_planta_nuclear] = "Потребляет обогащённый уран и много воды, чтобы производить много энергии"
 				edificio_descripcion[id_planta_quimica] = "Производит и перерабатывает различные ресурсы, связанные с кислотой"
 				edificio_descripcion[id_procesador] = "Выполняет логические инструкции"
-				edificio_descripcion[id_puerto_de_carga] = "Соединяет порты погрузки, чтобы ваши дроны перевозили ресурсы между ними"
+				edificio_descripcion[id_puerto_de_carga] = "Добавляет инструкции перевозки для дронов-мулов"
 				edificio_descripcion[id_recurso_infinito] = "Производит ресурсы с помощью магии"
 				edificio_descripcion[id_refineria_de_metales] = "Перерабатывает медную породу, железную породу или необработанный уран с помощью кислоты"
 				edificio_descripcion[id_refineria_de_petroleo] = "С помощью фракционной перегонки извлекает из нефти пластик, зажигательную смесь и серу"

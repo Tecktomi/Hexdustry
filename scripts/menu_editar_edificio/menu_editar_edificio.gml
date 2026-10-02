@@ -166,7 +166,7 @@ function menu_editar_edificio(){
 		}
 		else{
 			temp_complex = abtoxy(edificio.a, edificio.b)
-			var width = 80 * zoom, height = 80 * zoom
+			var width = 80 * zoom, height = 80 * zoom, _jugador = edificio.jugador
 			aa = clamp(temp_complex[0] * zoom - camx, width, room_width - width)
 			bb = clamp(temp_complex[1] * zoom - camy, 0, room_height - height)
 			draw_set_color(ui_borde)
@@ -190,6 +190,13 @@ function menu_editar_edificio(){
 				draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * (array_length(misiles_nombre) - not permitir_nuclear)) * zoom, false)
 			else if index = id_antena
 				draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + 60 * zoom, false)
+			else if index = id_puerto_de_carga{
+				draw_circle_off(edificio.center_x, edificio.center_y, PUERTO_CARGA_RANGE, true)
+				width = max(width, string_width(L.procesador_add) * zoom / 2)
+				for(a = array_length(edificio.instruccion) - 1; a >= 0; a--)
+					width = max(width, (string_width($"Llevar {recurso_nombre[edificio.instruccion[a, 0]]} de {edificio_nombre[edificios_jugador[_jugador, edificio.instruccion[a, 1]].index]} a {edificio_nombre[edificios_jugador[_jugador, edificio.instruccion[a, 2]].index]}") + 20) * zoom / 2)
+				draw_rectangle(aa - width, bb + 40 * zoom, aa + width, bb + 20 * (3 + array_length(edificio.instruccion)) * zoom, false)
+			}
 			draw_set_color(ui_fondo)
 			draw_triangle(aa - 10 * zoom, bb + 20 * zoom, aa + 10 * zoom, bb + 20 * zoom, aa, bb + 10 * zoom, true)
 			draw_rectangle(aa - 80 * zoom, bb + 20 * zoom, aa + 80 * zoom, bb + 40 * zoom, true)
@@ -227,8 +234,8 @@ function menu_editar_edificio(){
 				if mouse_check_button_pressed(mb_right){
 					mouse_clear(mb_right)
 					if edificio.array_real[0] = -1{
-						edificio.array_real[0] = xmouse
-						edificio.array_real[1] = ymouse
+						edificio.array_real[0] = (mouse_x + camx) / zoom
+						edificio.array_real[1] = (mouse_y + camy) / zoom
 					}
 					else{
 						edificio.array_real[0] = -1
@@ -260,7 +267,42 @@ function menu_editar_edificio(){
 				draw_set_halign(fa_center)
 				draw_text(aa, bb + 20 * zoom, $"{88 + 0.3 * edificio.select}[MHz]")
 				draw_set_halign(fa_left)
-				edificio.select = round(draw_deslizante(aa - 70 * zoom, aa + 70 * zoom, bb + 50 * zoom, edificio.select, 0, 99, 0))
+				edificio.select = round(draw_deslizante(aa - 70 * zoom, aa + 70 * zoom, bb + 50 * zoom, edificio.select, 0, frecuencia_max - 1, 0))
+			}
+			else if index = id_puerto_de_carga{
+				draw_boton_text_counter = 0
+				ypos = bb + 40 * zoom
+				for(a = 0; a < array_length(edificio.instruccion); a++){
+					xpos = aa - width
+					xpos = draw_text_xpos(xpos, ypos, "Llevar ")
+					edificio.instruccion[a, 0] = draw_boton_text_list(xpos, ypos, edificio.instruccion[a, 0], recurso_nombre,, 10)
+					xpos += text_x
+					xpos = draw_text_xpos(xpos, ypos, " de ")
+					if draw_boton(xpos, ypos, edificio_nombre[edificios_jugador[_jugador, edificio.instruccion[a, 1]].index],,,, false){
+						puerto_carga_link = edificio
+						puerto_carga_rss = edificio.instruccion[a, 0]
+						puerto_carga_select = 1
+						puerto_carga_instruccion = a
+					}
+					xpos += text_x
+					xpos = draw_text_xpos(xpos, ypos, " a ")
+					if draw_boton(xpos, ypos, edificio_nombre[edificios_jugador[_jugador, edificio.instruccion[a, 2]].index],,,, false){
+						puerto_carga_link = edificio
+						puerto_carga_rss = edificio.instruccion[a, 0]
+						puerto_carga_select = 2
+						puerto_carga_instruccion = a
+					}
+					xpos += text_x
+					if draw_sprite_boton(spr_basura, 0, xpos, ypos){
+						array_delete(edificio.instruccion, a, 1)
+						edificio.select = edificio.select mod array_length(edificio.instruccion)
+						break
+					}	
+					ypos += 20 * zoom
+				}
+				if draw_boton(aa - width, ypos, L.procesador_add,,,, false)
+					array_push(edificio.instruccion, [0, 0, 0])
+				draw_boton_text_list_end()
 			}
 			if mouse_x > aa - 80 * zoom and mouse_y > bb + 20 * zoom and mouse_x < aa + 80 * zoom{
 				if in(index, id_selector, id_overflow){
