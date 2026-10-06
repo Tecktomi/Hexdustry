@@ -23,7 +23,38 @@ function set_edificio_instruccion(edificio = control.null_edificio, data = {}, _
 				edificio.instruccion[data.instruccion, 2] = data.pointer
 		}
 		else if edificio.index = id_procesador{
-			//PLACEHOLDER
+			if data.cambio = cambio_instrucciones_add_comando{
+				var new_instruccion = array_create(array_length(procesador_default_instruccion[data.instruccion]), 0)
+				array_copy(new_instruccion, 0, procesador_default_instruccion[data.instruccion], 0, array_length(procesador_default_instruccion[data.instruccion]))
+				new_instruccion[0] = data.instruccion
+				array_push(edificio.instruccion, new_instruccion)
+			}
+			else if data.cambio = cambio_instrucciones_delete_comando
+				array_delete(edificio.instruccion, data.instruccion, 1)
+			else if data.cambio = cambio_instrucciones_set_variable{
+				if is_real(data.valor)
+					array_set(edificio.variables[data.instruccion], data.pos, real(data.valor))
+				else
+					array_set(edificio.variables[data.instruccion], data.pos, string(data.valor))
+			}
+			else if data.cambio = cambio_instruccion_copiar{
+				var new_instruccion = array_create(array_length(edificio.instruccion[data.instruccion]), 0)
+				array_copy(new_instruccion, 0, edificio.instruccion[data.instruccion], 0, array_length(edificio.instruccion[data.instruccion]))
+				new_instruccion[0] = data.instruccion
+				array_insert(edificio.instruccion, data.instruccion + 1, new_instruccion)
+			}
+			else if data.cambio = cambio_instruccion_mover{
+				array_insert(edificio.instruccion, data.instruccion, edificio.instruccion[data.prev])
+				array_delete(edificio.instruccion, data.prev + (data.prev > data.instruccion), 1)
+			}
+			else if data.cambio = cambio_instruccion_set{
+				if is_real(data.valor)
+					array_set(edificio.instruccion[data.instruccion], data.pos, real(data.valor))
+				else
+					array_set(edificio.instruccion[data.instruccion], data.pos, string(data.valor))
+			}
 		}
+		else if edificio.index = id_memoria
+			edificio.variables[data.instruccion] = data.valor
 	}
 }

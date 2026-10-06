@@ -31,8 +31,31 @@ function handle_set_instrucciones(buffer){
 				data.pointer = real(buffer_read(buffer, buffer_u16))
 			}
 		}
-		else if edificio = id_procesador{
-			//PLACEHOLDER
+		else if edificio.index = id_procesador{
+			data.cambio = real(buffer_read(buffer, buffer_u8))
+			data.instruccion = real(buffer_read(buffer, buffer_u8))
+			if data.cambio = cambio_instrucciones_set_variable{
+				if buffer_read(buffer, buffer_bool)
+					data.valor = real(buffer_read(buffer, buffer_f64))
+				else
+					data.valor = string(buffer_read(buffer, buffer_string))
+			}
+			else if data.cambio = cambio_instruccion_mover
+				data.prev = real(buffer_read(buffer, buffer_u8))
+			else if data.cambio = cambio_instruccion_set{
+				data.pos = real(buffer_read(buffer, buffer_u8))
+				if buffer_read(buffer, buffer_bool)
+					data.valor = real(buffer_read(buffer, buffer_f64))
+				else
+					data.valor = string(buffer_read(buffer, buffer_string))
+			}
+		}
+		else if edificio.index = id_memoria{
+			data.instruccion = real(buffer_read(buffer, buffer_u8))
+			if buffer_read(buffer, buffer_bool)
+				data.valor = real(buffer_read(buffer, buffer_f64))
+			else
+				data.valor = string(buffer_read(buffer, buffer_string))
 		}
 		if servidor{
 			set_edificio_instruccion(edificio, data, true)

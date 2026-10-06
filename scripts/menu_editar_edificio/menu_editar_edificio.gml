@@ -39,11 +39,7 @@ function menu_editar_edificio(){
 				draw_set_halign(fa_center)
 				for(a = 0; a < array_length(PROCESADOR_INSTRUCCIONES_LENGTH); a++)
 					if draw_boton(room_width / 2, 200 + 20 * a, $"{procesador_instrucciones_nombre[a]} ({a})",,,, false, 1) or keyboard_check_pressed(ord(string(a))){
-						new_instruccion = array_create(PROCESADOR_INSTRUCCIONES_LENGTH[a], 0)
-						for(i = 0; i < array_length(procesador_default_instruccion[a]); i++)
-							new_instruccion[i] = procesador_default_instruccion[a, i]
-						new_instruccion[0] = a
-						array_push(edificio.instruccion, new_instruccion)
+						set_edificio_instruccion(edificio, {cambio : cambio_instrucciones_add_comando, instruccion : a})
 						procesador_add = false
 						input_layer = 0
 						break
@@ -57,11 +53,14 @@ function menu_editar_edificio(){
 				}
 			}
 			ypos = 150
+			var val
 			for(a = 0; a < array_length(edificio.variables); a++){
 				draw_set_halign(fa_right)
 				draw_text(room_width - 120, ypos, $"VAR_{a}: ")
 				draw_set_halign(fa_left)
-				edificio.variables[a] = draw_boton_text(room_width - 120, ypos, edificio.variables[a],, true)
+				val = draw_boton_text(room_width - 120, ypos, edificio.variables[a],, true)
+				if edificio.variables[a] != val
+					set_edificio_instruccion(edificio, {cambio : cambio_instrucciones_set_variable, instruccion : a, valor : val})
 				ypos += 20
 			}
 			draw_set_halign(fa_right)
@@ -160,7 +159,12 @@ function menu_editar_edificio(){
 					temp_text = string_copy(edificio.variables[a], 1, 6) + "..."
 				else
 					temp_text = edificio.variables[a]
-				edificio.variables[a] = draw_boton_text(xpos + 100 * (is_real(edificio.variables[a])), ypos, temp_text,, true)
+				b = draw_boton_text(xpos + 100 * (is_real(edificio.variables[a])), ypos, temp_text,, true)
+				if edificio.variables[a] != b
+					if is_real(b)
+						set_edificio_instruccion(edificio, {instruccion : a, valor : real(b)})
+					else
+						set_edificio_instruccion(edificio, {instruccion : a, valor : string(b)})
 			}
 			draw_set_halign(fa_left)
 		}
@@ -172,7 +176,7 @@ function menu_editar_edificio(){
 			draw_set_color(ui_borde)
 			draw_triangle(aa - 10 * zoom, bb + 20 * zoom, aa + 10 * zoom, bb + 20 * zoom, aa, bb + 10 * zoom, false)
 			draw_rectangle(aa - 80 * zoom, bb + 20 * zoom, aa + 80 * zoom, bb + 40 * zoom, false)
-			if in(index, id_selector, id_recurso_infinito)
+			if index = id_selector or index = id_recurso_infinito
 				draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + TILE_WIDTH * ceil(rss_max / 5)) * zoom, false)
 			else if index = id_liquido_infinito
 				draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + 20 * liquido_max) * zoom, false)
@@ -201,7 +205,7 @@ function menu_editar_edificio(){
 			draw_triangle(aa - 10 * zoom, bb + 20 * zoom, aa + 10 * zoom, bb + 20 * zoom, aa, bb + 10 * zoom, true)
 			draw_rectangle(aa - 80 * zoom, bb + 20 * zoom, aa + 80 * zoom, bb + 40 * zoom, true)
 			draw_set_color(ui_texto)
-			if in(index, id_selector, id_overflow)
+			if index = id_selector or index = id_overflow
 				draw_text(aa - 80 * zoom, bb + 20 * zoom, L.show_menu_invertir)
 			if in(index, id_selector, id_recurso_infinito){
 				draw_rectangle(aa - 80 * zoom, bb + 40 * zoom, aa + 80 * zoom, bb + (40 + TILE_WIDTH * ceil(rss_max / 5)) * zoom, true)

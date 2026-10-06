@@ -320,6 +320,7 @@ L = {}
 	pre_build_list_cruce = array_create(0, false)
 	sprite_boton_text = ""
 	editor_menu = 0
+	prev_get_keyboard_string = -1
 	get_keyboard_string = -1
 	get_keyboard_cursor = 0
 	get_keyboard_text = ""
@@ -576,9 +577,15 @@ L = {}
 	#macro cambio_instrucciones 6
 	#macro cambio_instrucciones_add_comando 0
 	#macro cambio_instrucciones_delete_comando 1
+	//Instrucciones Puerto de carga
 	#macro cambio_instrucciones_cambio_recurso 2
 	#macro cambio_instrucciones_cambio_input 3
 	#macro cambio_instrucciones_cambio_output 4
+	//Instrucciones procesador
+	#macro cambio_instrucciones_set_variable 2
+	#macro cambio_instruccion_copiar 3
+	#macro cambio_instruccion_mover 4
+	#macro cambio_instruccion_set 5
 #endregion
 #region UI
 	#macro ui_fondo #282828

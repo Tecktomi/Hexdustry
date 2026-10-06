@@ -23,7 +23,36 @@ function server_set_instrucciones(edificio = control.null_edificio, data = {}){
 			}
 		}
 		else if edificio.index = id_procesador{
-			//PLACEHOLDER
+			buffer_write(buffer, buffer_u8, real(data.cambio))
+			buffer_write(buffer, buffer_u8, real(data.instruccion))
+			if data.cambio = cambio_instrucciones_set_variable{
+				buffer_write(buffer, buffer_bool, is_real(data.valor))
+				if is_real(data.valor)
+					buffer_write(buffer, buffer_f64, real(data.valor))
+				else
+					buffer_write(buffer, buffer_string, string(data.valor))
+			}
+			else if data.cambio = cambio_instruccion_mover
+				buffer_write(buffer, buffer_u8, real(data.prev))
+			else if data.cambio = cambio_instruccion_set{
+				buffer_write(buffer, buffer_u8, real(data.pos))
+				buffer_write(buffer, buffer_bool, is_real(data.valor))
+				if is_real(data.valor)
+					buffer_write(buffer, buffer_f64, real(data.valor))
+				else
+					buffer_write(buffer, buffer_string, string(data.valor))
+			}
+			else if data.cambio = cambio_instruccion_load{
+				
+			}
+		}
+		else if edificio.index = id_memoria{
+			buffer_write(buffer, buffer_u8, real(data.instruccion))
+			buffer_write(buffer, buffer_bool, is_real(data.valor))
+			if is_real(data.valor)
+				buffer_write(buffer, buffer_f64, real(data.valor))
+			else
+				buffer_write(buffer, buffer_string, string(data.valor))
 		}
 		if online{
 			if servidor
