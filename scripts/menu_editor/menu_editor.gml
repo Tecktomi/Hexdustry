@@ -123,45 +123,15 @@ function menu_editor(){
 						mision.tiempo_show = not mision.tiempo_show
 				}
 				ypos += 40
-				var texto
 				for(b = 0; b < array_length(mision.texto); b++){
-					texto = mision.texto[b]
-					xpos = room_width / 2 + 80
-					xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_write} ")
-					if draw_boton(xpos, ypos, $"'{text_wrap(texto.texto, 250)}'",,, mb_any, false){
-						if mouse_lastbutton = mb_left{
-							editor_list = false
-							get_keyboard_string = 100 + b
-							keyboard_string = texto.texto
-						}
-						else{
-							array_delete(mision.texto, b--, 1)
-							continue
-						}
-					}
-					ypos += text_y
-					if get_keyboard_string = 100 + b{
-						draw_line(xpos, ypos + 20, xpos + text_x, ypos + 20)
-						texto.texto = keyboard_string
-						exit_keyboard_input()
-					}
-					xpos = draw_text_xpos(xpos, ypos, $" {L.editor_on} ")
-					texto.x = draw_boton_text(xpos, ypos, texto.x)
-					xpos = draw_text_xpos(xpos + text_x, ypos, ", ")
-					texto.y = draw_boton_text(xpos, ypos, texto.y)
-					if draw_sprite_boton(spr_siguiente, 0, xpos + text_x, ypos){
-						mision_choosing_coord = true
-						mision_choosing_coord_i = i
-						mision_choosing_coord_tipo = 2 + b
-					}
-					ypos += text_y
+					var temp_text = string(draw_boton_text(room_width / 2 + 80, ypos, mision.texto[b, idioma], false,, false))
+					if mision.texto[b, idioma] != temp_text
+						array_set(mision.texto[b], idioma, temp_text)
+					ypos += text_y * 1.2
 				}
 				ypos += 10
-				if draw_boton(room_width / 2 + 40, ypos, L.editor_add_text, ui_azul){
-					mision_choosing_coord = true
-					mision_choosing_coord_i = i
-					mision_choosing_coord_tipo = 0
-				}
+				if draw_boton(room_width / 2 + 40, ypos, L.editor_add_text, ui_azul)
+					array_push(mision.texto, array_create(IDIOMAS, ""))
 				ypos += text_y + 10
 				if draw_boton(room_width / 2 + 40, ypos, (mision.switch_oleadas ? "" : L.editor_no + " ") + L.editor_cambiar_oleadas)
 					mision.switch_oleadas = not mision.switch_oleadas
@@ -333,14 +303,18 @@ function menu_editor(){
 			var prev_xsize = xsize
 			xsize = round(draw_deslizante(xpos, xpos + 100, ypos + 10, xsize, TILE_WIDTH, 256, 0))
 			chunk_xsize = ceil(xsize / CHUNK_WIDTH)
-			draw_text(xpos + 100, ypos, $"{xsize}")
+			var val = draw_boton_text(xpos + 110, ypos, xsize)
+			if val != xsize
+				xsize = val
 			if xsize > prev_xsize and mouse_check_button_released(mb_left)
 				resize_grid(prev_xsize, 0)
 			ypos += text_y
 			var prev_ysize = ysize
 			ysize = round(draw_deslizante(xpos, xpos + 100, ypos + 10, ysize, 60, 512, 1))
 			chunk_ysize = ceil(ysize / CHUNK_HEIGHT)
-			draw_text(xpos + 100, ypos, $"{ysize}")
+			val = draw_boton_text(xpos + 110, ypos, ysize)
+			if val != ysize
+				ysize = val
 			if ysize > prev_ysize and mouse_check_button_released(mb_left)
 				resize_grid(0, prev_ysize)
 			draw_boton_text_list_end()
@@ -351,20 +325,12 @@ function menu_editor(){
 		if mouse_x > 200 and not outside{
 			if mision_choosing_coord{
 				draw_set_halign(fa_center)
-				draw_text((room_width + 200) / 2, 100, $"{L.editor_clic} {mision_choosing_coord_tipo = 0 ? L.editor_add_text : L.editor_mover_camara}")
+				draw_text((room_width + 200) / 2, 100, $"{L.editor_clic} {L.editor_mover_camara}")
 				draw_set_halign(fa_left)
 				if mouse_check_button_pressed(mb_left){
 					temp_complex = abtoxy(mx, my)
-					if mision_choosing_coord_tipo = 0
-						array_push(misiones[mision_choosing_coord_i].texto, {x : temp_complex[0], y : temp_complex[1], texto : ""})
-					else if mision_choosing_coord_tipo = 1{
-						misiones[mision_choosing_coord_i].camera_x = temp_complex[0]
-						misiones[mision_choosing_coord_i].camera_y = temp_complex[1]
-					}
-					else if mision_choosing_coord_tipo >= 2{
-						misiones[mision_choosing_coord_i].texto[mision_choosing_coord_tipo - 2].x = temp_complex[0]
-						misiones[mision_choosing_coord_i].texto[mision_choosing_coord_tipo - 2].y = temp_complex[1]
-					}
+					misiones[mision_choosing_coord_i].camera_x = temp_complex[0]
+					misiones[mision_choosing_coord_i].camera_y = temp_complex[1]
 					mision_choosing_coord = false
 				}
 				if mouse_check_button_pressed(mb_right)
@@ -575,13 +541,7 @@ function menu_editor(){
 			xpos = draw_text_xpos(xpos + 1.2 * text_x, ypos - 35, $"{mision_actual + 1}/{array_length(misiones)}")
 			if draw_boton(xpos + 0.2 * text_x, ypos - 40, L.editor_next) and mision_actual < array_length(misiones) - 1
 				mision = misiones[++mision_actual]
-			draw_set_halign(fa_center)
-			var _texto
-			for(a = 0; a < array_length(mision.texto); a++){
-				_texto = mision.texto[a]
-				draw_text_background(_texto.x * zoom - camx, _texto.y * zoom - camy, text_wrap(_texto.texto_idioma[idioma], 250),, false)
-			}
-			draw_set_halign(fa_left)
+			draw_mision_texto(200)
 		}
 		if draw_boton(10, ypos, L.editor_objetivos, ui_azul){
 			editor_menu = 1

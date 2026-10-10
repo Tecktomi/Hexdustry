@@ -18,6 +18,7 @@ function pasar_mision(){
 		else{
 			mision_counter = 0
 			mision = misiones[mision_actual]
+			mision_text = 0
 			if mision.tiempo > 0
 				mision_current_tiempo = 60 * mision.tiempo
 			if mision.switch_oleadas

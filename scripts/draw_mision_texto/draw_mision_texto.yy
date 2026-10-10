@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"draw_mision_texto",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"draw_mision_texto",
+  "parent":{
+    "name":"DRAW",
+    "path":"folders/SCRIPTS/DRAW.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

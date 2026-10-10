@@ -1,5 +1,13 @@
 function menu_principal(){
 	with control{
+		if image_index mod 3600 > 1800{
+			camx += 0.5
+			camy += 0.5
+		}
+		else{
+			camx -= 0.5
+			camy -= 0.5
+		}
 		dibujar_fondo(1)
 		draw_set_alpha(0.5)
 		draw_set_color(c_black)

@@ -1,8 +1,8 @@
-function explosion(aa = 0, bb = 0, edificio = control.null_edificio, radio = 120, dmg = 1000, incendiario = false, _jugador = jugador, _target_dron = control.null_dron){
+function explosion(_x = 0, _y = 0, edificio = control.null_edificio, radio = 120, dmg = 1000, incendiario = false, _jugador = jugador, _target_dron = control.null_dron){
 	with control{
-		sound_play(snd_explosion, aa, bb)
-		array_push(efectos, add_efecto(spr_explosion, 0, aa, bb, 24, 1 / 3))
-		var temp_complex = xytoab(aa, bb), chunk_x, chunk_y, mina, minb, maxa, maxb, temp_array_edificios, temp_array_dron, dmg_total, a, b, i, dis, dron, flag = false
+		sound_play(snd_explosion, _x, _y)
+		array_push(efectos, add_efecto(spr_explosion, 0, _x, _y, 24, 1 / 3))
+		var temp_complex = xytoab(_x, _y), chunk_x, chunk_y, mina, minb, maxa, maxb, temp_array_edificios, temp_array_dron, dmg_total, a, b, i, dis, dron, flag = false
 		if temp_complex[0] < 0
 			exit
 		chunk_x = floor(temp_complex[0] / CHUNK_WIDTH)
@@ -11,6 +11,7 @@ function explosion(aa = 0, bb = 0, edificio = control.null_edificio, radio = 120
 		minb = max(chunk_y - 1, 0)
 		maxa = min(chunk_x + 1, chunk_xsize - 1)
 		maxb = min(chunk_y + 1, chunk_ysize - 1)
+		array_push(chunk_explosion[# chunk_x, chunk_y], {x : _x, y : _y, rot : sim_random(360)})
 		dmg_total = 0
 		if incendiario{
 			for(a = mina; a <= maxa; a++)
@@ -20,7 +21,7 @@ function explosion(aa = 0, bb = 0, edificio = control.null_edificio, radio = 120
 					for(i = array_length(temp_array_edificios) - 1; i >= 0; i--){
 						edificio = temp_array_edificios[i]
 						if edificio.jugador != _jugador{
-							dis = point_distance(aa, bb, edificio.center_x, edificio.center_y)
+							dis = point_distance(_x, _y, edificio.center_x, edificio.center_y)
 							if dis < radio
 								if herir_edificio(dmg / (10 + dis), edificio)
 									flag = true
@@ -33,7 +34,7 @@ function explosion(aa = 0, bb = 0, edificio = control.null_edificio, radio = 120
 					for(i = array_length(temp_array_dron) - 1; i >= 0; i--){
 						dron = temp_array_dron[i]
 						if dron.jugador != _jugador{
-							dis = point_distance(aa, bb, dron.x, dron.y)
+							dis = point_distance(_x, _y, dron.x, dron.y)
 							if dis < radio{
 								if herir_dron(dmg / (10 + dis), dron) and dron = _target_dron
 									flag = true
@@ -51,7 +52,7 @@ function explosion(aa = 0, bb = 0, edificio = control.null_edificio, radio = 120
 					for(i = array_length(temp_array_edificios) - 1; i >= 0; i--){
 						edificio = temp_array_edificios[i]
 						if edificio.jugador != _jugador{
-							dis = point_distance(aa, bb, edificio.center_x, edificio.center_y)
+							dis = point_distance(_x, _y, edificio.center_x, edificio.center_y)
 							if dis < radio
 								if herir_edificio(dmg / (10 + dis), edificio)
 									flag = true
@@ -64,7 +65,7 @@ function explosion(aa = 0, bb = 0, edificio = control.null_edificio, radio = 120
 					for(i = array_length(temp_array_dron) - 1; i >= 0; i--){
 						dron = temp_array_dron[i]
 						if dron.jugador != _jugador{
-							dis = point_distance(aa, bb, dron.x, dron.y)
+							dis = point_distance(_x, _y, dron.x, dron.y)
 							if dis < radio
 								if herir_dron(dmg / (10 + dis), dron) and dron = _target_dron
 									flag = true

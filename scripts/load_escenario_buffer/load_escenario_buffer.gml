@@ -71,20 +71,11 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 				var _camera_y = _camera_move ? real(buffer_read(buffer, buffer_u16)) : 0
 				var _switch_oleadas = bool(buffer_read(buffer, buffer_bool))
 				var len_text = real(buffer_read(buffer, buffer_u8))
-				var _texto = array_create(len_text, {x : 0, y : 0, texto : "", texto_idioma : array_create(0, "")})
+				var _texto = array_create(len_text)
 				for(b = 0; b < len_text; b++){
-					temp_array_string = array_create(IDIOMAS, "")
+					_texto[b] = array_create(IDIOMAS, "")
 					for(c = 0; c < IDIOMAS; c++)
-						temp_array_string[c] = string(buffer_read(buffer, buffer_string))
-					var xx = real(buffer_read(buffer, buffer_u16))
-					var yy = real(buffer_read(buffer, buffer_u16))
-					var temp_text = {
-						x : xx,
-						y : yy,
-						texto : temp_array_string[idioma],
-						texto_idioma : temp_array_string
-					}
-					_texto[b] = temp_text
+						array_set(_texto[b], c, string(buffer_read(buffer, buffer_string)))
 				}
 				misiones[a] = def_mision(_nombre, _nombre_idioma, _objetivo, _target_id, _target_num, _texto, false, _tiempo, _tiempo_victoria, _tiempo_show, _camera_move, _camera_x, _camera_y, _switch_oleadas)
 			}

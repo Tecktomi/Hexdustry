@@ -44,17 +44,11 @@ function load_game_buffer(buffer){
 				var _tiempo_victoria = buffer_read(buffer, buffer_bool)
 				var _tiempo_show = buffer_read(buffer, buffer_bool)
 				var len_2 = buffer_read(buffer, buffer_u8)
-				_texto = array_create(len_2, {x : 0, y : 0, texto : "", texto_idioma : array_create(0, "")})
+				_texto = array_create(len_2)
 				for(b = 0; b < len_2; b++){
-					var _x = real(buffer_read(buffer, buffer_u16))
-					var _y = real(buffer_read(buffer, buffer_u16))
-					var temp_texto = string(buffer_read(buffer, buffer_string))
-					array_set(_texto, b, {
-						x : _x,
-						y : _y,
-						texto : temp_texto,
-						texto_idioma : array_create(0, "")
-					})
+					_texto[b] = array_create(IDIOMAS, "")
+					for(c = 0; c < IDIOMAS; c++)
+						array_set(_texto[b], c, string(buffer_read(buffer, buffer_string)))
 				}
 				var _camera_move = buffer_read(buffer, buffer_bool)
 				var _camera_x = buffer_read(buffer, buffer_u16)

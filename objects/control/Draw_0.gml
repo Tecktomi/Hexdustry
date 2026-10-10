@@ -44,6 +44,10 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 	dibujar_fondo()
 	if grafic_tile_animation and zoom >= 1
 		dibujar_fondo(2)
+	for(a = min_chunka; a < max_chunka; a++)
+		for(b = min_chunkb; b < max_chunkb; b++)
+			for(c = array_length(chunk_explosion[# a, b]) - 1; c >= 0; c--)
+				draw_sprite_off(spr_explosion_mark, 0, chunk_explosion[# a, b][c].x, chunk_explosion[# a, b][c].y,,, chunk_explosion[# a, b][c].rot,, 0.3)
 	dibujar_edificios()
 	var show_humo = (grafic_humo and pausa = 0 and enciclopedia = 0 and ((image_index mod 5) = 0))
 	var chunk, edificio, index, aaa, bbb, center_x, center_y, alert_count, _jugador, proceso, d, edificio_2, dir
@@ -173,12 +177,11 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 			draw_set_alpha(1)
 		}
 	}
-	draw_set_halign(fa_center)
+	draw_set_halign(fa_left)
+	draw_set_valign(fa_top)
 	if mision_actual >= 0 and win = 0
-		for(b = array_length(mision.texto) - 1; b >= 0; b--){
-			var texto = mision.texto[b]
-			draw_text_background(texto.x * zoom - camx, texto.y * zoom - camy, text_wrap(texto.texto_idioma[idioma], 250),, false)
-		}
+		draw_mision_texto()
+	draw_set_halign(fa_center)
 	temp_text = ""
 	b = 0
 	for(a = 0; a < rss_max; a++)

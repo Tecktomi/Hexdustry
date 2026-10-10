@@ -40,13 +40,9 @@ function save_escenario_buffer(filename){
 			buffer_write(buffer, buffer_bool, _mision.switch_oleadas)
 			len_text = array_length(_mision.texto)
 			buffer_write(buffer, buffer_u8, len_text)
-			for(b = 0; b < len_text; b++){
-				temp_text = _mision.texto[b]
+			for(b = 0; b < len_text; b++)
 				for(c = 0; c < IDIOMAS; c++)
-					buffer_write(buffer, buffer_string, temp_text.texto_idioma[c])
-				buffer_write(buffer, buffer_u16, temp_text.x)
-				buffer_write(buffer, buffer_u16, temp_text.y)
-			}
+					buffer_write(buffer, buffer_string, _mision.texto[b, c])
 		}
 		var seek_config_end = buffer_tell(buffer)
 		buffer_seek(buffer, buffer_seek_start, seek_config)

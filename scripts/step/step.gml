@@ -199,48 +199,31 @@ function step(){
 		if oleadas and (++oleadas_timer >= 60 * oleadas_tiempo_primera or (not chat_input and keyboard_check_pressed(vk_enter))){
 			temp_time = oleadas_timer / 60 - oleadas_tiempo_primera
 			if (temp_time mod oleadas_tiempo) = 0 or keyboard_check_pressed(vk_enter){
-				a = 2 * (++oleada_count + 2)
-				b = 1
-				flag = false
 				if mision_actual >= 0 and mision.objetivo = idm_sobrevivir_oleadas and ++mision_counter >= mision.target_num
 					oleadas = false
+				a = ++oleada_count + 2
+				b = array_length(SIZE_SIZE)
 				for(i = 0; i < array_length(SIZE_SIZE); i++)
 					if a <= SIZE_SIZE[i]{
 						b = i + 1
-						flag = true
 						break
 					}
-				if not flag
-					b = array_length(SIZE_SIZE)
 				temp_complex_list = get_size(spawn_x, spawn_y, 0, b)
 				len = min(array_length(temp_complex_list), a)
-				for(i = 0; i < len;){
-					aa = clamp(temp_complex_list[i++], 0, xsize - 1)
-					bb = clamp(temp_complex_list[i++], 0, ysize - 1)
+				for(var _dron_count = 0; _dron_count < len;){
+					aa = clamp(temp_complex_list[2 * _dron_count], 0, xsize - 1)
+					bb = clamp(temp_complex_list[2 * _dron_count + 1], 0, ysize - 1)
+					//Generación marina
 					if grid_water_distance[# aa, bb] < infinity{
-						//Drones marítimos
-						if irandom(len) > i + 7{
-							add_dron(aa, bb, idd_destructor, JUGADOR_IA)
-							i += 8
-							continue
-						}
-						else if irandom(len) > i + 2{
-							add_dron(aa, bb, idd_barco, JUGADOR_IA)
-							i += 3
-							continue
-						}
-						//Drones aéreos
-						else if irandom(len) > i + 11{
-							add_dron(aa, bb, idd_bombardero, JUGADOR_IA)
-							i += 10
-						}
-						else if irandom(len) > i + 5{
-							add_dron(aa, bb, idd_helicoptero, JUGADOR_IA)
-							i += 4
-						}
-						else
-							add_dron(aa, bb, idd_kamikaze, JUGADOR_IA)
+						var _dron_order = [idd_destructor, idd_barco, idd_bombardero, idd_helicoptero, idd_kamikaze]
+						for(a = 0; a < array_length(_dron_order); a++)
+							if irandom(len) > _dron_count + dron_peso[_dron_order[a]] or dron_peso[_dron_order[a]] = 1{
+								add_dron(aa, bb, _dron_order[a], JUGADOR_IA)
+								_dron_count += dron_peso[_dron_order[a]]
+								continue
+							}
 					}
+					//Generación terrestre
 					else{
 						var max_dis = infinity
 						for(var j = array_length(edificios_index[id_nucleo]) - 1; j >= 0; j--){
@@ -248,32 +231,16 @@ function step(){
 							if edificio.jugador != JUGADOR_IA
 								max_dis = min(max_dis, edificio.coordenadas_dis[# aa, bb])
 						}
-						//Drones aéreos
-						if is_infinity(max_dis) or not terreno_caminable[terreno[# aa, bb]] or (tutorial = 0 and random(1) < 0.15){
-							if irandom(len) > i + 11{
-								add_dron(aa, bb, idd_bombardero, JUGADOR_IA)
-								i += 10
+						if is_infinity(max_dis) or not terreno_caminable[terreno[# aa, bb]] or (tutorial = 0 and random(1) < 0.15)
+							var _dron_order = [idd_bombardero, idd_helicoptero, idd_kamikaze]
+						else
+							_dron_order = [idd_titan, idd_tanque, idd_arana]
+						for(a = 0; a < array_length(_dron_order); a++)
+							if irandom(len) > _dron_count + dron_peso[_dron_order[a]] or dron_peso[_dron_order[a]] = 1{
+								add_dron(aa, bb, _dron_order[a], JUGADOR_IA)
+								_dron_count += dron_peso[_dron_order[a]]
+								continue
 							}
-							else if irandom(len) > i + 5{
-								add_dron(aa, bb, idd_helicoptero, JUGADOR_IA)
-								i += 4
-							}
-							else
-								add_dron(aa, bb, idd_kamikaze, JUGADOR_IA)
-						}
-						//Drones terrestres
-						else{
-							if irandom(len) > i + 15{
-								add_dron(aa, bb, idd_titan, JUGADOR_IA)
-								i += 14
-							}
-							else if irandom(len) > i + 6{
-								add_dron(aa, bb, idd_tanque, JUGADOR_IA)
-								i += 5
-							}
-							else
-								add_dron(aa, bb, idd_arana, JUGADOR_IA)
-						}
 					}
 				}
 			}

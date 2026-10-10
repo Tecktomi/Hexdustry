@@ -40,12 +40,9 @@ function save_game_buffer(buffer){
 				buffer_write(buffer, buffer_bool, _mision.tiempo_show)
 				len_2 = array_length(_mision.texto)
 				buffer_write(buffer, buffer_u8, len_2)
-				for(b = 0; b < len_2; b++){
-					temp_texto = _mision.texto[b]
-					buffer_write(buffer, buffer_u16, temp_texto.x)
-					buffer_write(buffer, buffer_u16, temp_texto.y)
-					buffer_write(buffer, buffer_string, temp_texto.texto)
-				}
+				for(b = 0; b < len_2; b++)
+					for(c = 0; c < IDIOMAS; c++)
+						buffer_write(buffer, buffer_string, _mision.texto[b, c])
 				buffer_write(buffer, buffer_bool, _mision.camera_move)
 				buffer_write(buffer, buffer_u16, _mision.camera_x)
 				buffer_write(buffer, buffer_u16, _mision.camera_y)

@@ -97,7 +97,7 @@ var a, b, c, flag
 	#macro MULA_CARGA_MAX 10
 #endregion
 #region debug
-	debug_frame_time = true
+	debug_frame_time = false
 	debug_frame_time_value = 0
 	debug_frame_time_value_2 = 0
 	REPRODUCIENDO = false
@@ -454,6 +454,8 @@ L = {}
 	mision_choosing_coord = false
 	mision_choosing_coord_tipo = 0
 	mision_choosing_coord_i = 0
+	mision_text = 0
+	mision_text_hide = false
 	#macro idm_sin_objetivo 0
 	#macro idm_conseguir 1
 	#macro idm_tener_acumulado 2
@@ -597,8 +599,8 @@ L = {}
 	#macro ui_texto_inhabilitado #7F7F7F
 	#macro ui_boton_verde #448A20
 	#macro ui_boton_verde_hover #366E1A
-	#macro ui_boton_azul #4169E1
-	#macro ui_boton_azul_hover #3454B4
+	#macro ui_boton_azul #A3620A
+	#macro ui_boton_azul_hover #A0410D
 	#macro ui_boton_gris #606060
 	#macro ui_boton_gris_hover #4D4D4D
 	#macro ui_boton_rojo #A00000
@@ -951,6 +953,7 @@ selected_dron = null_dron
 	chunk_edificios_draw = ds_grid_create(chunk_xsize, chunk_ysize)
 	chunk_edificios_background = ds_grid_create(chunk_xsize, chunk_ysize)
 	chunk_edificios_dirty = ds_grid_create(chunk_xsize, chunk_ysize)
+	chunk_explosion = ds_grid_create(chunk_xsize, chunk_ysize)
 	ds_grid_clear(chunk_edificios_dirty, true)
 	for(a = 0; a < chunk_xsize; a++)
 		for(b = 0; b < chunk_ysize; b++){
@@ -961,6 +964,7 @@ selected_dron = null_dron
 			ds_grid_set(chunk_edificios_estatico, a, b, array_create(0, null_edificio))
 			ds_grid_set(chunk_edificios_dinamico, a, b, array_create(0, null_edificio))
 			ds_grid_set(chunk_edificios_draw, a, b, array_create(0, null_edificio))
+			ds_grid_set(chunk_explosion, a, b, array_create(0, {x : 0, y : 0, rot : 0}))
 		}
 #endregion
 //Recursos
@@ -1125,8 +1129,9 @@ for(a = 0; a < ore_max; a++)
 	dron_time = array_create(0, 0)
 	dron_vel = array_create(0, 0)
 	dron_step = array_create(0, 0)
+	dron_peso = array_create(0, 0)
 #endregion
-function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vida = 0, size = 0, alcance = 0, precio_id = array_create(0, 0), precio_num = array_create(0, 0), time = 0, aereo = false, vel = 2, step = infinity){
+function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vida = 0, size = 0, alcance = 0, precio_id = array_create(0, 0), precio_num = array_create(0, 0), time = 0, aereo = false, vel = 2, step = infinity, peso = 1){
 	array_push(dron_nombre, string(nombre))
 	array_push(dron_sprite, sprite)
 	array_push(dron_sprite_color, sprite_color)
@@ -1141,21 +1146,22 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 	array_push(dron_time, time)
 	array_push(dron_vel, vel)
 	array_push(dron_step, step)
+	array_push(dron_peso, peso)
 	return array_length(dron_nombre) - 1
 }
 #region Definicion
 	idd_arana = def_dron("Araña", spr_arana,, 100, 20, 100, [idr_bronce, idr_bateria, idr_electronicos], [6, 1, 3], 600,, 1, 12)
 	idd_mula = def_dron("Mula", spr_dron,, 40, 20, 10, [idr_bronce, idr_hierro, idr_electronicos], [10, 20, 3], 900, true, 2)
-	idd_reparador = def_dron("Reparador", spr_reparador,, 120, 30, 50, [idr_aluminio, idr_bateria, idr_electronicos], [10, 5, 5], 1200, true, 2)
+	idd_reparador = def_dron("Reparador", spr_reparador,, 120, 30, 50, [idr_aluminio, idr_bateria, idr_electronicos], [10, 5, 5], 1200, true, 2,, 3)
 	idd_kamikaze = def_dron("Kamikaze", spr_dron_explosivo,, 50, 20, 10, [idr_hierro, idr_explosivo, idr_aluminio], [15, 2, 2], 450, true, 2.5)
-	idd_tanque = def_dron("Tanque", spr_tanque, spr_tanque_2, 1500, 50, 250, [idr_hierro, idr_acero, idr_electronicos], [60, 25, 10], 1800,, 0.8, 150)
-	idd_helicoptero = def_dron("Helicóptero", spr_helicoptero, spr_helicoptero_2, 400, 50, 250, [idr_bronce, idr_electronicos, idr_aluminio], [10, 20, 40], 1800, true, 2, 110)
-	idd_titan = def_dron("Titán", spr_titan, spr_titan_leg, 1500, 80, 400, [idr_bronce, idr_acero, idr_uranio_bruto, idr_modulos], [30, 40, 75, 5], 3000,, 1.1, 75)
-	idd_bombardero = def_dron("Bombardero", spr_bombardero,, 800, 50, 40, [idr_bronce, idr_aluminio, idr_uranio_bruto, idr_modulos], [30, 40, 50, 5], 6000, true, 3, 80)
-	idd_reconstructor = def_dron("Reconstructor", spr_reconstructor,, 100, 30, 40, [idr_aluminio, idr_bateria, idr_modulos], [30, 20, 1], 100, true, 2)
-	idd_minero = def_dron("Minero", spr_tanque, spr_minero, 200, 50, 250, [idr_hierro, idr_acero, idr_electronicos, idr_modulos], [50, 25, 10, 1], 1200,, 0.7, 60)
-	idd_barco = def_dron("Barco", spr_barco,, 300, 30, 400, [idr_acero, idr_aluminio, idr_bronce], [30, 20, 30], 800,, 1.8, 15)
-	idd_destructor = def_dron("Destructor", spr_destructor,, 1200, 50, 450, [idr_acero, idr_aluminio, idr_electronicos, idr_uranio_bruto], [150, 100, 50, 50], 1600,, 1.2, 200)
+	idd_tanque = def_dron("Tanque", spr_tanque, spr_tanque_2, 1500, 50, 250, [idr_hierro, idr_acero, idr_electronicos], [60, 25, 10], 1800,, 0.8, 150, 6)
+	idd_helicoptero = def_dron("Helicóptero", spr_helicoptero, spr_helicoptero_2, 400, 50, 250, [idr_bronce, idr_electronicos, idr_aluminio], [10, 20, 40], 1800, true, 2, 110, 6)
+	idd_titan = def_dron("Titán", spr_titan, spr_titan_leg, 1500, 80, 400, [idr_bronce, idr_acero, idr_uranio_bruto, idr_modulos], [30, 40, 75, 5], 3000,, 1.1, 75, 15)
+	idd_bombardero = def_dron("Bombardero", spr_bombardero,, 800, 50, 40, [idr_bronce, idr_aluminio, idr_uranio_bruto, idr_modulos], [30, 40, 50, 5], 6000, true, 3, 80, 12)
+	idd_reconstructor = def_dron("Reconstructor", spr_reconstructor,, 100, 30, 40, [idr_aluminio, idr_bateria, idr_modulos], [30, 20, 1], 100, true, 2, 5)
+	idd_minero = def_dron("Minero", spr_tanque, spr_minero, 200, 50, 250, [idr_hierro, idr_acero, idr_electronicos, idr_modulos], [50, 25, 10, 1], 1200,, 0.7, 60, 5)
+	idd_barco = def_dron("Barco", spr_barco,, 300, 30, 400, [idr_acero, idr_aluminio, idr_bronce], [30, 20, 30], 800,, 1.8, 15, 3)
+	idd_destructor = def_dron("Destructor", spr_destructor,, 1200, 50, 450, [idr_acero, idr_aluminio, idr_electronicos, idr_uranio_bruto], [150, 100, 50, 50], 1600,, 1.2, 200, 12)
 #endregion
 dron_max = array_length(dron_nombre)
 dron_descripcion = array_create(dron_max, "")
