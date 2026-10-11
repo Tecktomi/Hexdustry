@@ -1,6 +1,6 @@
 function dron_logic(){
 	with control{
-		var cam_center_x = (camx + room_width * zoom / 2), cam_center_y = (camy + room_height * zoom / 2)
+		var cam_center_x = (room_width / 2 + camx) / zoom, cam_center_y = (room_height / 2 + camy) / zoom
 		var a, b, dron, dron_x, dron_y, index, vel, chunk_x, chunk_y, temp_complex, edificio, i, j
 		var u, v, dis, min_dis, aa, bb, angle, cosa, sina, dir, c, d, _comprable, flag, temp_beta, temp_terreno, temp_complex_2
 		var min_puerto, temp_almacenes, minu, minv, maxu, maxv, ataque, min_dis_eu, aaa, bbb, disi, dis_2, _posibles, closest_dis, chunk, max_prioridad
@@ -76,7 +76,7 @@ function dron_logic(){
 					edificio = edificio_id[# dron.a, dron.b]
 					if edificio.index = id_mina{
 						flag = explosion(edificio.center_x, edificio.center_y,, 100, 1000,, edificio.jugador, dron)
-						delete_edificio(edificio)
+						delete_edificio(edificio, true)
 						if flag
 							continue
 					}
@@ -97,20 +97,35 @@ function dron_logic(){
 					}
 					else{
 						if dron.modo = MULA_BUSCAR_INSTRUCCION{
-							dron.modo = MULA_BUSCAR_RSS
-							dron.dir_move = dron.target.select
-							dron.move_dis = dron.target.instruccion[dron.dir_move, 0]
-							dron.temp_target = edificios_jugador[_jugador, dron.target.instruccion[dron.dir_move, 1]]
-							dron.target.select = (dron.dir_move + 1) mod array_length(dron.target.instruccion)
+							if array_length(dron.target.instruccion) = 0{
+								dron.modo = MULA_IDLE
+								dron.target = null_edificio
+							}
+							else{
+								dron.temp_target = edificio_id[# dron.target.instruccion[dron.dir_move, 1], dron.target.instruccion[dron.dir_move, 2]]
+								if dron.temp_target = null_edificio
+									dron.modo = MULA_IDLE
+								else{
+									dron.modo = MULA_BUSCAR_RSS
+									dron.dir_move = dron.target.select
+									dron.move_dis = dron.target.instruccion[dron.dir_move, 0]
+									dron.temp_target = edificio_id[# dron.target.instruccion[dron.dir_move, 1], dron.target.instruccion[dron.dir_move, 2]]
+									dron.target.select = (dron.dir_move + 1) mod array_length(dron.target.instruccion)
+								}
+							}
 						}
 						else if dron.modo = MULA_BUSCAR_RSS{
-							dron.modo = MULA_DEJAR_RSS
-							i = min(dron.temp_target.carga[dron.move_dis], MULA_CARGA_MAX - dron.carga_total)
-							dron.carga[dron.move_dis] += i
-							dron.carga_total += i
-							dron.temp_target.carga[dron.move_dis] -= i
-							dron.temp_target.carga_total -= i
-							dron.temp_target = edificios_jugador[_jugador, dron.target.instruccion[dron.dir_move, 2]]
+							if not edificio_bool[# dron.target.instruccion[dron.dir_move, 3], dron.target.instruccion[dron.dir_move, 4]]
+								ron.modo = MULA_IDLE
+							else{
+								dron.modo = MULA_DEJAR_RSS
+								i = min(dron.temp_target.carga[dron.move_dis], MULA_CARGA_MAX - dron.carga_total)
+								dron.carga[dron.move_dis] += i
+								dron.carga_total += i
+								dron.temp_target.carga[dron.move_dis] -= i
+								dron.temp_target.carga_total -= i
+								dron.temp_target = edificio_id[# dron.target.instruccion[dron.dir_move, 3], dron.target.instruccion[dron.dir_move, 4]]
+							}
 						}
 						else if dron.modo = MULA_DEJAR_RSS{
 							dron.modo = MULA_BUSCAR_INSTRUCCION

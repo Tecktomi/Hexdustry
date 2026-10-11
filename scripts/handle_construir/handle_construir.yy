@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"activar_edificio",
+  "%Name":"handle_construir",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"activar_edificio",
+  "name":"handle_construir",
   "parent":{
-    "name":"EDIFICIOS",
-    "path":"folders/SCRIPTS/EDIFICIOS.yy",
+    "name":"In-game",
+    "path":"folders/SCRIPTS/ONLINE/HANDLE/In-game.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

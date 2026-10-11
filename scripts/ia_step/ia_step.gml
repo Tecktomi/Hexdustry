@@ -219,7 +219,7 @@ function ia_step(){
 					ds_grid_destroy(struct_bfs.bfs)
 					exit
 				}
-				//Construir chorno - núcleo
+				//Construir horno - núcleo
 				show_debug_message(9 + random(1))
 				len = array_length(temp_list)
 				for(i = 0; i < len;){

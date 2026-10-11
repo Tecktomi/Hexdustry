@@ -1,11 +1,11 @@
-function delete_edificio(edificio = control.null_edificio, destruccion = false, _server = false, _cheat = control.cheat){
+function delete_edificio(edificio = control.null_edificio, destruccion = false, manual = false, _cheat = control.cheat){
 	with control{
 		if not edificio_bool[# edificio.a, edificio.b]{
 			show_debug_message($"###ADVERTENCIA###\n  Intentando eliminar {edificio.index = -1 ? "??" : edificio_nombre[edificio.index]} en {edificio.a}, {edificio.b}")
 			exit
 		}
 		var index = edificio.index, pre_vida = edificio.vida, aa = edificio.a, bb = edificio.b, _jugador = edificio.jugador
-		if (online or GRABANDO) and not _server and not destruccion{
+		if (online or GRABANDO) and manual and not destruccion{
 			server_delete_edificio(aa, bb)
 			if online and not servidor
 				exit
@@ -161,7 +161,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		for(a = array_length(edificios_jugador_index[_jugador, id_puerto_de_carga]) - 1; a >= 0; a--){
 			temp_edificio = edificios_jugador_index[_jugador, id_puerto_de_carga][a]
 			for(b = array_length(temp_edificio.instruccion) - 1; b >= 0; b--)
-				if temp_edificio.instruccion[b, 1] = edificio.punteros[ptre_jugador] or temp_edificio.instruccion[b, 2] = edificio.punteros[ptre_jugador]{
+				if (temp_edificio.instruccion[b, 1] = edificio.a and temp_edificio.instruccion[b, 2] = edificio.b) or (temp_edificio.instruccion[b, 3] = edificio.a and temp_edificio.instruccion[b, 4] = edificio.b){
 					array_delete(temp_edificio.instruccion, b, 1)
 					for(var c = array_length(drones_jugador[_jugador]) - 1; c >= 0; c--){
 						dron = drones_jugador[_jugador, c]
@@ -276,7 +276,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				delete_edificio_flujo(edificio, edificio.flujo_2)
 		}
 		//Retorno de recursos
-		if not _cheat and not destruccion and ((_jugador = jugador) or (online and servidor)){
+		if not _cheat and not destruccion and ((_jugador > JUGADOR_IA) or (online and servidor)){
 			b = pre_vida / edificio_vida[index]
 			for(a = array_length(edificio_precio_id[index]) - 1; a >= 0; a--)
 				jugador_recursos[_jugador, edificio_precio_id[index, a]] += floor(b * edificio_precio_num[index, a] / 2)

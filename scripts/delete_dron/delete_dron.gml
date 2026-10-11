@@ -5,7 +5,7 @@ function delete_dron(dron = control.null_dron){
 		dron_chunk_remove(dron)
 		array_disorder_remove(drones_jugador[_jugador], dron, ptrd_jugador)
 		//Dron enemigo
-		if _jugador != jugador{
+		if _jugador = JUGADOR_IA{
 			enemigos_eliminados++
 			if mision_actual >= 0 and mision.objetivo = idm_sobrevivir_oleadas and array_length(drones_jugador[_jugador]) = 0 and mision_counter >= mision.target_num
 				pasar_mision()

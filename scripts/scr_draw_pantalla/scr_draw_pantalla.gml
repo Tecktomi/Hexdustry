@@ -1,7 +1,7 @@
 function scr_draw_pantalla(edificio = control.null_edificio, offset_x = 0, offset_y = 0){
 	with control{
-		var index = edificio.index, dir = edificio.dir, aa = edificio.x + offset_x, bb = edificio.y + offset_y
-		draw_sprite_off(edificio_sprite[index], 0, aa, bb)
+		var index = edificio.index, _x = edificio.x + offset_x, _y = edificio.y + offset_y
+		draw_sprite_off(edificio_sprite[index], 0, _x, _y)
 		if edificio.mode{
 			var d = array_create(0, array_create(1, 0)), color = draw_get_color()
 			draw_set_font(ft_mini)
@@ -37,6 +37,6 @@ function scr_draw_pantalla(edificio = control.null_edificio, offset_x = 0, offse
 			draw_set_color(color)
 		}
 		if edificio.imagen != spr_hexagono
-			draw_sprite_off(edificio.imagen, 0, aa - 30, bb - 25)
+			draw_sprite_off(edificio.imagen, 0, _x - 30, _y - 25)
 	}
 }

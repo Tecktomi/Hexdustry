@@ -1,4 +1,4 @@
-function construir(index, dir, mx, my, _server = false, _cheat = control.cheat, _jugador = jugador){
+function construir(index, dir, mx, my, manual = false, _cheat = control.cheat, _jugador = jugador){
 	with control{
 		var edificio = null_edificio, xx = pre_abtox[# mx + 1, my + 1], yy = pre_abtoy[# mx + 1, my + 1], flag = check_colision(mx, my, index, dir)
 		var temp_edificio, a, dron, b, temp_jugador
@@ -26,12 +26,12 @@ function construir(index, dir, mx, my, _server = false, _cheat = control.cheat, 
 					}
 					else
 						temp_edificio.draw_rot = (dir - 1) * 60
-					if (GRABANDO or online) and not _server{
-						server_add_edificio(real(index), real(dir), real(mx), real(my), _cheat)
+					if (GRABANDO or online) and manual{
+						server_construir(real(index), real(dir), real(mx), real(my), _cheat)
 						if online and not servidor
 							return null_edificio
 					}
-					break
+					return temp_edificio
 				}
 				else
 					delete_edificio(temp_edificio)
@@ -51,8 +51,8 @@ function construir(index, dir, mx, my, _server = false, _cheat = control.cheat, 
 			return null_edificio
 		if tag_edificio_tunel[index] and build_able and build_target.index = id_tunel
 			index = id_tunel_salida
-		if (online or GRABANDO) and not _server{
-			server_add_edificio(real(index), real(dir), real(mx), real(my), _cheat)
+		if (online or GRABANDO) and manual{
+			server_construir(real(index), real(dir), real(mx), real(my), _cheat)
 			if online and not servidor
 				return null_edificio
 		}
@@ -115,7 +115,7 @@ function construir(index, dir, mx, my, _server = false, _cheat = control.cheat, 
 			for(a = 0; a < array_length(edificio_precio_id[index]); a++)
 				jugador_recursos[_jugador, edificio_precio_id[index, a]] -= edificio_precio_num[index, a]
 		}
-		if not _server and in(index, id_planta_quimica, id_fabrica_de_drones, id_silo_de_misiles, id_fabrica_de_drones_grande){
+		if manual and in(index, id_planta_quimica, id_fabrica_de_drones, id_silo_de_misiles, id_fabrica_de_drones_grande){
 			clear_edit()
 			show_menu = true
 			show_menu_build = edificio

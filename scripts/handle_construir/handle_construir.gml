@@ -1,4 +1,4 @@
-function handle_add_edificio(buffer){
+function handle_construir(buffer){
 	with control{
 		var _timer = real(buffer_read(buffer, buffer_u32))
 		var index = real(buffer_read(buffer, buffer_u8))
@@ -12,8 +12,8 @@ function handle_add_edificio(buffer){
 			liquido_choose = 0
 		}
 		if servidor{
-			construir(index, dir, a, b, true, _cheat, _jugador)
-			server_add_edificio(index, dir, a, b, _cheat, _jugador)
+			if construir(index, dir, a, b,, _cheat, _jugador) != null_edificio
+				server_construir(index, dir, a, b, _cheat, _jugador)
 		}
 		else{
 			var cambio = {

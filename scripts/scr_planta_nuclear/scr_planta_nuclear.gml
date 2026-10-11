@@ -7,10 +7,10 @@ function scr_planta_nuclear(edificio = control.null_edificio){
 			edificio.fuel--
 			if not tag_liquido_agua[flujo.liquido]{
 				if edificio.modulo
-					fuel = 0
+					edificio.fuel = 0
 				draw_set_color(ui_color_nuclear)
-				var cam_center_x = (camx + room_width * zoom / 2), cam_center_y = (camy + room_height * zoom / 2)
-				var angle = arctan2(cam_center_y - edificio.center_x, cam_center_x - edificio.center_y), cosa = cos(angle), sina = sin(angle)
+				var cam_center_x = (room_width / 2 + camx) / zoom, cam_center_y = (room_height / 2 + camy) / zoom
+				var angle = arctan2(cam_center_y - edificio.center_y, cam_center_x - edificio.center_x), cosa = cos(angle), sina = sin(angle)
 				draw_line(room_width / 2 - 60 * cosa, room_height / 2 - 60 * sina, room_width / 2 - 90 * cosa, room_height / 2 - 90 * sina)
 				if (image_index mod 145) = 0
 					audio_play_sound(snd_nuclear, 0, false, 0.5)
@@ -20,9 +20,9 @@ function scr_planta_nuclear(edificio = control.null_edificio){
 			else{
 				if flujo_power < 1{
 					if edificio.modulo and edificio.vida < 0.2 * edificio_vida[index]
-						fuel = 0
+						edificio.fuel = 0
 					draw_set_color(ui_color_nuclear)
-					var cam_center_x = (camx + room_width * zoom / 2), cam_center_y = (camy + room_height * zoom / 2)
+					var cam_center_x = (room_width / 2 + camx) / zoom, cam_center_y = (room_height / 2 + camy) / zoom
 					var angle = arctan2(cam_center_y - edificio.center_y, cam_center_x - edificio.center_x), cosa = cos(angle), sina = sin(angle)
 					draw_line(room_width / 2 - 60 * cosa, room_height / 2 - 60 * sina, room_width / 2 - 90 * cosa, room_height / 2 - 90 * sina)
 					if (image_index mod 145) = 0

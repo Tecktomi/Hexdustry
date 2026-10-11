@@ -130,7 +130,7 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 					}
 				draw_set_valign(fa_middle)
 				if draw_boton(xpos + 100, ypos + 100, (flag ? L.enciclopedia_investigar : L.almacen_sin_recursos) + temp_text, flag ? ui_verde : ui_rojo,,,, _this_input_layer) and flag
-					investigar(ei)
+					investigar(ei, true)
 				draw_set_valign(fa_top)
 				draw_set_color(ui_color_lava)
 			}

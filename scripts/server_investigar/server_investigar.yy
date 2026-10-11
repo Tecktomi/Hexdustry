@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"server_investigar",
   "parent":{
-    "name":"SERVER",
-    "path":"folders/SCRIPTS/ONLINE/SERVER.yy",
+    "name":"In-game",
+    "path":"folders/SCRIPTS/ONLINE/SERVER/In-game.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

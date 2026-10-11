@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"terminar_partida",
+  "%Name":"scr_draw_mina",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"terminar_partida",
+  "name":"scr_draw_mina",
   "parent":{
-    "name":"SCRIPTS",
-    "path":"folders/SCRIPTS.yy",
+    "name":"DRAW",
+    "path":"folders/SCRIPTS/EDIFICIOS/DRAW.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

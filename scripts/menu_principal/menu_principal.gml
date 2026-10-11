@@ -153,7 +153,7 @@ function menu_principal(){
 				//Cargar partidas
 				if BROWSER and draw_boton(room_width / 2 - 200, ypos, L.cargar_partida, ui_azul,,,, 1){
 					if not nucleos[jugador].vivo
-						terminar_partida(fin_cerrar_juego, MENU_PRINCIPAL)
+						game_terminar(fin_cerrar_juego, MENU_PRINCIPAL)
 					get_file = 3
 					partidas = scan_files("Saves/*.save", fa_none)
 					var temp_image
@@ -171,7 +171,7 @@ function menu_principal(){
 				draw_set_halign(fa_center)
 				if BROWSER and draw_boton(room_width / 2, ypos, "Grabaciones", ui_azul,,,, 1){
 					if not nucleos[jugador].vivo
-						terminar_partida(fin_cerrar_juego, MENU_PRINCIPAL)
+						game_terminar(fin_cerrar_juego, MENU_PRINCIPAL)
 					get_file = 6
 					grabaciones = scan_files("Grabaciones/*.rec", fa_none)
 				}
@@ -294,7 +294,7 @@ function menu_principal(){
 			}
 		}
 		else if not DEVISE and keyboard_check(vk_backspace){
-			terminar_partida(fin_cerrar_juego, MENU_PRINCIPAL)
+			game_terminar(fin_cerrar_juego, MENU_PRINCIPAL)
 			game_end()
 		}
 		draw_set_valign(fa_bottom)

@@ -1,30 +1,32 @@
-function eliminar_jugador(index){
+function eliminar_jugador(_jugador){
 	with control{
-		//Buscar index
-		if not is_real(index){
+		//Buscar _jugador
+		if not is_real(_jugador){
 			var pos
 			for(pos = 0; pos < MAX_JUGADORES; pos++)
-				if index = server_jugadores_nombre[pos]
+				if _jugador = server_jugadores_nombre[pos]
 					break
-			index = pos
+			_jugador = pos
 		}
-		server_jugadores_nombre[index] = ""
+		server_jugadores_nombre[_jugador] = ""
 		if server_pvp{
-			index = index + 2
+			_jugador = _jugador + 2
 			if servidor
-				jugador_recursos[index] = array_create(rss_max, 0)
+				jugador_recursos[_jugador] = array_create(rss_max, 0)
 			//Los edificios pasarán a ser salvajes
 			var len = array_length(edificios_totales) - 1, a, edificio, dron
 			for(a = len; a >= 0; a--){
 				edificio = edificios_totales[a]
-				if edificio.jugador = index{
+				if edificio.jugador = _jugador{
 					if edificio.index = id_nucleo
 						delete_edificio(edificio, true)
 					else{
 						edificio.jugador = JUGADOR_SALVAJE
 						desactivar_edificio(edificio)
-						array_disorder_remove(edificios_jugador[index], edificio, ptre_jugador)
+						array_disorder_remove(edificios_jugador[_jugador], edificio, ptre_jugador)
+						array_disorder_remove(edificios_jugador_index[_jugador, edificio.index], edificio, ptre_jugador_index)
 						array_disorder_push(edificios_jugador[JUGADOR_SALVAJE], edificio, ptre_jugador)
+						array_disorder_push(edificios_jugador_index[JUGADOR_SALVAJE, edificio.index], edificio, ptre_jugador_index)
 					}
 				}
 			}
@@ -32,12 +34,12 @@ function eliminar_jugador(index){
 			len = array_length(drones) - 1
 			for(a = len; a >= 0; a--){
 				dron = drones[a]
-				if dron.jugador = index
+				if dron.jugador = _jugador
 					delete_dron(dron)
 			}
-			array_resize(puerto_carga_array[index], 0)
-			puerto_carga_atended[index] = 0
-			nucleos[index] = null_edificio
+			array_resize(puerto_carga_array[_jugador], 0)
+			puerto_carga_atended[_jugador] = 0
+			nucleos[_jugador] = null_edificio
 		}
 	}
 }

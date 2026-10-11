@@ -1,7 +1,7 @@
-function server_add_edificio(index, dir, a, b, _cheat = control.cheat, _jugador = jugador){
+function server_construir(index, dir, a, b, _cheat = control.cheat, _jugador = jugador){
 	with control{
 		var buffer = buffer_create(13, buffer_grow, 1)
-		buffer_write(buffer, buffer_u8, net_add_edificio)
+		buffer_write(buffer, buffer_u8, net_construir)
 		buffer_write(buffer, buffer_u32, real(timer))
 		buffer_write(buffer, buffer_u8, real(index))
 		buffer_write(buffer, buffer_u8, real(dir mod 6))

@@ -185,7 +185,7 @@ function set_idioma(){
 				edificio_nombre[id_planta_nuclear] = "Nuclear Plant"
 				edificio_nombre[id_planta_quimica] = "Chemical Plant"
 				edificio_nombre[id_procesador] = "Processor"
-				edificio_nombre[id_puerto_de_carga] = "Charging Port"
+				edificio_nombre[id_puerto_de_carga] = "Cargo Port"
 				edificio_nombre[id_recurso_infinito] = "Infinite Resource"
 				edificio_nombre[id_refineria_de_metales] = "Metal Refinery"
 				edificio_nombre[id_refineria_de_petroleo] = "Oil Refinery"

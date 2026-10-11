@@ -25,14 +25,14 @@ if type = network_type_data{
 			}
 			else{
 				server_jugadores[slot] = temp_socket
-				handle_hello(temp_socket, buffer, slot)
+				handle_hello(temp_socket, buffer, slot, player_name)
 			}
 		}
 	}
 	else if msg = net_welcome
 		handle_welcome(buffer)
-	else if msg = net_add_edificio
-		handle_add_edificio(buffer)
+	else if msg = net_construir
+		handle_construir(buffer)
 	else if msg = net_delete_edificio
 		handle_delete_edificio(buffer)
     else if msg = net_buscar_server{
@@ -84,5 +84,4 @@ if type = network_type_data{
 	}
 	else if msg = net_mensaje
 		handle_mensaje(buffer)
-	
 }

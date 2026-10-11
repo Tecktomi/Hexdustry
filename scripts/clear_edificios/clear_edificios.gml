@@ -13,13 +13,17 @@ function clear_edificios(){
 			array_resize(edificios_jugador[a], 0)
 			array_resize(drones_jugador[a], 0)
 			nucleos[a] = null_edificio
+			for(b = 0; b < edificio_max; b++)
+				array_resize(edificios_jugador_index[a, b], 0)
 		}
+		array_resize(drones, 0)
 		for(a = 0; a < chunk_xsize; a++)
 			for(b = 0; b < chunk_ysize; b++){
 				array_resize(chunk_edificios[# a, b], 0)
 				array_resize(chunk_edificios_estatico[# a, b], 0)
 				array_resize(chunk_edificios_dinamico[# a, b], 0)
 				array_resize(chunk_edificios_draw[# a, b], 0)
+				array_resize(chunk_dron[# a, b], 0)
 				if chunk_edificios_background[# a, b] != spr_hexagono
 					sprite_delete(chunk_edificios_background[# a, b])
 				if background[# a, b] != spr_hexagono
@@ -27,6 +31,8 @@ function clear_edificios(){
 			}
 		array_resize(edificios, 0)
 		array_resize(edificios_salida_drones, 0)
+		array_resize(municiones, 0)
+		array_resize(selected_drones, 0)
 		for(a = 0; a < edificio_max; a++)
 			array_resize(edificios_index[a], 0)
 		ds_grid_clear(edificio_bool, false)

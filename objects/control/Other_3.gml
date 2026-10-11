@@ -1,1 +1,1 @@
-terminar_partida(fin_cerrar_juego, MENU_PRINCIPAL)
+game_terminar(fin_cerrar_juego, MENU_PRINCIPAL)

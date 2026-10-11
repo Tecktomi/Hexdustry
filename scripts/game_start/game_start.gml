@@ -19,8 +19,10 @@ function game_start(_nucleo = true, mision_cumplida = false){
 			}
 		}
 		if GRABANDO{
-			buffer_write(buffer_grabacion, buffer_u32, seed)
-			buffer_write(buffer_grabacion, buffer_s8, biome_seed)
+			if mapa < 0{
+				buffer_write(buffer_grabacion, buffer_u32, seed)
+				buffer_write(buffer_grabacion, buffer_s8, biome_seed)
+			}
 			buffer_write(buffer_grabacion, buffer_u8, tutorial)
 			buffer_write(buffer_grabacion, buffer_u8, oleadas)
 			buffer_write(buffer_grabacion, buffer_u32, oleadas_tiempo)

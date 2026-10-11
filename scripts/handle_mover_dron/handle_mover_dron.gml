@@ -5,7 +5,7 @@ function handle_mover_dron(buffer){
 		var _y = real(buffer_read(buffer, buffer_f32))
 		var index = real(buffer_read(buffer, buffer_u16))
 		if servidor{
-			mover_dron(drones[index], _x, _y, false)
+			mover_dron(drones[index], _x, _y)
 			server_mover_dron(_x, _y, drones[index])
 		}
 		else{

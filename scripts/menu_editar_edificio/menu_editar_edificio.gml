@@ -39,7 +39,7 @@ function menu_editar_edificio(){
 				draw_set_halign(fa_center)
 				for(a = 0; a < array_length(PROCESADOR_INSTRUCCIONES_LENGTH); a++)
 					if draw_boton(room_width / 2, 200 + 20 * a, $"{procesador_instrucciones_nombre[a]} ({a})",,,, false, 1) or keyboard_check_pressed(ord(string(a))){
-						set_edificio_instruccion(edificio, {cambio : cambio_instrucciones_add_comando, instruccion : a})
+						set_edificio_instruccion(edificio, cambio_instrucciones_add_comando, {instruccion : a}, true)
 						procesador_add = false
 						input_layer = 0
 						break
@@ -60,13 +60,13 @@ function menu_editar_edificio(){
 				draw_set_halign(fa_left)
 				val = draw_boton_text(room_width - 120, ypos, edificio.variables[a],, true)
 				if edificio.variables[a] != val
-					set_edificio_instruccion(edificio, {cambio : cambio_instrucciones_set_variable, instruccion : a, valor : val})
+					set_edificio_instruccion(edificio, cambio_instrucciones_set_variable, {instruccion : a, valor : val}, true)
 				ypos += 20
 			}
 			draw_set_halign(fa_right)
 			if draw_boton(room_width - 120, 500, L.procesador_next_step, ui_azul,,, false) or keyboard_check_pressed(vk_space){
 				keyboard_clear(vk_space)
-				edificio.proceso = 1
+				set_edificio_instruccion(edificio, cambio_instruccion_next, {instruccion : 0}, true)
 			}
 			if BROWSER and draw_boton(room_width - 120, 530, L.procesador_guardar, ui_azul,,, false) or (keyboard_check(vk_control) and keyboard_check_pressed(ord("S"))){
 				save_codes = scan_files("Codes/*.txt", fa_none)
@@ -162,9 +162,9 @@ function menu_editar_edificio(){
 				b = draw_boton_text(xpos + 100 * (is_real(edificio.variables[a])), ypos, temp_text,, true)
 				if edificio.variables[a] != b
 					if is_real(b)
-						set_edificio_instruccion(edificio, {instruccion : a, valor : real(b)})
+						set_edificio_instruccion(edificio,, {instruccion : a, valor : real(b)}, true)
 					else
-						set_edificio_instruccion(edificio, {instruccion : a, valor : string(b)})
+						set_edificio_instruccion(edificio,, {instruccion : a, valor : string(b)}, true)
 			}
 			draw_set_halign(fa_left)
 		}
@@ -198,7 +198,7 @@ function menu_editar_edificio(){
 				draw_circle_off(edificio.center_x, edificio.center_y, PUERTO_CARGA_RANGE, true)
 				width = max(width, string_width(L.procesador_add) * zoom / 2)
 				for(a = array_length(edificio.instruccion) - 1; a >= 0; a--)
-					width = max(width, (string_width($"Llevar {recurso_nombre[edificio.instruccion[a, 0]]} de {edificio_nombre[edificios_jugador[_jugador, edificio.instruccion[a, 1]].index]} a {edificio_nombre[edificios_jugador[_jugador, edificio.instruccion[a, 2]].index]}") + 20) * zoom / 2)
+					width = max(width, (string_width($"Llevar {recurso_nombre[edificio.instruccion[a, 0]]} de {edificio_nombre[edificio_id[# edificio.instruccion[a, 1], edificio.instruccion[a, 2]].index]} a {edificio_nombre[edificio_id[# edificio.instruccion[a, 1], edificio.instruccion[a, 2]].index]}") + 20) * zoom / 2)
 				draw_rectangle(aa - width, bb + 40 * zoom, aa + width, bb + 20 * (3 + array_length(edificio.instruccion)) * zoom, false)
 			}
 			draw_set_color(ui_fondo)
@@ -281,7 +281,7 @@ function menu_editar_edificio(){
 					xpos = draw_text_xpos(xpos, ypos, "Llevar ")
 					b = draw_boton_text_list(xpos, ypos, edificio.instruccion[a, 0], recurso_nombre,, 10)
 					if edificio.instruccion[a, 0] != b
-						set_edificio_instruccion(edificio, {cambio : cambio_instrucciones_cambio_recurso, rss : b, instruccion : a})
+						set_edificio_instruccion(edificio, cambio_instrucciones_cambio_recurso, {rss : b, instruccion : a}, true)
 					xpos += text_x
 					xpos = draw_text_xpos(xpos, ypos, " de ")
 					if draw_boton(xpos, ypos, edificio_nombre[edificios_jugador[_jugador, edificio.instruccion[a, 1]].index],,,, false){
@@ -300,13 +300,13 @@ function menu_editar_edificio(){
 					}
 					xpos += text_x
 					if draw_sprite_boton(spr_basura, 0, xpos, ypos){
-						set_edificio_instruccion(edificio, {cambio : cambio_instrucciones_delete_comando, instruccion : a})
+						set_edificio_instruccion(edificio, cambio_instrucciones_delete_comando, {instruccion : a}, true)
 						break
 					}	
 					ypos += 20 * zoom
 				}
 				if draw_boton(aa - width, ypos, L.procesador_add,,,, false)
-					set_edificio_instruccion(edificio, {cambio : cambio_instrucciones_add_comando})
+					set_edificio_instruccion(edificio, cambio_instrucciones_add_comando,, true)
 				draw_boton_text_list_end()
 			}
 			if mouse_x > aa - 80 * zoom and mouse_y > bb + 20 * zoom and mouse_x < aa + 80 * zoom{
@@ -314,7 +314,7 @@ function menu_editar_edificio(){
 					if mouse_check_button_pressed(mb_left) and mouse_y < bb + 40 * zoom{
 						mouse_clear(mb_left)
 						show_menu = false
-						set_edificio(not edificio.mode, edificio.select, edificio)
+						set_edificio(not edificio.mode, edificio.select, edificio, true)
 					}
 				}
 				if in(index, id_selector, id_recurso_infinito){
@@ -326,7 +326,7 @@ function menu_editar_edificio(){
 							if mouse_check_button_pressed(mb_left){
 								mouse_clear(mb_left)
 								show_menu = false
-								set_edificio(edificio.mode, a, edificio)
+								set_edificio(edificio.mode, a, edificio, true)
 							}
 						}
 					}
@@ -336,7 +336,7 @@ function menu_editar_edificio(){
 						mouse_clear(mb_left)
 						show_menu = false
 						a = floor((mouse_y - (bb + 40 * zoom)) / (20 * zoom))
-						set_edificio(edificio.mode, a, edificio)
+						set_edificio(edificio.mode, a, edificio, true)
 					}
 				}
 				else if index = id_planta_quimica{
@@ -347,7 +347,7 @@ function menu_editar_edificio(){
 						if mouse_check_button_pressed(mb_left){
 							mouse_clear(mb_left)
 							show_menu = false
-							set_edificio(edificio.mode, a, edificio)
+							set_edificio(edificio.mode, a, edificio, true)
 						}
 					}
 				}
@@ -364,7 +364,7 @@ function menu_editar_edificio(){
 						if mouse_check_button_pressed(mb_left){
 							mouse_clear(mb_left)
 							show_menu = false
-							set_edificio(edificio.mode, a, edificio)
+							set_edificio(edificio.mode, a, edificio, true)
 						}
 					}
 				}
@@ -398,7 +398,7 @@ function menu_editar_edificio(){
 						if mouse_check_button_pressed(mb_left){
 							mouse_clear(mb_left)
 							show_menu = false
-							set_edificio(edificio.mode, a, edificio)
+							set_edificio(edificio.mode, a, edificio, true)
 						}
 					}
 				}

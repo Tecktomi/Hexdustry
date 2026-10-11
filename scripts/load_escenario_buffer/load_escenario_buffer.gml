@@ -2,6 +2,8 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 	with control{
 		clear_edificios()
 		var buffer = buffer_load(filename)
+		if buffer = -1
+			return ""
 		//Variables globales
 		var prev_xsize = xsize, prev_ysize = ysize
 		xsize = real(buffer_read(buffer, buffer_u16))
@@ -36,7 +38,7 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 			}
 			categoria_nombre_disponible = array_create(0, "")
 			categoria_index_disponible = array_create(0, 0)
-			for(a = 0; a < array_length(categoria_nombre); a++){
+			for(a = 0; a < array_length(categoria_nombre) - 1; a++){
 				categoria_edificios_disponible[a] = array_create(0, 0)
 				for(b = 0; b < array_length(categoria_edificios[a]); b++)
 					if mision_edificios[categoria_edificios[a, b]]
@@ -108,7 +110,7 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 				if tag_edificio_seteable[index]{
 					var mode = bool(buffer_read(buffer, buffer_bool))
 					var select = real(buffer_read(buffer, buffer_f64))
-					set_edificio(mode, select, edificio, true)
+					set_edificio(mode, select, edificio)
 				}
 			}
 		}

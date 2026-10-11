@@ -1,4 +1,4 @@
-function handle_hello(socket, buffer, slot){
+function handle_hello(socket, buffer, slot, player_name){
 	with control{
 		online = true
 		#region Crear núcleo PvP

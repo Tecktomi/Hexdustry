@@ -16,8 +16,8 @@ function step(){
 						break
 					buffer_seek(buffer_grabacion, buffer_seek_start, grabacion_pos)
 					var msg = buffer_read(buffer_grabacion, buffer_u8)
-					if msg = net_add_edificio
-						handle_add_edificio(buffer_grabacion)
+					if msg = net_construir
+						handle_construir(buffer_grabacion)
 					else if msg = net_delete_edificio
 						handle_delete_edificio(buffer_grabacion)
 					else if msg = net_set_edificio
@@ -38,19 +38,19 @@ function step(){
 				if cambio.step <= timer{
 					array_delete(cambios, a, 1)
 					if cambio.tipo = cambio_construir
-						construir(cambio.data.index, cambio.data.dir, cambio.data.a, cambio.data.b, true, cambio.data.cheat, cambio.data.jugador)
+						construir(cambio.data.index, cambio.data.dir, cambio.data.a, cambio.data.b,, cambio.data.cheat, cambio.data.jugador)
 					else if cambio.tipo = cambio_delete_edificio
-						delete_edificio(edificio_id[# cambio.data.a, cambio.data.b], false, true, cambio.data.cheat)
+						delete_edificio(edificio_id[# cambio.data.a, cambio.data.b], false,, cambio.data.cheat)
 					else if cambio.tipo = cambio_set_edificio
-						set_edificio(cambio.data.mode, cambio.data.select, edificio_id[# cambio.data.a, cambio.data.b], true)
+						set_edificio(cambio.data.mode, cambio.data.select, edificio_id[# cambio.data.a, cambio.data.b])
 					else if cambio.tipo = cambio_mover_dron
-						mover_dron(drones[cambio.data.index], cambio.data.x, cambio.data.y, true)
+						mover_dron(drones[cambio.data.index], cambio.data.x, cambio.data.y)
 					else if cambio.tipo = cambio_add_modulo
-						add_modulo(edificio_id[# cambio.data.a, cambio.data.b], true, cambio.data.cheat)
+						add_modulo(edificio_id[# cambio.data.a, cambio.data.b],, cambio.data.cheat)
 					else if cambio.tipo = cambio_investigar
-						investigar(cambio.data.index, true, cambio.data.cheat, cambio.data.jugador)
+						investigar(cambio.data.index,, cambio.data.cheat, cambio.data.jugador)
 					else if cambio.tipo = cambio_instrucciones
-						set_edificio_instruccion(edificio_id[# cambio.data.a, cambio.data.b], cambio.data, true)
+						set_edificio_instruccion(edificio_id[# cambio.data.a, cambio.data.b], cambio.data.cambio, cambio.data)
 				}		
 			}
 			if REPRODUCIENDO and grabacion_pos = grabacion_size and array_length(cambios) = 0
@@ -87,9 +87,9 @@ function step(){
 					edificio.fuego--
 					herir_edificio(0.2, edificio)
 					if grafic_humo and image_index mod 10 = b mod 10
-						add_humo(edificio.center_x, edificio.center_y, edificio.a, edificio.b, sim_random_range(-1, 1), sim_random_range(-1, 1), 30)
+						array_push(humos, add_humo(edificio.center_x, edificio.center_y, edificio.a, edificio.b, sim_random_range(-1, 1), sim_random_range(-1, 1), 30))
 				}
-				if edificio.idle or edificio.vida < 0
+				if edificio.idle or edificio.vida <= 0
 					continue
 				temp_script(edificio)
 			}
@@ -141,7 +141,7 @@ function step(){
 				if (timer mod 10) < 5 and draw_once{
 					draw_set_color(c_red)
 					draw_set_alpha(0.3)
-					draw_circle(municion.x, municion.y, 10, false)
+					draw_circle_off(municion.x, municion.y, 10, false)
 					draw_set_alpha(1)
 				}
 			}

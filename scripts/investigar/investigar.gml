@@ -1,14 +1,14 @@
-function investigar(index, _server = false, _cheat = control.cheat, _jugador = jugador){
+function investigar(index, manual = false, _cheat = control.cheat, _jugador = jugador){
 	with control{
-		var a, _next, flag, c, d, _mio = (jugador = _jugador)
+		var a, _next, flag, c, d
 		if not edificio_tecnologia_desbloqueable[_jugador, index]
 			exit
-		if (GRABANDO or online) and not _server{
+		if (GRABANDO or online) and manual{
 			server_investigar(index, _cheat, _jugador)
 			if online and not servidor
 				exit
 		}
-		if not _cheat and (_mio or (online and servidor))
+		if not _cheat
 			for(a = 0; a < array_length(tecnologia_precio_id[index]); a++)
 				jugador_recursos[_jugador, tecnologia_precio_id[index, a]] -= tecnologia_precio_num[index, a]
 		array_set(edificio_tecnologia_desbloqueable[_jugador], index, false)

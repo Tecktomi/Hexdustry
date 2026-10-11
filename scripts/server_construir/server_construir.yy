@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"handle_add_edificio",
+  "%Name":"server_construir",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"handle_add_edificio",
+  "name":"server_construir",
   "parent":{
-    "name":"HANDLE",
-    "path":"folders/SCRIPTS/ONLINE/HANDLE.yy",
+    "name":"In-game",
+    "path":"folders/SCRIPTS/ONLINE/SERVER/In-game.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

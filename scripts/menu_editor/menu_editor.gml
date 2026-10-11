@@ -2,6 +2,7 @@ function menu_editor(){
 	with control{
 		dibujar_fondo(1)
 		dibujar_edificios()
+		draw_set_halign(fa_left)
 		draw_sprite(spr_vineta, 0, 0, 0)
 		draw_boton_text_counter = 0
 		if deslizante_id != -1 and not mouse_check_button(mb_left)
@@ -43,12 +44,12 @@ function menu_editor(){
 				editor_menu = 0
 			}
 			xpos += text_x + 20
-			if draw_boton(xpos, 110, L.editor_configuracion){
+			if draw_boton(xpos, 110, L.editor_configuracion, mision_actual = -1 ? ui_azul : ui_verde){
 				mision_actual = -1
 				get_keyboard_string = -1
 			}
 			xpos += text_x + 20
-			if draw_boton(xpos, 110, L.editor_edificios_disponibles){
+			if draw_boton(xpos, 110, L.editor_edificios_disponibles, mision_actual = -2 ? ui_azul : ui_verde){
 				mision_actual = -2
 				get_keyboard_string = -1
 			}
@@ -182,7 +183,7 @@ function menu_editor(){
 				xpos = room_width / 2 + 40
 				ypos += 20
 				xpos = draw_text_xpos(xpos, ypos, $"{L.editor_multiplicador_vida}: ")
-				multiplicador_vida_enemigos = draw_boton_text(xpos, ypos, multiplicador_vida_enemigos)
+				multiplicador_vida_enemigos = draw_boton_text(xpos, ypos, multiplicador_vida_enemigos, true)
 				draw_text_xpos(xpos + text_x, ypos, "%")
 				ypos += 20
 				ypos = draw_text_ypos(room_width / 2 + 20, ypos, L.editor_carga_inicial)

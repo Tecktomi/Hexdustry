@@ -1,4 +1,4 @@
-function add_modulo(edificio = control.null_edificio, _server = false, _cheat = control.cheat){
+function add_modulo(edificio = control.null_edificio, manual = false, _cheat = control.cheat){
 	with control{
 		var a, b, _jugador = edificio.jugador
 		if edificio.modulo
@@ -6,7 +6,7 @@ function add_modulo(edificio = control.null_edificio, _server = false, _cheat = 
 		b = edificio_modulo_tier[edificio.index]
 		if b = -1
 			exit
-		if (GRABANDO or online) and not _server{
+		if (GRABANDO or online) and manual{
 			server_add_modulo(edificio.a, edificio.b)
 			if online and not servidor
 				exit

@@ -1,40 +1,47 @@
-function server_set_instrucciones(edificio = control.null_edificio, data = {}){
+function server_set_instrucciones(edificio = control.null_edificio, cambio, data = {}){
 	with control{
 		var buffer = buffer_create(10, buffer_grow, 1)
 		buffer_write(buffer, buffer_u8, net_set_instrucciones)
 		buffer_write(buffer, buffer_u32, real(timer))
 		buffer_write(buffer, buffer_u16, real(edificio.a))
 		buffer_write(buffer, buffer_u16, real(edificio.b))
-		if edificio.index = id_puerto_de_carga{
-			buffer_write(buffer, buffer_u8, real(data.cambio))
-			if data.cambio = cambio_instrucciones_delete_comando
+		buffer_write(buffer, buffer_s8, real(cambio))
+		if cambio = cambio_activar{}
+		else if cambio = cambio_rotar{}
+		else if cambio = cambio_silo_target{
+			buffer_write(buffer, buffer_f64, real(data._x))
+			buffer_write(buffer, buffer_f64, real(data._y))
+		}
+		else if edificio.index = id_puerto_de_carga{
+			if cambio = cambio_instrucciones_delete_comando
 				buffer_write(buffer, buffer_u8, real(data.instruccion))
-			if data.cambio = cambio_instrucciones_cambio_recurso{
+			else if cambio = cambio_instrucciones_cambio_recurso{
 				buffer_write(buffer, buffer_u8, real(data.instruccion))
 				buffer_write(buffer, buffer_u8, real(data.rss))
 			}
-			if data.cambio = cambio_instrucciones_cambio_input{
+			else if cambio = cambio_instrucciones_cambio_input{
 				buffer_write(buffer, buffer_u8, real(data.instruccion))
-				buffer_write(buffer, buffer_u16, real(data.pointer))
+				buffer_write(buffer, buffer_u16, real(data.a))
+				buffer_write(buffer, buffer_u16, real(data.b))
 			}
-			if data.cambio = cambio_instrucciones_cambio_output{
+			else if cambio = cambio_instrucciones_cambio_output{
 				buffer_write(buffer, buffer_u8, real(data.instruccion))
-				buffer_write(buffer, buffer_u16, real(data.pointer))
+				buffer_write(buffer, buffer_u16, real(data.a))
+				buffer_write(buffer, buffer_u16, real(data.b))
 			}
 		}
 		else if edificio.index = id_procesador{
-			buffer_write(buffer, buffer_u8, real(data.cambio))
 			buffer_write(buffer, buffer_u8, real(data.instruccion))
-			if data.cambio = cambio_instrucciones_set_variable{
+			if cambio = cambio_instrucciones_set_variable{
 				buffer_write(buffer, buffer_bool, is_real(data.valor))
 				if is_real(data.valor)
 					buffer_write(buffer, buffer_f64, real(data.valor))
 				else
 					buffer_write(buffer, buffer_string, string(data.valor))
 			}
-			else if data.cambio = cambio_instruccion_mover
+			else if cambio = cambio_instruccion_mover
 				buffer_write(buffer, buffer_u8, real(data.prev))
-			else if data.cambio = cambio_instruccion_set{
+			else if cambio = cambio_instruccion_set{
 				buffer_write(buffer, buffer_u8, real(data.pos))
 				buffer_write(buffer, buffer_bool, is_real(data.valor))
 				if is_real(data.valor)
@@ -42,8 +49,9 @@ function server_set_instrucciones(edificio = control.null_edificio, data = {}){
 				else
 					buffer_write(buffer, buffer_string, string(data.valor))
 			}
-			else if data.cambio = cambio_instruccion_load{
-				
+			else if cambio = cambio_vincular{
+				buffer_write(buffer, buffer_u16,real(data.desa))
+				buffer_write(buffer, buffer_u16,real(data.desb))
 			}
 		}
 		else if edificio.index = id_memoria{

@@ -76,8 +76,9 @@ function scr_silo_misiles(edificio = control.null_edificio){
 					win = 1
 					mision_camara_step = 60
 					mision_actual = 0
-					misiones[0].camera_x = edificio.center_x
-					misiones[0].camera_y = edificio.center_y
+					if array_length(misiones) = 0
+						array_resize(misiones, 1)
+					misiones[0] = def_mision(,,,,,,,,,,, edificio.center_x, edificio.center_y)
 					mision_camera_x_start = camx
 					mision_camera_y_start = camy
 				}

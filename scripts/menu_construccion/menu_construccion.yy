@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"server_add_edificio",
+  "%Name":"menu_construccion",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"server_add_edificio",
+  "name":"menu_construccion",
   "parent":{
-    "name":"SERVER",
-    "path":"folders/SCRIPTS/ONLINE/SERVER.yy",
+    "name":"MENUS",
+    "path":"folders/SCRIPTS/MENUS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

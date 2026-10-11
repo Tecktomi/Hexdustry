@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"handle_mover_dron",
   "parent":{
-    "name":"HANDLE",
-    "path":"folders/SCRIPTS/ONLINE/HANDLE.yy",
+    "name":"In-game",
+    "path":"folders/SCRIPTS/ONLINE/HANDLE/In-game.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

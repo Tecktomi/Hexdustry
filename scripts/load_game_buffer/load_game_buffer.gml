@@ -95,7 +95,7 @@ function load_game_buffer(buffer){
 			if index = id_nucleo
 				var edificio = add_edificio(index, dir, a, b, _jugador)
 			else
-				edificio = construir(index, dir, a, b, true, true, _jugador)
+				edificio = construir(index, dir, a, b,, true, _jugador)
 			if index = id_procesador
 				load_procesador(buffer, edificio)
 		}

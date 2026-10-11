@@ -3,46 +3,58 @@ function handle_set_instrucciones(buffer){
 		var _timer = real(buffer_read(buffer, buffer_u32))
 		var a = real(buffer_read(buffer, buffer_u16))
 		var b = real(buffer_read(buffer, buffer_u16))
+		var cambio = real(buffer_read(buffer, buffer_s8))
 		var edificio = edificio_id[# a, b]
-		var cambio = {
+		var new_cambio = {
 			step : _timer,
 			tipo : cambio_instrucciones,
 			data : {}
 		}
 		var data = {
 			a : a,
-			b : b
+			b : b,
+			cambio : cambio
 		}
-		if edificio.index = id_puerto_de_carga{
+		if cambio = cambio_activar{}
+		else if cambio = cambio_rotar{}
+		else if cambio = cambio_silo_target{
+			data._x = real(buffer_read(buffer, buffer_f64))
+			data._y = real(buffer_read(buffer, buffer_f64))
+		}
+		else if edificio.index = id_puerto_de_carga{
 			var _jugador = edificio.jugador
-			data.cambio = real(buffer_read(buffer, buffer_u8))
-			if data.cambio = cambio_instrucciones_delete_comando
+			if cambio = cambio_instrucciones_delete_comando
 				data.instruccion = real(buffer_read(buffer, buffer_u8))
-			else if data.cambio = cambio_instrucciones_cambio_recurso{
+			else if cambio = cambio_instrucciones_cambio_recurso{
 				data.instruccion = real(buffer_read(buffer, buffer_u8))
 				data.rss = real(buffer_read(buffer, buffer_u8))
 			}
-			else if data.cambio = cambio_instrucciones_cambio_input{
+			else if cambio = cambio_instrucciones_cambio_input{
 				data.instruccion = real(buffer_read(buffer, buffer_u8))
-				data.pointer = real(buffer_read(buffer, buffer_u16))
+				data.a = real(buffer_read(buffer, buffer_u16))
+				data.b = real(buffer_read(buffer, buffer_u16))
 			}
-			else if data.cambio = cambio_instrucciones_cambio_output{
+			else if cambio = cambio_instrucciones_cambio_output{
 				data.instruccion = real(buffer_read(buffer, buffer_u8))
-				data.pointer = real(buffer_read(buffer, buffer_u16))
+				data.a = real(buffer_read(buffer, buffer_u16))
+				data.b = real(buffer_read(buffer, buffer_u16))
 			}
 		}
 		else if edificio.index = id_procesador{
-			data.cambio = real(buffer_read(buffer, buffer_u8))
 			data.instruccion = real(buffer_read(buffer, buffer_u8))
-			if data.cambio = cambio_instrucciones_set_variable{
+			if cambio = cambio_vincular{
+				data.desa = real(buffer_read(buffer, buffer_u16))
+				data.desb = real(buffer_read(buffer, buffer_u16))
+			}
+			else if cambio = cambio_instrucciones_set_variable{
 				if buffer_read(buffer, buffer_bool)
 					data.valor = real(buffer_read(buffer, buffer_f64))
 				else
 					data.valor = string(buffer_read(buffer, buffer_string))
 			}
-			else if data.cambio = cambio_instruccion_mover
+			else if cambio = cambio_instruccion_mover
 				data.prev = real(buffer_read(buffer, buffer_u8))
-			else if data.cambio = cambio_instruccion_set{
+			else if cambio = cambio_instruccion_set{
 				data.pos = real(buffer_read(buffer, buffer_u8))
 				if buffer_read(buffer, buffer_bool)
 					data.valor = real(buffer_read(buffer, buffer_f64))
@@ -58,12 +70,12 @@ function handle_set_instrucciones(buffer){
 				data.valor = string(buffer_read(buffer, buffer_string))
 		}
 		if servidor{
-			set_edificio_instruccion(edificio, data, true)
-			server_set_instrucciones(edificio, data)
+			set_edificio_instruccion(edificio, data.cambio, data)
+			server_set_instrucciones(edificio, data.cambio, data)
 		}
 		else{
-			cambio.data = data
-			array_push(cambios, cambio)
+			new_cambio.data = data
+			array_push(cambios, new_cambio)
 		}
 	}
 }

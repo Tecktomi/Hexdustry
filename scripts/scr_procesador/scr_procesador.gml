@@ -2,8 +2,7 @@ function scr_procesador(edificio = control.null_edificio){
 	with control{
 		var index = edificio.index
 		var red = edificio.red, red_power = red.eficiencia
-		if procesador_select != edificio
-			edificio.proceso += red_power
+		edificio.proceso += red_power
 		var pc, pc0, val, type2, type3, b, temp_edificio, val2, val3, i, j, temp_array, temp_array_2
 		while edificio.proceso >= 1{
 			edificio.proceso--
@@ -72,7 +71,7 @@ function scr_procesador(edificio = control.null_edificio){
 				if pc[4] = 0{
 					if type2 = "string"
 						val = val2 + string(val3)
-					else
+					else if type3 != "string"
 						val = val2 + val3
 				}
 				else if pc[4] = 1 and not(type2 = "string" or type3 = "string")
@@ -85,15 +84,15 @@ function scr_procesador(edificio = control.null_edificio){
 					val = (val3 = 0 ? NaN : val2 div val3)
 				else if pc[4] = 5 and not (type2 = "string" or type3 = "string")
 					val = (val3 = 0 ? NaN : val2 % val3)
-				else if pc[4] = 6
+				else if pc[4] = 6 and not (type2 = "string" or type3 = "string")
 					val = val2 | val3
-				else if pc[4] = 7
+				else if pc[4] = 7 and not (type2 = "string" or type3 = "string")
 					val = val2 & val3
-				else if pc[4] = 8
+				else if pc[4] = 8 and not (type2 = "string" or type3 = "string")
 					val = val2 ^ val3
-				else if pc[4] = 9
+				else if pc[4] = 9 and not (type2 = "string" or type3 = "string")
 					val = val2 << val3
-				else if pc[4] = 10
+				else if pc[4] = 10 and not (type2 = "string" or type3 = "string")
 					val = val2 >> val3
 				else if pc[4] = 11 and not (type2 = "string" or type3 = "string")
 					val = power(val2, val3)
@@ -127,10 +126,10 @@ function scr_procesador(edificio = control.null_edificio){
 				if pc[6] = 0{
 					if not is_real(edificio.variables[pc[7]])
 						continue
-					val3 = edificio.variables[pc[7]] - 1
+					val3 = clamp(edificio.variables[pc[7]] - 1, 0, array_length(edificio.instruccion) - 1)
 				}
 				else
-					val3 = pc[7] - 1
+					val3 = clamp(pc[7] - 1, 0, array_length(edificio.instruccion) - 1)
 				if pc[3] = 0 and val < val2
 					edificio.select = val3
 				else if pc[3] = 1 and val <= val2
@@ -241,7 +240,7 @@ function scr_procesador(edificio = control.null_edificio){
 				if is_real(val){
 					if pc[3] = 0{
 						if bool(val)
-							activar_edificio(temp_edificio)
+							set_edificio_instruccion(temp_edificio, cambio_activar)
 						else
 							desactivar_edificio(temp_edificio)
 					}

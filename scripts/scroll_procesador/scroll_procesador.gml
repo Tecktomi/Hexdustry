@@ -1,4 +1,4 @@
-function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edificio, size : 0, b : 0}){
+function scroll_procesador(a = 0, param = {xpos : 0, ypos : 0, edificio : null_edificio, size : 0, b : 0}){
 	with control{
 		var xpos = param.xpos, ypos = param.ypos, edificio = param.edificio, size = param.size
 		var pc = edificio.instruccion[a], pc0 = pc[0], signs, temp_val
@@ -7,12 +7,12 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 		draw_text_xpos(xpos, ypos, ((edificio.select + 1) mod size = a ? ">" : "") + $"{a}|")
 		draw_set_halign(fa_left)
 		if draw_sprite_boton(spr_basura,, xpos, ypos, 20, 20,, hover_sprite_boton_text, {a : L.procesador_borrar}){
-			set_edificio_instruccion(edificio, {cambio : cambio_instrucciones_delete_comando, instruccion : a})
+			set_edificio_instruccion(edificio, cambio_instrucciones_delete_comando, {instruccion : a}, true)
 			return infinity
 		}
 		xpos += 20
 		if draw_sprite_boton(spr_clonar,, xpos, ypos, 20, 20,, hover_sprite_boton_text, {a : L.procesador_clonar})
-			set_edificio_instruccion(edificio, {cambio : cambio_instruccion_copiar, instruccion : a})
+			set_edificio_instruccion(edificio, cambio_instruccion_copiar, {instruccion : a}, true)
 		xpos += 20
 		if draw_sprite_boton(spr_flecha,, xpos, ypos, 20, 20,, hover_sprite_boton_text, {a : L.procesador_subir})
 			procesador_move = a
@@ -23,7 +23,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 			draw_set_alpha(1)
 			if mouse_check_button_released(mb_left){
 				if a != procesador_move
-					set_edificio_instruccion(edificio, {cambio : cambio_instruccion_mover, instruccion : a, prev : procesador_move})
+					set_edificio_instruccion(edificio, cambio_instruccion_mover, {instruccion : a, prev : procesador_move}, true)
 				procesador_move = -1
 			}
 		}
@@ -35,7 +35,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 			xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_set} VAR_")
 			temp_val = procesador_var(xpos, ypos, pc, 1)
 			if pc[1] != temp_val
-				set_edificio_instruccion(edificio, {cambio : cambio_instruccion_set, instruccion : a, pos : 1, valor : temp_val})
+				set_edificio_instruccion(edificio, cambio_instruccion_set, {instruccion : a, pos : 1, valor : temp_val}, true)
 			xpos = draw_text_xpos(xpos + text_x, ypos, " to ")
 			procesador_valor(edificio, a, xpos, ypos, pc, 2, 3, false)
 		}
@@ -45,12 +45,12 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 			xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_set} VAR_")
 			temp_val = procesador_var(xpos, ypos, pc, 1)
 			if pc[1] != temp_val
-				set_edificio_instruccion(edificio, {cambio : cambio_instruccion_set, instruccion : a, pos : 1, valor : temp_val})
+				set_edificio_instruccion(edificio, cambio_instruccion_set, {instruccion : a, pos : 1, valor : temp_val}, true)
 			xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to} ")
 			temp_val = draw_boton_text_list(xpos, ypos, pc[2], signs,, 10)
 			if pc[2] != temp_val
-				set_edificio_instruccion(edificio, {cambio : cambio_instruccion_set, instruccion : a, pos : 2, valor : temp_val})
-			if not signs[pc[2]] = "pi"{
+				set_edificio_instruccion(edificio, cambio_instruccion_set, {instruccion : a, pos : 2, valor : temp_val}, true)
+			if signs[pc[2]] != "pi"{
 				xpos = draw_text_xpos(xpos + text_x, ypos, $" ")
 				procesador_valor(edificio, a, xpos, ypos, pc, 3, 4)
 			}
@@ -61,13 +61,13 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 			xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_set} VAR_")
 			temp_val = procesador_var(xpos, ypos, pc, 1)
 			if pc[1] != temp_val
-				set_edificio_instruccion(edificio, {cambio : cambio_instruccion_set, instruccion : a, pos : 1, valor : temp_val})
+				set_edificio_instruccion(edificio, cambio_instruccion_set, {instruccion : a, pos : 1, valor : temp_val}, true)
 			xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to} ")
 			procesador_valor(edificio, a, xpos, ypos, pc, 2, 3)
 			xpos += text_x
 			temp_val = draw_boton_text_list(xpos, ypos, pc[4], signs,, 10)
 			if pc[4] != temp_val
-				set_edificio_instruccion(edificio, {cambio : cambio_instruccion_set, instruccion : a, pos : 4, valor : temp_val})
+				set_edificio_instruccion(edificio, cambio_instruccion_set, {instruccion : a, pos : 4, valor : temp_val}, true)
 			procesador_valor(edificio, a, xpos + text_x, ypos, pc, 5, 6)
 		}
 		//If [VAR]{A} [<, <=, =, >=, >, !=] [VAR]{B}, jump to [VAR]{C}
@@ -78,13 +78,13 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 			xpos += text_x
 			temp_val = draw_boton_text_list(xpos, ypos, pc[3], signs,, 10)
 			if pc[3] != temp_val
-				set_edificio_instruccion(edificio, {cambio : cambio_instruccion_set, instruccion : a, pos : 3, valor : temp_val})
+				set_edificio_instruccion(edificio, cambio_instruccion_set, {instruccion : a, pos : 3, valor : temp_val}, true)
 			xpos += text_x
 			procesador_valor(edificio, a, xpos, ypos, pc, 4, 5, false)
 			xpos = draw_text_xpos(xpos + text_x, ypos, $", {L.procesador_jump} ")
 			procesador_valor(edificio, a, xpos, ypos, pc, 6, 7, true)
 			if pc[6] and pc[7] < 0 or pc[7] > size
-				set_edificio_instruccion(edificio, {cambio : cambio_instruccion_set, instruccion : a, pos : 7, valor : clamp(pc[7], 0, size)})
+				set_edificio_instruccion(edificio, cambio_instruccion_set, {instruccion : a, pos : 7, valor : clamp(pc[7], 0, size)}, true)
 			xpos += text_x
 			var val = 0, flag = true
 			if pc[6] = 0{
@@ -118,11 +118,11 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 			xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_set} VAR_")
 			temp_val = procesador_var(xpos, ypos, pc, 1)
 			if pc[1] != temp_val
-				set_edificio_instruccion(edificio, {cambio : cambio_instruccion_set, instruccion : a, pos : 1, valor : temp_val})
+				set_edificio_instruccion(edificio, cambio_instruccion_set, {instruccion : a, pos : 1, valor : temp_val}, true)
 			xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to} ")
 			temp_val = draw_boton_text_list(xpos, ypos, pc[2], signs,, 10)
 			if pc[2] != temp_val
-				set_edificio_instruccion(edificio, {cambio : cambio_instruccion_set, instruccion : a, pos : 2, valor : temp_val})
+				set_edificio_instruccion(edificio, cambio_instruccion_set, {instruccion : a, pos : 2, valor : temp_val}, true)
 			xpos += text_x
 			if signs_subindex[pc[2]]{
 				xpos = draw_text_xpos(xpos, ypos, "[")
@@ -140,7 +140,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 			xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to_set} ")
 			temp_val = draw_boton_text_list(xpos, ypos, pc[3], signs,, 10)
 			if pc[3] != temp_val
-				set_edificio_instruccion(edificio, {cambio : cambio_instruccion_set, instruccion : a, pos : 3, valor : temp_val})
+				set_edificio_instruccion(edificio, cambio_instruccion_set, {instruccion : a, pos : 3, valor : temp_val}, true)
 			xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to} ")
 			procesador_valor(edificio, a, xpos, ypos, pc, 4, 5, false)
 		}
@@ -149,7 +149,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 			xpos = draw_text_xpos(xpos, ypos, $"{L.procesador_set} VAR_")
 			temp_val = procesador_var(xpos, ypos, pc, 1)
 			if pc[1] != temp_val
-				set_edificio_instruccion(edificio, {cambio : cambio_instruccion_set, instruccion : a, pos : 1, valor : temp_val})
+				set_edificio_instruccion(edificio, cambio_instruccion_set, {instruccion : a, pos : 1, valor : temp_val}, true)
 			xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_to_value_of_cell} ")
 			procesador_valor(edificio, a, xpos, ypos, pc, 2, 3, true)
 			xpos = draw_text_xpos(xpos + text_x, ypos, $" {L.procesador_from} LINK_")
@@ -174,7 +174,7 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 			var prev_pc3 = pc[3]
 			temp_val = draw_boton_text_list(xpos, ypos, pc[3], signs,, 10)
 			if pc[3] != temp_val
-				set_edificio_instruccion(edificio, {cambio : cambio_instruccion_set, instruccion : a, pos : 3, valor : temp_val})
+				set_edificio_instruccion(edificio, cambio_instruccion_set, {instruccion : a, pos : 3, valor : temp_val}, true)
 			if pc[3] = 0
 				xpos = draw_text_xpos(xpos + text_x, ypos, "()")
 			else if pc[3] = 1
@@ -266,9 +266,9 @@ function scroll_procesador(a, param = {xpos : 0, ypos : 0, edificio : null_edifi
 			draw_set_alpha(1)
 			if mouse_check_button_released(mb_left){
 				if pc[6] != 1
-					set_edificio_instruccion(edificio, {cambio : cambio_instruccion_set, instruccion : a, pos : 6, valor : 1})
+					set_edificio_instruccion(edificio, cambio_instruccion_set, {instruccion : a, pos : 6, valor : 1}, true)
 				if pc[7] != a
-					set_edificio_instruccion(edificio, {cambio : cambio_instruccion_set, instruccion : a, pos : 7, valor : a})
+					set_edificio_instruccion(edificio, cambio_instruccion_set, {instruccion : a, pos : 7, valor : a}, true)
 				procesador_link_handle = -1
 			}
 		}

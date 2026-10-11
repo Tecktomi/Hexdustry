@@ -77,9 +77,9 @@ function menu_pausa(_juego = true, _input_layer = 0){
 				jugador = 2
 				if _juego{
 					if menu = MENU_JUEGO
-						terminar_partida(fin_salir, MENU_PRINCIPAL)
+						game_terminar(fin_salir, MENU_PRINCIPAL)
 					else if menu = MENU_EDITOR_JUEGO
-						terminar_partida(fin_salir, MENU_EDITOR)
+						game_terminar(fin_salir, MENU_EDITOR)
 				}
 				else{
 					input_layer = 0

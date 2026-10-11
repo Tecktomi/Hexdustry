@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"handle_add_modulo",
   "parent":{
-    "name":"HANDLE",
-    "path":"folders/SCRIPTS/ONLINE/HANDLE.yy",
+    "name":"In-game",
+    "path":"folders/SCRIPTS/ONLINE/HANDLE/In-game.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

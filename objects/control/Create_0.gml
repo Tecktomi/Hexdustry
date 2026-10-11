@@ -95,6 +95,57 @@ var a, b, c, flag
 	#macro MULA_DEJAR_RSS 2
 	#macro MULA_BUSCAR_INSTRUCCION 3
 	#macro MULA_CARGA_MAX 10
+	//Red
+	#macro net_hello 0
+	#macro net_welcome 1
+	#macro net_construir 2
+	#macro net_delete_edificio 3
+	#macro net_buscar_server 4
+	#macro net_respuesta_buscar 5
+	#macro net_set_edificio 6
+	#macro net_timer 7
+	#macro net_mover_dron 8
+	#macro net_add_modulo 9
+	#macro net_investigar 10
+	#macro net_jugador_unido 11
+	#macro net_jugador_ido 12
+	#macro net_jugador_eliminado 13
+	#macro net_server_break 14
+	#macro net_error 15
+	#macro net_expulsado 16
+	#macro net_timeout 17
+	#macro net_heartbeat 18
+	#macro net_mensaje 19
+	#macro net_set_instrucciones 20
+	//Errores net
+	#macro net_error_nombre_usado 0
+	#macro net_error_server_lleno 1
+	//Cambios in-game
+	#macro cambio_construir 0
+	#macro cambio_delete_edificio 1
+	#macro cambio_set_edificio 2
+	#macro cambio_mover_dron 3
+	#macro cambio_add_modulo 4
+	#macro cambio_investigar 5
+	#macro cambio_instrucciones 6
+	//Instrucciones generales
+	#macro cambio_activar -1
+	#macro cambio_rotar -2
+	#macro cambio_silo_target -3
+	//Instrucciones
+	#macro cambio_instrucciones_add_comando 1
+	#macro cambio_instrucciones_delete_comando 2
+	//Instrucciones Puerto de carga
+	#macro cambio_instrucciones_cambio_recurso 3
+	#macro cambio_instrucciones_cambio_input 4
+	#macro cambio_instrucciones_cambio_output 5
+	//Instrucciones procesador
+	#macro cambio_instrucciones_set_variable 3
+	#macro cambio_instruccion_copiar 4
+	#macro cambio_instruccion_mover 5
+	#macro cambio_instruccion_set 6
+	#macro cambio_instruccion_next 7
+	#macro cambio_vincular 8
 #endregion
 #region debug
 	debug_frame_time = false
@@ -547,47 +598,6 @@ L = {}
 	server_buscando_lan_step = 0
 	EQUIPO_COLOR = [ #bfbfbf, #ff0000, #0000ff, #00ff00, #ffff00, #ff00ff, #00ffff, #ffffff, #000000, #7f0000, #007f00, #00007f, #7f7f00, #7f007f, #007f7f]
 	jugador = 2
-	#macro net_hello 0
-	#macro net_welcome 1
-	#macro net_add_edificio 2
-	#macro net_delete_edificio 3
-	#macro net_buscar_server 4
-	#macro net_respuesta_buscar 5
-	#macro net_set_edificio 6
-	#macro net_timer 7
-	#macro net_mover_dron 8
-	#macro net_add_modulo 9
-	#macro net_investigar 10
-	#macro net_jugador_unido 11
-	#macro net_jugador_ido 12
-	#macro net_jugador_eliminado 13
-	#macro net_server_break 14
-	#macro net_error 15
-	#macro net_expulsado 16
-	#macro net_timeout 17
-	#macro net_heartbeat 18
-	#macro net_mensaje 19
-	#macro net_set_instrucciones 20
-	#macro net_error_nombre_usado 0
-	#macro net_error_server_lleno 1
-	#macro cambio_construir 0
-	#macro cambio_delete_edificio 1
-	#macro cambio_set_edificio 2
-	#macro cambio_mover_dron 3
-	#macro cambio_add_modulo 4
-	#macro cambio_investigar 5
-	#macro cambio_instrucciones 6
-	#macro cambio_instrucciones_add_comando 0
-	#macro cambio_instrucciones_delete_comando 1
-	//Instrucciones Puerto de carga
-	#macro cambio_instrucciones_cambio_recurso 2
-	#macro cambio_instrucciones_cambio_input 3
-	#macro cambio_instrucciones_cambio_output 4
-	//Instrucciones procesador
-	#macro cambio_instrucciones_set_variable 2
-	#macro cambio_instruccion_copiar 3
-	#macro cambio_instruccion_mover 4
-	#macro cambio_instruccion_set 5
 #endregion
 #region UI
 	#macro ui_fondo #282828
@@ -1355,7 +1365,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 	id_fabrica_de_drones_grande = def_edificio("Fábrica de Drones Grande", 3, spr_fabrica_drones_grande,, 400,, scr_fabrica_drones,,,, [idr_cobre, idr_hierro, idr_acero, idr_electronicos, idr_uranio_bruto], [200, 150, 40, 100, 40], 20, true, false, [], []); def_edificio_2(250, 10, 10, [idl_acido],,,, 3)
 	//60
 	id_cinta_grande = def_edificio("Cinta Grande", 2, spr_cinta_grande, spr_cinta_grande_diagonal, 80, 30, scr_cinta_grande,,,, [idr_bronce, idr_hierro], [5, 15]); def_edificio_2()
-	id_mina = def_edificio("Mina", 1, spr_mina,,,,,,,, [idr_hierro, idr_explosivo], [5, 2]); def_edificio_2(,,,,,, true, -2)
+	id_mina = def_edificio("Mina", 1, spr_mina, spr_mina_naval,,,, scr_draw_mina, false,, [idr_hierro, idr_explosivo], [5, 2]); def_edificio_2(,,,,,, true, -2)
 	id_fabrica_de_lubricante = def_edificio("Fábrica de Lubricante", 3, spr_fabrica_de_lubricante,, 200, 30, scr_fabrica_de_lubricante, scr_draw_bomba_impar, false,, [idr_acero, idr_vidrio, idr_bronce], [20, 20, 30]); def_edificio_2(50, 10, 30, [idl_petroleo, idl_lubricante],,,,, -30)
 	id_antena = def_edificio("Antena", 1, spr_antena,, 80,,,,,, [idr_cobre, idr_hierro, idr_electronicos], [20, 10, 5]); def_edificio_2()
 #endregion
@@ -1505,6 +1515,11 @@ edificio_key[id_recurso_infinito] = "1z"
 		tag_agua_baja[idt_agua] = true
 		tag_agua_baja[idt_agua_salada] = true
 	#endregion
+	#region agua_profunda
+		tag_agua_profunda = array_create(terreno_max, false)
+		tag_agua_profunda[idt_agua_profunda] = true
+		tag_agua_profunda[idt_agua_salada_profunda] = true
+	#endregion
 	#region construible_en_liquido
 		tag_construible_en_liquido = array_create(edificio_max, false)
 		tag_construible_en_liquido[id_bomba_hidraulica] = true
@@ -1512,6 +1527,7 @@ edificio_key[id_recurso_infinito] = "1z"
 		tag_construible_en_liquido[id_tuberia] = true
 		tag_construible_en_liquido[id_generador_geotermico] = true
 		tag_construible_en_liquido[id_tuberia_subterranea] = true
+		tag_construible_en_liquido[id_mina] = true
 	#endregion
 	#region generadores_de_humo_combustión
 		tag_generadores_de_humo_combustion = array_create(edificio_max, false)
