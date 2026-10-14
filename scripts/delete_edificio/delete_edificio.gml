@@ -14,21 +14,23 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		var a, b, flag, temp_edificio, temp_coordenada_2, i, dis, temp_complex, dron, aaa, bbb
 		edificio.vida = 0
 		array_disorder_remove(edificios_index[index], edificio, ptre_index)
-		if index = id_nucleo and menu = MENU_JUEGO and _jugador = jugador{
+		if index = id_nucleo and menu = MENU_JUEGO{
 			if nucleos[_jugador] = edificio
 				nucleos[_jugador] = null_edificio
-			flag = true
-			for(a = array_length(edificios_index[id_nucleo]) - 1; a >= 0; a--){
-				temp_edificio = edificios_index[id_nucleo, a]
-				if temp_edificio.jugador = _jugador{
-					flag = false
-					break
+			if _jugador = jugador{
+				flag = true
+				for(a = array_length(edificios_index[id_nucleo]) - 1; a >= 0; a--){
+					temp_edificio = edificios_index[id_nucleo, a]
+					if temp_edificio.jugador = _jugador{
+						flag = false
+						break
+					}
 				}
-			}
-			if flag{
-				win = 2
-				selected_dron = null_dron
-				pausa = 0
+				if flag{
+					win = 2
+					selected_dron = null_dron
+					pausa = 0
+				}
 			}
 		}
 		if jugador != _jugador and mision_actual >= 0 and mision.objetivo = idm_destruir_edificio and mision.target_id = index and ++mision_counter >= mision.target_num
@@ -119,12 +121,12 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		}
 		if grafic_luz
 			encender_luz(false, edificio)
-		if destruccion and _jugador = jugador{
-			ds_grid_set(repair_id, aa, bb, index)
-			ds_grid_set(repair_dir, aa, bb, edificio.dir)
+		if destruccion{
+			repair_id[# aa, bb][_jugador] = index
+			repair_dir[# aa, bb][_jugador] = edificio.dir
 			if tag_edificio_seteable[index]{
-				ds_grid_set(repair_mode, aa, bb, edificio.mode)
-				ds_grid_set(repair_select, aa, bb, edificio.select)
+				repair_mode[# aa, bb][_jugador] = edificio.mode
+				repair_select[# aa, bb][_jugador] = edificio.select
 			}
 		}
 		if menu = MENU_JUEGO and index = id_nucleo and array_length(edificios_index[id_nucleo]) > 0

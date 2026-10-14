@@ -11,8 +11,9 @@ function resize_grid(minx = 0, miny = 0){
 			for(b = floor(miny / CHUNK_HEIGHT); b < chunk_ysize; b++){
 				if background[# a, b] != spr_hexagono
 					sprite_delete(background[# a, b])
-				ds_grid_set(background, a, b, spr_hexagono)
-				ds_grid_set(background_bool, a, b, false)
+				background[# a, b] = spr_hexagono
+				background_bool[# a, b] = false
+				chunk_explosion[# a, b] = array_create(0, null_explosion_mark)
 				update_background(a * CHUNK_WIDTH, b * CHUNK_HEIGHT)
 			}
 		ds_grid_resize(edificio_bool, xsize, ysize)
@@ -27,6 +28,8 @@ function resize_grid(minx = 0, miny = 0){
 		ds_grid_resize(terreno_pared_index, xsize, ysize)
 		ds_grid_resize(repair_id, xsize, ysize)
 		ds_grid_resize(repair_dir, xsize, ysize)
+		ds_grid_resize(repair_mode, xsize, ysize)
+		ds_grid_resize(repair_select, xsize, ysize)
 		ds_grid_resize(background_bool, chunk_xsize, chunk_ysize)
 		ds_grid_resize(beta_grid, xsize, ysize)
 		ds_grid_resize(ia_grid_real, xsize, ysize)
@@ -35,6 +38,7 @@ function resize_grid(minx = 0, miny = 0){
 		for(a = array_length(edificios_index[id_nucleo]) - 1; a >= 0; a--)
 			ds_grid_resize(edificios_index[id_nucleo, a].coordenadas_dis, xsize, ysize)
 		ds_grid_resize(tile_animado_chunk, chunk_xsize, chunk_ysize)
+		ds_grid_resize(chunk_explosion, chunk_xsize, chunk_ysize)
 		ds_grid_resize(ia_grid_real, xsize, ysize)
 		ds_grid_resize(ia_grid_camino, xsize, ysize)
 		ds_grid_set_region(terreno, minx, miny, xsize, ysize, 1)
@@ -45,8 +49,12 @@ function resize_grid(minx = 0, miny = 0){
 			aplus = a + 1
 			for(b = miny; b < ysize; b++){
 				temp_complex_2 = [real(a + (b & 1) / 2) * 48 + 16, real(b + 1) * 14]
-				ds_grid_set(pre_abtoxy, aplus, b + 1, temp_complex_2)
-				ds_grid_set(ore_random, a, b, random(1))
+				pre_abtoxy[# aplus, b + 1] = temp_complex_2
+				ore_random[# a, b] = random(1)
+				repair_id[# a, b] = array_create(EQUIPOS, -1)
+				repair_dir[# a, b] = array_create(EQUIPOS, 0)
+				repair_mode[# a, b] = array_create(EQUIPOS, false)
+				repair_select[# a, b] = array_create(EQUIPOS, 0)
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 function sim_random(n){
-    sim_seed[1] = (sim_seed[1] * 1103515245 + 12345) & 0x7FFFFFFF
+    sim_seed[1] = (int64(sim_seed[1]) * 1103515245 + 12345) & 0x7FFFFFFF
     return (sim_seed[1] / 0x7FFFFFFF) * n
 }
 function sim_irandom(n){

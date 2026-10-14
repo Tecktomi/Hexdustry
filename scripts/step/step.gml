@@ -3,7 +3,7 @@ function step(){
 		//Detenerse por LAG
 		if online and not servidor and timer + LAG > server_timer
 			exit
-		var _seed_vista = random_get_seed()
+		var _seed_vista = (int64(sim_seed[1]) * 1103515245 + 12345) & 0x7FFFFFFF
 		random_set_seed(sim_seed[0])
 		var a, b, cambio, temp_array_real, buffer, edificio, municion, target, _jugador, _tipo, _dmg, temp_complex, muna, munb, len, efecto, humo, fuego, temp_time, flag
 		var temp_complex_list, i, aa, bb, temp_text_right, file, red, flujo, temp_explosion, temp_script
@@ -196,23 +196,18 @@ function step(){
 		}
 		draw_set_alpha(1)
 		//Oleadas
-		if oleadas and (++oleadas_timer >= 60 * oleadas_tiempo_primera or (not chat_input and keyboard_check_pressed(vk_enter))){
+		if oleadas and (++oleadas_timer >= 60 * oleadas_tiempo_primera or (not online and not chat_input and keyboard_check_pressed(vk_enter))){
 			temp_time = oleadas_timer / 60 - oleadas_tiempo_primera
-			if (temp_time mod oleadas_tiempo) = 0 or keyboard_check_pressed(vk_enter){
+			if (temp_time mod oleadas_tiempo) = 0 or (not online and not chat_input and keyboard_check_pressed(vk_enter)){
 				if mision_actual >= 0 and mision.objetivo = idm_sobrevivir_oleadas and ++mision_counter >= mision.target_num
 					oleadas = false
-				a = ++oleada_count + 2
-				b = array_length(SIZE_SIZE)
-				for(i = 0; i < array_length(SIZE_SIZE); i++)
-					if a <= SIZE_SIZE[i]{
-						b = i + 1
-						break
-					}
-				temp_complex_list = get_size(spawn_x, spawn_y, 0, b)
-				len = min(array_length(temp_complex_list), a)
+				temp_complex_list = get_size(spawn_x, spawn_y, 0, 7)
+				len = min(array_length(temp_complex_list), ++oleada_count + 2)
+				i = 0
 				for(var _dron_count = 0; _dron_count < len;){
-					aa = clamp(temp_complex_list[2 * _dron_count], 0, xsize - 1)
-					bb = clamp(temp_complex_list[2 * _dron_count + 1], 0, ysize - 1)
+					aa = clamp(temp_complex_list[i++], 0, xsize - 1)
+					bb = clamp(temp_complex_list[i++], 0, ysize - 1)
+					i = i mod array_length(temp_complex_list)
 					//Generación marina
 					if grid_water_distance[# aa, bb] < infinity{
 						var _dron_order = [idd_destructor, idd_barco, idd_bombardero, idd_helicoptero, idd_kamikaze]
@@ -348,7 +343,7 @@ function step(){
 		//IA
 		if IA and timer mod 20 = 0
 			ia_step()
-		sim_seed[0] = random_get_seed()
+		sim_seed[0] = (int64(sim_seed[0]) * 1103515245 + 12345) & 0x7FFFFFFF
 		random_set_seed(_seed_vista)
 		if REPRODUCIENDO{
 			draw_once = false

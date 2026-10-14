@@ -1,4 +1,4 @@
-function set_edificio(mode, select, edificio = control.null_edificio, manual = false){
+function set_edificio(mode = false, select = 0, edificio = control.null_edificio, manual = false){
 	with control{
 		if edificio = null_edificio or edificio.vida <= 0
 			exit
@@ -14,20 +14,21 @@ function set_edificio(mode, select, edificio = control.null_edificio, manual = f
 			mover(edificio)
 		}
 		//Seleccionar edificio
-		if in(index, id_selector, id_recurso_infinito, id_planta_de_reciclaje) and edificio.select != select{
-			if in(index, id_selector, id_recurso_infinito) and (select < -1 or select >= rss_max)
-				exit
+		if in(index, id_selector, id_recurso_infinito, id_planta_de_reciclaje, id_antena) and edificio.select != select{
+			if index = id_selector or index = id_recurso_infinito
+				select = clamp(select, -1, rss_max - 1)
+			else if index = id_antena
+				select = clamp(select, 0, frecuencia_max - 1)
 			if index = id_recurso_infinito and edificio.select >= 0
 				edificio.carga_output[edificio.select] = false
 			edificio.select = select
-			if index = id_recurso_infinito
+			if index = id_recurso_infinito and select >= 0
 				edificio.carga_output[select] = true
 			mover(edificio)
 		}
 		//Líquido infinito
 		else if index = id_liquido_infinito{
-			if select < -1 or select >= liquido_max
-				exit
+			select = clamp(select, -1, liquido_max - 1)
 			if edificio.select >= 0 and select = -1{
 				change_flujo(0, edificio)
 				edificio.flujo.almacen = 0
@@ -44,7 +45,7 @@ function set_edificio(mode, select, edificio = control.null_edificio, manual = f
 			}
 		}
 		//Planta química
-		else if index = id_planta_quimica and edificio.select != select{
+		else if index = id_planta_quimica{
 			if select < 0 or select > 2
 				exit
 			change_flujo(0, edificio)

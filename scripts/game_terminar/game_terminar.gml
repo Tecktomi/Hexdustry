@@ -2,8 +2,11 @@ function game_terminar(motivo, destino = MENU_PRINCIPAL){
 	with control{
 		if menu != MENU_JUEGO and menu != MENU_EDITOR_JUEGO
 			return false
-		if menu = MENU_EDITOR_JUEGO
+		if menu = MENU_EDITOR_JUEGO{
+			array_pop(categoria_index_disponible)
 			array_pop(categoria_nombre_disponible)
+			array_pop(categoria_edificios_disponible)
+		}
 		if motivo != fin_desconexion and win = 0 and BROWSER and not mapa_editado
 			save()
 		if GRABANDO

@@ -9,7 +9,7 @@ function set_edificio_instruccion(edificio = control.null_edificio, cambio = 0, 
 			edificio.agregar = true
 			array_push(edificios_pendientes, edificio)
 		}
-		else if cambio = cambio_rotar{
+		else if cambio = cambio_rotar_tunel{
 			var _jugador = edificio.jugador, link = edificio.link
 			if edificio.index = id_tunel_salida{
 				array_disorder_remove(edificios_index[id_tunel_salida], edificio, ptre_index)
@@ -66,21 +66,21 @@ function set_edificio_instruccion(edificio = control.null_edificio, cambio = 0, 
 					edificio.select = edificio.select mod array_length(edificio.instruccion)
 			}
 			else if cambio = cambio_instrucciones_cambio_recurso
-				edificio.instruccion[data.instruccion, 0] = data.rss
+				edificio.instruccion[data.instruccion, 0] = real(data.rss)
 			else if cambio = cambio_instrucciones_cambio_input{
-				edificio.instruccion[data.instruccion, 1] = data.a
-				edificio.instruccion[data.instruccion, 2] = data.b
+				edificio.instruccion[data.instruccion, 1] = real(data.a)
+				edificio.instruccion[data.instruccion, 2] = real(data.b)
 			}
 			else if cambio = cambio_instrucciones_cambio_output{
-				edificio.instruccion[data.instruccion, 3] = data.a
-				edificio.instruccion[data.instruccion, 4] = data.b
+				edificio.instruccion[data.instruccion, 3] = real(data.a)
+				edificio.instruccion[data.instruccion, 4] = real(data.b)
 			}
 		}
 		else if edificio.index = id_procesador{
 			if cambio = cambio_instrucciones_add_comando{
 				var new_instruccion = array_create(array_length(procesador_default_instruccion[data.instruccion]), 0)
 				array_copy(new_instruccion, 0, procesador_default_instruccion[data.instruccion], 0, array_length(procesador_default_instruccion[data.instruccion]))
-				new_instruccion[0] = data.instruccion
+				new_instruccion[0] = real(data.instruccion)
 				array_push(edificio.instruccion, new_instruccion)
 			}
 			else if cambio = cambio_instrucciones_delete_comando
@@ -94,7 +94,7 @@ function set_edificio_instruccion(edificio = control.null_edificio, cambio = 0, 
 			else if cambio = cambio_instruccion_copiar{
 				var new_instruccion = array_create(array_length(edificio.instruccion[data.instruccion]), 0)
 				array_copy(new_instruccion, 0, edificio.instruccion[data.instruccion], 0, array_length(edificio.instruccion[data.instruccion]))
-				new_instruccion[0] = data.instruccion
+				new_instruccion[0] = real(data.instruccion)
 				array_insert(edificio.instruccion, data.instruccion + 1, new_instruccion)
 			}
 			else if cambio = cambio_instruccion_mover{
@@ -123,5 +123,19 @@ function set_edificio_instruccion(edificio = control.null_edificio, cambio = 0, 
 		}
 		else if edificio.index = id_memoria
 			edificio.variables[data.instruccion] = data.valor
+		else if cambio = cambio_vaciar_deposito{
+			edificio.flujo.almacen = 0
+			edificio.flujo.liquido = -1
+		}
+		else if cambio = cambio_target_drones{
+			if edificio.array_real[0] = -1{
+				edificio.array_real[0] = real(data.desa)
+				edificio.array_real[1] = real(data.desb)
+			}
+			else{
+				edificio.array_real[0] = -1
+				edificio.array_real[1] = -1
+			}
+		}
 	}
 }

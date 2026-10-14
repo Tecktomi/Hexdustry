@@ -120,7 +120,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 						edificio.carga_total -= tiro_struct.cantidad
 						var municion
 						if index = id_lanzallamas{
-							b = degtorad(angle) + random_range(-pi / 6, pi / 6)
+							b = degtorad(angle) + random_range(-pi / 24, pi / 24)
 							municion = add_municion(center_x, center_y, 20 * cos(b), -20 * sin(b), municion_tipo_fuego, dis / 20, tiro_struct.dmg * dmg_factor,, dron, target_edificio,,, _jugador)
 						}
 						else if index = id_mortero{
@@ -138,7 +138,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 							municion = add_municion(center_x, center_y, 25 * (target_x - center_x) / dis, 25 * (target_y - center_y) / dis, municion_tipo_normal, dis / 25, tiro_struct.dmg * dmg_factor,, dron, target_edificio,,, _jugador)
 						array_push(municiones, municion)
 						if index = id_lanzallamas{
-							b = degtorad(angle) + random_range(-pi / 6, pi / 6)
+							b = degtorad(angle) + random_range(-pi / 24, pi / 24)
 							array_push(fuegos, add_fuego(center_x + 20 * cos(b), center_y - 20 * sin(b), edificio.a, edificio.b, 12 * cos(b), -12 * sin(b), 40))
 						}
 						mover_in(edificio)

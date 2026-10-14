@@ -4,6 +4,16 @@ function server_construir(index, dir, a, b, _cheat = control.cheat, _jugador = j
 		buffer_write(buffer, buffer_u8, net_construir)
 		buffer_write(buffer, buffer_u32, real(timer))
 		buffer_write(buffer, buffer_u8, real(index))
+		if index = id_tunel or index = id_tunel_salida{
+			buffer_write(buffer, buffer_bool, build_able)
+			buffer_write(buffer, buffer_u16, build_target.a)
+			buffer_write(buffer, buffer_u16, build_target.b)
+		}
+		else if in(index, id_fabrica_de_drones, id_cinta_grande, id_fabrica_de_drones_grande){
+			buffer_write(buffer, buffer_bool, build_agua)
+			buffer_write(buffer, buffer_u16, build_agua_x)
+			buffer_write(buffer, buffer_u16, build_agua_y)
+		}
 		buffer_write(buffer, buffer_u8, real(dir mod 6))
 		buffer_write(buffer, buffer_u16, real(a))
 		buffer_write(buffer, buffer_u16, real(b))

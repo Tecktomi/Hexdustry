@@ -17,17 +17,17 @@ function set_grid_size(){
 		ds_grid_clear(ore, -1)
 		ds_grid_resize(ore_amount, xsize, ysize)
 		ds_grid_clear(ore_amount, 0)
-		ds_grid_resize(ore_random, xsize, ysize)
-		ds_grid_clear(ore_random, 0)
 		ds_grid_resize(terreno, xsize, ysize)
 		ds_grid_clear(terreno, 1)
 		var a, b, a2, aplus, temp_complex, edificio, prev_width = ds_grid_width(background_bool), prev_height = ds_grid_height(background_bool)
+		ds_grid_resize(ore_random, xsize, ysize)
 		ds_grid_resize(pre_abtoxy, xsize + 2, ysize + 2)
-		ds_grid_clear(pre_abtoxy, [0, 0])
 		ds_grid_resize(pre_abtox, xsize + 2, ysize + 2)
-		ds_grid_clear(pre_abtox, 0)
 		ds_grid_resize(pre_abtoy, xsize + 2, ysize + 2)
-		ds_grid_clear(pre_abtoy, 0)
+		ds_grid_resize(repair_id, xsize, ysize)
+		ds_grid_resize(repair_dir, xsize, ysize)
+		ds_grid_resize(repair_mode, xsize, ysize)
+		ds_grid_resize(repair_select, xsize, ysize)
 		for(a = 0; a < xsize; a++){
 			aplus = a + 1
 			pre_abtoxy[# a, 0] = [a * 48 + 40, 0]
@@ -40,6 +40,10 @@ function set_grid_size(){
 				pre_abtox[# aplus, b + 1] = (a + (b & 1) / 2) * 48 + 16
 				pre_abtoy[# aplus, b + 1] = (b + 1) * 14
 				ore_random[# a, b] = random(1)
+				repair_id[# a, b] = array_create(EQUIPOS, -1)
+				repair_dir[# a, b] = array_create(EQUIPOS, 0)
+				repair_mode[# a, b] = array_create(EQUIPOS, false)
+				repair_select[# a, b] = array_create(EQUIPOS, 0)
 			}
 		}
 		for(b = 0; b < ysize; b++){
@@ -52,14 +56,6 @@ function set_grid_size(){
 		}
 		ds_grid_resize(terreno_pared_index, xsize, ysize)
 		ds_grid_clear(terreno_pared_index, 0)
-		ds_grid_resize(repair_id, xsize, ysize)
-		ds_grid_clear(repair_id, -1)
-		ds_grid_resize(repair_dir, xsize, ysize)
-		ds_grid_clear(repair_dir, 0)
-		ds_grid_resize(repair_mode, xsize, ysize)
-		ds_grid_clear(repair_mode, false)
-		ds_grid_resize(repair_select, xsize, ysize)
-		ds_grid_clear(repair_select, 0)
 		ds_grid_resize(background_bool, chunk_xsize, chunk_ysize)
 		ds_grid_clear(background_bool, false)
 		ds_grid_resize(usable_grid_bool, xsize, ysize)
@@ -100,6 +96,8 @@ function set_grid_size(){
 		}
 		ds_grid_resize(tile_animado_chunk, chunk_xsize, chunk_ysize)
 		ds_grid_clear(tile_animado_chunk, 0)
+		ds_grid_resize(chunk_explosion, chunk_xsize, chunk_ysize)
+		ds_grid_clear(chunk_explosion, array_create(0, null_explosion_mark))
 		ds_grid_resize(ia_grid_real, xsize, ysize)
 		ds_grid_resize(ia_grid_camino, xsize, ysize)
 	}

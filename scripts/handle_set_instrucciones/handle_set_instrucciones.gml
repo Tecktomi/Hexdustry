@@ -16,7 +16,7 @@ function handle_set_instrucciones(buffer){
 			cambio : cambio
 		}
 		if cambio = cambio_activar{}
-		else if cambio = cambio_rotar{}
+		else if cambio = cambio_rotar_tunel{}
 		else if cambio = cambio_silo_target{
 			data._x = real(buffer_read(buffer, buffer_f64))
 			data._y = real(buffer_read(buffer, buffer_f64))
@@ -68,6 +68,10 @@ function handle_set_instrucciones(buffer){
 				data.valor = real(buffer_read(buffer, buffer_f64))
 			else
 				data.valor = string(buffer_read(buffer, buffer_string))
+		}
+		else if cambio = cambio_target_drones{
+			data.desa = real(buffer_read(buffer, buffer_u16))
+			data.desb = real(buffer_read(buffer, buffer_u16))
 		}
 		if servidor{
 			set_edificio_instruccion(edificio, data.cambio, data)

@@ -6,6 +6,11 @@ function mover_dron(dron = control.null_dron, x, y, manual = false){
 				exit
 		}
 		var index = dron.index, temp_complex = xytoab(x, y), aa = temp_complex[0], bb = temp_complex[1]
+		if dron.index = idd_mula and edificio_id[# aa, bb].index = id_puerto_de_carga{
+			dron.modo = MULA_BUSCAR_INSTRUCCION
+			dron.target = edificio_id[# aa, bb]
+			dron.temp_target = edificio_id[# aa, bb]
+		}
 		if tag_drones_de_ataque[index] and edificio_bool[# aa, bb]{
 			var edificio = edificio_id[# aa, bb]
 			if edificio.jugador != dron.jugador{

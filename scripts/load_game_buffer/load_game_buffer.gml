@@ -14,7 +14,7 @@ function load_game_buffer(buffer){
 			load_escenario_buffer(tutorial_nombre[tutorial - 1], false, false)
 		}
 		else
-			load_escenario_buffer($"{DEFAULT_MAPS[mapa]}.txt", false)
+			load_escenario_buffer($"{DEFAULT_MAPS[mapa]}.txt", false, false)
 		sim_seed[0] = real(buffer_read(buffer, buffer_u32))
 		game_start(false)
 		camx = buffer_read(buffer, buffer_f64)
@@ -186,7 +186,7 @@ function load_game_buffer(buffer){
 			var vmove = real(buffer_read(buffer, buffer_f64))
 			var mask = real(buffer_read(buffer, buffer_u8))
 			c = 0
-			var tipo = municion_tipo_normal, radio = 2500, humo = false, rastreador = false, _jugador = jugador, _target = -1, _target_build = -1
+			var tipo = municion_tipo_normal, radio = 2500, humo = false, rastreador = false, _jugador = 2, _target = -1, _target_build = -1
 			if mask & (1 << c++) tipo = real(buffer_read(buffer, buffer_u8))
 			var dis = real(buffer_read(buffer, buffer_f64))
 			var dmg = real(buffer_read(buffer, buffer_f64))

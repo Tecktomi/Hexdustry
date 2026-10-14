@@ -198,7 +198,7 @@ function menu_editar_edificio(){
 				draw_circle_off(edificio.center_x, edificio.center_y, PUERTO_CARGA_RANGE, true)
 				width = max(width, string_width(L.procesador_add) * zoom / 2)
 				for(a = array_length(edificio.instruccion) - 1; a >= 0; a--)
-					width = max(width, (string_width($"Llevar {recurso_nombre[edificio.instruccion[a, 0]]} de {edificio_nombre[edificio_id[# edificio.instruccion[a, 1], edificio.instruccion[a, 2]].index]} a {edificio_nombre[edificio_id[# edificio.instruccion[a, 1], edificio.instruccion[a, 2]].index]}") + 20) * zoom / 2)
+					width = max(width, (string_width($"Llevar {recurso_nombre[edificio.instruccion[a, 0]]} de {edificio_nombre[edificio_id[# edificio.instruccion[a, 1], edificio.instruccion[a, 2]].index]} a {edificio_nombre[edificio_id[# edificio.instruccion[a, 3], edificio.instruccion[a, 4]].index]}") + 20) * zoom / 2)
 				draw_rectangle(aa - width, bb + 40 * zoom, aa + width, bb + 20 * (3 + array_length(edificio.instruccion)) * zoom, false)
 			}
 			draw_set_color(ui_fondo)
@@ -237,27 +237,22 @@ function menu_editar_edificio(){
 					draw_sprite_off(spr_target, 0, edificio.array_real[0], edificio.array_real[1])
 				if mouse_check_button_pressed(mb_right){
 					mouse_clear(mb_right)
-					if edificio.array_real[0] = -1{
-						edificio.array_real[0] = (mouse_x + camx) / zoom
-						edificio.array_real[1] = (mouse_y + camy) / zoom
-					}
-					else{
-						edificio.array_real[0] = -1
-						edificio.array_real[1] = -1
-					}
+					set_edificio_instruccion(edificio, cambio_target_drones, {desa : (mouse_x + camx) / zoom, desb : (mouse_y + camy) / zoom}, true)
 				}
 			}
 			else if index = id_deposito
 				draw_text(aa - 80 * zoom, bb + 20 * zoom, L.vaciar)
 			else if index = id_refineria_de_petroleo{
-				edificio.select = round(draw_deslizante(aa - 100 * zoom, aa + 100 * zoom, bb + 50 * zoom, edificio.select, 0, 100, 0))
+				var val = round(draw_deslizante(aa - 100 * zoom, aa + 100 * zoom, bb + 50 * zoom, edificio.select, 0, 100, 0))
 				draw_set_halign(fa_center)
 				if draw_boton(aa, bb + 60 * zoom, $"{recurso_nombre[idr_compuesto_incendiario]}: {edificio.select}%",,,, false)
-					edificio.select = 100
+					val = 100
 				if draw_boton(aa, bb + 80 * zoom, $"{recurso_nombre[idr_plastico]}: {round(100 * (1 - edificio.select / 100) * (sqr(1 - abs(edificio.select - 50) / 100)))}%",,,, false)
-					edificio.select = 50
+					val = 50
 				if draw_boton(aa, bb + 100 * zoom, $"{recurso_nombre[idr_piedra_sulfatada]}: {100 - edificio.select - round(100 * (1 - edificio.select / 100) * (sqr(1 - abs(edificio.select - 50) / 100)))}%",,,, false)
-					edificio.select = 0
+					val = 0
+				if val != edificio.select
+					set_edificio(edificio.mode, val, edificio, true)
 				draw_set_halign(fa_left)
 			}
 			else if index = id_silo_de_misiles{
@@ -271,7 +266,9 @@ function menu_editar_edificio(){
 				draw_set_halign(fa_center)
 				draw_text(aa, bb + 20 * zoom, $"{88 + 0.3 * edificio.select}[MHz]")
 				draw_set_halign(fa_left)
-				edificio.select = round(draw_deslizante(aa - 70 * zoom, aa + 70 * zoom, bb + 50 * zoom, edificio.select, 0, frecuencia_max - 1, 0))
+				var val = round(draw_deslizante(aa - 70 * zoom, aa + 70 * zoom, bb + 50 * zoom, edificio.select, 0, frecuencia_max - 1, 0))
+				if val != edificio.select
+					set_edificio(edificio.mode, val, edificio, true)
 			}
 			else if index = id_puerto_de_carga{
 				draw_boton_text_counter = 0
@@ -284,7 +281,8 @@ function menu_editar_edificio(){
 						set_edificio_instruccion(edificio, cambio_instrucciones_cambio_recurso, {rss : b, instruccion : a}, true)
 					xpos += text_x
 					xpos = draw_text_xpos(xpos, ypos, " de ")
-					if draw_boton(xpos, ypos, edificio_nombre[edificios_jugador[_jugador, edificio.instruccion[a, 1]].index],,,, false){
+					temp_text = edificio_bool[# edificio.instruccion[a, 1], edificio.instruccion[a, 2]] ? edificio_nombre[edificio_id[# edificio.instruccion[a, 1], edificio.instruccion[a, 2]].index] : "..."
+					if draw_boton(xpos, ypos, temp_text,,,, false){
 						puerto_carga_link = edificio
 						puerto_carga_rss = edificio.instruccion[a, 0]
 						puerto_carga_select = 1
@@ -292,7 +290,8 @@ function menu_editar_edificio(){
 					}
 					xpos += text_x
 					xpos = draw_text_xpos(xpos, ypos, " a ")
-					if draw_boton(xpos, ypos, edificio_nombre[edificios_jugador[_jugador, edificio.instruccion[a, 2]].index],,,, false){
+					temp_text = edificio_bool[# edificio.instruccion[a, 1], edificio.instruccion[a, 2]] ? edificio_nombre[edificio_id[# edificio.instruccion[a, 1], edificio.instruccion[a, 2]].index] : "..."
+					if draw_boton(xpos, ypos, temp_text,,,, false){
 						puerto_carga_link = edificio
 						puerto_carga_rss = edificio.instruccion[a, 0]
 						puerto_carga_select = 2
@@ -326,7 +325,8 @@ function menu_editar_edificio(){
 							if mouse_check_button_pressed(mb_left){
 								mouse_clear(mb_left)
 								show_menu = false
-								set_edificio(edificio.mode, a, edificio, true)
+								if a != edificio.select
+									set_edificio(edificio.mode, a, edificio, true)
 							}
 						}
 					}
@@ -336,7 +336,8 @@ function menu_editar_edificio(){
 						mouse_clear(mb_left)
 						show_menu = false
 						a = floor((mouse_y - (bb + 40 * zoom)) / (20 * zoom))
-						set_edificio(edificio.mode, a, edificio, true)
+						if a != edificio.select
+							set_edificio(edificio.mode, a, edificio, true)
 					}
 				}
 				else if index = id_planta_quimica{
@@ -347,7 +348,8 @@ function menu_editar_edificio(){
 						if mouse_check_button_pressed(mb_left){
 							mouse_clear(mb_left)
 							show_menu = false
-							set_edificio(edificio.mode, a, edificio, true)
+							if a != edificio.select
+								set_edificio(edificio.mode, a, edificio, true)
 						}
 					}
 				}
@@ -364,7 +366,8 @@ function menu_editar_edificio(){
 						if mouse_check_button_pressed(mb_left){
 							mouse_clear(mb_left)
 							show_menu = false
-							set_edificio(edificio.mode, a, edificio, true)
+							if a != edificio.select
+								set_edificio(edificio.mode, a, edificio, true)
 						}
 					}
 				}
@@ -374,8 +377,7 @@ function menu_editar_edificio(){
 							if mouse_check_button_pressed(mb_left){
 								mouse_clear(mb_left)
 								show_menu = false
-								edificio.flujo.almacen = 0
-								edificio.flujo.liquido = -1
+								set_edificio_instruccion(edificio, cambio_vaciar_deposito,, true)
 							}
 						}
 						else{
@@ -398,7 +400,8 @@ function menu_editar_edificio(){
 						if mouse_check_button_pressed(mb_left){
 							mouse_clear(mb_left)
 							show_menu = false
-							set_edificio(edificio.mode, a, edificio, true)
+							if a != edificio.select
+								set_edificio(edificio.mode, a, edificio, true)
 						}
 					}
 				}

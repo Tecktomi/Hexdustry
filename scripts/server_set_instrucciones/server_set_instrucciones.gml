@@ -7,7 +7,7 @@ function server_set_instrucciones(edificio = control.null_edificio, cambio, data
 		buffer_write(buffer, buffer_u16, real(edificio.b))
 		buffer_write(buffer, buffer_s8, real(cambio))
 		if cambio = cambio_activar{}
-		else if cambio = cambio_rotar{}
+		else if cambio = cambio_rotar_tunel{}
 		else if cambio = cambio_silo_target{
 			buffer_write(buffer, buffer_f64, real(data._x))
 			buffer_write(buffer, buffer_f64, real(data._y))
@@ -61,6 +61,10 @@ function server_set_instrucciones(edificio = control.null_edificio, cambio, data
 				buffer_write(buffer, buffer_f64, real(data.valor))
 			else
 				buffer_write(buffer, buffer_string, string(data.valor))
+		}
+		else if cambio = cambio_target_drones{
+			buffer_write(buffer, buffer_u16, real(data.desa))
+			buffer_write(buffer, buffer_u16, real(data.desb))
 		}
 		if online{
 			if servidor

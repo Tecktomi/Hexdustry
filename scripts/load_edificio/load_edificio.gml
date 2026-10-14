@@ -1,6 +1,16 @@
 function load_edificio(buffer, edificio = control.null_edificio){
 	with control{
 		var mask = buffer_read(buffer, buffer_u64), c = 0, temp_target_dron = -1, flag = false, a
+		if mask & (1 << c++){
+			edificio.select = real(buffer_read(buffer, buffer_f64))
+			flag = true
+		}
+		if mask & (1 << c++){
+			edificio.mode = true
+			flag = true
+		}
+		if flag and tag_edificio_seteable[edificio.index]
+			set_edificio(edificio.mode, edificio.select, edificio)
 		if mask & (1 << c++) edificio.input_index = real(buffer_read(buffer, buffer_u8))
 		if mask & (1 << c++) edificio.output_index = real(buffer_read(buffer, buffer_u8))
 		if mask & (1 << c++) edificio.proceso = real(buffer_read(buffer, buffer_f64))
@@ -12,14 +22,6 @@ function load_edificio(buffer, edificio = control.null_edificio){
 			}
 		if mask & (1 << c++) edificio.carga_id = real(buffer_read(buffer, buffer_u8))
 		if mask & (1 << c++) edificio.fuel = real(buffer_read(buffer, buffer_u16))
-		if mask & (1 << c++){
-			edificio.select = real(buffer_read(buffer, buffer_f64))
-			flag = true
-		}
-		if mask & (1 << c++){
-			edificio.mode = true
-			flag = true
-		}
 		if mask & (1 << c++) edificio.waiting = true
 		if mask & (1 << c++) edificio.idle = true
 		if mask & (1 << c++) edificio.link = edificios_totales[real(buffer_read(buffer, buffer_u16))]
@@ -31,7 +33,7 @@ function load_edificio(buffer, edificio = control.null_edificio){
 		if mask & (1 << c++) change_energia(real(buffer_read(buffer, buffer_f64)), edificio)
 		if mask & (1 << c++) edificio.energia_consumo_max = real(buffer_read(buffer, buffer_f64))
 		if mask & (1 << c++) edificio.edificio_index = real(buffer_read(buffer, buffer_u16))
-		if mask & (1 << c++) encender_luz(edificio.luz, edificio)
+		if mask & (1 << c++) encender_luz(true, edificio)
 		if mask & (1 << c++){
 			var len = real(buffer_read(buffer, buffer_u16))
 			for(a = 0; a < len; a++)
@@ -42,8 +44,6 @@ function load_edificio(buffer, edificio = control.null_edificio){
 		if mask & (1 << c++) add_modulo(edificio,, true)
 		if mask & (1 << c++) edificio.outputs_carga_index = real(buffer_read(buffer, buffer_u8))
 		if mask & (1 << c++) edificio.fuego = real(buffer_read(buffer, buffer_u16))
-		if flag and tag_edificio_seteable[edificio.index]
-			set_edificio(edificio.mode, edificio.select, edificio)
 		return temp_target_dron
 	}
 }

@@ -555,7 +555,9 @@ function menu_editor(){
 		}
 		ypos += text_y * 1.2
 		if draw_boton(10, ypos, L.editar_desde_adentro, ui_azul){
-			array_copy(categoria_nombre_disponible, 0, categoria_nombre, 0, array_length(categoria_nombre))
+			array_push(categoria_nombre_disponible, array_last(categoria_nombre))
+			array_push(categoria_index_disponible, array_length(categoria_nombre) - 1)
+			array_push(categoria_edificios_disponible, array_last(categoria_edificios))
 			build_index = -1
 			clear_edit()
 			menu = MENU_EDITOR_JUEGO

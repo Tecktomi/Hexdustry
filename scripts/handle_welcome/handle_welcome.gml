@@ -10,7 +10,8 @@ function handle_welcome(buffer){
 		drones_propios = drones_jugador[jugador]
 		//Asignar núcleo y recursos
 		if server_pvp{
-			var a = real(buffer_read(buffer, buffer_u8)), b = real(buffer_read(buffer, buffer_u8))
+			var a = real(buffer_read(buffer, buffer_u16))
+			var b = real(buffer_read(buffer, buffer_u16))
 			nucleos[jugador] = edificio_id[# a, b]
 			for(a = 0; a < rss_max; a++)
 				array_set(jugador_recursos[jugador], a, carga_inicial[a])

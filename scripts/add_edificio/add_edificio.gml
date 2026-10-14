@@ -274,6 +274,8 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 							temp_edificio.mode = true
 							edificio.link = temp_edificio
 							temp_edificio.link = edificio
+							edificio.carga_total = 0
+							temp_edificio.carga_total = temp_edificio.carga[idr_electronicos]
 							edificio.carga_max[idr_cobre] = 0
 							edificio.carga_input[idr_cobre] = false
 							edificio.carga_max[idr_vidrio] = 0
@@ -311,11 +313,11 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		for(c = 0; c < len;){
 			aa = temp_list_size[c++]
 			bb = temp_list_size[c++]
-			ds_grid_set(edificio_bool, aa, bb, true)
-			ds_grid_set(edificio_id, aa, bb, edificio)
-			ds_grid_set(repair_id, aa, bb, -1)
+			edificio_bool[# aa, bb] = true
+			edificio_id[# aa, bb] = edificio
+			repair_id[# aa, bb][_jugador] = -1
 			if index = id_nucleo
-				ds_grid_set(edificio.coordenadas_dis, aa, bb, 0)
+				edificio.coordenadas_dis[# aa, bb] = 0
 		}
 		calcular_edificios_adyascentes(edificio)
 		//Añadir a la red electrica

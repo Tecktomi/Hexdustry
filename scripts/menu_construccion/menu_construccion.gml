@@ -851,10 +851,8 @@ function menu_construccion(mx, my, xmouse, ymouse, just_pressed = false, prev_ch
 											}
 										}
 								}
-								for(a = array_length(build_array_edificios) - 1; a >= 0; a--){
-									var temp_edificio = build_array_edificios[a]
-									draw_edificio_borde(temp_edificio, ui_color_reparadora, _parpadeo)
-								}
+								for(a = array_length(build_array_edificios) - 1; a >= 0; a--)
+									draw_edificio_borde(build_array_edificios[a], ui_color_reparadora, _parpadeo)
 							
 							}
 							//Vista previa Alcance de torres
@@ -952,10 +950,8 @@ function menu_construccion(mx, my, xmouse, ymouse, just_pressed = false, prev_ch
 								if build_index = id_planta_de_reciclaje{
 									draw_set_color(ui_color_reciclaje)
 									draw_circle_off(temp_complex[0], temp_complex[1], PLANTA_RECICLAJE_RANGE, true)
-									for(a = array_length(build_array_edificios) - 1; a >= 0; a--){
-										var temp_edificio = build_array_edificios[a]
-										draw_edificio_borde(temp_edificio, ui_color_reciclaje, _parpadeo)
-									}
+									for(a = array_length(build_array_edificios) - 1; a >= 0; a--)
+										draw_edificio_borde(build_array_edificios[a], ui_color_reciclaje, _parpadeo)
 								}
 							}
 							//Depósitos
@@ -975,10 +971,8 @@ function menu_construccion(mx, my, xmouse, ymouse, just_pressed = false, prev_ch
 										array_disorder_remove(edificios_salida_drones, temp_edificio_2, ptre_salida_drones)
 								}
 								array_copy(temp_edificio.outputs_carga, 0, build_array_edificios_output, 0, array_length(build_array_edificios_output))
-								for(a = array_length(temp_edificio.outputs_carga) - 1; a >= 0; a--){
-									var temp_edificio_2 = temp_edificio.outputs_carga[a]
-									array_push(temp_edificio_2.inputs_carga, temp_edificio)
-								}
+								for(a = array_length(temp_edificio.outputs_carga) - 1; a >= 0; a--)
+									array_push(temp_edificio.outputs_carga[a].inputs_carga, temp_edificio)
 								if array_length(temp_edificio.outputs_carga) = 0
 									array_disorder_push(edificios_salida_drones, temp_edificio, ptre_salida_drones)
 							}

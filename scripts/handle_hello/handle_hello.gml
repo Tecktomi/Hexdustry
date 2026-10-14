@@ -19,7 +19,7 @@ function handle_hello(socket, buffer, slot, player_name){
 					break
 				}
 				construir(id_nucleo, 0, new_nucleo_x, new_nucleo_y,,, slot + 2)
-				jugador_recursos[slot + 2] = array_create(rss_max, 0)
+				array_copy(jugador_recursos[slot + 2], 0, carga_inicial, 0, rss_max)
 			}
 		#endregion
 		array_push(chat, string(L.server_jugador_unido, player_name))
@@ -43,8 +43,8 @@ function handle_hello(socket, buffer, slot, player_name){
 			save_game_buffer(reply)
 			buffer_write(reply, buffer_u32, random_get_seed())
 			if server_pvp{
-				buffer_write(reply, buffer_u8, new_nucleo_x)
-				buffer_write(reply, buffer_u8, new_nucleo_y)
+				buffer_write(reply, buffer_u16, new_nucleo_x)
+				buffer_write(reply, buffer_u16, new_nucleo_y)
 			}
 			for(var i = 0; i < MAX_JUGADORES; i++)
 				buffer_write(reply, buffer_string, server_jugadores_nombre[i])

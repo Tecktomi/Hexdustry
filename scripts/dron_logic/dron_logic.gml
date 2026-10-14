@@ -102,21 +102,30 @@ function dron_logic(){
 								dron.target = null_edificio
 							}
 							else{
-								dron.temp_target = edificio_id[# dron.target.instruccion[dron.dir_move, 1], dron.target.instruccion[dron.dir_move, 2]]
+								dron.temp_target = edificio_id[# dron.target.instruccion[dron.target.select, 1], dron.target.instruccion[dron.target.select, 2]]
 								if dron.temp_target = null_edificio
 									dron.modo = MULA_IDLE
-								else{
+								else if dron.carga_total < MULA_CARGA_MAX{
 									dron.modo = MULA_BUSCAR_RSS
 									dron.dir_move = dron.target.select
 									dron.move_dis = dron.target.instruccion[dron.dir_move, 0]
 									dron.temp_target = edificio_id[# dron.target.instruccion[dron.dir_move, 1], dron.target.instruccion[dron.dir_move, 2]]
 									dron.target.select = (dron.dir_move + 1) mod array_length(dron.target.instruccion)
 								}
+								else if dron.carga[dron.target.instruccion[dron.dir_move, 0]] > 0{
+									dron.modo = MULA_DEJAR_RSS
+									dron.dir_move = dron.target.select
+									dron.move_dis = dron.target.instruccion[dron.dir_move, 0]
+									dron.temp_target = edificio_id[# dron.target.instruccion[dron.dir_move, 3], dron.target.instruccion[dron.dir_move, 4]]
+									dron.target.select = (dron.dir_move + 1) mod array_length(dron.target.instruccion)
+								}
+								else
+									dron.modo = MULA_IDLE
 							}
 						}
 						else if dron.modo = MULA_BUSCAR_RSS{
 							if not edificio_bool[# dron.target.instruccion[dron.dir_move, 3], dron.target.instruccion[dron.dir_move, 4]]
-								ron.modo = MULA_IDLE
+								dron.modo = MULA_IDLE
 							else{
 								dron.modo = MULA_DEJAR_RSS
 								i = min(dron.temp_target.carga[dron.move_dis], MULA_CARGA_MAX - dron.carga_total)
@@ -129,7 +138,7 @@ function dron_logic(){
 						}
 						else if dron.modo = MULA_DEJAR_RSS{
 							dron.modo = MULA_BUSCAR_INSTRUCCION
-							i = min(dron.carga[dron.move_dis], edificio_carga_max[dron.temp_target.index] - dron.temp_target.carga_total)
+							i = clamp(dron.carga[dron.move_dis], 0, edificio_carga_max[dron.temp_target.index] - dron.temp_target.carga_total)
 							dron.carga[dron.move_dis] -= i
 							dron.carga_total -= i
 							dron.temp_target.carga[dron.move_dis] += i
@@ -175,7 +184,7 @@ function dron_logic(){
 				if dron.modo = 0{
 					i = irandom(xsize - 1)
 					j = irandom(ysize - 1)
-					if repair_id[# i, j] > 0{
+					if repair_id[# i, j][_jugador] > 0{
 						dron.move_x = i
 						dron.move_y = j
 						temp_complex = abtoxy(i, j)
@@ -197,14 +206,14 @@ function dron_logic(){
 					else{
 						i = dron.move_x
 						j = dron.move_y
-						b = repair_id[# i, j]
+						b = repair_id[# i, j][_jugador]
 						_comprable = (b > 0)
 						if _comprable and not cheat
 							_comprable = check_reconstruible(b, false, _jugador)._comprable
 						if _comprable{
-							edificio = construir(b, repair_dir[# i, j], i, j,,, _jugador)
+							edificio = construir(b, repair_dir[# i, j][_jugador], i, j,,, _jugador)
 							if tag_edificio_seteable[b]
-								set_edificio(repair_mode[# i, j], repair_select[# i, j], edificio)
+								set_edificio(repair_mode[# i, j][_jugador], repair_select[# i, j][_jugador], edificio)
 						}
 						dron.modo = 0
 					}

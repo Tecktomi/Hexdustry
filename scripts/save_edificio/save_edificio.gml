@@ -1,6 +1,8 @@
 function save_edificio(buffer, edificio = control.null_edificio){
 	with control{
 		var mask = 0, c = 0, a, len, len_2
+		mask += (edificio.select != -1) << c++
+		mask += (edificio.mode) << c++
 		mask += (edificio.input_index != 0) << c++
 		mask += (edificio.output_index != 0) << c++
 		mask += (edificio.proceso != 0) << c++
@@ -9,8 +11,6 @@ function save_edificio(buffer, edificio = control.null_edificio){
 			mask += (edificio.carga[a] != 0) << c++
 		mask += (edificio.carga_id != 0) << c++
 		mask += (edificio.fuel != 0) << c++
-		mask += (edificio.select != -1) << c++
-		mask += (edificio.mode) << c++
 		mask += edificio.waiting << c++
 		mask += edificio.idle << c++
 		mask += (edificio.link != null_edificio and edificio.link.punteros[ptre_total] != -1) << c++
@@ -32,6 +32,8 @@ function save_edificio(buffer, edificio = control.null_edificio){
 		buffer_write(buffer, buffer_u64, mask)
 		c = 0
 		//DEMASK
+		if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(edificio.select))
+		c++
 		if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(edificio.input_index))
 		if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(edificio.output_index))
 		if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(edificio.proceso))
@@ -40,8 +42,6 @@ function save_edificio(buffer, edificio = control.null_edificio){
 			if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(edificio.carga[a]))
 		if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(edificio.carga_id))
 		if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(edificio.fuel))
-		if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(edificio.select))
-		c++
 		c++
 		c++
 		if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(edificio.link.punteros[ptre_total]))

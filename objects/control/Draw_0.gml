@@ -147,8 +147,8 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 	if keyboard_check(CONTROL_REPARAR)
 		for(a = mina; a < maxa; a++)
 			for(b = minb; b < maxb; b++)
-				if repair_id[# a, b] >= 0
-					draw_edificio(pre_abtox[# a + 1, b + 1], pre_abtoy[# a + 1, b + 1], repair_id[# a, b], repair_dir[# a, b], 0.5)
+				if repair_id[# a, b][jugador] >= 0
+					draw_edificio(pre_abtox[# a + 1, b + 1], pre_abtoy[# a + 1, b + 1], repair_id[# a, b][jugador], repair_dir[# a, b][jugador], 0.5)
 	//Luz
 	if energia_solar < 1{
 		var luz_alpha = 0.6 * (1 - energia_solar)
@@ -354,7 +354,10 @@ if pausa != 1 and get_file = 3{
 					a = real(buffer_read(buffer, buffer_u8))
 					b = real(buffer_read(buffer, buffer_u8))
 					var index = real(buffer_read(buffer, buffer_u8))
-					var dir = real(buffer_read(buffer, buffer_u8)), rot0 = real(buffer_read(buffer, buffer_u8)), rot4 = real(buffer_read(buffer, buffer_u8)), rot5 = real(buffer_read(buffer, buffer_u8))
+					var dir = real(buffer_read(buffer, buffer_u8))
+					var rot0 = real(buffer_read(buffer, buffer_s16))
+					var rot4 = real(buffer_read(buffer, buffer_s16))
+					var rot5 = real(buffer_read(buffer, buffer_s16))
 					var temp_blueprint = {
 						construible : true,
 						a : a,
@@ -625,7 +628,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			if tag_edificio_tunel[index]{
 				if keyboard_check_pressed(CONTROL_ROTAR) and edificio.link != null_edificio{
 					keyboard_clear(CONTROL_ROTAR)
-					set_edificio_instruccion(edificio, cambio_rotar,, true)
+					set_edificio_instruccion(edificio, cambio_rotar_tunel,, true)
 				}
 			}
 			else if tag_dron_encima[index]{
@@ -798,7 +801,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 	}
 	//Reconstruir edificios
 	else if keyboard_check(CONTROL_REPARAR){
-		b = repair_id[# mx, my]
+		b = repair_id[# mx, my][jugador]
 		var temp_text_2 = ""
 		if b > 0{
 			var _comprable = true
@@ -810,12 +813,12 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 				draw_text_background_off(temp_complex[0] + 20, temp_complex[1], temp_text_2)
 			}
 			else if mouse_check_button(mb_left){
-				var temp_edificio = construir(b, repair_dir[# mx, my], mx, my, true)
+				var temp_edificio = construir(b, repair_dir[# mx, my][jugador], mx, my, true)
 				if tag_edificio_seteable[b]
-					set_edificio(repair_mode[# mx, my], repair_select[# mx, my], temp_edificio, true)
+					set_edificio(repair_mode[# mx, my][jugador], repair_select[# mx, my][jugador], temp_edificio, true)
 			}
 			if mouse_check_button(mb_right)
-				ds_grid_set(repair_id, mx, my, -1)
+				repair_id[# mx, my][jugador] = -1
 		}
 	}
 	//Seleccionar drones
@@ -906,11 +909,8 @@ if array_length(selected_drones) > 0{
 		draw_circle_off(dron.x, dron.y, 30, true)
 		if dron.index = idd_mula and right_clicked{
 			mouse_clear(mb_right)
-			if edificio.index = id_puerto_de_carga{
-				dron.modo = MULA_BUSCAR_INSTRUCCION
-				dron.target = edificio
-				dron.temp_target = edificio
-			}
+			if edificio.index = id_puerto_de_carga
+				mover_dron(dron, edificio.x, edificio.y, true)
 			continue
 		}
 		if dron.modo = 1 and not dron.index = idd_minero
@@ -1135,7 +1135,7 @@ if sonido
 	}
 #endregion
 //Acceso directo
-if keyboard_check_pressed(vk_anykey) and (not in(ord(keyboard_lastchar), CONTROL_LEFT, CONTROL_RIGHT, CONTROL_UP, CONTROL_DOWN, ord(" ")) or cheat) and win = 0 and not show_menu{
+if keyboard_check_pressed(vk_anykey) and (not in(ord(keyboard_lastchar), CONTROL_LEFT, CONTROL_RIGHT, CONTROL_UP, CONTROL_DOWN, ord(" ")) or cheat) and win = 0 and not show_menu and not chat_input{
 	for(a = 1; a < edificio_max; a++)
 		if edificio_key[a] != "" and string_ends_with(keyboard_string, edificio_key[a]){
 			if tecnologia and not cheat and not edificio_tecnologia[jugador, a]{
@@ -1182,9 +1182,9 @@ else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
 				buffer_write(buffer, buffer_u8, temp_blueprint.b)
 				buffer_write(buffer, buffer_u8, temp_blueprint.index)
 				buffer_write(buffer, buffer_u8, temp_blueprint.dir)
-				buffer_write(buffer, buffer_u8, temp_blueprint.rot0)
-				buffer_write(buffer, buffer_u8, temp_blueprint.rot4)
-				buffer_write(buffer, buffer_u8, temp_blueprint.rot5)
+				buffer_write(buffer, buffer_s16, temp_blueprint.rot0)
+				buffer_write(buffer, buffer_s16, temp_blueprint.rot4)
+				buffer_write(buffer, buffer_s16, temp_blueprint.rot5)
 			}
 			buffer_save(buffer, $"Blueprints/{day_format()}.txt")
 			buffer_delete(buffer)
@@ -1225,7 +1225,7 @@ else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
 	//Cancelar
 	if mouse_check_button_pressed(mb_right){
 		mouse_clear(mb_right)
-		build_index = -1
+		array_resize(blueprint, 0)
 	}
 	//Rotar
 	if keyboard_check_pressed(CONTROL_ROTAR) or mouse_wheel_up() or mouse_wheel_down(){
@@ -1329,7 +1329,7 @@ else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
 	if mouse_check_button_pressed(mb_left){
 		mouse_clear(mb_left)
 		if not keyboard_check(vk_lshift)
-			build_index = -1
+			array_resize(blueprint, 0)
 		for(a = 0; a < len; a++){
 			var temp_blueprint = blueprint[a], aaa = temp_blueprint.a + mx
 			if flip and (temp_blueprint.b & 1) = 1{

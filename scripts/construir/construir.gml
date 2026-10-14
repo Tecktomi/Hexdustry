@@ -9,6 +9,11 @@ function construir(index, dir, mx, my, manual = false, _cheat = control.cheat, _
 			temp_edificio = edificio_id[# mx, my]
 			if temp_edificio.jugador = _jugador and (edificio_camino[temp_edificio.index] or temp_edificio.index = id_cruce){
 				if index = temp_edificio.index{
+					if (GRABANDO or online) and manual{
+						server_construir(index, dir, mx, my, _cheat)
+						if online and not servidor
+							return null_edificio
+					}
 					temp_edificio.dir = dir
 					calcular_edificios_adyascentes(temp_edificio)
 					mover(temp_edificio)
@@ -16,7 +21,7 @@ function construir(index, dir, mx, my, manual = false, _cheat = control.cheat, _
 					temp_edificio.array_real[0] = cos(a)
 					temp_edificio.array_real[1] = -sin(a)
 					flag = false
-					if in(index, id_enrutador, id_cinta_rapida){
+					if index = id_enrutador or index = id_cinta_rapida{
 						if (dir mod 3) = 1
 							temp_edificio.yscale = power(-1, dir > 1)
 						else{
@@ -26,11 +31,6 @@ function construir(index, dir, mx, my, manual = false, _cheat = control.cheat, _
 					}
 					else
 						temp_edificio.draw_rot = (dir - 1) * 60
-					if (GRABANDO or online) and manual{
-						server_construir(real(index), real(dir), real(mx), real(my), _cheat)
-						if online and not servidor
-							return null_edificio
-					}
 					return temp_edificio
 				}
 				else

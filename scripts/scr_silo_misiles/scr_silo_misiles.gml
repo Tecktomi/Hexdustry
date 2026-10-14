@@ -79,6 +79,7 @@ function scr_silo_misiles(edificio = control.null_edificio){
 					if array_length(misiones) = 0
 						array_resize(misiones, 1)
 					misiones[0] = def_mision(,,,,,,,,,,, edificio.center_x, edificio.center_y)
+					mision = misiones[0]
 					mision_camera_x_start = camx
 					mision_camera_y_start = camy
 				}
