@@ -16,7 +16,7 @@ function add_dron(a, b, index, _jugador = jugador){
 			chunk_y : clamp(floor(b / CHUNK_HEIGHT), 0, chunk_ysize - 1),
 			carga : array_create(rss_max, 0),
 			carga_total : 0,
-			modo : 0,
+			modo : MULA_IDLE,
 			torres : array_create(0, null_edificio),
 			dir : 0,
 			dir_move : 0,

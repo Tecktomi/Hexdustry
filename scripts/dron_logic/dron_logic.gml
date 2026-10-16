@@ -128,7 +128,7 @@ function dron_logic(){
 								dron.modo = MULA_IDLE
 							else{
 								dron.modo = MULA_DEJAR_RSS
-								i = min(dron.temp_target.carga[dron.move_dis], MULA_CARGA_MAX - dron.carga_total)
+								i = max(0, min(dron.temp_target.carga[dron.move_dis], MULA_CARGA_MAX - dron.carga_total))
 								dron.carga[dron.move_dis] += i
 								dron.carga_total += i
 								dron.temp_target.carga[dron.move_dis] -= i
@@ -138,7 +138,7 @@ function dron_logic(){
 						}
 						else if dron.modo = MULA_DEJAR_RSS{
 							dron.modo = MULA_BUSCAR_INSTRUCCION
-							i = clamp(dron.carga[dron.move_dis], 0, edificio_carga_max[dron.temp_target.index] - dron.temp_target.carga_total)
+							i = max(0, min(dron.carga[dron.move_dis], edificio_carga_max[dron.temp_target.index] - dron.temp_target.carga_total))
 							dron.carga[dron.move_dis] -= i
 							dron.carga_total -= i
 							dron.temp_target.carga[dron.move_dis] += i
@@ -150,17 +150,17 @@ function dron_logic(){
 			}
 			//Dron Reparador
 			else if index = idd_reparador{
-				if dron.modo = 0 and array_length(edificios_jugador[_jugador]) > 0{
+				if dron.modo = MULA_IDLE and array_length(edificios_jugador[_jugador]) > 0{
 					edificio = array_choose(edificios_jugador[_jugador])
 					if edificio.vida < edificio_vida[edificio.index]{
-						dron.modo = 1
+						dron.modo = MULA_REPARAR
 						dron.target = edificio
 					}
 				}
 				else{
 					edificio = dron.target
 					if edificio.vida <= 0{
-						dron.modo = 0
+						dron.modo = MULA_IDLE
 						continue
 					}
 					dis = point_distance(dron_x, dron_y, edificio.center_x, edificio.center_y)
@@ -174,14 +174,14 @@ function dron_logic(){
 						draw_set_color(ui_color_reparadora)
 						draw_line_off(dron_x, dron_y, edificio.center_x, edificio.center_y)
 						if edificio_curar(edificio, 30)
-							dron.modo = 0
+							dron.modo = MULA_IDLE
 					}
 				}
 			}
 			//Dron Reconstructor
 			else if index = idd_reconstructor{
 				//Buscar edificios destruidos
-				if dron.modo = 0{
+				if dron.modo = MULA_IDLE{
 					i = irandom(xsize - 1)
 					j = irandom(ysize - 1)
 					if repair_id[# i, j][_jugador] > 0{
@@ -190,11 +190,11 @@ function dron_logic(){
 						temp_complex = abtoxy(i, j)
 						dron.move_xmove = temp_complex[0]
 						dron.move_ymove = temp_complex[1]
-						dron.modo = 1
+						dron.modo = MULA_RECONSTRUIR
 					}
 				}
 				//Reconstruir edificios
-				else if dron.modo = 1{
+				else if dron.modo = MULA_RECONSTRUIR{
 					dis = point_distance(dron_x, dron_y, dron.move_xmove, dron.move_ymove)
 					//Ir al lugar
 					if dis > dron_alcance[index]{
@@ -215,14 +215,14 @@ function dron_logic(){
 							if tag_edificio_seteable[b]
 								set_edificio(repair_mode[# i, j][_jugador], repair_select[# i, j][_jugador], edificio)
 						}
-						dron.modo = 0
+						dron.modo = MULA_IDLE
 					}
 				}
 			}
 			//Dron Minero
 			else if index = idd_minero{
 				//Minar
-				if dron.modo = 1{
+				if dron.modo = MULA_MINAR{
 					temp_complex = xytoab(dron.move_x, dron.move_y)
 					if ore[# temp_complex[0], temp_complex[1]] != -1{
 						dis = point_distance(dron.x, dron.y, dron.move_x, dron.move_y)
@@ -250,7 +250,7 @@ function dron_logic(){
 								}
 							}
 							if flag{
-								dron.modo = 0
+								dron.modo = MULA_DEJAR_RSS
 								min_dis = infinity
 								min_puerto = null_edificio
 								for(b = array_length(edificios_index[id_almacen]) - 1; b >= 0; b--){
@@ -269,7 +269,7 @@ function dron_logic(){
 					}
 				}
 				//Llevar recursos a un puerto
-				else if dron.target != null_edificio{
+				else if dron.modo = MULA_DEJAR_RSS and dron.target != null_edificio{
 					dis = point_distance(dron.x, dron.y, dron.target.center_x, dron.target.center_y)
 					//Ir al almacén
 					if dis > 50{
@@ -285,7 +285,7 @@ function dron_logic(){
 							dron.carga[b] = 0
 						}
 						dron.carga_total = 0
-						dron.modo = 1
+						dron.modo = MULA_MINAR
 					}
 				}
 			}
@@ -302,7 +302,7 @@ function dron_logic(){
 				if index != idd_bombardero and (aereo or dis < dron_alcance[index])
 					dron.dir += 0.1 * angle_difference(point_direction(dron_x, dron_y, edificio.center_x, edificio.center_y), dron.dir)
 				//Seguir instrucciones
-				if dron.modo >= 1{
+				if dron.modo = MULA_MOVER{
 					if index = idd_bombardero{
 						if dron.step <= dron_step[index]{
 							dron.dir += 0.02 * angle_difference(point_direction(dron.x, dron.y, dron.move_xmove, dron.move_ymove) + random_range(-0.01, 0.01), dron.dir)
@@ -320,11 +320,11 @@ function dron_logic(){
 						dron.x += vel * dron.move_xmove
 						dron.y += vel * dron.move_ymove
 						if --dron.move_dis <= 0
-							dron.modo = 0
+							dron.modo = MULA_IDLE
 					}
 				}
 				//Moverse
-				else{
+				else if dron.modo = MULA_TARGET{
 					if tag_drones_terrestres[index]{
 						if dron.target.coordenadas_dis[# dron_a, dron_b] > 1 and dis > dron_alcance[index] / 2{
 							if dron.change_pos{
@@ -356,6 +356,8 @@ function dron_logic(){
 										}
 									}
 								}
+								if dir = -1
+									dron.modo = MULA_IDLE
 								dron.move_dir = dir
 							}
 							dron.dir += 0.05 * angle_difference(60 * dron.move_dir + 30, dron.dir)
@@ -399,12 +401,14 @@ function dron_logic(){
 									dron.y += vel * SIN_ANGLE_DIR[i] / 2
 								}
 								else if disi < min_dis{
-									_posibles = array_create(1, i)
+									_posibles = [i]
 									min_dis = disi
 								}
 								else if disi = min_dis
 									array_push(_posibles, i)
 							}
+							if array_length(_posibles) = 0
+								dron.modo = MULA_IDLE
 							dron.move_dir = array_choose(_posibles)
 						}
 						dron.dir += 0.05 * angle_difference(60 * dron.move_dir + 30, dron.dir)
@@ -494,7 +498,7 @@ function dron_logic(){
 				}
 			}
 			//Seguir instrucciones
-			else if dron.modo >= 1{
+			else if dron.modo = MULA_MOVER{
 				if index = idd_bombardero{
 					if dron.step <= dron_step[index]{
 						dron.dir += 0.02 * angle_difference(point_direction(dron.x, dron.y, dron.move_xmove, dron.move_ymove) + random_range(-0.01, 0.01), dron.dir)
@@ -514,7 +518,7 @@ function dron_logic(){
 					dron.x += vel * dron.move_xmove
 					dron.y += vel * dron.move_ymove
 					if --dron.move_dis <= 0
-						dron.modo = 0
+						dron.modo = MULA_IDLE
 				}
 			}
 			//Alejarse de los enemigos cercanos

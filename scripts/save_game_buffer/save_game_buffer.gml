@@ -59,7 +59,7 @@ function save_game_buffer(buffer){
 		#endregion
 		for(a = 0; a < rss_max; a++)
 			for(b = 0; b < EQUIPOS; b++)
-				buffer_write(buffer, buffer_u16, clamp(jugador_recursos[b, a], 0, 65535))
+				buffer_write(buffer, buffer_u32, max(jugador_recursos[b, a], 0))
 		buffer_write(buffer, buffer_u32, image_index)
 		for(b = 0; b < EQUIPOS; b++){
 			var mask_tecnologia = 0, mask_tecnologia_desbloqueable = 0
@@ -144,7 +144,7 @@ function save_game_buffer(buffer){
 			mask += (dron.target_dron != null_dron) << c++
 			for(i = 0; i < rss_max; i++)
 				mask += (dron.carga[i] != 0) << c++
-			mask += (dron.modo != 0) << c++
+			mask += (dron.modo != MULA_IDLE) << c++
 			mask += (dron.dir != 0) << c++
 			mask += (dron.dir_move != 0) << c++
 			mask += (dron.step != 0) << c++

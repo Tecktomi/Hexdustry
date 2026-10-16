@@ -122,8 +122,8 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 				var flag = true, temp_text = ""
 				if not cheat
 					for(a = 0; a < array_length(tecnologia_precio_id[ei]); a++){
-						temp_text += $"\n{recurso_nombre[tecnologia_precio_id[ei, a]]}: {tecnologia_precio_num[ei, a]}"
-						if jugador_recursos[jugador, tecnologia_precio_id[ei, a]] < tecnologia_precio_num[ei, a]{
+						temp_text += $"\n{recurso_nombre[tecnologia_precio_id[ei, a]]}: {tecnologia_precio_num[ei, a] * tecnologia_precio_multiplicador}"
+						if jugador_recursos[jugador, tecnologia_precio_id[ei, a]] < tecnologia_precio_num[ei, a] * tecnologia_precio_multiplicador{
 							flag = false
 							temp_text += " !!"
 						}

@@ -3,5 +3,7 @@ function string_digits_ext(text){
 	for(var a = 1; a <= len; a++)
 		if control.DIGITS[string_byte_at(text, a)]
 			output += string_char_at(text, a)
+	if string_digits(output) = ""
+		return ""
 	return output
 }

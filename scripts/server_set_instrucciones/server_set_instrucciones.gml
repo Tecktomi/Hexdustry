@@ -5,7 +5,7 @@ function server_set_instrucciones(edificio = control.null_edificio, cambio, data
 		buffer_write(buffer, buffer_u32, real(timer))
 		buffer_write(buffer, buffer_u16, real(edificio.a))
 		buffer_write(buffer, buffer_u16, real(edificio.b))
-		buffer_write(buffer, buffer_s8, real(cambio))
+		buffer_write(buffer, buffer_u8, real(cambio))
 		if cambio = cambio_activar{}
 		else if cambio = cambio_rotar_tunel{}
 		else if cambio = cambio_silo_target{

@@ -3,7 +3,7 @@ function handle_set_instrucciones(buffer){
 		var _timer = real(buffer_read(buffer, buffer_u32))
 		var a = real(buffer_read(buffer, buffer_u16))
 		var b = real(buffer_read(buffer, buffer_u16))
-		var cambio = real(buffer_read(buffer, buffer_s8))
+		var cambio = real(buffer_read(buffer, buffer_u8))
 		var edificio = edificio_id[# a, b]
 		var new_cambio = {
 			step : _timer,

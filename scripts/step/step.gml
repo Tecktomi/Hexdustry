@@ -37,8 +37,23 @@ function step(){
 				cambio = cambios[a]
 				if cambio.step <= timer{
 					array_delete(cambios, a, 1)
-					if cambio.tipo = cambio_construir
+					if cambio.tipo = cambio_construir{
+						if in(cambio.data.index, id_tunel, id_tunel_salida){
+							build_able = cambio.data.able
+							if edificio_bool[# cambio.data.tunel_a, cambio.data.tunel_b]
+								build_target = edificio_id[# cambio.data.tunel_a, cambio.data.tunel_b]
+						}
+						else if in(cambio.data.index, id_fabrica_de_drones, id_cinta_grande, id_fabrica_de_drones_grande){
+							build_agua = bool(cambio.data.agua)
+							build_agua_x = real(cambio.data.agua_x)
+							build_agua_y = real(cambio.data.agua_y)
+						}
+						else if tag_edificio_tuberia[cambio.data.index]{
+							liquido_choose_array = array_create(2, real(cambio.data.liquido))
+							liquido_choose = 0
+						}
 						construir(cambio.data.index, cambio.data.dir, cambio.data.a, cambio.data.b,, cambio.data.cheat, cambio.data.jugador)
+					}
 					else if cambio.tipo = cambio_delete_edificio
 						delete_edificio(edificio_id[# cambio.data.a, cambio.data.b], false,, cambio.data.cheat)
 					else if cambio.tipo = cambio_set_edificio

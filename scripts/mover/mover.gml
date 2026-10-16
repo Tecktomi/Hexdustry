@@ -124,7 +124,7 @@ function mover(edificio = control.null_edificio){
 			temp_edificio.carga[out]++
 			temp_edificio.carga_total++
 			temp_edificio.carga_id = out
-			if edificio_camino[index] and edificio_camino[temp_edificio.index]{
+			if edificio_camino[index] and edificio_camino[edificio.index]{
 				var temp_dir = temp_edificio.dir
 				if temp_dir != dir{
 					if (temp_dir = ((dir + 1) mod 6)) or (temp_dir = ((dir + 5) mod 6))

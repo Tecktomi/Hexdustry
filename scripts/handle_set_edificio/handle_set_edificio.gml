@@ -2,7 +2,7 @@ function handle_set_edificio(buffer){
 	with control{
 		var _timer = real(buffer_read(buffer, buffer_u32))
 		var mode = bool(buffer_read(buffer, buffer_bool))
-		var select = real(buffer_read(buffer, buffer_s8))
+		var select = real(buffer_read(buffer, buffer_f64))
 		var a = real(buffer_read(buffer, buffer_u16))
 		var b = real(buffer_read(buffer, buffer_u16))
 		if servidor{

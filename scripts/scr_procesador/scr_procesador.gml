@@ -107,7 +107,7 @@ function scr_procesador(edificio = control.null_edificio){
 					val = edificio.variables[pc[2]]
 				else
 					val = pc[2]
-				if string_digits_ext(string(val)) = string(val)
+				if string_digits_ext(string(val)) = string(val) and val != ""
 					val = real(val)
 				else
 					val = string(val)
@@ -115,7 +115,7 @@ function scr_procesador(edificio = control.null_edificio){
 					val2 = edificio.variables[pc[5]]
 				else
 					val2 = pc[5]
-				if string_digits_ext(string(val2)) = string(val2)
+				if string_digits_ext(string(val2)) = string(val2) and val2 != ""
 					val2 = real(val2)
 				else
 					val2 = string(val2)

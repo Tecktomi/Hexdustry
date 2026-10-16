@@ -5,6 +5,6 @@ function handle_jugador_nuevo(buffer){
 		array_push(chat, string(L.server_jugador_unido, player_name))
 		array_push(chat_time, image_index)
 		server_jugadores_nombre[slot] = player_name
-		array_copy(jugador_recursos[slot], 0, carga_inicial, 0, rss_max)
+		array_copy(jugador_recursos[slot + 2], 0, carga_inicial, 0, rss_max)
 	}
 }

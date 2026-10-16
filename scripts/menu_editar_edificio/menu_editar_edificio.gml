@@ -197,8 +197,11 @@ function menu_editar_edificio(){
 			else if index = id_puerto_de_carga{
 				draw_circle_off(edificio.center_x, edificio.center_y, PUERTO_CARGA_RANGE, true)
 				width = max(width, string_width(L.procesador_add) * zoom / 2)
-				for(a = array_length(edificio.instruccion) - 1; a >= 0; a--)
-					width = max(width, (string_width($"Llevar {recurso_nombre[edificio.instruccion[a, 0]]} de {edificio_nombre[edificio_id[# edificio.instruccion[a, 1], edificio.instruccion[a, 2]].index]} a {edificio_nombre[edificio_id[# edificio.instruccion[a, 3], edificio.instruccion[a, 4]].index]}") + 20) * zoom / 2)
+				for(a = array_length(edificio.instruccion) - 1; a >= 0; a--){
+					var text1 = edificio_bool[# edificio.instruccion[a, 1], edificio.instruccion[a, 2]] ? edificio_nombre[edificio_id[# edificio.instruccion[a, 1], edificio.instruccion[a, 2]].index] : "..."
+					var text2 = edificio_bool[# edificio.instruccion[a, 3], edificio.instruccion[a, 4]] ? edificio_nombre[edificio_id[# edificio.instruccion[a, 3], edificio.instruccion[a, 4]].index] : "..."
+					width = max(width, (string_width($"Llevar {recurso_nombre[edificio.instruccion[a, 0]]} de {text1} a {text2}") + 20) * zoom / 2)
+				}
 				draw_rectangle(aa - width, bb + 40 * zoom, aa + width, bb + 20 * (3 + array_length(edificio.instruccion)) * zoom, false)
 			}
 			draw_set_color(ui_fondo)
@@ -290,7 +293,7 @@ function menu_editar_edificio(){
 					}
 					xpos += text_x
 					xpos = draw_text_xpos(xpos, ypos, " a ")
-					temp_text = edificio_bool[# edificio.instruccion[a, 1], edificio.instruccion[a, 2]] ? edificio_nombre[edificio_id[# edificio.instruccion[a, 1], edificio.instruccion[a, 2]].index] : "..."
+					temp_text = edificio_bool[# edificio.instruccion[a, 3], edificio.instruccion[a, 4]] ? edificio_nombre[edificio_id[# edificio.instruccion[a, 3], edificio.instruccion[a, 4]].index] : "..."
 					if draw_boton(xpos, ypos, temp_text,,,, false){
 						puerto_carga_link = edificio
 						puerto_carga_rss = edificio.instruccion[a, 0]

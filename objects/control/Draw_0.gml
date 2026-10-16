@@ -913,14 +913,14 @@ if array_length(selected_drones) > 0{
 				mover_dron(dron, edificio.x, edificio.y, true)
 			continue
 		}
-		if dron.modo = 1 and not dron.index = idd_minero
+		if dron.modo = MULA_MOVER
 			draw_sprite_off(spr_target, 0, dron.move_x, dron.move_y)
 		if right_clicked and tag_dron_seleccionable[dron.index]{
 			mouse_clear(mb_right)
 			mover_dron(dron, xmouse, ymouse, true)
 		}
 		if dron.index = idd_minero{
-			if dron.modo = 1{
+			if dron.modo = MULA_MINAR{
 				temp_complex = xytoab(dron.move_x, dron.move_y)
 				draw_sprite_off(spr_target, 0, temp_complex[0], temp_complex[1])
 			}
@@ -1164,7 +1164,7 @@ if DEVISE and (mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk
 }
 //CONSTRUCCIÓN
 if build_index >= 0 and win = 0
-	menu_construccion(mx, my, xmouse, ymouse, just_pressed, prev_change,outside)
+	menu_construccion(mx, my, xmouse, ymouse, just_pressed, prev_change, outside)
 else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
 	len = array_length(blueprint)
 	var flip = (((blueprint_mod2 + my) mod 2) = 1), _rotar = false, len2

@@ -6,7 +6,7 @@ function game_start(_nucleo = true, mision_cumplida = false){
 			buffer_write(buffer_grabacion, buffer_u32, sim_seed[0])
 			buffer_write(buffer_grabacion, buffer_s8, mapa)
 		}
-		var a, temp_array, b, temp_complex
+		var a, b, temp_complex
 		if _nucleo and array_length(edificios_index[id_nucleo]) = 0{
 			if mapa >= 0
 			    load_escenario_buffer($"{DEFAULT_MAPS[mapa]}.txt", false)
@@ -39,12 +39,6 @@ function game_start(_nucleo = true, mision_cumplida = false){
 			mision_actual = -1
 			pasar_mision()
 		}
-		if tecnologia
-			for(a = 0; a < edificio_max; a++){
-				temp_array = tecnologia_precio_num[a]
-				for(b = 0; b < array_length(temp_array); b++)
-					temp_array[b] = round(tecnologia_precio_multiplicador * temp_array[b])
-			}
 		pausa = 0
 		input_layer = 0
 		get_file = 0

@@ -2,6 +2,7 @@ function handle_welcome(buffer){
 	with control{
 		online = true
 		server_pvp = bool(buffer_read(buffer, buffer_bool))
+		cheat = bool(buffer_read(buffer, buffer_bool))
 		var slot = real(buffer_read(buffer, buffer_u8))
 		jugador = server_pvp ? slot + 2 : 2
 		if not load_game_buffer(buffer)

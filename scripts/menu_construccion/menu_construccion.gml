@@ -96,7 +96,7 @@ function menu_construccion(mx, my, xmouse, ymouse, just_pressed = false, prev_ch
 			if build_index = id_torre_reparadora
 				build_array_edificios = array_create(0, null_edificio)
 			comprable = true
-			if in(build_index, id_tuberia, id_deposito) and not mouse_check_button(mb_left) and not mouse_check_button_released(mb_left){
+			if tag_edificio_tuberia[build_index] and not mouse_check_button(mb_left) and not mouse_check_button_released(mb_left){
 				liquido_choose = 0
 				array_resize(liquido_choose_array, 0)
 			}

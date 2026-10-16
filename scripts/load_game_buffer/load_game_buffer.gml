@@ -69,7 +69,7 @@ function load_game_buffer(buffer){
 		#endregion
 		for(a = 0; a < rss_max; a++)
 			for(b = 0; b < EQUIPOS; b++)
-				array_set(jugador_recursos[b], a, real(buffer_read(buffer, buffer_u16)))
+				array_set(jugador_recursos[b], a, real(buffer_read(buffer, buffer_u32)))
 		image_index = buffer_read(buffer, buffer_u32)
 		for(b = 0; b < EQUIPOS; b++){
 			var mask_tecnologia = buffer_read(buffer, buffer_u64)

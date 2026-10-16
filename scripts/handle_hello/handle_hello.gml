@@ -39,6 +39,7 @@ function handle_hello(socket, buffer, slot, player_name){
 			var reply = buffer_create(1024, buffer_grow, 1)
 			buffer_write(reply, buffer_u8, net_welcome)
 			buffer_write(reply, buffer_bool, server_pvp)
+			buffer_write(reply, buffer_bool, cheat)
 			buffer_write(reply, buffer_u8, slot)
 			save_game_buffer(reply)
 			buffer_write(reply, buffer_u32, random_get_seed())

@@ -10,7 +10,7 @@ function investigar(index, manual = false, _cheat = control.cheat, _jugador = ju
 		}
 		if not _cheat
 			for(a = 0; a < array_length(tecnologia_precio_id[index]); a++)
-				jugador_recursos[_jugador, tecnologia_precio_id[index, a]] -= tecnologia_precio_num[index, a]
+				jugador_recursos[_jugador, tecnologia_precio_id[index, a]] -= tecnologia_precio_num[index, a] * tecnologia_precio_multiplicador
 		array_set(edificio_tecnologia_desbloqueable[_jugador], index, false)
 		array_set(edificio_tecnologia[_jugador], index, true)
 		tecnologias_estudiadas++

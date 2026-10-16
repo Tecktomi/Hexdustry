@@ -14,13 +14,13 @@ function server_construir(index, dir, a, b, _cheat = control.cheat, _jugador = j
 			buffer_write(buffer, buffer_u16, build_agua_x)
 			buffer_write(buffer, buffer_u16, build_agua_y)
 		}
+		else if tag_edificio_tuberia[index]
+			buffer_write(buffer, buffer_u8, liquido_choose_array[liquido_choose])
 		buffer_write(buffer, buffer_u8, real(dir mod 6))
 		buffer_write(buffer, buffer_u16, real(a))
 		buffer_write(buffer, buffer_u16, real(b))
 		buffer_write(buffer, buffer_bool, bool(_cheat))
 		buffer_write(buffer, buffer_u8, _jugador)
-		if index = id_tuberia
-			buffer_write(buffer, buffer_u8, liquido_choose_array[liquido_choose])
 		if online{
 			if servidor
 				server_broadcast_buffer(buffer)
