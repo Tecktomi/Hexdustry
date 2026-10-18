@@ -43,7 +43,10 @@ function load_edificio(buffer, edificio = control.null_edificio){
 		if mask & (1 << c++) edificio.agregar = true
 		if mask & (1 << c++) add_modulo(edificio,, true)
 		if mask & (1 << c++) edificio.outputs_carga_index = real(buffer_read(buffer, buffer_u8))
-		if mask & (1 << c++) edificio.fuego = real(buffer_read(buffer, buffer_u16))
+		if mask & (1 << c++){
+			array_disorder_push(edificios_fuego, edificio, ptre_fuego)
+			edificio.fuego = real(buffer_read(buffer, buffer_u16))
+		}
 		return temp_target_dron
 	}
 }

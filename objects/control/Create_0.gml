@@ -869,7 +869,8 @@ null_edificio = {
 #macro ptre_puerto 11
 #macro ptre_salida_drones 12
 #macro ptre_jugador_index 13
-#macro ptre_MAX 14
+#macro ptre_fuego 14
+#macro ptre_MAX 15
 null_edificio.link = null_edificio
 null_edificio.energia_link = array_create(0, null_edificio)
 null_edificio.flujo_link = array_create(0, null_edificio)
@@ -881,12 +882,12 @@ null_edificio.reparadores_cercanos = array_create(0, null_edificio)
 null_edificio.target_edificio = null_edificio
 null_edificio.torres = array_create(0, null_edificio)
 build_target = null_edificio
-edificios_activos = array_create(0, null_edificio)
 procesador_select = null_edificio
 null_edificio.procesador_link = array_create(0, null_edificio)
 edificios_pendientes = array_create(0, null_edificio)
 edificios_totales = array_create(0, null_edificio)
 nucleos = array_create(EQUIPOS, null_edificio)
+edificios_fuego = array_create(0, null_edificio)
 show_menu_build = null_edificio
 luces = array_create(0, {a : 0, b : 0, x : 0, y : 0, r : 0, source : null_edificio})
 //Puertos de Carga
@@ -1772,7 +1773,9 @@ for(a = 0; a < dron_max; a++){
 	edificio_carga_max[id_planta_de_reciclaje] = edificio_carga_max[id_fabrica_de_drones]
 }
 //Valor absoluto edificios
+edificios_activos = array_create(edificio_max)
 for(a = 0; a < edificio_max; a++){
+	edificios_activos[a] = array_create(0, null_edificio)
 	edificio_precio[a] = 0
 	if tag_edificio_construible[a]
 		for(b = 0; b < array_length(edificio_precio_id[a]); b++)

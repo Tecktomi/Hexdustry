@@ -16,10 +16,18 @@ function set_edificio_instruccion(edificio = control.null_edificio, cambio = 0, 
 				array_disorder_push(edificios_index[id_tunel], edificio, ptre_index)
 				array_disorder_remove(edificios_jugador_index[_jugador,id_tunel_salida], edificio, ptre_jugador_index)
 				array_disorder_push(edificios_jugador_index[_jugador,id_tunel], edificio, ptre_jugador_index)
+				if edificio.punteros[ptre_activo] != -1{
+					array_disorder_remove(edificios_activos[id_tunel_salida], edificio, ptre_activo)
+					array_disorder_push(edificios_activos[id_tunel], edificio, ptre_activo)
+				}
 				array_disorder_remove(edificios_index[id_tunel], link, ptre_index)
 				array_disorder_push(edificios_index[id_tunel_salida], link, ptre_index)
 				array_disorder_remove(edificios_jugador_index[_jugador, id_tunel], link, ptre_jugador_index)
 				array_disorder_push(edificios_jugador_index[_jugador,id_tunel_salida], link, ptre_jugador_index)
+				if link.punteros[ptre_activo] != -1{
+					array_disorder_remove(edificios_activos[id_tunel], link, ptre_activo)
+					array_disorder_push(edificios_activos[id_tunel_salida], link, ptre_activo)
+				}
 				link.index = id_tunel_salida
 				edificio.index = id_tunel
 				calcular_inputs_outputs(edificio)
@@ -34,10 +42,18 @@ function set_edificio_instruccion(edificio = control.null_edificio, cambio = 0, 
 				array_disorder_push(edificios_index[id_tunel_salida], edificio, ptre_index)
 				array_disorder_remove(edificios_jugador_index[_jugador,id_tunel], edificio, ptre_jugador_index)
 				array_disorder_push(edificios_jugador_index[_jugador,id_tunel_salida], edificio, ptre_jugador_index)
+				if edificio.punteros[ptre_activo] != -1{
+					array_disorder_remove(edificios_activos[id_tunel], edificio, ptre_activo)
+					array_disorder_push(edificios_activos[id_tunel_salida], edificio, ptre_activo)
+				}
 				array_disorder_remove(edificios_index[id_tunel_salida], link, ptre_index)
 				array_disorder_push(edificios_index[id_tunel], link, ptre_index)
 				array_disorder_remove(edificios_jugador_index[_jugador, id_tunel_salida], link, ptre_jugador_index)
 				array_disorder_push(edificios_jugador_index[_jugador,id_tunel], link, ptre_jugador_index)
+				if link.punteros[ptre_activo] != -1{
+					array_disorder_remove(edificios_activos[id_tunel_salida], link, ptre_activo)
+					array_disorder_push(edificios_activos[id_tunel], link, ptre_activo)
+				}
 				edificio.index = id_tunel_salida
 				edificio.link.index = id_tunel
 				calcular_inputs_outputs(edificio)

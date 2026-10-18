@@ -94,31 +94,33 @@ function step(){
 				server_sync_timer()
 		}
 		//Ciclo edificios
-		for(a = 0; a < edificio_max; a++) if not edificio_inerte[a] and array_length(edificios_index[a]) > 0{
+		for(a = 0; a < edificio_max; a++) if not edificio_inerte[a] and array_length(edificios_activos[a]) > 0{
 			temp_script = edificio_script[a]
-			for(b = array_length(edificios_index[a]) - 1; b >= 0; b--){
-				edificio = edificios_index[a, b]
-				if edificio.fuego > 0{
-					edificio.fuego--
-					herir_edificio(0.2, edificio)
-					if grafic_humo and image_index mod 10 = b mod 10
-						array_push(humos, add_humo(edificio.center_x, edificio.center_y, edificio.a, edificio.b, sim_random_range(-1, 1), sim_random_range(-1, 1), 30))
-				}
+			for(b = array_length(edificios_activos[a]) - 1; b >= 0; b--){
+				edificio = edificios_activos[a, b]
 				if edificio.idle or edificio.vida <= 0
 					continue
 				temp_script(edificio)
 			}
 		}
+		for(a = array_length(edificios_fuego) - 1; a >= 0; a--){
+			edificio = edificios_fuego[a]
+			if --edificio.fuego <= 0
+				array_disorder_remove(edificio, edificios_fuego, ptre_fuego)
+			herir_edificio(0.2, edificio)
+			if grafic_humo and image_index mod 10 = a mod 10
+				array_push(humos, add_humo(edificio.center_x, edificio.center_y, edificio.a, edificio.b, sim_random_range(-1, 1), sim_random_range(-1, 1), 30))
+		}
 		for(a = array_length(edificios_pendientes) - 1; a >= 0; a--){
 			edificio = array_pop(edificios_pendientes)
 			if edificio.eliminar and edificio.punteros[ptre_activo] >= 0{
 				edificio.eliminar = false
-				array_disorder_remove(edificios_activos, edificio, ptre_activo)
+				array_disorder_remove(edificios_activos[edificio.index], edificio, ptre_activo)
 				edificio.punteros[ptre_activo] = -1
 			}
 			if edificio.agregar and edificio.punteros[ptre_activo] = -1{
 				edificio.agregar = false
-				array_disorder_push(edificios_activos, edificio, ptre_activo)
+				array_disorder_push(edificios_activos[edificio.index], edificio, ptre_activo)
 			}
 		}
 		//Drones
@@ -171,8 +173,11 @@ function step(){
 					edificio = edificio_id[# muna, munb]
 					if _tipo != municion_tipo_perforadora and edificio.jugador != municion.jugador{
 						municion.dis = 0
-						if _tipo = municion_tipo_fuego
+						if _tipo = municion_tipo_fuego{
+							if edificio.fuego = 0
+								array_disorder_push(edificio, edificios_fuego, ptre_fuego)
 							edificio.fuego = 300
+						}
 						break
 					}
 				}

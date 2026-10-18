@@ -25,8 +25,11 @@ function explosion(_x = 0, _y = 0, edificio = control.null_edificio, radio = 120
 							if dis < radio
 								if herir_edificio(dmg / (10 + dis), edificio)
 									flag = true
-								else
+								else{
+									if edificio.fuego = 0
+										array_disorder_push(edificios_fuego, edificio, ptre_fuego)
 									edificio.fuego = 300
+								}
 						}
 					}
 					//Herir drones
@@ -56,8 +59,11 @@ function explosion(_x = 0, _y = 0, edificio = control.null_edificio, radio = 120
 							if dis < radio
 								if herir_edificio(dmg / (10 + dis), edificio)
 									flag = true
-								else
+								else{
+									if edificio.fuego = 0
+										array_disorder_push(edificios_fuego, edificio, ptre_fuego)
 									edificio.fuego = 300
+								}
 						}
 					}
 					//Herir drones

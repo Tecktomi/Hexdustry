@@ -1,24 +1,22 @@
 function draw_dron(dron = control.null_dron, color){
-	with control{
-		var aa = dron.x, bb = dron.y, index = dron.index
-		if index = idd_tanque{
-			draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir_move)
-			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir)
-		}
-		else if index = idd_helicoptero{
-			draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir)
-			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, image_index * 15, color)
-		}
-		else if index = idd_titan{
-			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir + 20 * sqr(sin(image_index / 20 + dron.random_int * 90)))
-			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir + 90 - 20 * sqr(sin(image_index / 20 + dron.random_int * 90)))
-			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir + 180 - 20 * sqr(sin(image_index / 20 + dron.random_int * 90)))
-			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir + 270 + 20 * sqr(sin(image_index / 20 + dron.random_int * 90)))
-			draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir_move)
-		}
-		else{
-			draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir)
-			draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir, color)
-		}
+	var aa = dron.x, bb = dron.y, index = dron.index
+	if index = idd_tanque{
+		draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir_move)
+		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir)
+	}
+	else if index = idd_helicoptero{
+		draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir)
+		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, image_index * 15, color)
+	}
+	else if index = idd_titan{
+		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir + 20 * sqr(sin(image_index / 20 + dron.random_int * 90)))
+		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir + 90 - 20 * sqr(sin(image_index / 20 + dron.random_int * 90)))
+		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir + 180 - 20 * sqr(sin(image_index / 20 + dron.random_int * 90)))
+		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir + 270 + 20 * sqr(sin(image_index / 20 + dron.random_int * 90)))
+		draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir_move)
+	}
+	else{
+		draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir)
+		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir, color)
 	}
 }

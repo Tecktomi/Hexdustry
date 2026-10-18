@@ -136,7 +136,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		}
 		calcular_inputs_outputs(edificio)
 		if not edificio_inerte[edificio.index]
-			array_disorder_push(edificios_activos, edificio, ptre_activo)
+			array_disorder_push(edificios_activos[index], edificio, ptre_activo)
 		if index = id_procesador{
 			array_push(edificio.procesador_link, edificio)
 			edificio.variables = array_create(16)

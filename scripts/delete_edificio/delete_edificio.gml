@@ -358,6 +358,8 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		}
 		if index = id_pantalla and edificio.imagen != spr_hexagono
 			sprite_delete(edificio.imagen)
+		if edificio.fuego > 0
+			array_disorder_remove(edificios_fuego, edificio, ptre_fuego)
 		delete(edificio)
 	}
 }

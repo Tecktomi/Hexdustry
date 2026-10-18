@@ -1,7 +1,7 @@
 function clear_edificios(){
 	with control{
-		array_resize(edificios_activos, 0)
 		array_resize(edificios_pendientes, 0)
+		array_resize(edificios_fuego, 0)
 		var a, b, edificio
 		for(a = array_length(edificios_totales) - 1; a >= 0; a--){
 			edificio = edificios_totales[a]
@@ -33,8 +33,10 @@ function clear_edificios(){
 		array_resize(edificios_salida_drones, 0)
 		array_resize(municiones, 0)
 		array_resize(selected_drones, 0)
-		for(a = 0; a < edificio_max; a++)
+		for(a = 0; a < edificio_max; a++){
 			array_resize(edificios_index[a], 0)
+			array_resize(edificios_activos[a], 0)
+		}
 		ds_grid_clear(edificio_bool, false)
 		ds_grid_clear(edificio_id, null_edificio)
 		array_resize(redes, 0)
