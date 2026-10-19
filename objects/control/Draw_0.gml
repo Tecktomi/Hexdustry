@@ -1,7 +1,7 @@
 #region Pre-event
 	if debug_frame_time
 		var _frame_time = get_timer()
-	mina = max(0, floor(camx / zoom / 48))
+	mina = max(0, floor(camx / zoom / 48 - 0.5))
 	minb = max(0, floor(camy / zoom / 14) - 1)
 	maxa = min(xsize, ceil(1 + (camx + room_width) / zoom / 48))
 	maxb = min(ysize, ceil(1 + (camy + room_height) / zoom / 14))

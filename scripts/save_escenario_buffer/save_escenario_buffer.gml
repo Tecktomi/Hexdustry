@@ -82,5 +82,11 @@ function save_escenario_buffer(filename){
 		sprite_save(temp_sprite, 0, $"Scenarios/{filename}.png")
 		if b = -1
 			array_push(save_files_png, temp_sprite)
+		ini_open($"Scenarios/{filename}.lang")
+		for(c = 0; c < IDIOMAS; c++)
+			for(a = 0; a < len_mis; a++)
+				for(b = 0; b < array_length(misiones[a].texto); b++)
+					ini_write_string(IDIOMA_NAME[c], $"M{a} T{b}", misiones[a].texto[b, c])
+		ini_close()
 	}
 }

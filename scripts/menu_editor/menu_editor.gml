@@ -105,27 +105,36 @@ function menu_editor(){
 					draw_text(xpos, ypos, $" {L.editor_enemigos}")
 				xpos = room_width / 2 + 40
 				ypos = 180
-				if draw_boton(xpos, ypos, mision.tiempo_edit ? L.editor_deshabilitar : L.editor_habilitar){
+				xpos = draw_text_xpos(xpos, ypos, L.editor_cronometro)
+				var _bool = draw_toggle(xpos + 10, ypos, mision.tiempo_edit)
+				if mision.tiempo_edit != _bool{
+					mision.tiempo_edit = _bool
 					if mision.tiempo > 0
 						mision.tiempo = 0
 					else
 						mision.tiempo = 1
-					mision.tiempo_edit = not mision.tiempo_edit
 				}
 				if mision.tiempo_edit{
 					xpos = room_width / 2 + 70
-					ypos += 30
+					ypos += text_y * 1.2
 					xpos = draw_text_xpos(xpos, ypos, $"{L.editor_luego_de} ")
 					mision.tiempo = draw_boton_text(xpos, ypos, mision.tiempo)
 					xpos = 20 + draw_text_xpos(xpos + text_x, ypos, L.editor_segundos)
 					if draw_boton(xpos, ypos, mision.tiempo_victoria ? L.win_victoria : L.win_derrota)
 						mision.tiempo_victoria = not mision.tiempo_victoria
-					if draw_boton(xpos + text_x + 20, ypos, mision.tiempo_show ? L.editor_mostrar : L.editor_ocultar)
-						mision.tiempo_show = not mision.tiempo_show
+					xpos = room_width / 2 + 70
+					ypos += text_y * 1.2
+					xpos = draw_text_xpos(xpos, ypos, L.editor_mostrar)
+					mision.tiempo_show = draw_toggle(xpos + 10, ypos, mision.tiempo_show)
 				}
-				ypos += 40
+				ypos += text_y * 1.2
 				for(b = 0; b < array_length(mision.texto); b++){
-					var temp_text = string(draw_boton_text(room_width / 2 + 80, ypos, mision.texto[b, idioma], false,, false))
+					if draw_sprite_boton(spr_basura,, room_width / 2 + 60, ypos){
+						array_delete(mision.texto, b, 1)
+						ypos += text_y * 1.2
+						continue
+					}
+					var temp_text = string(draw_boton_text(room_width / 2 + 80, ypos, text_wrap(mision.texto[b, idioma], 350), false,, false))
 					if mision.texto[b, idioma] != temp_text
 						array_set(mision.texto[b], idioma, temp_text)
 					ypos += text_y * 1.2
@@ -134,25 +143,28 @@ function menu_editor(){
 				if draw_boton(room_width / 2 + 40, ypos, L.editor_add_text, ui_azul)
 					array_push(mision.texto, array_create(IDIOMAS, ""))
 				ypos += text_y + 10
-				if draw_boton(room_width / 2 + 40, ypos, (mision.switch_oleadas ? "" : L.editor_no + " ") + L.editor_cambiar_oleadas)
-					mision.switch_oleadas = not mision.switch_oleadas
-				ypos += text_y + 10
-				if draw_boton(room_width / 2  + 40, ypos, (mision.camera_move ? "" : L.editor_no + " ") + L.editor_mover_camara){
-					mision.camera_move = not mision.camera_move
+				xpos = draw_text_xpos(room_width / 2 + 40, ypos, L.editor_cambiar_oleadas)
+				mision.switch_oleadas = draw_toggle(xpos + 10, ypos, mision.switch_oleadas)
+				ypos += text_y * 1.2
+				xpos = draw_text_xpos(room_width / 2 + 40, ypos, L.editor_mover_camara)
+				var _bool = draw_toggle(xpos + 10, ypos, mision.camera_move)
+				if mision.camera_move != _bool{
+					mision.camera_move = _bool
 					if mision.camera_move{
 						mision_choosing_coord = true
 						mision_choosing_coord_i = i
 						mision_choosing_coord_tipo = 1
 					}
 				}
-				ypos += text_y + 10
 				if mision.camera_move{
 					xpos = room_width / 2 + 80
+					ypos += text_y * 1.2
 					xpos = draw_text_xpos(xpos, ypos, $"{L.editor_mover_a} ")
 					mision.camera_x = draw_boton_text(xpos, ypos, mision.camera_x)
 					xpos = draw_text_xpos(xpos+ text_x, ypos, ", ")
 					mision.camera_y = draw_boton_text(xpos, ypos, mision.camera_y)
 				}
+				ypos += text_y * 1.2
 				if draw_boton(room_width / 2 + 10, room_height - 140, L.editor_eliminar_objetivo, ui_rojo){
 					array_delete(misiones, i, 1)
 					mision_actual = -1
