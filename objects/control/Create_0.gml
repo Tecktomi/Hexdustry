@@ -1129,7 +1129,7 @@ null_municion = add_municion()
 municiones = array_create(0, null_municion)
 #region Tipos de Disparos
 	armas = [
-		[{recurso : idr_cobre, cantidad : 0.15, dmg : 10}, {recurso : idr_hierro, cantidad : 0.15, dmg : 15}, {recurso : idr_plastico, cantidad : 0.15, dmg : 20}],
+		[{recurso : idr_cobre, cantidad : 0.15, dmg : 6}, {recurso : idr_hierro, cantidad : 0.15, dmg : 10}, {recurso : idr_aluminio, cantidad : 0.15, dmg : 15}],
 		[{recurso : idr_bronce, cantidad : 0.5, dmg : 80}, {recurso : idr_acero, cantidad : 0.5, dmg : 90}, {recurso : idr_uranio_bruto, cantidad : 1, dmg : 100}],
 		[{recurso : idr_explosivo, cantidad : 1, dmg : 650}, {recurso : idr_uranio_bruto, cantidad : 1, dmg : 500}],
 		[{recurso : idr_carbon, cantidad : 0.03, dmg : 2}, {recurso : idr_compuesto_incendiario, cantidad : 0.03, dmg : 5}]]
