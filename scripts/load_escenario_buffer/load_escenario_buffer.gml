@@ -65,6 +65,7 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 				var _objetivo = real(buffer_read(buffer, buffer_u8))
 				var _target_id = real(buffer_read(buffer, buffer_u8))
 				var _target_num = real(buffer_read(buffer, buffer_u16))
+				var _tiempo_edit = bool(buffer_read(buffer, buffer_bool))
 				var _tiempo = real(buffer_read(buffer, buffer_u16))
 				var _tiempo_victoria = bool(buffer_read(buffer, buffer_bool))
 				var _tiempo_show = bool(buffer_read(buffer, buffer_bool))
@@ -79,7 +80,7 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 					for(c = 0; c < IDIOMAS; c++)
 						array_set(_texto[b], c, string(buffer_read(buffer, buffer_string)))
 				}
-				misiones[a] = def_mision(_nombre, _nombre_idioma, _objetivo, _target_id, _target_num, _texto, false, _tiempo, _tiempo_victoria, _tiempo_show, _camera_move, _camera_x, _camera_y, _switch_oleadas)
+				misiones[a] = def_mision(_nombre, _nombre_idioma, _objetivo, _target_id, _target_num, _texto, _tiempo_edit, _tiempo, _tiempo_victoria, _tiempo_show, _camera_move, _camera_x, _camera_y, _switch_oleadas)
 			}
 		}
 		else
@@ -122,6 +123,22 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 		if array_length(edificios_jugador_index[jugador, id_nucleo]) > 0{
 			camx = clamp(edificios_jugador_index[jugador, id_nucleo][0].a * 48 - room_width / 2, 0, xsize * 48 * zoom - room_width)
 			camy = clamp(edificios_jugador_index[jugador, id_nucleo][0].b * 14 - room_height / 2, 0, ysize * 14 * zoom - room_height)
+		}
+		if file_exists($"{string_delete(filename, string_pos(".txt", filename), string_width(filename))}.lang"){
+			ini_open($"{string_delete(filename, string_pos(".txt", filename), string_width(filename))}.lang")
+			for(c = 0; c < IDIOMAS; c++){
+				if ini_key_exists(IDIOMA_NAME[c], "Victoria")
+					mision_texto_victoria_idioma[c] = ini_read_string(IDIOMA_NAME[c], "Victoria", "")
+				for(a = 0; a < array_length(misiones); a++){
+					var mision = misiones[a]
+					if ini_key_exists(IDIOMA_NAME[c], $"M{a} nombre")
+						mision.nombre_idioma[c] = ini_read_string(IDIOMA_NAME[c], $"M{a} nombre", "")
+					for(b = 0; b < array_length(mision.texto); b++)
+						if ini_key_exists(IDIOMA_NAME[c], $"M{a} T{b}")
+							array_set(mision.texto[b], c, ini_read_string(IDIOMA_NAME[c], $"M{a} T{b}", ""))
+				}
+			}
+			ini_close()
 		}
 		return filename
 	}

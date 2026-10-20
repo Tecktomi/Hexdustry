@@ -84,4 +84,6 @@ if type = network_type_data{
 	}
 	else if msg = net_mensaje
 		handle_mensaje(buffer)
+	else if msg = net_set_instrucciones
+		handle_set_instrucciones(buffer)
 }

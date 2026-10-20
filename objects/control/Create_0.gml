@@ -16,7 +16,6 @@ var a, b, c, flag
 	#macro PLANTA_RECICLAJE_RANGE 250
 	#macro PUERTO_CARGA_RANGE 500
 	#macro ENEMIGO_CERCA 100
-	#macro HEX_FAST_THRESHOLD 8
 	#macro MORTERO_MIN_RANGE 100
 	#macro LOGIC_DT (1 / 60)
 	SIZE_SIZE = [1, 3, 7, 12, 19, 27, 37]
@@ -88,8 +87,6 @@ var a, b, c, flag
 	#macro fin_salir 0
 	#macro fin_desconexion 1
 	#macro fin_cerrar_juego 2
-	//Menú principal
-	#macro menu_principal_nueva 0
 	//Mula
 	#macro MULA_IDLE 0
 	#macro MULA_BUSCAR_RSS 1

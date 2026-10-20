@@ -134,7 +134,7 @@ function menu_editor(){
 						ypos += text_y * 1.2
 						continue
 					}
-					var temp_text = string(draw_boton_text(room_width / 2 + 80, ypos, text_wrap(mision.texto[b, idioma], 350), false,, false))
+					var temp_text = string(draw_boton_text(room_width / 2 + 80, ypos, mision.texto[b, idioma], false,, false,, 350))
 					if mision.texto[b, idioma] != temp_text
 						array_set(mision.texto[b], idioma, temp_text)
 					ypos += text_y * 1.2
@@ -147,7 +147,7 @@ function menu_editor(){
 				mision.switch_oleadas = draw_toggle(xpos + 10, ypos, mision.switch_oleadas)
 				ypos += text_y * 1.2
 				xpos = draw_text_xpos(room_width / 2 + 40, ypos, L.editor_mover_camara)
-				var _bool = draw_toggle(xpos + 10, ypos, mision.camera_move)
+				_bool = draw_toggle(xpos + 10, ypos, mision.camera_move)
 				if mision.camera_move != _bool{
 					mision.camera_move = _bool
 					if mision.camera_move{

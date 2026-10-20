@@ -1,6 +1,9 @@
-function draw_boton_text(xpos, ypos, variable, es_real = true, detect_real = false, box = false, input_layer = 0){
+function draw_boton_text(xpos, ypos, variable, es_real = true, detect_real = false, box = false, input_layer = 0, wrap = 0){
 	with control{
-		if draw_boton(xpos, ypos, (es_real ? "" : "'") + string(variable) + (es_real ? "" : "'"),,,, box, input_layer){
+		var var_name = string(variable)
+		if wrap > 0
+			var_name = text_wrap(var_name, wrap)
+		if draw_boton(xpos, ypos, (es_real ? "" : "'") + var_name + (es_real ? "" : "'"),,,, box, input_layer){
 			if detect_real
 				es_real = (keyboard_string = string_digits_ext(keyboard_string))
 			if es_real

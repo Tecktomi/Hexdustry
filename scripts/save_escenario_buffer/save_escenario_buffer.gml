@@ -29,6 +29,7 @@ function save_escenario_buffer(filename){
 			buffer_write(buffer, buffer_u8, _mision.objetivo)
 			buffer_write(buffer, buffer_u8, _mision.target_id)
 			buffer_write(buffer, buffer_u16, _mision.target_num)
+			buffer_write(buffer, buffer_bool, _mision.tiempo_edit)
 			buffer_write(buffer, buffer_u16, _mision.tiempo)
 			buffer_write(buffer, buffer_bool, _mision.tiempo_victoria)
 			buffer_write(buffer, buffer_bool, _mision.tiempo_show)
@@ -82,11 +83,17 @@ function save_escenario_buffer(filename){
 		sprite_save(temp_sprite, 0, $"Scenarios/{filename}.png")
 		if b = -1
 			array_push(save_files_png, temp_sprite)
+		file_delete($"Scenarios/{filename}.lang")
 		ini_open($"Scenarios/{filename}.lang")
-		for(c = 0; c < IDIOMAS; c++)
-			for(a = 0; a < len_mis; a++)
-				for(b = 0; b < array_length(misiones[a].texto); b++)
-					ini_write_string(IDIOMA_NAME[c], $"M{a} T{b}", misiones[a].texto[b, c])
+		for(c = 0; c < IDIOMAS; c++){
+			ini_write_string(IDIOMA_NAME[c], "Victoria", mision_texto_victoria_idioma[c])
+			for(a = 0; a < len_mis; a++){
+				var mision = misiones[a]
+				ini_write_string(IDIOMA_NAME[c], $"M{a} nombre", mision.nombre_idioma[c])
+				for(b = 0; b < array_length(mision.texto); b++)
+					ini_write_string(IDIOMA_NAME[c], $"M{a} T{b}", mision.texto[b, c])
+			}
+		}
 		ini_close()
 	}
 }
