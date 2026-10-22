@@ -9,7 +9,7 @@ function handle_hello(socket, buffer, slot, player_name){
 					new_nucleo_y = irandom_range(10, ysize - 11)
 				}
 				until (far_from_nucleus(new_nucleo_x, new_nucleo_y) and check_colision(new_nucleo_x, new_nucleo_y, id_nucleo, 0)) or tries++ = 100
-				if tries = 100{
+				if tries >= 100{
 					var reply = buffer_create(1, buffer_grow, 1)
 					buffer_write(reply, buffer_u8, net_error)
 					buffer_write(reply, buffer_u8, net_error_server_lleno)
@@ -18,7 +18,7 @@ function handle_hello(socket, buffer, slot, player_name){
 					server_jugadores[slot] = -1
 					break
 				}
-				construir(id_nucleo, 0, new_nucleo_x, new_nucleo_y,,, slot + 2)
+				construir(id_nucleo, 0, new_nucleo_x, new_nucleo_y, true,, slot + 2)
 				array_copy(jugador_recursos[slot + 2], 0, carga_inicial, 0, rss_max)
 			}
 		#endregion

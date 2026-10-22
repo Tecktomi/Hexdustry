@@ -7,7 +7,7 @@ function game_terminar(motivo, destino = MENU_PRINCIPAL){
 			array_pop(categoria_nombre_disponible)
 			array_pop(categoria_edificios_disponible)
 		}
-		if motivo != fin_desconexion and win = 0 and BROWSER and not mapa_editado
+		if motivo != fin_desconexion and win = 0 and BROWSER and not mapa_editado and not online
 			save()
 		if GRABANDO
 			grabacion_end($"Grabaciones/grabacion_{day_format()}.rec")

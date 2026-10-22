@@ -1,4 +1,4 @@
-function check_reconstruible(index = 0, _dibujo = true, _jugador = jugador){
+function check_reconstruible(mx, my, index = 0, _dibujo = true, _jugador = jugador){
 	with control{
 		var _comprable = true, temp_text = "", a, flag_3, size_2, dron, output
 		for(a = 0; a < array_length(edificio_precio_id[index]); a++)
@@ -13,11 +13,12 @@ function check_reconstruible(index = 0, _dibujo = true, _jugador = jugador){
 		flag_3 = false
 		for(a = array_length(drones) - 1; a >= 0; a--){
 			dron = drones[a]
-			if dron.jugador = jugador
+			if dron.jugador = _jugador
 				continue
 			if _dibujo
 				draw_circle_off(dron.x, dron.y, 100, true)
-			if not flag_3 and point_distance(mouse_x, mouse_y, dron.x * zoom - camx, dron.y * zoom - camy) < ENEMIGO_CERCA * zoom{
+			var temp_complex = abtoxy(mx, my)
+			if not flag_3 and point_distance(temp_complex[0], temp_complex[1], dron.x, dron.y) < ENEMIGO_CERCA{
 				if _dibujo
 					temp_text += $"{L.construir_enemigos_cerca}\n"
 				_comprable = false

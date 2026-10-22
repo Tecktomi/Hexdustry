@@ -132,6 +132,7 @@ var a, b, c, flag
 	#macro cambio_add_modulo 4
 	#macro cambio_investigar 5
 	#macro cambio_instrucciones 6
+	#macro cambio_eliminar_jugador 7
 	//Instrucciones
 	#macro cambio_instrucciones_add_comando 1
 	#macro cambio_instrucciones_delete_comando 2

@@ -1,5 +1,6 @@
 function handle_jugador_ido(buffer){
 	with control{
+		var _timer = real(buffer_read(buffer, buffer_u32))
 		var player_name = buffer_read(buffer, buffer_string), pos = 0
 		var buffer_2 = buffer_create(2, buffer_grow, 1)
 		buffer_write(buffer_2, buffer_u8, net_jugador_eliminado)
@@ -13,6 +14,6 @@ function handle_jugador_ido(buffer){
 		server_jugadores_timeout[pos] = 0
 		array_push(chat, string(L.server_jugador_ido, player_name))
 		array_push(chat_time, image_index)
-		eliminar_jugador(pos)
+		array_push(cambios, {step : _timer, tipo : cambio_eliminar_jugador, data : {pos : pos}})
 	}
 }

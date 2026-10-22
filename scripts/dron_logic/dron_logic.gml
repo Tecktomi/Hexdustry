@@ -211,7 +211,7 @@ function dron_logic(){
 						b = repair_id[# i, j][_jugador]
 						_comprable = (b > 0)
 						if _comprable and not cheat
-							_comprable = check_reconstruible(b, false, _jugador)._comprable
+							_comprable = check_reconstruible(i, j, b, false, _jugador)._comprable
 						if _comprable{
 							edificio = construir(b, repair_dir[# i, j][_jugador], i, j,,, _jugador)
 							if tag_edificio_seteable[b]

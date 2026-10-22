@@ -4,15 +4,21 @@ function server_construir(index, dir, a, b, _cheat = control.cheat, _jugador = j
 		buffer_write(buffer, buffer_u8, net_construir)
 		buffer_write(buffer, buffer_u32, real(timer))
 		buffer_write(buffer, buffer_u8, real(index))
-		if index = id_tunel or index = id_tunel_salida{
+		if tag_edificio_tunel[index]{
 			buffer_write(buffer, buffer_bool, build_able)
 			buffer_write(buffer, buffer_u16, build_target.a)
 			buffer_write(buffer, buffer_u16, build_target.b)
 		}
-		else if in(index, id_fabrica_de_drones, id_cinta_grande, id_fabrica_de_drones_grande){
+		else if tag_dron_encima[index]{
 			buffer_write(buffer, buffer_bool, build_agua)
 			buffer_write(buffer, buffer_u16, build_agua_x)
 			buffer_write(buffer, buffer_u16, build_agua_y)
+			var len = array_length(edificios_salida_drones)
+			buffer_write(buffer, buffer_u8, len)
+			for(var i = 0; i < len; i++){
+				buffer_write(buffer, buffer_u16, edificios_salida_drones[i].a)
+				buffer_write(buffer, buffer_u16, edificios_salida_drones[i].b)
+			}
 		}
 		else if tag_edificio_tuberia[index]
 			buffer_write(buffer, buffer_u8, liquido_choose_array[liquido_choose])

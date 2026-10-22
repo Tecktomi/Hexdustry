@@ -801,7 +801,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		if b > 0{
 			var _comprable = true
 			if not cheat
-				_comprable = check_reconstruible(b,, jugador)._comprable
+				_comprable = check_reconstruible(mx, my, b,, jugador)._comprable
 			if not _comprable{
 				temp_complex = abtoxy(mx, my)
 				draw_sprite_off(spr_rojo, 0, temp_complex[0], temp_complex[1],,,,, 0.5)
@@ -1420,7 +1420,7 @@ if menu = MENU_JUEGO{
 				else if pausa = 2
 					pausa = 0
 			}
-			if string_ends_with(keyboard_string, "cheat"){
+			if string_ends_with(keyboard_string, "cheat") and not online{
 				keyboard_string = ""
 				cheat = not cheat
 			}
@@ -1726,7 +1726,7 @@ if array_length(chat) > 0{
 			array_push(chat, chat_text)
 			array_push(chat_time, image_index)
 			if online
-				server_mensaje($"{online_nombre}: {chat_text}")
+				server_mensaje(online_nombre, chat_text)
 			chat_text = ""
 		}
 		if keyboard_check_pressed(vk_escape)

@@ -461,7 +461,7 @@ function menu_construccion(mx, my, xmouse, ymouse, just_pressed = false, prev_ch
 					}
 					//Detectar que no haya otros edificios debajo
 					len = array_length(build_list)
-					if edificio_camino[build_index] or in(build_index, id_tunel, id_tunel_salida, id_cruce){
+					if edificio_camino[build_index] or tag_edificio_tunel[build_index] or build_index = id_cruce{
 						for(a = 0; a < len;){
 							aa = build_list[a++]
 							bb = build_list[a++]
@@ -962,6 +962,7 @@ function menu_construccion(mx, my, xmouse, ymouse, just_pressed = false, prev_ch
 						if ((DEVISE and mouse_check_button_pressed(mb_left)) or (not DEVISE and mouse_check_button_released(mb_left) and android_building and construible and point_distance(mouse_x, mouse_y, android_mouse_x, android_mouse_y) < 10)) and flag_camino and _comprable and (not edificio_bool[# temp_mx, temp_my] or (build_index = id_cruce and edificio_camino[edificio_id[# temp_mx, temp_my].index])){
 							android_building = false
 							var temp_edificio = construir(build_index, build_dir, temp_mx, temp_my, true)
+							/*
 							if temp_edificio != null_edificio and tag_dron_encima[temp_edificio.index]{
 								array_copy(temp_edificio.inputs_carga, 0, build_array_edificios_input, 0, array_length(build_array_edificios_input))
 								for(a = array_length(temp_edificio.inputs_carga) - 1; a >= 0; a--){
@@ -976,6 +977,7 @@ function menu_construccion(mx, my, xmouse, ymouse, just_pressed = false, prev_ch
 								if array_length(temp_edificio.outputs_carga) = 0
 									array_disorder_push(edificios_salida_drones, temp_edificio, ptre_salida_drones)
 							}
+							*/
 						}
 					}
 					//Arcos eléctricos

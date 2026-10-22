@@ -19,7 +19,7 @@ function delete_dron(dron = control.null_dron){
 			if array_length(drones_jugador[_jugador]) < 8 + 2 * nucleos[_jugador].modulo
 				for(a = array_length(edificios_salida_drones) - 1; a >= 0; a--){
 					edificio = edificios_salida_drones[a]
-					if edificio.jugador = _jugador and edificio.select != -1 and edificio.waiting
+					if edificio.jugador = _jugador and edificio.select != -1 and edificio.waiting_dron
 						mover_carga(edificio)
 				}
 		}

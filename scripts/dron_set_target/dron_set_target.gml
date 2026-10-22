@@ -14,5 +14,6 @@ function dron_set_target(dron = control.null_dron, temp_array){
 				break
 		}
 		dron.target = (edificio.jugador = _jugador ? null_edificio : edificio)
+		dron.modo = MULA_TARGET
 	}
 }

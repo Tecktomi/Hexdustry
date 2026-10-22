@@ -57,11 +57,6 @@ function construir(index, dir, mx, my, manual = false, _cheat = control.cheat, _
 				return null_edificio
 		}
 		edificio = add_edificio(index, dir, mx, my, _jugador)
-		if in(index, id_fabrica_de_drones, id_cinta_grande, id_fabrica_de_drones_grande){
-			edificio.array_real[2] = real(build_agua)
-			edificio.array_real[3] = real(build_agua_x)
-			edificio.array_real[4] = real(build_agua_y)
-		}
 		//Algoritmo link de tuneles
 		if tag_edificio_tunel[index]{
 			build_able = false
@@ -110,6 +105,24 @@ function construir(index, dir, mx, my, manual = false, _cheat = control.cheat, _
 				if build_target.waiting
 					mover(build_target)
 			}
+		}
+		//Algoritmo fábricas de drones
+		else if tag_dron_encima[edificio.index]{
+			edificio.array_real[2] = real(build_agua)
+			edificio.array_real[3] = real(build_agua_x)
+			edificio.array_real[4] = real(build_agua_y)
+			array_copy(edificio.inputs_carga, 0, build_array_edificios_input, 0, array_length(build_array_edificios_input))
+			for(a = array_length(edificio.inputs_carga) - 1; a >= 0; a--){
+				var temp_edificio_2 = edificio.inputs_carga[a]
+				array_push(temp_edificio_2.outputs_carga, edificio)
+				if array_contains(edificios_salida_drones, temp_edificio_2)
+					array_disorder_remove(edificios_salida_drones, temp_edificio_2, ptre_salida_drones)
+			}
+			array_copy(edificio.outputs_carga, 0, build_array_edificios_output, 0, array_length(build_array_edificios_output))
+			for(a = array_length(edificio.outputs_carga) - 1; a >= 0; a--)
+				array_push(edificio.outputs_carga[a].inputs_carga, edificio)
+			if array_length(edificio.outputs_carga) = 0
+				array_disorder_push(edificios_salida_drones, edificio, ptre_salida_drones)
 		}
 		//Actualizar recursos
 		if not _cheat{

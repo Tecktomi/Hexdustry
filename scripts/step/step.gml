@@ -30,23 +30,26 @@ function step(){
 						handle_investigar(buffer_grabacion)
 					else if msg = net_set_instrucciones
 						handle_set_instrucciones(buffer_grabacion)
+					else if msg = net_jugador_ido
+						handle_jugador_ido(buffer_grabacion)
 					grabacion_pos = buffer_tell(buffer_grabacion)
 				}
 			//Aplicar cambios
-			for(a = array_length(cambios) - 1; a >= 0; a--){
+			for(a = 0; a < array_length(cambios); a++){
 				cambio = cambios[a]
 				if cambio.step <= timer{
-					array_delete(cambios, a, 1)
+					array_delete(cambios, a--, 1)
 					if cambio.tipo = cambio_construir{
-						if in(cambio.data.index, id_tunel, id_tunel_salida){
+						if tag_edificio_tunel[cambio.data.index]{
 							build_able = cambio.data.able
 							if edificio_bool[# cambio.data.tunel_a, cambio.data.tunel_b]
 								build_target = edificio_id[# cambio.data.tunel_a, cambio.data.tunel_b]
 						}
-						else if in(cambio.data.index, id_fabrica_de_drones, id_cinta_grande, id_fabrica_de_drones_grande){
+						else if tag_dron_encima[cambio.data.index]{
 							build_agua = bool(cambio.data.agua)
 							build_agua_x = real(cambio.data.agua_x)
 							build_agua_y = real(cambio.data.agua_y)
+							array_copy(edificios_salida_drones, 0, cambio.data.edificios_salida_drones, 0, array_length(cambio.data.edificios_salida_drones))
 						}
 						else if tag_edificio_tuberia[cambio.data.index]{
 							liquido_choose_array = array_create(2, real(cambio.data.liquido))
@@ -66,6 +69,8 @@ function step(){
 						investigar(cambio.data.index,, cambio.data.cheat, cambio.data.jugador)
 					else if cambio.tipo = cambio_instrucciones
 						set_edificio_instruccion(edificio_id[# cambio.data.a, cambio.data.b], cambio.data.cambio, cambio.data)
+					else if cambio.tipo = cambio_eliminar_jugador
+						eliminar_jugador(cambio.data.pos)
 				}		
 			}
 			if REPRODUCIENDO and grabacion_pos = grabacion_size and array_length(cambios) = 0
