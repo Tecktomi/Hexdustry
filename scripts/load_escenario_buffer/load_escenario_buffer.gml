@@ -7,11 +7,9 @@ function load_escenario_buffer(filename, _misiones = true, _edificios = true){
 		//Variables globales
 		var prev_xsize = xsize, prev_ysize = ysize
 		xsize = real(buffer_read(buffer, buffer_u16))
-		if prev_xsize != xsize
-			resize_grid(min(prev_xsize, xsize), 0)
 		ysize = real(buffer_read(buffer, buffer_u16))
-		if prev_ysize != ysize
-			resize_grid(0, min(prev_ysize, ysize))
+		if prev_xsize != xsize or prev_ysize != ysize
+			set_grid_size()
 		spawn_x = real(buffer_read(buffer, buffer_u16))
 		spawn_y = real(buffer_read(buffer, buffer_u16))
 		var seek_config = real(buffer_read(buffer, buffer_u32)), a, b, c, temp_array_string

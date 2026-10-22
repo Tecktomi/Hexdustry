@@ -158,6 +158,7 @@ function save_game_buffer(buffer){
 			mask += (dron.oleada != 0) << c++
 			mask += (dron.change_pos) << c++
 			mask += (dron.move_dir != 0) << c++
+			mask += (array_length(dron.instruccion) > 0) << c++
 			buffer_write(buffer, buffer_u64, real(mask))
 			c = 0
 			buffer_write(buffer, buffer_f64, real(dron.x))
@@ -183,6 +184,13 @@ function save_game_buffer(buffer){
 			if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(dron.oleada))
 			c++
 			if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(dron.move_dir))
+			if mask & (1 << c++){
+				buffer_write(buffer, buffer_u8, dron.instruccion[0])
+				buffer_write(buffer, buffer_u16, dron.instruccion[1])
+				buffer_write(buffer, buffer_u16, dron.instruccion[2])
+				buffer_write(buffer, buffer_u16, dron.instruccion[3])
+				buffer_write(buffer, buffer_u16, dron.instruccion[4])
+			}
 		}
 		//Municiones
 		len = real(array_length(municiones))

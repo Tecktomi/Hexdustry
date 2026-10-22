@@ -3,7 +3,7 @@ function step(){
 		//Detenerse por LAG
 		if online and not servidor and timer + LAG > server_timer
 			exit
-		var _seed_vista = (int64(sim_seed[1]) * 1103515245 + 12345) & 0x7FFFFFFF
+		var _seed_vista = sim_random(0x7FFFFFFF)
 		random_set_seed(sim_seed[0])
 		var a, b, cambio, temp_array_real, buffer, edificio, municion, target, _jugador, _tipo, _dmg, temp_complex, muna, munb, len, efecto, humo, fuego, temp_time, flag
 		var temp_complex_list, i, aa, bb, temp_text_right, file, red, flujo, temp_explosion, temp_script
@@ -71,6 +71,14 @@ function step(){
 			if REPRODUCIENDO and grabacion_pos = grabacion_size and array_length(cambios) = 0
 				REPRODUCIENDO = false
 		}
+		//Heartbeat servidor
+		if online and servidor{
+			buffer = buffer_create(2 + string_length(online_nombre), buffer_grow, 1)
+			buffer_write(buffer, buffer_u8, net_heartbeat)
+			buffer_write(buffer, buffer_string, online_nombre)
+			server_broadcast_buffer(buffer)
+			buffer_delete(buffer)
+		}
 		acumulator -= LOGIC_DT
 		//Estadísticas / Guardado automático
 		if win = 0{
@@ -106,7 +114,7 @@ function step(){
 		for(a = array_length(edificios_fuego) - 1; a >= 0; a--){
 			edificio = edificios_fuego[a]
 			if --edificio.fuego <= 0
-				array_disorder_remove(edificio, edificios_fuego, ptre_fuego)
+				array_disorder_remove(edificios_fuego, edificio, ptre_fuego)
 			herir_edificio(0.2, edificio)
 			if grafic_humo and image_index mod 10 = a mod 10
 				array_push(humos, add_humo(edificio.center_x, edificio.center_y, edificio.a, edificio.b, sim_random_range(-1, 1), sim_random_range(-1, 1), 30))
@@ -175,7 +183,7 @@ function step(){
 						municion.dis = 0
 						if _tipo = municion_tipo_fuego{
 							if edificio.fuego = 0
-								array_disorder_push(edificio, edificios_fuego, ptre_fuego)
+								array_disorder_push(edificios_fuego, edificio, ptre_fuego)
 							edificio.fuego = 300
 						}
 						break
@@ -363,7 +371,7 @@ function step(){
 		//IA
 		if IA and timer mod 20 = 0
 			ia_step()
-		sim_seed[0] = (int64(sim_seed[0]) * 1103515245 + 12345) & 0x7FFFFFFF
+		sim_random(0x7FFFFFFF, 0)
 		random_set_seed(_seed_vista)
 		if REPRODUCIENDO{
 			draw_once = false

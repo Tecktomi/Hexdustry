@@ -505,6 +505,8 @@ L = {}
 	editor_max_height = DEVISE ? 25 : 12
 	editor_item_size = DEVISE ? 20 : 40
 	editor_list = false
+	editor_prev_xsize = xsize
+	editor_prev_ysize = ysize
 	nuclear_x = 0
 	nuclear_y = 0
 	nuclear_step = 0
@@ -933,12 +935,14 @@ null_dron = {
 	jugador : 0,
 	change_pos : false,
 	move_dir : 0,
-	punteros : array_create(ptrd_MAX, -1)
+	punteros : array_create(ptrd_MAX, -1),
+	instruccion : array_create(0, 0)
 }
 #macro ptrd_jugador 0
 #macro ptrd_chunk 1
 #macro ptrd_total 2
-#macro ptrd_MAX 3
+#macro ptrd_jugador_index 3
+#macro ptrd_MAX 4
 null_edificio.target = null_dron
 null_dron.target_dron = null_dron
 selected_drones = array_create(0, null_dron)
@@ -1255,6 +1259,12 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 #endregion
 dron_max = array_length(dron_nombre)
 dron_descripcion = array_create(dron_max, "")
+drones_jugador_index = array_create(EQUIPOS)
+for(a = 0; a < EQUIPOS; a++){
+	drones_jugador_index[a] = array_create(dron_max, array_create(0, null_dron))
+	for(b = 0; b < dron_max; b++)
+		array_set(drones_jugador_index[a], b, array_create(0, null_dron))
+}
 //Liquidos
 #region arreglos
 	liquido_nombre = array_create(0, "")

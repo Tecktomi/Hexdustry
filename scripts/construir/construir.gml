@@ -86,6 +86,7 @@ function construir(index, dir, mx, my, manual = false, _cheat = control.cheat, _
 			if build_able{
 				if not build_target.idle{
 					build_target.link.idle = true
+					build_target.link.link = null_edificio
 					if build_target.index = 16{
 						array_remove(build_target.inputs, build_target.link)
 						array_remove(build_target.link.outputs, build_target)

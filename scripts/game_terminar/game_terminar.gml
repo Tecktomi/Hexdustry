@@ -12,11 +12,13 @@ function game_terminar(motivo, destino = MENU_PRINCIPAL){
 		if GRABANDO
 			grabacion_end($"Grabaciones/grabacion_{day_format()}.rec")
 		if motivo = fin_desconexion{
+			online = false
 			network_destroy(server)
 			server = -1
 			servidor = false
 		}
 		else if online{
+			online = false
 			if servidor
 				server_break()
 			else

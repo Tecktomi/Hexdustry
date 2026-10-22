@@ -20,6 +20,8 @@ function menu_editar_edificio(){
 			size = array_length(edificio.instruccion)
 			//SCROLL
 			scroll(110, ypos, size, DEVISE ? 25 : 12, DEVISE ? 20 : 40, scroll_procesador, {xpos : 150, ypos : ypos, edificio : edificio, size : size, b : 0})
+			if procesador_link_handle != -1 and mouse_check_button_released(mb_left)
+				procesador_link_handle = -1
 			draw_boton_text_list_end()
 			xpos = 150
 			ypos += min(size, 25) * 20
@@ -413,6 +415,7 @@ function menu_editar_edificio(){
 				show_menu = false
 		}
 		if mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape){
+			procesador_link_handle = -1
 			show_smoke = true
 			keyboard_clear(vk_escape)
 			mouse_clear(mb_right)

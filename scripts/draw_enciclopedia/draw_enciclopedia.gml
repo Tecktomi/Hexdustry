@@ -52,6 +52,7 @@ function draw_enciclopedia(_tecnologia = true, _this_input_layer = 0){
 		else if enciclopedia = 9
 			draw_panel(120, ypos, room_width - 240, room_height - 120 - ypos, 0, 1, 1, panel_enciclopedia_consejo, {_this_input_layer : _this_input_layer})
 		if keyboard_check_pressed(vk_escape) or keyboard_check_pressed(CONTROL_ENCICLOPEDIA) or mouse_check_button_pressed(mb_right) or (mouse_check_button_pressed(mb_left) and (mouse_x < 100 or mouse_y < 100 or mouse_x > room_width - 100 or mouse_y > room_height - 100)){
+			input_layer = 0
 			mouse_clear(mouse_lastbutton)
 			keyboard_clear(vk_escape)
 			keyboard_clear(CONTROL_ENCICLOPEDIA)

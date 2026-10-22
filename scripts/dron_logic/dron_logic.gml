@@ -100,23 +100,25 @@ function dron_logic(){
 							if array_length(dron.target.instruccion) = 0{
 								dron.modo = MULA_IDLE
 								dron.target = null_edificio
+								array_resize(dron.instruccion, 0)
 							}
 							else{
-								dron.temp_target = edificio_id[# dron.target.instruccion[dron.target.select, 1], dron.target.instruccion[dron.target.select, 2]]
+								array_copy(dron.instruccion, 0, dron.target.instruccion[dron.target.select], 0, array_length(dron.target.instruccion[dron.target.select]))
+								dron.temp_target = edificio_id[# dron.instruccion[1], dron.instruccion[2]]
 								if dron.temp_target = null_edificio
 									dron.modo = MULA_IDLE
 								else if dron.carga_total < MULA_CARGA_MAX{
 									dron.modo = MULA_BUSCAR_RSS
 									dron.dir_move = dron.target.select
-									dron.move_dis = dron.target.instruccion[dron.dir_move, 0]
-									dron.temp_target = edificio_id[# dron.target.instruccion[dron.dir_move, 1], dron.target.instruccion[dron.dir_move, 2]]
+									dron.move_dis = dron.instruccion[0]
+									dron.temp_target = edificio_id[# dron.instruccion[1], dron.instruccion[2]]
 									dron.target.select = (dron.dir_move + 1) mod array_length(dron.target.instruccion)
 								}
-								else if dron.carga[dron.target.instruccion[dron.dir_move, 0]] > 0{
+								else if dron.carga[dron.instruccion[0]] > 0{
 									dron.modo = MULA_DEJAR_RSS
 									dron.dir_move = dron.target.select
-									dron.move_dis = dron.target.instruccion[dron.dir_move, 0]
-									dron.temp_target = edificio_id[# dron.target.instruccion[dron.dir_move, 3], dron.target.instruccion[dron.dir_move, 4]]
+									dron.move_dis = dron.instruccion[0]
+									dron.temp_target = edificio_id[# dron.instruccion[3], dron.instruccion[4]]
 									dron.target.select = (dron.dir_move + 1) mod array_length(dron.target.instruccion)
 								}
 								else
@@ -124,7 +126,7 @@ function dron_logic(){
 							}
 						}
 						else if dron.modo = MULA_BUSCAR_RSS{
-							if not edificio_bool[# dron.target.instruccion[dron.dir_move, 3], dron.target.instruccion[dron.dir_move, 4]]
+							if not edificio_bool[# dron.instruccion[3], dron.instruccion[4]]
 								dron.modo = MULA_IDLE
 							else{
 								dron.modo = MULA_DEJAR_RSS
@@ -133,7 +135,7 @@ function dron_logic(){
 								dron.carga_total += i
 								dron.temp_target.carga[dron.move_dis] -= i
 								dron.temp_target.carga_total -= i
-								dron.temp_target = edificio_id[# dron.target.instruccion[dron.dir_move, 3], dron.target.instruccion[dron.dir_move, 4]]
+								dron.temp_target = edificio_id[# dron.instruccion[3], dron.instruccion[4]]
 							}
 						}
 						else if dron.modo = MULA_DEJAR_RSS{
@@ -242,10 +244,12 @@ function dron_logic(){
 									flag = true
 								if minar(temp_complex[0], temp_complex[1]){
 									temp_beta = beta_grid[# temp_complex[0], temp_complex[1]]
-									temp_terreno = array_choose(temp_beta.terrenos)
-									temp_complex_2 = abtoxy(temp_terreno[0], temp_terreno[1])
-									dron.move_x = temp_complex_2[0]
-									dron.move_y = temp_complex_2[1]
+									if array_length(temp_beta.terrenos) > 0{
+										b = 2 * irandom(array_length(temp_beta.terrenos) / 2 - 1)
+										temp_complex_2 = abtoxy(temp_beta.terrenos[b], temp_beta.terrenos[b + 1])
+										dron.move_x = temp_complex_2[0]
+										dron.move_y = temp_complex_2[1]
+									}
 									flag = true
 								}
 							}

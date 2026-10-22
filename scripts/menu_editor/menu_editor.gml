@@ -313,23 +313,30 @@ function menu_editor(){
 			draw_text(xpos, ypos, L.editor_size_map)
 			xpos += 20
 			ypos += text_y
-			var prev_xsize = xsize
-			xsize = round(draw_deslizante(xpos, xpos + 100, ypos + 10, xsize, TILE_WIDTH, 256, 0))
-			chunk_xsize = ceil(xsize / CHUNK_WIDTH)
-			var val = draw_boton_text(xpos + 110, ypos, xsize)
-			if val != xsize
-				xsize = val
-			if xsize > prev_xsize and mouse_check_button_released(mb_left)
-				resize_grid(prev_xsize, 0)
+			editor_prev_xsize = round(draw_deslizante(xpos, xpos + 100, ypos + 10, editor_prev_xsize, 32, 256, 0))
+			editor_prev_xsize = real(draw_boton_text(xpos + 110, ypos, editor_prev_xsize, true))
+			if editor_prev_xsize < 32 or editor_prev_xsize > 256{
+				draw_set_color(ui_boton_rojo)
+				draw_set_alpha(0.5)
+				draw_rectangle(xpos + 110, ypos, xpos + 110 + text_x, ypos + text_y, false)
+				draw_set_color(ui_texto)
+				draw_set_alpha(1)
+			}
 			ypos += text_y
-			var prev_ysize = ysize
-			ysize = round(draw_deslizante(xpos, xpos + 100, ypos + 10, ysize, 60, 512, 1))
-			chunk_ysize = ceil(ysize / CHUNK_HEIGHT)
-			val = draw_boton_text(xpos + 110, ypos, ysize)
-			if val != ysize
-				ysize = val
-			if ysize > prev_ysize and mouse_check_button_released(mb_left)
-				resize_grid(0, prev_ysize)
+			editor_prev_ysize = round(draw_deslizante(xpos, xpos + 100, ypos + 10, editor_prev_ysize, 64, 512, 1))
+			editor_prev_ysize = real(draw_boton_text(xpos + 110, ypos, editor_prev_ysize, true))
+			if editor_prev_ysize < 64 or editor_prev_ysize > 512{
+				draw_set_color(ui_boton_rojo)
+				draw_set_alpha(0.5)
+				draw_rectangle(xpos + 110, ypos, xpos + 110 + text_x, ypos + text_y, false)
+				draw_set_color(ui_texto)
+				draw_set_alpha(1)
+			}
+			if (xsize != editor_prev_xsize or ysize != editor_prev_ysize) and not mouse_check_button(mb_left) and get_keyboard_string = -1 and editor_prev_xsize >= 32 and editor_prev_xsize <= 256 and editor_prev_ysize >= 64 and editor_prev_ysize <= 512{
+				xsize = editor_prev_xsize
+				ysize = editor_prev_ysize
+				set_grid_size()
+			}
 			draw_boton_text_list_end()
 			update_cursor()
 			exit
@@ -562,6 +569,8 @@ function menu_editor(){
 		}
 		ypos += text_y * 1.2
 		if draw_boton(10, ypos, L.editor_editar_mapa, ui_azul){
+			editor_prev_xsize = xsize
+			editor_prev_ysize = ysize
 			editor_menu = 2
 			exit
 		}

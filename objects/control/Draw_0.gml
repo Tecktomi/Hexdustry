@@ -193,11 +193,6 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 	if temp_text != ""
 		draw_text_background(room_width / 2, 0, temp_text, true)
 	draw_set_halign(fa_left)
-	if enciclopedia > 0{
-		image_index--
-		draw_enciclopedia()
-		exit
-	}
 	if sonido and random(1) < 0.1{
 		a = irandom_range(mina, maxa - 1)
 		b = irandom_range(minb, maxb - 1)
@@ -446,7 +441,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 					set_edificio_instruccion(edificio, cambio_activar,, true)
 			}
 			//Seleccionar edificios
-			if mouse_check_button_pressed(mb_left) and build_index = -1 and build_menu = 0{
+			if mouse_check_button_pressed(mb_left) and build_index = -1 and build_menu = 0 and input_layer = 0{
 				if puerto_carga_select > 0{
 					mouse_clear(mb_left)
 					if edificio != puerto_carga_link and point_distance(edificio.x, edificio.y, puerto_carga_link.x, puerto_carga_link.y) < PUERTO_CARGA_RANGE{
@@ -800,7 +795,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		}
 	}
 	//Reconstruir edificios
-	else if keyboard_check(CONTROL_REPARAR){
+	else if keyboard_check(CONTROL_REPARAR) and input_layer = 0{
 		b = repair_id[# mx, my][jugador]
 		var temp_text_2 = ""
 		if b > 0{
@@ -822,12 +817,12 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		}
 	}
 	//Seleccionar drones
-	else if DEVISE and mouse_check_button_pressed(mb_left) and build_index = -1{
+	else if DEVISE and mouse_check_button_pressed(mb_left) and build_index = -1 and input_layer = 0{
 		mx_clic = xmouse
 		my_clic = ymouse
 		clicked = true
 	}
-	if DEVISE and mouse_check_button(mb_left) and clicked and build_index = -1 and not keyboard_check(CONTROL_REPARAR){
+	if DEVISE and mouse_check_button(mb_left) and clicked and build_index = -1 and not keyboard_check(CONTROL_REPARAR) and input_layer = 0{
 		draw_set_alpha(0.5)
 		draw_set_color(ui_fondo)
 		draw_rectangle_off(mx_clic, my_clic, xmouse, ymouse, false)
@@ -843,7 +838,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		}
 		draw_set_alpha(1)
 	}
-	if DEVISE and mouse_check_button_released(mb_left) and clicked and build_index = -1{
+	if DEVISE and mouse_check_button_released(mb_left) and clicked and build_index = -1 and input_layer = 0{
 		deselect_drones()
 		var minx = min(mx_clic, xmouse), miny = min(my_clic, ymouse), maxx = max(mx_clic, xmouse), maxy = max(my_clic, ymouse)
 		for(a = array_length(drones_propios) - 1; a >= 0; a--){
@@ -898,7 +893,8 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		}
 		temp_text += $"step: {dron.step}\n"
 	}
-	draw_text_background(0, 0, temp_text)
+	if input_layer = 0
+		draw_text_background(0, 0, temp_text)
 }
 //Comandar drones
 if array_length(selected_drones) > 0{
@@ -1118,6 +1114,7 @@ if sonido
 				if tecnologia and not cheat and not edificio_tecnologia[jugador, a]{
 					enciclopedia_item = a
 					enciclopedia = 4
+					input_layer = 1
 				}
 				else{
 					build_index = a
@@ -1135,12 +1132,13 @@ if sonido
 	}
 #endregion
 //Acceso directo
-if keyboard_check_pressed(vk_anykey) and (not in(ord(keyboard_lastchar), CONTROL_LEFT, CONTROL_RIGHT, CONTROL_UP, CONTROL_DOWN, ord(" ")) or cheat) and win = 0 and not show_menu and not chat_input{
+if keyboard_check_pressed(vk_anykey) and (not in(ord(keyboard_lastchar), CONTROL_LEFT, CONTROL_RIGHT, CONTROL_UP, CONTROL_DOWN, ord(" ")) or cheat) and win = 0 and not show_menu and not chat_input and input_layer = 0{
 	for(a = 1; a < edificio_max; a++)
-		if edificio_key[a] != "" and string_ends_with(keyboard_string, edificio_key[a]){
+		if edificio_key[a] != "" and string_ends_with(keyboard_string, edificio_key[a]) and mision_edificios[a]{
 			if tecnologia and not cheat and not edificio_tecnologia[jugador, a]{
 				enciclopedia_item = a
 				enciclopedia = 4
+				input_layer = 1
 			}
 			else
 				build_index = a
@@ -1163,9 +1161,9 @@ if DEVISE and (mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk
 	clear_edit()
 }
 //CONSTRUCCIÓN
-if build_index >= 0 and win = 0
+if build_index >= 0 and win = 0 and input_layer = 0
 	menu_construccion(mx, my, xmouse, ymouse, just_pressed, prev_change, outside)
-else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
+else if build_index = -1 and win = 0 and array_length(blueprint) > 0 and input_layer = 0{
 	len = array_length(blueprint)
 	var flip = (((blueprint_mod2 + my) mod 2) = 1), _rotar = false, len2
 	//Guardar
@@ -1328,8 +1326,6 @@ else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
 	//Construir
 	if mouse_check_button_pressed(mb_left){
 		mouse_clear(mb_left)
-		if not keyboard_check(vk_lshift)
-			array_resize(blueprint, 0)
 		for(a = 0; a < len; a++){
 			var temp_blueprint = blueprint[a], aaa = temp_blueprint.a + mx
 			if flip and (temp_blueprint.b & 1) = 1{
@@ -1341,6 +1337,8 @@ else if build_index = -1 and win = 0 and array_length(blueprint) > 0{
 			if temp_blueprint.construible and is_comprable(edificio_precio_id[temp_blueprint.index], edificio_precio_num[temp_blueprint.index])
 				construir(temp_blueprint.index, temp_blueprint.dir, aaa, temp_blueprint.b + my, true)
 		}
+		if not keyboard_check(vk_lshift)
+			array_resize(blueprint, 0)
 	}
 	last_mx = mx
 	last_my = my
@@ -1356,7 +1354,7 @@ var temp_text_right = ""
 //Juego
 if menu = MENU_JUEGO{
 	//Ciclo principal
-	if pausa = 0 or online{
+	if (pausa = 0 and enciclopedia = 0) or online{
 		var frame_time = min(delta_time / 1_000_000, 0.25)
 		acumulator += frame_time
 		if online and not servidor{
@@ -1408,8 +1406,10 @@ if menu = MENU_JUEGO{
 		draw_text_background(room_width, 0, temp_text_right)
 		draw_set_halign(fa_left)
 	}
-	if not grafic_hideui and draw_sprite_boton(spr_manual,, room_width - 64, string_height(temp_text_right), 64, 64,, hover_sprite_boton_text, {a : $"{L.game_enciclopedia} (Y)"})
+	if not grafic_hideui and draw_sprite_boton(spr_manual,, room_width - 64, string_height(temp_text_right), 64, 64,, hover_sprite_boton_text, {a : $"{L.game_enciclopedia} (Y)"}){
 		enciclopedia = 1
+		input_layer = 1
+	}
 	//Input
 	if win = 0 and not show_menu and not chat_input{
 		if keyboard_check_pressed(vk_anykey){
@@ -1427,10 +1427,14 @@ if menu = MENU_JUEGO{
 			if cheat and keyboard_check_pressed(CONTROL_WAVES)
 				oleadas = not oleadas
 			if keyboard_check_pressed(CONTROL_ENCICLOPEDIA){
-				if enciclopedia = 0
+				if enciclopedia = 0{
 					enciclopedia = 1
-				else
+					input_layer = 1
+				}
+				else{
 					enciclopedia = 0
+					input_layer = 0
+				}
 			}
 			if cheat and mision_actual >= 0 and string_ends_with(keyboard_string, "uwu")
 				pasar_mision()
@@ -1761,6 +1765,8 @@ if keyboard_check(CONTROL_TAB) and online{
 		}
 	draw_set_halign(fa_left)
 }
+if enciclopedia > 0
+	draw_enciclopedia(, 1)
 draw_sprite(spr_vineta, 0, 0, 0)
 if debug_frame_time{
 	draw_set_halign(fa_right)

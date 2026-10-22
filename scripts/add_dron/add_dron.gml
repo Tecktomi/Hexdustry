@@ -37,6 +37,7 @@ function add_dron(a, b, index, _jugador = jugador){
 			change_pos : false,
 			move_dir : 0,
 			punteros : array_create(ptrd_MAX, -1),
+			instruccion : array_create(0, 0)
 		}
 		if _jugador = JUGADOR_IA{
 			dron.vida_max = ceil(dron.vida * power((oleada_count + 3) / 3, 1.1) * multiplicador_vida_enemigos / 100)
@@ -54,6 +55,7 @@ function add_dron(a, b, index, _jugador = jugador){
 			drones_construidos++
 		array_disorder_push(drones_jugador[_jugador], dron, ptrd_jugador)
 		array_disorder_push(drones, dron, ptrd_total)
+		array_disorder_push(drones_jugador_index[_jugador, index], dron, ptrd_jugador_index)
 		dron_chunk_push(dron)
 		return dron
 	}

@@ -164,6 +164,14 @@ function load_game_buffer(buffer){
 			if mask & (1 << c++) dron.oleada = real(buffer_read(buffer, buffer_u8))
 			if mask & (1 << c++) dron.change_pos = true
 			if mask & (1 << c++) dron.move_dir = real(buffer_read(buffer, buffer_u8))
+			if mask & (1 << c++){
+				var _rss = real(buffer_read(buffer, buffer_u8))
+				var a1 = real(buffer_read(buffer, buffer_u16))
+				var b1 = real(buffer_read(buffer, buffer_u16))
+				var a2 = real(buffer_read(buffer, buffer_u16))
+				var b2 = real(buffer_read(buffer, buffer_u16))
+				dron.instruccion = [_rss, a1, b1, a2, b2]
+			}
 		}
 		//Referencias cruzadas dron-dron
 		for(var i = 0; i < len; i++)

@@ -141,8 +141,10 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				array_disorder_remove(edificio.target.torres, edificio, ptre_torre_dron)
 		}
 		//Eliminar tuneles
-		if tag_edificio_tunel[index] and not edificio.idle
+		if tag_edificio_tunel[index] and not edificio.idle{
 			edificio.link.idle = true
+			edificio.link.link = null_edificio
+		}
 		//Cancelar outputs
 		for(a = array_length(edificio.outputs) - 1; a >= 0; a--){
 			temp_edificio = edificio.outputs[a]
@@ -165,9 +167,9 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			for(b = array_length(temp_edificio.instruccion) - 1; b >= 0; b--)
 				if (temp_edificio.instruccion[b, 1] = edificio.a and temp_edificio.instruccion[b, 2] = edificio.b) or (temp_edificio.instruccion[b, 3] = edificio.a and temp_edificio.instruccion[b, 4] = edificio.b){
 					array_delete(temp_edificio.instruccion, b, 1)
-					for(var c = array_length(drones_jugador[_jugador]) - 1; c >= 0; c--){
-						dron = drones_jugador[_jugador, c]
-						if dron.index = idd_mula and dron.target = temp_edificio
+					for(var c = array_length(drones_jugador_index[_jugador, idd_mula]) - 1; c >= 0; c--){
+						dron = drones_jugador_index[_jugador, idd_mula][c]
+						if  dron.target = temp_edificio
 							if dron.dir_move = b{
 								if array_length(temp_edificio.instruccion) = 0{
 									dron.modo = MULA_IDLE
@@ -189,9 +191,9 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				}
 		}
 		if index = id_puerto_de_carga
-			for(a = array_length(drones_jugador[_jugador]) - 1; a >= 0; a--){
-				dron = drones_jugador[_jugador, a]
-				if dron.index = idd_mula and dron.target = edificio{
+			for(a = array_length(drones_jugador_index[_jugador, idd_mula]) - 1; a >= 0; a--){
+				dron = drones_jugador_index[_jugador, idd_mula][a]
+				if dron.target = edificio{
 					dron.target = null_edificio
 					dron.temp_target = null_edificio
 					dron.modo = MULA_IDLE

@@ -22,8 +22,8 @@ function atacar_dron(dron = control.null_dron, edificio = control.null_edificio,
 			return false
 		}
 		//Ataque Explosivo
-		else if dron.index = idd_kamikaze{
-			explosion(dron.x, dron.y, edificio, 500, 2000,, _jugador)
+		else if index = idd_kamikaze{
+			explosion(dron.x, dron.y, edificio, 150, 2000,, _jugador)
 			delete_dron(dron)
 			return true
 		}

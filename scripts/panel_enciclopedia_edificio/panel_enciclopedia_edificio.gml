@@ -63,6 +63,7 @@ function panel_enciclopedia_edificio(xpos = 0, ypos = 0, param = {_this_input_la
 		}
 		if ((_tecnologia and edificio_tecnologia[jugador, ei]) or cheat) and draw_boton(xpos + 10, ypos + 40, L.enciclopedia_construir, ui_verde,,,, _this_input_layer){
 			enciclopedia = 0
+			input_layer = 0
 			build_index = ei
 			build_dir = 0
 		}

@@ -4,6 +4,7 @@ function delete_dron(dron = control.null_dron){
 		array_disorder_remove(drones, dron, ptrd_total)
 		dron_chunk_remove(dron)
 		array_disorder_remove(drones_jugador[_jugador], dron, ptrd_jugador)
+		array_disorder_remove(drones_jugador_index[_jugador, dron.index], dron, ptrd_jugador_index)
 		//Dron enemigo
 		if _jugador = JUGADOR_IA{
 			enemigos_eliminados++

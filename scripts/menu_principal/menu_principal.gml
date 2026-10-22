@@ -196,6 +196,7 @@ function menu_principal(){
 						file_delete("Saves/" + temp_text + ".png")
 						file_delete("Saves/" + temp_text + ".save")
 						array_delete(partidas, a, 1)
+						array_delete(partidas_png, a, 1)
 						continue
 					}
 					draw_text(xpos + 20, ypos, text_wrap(temp_text, 100))

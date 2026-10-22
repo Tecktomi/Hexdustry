@@ -32,7 +32,7 @@ function handle_construir(buffer){
 				build_agua_y = real(data.agua_y)
 			}
 			else if tag_edificio_tuberia[index]{
-				liquido_choose_array = array_create(2, real(liquido))
+				liquido_choose_array = array_create(2, real(data.liquido))
 				liquido_choose = 0
 			}
 			if construir(index, dir, a, b,, _cheat, _jugador) != null_edificio

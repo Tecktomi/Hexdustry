@@ -76,6 +76,7 @@ function game_start(_nucleo = true, mision_cumplida = false){
 				update_background(a * CHUNK_WIDTH, b * CHUNK_HEIGHT)
 		grafic_hideui = false
 		check_water_target()
+		detect_features()
 		if game_mode = GAMEMODE_IA{
 			if array_length(edificios_jugador_index[JUGADOR_IA, id_nucleo]) = 0{
 				var temp_list = get_size(spawn_x, spawn_y, 0, 7), len = array_length(temp_list)

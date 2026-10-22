@@ -18,6 +18,7 @@ function detect_features(){
 							cantidad : ore_amount[# a, b]
 						}
 						array_push(betas, temp_beta)
+						beta_grid[# a, b] = temp_beta
 						maxi = 6
 						array_resize(temp_list, 0)
 						array_push(temp_list, a, b, 0)

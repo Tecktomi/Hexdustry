@@ -40,7 +40,7 @@ function menu_pausa(_juego = true, _input_layer = 0){
 					}
 					else if not mapa_editado{
 						if draw_boton(xpos, ypos, L.guardar, ui_azul,,,, _input_layer,, _max_width)
-							save()
+							save(true)
 						ypos += text_y * 1.2
 					}
 					//Online
