@@ -49,7 +49,7 @@ function scr_taladro(edificio = control.null_edificio){
 					else if terreno_recurso_bool[terreno[# aa, bb]] and index = id_taladro_electrico{
 						carga[terreno_recurso_id[terreno[# aa, bb]]]++
 						edificio.carga_total++
-						if edificio.carga_total = edificio_carga_max[index]
+						if edificio.carga_total >= edificio_carga_max[index]
 							edificio_encender(edificio, false,,, false)
 						flag = true
 						break

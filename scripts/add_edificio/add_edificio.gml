@@ -195,6 +195,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		ds_grid_set(edificio_draw, a, b, true)
 		array_disorder_push(edificios_jugador[_jugador], edificio, ptre_jugador)
 		array_disorder_push(chunk_edificios[# chunk_x, chunk_y], edificio, ptre_chunk)
+		array_disorder_push(chunk_edificios_jugador[_jugador][# chunk_x, chunk_y], edificio, ptre_chunk_jugador)
 		edificios_counter[index]++
 		if edificio_armas[index]{
 			var dis = edificio_alcance[index], chunk_size_x = CHUNK_WIDTH * 48, chunk_size_y = CHUNK_HEIGHT * 14

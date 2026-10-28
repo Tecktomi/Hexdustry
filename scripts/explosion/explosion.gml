@@ -2,8 +2,8 @@ function explosion(_x = 0, _y = 0, edificio = control.null_edificio, radio = 120
 	with control{
 		sound_play(snd_explosion, _x, _y)
 		array_push(efectos, add_efecto(spr_explosion, 0, _x, _y, 24, 1 / 3))
-		var temp_complex = xytoab(_x, _y), chunk_x, chunk_y, mina, minb, maxa, maxb, temp_array_edificios, temp_array_dron, dmg_total, a, b, i, dis, dron, flag = false
-		if temp_complex[0] < 0
+		var temp_complex = xytoab(_x, _y), chunk_x, chunk_y, mina, minb, maxa, maxb, temp_array_edificios, temp_array_dron, dmg_total, a, b, c, i, dis, dron, flag = false
+		if temp_complex[0] < 0 or temp_complex[1] < 0 or temp_complex[0] >= xsize or temp_complex[1] >= ysize
 			exit
 		chunk_x = floor(temp_complex[0] / CHUNK_WIDTH)
 		chunk_y = floor(temp_complex[1] / CHUNK_HEIGHT)
@@ -17,10 +17,10 @@ function explosion(_x = 0, _y = 0, edificio = control.null_edificio, radio = 120
 			for(a = mina; a <= maxa; a++)
 				for(b = minb; b <= maxb; b++){
 					//Herir edificios
-					temp_array_edificios = ds_grid_get(chunk_edificios, a, b)
-					for(i = array_length(temp_array_edificios) - 1; i >= 0; i--){
-						edificio = temp_array_edificios[i]
-						if edificio.jugador != _jugador{
+					for(c = 0; c < EQUIPOS; c++) if c != _jugador{
+						temp_array_edificios = ds_grid_get(chunk_edificios_jugador[c], a, b)
+						for(i = array_length(temp_array_edificios) - 1; i >= 0; i--){
+							edificio = temp_array_edificios[i]
 							dis = point_distance(_x, _y, edificio.center_x, edificio.center_y)
 							if dis < radio
 								if herir_edificio(dmg / (10 + dis), edificio)
@@ -51,14 +51,13 @@ function explosion(_x = 0, _y = 0, edificio = control.null_edificio, radio = 120
 		else{
 			for(a = mina; a <= maxa; a++)
 				for(b = minb; b <= maxb; b++){
-					temp_array_edificios = ds_grid_get(chunk_edificios, a, b)
-					for(i = array_length(temp_array_edificios) - 1; i >= 0; i--){
-						edificio = temp_array_edificios[i]
-						if edificio.jugador != _jugador{
+					for(c = 0; c < EQUIPOS; c++) if c != _jugador{
+						temp_array_edificios = ds_grid_get(chunk_edificios_jugador[c], a, b)
+						for(i = array_length(temp_array_edificios) - 1; i >= 0; i--){
+							edificio = temp_array_edificios[i]
 							dis = point_distance(_x, _y, edificio.center_x, edificio.center_y)
-							if dis < radio
-								if herir_edificio(dmg / (10 + dis), edificio)
-									flag = true
+							if dis < radio and herir_edificio(dmg / (10 + dis), edificio)
+								flag = true
 						}
 					}
 					//Herir drones
@@ -67,9 +66,8 @@ function explosion(_x = 0, _y = 0, edificio = control.null_edificio, radio = 120
 						dron = temp_array_dron[i]
 						if dron.jugador != _jugador{
 							dis = point_distance(_x, _y, dron.x, dron.y)
-							if dis < radio
-								if herir_dron(dmg / (10 + dis), dron) and dron = _target_dron
-									flag = true
+							if dis < radio and herir_dron(dmg / (10 + dis), dron) and dron = _target_dron
+								flag = true
 						}
 					}
 				}

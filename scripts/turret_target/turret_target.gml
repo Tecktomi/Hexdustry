@@ -2,7 +2,7 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 	with control{
 		var dis = edificio_alcance[edificio.index], dron_final = null_dron, center_x = edificio.center_x, center_y = edificio.center_y
 		var temp_array_dron, _jugador = edificio.jugador
-		var a, b, temp_complex, temp_dis, dron, temp_edificio, temp_array_edificio
+		var a, b, c, temp_complex, temp_dis, dron, temp_edificio, temp_array_edificio
 		//Disparo normal
 		if alc_min = 0{
 			for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
@@ -59,12 +59,12 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 		if alc_min = 0{
 			for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
 				temp_complex = edificio.target_chunks[a]
-				temp_array_edificio = ds_grid_get(chunk_edificios, temp_complex[0], temp_complex[1])
-				for(b = array_length(temp_array_edificio) - 1; b >= 0; b--){
-					temp_edificio = temp_array_edificio[b]
-					if temp_edificio.vida <= 0
-						continue
-					if temp_edificio.jugador != _jugador{
+				for(c = 0; c < EQUIPOS; c++) if c != _jugador{
+					temp_array_edificio = ds_grid_get(chunk_edificios_jugador[c], temp_complex[0], temp_complex[1])
+					for(b = array_length(temp_array_edificio) - 1; b >= 0; b--){
+						temp_edificio = temp_array_edificio[b]
+						if temp_edificio.vida <= 0
+							continue
 						temp_dis = point_distance(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y)
 						if temp_dis < dis{
 							dis = temp_dis
@@ -77,12 +77,12 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 		//Mortero
 		else for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
 			temp_complex = edificio.target_chunks[a]
-			temp_array_edificio = ds_grid_get(chunk_edificios, temp_complex[0], temp_complex[1])
-			for(b = array_length(temp_array_edificio) - 1; b >= 0; b--){
-				temp_edificio = temp_array_edificio[b]
-				if temp_edificio.vida < 0
-					continue
-				if temp_edificio.jugador != _jugador{
+			for(c = 0; c < EQUIPOS; c++) if c != _jugador{
+				temp_array_edificio = ds_grid_get(chunk_edificios_jugador[c], temp_complex[0], temp_complex[1])
+				for(b = array_length(temp_array_edificio) - 1; b >= 0; b--){
+					temp_edificio = temp_array_edificio[b]
+					if temp_edificio.vida < 0
+						continue
 					temp_dis = point_distance(center_x, center_y, temp_edificio.center_x, temp_edificio.center_y)
 					if temp_dis < dis and temp_dis > alc_min{
 						dis = temp_dis

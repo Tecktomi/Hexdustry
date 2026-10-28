@@ -843,10 +843,10 @@ function menu_construccion(mx, my, xmouse, ymouse, just_pressed = false, prev_ch
 									var temp_edificio, k, temp_array_edificio
 									for(i = mini; i <= maxi; i++)
 										for(j = minj; j <= maxj; j++){
-											temp_array_edificio = ds_grid_get(chunk_edificios, i, j)
+											temp_array_edificio = ds_grid_get(chunk_edificios_jugador[jugador], i, j)
 											for(k = array_length(temp_array_edificio) - 1; k >= 0; k--){
 												temp_edificio = temp_array_edificio[k]
-												if temp_edificio.jugador = jugador and point_distance(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y) < edificio_alcance[build_index]
+												if point_distance(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y) < edificio_alcance[build_index]
 													array_push(build_array_edificios, temp_edificio)
 											}
 										}
@@ -926,10 +926,10 @@ function menu_construccion(mx, my, xmouse, ymouse, just_pressed = false, prev_ch
 										var temp_edificio, temp_array_edificio
 										for(i = mini; i <= maxi; i++)
 											for(j = minj; j <= maxj; j++){
-												temp_array_edificio = ds_grid_get(chunk_edificios, i, j)
+												temp_array_edificio = ds_grid_get(chunk_edificios_jugador[jugador], i, j)
 												for(k = array_length(temp_array_edificio) - 1; k >= 0; k--){
 													temp_edificio = temp_array_edificio[k]
-													if temp_edificio.jugador = jugador and point_distance(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y) < PLANTA_RECICLAJE_RANGE
+													if point_distance(temp_complex[0], temp_complex[1], temp_edificio.center_x, temp_edificio.center_y) < PLANTA_RECICLAJE_RANGE
 														array_push(build_array_edificios, temp_edificio)
 												}
 											}

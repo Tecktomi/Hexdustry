@@ -110,6 +110,12 @@ function construir(index, dir, mx, my, manual = false, _cheat = control.cheat, _
 		}
 		//Algoritmo fábricas de drones
 		else if tag_dron_encima[edificio.index]{
+			var temp_complex_array = cinta_grande_check(mx, my, dir, index, _jugador)
+			build_array_edificios_input = temp_complex_array.inputs
+			build_array_edificios_output = temp_complex_array.outputs
+			build_agua = temp_complex_array.agua
+			build_agua_x = temp_complex_array.agua_x
+			build_agua_y = temp_complex_array.agua_y
 			edificio.array_real[2] = real(build_agua)
 			edificio.array_real[3] = real(build_agua_x)
 			edificio.array_real[4] = real(build_agua_y)

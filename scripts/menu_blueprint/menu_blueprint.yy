@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"menu_blueprint",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"menu_blueprint",
+  "parent":{
+    "name":"MENUS",
+    "path":"folders/SCRIPTS/MENUS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

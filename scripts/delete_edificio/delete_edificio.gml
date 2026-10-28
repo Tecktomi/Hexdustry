@@ -38,6 +38,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		array_disorder_remove(edificios_jugador[_jugador], edificio, ptre_jugador)
 		array_disorder_remove(edificios_jugador_index[_jugador, index], edificio, ptre_jugador_index)
 		array_disorder_remove(chunk_edificios[# chunk_x, chunk_y], edificio, ptre_chunk)
+		array_disorder_remove(chunk_edificios_jugador[_jugador][# chunk_x, chunk_y], edificio, ptre_chunk_jugador)
 		for(a = edificio.chunk_mina; a <= edificio.chunk_maxa; a++)
 			for(b = edificio.chunk_minb; b <= edificio.chunk_maxb; b++){
 				if edificio_draw_estatico[index]{

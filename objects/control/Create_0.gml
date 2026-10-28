@@ -5,18 +5,142 @@ var a, b, c, flag
 	array_xytob = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1],[-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],[-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],[-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],[-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],[-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1]]
 #endregion
 #region MACROS
-	#macro FILE_VERSION 2026_10_16
-	#macro PROCESADOR_VERSION 2026_10_02
-	#macro GRABACION_VERSION 2026_10_16
+	#region VERSION
+		#macro FILE_VERSION 2026_10_16
+		#macro PROCESADOR_VERSION 2026_10_02
+		#macro GRABACION_VERSION 2026_10_16
+	#endregion
+	#region RANGE
+		#macro CABLE_RANGE 90
+		#macro TORRE_TENSION_RANGE 1000
+		#macro PLANTA_NUCLEAR_RANGE 400
+		#macro PLANTA_RECICLAJE_RANGE 250
+		#macro PUERTO_CARGA_RANGE 500
+		#macro ENEMIGO_CERCA 100
+		#macro MORTERO_MIN_RANGE 100
+	#endregion
+	#region MUNICION
+		#macro municion_tipo_normal 0
+		#macro municion_tipo_misil 1
+		#macro municion_tipo_fuego 2
+		#macro municion_tipo_misil_incendiario 3
+		#macro municion_tipo_perforadora 4
+	#endregion
+	#region MENUS
+		#macro MENU_PRINCIPAL 0
+		#macro MENU_JUEGO 1
+		#macro MENU_EDITOR 2
+		#macro MENU_EDITOR_JUEGO 3
+		#macro MENU_CAMPANNA 4
+	#endregion
+	#region EDITOR_INSTRUCCION
+		#macro EDITOR_INSTRUCCION_CLEAR 0
+		#macro EDITOR_INSTRUCCION_MANCHAS 1
+		#macro EDITOR_INSTRUCCION_BORDES 2
+		#macro EDITOR_INSTRUCCION_RUIDO 3
+		#macro EDITOR_INSTRUCCION_MENAS 4
+		#macro EDITOR_INSTRUCCION_PERLIN 5
+		#macro EDITOR_INSTRUCCION_SCCR 6
+		#macro EDITOR_INSTRUCCION_CONTORNO 7
+		#macro EDITOR_INSTRUCCION_AUTOMATA 8
+		#macro EDITOR_INSTRUCCION_CLEAR_RSS 9
+	#endregion
+	#region IDIOMAS
+		#macro IDIOMA_INGLES 0
+		#macro IDIOMA_ESPANOL 1
+		#macro IDIOMA_RUSO 2
+	#endregion
+	#region GAMEMODE
+		#macro GAMEMODE_OLEADAS 0
+		#macro GAMEMODE_INFINITO 1
+		#macro GAMEMODE_MISIONES 2
+		#macro GAMEMODE_IA 3
+	#endregion
+	#region PAUSA
+		#macro pausa_general 0
+		#macro pausa_online 1
+		#macro pausa_ajuste 2
+		#macro pausa_control 3
+	#endregion
+	#region CIERRE
+		#macro fin_salir 0
+		#macro fin_desconexion 1
+		#macro fin_cerrar_juego 2
+	#endregion
+	#region DRON_INSTRUCCION
+		#macro DRON_IDLE 0
+		#macro DRON_BUSCAR_RSS 1
+		#macro DRON_DEJAR_RSS 2
+		#macro DRON_BUSCAR_INSTRUCCION 3
+		#macro DRON_TARGET 4
+		#macro DRON_MOVER 5
+		#macro DRON_MINAR 6
+		#macro DRON_ATACAR 7
+		#macro DRON_REPARAR 8
+		#macro DRON_RECONSTRUIR 9
+		#macro DRON_CARGA_MAX 10
+	#endregion
+	#region NET
+		#macro net_hello 0
+		#macro net_welcome 1
+		#macro net_construir 2
+		#macro net_delete_edificio 3
+		#macro net_buscar_server 4
+		#macro net_respuesta_buscar 5
+		#macro net_set_edificio 6
+		#macro net_timer 7
+		#macro net_mover_dron 8
+		#macro net_add_modulo 9
+		#macro net_investigar 10
+		#macro net_jugador_unido 11
+		#macro net_jugador_ido 12
+		#macro net_jugador_eliminado 13
+		#macro net_server_break 14
+		#macro net_error 15
+		#macro net_expulsado 16
+		#macro net_timeout 17
+		#macro net_heartbeat 18
+		#macro net_mensaje 19
+		#macro net_set_instrucciones 20
+	#endregion
+	#region NET_ERROR
+		#macro net_error_nombre_usado 0
+		#macro net_error_server_lleno 1
+	#endregion
+	#region CAMBIO_in-game
+		#macro cambio_construir 0
+		#macro cambio_delete_edificio 1
+		#macro cambio_set_edificio 2
+		#macro cambio_mover_dron 3
+		#macro cambio_add_modulo 4
+		#macro cambio_investigar 5
+		#macro cambio_instrucciones 6
+		#macro cambio_eliminar_jugador 7
+	#endregion
+	#region EDIFICIO_INSTRUCCION
+		//Instrucciones
+		#macro cambio_instrucciones_add_comando 1
+		#macro cambio_instrucciones_delete_comando 2
+		#macro cambio_activar 3
+		//Instrucciones Puerto de carga
+		#macro cambio_instrucciones_cambio_recurso 4
+		#macro cambio_instrucciones_cambio_input 5
+		#macro cambio_instrucciones_cambio_output 6
+		//Instrucciones procesador
+		#macro cambio_instrucciones_set_variable 7
+		#macro cambio_instruccion_copiar 8
+		#macro cambio_instruccion_mover 9
+		#macro cambio_instruccion_set 10
+		#macro cambio_instruccion_next 11
+		#macro cambio_vincular 12
+		//Instrcciones extra
+		#macro cambio_rotar_tunel 13
+		#macro cambio_silo_target 14
+		#macro cambio_vaciar_deposito 15
+		#macro cambio_target_drones 16
+	#endregion
 	#macro TILE_WIDTH 32
 	#macro TILE_HEIGHT 28
-	#macro CABLE_RANGE 90
-	#macro TORRE_TENSION_RANGE 1000
-	#macro PLANTA_NUCLEAR_RANGE 400
-	#macro PLANTA_RECICLAJE_RANGE 250
-	#macro PUERTO_CARGA_RANGE 500
-	#macro ENEMIGO_CERCA 100
-	#macro MORTERO_MIN_RANGE 100
 	#macro LOGIC_DT (1 / 60)
 	SIZE_SIZE = [1, 3, 7, 12, 19, 27, 37]
 	DESFACE_A = [[0, 0, -1, -1, 0, 0], [1, 0, 0, 0, 0, 1]]
@@ -43,116 +167,9 @@ var a, b, c, flag
 	DIGITS[47] = false
 	#macro MAX_JUGADORES 9
 	#macro EQUIPOS (MAX_JUGADORES + 2)
-	//Tipos de municiones
-	#macro municion_tipo_normal 0
-	#macro municion_tipo_misil 1
-	#macro municion_tipo_fuego 2
-	#macro municion_tipo_misil_incendiario 3
-	#macro municion_tipo_perforadora 4
 	//Jgadores predeterminados
 	#macro JUGADOR_SALVAJE 0
 	#macro JUGADOR_IA 1
-	//Menús
-	#macro MENU_PRINCIPAL 0
-	#macro MENU_JUEGO 1
-	#macro MENU_EDITOR 2
-	#macro MENU_EDITOR_JUEGO 3
-	#macro MENU_CAMPANNA 4
-	//Instrucciones del editor
-	#macro EDITOR_INSTRUCCION_CLEAR 0
-	#macro EDITOR_INSTRUCCION_MANCHAS 1
-	#macro EDITOR_INSTRUCCION_BORDES 2
-	#macro EDITOR_INSTRUCCION_RUIDO 3
-	#macro EDITOR_INSTRUCCION_MENAS 4
-	#macro EDITOR_INSTRUCCION_PERLIN 5
-	#macro EDITOR_INSTRUCCION_SCCR 6
-	#macro EDITOR_INSTRUCCION_CONTORNO 7
-	#macro EDITOR_INSTRUCCION_AUTOMATA 8
-	#macro EDITOR_INSTRUCCION_CLEAR_RSS 9
-	//Idiomas
-	#macro IDIOMA_INGLES 0
-	#macro IDIOMA_ESPANOL 1
-	#macro IDIOMA_RUSO 2
-	//Gamemode
-	#macro GAMEMODE_OLEADAS 0
-	#macro GAMEMODE_INFINITO 1
-	#macro GAMEMODE_MISIONES 2
-	#macro GAMEMODE_IA 3
-	//Pausa settings
-	#macro pausa_general 0
-	#macro pausa_online 1
-	#macro pausa_ajuste 2
-	#macro pausa_control 3
-	//Motivos cierre
-	#macro fin_salir 0
-	#macro fin_desconexion 1
-	#macro fin_cerrar_juego 2
-	//Mula
-	#macro DRON_IDLE 0
-	#macro DRON_BUSCAR_RSS 1
-	#macro DRON_DEJAR_RSS 2
-	#macro DRON_BUSCAR_INSTRUCCION 3
-	#macro DRON_TARGET 4
-	#macro DRON_MOVER 5
-	#macro DRON_MINAR 6
-	#macro DRON_ATACAR 7
-	#macro DRON_REPARAR 8
-	#macro DRON_RECONSTRUIR 9
-	#macro DRON_CARGA_MAX 10
-	//Red
-	#macro net_hello 0
-	#macro net_welcome 1
-	#macro net_construir 2
-	#macro net_delete_edificio 3
-	#macro net_buscar_server 4
-	#macro net_respuesta_buscar 5
-	#macro net_set_edificio 6
-	#macro net_timer 7
-	#macro net_mover_dron 8
-	#macro net_add_modulo 9
-	#macro net_investigar 10
-	#macro net_jugador_unido 11
-	#macro net_jugador_ido 12
-	#macro net_jugador_eliminado 13
-	#macro net_server_break 14
-	#macro net_error 15
-	#macro net_expulsado 16
-	#macro net_timeout 17
-	#macro net_heartbeat 18
-	#macro net_mensaje 19
-	#macro net_set_instrucciones 20
-	//Errores net
-	#macro net_error_nombre_usado 0
-	#macro net_error_server_lleno 1
-	//Cambios in-game
-	#macro cambio_construir 0
-	#macro cambio_delete_edificio 1
-	#macro cambio_set_edificio 2
-	#macro cambio_mover_dron 3
-	#macro cambio_add_modulo 4
-	#macro cambio_investigar 5
-	#macro cambio_instrucciones 6
-	#macro cambio_eliminar_jugador 7
-	//Instrucciones
-	#macro cambio_instrucciones_add_comando 1
-	#macro cambio_instrucciones_delete_comando 2
-	#macro cambio_activar 3
-	//Instrucciones Puerto de carga
-	#macro cambio_instrucciones_cambio_recurso 4
-	#macro cambio_instrucciones_cambio_input 5
-	#macro cambio_instrucciones_cambio_output 6
-	//Instrucciones procesador
-	#macro cambio_instrucciones_set_variable 7
-	#macro cambio_instruccion_copiar 8
-	#macro cambio_instruccion_mover 9
-	#macro cambio_instruccion_set 10
-	#macro cambio_instruccion_next 11
-	#macro cambio_vincular 12
-	//Instrcciones extra
-	#macro cambio_rotar_tunel 13
-	#macro cambio_silo_target 14
-	#macro cambio_vaciar_deposito 15
-	#macro cambio_target_drones 16
 #endregion
 #region debug
 	debug_frame_time = false
@@ -856,22 +873,25 @@ null_edificio = {
 	jugador : -1,
 	fuego : 0
 }
-#macro ptre_jugador 0
-#macro ptre_chunk 1
-#macro ptre_total 2
-#macro ptre_index 3
-#macro ptre_luz 4
-#macro ptre_activo 5
-#macro ptre_red 6
-#macro ptre_flujo_1 7
-#macro ptre_flujo_2 8
-#macro ptre_torre_dron 9
-#macro ptre_torre_edificio 10
-#macro ptre_puerto 11
-#macro ptre_salida_drones 12
-#macro ptre_jugador_index 13
-#macro ptre_fuego 14
-#macro ptre_MAX 15
+#region PUNTEROS
+	#macro ptre_jugador 0
+	#macro ptre_chunk 1
+	#macro ptre_total 2
+	#macro ptre_index 3
+	#macro ptre_luz 4
+	#macro ptre_activo 5
+	#macro ptre_red 6
+	#macro ptre_flujo_1 7
+	#macro ptre_flujo_2 8
+	#macro ptre_torre_dron 9
+	#macro ptre_torre_edificio 10
+	#macro ptre_puerto 11
+	#macro ptre_salida_drones 12
+	#macro ptre_jugador_index 13
+	#macro ptre_fuego 14
+	#macro ptre_chunk_jugador 15
+	#macro ptre_MAX 16
+#endregion
 null_edificio.link = null_edificio
 null_edificio.energia_link = array_create(0, null_edificio)
 null_edificio.flujo_link = array_create(0, null_edificio)
@@ -941,11 +961,14 @@ null_dron = {
 	instruccion : array_create(0, 0),
 	dron_counter : 0
 }
-#macro ptrd_jugador 0
-#macro ptrd_chunk 1
-#macro ptrd_total 2
-#macro ptrd_jugador_index 3
-#macro ptrd_MAX 4
+#region PUNTEROS
+	#macro ptrd_jugador 0
+	#macro ptrd_chunk 1
+	#macro ptrd_total 2
+	#macro ptrd_jugador_index 3
+	#macro ptrd_chunk_jugador 4
+	#macro ptrd_MAX 5
+#endregion
 null_edificio.target = null_dron
 null_dron.target_dron = null_dron
 selected_drones = array_create(0, null_dron)
@@ -1044,6 +1067,12 @@ null_explosion_mark = {
 	background = ds_grid_create(chunk_xsize, chunk_ysize)
 	chunk_dron = ds_grid_create(chunk_xsize, chunk_ysize)
 	chunk_edificios = ds_grid_create(chunk_xsize, chunk_ysize)
+	chunk_edificios_jugador = array_create(EQUIPOS)
+	for(c = 0; c < EQUIPOS; c++){
+		var temp_grid = ds_grid_create(chunk_xsize, chunk_ysize)
+		ds_grid_clear(temp_grid, array_create(0, null_edificio))
+		chunk_edificios_jugador[c] = temp_grid
+	}
 	chunk_edificios_estatico = ds_grid_create(chunk_xsize, chunk_ysize)
 	chunk_edificios_dinamico = ds_grid_create(chunk_xsize, chunk_ysize)
 	chunk_edificios_draw = ds_grid_create(chunk_xsize, chunk_ysize)
@@ -1057,6 +1086,8 @@ null_explosion_mark = {
 		for(b = 0; b < chunk_ysize; b++){
 			chunk_dron[# a, b] = array_create(0, null_dron)
 			chunk_edificios[# a, b] = array_create(0, null_edificio)
+			for(c = 0; c < EQUIPOS; c++)
+				chunk_edificios_jugador[c][# a, b] = array_create(0, null_edificio)
 			chunk_edificios_estatico[# a, b] = array_create(0, null_edificio)
 			chunk_edificios_dinamico[# a, b] = array_create(0, null_edificio)
 			chunk_edificios_draw[# a, b] = array_create(0, null_edificio)

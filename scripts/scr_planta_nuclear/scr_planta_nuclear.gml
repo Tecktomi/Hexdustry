@@ -5,7 +5,7 @@ function scr_planta_nuclear(edificio = control.null_edificio){
 		//Está encendido
 		if edificio.fuel > 0{
 			edificio.fuel--
-			if not tag_liquido_agua[flujo.liquido]{
+			if flujo.liquido = -1 or not tag_liquido_agua[flujo.liquido]{
 				if edificio.modulo
 					edificio.fuel = 0
 				draw_set_color(ui_color_nuclear)
@@ -33,7 +33,7 @@ function scr_planta_nuclear(edificio = control.null_edificio){
 				change_energia(edificio_energia_consumo[index] * flujo_power, edificio)
 			}
 		}
-		else if tag_liquido_agua[flujo.liquido]{
+		else if flujo.liquido != -1 and tag_liquido_agua[flujo.liquido]{
 			//Encender
 			if edificio.carga[idr_uranio_enriquecido] >= 1 and flujo_power > 0{
 				edificio.fuel = 3000

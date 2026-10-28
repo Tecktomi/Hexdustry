@@ -469,20 +469,21 @@ function dron_logic(){
 							closest_dis = dron_alcance[index]
 							max_prioridad = 0
 							for(u = minu; u <= maxu; u++)
-								for(v = minv; v <= maxv; v++){
-									chunk = ds_grid_get(chunk_edificios, u, v)
-									for(i = array_length(chunk) - 1; i >= 0; i--){
-										edificio = chunk[i]
-										if edificio.jugador != _jugador and edificio.prioridad >= max_prioridad{
-											dis = point_distance(dron_x, dron_y, edificio.center_x, edificio.center_y)
-											if dis < closest_dis{
-												max_prioridad = edificio.prioridad
-												dron.temp_target = edificio
-												closest_dis = dis
+								for(v = minv; v <= maxv; v++)
+									for(c = 0; c < EQUIPOS; c++) if c != _jugador{
+										chunk = ds_grid_get(chunk_edificios_jugador[c], u, v)
+										for(i = array_length(chunk) - 1; i >= 0; i--){
+											edificio = chunk[i]
+											if edificio.prioridad >= max_prioridad{
+												dis = point_distance(dron_x, dron_y, edificio.center_x, edificio.center_y)
+												if dis < closest_dis{
+													max_prioridad = edificio.prioridad
+													dron.temp_target = edificio
+													closest_dis = dis
+												}
 											}
 										}
 									}
-								}
 						}
 					}
 					else{

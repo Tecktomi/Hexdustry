@@ -19,7 +19,7 @@ function set_grid_size(){
 		ds_grid_clear(ore_amount, 0)
 		ds_grid_resize(terreno, xsize, ysize)
 		ds_grid_clear(terreno, 1)
-		var a, b, a2, aplus, temp_complex, edificio, prev_width = ds_grid_width(background_bool), prev_height = ds_grid_height(background_bool)
+		var a, b, c, a2, aplus, temp_complex, edificio, prev_width = ds_grid_width(background_bool), prev_height = ds_grid_height(background_bool)
 		ds_grid_resize(ore_random, xsize, ysize)
 		ds_grid_resize(pre_abtoxy, xsize + 2, ysize + 2)
 		ds_grid_resize(pre_abtox, xsize + 2, ysize + 2)
@@ -67,6 +67,11 @@ function set_grid_size(){
 		ds_grid_resize(background, chunk_xsize, chunk_ysize)
 		ds_grid_resize(chunk_dron, chunk_xsize, chunk_ysize)
 		ds_grid_resize(chunk_edificios, chunk_xsize, chunk_ysize)
+		for(c = 0; c < EQUIPOS; c++){
+			var temp_grid = ds_grid_create(chunk_xsize, chunk_ysize)
+			ds_grid_clear(temp_grid, array_create(0, null_edificio))
+			chunk_edificios_jugador[c] = temp_grid
+		}
 		ds_grid_resize(chunk_edificios_estatico, chunk_xsize, chunk_ysize)
 		ds_grid_resize(chunk_edificios_dinamico, chunk_xsize, chunk_ysize)
 		ds_grid_resize(chunk_edificios_draw, chunk_xsize, chunk_ysize)
@@ -84,6 +89,8 @@ function set_grid_size(){
 				chunk_edificios_background[# a, b] = spr_hexagono
 				chunk_dron[# a, b] = array_create(0, null_dron)
 				chunk_edificios[# a, b] = array_create(0, null_edificio)
+				for(c = 0; c < EQUIPOS; c++)
+					chunk_edificios_jugador[c][# a, b] = array_create(0, null_edificio)
 				chunk_edificios_estatico[# a, b] = array_create(0, null_edificio)
 				chunk_edificios_dinamico[# a, b] = array_create(0, null_edificio)
 				chunk_edificios_draw[# a, b] = array_create(0, null_edificio)
