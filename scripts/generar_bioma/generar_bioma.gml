@@ -171,8 +171,8 @@ function generar_bioma(bioma){
 		while array_length(edificios_index[id_nucleo]) > 0
 			delete_edificio(edificios_index[id_nucleo][0])
 		nucleos[jugador] = add_edificio(0, 0, floor(xsize / 2), floor(ysize / 2))
-		jugador_recursos[jugador, idr_cobre] = 100
-		carga_inicial = array_create(rss_max, 0)
+		jugador_recursos[jugador] = array_create(rss_max, 0)
+		array_set(jugador_recursos[jugador], idr_cobre, 100)
 		array_copy(carga_inicial, 0, jugador_recursos[jugador], 0, rss_max)
 		//Menas de recursos
 		if bioma = 0

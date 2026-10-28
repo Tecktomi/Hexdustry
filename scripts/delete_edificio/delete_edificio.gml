@@ -172,11 +172,11 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 						if  dron.target = temp_edificio
 							if dron.dir_move = b{
 								if array_length(temp_edificio.instruccion) = 0{
-									dron.modo = MULA_IDLE
+									dron.modo = DRON_IDLE
 									dron.target = null_edificio
 								}
 								else{
-									dron.modo = MULA_BUSCAR_INSTRUCCION
+									dron.modo = DRON_BUSCAR_INSTRUCCION
 									dron.temp_target = dron.target
 								}
 							}
@@ -196,7 +196,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				if dron.target = edificio{
 					dron.target = null_edificio
 					dron.temp_target = null_edificio
-					dron.modo = MULA_IDLE
+					dron.modo = DRON_IDLE
 				}
 			}
 		//Cancelar red
@@ -283,7 +283,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		if not _cheat and not destruccion and ((_jugador > JUGADOR_IA) or (online and servidor)){
 			b = pre_vida / edificio_vida[index]
 			for(a = array_length(edificio_precio_id[index]) - 1; a >= 0; a--)
-				jugador_recursos[_jugador, edificio_precio_id[index, a]] += floor(b * edificio_precio_num[index, a] / 2)
+				array_set(jugador_recursos[_jugador], edificio_precio_id[index, a], jugador_recursos[_jugador, edificio_precio_id[index, a]] + floor(b * edificio_precio_num[index, a] / 2))
 		}
 		//Camiar target de enemigos
 		if index != id_nucleo

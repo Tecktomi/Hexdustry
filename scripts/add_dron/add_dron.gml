@@ -16,7 +16,7 @@ function add_dron(a, b, index, _jugador = jugador){
 			chunk_y : clamp(floor(b / CHUNK_HEIGHT), 0, chunk_ysize - 1),
 			carga : array_create(rss_max, 0),
 			carga_total : 0,
-			modo : MULA_IDLE,
+			modo : DRON_IDLE,
 			torres : array_create(0, null_edificio),
 			dir : 0,
 			dir_move : 0,
@@ -37,7 +37,8 @@ function add_dron(a, b, index, _jugador = jugador){
 			change_pos : false,
 			move_dir : 0,
 			punteros : array_create(ptrd_MAX, -1),
-			instruccion : array_create(0, 0)
+			instruccion : array_create(0, 0),
+			dron_counter : dron_counter++
 		}
 		if _jugador = JUGADOR_IA{
 			dron.vida_max = ceil(dron.vida * power((oleada_count + 3) / 3, 1.1) * multiplicador_vida_enemigos / 100)

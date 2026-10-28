@@ -52,7 +52,7 @@ function control_camara(min_camx = 0){
 					android_hovering = true
 				}
 				if mouse_check_button(mb_left) and android_hovering{
-					camx = clamp(android_camx - mouse_x + android_mouse_x, min_camx, xsize * 40 * zoom - room_width)
+					camx = clamp(android_camx - mouse_x + android_mouse_x, min_camx, xsize * 48 * zoom - room_width)
 					camy = clamp(android_camy - mouse_y + android_mouse_y, 0, ysize * 14 * zoom - room_height)
 				}
 				if mouse_check_button_released(mb_left)

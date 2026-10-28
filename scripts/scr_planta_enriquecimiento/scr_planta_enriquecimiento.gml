@@ -11,7 +11,7 @@ function scr_planta_enriquecimiento(edificio = control.null_edificio){
 					edificio_encender(edificio)
 					edificio.start = true
 				}
-				edificio.proceso = max(0, edificio.proceso + 4 * (red_power - 0.5) * (flujo_power - 0.5)) * (1 + 0.3 * edificio.modulo)
+				edificio.proceso = max(0, edificio.proceso + 4 * (red_power - 0.5) * (flujo_power - 0.5) * (1 + 0.3 * edificio.modulo))
 				sound_play_edificio(0, edificio.center_x, edificio.center_y)
 				//Producir / apagar
 				if edificio.proceso >= edificio_proceso[index]{

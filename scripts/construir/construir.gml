@@ -4,13 +4,23 @@ function construir(index, dir, mx, my, manual = false, _cheat = control.cheat, _
 		var temp_edificio, a, dron, b, temp_jugador
 		if flag and not _cheat
 			flag = is_comprable(edificio_precio_id[index], edificio_precio_num[index], _jugador)
+		//Detectar enemigos cerca
+		if flag and not _cheat{
+			for(a = array_length(drones) - 1; a >= 0; a--){
+				dron = drones[a]
+				if dron.jugador != _jugador and point_distance(dron.x, dron.y, xx, yy) < ENEMIGO_CERCA{
+					flag = false
+					break
+				}
+			}
+		}
 		//Reemplazar caminos
 		if flag and (tag_camino_o_tunel[index] or index = id_cruce) and edificio_bool[# mx, my]{
 			temp_edificio = edificio_id[# mx, my]
 			if temp_edificio.jugador = _jugador and (edificio_camino[temp_edificio.index] or temp_edificio.index = id_cruce){
 				if index = temp_edificio.index{
 					if (GRABANDO or online) and manual{
-						server_construir(index, dir, mx, my, _cheat)
+						server_construir(index, dir, mx, my, _cheat, _jugador)
 						if online and not servidor
 							return null_edificio
 					}
@@ -36,23 +46,15 @@ function construir(index, dir, mx, my, manual = false, _cheat = control.cheat, _
 				else
 					delete_edificio(temp_edificio)
 			}
-		}
-		//Detectar enemigos cerca
-		if flag and not _cheat{
-			for(a = array_length(drones) - 1; a >= 0; a--){
-				dron = drones[a]
-				if dron.jugador != _jugador and point_distance(dron.x, dron.y, xx, yy) < ENEMIGO_CERCA{
-					flag = false
-					break
-				}
-			}
+			else
+				flag = false
 		}
 		if not flag
 			return null_edificio
 		if tag_edificio_tunel[index] and build_able and build_target.index = id_tunel
 			index = id_tunel_salida
 		if (online or GRABANDO) and manual{
-			server_construir(real(index), real(dir), real(mx), real(my), _cheat)
+			server_construir(real(index), real(dir), real(mx), real(my), _cheat, _jugador)
 			if online and not servidor
 				return null_edificio
 		}
@@ -127,7 +129,7 @@ function construir(index, dir, mx, my, manual = false, _cheat = control.cheat, _
 		//Actualizar recursos
 		if not _cheat{
 			for(a = 0; a < array_length(edificio_precio_id[index]); a++)
-				jugador_recursos[_jugador, edificio_precio_id[index, a]] -= edificio_precio_num[index, a]
+				array_set(jugador_recursos[_jugador], edificio_precio_id[index, a], jugador_recursos[_jugador, edificio_precio_id[index, a]] - edificio_precio_num[index, a])
 		}
 		if manual and in(index, id_planta_quimica, id_fabrica_de_drones, id_silo_de_misiles, id_fabrica_de_drones_grande){
 			clear_edit()

@@ -3,7 +3,7 @@ function dron_move_terrestre(dron = control.null_dron){
 		if dron.change_pos or (dron.move_xmove = 0 and dron.move_ymove = 0){
 			var aa = dron.a, bb = dron.b
 			if aa = dron.move_a and bb = dron.move_b
-				dron.modo = MULA_IDLE
+				dron.modo = DRON_IDLE
 			else{
 				var xx = dron.x, yy = dron.y, vel = dron_vel[dron.index]
 				var angle = floor(point_direction(xx, yy, dron.move_x, dron.move_y) / 30), b, aaa, bbb
@@ -25,7 +25,7 @@ function dron_move_terrestre(dron = control.null_dron){
 					}
 				}
 				if dron.move_xmove = 0 and dron.move_ymove = 0{
-					dron.modo = MULA_IDLE
+					dron.modo = DRON_IDLE
 					dron.last_dir = -1
 				}
 			}

@@ -110,7 +110,6 @@ function set_edificio_instruccion(edificio = control.null_edificio, cambio = 0, 
 			else if cambio = cambio_instruccion_copiar{
 				var new_instruccion = array_create(array_length(edificio.instruccion[data.instruccion]), 0)
 				array_copy(new_instruccion, 0, edificio.instruccion[data.instruccion], 0, array_length(edificio.instruccion[data.instruccion]))
-				new_instruccion[0] = real(data.instruccion)
 				array_insert(edificio.instruccion, data.instruccion + 1, new_instruccion)
 			}
 			else if cambio = cambio_instruccion_mover{

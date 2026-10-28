@@ -3,7 +3,7 @@ function update_background(a, b){
 		var aa = floor(a / CHUNK_WIDTH), bb = floor(b / CHUNK_HEIGHT)
 		if background[# aa, bb] != spr_hexagono
 			sprite_delete(background[# aa, bb])
-		ds_grid_set(background, aa, bb, spr_hexagono)
-		ds_grid_set(background_bool, aa, bb, false)
+		background[# aa, bb] = spr_hexagono
+		background_bool[# aa, bb] = false
 	}
 }

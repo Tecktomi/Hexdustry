@@ -136,6 +136,7 @@ function load_game_buffer(buffer){
 		//Dron - estados
 		for(var i = 0; i < len; i++){
 			var dron = drones[i]
+			dron.dron_counter = real(buffer_read(buffer, buffer_u32))
 			var mask = real(buffer_read(buffer, buffer_u64))
 			c = 0
 			dron.x = real(buffer_read(buffer, buffer_f64))
@@ -173,6 +174,7 @@ function load_game_buffer(buffer){
 				dron.instruccion = [_rss, a1, b1, a2, b2]
 			}
 		}
+		dron_counter = buffer_read(buffer, buffer_u32)
 		//Referencias cruzadas dron-dron
 		for(var i = 0; i < len; i++)
 			if temp_dron_target[i] != -1

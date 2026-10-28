@@ -248,7 +248,7 @@ function step(){
 							if irandom(len) > _dron_count + dron_peso[_dron_order[a]] or dron_peso[_dron_order[a]] = 1{
 								add_dron(aa, bb, _dron_order[a], JUGADOR_IA)
 								_dron_count += dron_peso[_dron_order[a]]
-								continue
+								break
 							}
 					}
 					//Generación terrestre
@@ -267,7 +267,7 @@ function step(){
 							if irandom(len) > _dron_count + dron_peso[_dron_order[a]] or dron_peso[_dron_order[a]] = 1{
 								add_dron(aa, bb, _dron_order[a], JUGADOR_IA)
 								_dron_count += dron_peso[_dron_order[a]]
-								continue
+								break
 							}
 					}
 				}
@@ -355,7 +355,7 @@ function step(){
 			}
 		}
 		if array_length(explosion_queue) > 0{
-			for(a = array_length(explosion_queue) - 1; a >= 0; a--){
+			for(a = 0; a < array_length(explosion_queue); a++){
 				temp_explosion = explosion_queue[a]
 				explosion(temp_explosion.x, temp_explosion.y, temp_explosion.edificio, temp_explosion.radio, temp_explosion.dmg, temp_explosion.incendiario, temp_explosion.jugador)
 			}

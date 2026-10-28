@@ -237,7 +237,7 @@ function menu_principal(){
 				online_nombre = draw_boton_text(room_width / 2, ypos, online_nombre, false,, true, 1)
 				if draw_sprite_boton(spr_random, 0, (room_width + text_x) / 2, ypos,,, 1){
 					online_nombre = $"jugador_{irandom(255)}"
-					ini_open("Settings.ini")
+					ini_open("settings.ini")
 					ini_key_delete("", "online_nombre")
 					ini_close()
 				}

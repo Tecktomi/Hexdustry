@@ -21,7 +21,7 @@ function dron_target_nucleo(dron = control.null_dron){
 			dron.target = null_edificio
 			return false
 		}
-		dron.modo = MULA_TARGET
+		dron.modo = DRON_TARGET
 		return true
 	}
 }

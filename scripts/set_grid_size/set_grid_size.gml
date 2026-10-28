@@ -72,20 +72,22 @@ function set_grid_size(){
 		ds_grid_resize(chunk_edificios_draw, chunk_xsize, chunk_ysize)
 		ds_grid_resize(chunk_edificios_background, chunk_xsize, chunk_ysize)
 		ds_grid_resize(chunk_edificios_dirty, chunk_xsize, chunk_ysize)
+		ds_grid_resize(chunk_explosion, chunk_xsize, chunk_ysize)
 		ds_grid_clear(chunk_edificios_dirty, true)
 		for(a = 0; a < chunk_xsize; a++)
 			for(b = 0; b < chunk_ysize; b++){
 				if background[# a, b] != spr_hexagono
 					sprite_delete(background[# a, b])
-				ds_grid_set(background, a, b, spr_hexagono)
+				background[# a, b] = spr_hexagono
 				if chunk_edificios_background[# a, b] != spr_hexagono
 					sprite_delete(chunk_edificios_background[# a, b])
-				ds_grid_set(chunk_edificios_background, a, b, spr_hexagono)
-				ds_grid_set(chunk_dron, a, b, array_create(0, null_dron))
-				ds_grid_set(chunk_edificios, a, b, array_create(0, null_edificio))
-				ds_grid_set(chunk_edificios_estatico, a, b, array_create(0, null_edificio))
-				ds_grid_set(chunk_edificios_dinamico, a, b, array_create(0, null_edificio))
-				ds_grid_set(chunk_edificios_draw, a, b, array_create(0, null_edificio))
+				chunk_edificios_background[# a, b] = spr_hexagono
+				chunk_dron[# a, b] = array_create(0, null_dron)
+				chunk_edificios[# a, b] = array_create(0, null_edificio)
+				chunk_edificios_estatico[# a, b] = array_create(0, null_edificio)
+				chunk_edificios_dinamico[# a, b] = array_create(0, null_edificio)
+				chunk_edificios_draw[# a, b] = array_create(0, null_edificio)
+				chunk_explosion[# a, b] = array_create(0, null_explosion_mark)
 			}
 		ds_grid_resize(beta_grid, xsize, ysize)
 		ds_grid_clear(beta_grid, null_beta)
@@ -96,8 +98,6 @@ function set_grid_size(){
 		}
 		ds_grid_resize(tile_animado_chunk, chunk_xsize, chunk_ysize)
 		ds_grid_clear(tile_animado_chunk, 0)
-		ds_grid_resize(chunk_explosion, chunk_xsize, chunk_ysize)
-		ds_grid_clear(chunk_explosion, array_create(0, null_explosion_mark))
 		ds_grid_resize(ia_grid_real, xsize, ysize)
 		ds_grid_resize(ia_grid_camino, xsize, ysize)
 	}

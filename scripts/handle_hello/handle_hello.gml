@@ -18,7 +18,7 @@ function handle_hello(socket, buffer, slot, player_name){
 					server_jugadores[slot] = -1
 					break
 				}
-				construir(id_nucleo, 0, new_nucleo_x, new_nucleo_y, true,, slot + 2)
+				construir(id_nucleo, 0, new_nucleo_x, new_nucleo_y, true, true, slot + 2)
 				array_copy(jugador_recursos[slot + 2], 0, carga_inicial, 0, rss_max)
 			}
 		#endregion

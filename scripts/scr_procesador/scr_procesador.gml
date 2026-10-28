@@ -355,7 +355,7 @@ function scr_procesador(edificio = control.null_edificio){
 						}
 						else
 							j = pc[5 + 2 * i]
-						if not is_real(j) and pc[3] != 1{
+						if not is_real(j) and pc[3] != 8{
 							flag = false
 							continue
 						}

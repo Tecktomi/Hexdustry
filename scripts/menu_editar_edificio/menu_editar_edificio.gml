@@ -157,11 +157,7 @@ function menu_editar_edificio(){
 				draw_rectangle(xpos, ypos, xpos + 100, ypos + 20, false)
 				draw_set_color(ui_texto)
 				draw_rectangle(xpos, ypos, xpos + 100, ypos + 20, true)
-				if string_length(edificio.variables[a]) > 9
-					temp_text = string_copy(edificio.variables[a], 1, 6) + "..."
-				else
-					temp_text = edificio.variables[a]
-				b = draw_boton_text(xpos + 100 * (is_real(edificio.variables[a])), ypos, temp_text,, true)
+				b = draw_boton_text(xpos + 100 * (is_real(edificio.variables[a])), ypos, edificio.variables[a],, true,,, 100)
 				if edificio.variables[a] != b
 					if is_real(b)
 						set_edificio_instruccion(edificio,, {instruccion : a, valor : real(b)}, true)

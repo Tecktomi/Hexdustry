@@ -25,7 +25,8 @@ function game_terminar(motivo, destino = MENU_PRINCIPAL){
 				server_jugador_irse()
 		}
 		if motivo != fin_cerrar_juego{
-			clear_edificios()
+			if destino != MENU_EDITOR
+				clear_edificios()
 			jugador = 2
 			drones_propios = drones_jugador[jugador]
 			win = 0

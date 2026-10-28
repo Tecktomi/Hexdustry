@@ -8,7 +8,7 @@ function mover_dron(dron = control.null_dron, x, y, manual = false){
 		var index = dron.index, temp_complex = xytoab(x, y), aa = temp_complex[0], bb = temp_complex[1]
 		if dron.index = idd_mula{
 			if edificio_bool[# aa, bb] and edificio_id[# aa, bb].index = id_puerto_de_carga{
-				dron.modo = MULA_BUSCAR_INSTRUCCION
+				dron.modo = DRON_BUSCAR_INSTRUCCION
 				dron.target = edificio_id[# aa, bb]
 				dron.temp_target = edificio_id[# aa, bb]
 				exit
@@ -16,7 +16,7 @@ function mover_dron(dron = control.null_dron, x, y, manual = false){
 		}
 		else if dron.index = idd_minero{
 			if edificio_bool[# aa, bb] and edificio_id[# aa, bb].index = id_almacen{
-				dron.modo = MULA_MINAR
+				dron.modo = DRON_MINAR
 				dron.target = edificio_id[# aa, bb]
 				exit
 			}
@@ -28,12 +28,12 @@ function mover_dron(dron = control.null_dron, x, y, manual = false){
 					x = edificio.center_x
 					y = edificio.center_y
 					dron.temp_target = edificio
-					dron.modo = MULA_ATACAR
+					dron.modo = DRON_ATACAR
 					exit
 				}
 			}
 		}
-		dron.modo = MULA_MOVER
+		dron.modo = DRON_MOVER
 		if index = idd_bombardero{
 			dron.move_xmove = x
 			dron.move_ymove = y

@@ -909,14 +909,14 @@ if array_length(selected_drones) > 0{
 				mover_dron(dron, edificio.x, edificio.y, true)
 			continue
 		}
-		if dron.modo = MULA_MOVER
+		if dron.modo = DRON_MOVER
 			draw_sprite_off(spr_target, 0, dron.move_x, dron.move_y)
 		if right_clicked and tag_dron_seleccionable[dron.index]{
 			mouse_clear(mb_right)
 			mover_dron(dron, xmouse, ymouse, true)
 		}
 		if dron.index = idd_minero{
-			if dron.modo = MULA_MINAR{
+			if dron.modo = DRON_MINAR{
 				temp_complex = xytoab(dron.move_x, dron.move_y)
 				draw_sprite_off(spr_target, 0, temp_complex[0], temp_complex[1])
 			}
@@ -1493,7 +1493,7 @@ if menu = MENU_JUEGO{
 		}
 	}
 	//Control de cámara
-	if mision_actual = 0 and mision_camara_step > 0{
+	if mision_actual >= 0 and mision_camara_step > 0{
 		mision_camara_step--
 		zoom = 1
 		camx = clamp(((mision.camera_x - room_width / 2) * (60 - mision_camara_step) + mision_camera_x_start * mision_camara_step) / 60, 0, xsize * 48 * zoom - room_width)

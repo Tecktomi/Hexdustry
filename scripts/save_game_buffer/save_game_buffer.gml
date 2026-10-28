@@ -135,6 +135,7 @@ function save_game_buffer(buffer){
 		//Estado drones
 		for(a = 0; a < len; a++){
 			dron = drones[a]
+			buffer_write(buffer, buffer_u32, dron.dron_counter)
 			mask = 0
 			c = 0
 			mask += (dron.vida_max != dron_vida_max[dron.index]) << c++
@@ -144,7 +145,7 @@ function save_game_buffer(buffer){
 			mask += (dron.target_dron != null_dron) << c++
 			for(i = 0; i < rss_max; i++)
 				mask += (dron.carga[i] != 0) << c++
-			mask += (dron.modo != MULA_IDLE) << c++
+			mask += (dron.modo != DRON_IDLE) << c++
 			mask += (dron.dir != 0) << c++
 			mask += (dron.dir_move != 0) << c++
 			mask += (dron.step != 0) << c++
@@ -192,6 +193,7 @@ function save_game_buffer(buffer){
 				buffer_write(buffer, buffer_u16, dron.instruccion[4])
 			}
 		}
+		buffer_write(buffer, buffer_u32, dron_counter)
 		//Municiones
 		len = real(array_length(municiones))
 		buffer_write(buffer, buffer_u16, len)

@@ -88,17 +88,17 @@ var a, b, c, flag
 	#macro fin_desconexion 1
 	#macro fin_cerrar_juego 2
 	//Mula
-	#macro MULA_IDLE 0
-	#macro MULA_BUSCAR_RSS 1
-	#macro MULA_DEJAR_RSS 2
-	#macro MULA_BUSCAR_INSTRUCCION 3
-	#macro MULA_TARGET 4
-	#macro MULA_MOVER 5
-	#macro MULA_MINAR 6
-	#macro MULA_ATACAR 7
-	#macro MULA_REPARAR 8
-	#macro MULA_RECONSTRUIR 9
-	#macro MULA_CARGA_MAX 10
+	#macro DRON_IDLE 0
+	#macro DRON_BUSCAR_RSS 1
+	#macro DRON_DEJAR_RSS 2
+	#macro DRON_BUSCAR_INSTRUCCION 3
+	#macro DRON_TARGET 4
+	#macro DRON_MOVER 5
+	#macro DRON_MINAR 6
+	#macro DRON_ATACAR 7
+	#macro DRON_REPARAR 8
+	#macro DRON_RECONSTRUIR 9
+	#macro DRON_CARGA_MAX 10
 	//Red
 	#macro net_hello 0
 	#macro net_welcome 1
@@ -569,6 +569,7 @@ L = {}
 	pausa_setting = 0
 	pausa_controles = -1
 	game_mode = 0
+	dron_counter = 0
 #endregion
 #region Misiones
 	null_mision = def_mision()
@@ -937,7 +938,8 @@ null_dron = {
 	change_pos : false,
 	move_dir : 0,
 	punteros : array_create(ptrd_MAX, -1),
-	instruccion : array_create(0, 0)
+	instruccion : array_create(0, 0),
+	dron_counter : 0
 }
 #macro ptrd_jugador 0
 #macro ptrd_chunk 1
@@ -1049,16 +1051,16 @@ null_explosion_mark = {
 	chunk_edificios_dirty = ds_grid_create(chunk_xsize, chunk_ysize)
 	chunk_explosion = ds_grid_create(chunk_xsize, chunk_ysize)
 	ds_grid_clear(chunk_edificios_dirty, true)
+	ds_grid_clear(background, spr_hexagono)
+	ds_grid_clear(chunk_edificios_background, spr_hexagono)
 	for(a = 0; a < chunk_xsize; a++)
 		for(b = 0; b < chunk_ysize; b++){
-			ds_grid_set(background, a, b, spr_hexagono)
-			ds_grid_set(chunk_edificios_background, a, b, spr_hexagono)
-			ds_grid_set(chunk_dron, a, b, array_create(0, null_dron))
-			ds_grid_set(chunk_edificios, a, b, array_create(0, null_edificio))
-			ds_grid_set(chunk_edificios_estatico, a, b, array_create(0, null_edificio))
-			ds_grid_set(chunk_edificios_dinamico, a, b, array_create(0, null_edificio))
-			ds_grid_set(chunk_edificios_draw, a, b, array_create(0, null_edificio))
-			ds_grid_set(chunk_explosion, a, b, array_create(0, null_explosion_mark))
+			chunk_dron[# a, b] = array_create(0, null_dron)
+			chunk_edificios[# a, b] = array_create(0, null_edificio)
+			chunk_edificios_estatico[# a, b] = array_create(0, null_edificio)
+			chunk_edificios_dinamico[# a, b] = array_create(0, null_edificio)
+			chunk_edificios_draw[# a, b] = array_create(0, null_edificio)
+			chunk_explosion[# a, b] = array_create(0, null_explosion_mark)
 		}
 #endregion
 //Recursos
@@ -1117,7 +1119,7 @@ recurso_descripcion = array_create(rss_max, "")
 carga_inicial = array_create(rss_max, 0)
 sort_recursos()
 usable_rss_bool = array_create(rss_max, false)
-jugador_recursos = array_create(EQUIPOS)
+jugador_recursos = array_create(EQUIPOS, array_create(0, 0))
 for(a = 0; a < EQUIPOS; a++)
 	jugador_recursos[a] = array_create(rss_max, 0)
 recurso_keyword_orden = array_create(rss_max, 0)

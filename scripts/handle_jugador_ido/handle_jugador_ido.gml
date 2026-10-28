@@ -14,6 +14,9 @@ function handle_jugador_ido(buffer){
 		server_jugadores_timeout[pos] = 0
 		array_push(chat, string(L.server_jugador_ido, player_name))
 		array_push(chat_time, image_index)
-		array_push(cambios, {step : _timer, tipo : cambio_eliminar_jugador, data : {pos : pos}})
+		if servidor
+			eliminar_jugador(pos)
+		else
+			array_push(cambios, {step : _timer, tipo : cambio_eliminar_jugador, data : {pos : pos}})
 	}
 }

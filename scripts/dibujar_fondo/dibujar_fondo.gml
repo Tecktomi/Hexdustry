@@ -69,6 +69,8 @@ function dibujar_fondo(editor = 0){
 					for(c = array_length(chunk_explosion[# a, b]) - 1; c >= 0; c--)
 						draw_sprite_off(spr_explosion_mark, 0, chunk_explosion[# a, b][c].x - des_a, chunk_explosion[# a, b][c].y - des_b,,, chunk_explosion[# a, b][c].rot,, 0.3)
 					array_resize(chunk_explosion[# a, b], 0)
+					if background[# a, b] != spr_hexagono
+						sprite_delete(background[# a, b])
 					background[# a, b] = sprite_create_from_surface(background_surface, 0, 0, CHUNK_WIDTH * 48 + 8, chunkhplus * 14, false, false, 0, 0)
 					background_bool[# a, b] = true
 					surface_reset_target()

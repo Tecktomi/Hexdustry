@@ -5,7 +5,10 @@ function server_mover_dron(x, y, dron = control.null_dron){
 		buffer_write(buffer, buffer_u32, real(timer))
 		buffer_write(buffer, buffer_f32, real(x))
 		buffer_write(buffer, buffer_f32, real(y))
-		buffer_write(buffer, buffer_u16, real(dron.punteros[2]))
+		if online and not servidor
+			buffer_write(buffer, buffer_u32, real(dron.dron_counter))
+		else
+			buffer_write(buffer, buffer_u16, real(dron.punteros[ptrd_total]))
 		if online{
 			if servidor
 				server_broadcast_buffer(buffer)

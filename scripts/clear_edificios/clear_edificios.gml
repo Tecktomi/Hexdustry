@@ -48,5 +48,6 @@ function clear_edificios(){
 		ds_grid_clear(chunk_edificios_dirty, true)
 		ds_grid_clear(chunk_edificios_background, spr_hexagono)
 		ds_grid_clear(background, spr_hexagono)
+		dron_counter = 0
 	}
 }

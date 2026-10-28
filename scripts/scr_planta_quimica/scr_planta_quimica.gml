@@ -10,9 +10,9 @@ function scr_planta_quimica(edificio = control.null_edificio){
 			if edificio.fuel <= 0
 				edificio_encender(edificio, false)
 		}
-		if (edificio.select = 0 and carga[idr_piedra_sulfatada] >= 3 and in(flujo.liquido, -1, idl_acido) and flujo.almacen < flujo.almacen_max) or
-			(edificio.select = 1 and flujo.liquido = idl_acido and carga[idr_compuesto_incendiario] > 0 and carga[idr_explosivo] < 10) or
-			(edificio.select = 2 and flujo.liquido = idl_acido and carga[idr_cobre] > 0 and carga[idr_bateria] < 10){
+		if (edificio.select = 0 and carga[idr_piedra_sulfatada] >= 2 and in(flujo.liquido, -1, idl_acido) and flujo.almacen < flujo.almacen_max) or
+			(edificio.select = 1 and flujo.liquido = idl_acido and carga[idr_compuesto_incendiario] >= 1 and carga[idr_explosivo] < 10) or
+			(edificio.select = 2 and flujo.liquido = idl_acido and carga[idr_cobre] >= 2 and carga[idr_bateria] < 10){
 			//Apagar
 			if edificio.energia_consumo_max > 0 and red_power = 0{
 				edificio_encender(edificio, false)
@@ -38,8 +38,8 @@ function scr_planta_quimica(edificio = control.null_edificio){
 			if edificio.proceso >= edificio_proceso[index]{
 				//Ácido
 				if edificio.select = 0{
-					carga[idr_piedra_sulfatada] -= 3
-					edificio.carga_total -= 3
+					carga[idr_piedra_sulfatada] -= 2
+					edificio.carga_total -= 2
 					flujo.liquido = idl_acido
 					edificio.fuel = 60
 					mover_in(edificio)
