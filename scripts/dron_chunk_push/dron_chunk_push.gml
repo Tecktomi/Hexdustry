@@ -5,5 +5,9 @@ function dron_chunk_push(dron = control.null_dron){
 		dron.punteros[ptrd_chunk] = array_length(temp_array_dron)
 		array_disorder_push(temp_array_dron, dron, ptrd_chunk)
 		chunk_dron[# a, b] = temp_array_dron
+		temp_array_dron = ds_grid_get(chunk_dron_jugador[dron.jugador], a, b)
+		dron.punteros[ptrd_chunk_jugador] = array_length(temp_array_dron)
+		array_disorder_push(temp_array_dron, dron, ptrd_chunk_jugador)
+		ds_grid_set(chunk_dron_jugador[dron.jugador], a, b, temp_array_dron)
 	}
 }

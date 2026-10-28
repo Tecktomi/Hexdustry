@@ -93,13 +93,13 @@ function scr_torres_basicas(edificio = control.null_edificio){
 								edificio.sound = sound_play(snd_flame_cont, center_x, center_y, 0.1)
 							}
 							if dron != null_dron{
-								var temp_array_dron = ds_grid_get(chunk_dron, dron.chunk_x, dron.chunk_y)
 								var disi = edificio_alcance[index], x1 = center_x + disi * cos(degtorad(angle) + pi / 6), y1 = center_y - disi * sin(degtorad(angle) + pi / 6)
 								var x2 = center_x + disi * cos(degtorad(angle) - pi / 6), y2 = center_y - disi * sin(degtorad(angle) - pi / 6), total_dmg = tiro_struct.dmg * dmg_factor
-								var c, temp_dron
-								for(c = array_length(temp_array_dron) - 1; c >= 0; c--){
-									temp_dron = temp_array_dron[c]
-									if temp_dron.jugador != _jugador{
+								var c, d, temp_dron, temp_array_dron
+								for(d = 0; d < EQUIPOS; d++) if not aliados[# _jugador, d]{
+									temp_array_dron = ds_grid_get(chunk_dron_jugador[d], dron.chunk_x, dron.chunk_y)
+									for(c = array_length(temp_array_dron) - 1; c >= 0; c--){
+										temp_dron = temp_array_dron[c]
 										if point_in_triangle(temp_dron.x, temp_dron.y, center_x, center_y, x1, y1, x2, y2){
 											aplicar_efecto(1, 300, temp_dron)
 											herir_dron(total_dmg, temp_dron)

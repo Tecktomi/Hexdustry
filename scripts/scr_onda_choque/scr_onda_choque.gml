@@ -7,7 +7,7 @@ function scr_onda_choque(edificio = control.null_edificio){
 			edificio.proceso += red_power
 		}
 		else{
-			var dis, center_x, center_y, a, temp_complex, temp_array_dron, b, dron, temp_dis, _jugador = edificio.jugador
+			var dis, center_x, center_y, a, temp_complex, temp_array_dron, b, c, dron, temp_dis, _jugador = edificio.jugador
 			edificio_encender(edificio, false,, false)
 			if edificio.select = 0{
 				dis = edificio_alcance[index]
@@ -15,13 +15,17 @@ function scr_onda_choque(edificio = control.null_edificio){
 				center_y = edificio.center_y
 				for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
 					temp_complex = edificio.target_chunks[a]
-					temp_array_dron = ds_grid_get(chunk_dron, temp_complex[0], temp_complex[1])
-					for(b = array_length(temp_array_dron) - 1; b >= 0; b--){
-						dron = temp_array_dron[b]
-						if dron.jugador != _jugador and point_distance(center_x, center_y, dron.x, dron.y) < dis{
-							edificio.select = 20
-							break
+					for(c = 0; c < EQUIPOS; c++) if not aliados[# _jugador, c]{
+						temp_array_dron = ds_grid_get(chunk_dron_jugador[c], temp_complex[0], temp_complex[1])
+						for(b = array_length(temp_array_dron) - 1; b >= 0; b--){
+							dron = temp_array_dron[b]
+							if point_distance(center_x, center_y, dron.x, dron.y) < dis{
+								edificio.select = 20
+								break
+							}
 						}
+						if edificio.select > 0
+							break
 					}
 					if edificio.select > 0
 						break
@@ -35,12 +39,14 @@ function scr_onda_choque(edificio = control.null_edificio){
 				center_y = edificio.center_y
 				for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
 					temp_complex = edificio.target_chunks[a]
-					temp_array_dron = ds_grid_get(chunk_dron, temp_complex[0], temp_complex[1])
-					for(b = array_length(temp_array_dron) - 1; b >= 0; b--){
-						dron = temp_array_dron[b]
-						if dron.jugador != _jugador and point_distance(center_x, center_y, dron.x, dron.y) < dis{
-							aplicar_efecto(0, stun, dron)
-							herir_dron(130, dron)
+					for(c = 0; c < EQUIPOS; c++) if not aliados[# _jugador, c]{
+						temp_array_dron = ds_grid_get(chunk_dron_jugador[c], temp_complex[0], temp_complex[1])
+						for(b = array_length(temp_array_dron) - 1; b >= 0; b--){
+							dron = temp_array_dron[b]
+							if point_distance(center_x, center_y, dron.x, dron.y) < dis{
+								aplicar_efecto(0, stun, dron)
+								herir_dron(130, dron)
+							}
 						}
 					}
 				}

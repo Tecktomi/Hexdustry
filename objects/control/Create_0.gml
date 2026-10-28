@@ -166,8 +166,12 @@ var a, b, c, flag
 		DIGITS[a] = true
 	DIGITS[47] = false
 	#macro MAX_JUGADORES 9
-	#macro EQUIPOS (MAX_JUGADORES + 2)
-	//Jgadores predeterminados
+	#macro EQUIPOS 11 //MAX_JUGADORES + 2
+	aliados = ds_grid_create(EQUIPOS, EQUIPOS)
+	ds_grid_clear(aliados, false)
+	for(a = 0; a < EQUIPOS; a++)
+		aliados[# a, a] = true
+	//Jugadores predeterminados
 	#macro JUGADOR_SALVAJE 0
 	#macro JUGADOR_IA 1
 #endregion
@@ -973,7 +977,7 @@ null_edificio.target = null_dron
 null_dron.target_dron = null_dron
 selected_drones = array_create(0, null_dron)
 drones = array_create(0, null_dron)
-drones_jugador = array_create(EQUIPOS)
+drones_jugador = array_create(EQUIPOS, array_create(0, null_dron))
 for(a = 0; a < EQUIPOS; a++)
 	drones_jugador[a] = array_create(0, null_dron)
 drones_propios = drones_jugador[jugador]
@@ -1066,12 +1070,16 @@ null_explosion_mark = {
 	ds_grid_clear(tile_animado_chunk, 0)
 	background = ds_grid_create(chunk_xsize, chunk_ysize)
 	chunk_dron = ds_grid_create(chunk_xsize, chunk_ysize)
+	chunk_dron_jugador = array_create(EQUIPOS)
 	chunk_edificios = ds_grid_create(chunk_xsize, chunk_ysize)
 	chunk_edificios_jugador = array_create(EQUIPOS)
 	for(c = 0; c < EQUIPOS; c++){
-		var temp_grid = ds_grid_create(chunk_xsize, chunk_ysize)
-		ds_grid_clear(temp_grid, array_create(0, null_edificio))
-		chunk_edificios_jugador[c] = temp_grid
+		var temp_grid_edificios = ds_grid_create(chunk_xsize, chunk_ysize)
+		ds_grid_clear(temp_grid_edificios, array_create(0, null_edificio))
+		chunk_edificios_jugador[c] = temp_grid_edificios
+		var temp_grid_dron = ds_grid_create(chunk_xsize, chunk_ysize)
+		ds_grid_clear(temp_grid_dron, array_create(0, null_dron))
+		chunk_dron_jugador[c] = temp_grid_dron
 	}
 	chunk_edificios_estatico = ds_grid_create(chunk_xsize, chunk_ysize)
 	chunk_edificios_dinamico = ds_grid_create(chunk_xsize, chunk_ysize)
@@ -1086,8 +1094,10 @@ null_explosion_mark = {
 		for(b = 0; b < chunk_ysize; b++){
 			chunk_dron[# a, b] = array_create(0, null_dron)
 			chunk_edificios[# a, b] = array_create(0, null_edificio)
-			for(c = 0; c < EQUIPOS; c++)
+			for(c = 0; c < EQUIPOS; c++){
 				chunk_edificios_jugador[c][# a, b] = array_create(0, null_edificio)
+				chunk_dron_jugador[c][# a, b] = array_create(0, null_dron)
+			}
 			chunk_edificios_estatico[# a, b] = array_create(0, null_edificio)
 			chunk_edificios_dinamico[# a, b] = array_create(0, null_edificio)
 			chunk_edificios_draw[# a, b] = array_create(0, null_edificio)
@@ -1096,56 +1106,55 @@ null_explosion_mark = {
 #endregion
 //Recursos
 #region Arreglos
-	recurso_sprite = []
-	recurso_nombre = []
-	recurso_color = []
-	recurso_combustion = []
-	recurso_combustion_time = []
-	recurso_tier = []
+	recurso_sprite = array_create(0, spr_item_hierro)
+	recurso_nombre = array_create(0, "")
+	recurso_color = array_create(0, c_black)
+	recurso_tier = array_create(0, 0)
 	recurso_keyword = array_create(0, "")
 #endregion
-function def_recurso(name, sprite = spr_item_hierro, color = c_black, combustion = 0, tier = 0){
+function def_recurso(name, sprite = spr_item_hierro, color = c_black, tier = 0){
 	array_push(recurso_nombre, string(name))
 	array_push(recurso_sprite, sprite)
 	array_push(recurso_color, color)
-	array_push(recurso_combustion_time, combustion)
-	array_push(recurso_combustion, (combustion > 0))
 	array_push(recurso_tier, tier)
 	array_push(recurso_keyword, string(name))
 	return array_length(recurso_nombre) - 1
 }
 #region Definición
-	idr_cobre = def_recurso("Cobre", spr_item_cobre, #C06A2C,, 0)
-	idr_carbon = def_recurso("Carbón", spr_item_carbon, #2B2B2B, 300, 0)
-	idr_bronce = def_recurso("Bronce", spr_item_bronce, #8C6A3D,, 1)
-	idr_hierro = def_recurso("Hierro", spr_item_hierro, #7A4A3A,, 0)
-	idr_acero = def_recurso("Acero", spr_item_acero, #5F6A72,, 1)
-	idr_arena = def_recurso("Arena", spr_item_arena, #D2B48C,, 2)
-	idr_piedra = def_recurso("Piedra", spr_item_piedra, #7A7A74,, 2)
-	idr_vidrio = def_recurso("Vidrio", spr_item_vidrio, #A0A4A8,, 2)
-	idr_concreto = def_recurso("Concreto", spr_item_concreto, #9A9A94,, 3)
-	idr_piedra_cuprica = def_recurso("Piedra Cúprica", spr_item_piedra_cobre, #8A5A32,, 2)
+	idr_cobre = def_recurso("Cobre", spr_item_cobre, #C06A2C, 0)
+	idr_carbon = def_recurso("Carbón", spr_item_carbon, #2B2B2B, 0)
+	idr_bronce = def_recurso("Bronce", spr_item_bronce, #8C6A3D, 1)
+	idr_hierro = def_recurso("Hierro", spr_item_hierro, #7A4A3A, 0)
+	idr_acero = def_recurso("Acero", spr_item_acero, #5F6A72, 1)
+	idr_arena = def_recurso("Arena", spr_item_arena, #D2B48C, 2)
+	idr_piedra = def_recurso("Piedra", spr_item_piedra, #7A7A74, 2)
+	idr_vidrio = def_recurso("Vidrio", spr_item_vidrio, #A0A4A8, 2)
+	idr_concreto = def_recurso("Concreto", spr_item_concreto, #9A9A94, 3)
+	idr_piedra_cuprica = def_recurso("Piedra Cúprica", spr_item_piedra_cobre, #8A5A32, 2)
 	//10
-	idr_piedra_ferrica = def_recurso("Piedra Férrica", spr_item_piedra_hierro, #6B4B3A,, 2)
-	idr_piedra_sulfatada = def_recurso("Piedra Sulfatada", spr_item_piedra_azufre, #8E8A6A,, 2)
-	idr_compuesto_incendiario = def_recurso("Compuesto Incendiario", spr_item_combustible, #A63D2D, 900, 3)
-	idr_explosivo = def_recurso("Explosivo", spr_item_explosivos, #C7A12E,, 3)
-	idr_bateria = def_recurso("Batería", spr_item_bateria, #5B5F3A,, 4)
-	idr_plastico = def_recurso("Plástico", spr_item_plastico, #B8C2CC,, 3)
-	idr_electronicos = def_recurso("Electrónicos", spr_item_chip, #3F6F5A,, 3)
-	idr_uranio_bruto = def_recurso("Uranio Bruto", spr_item_uranio, #6E8F3A,, 4)
-	idr_uranio_enriquecido = def_recurso("Uranio Enriquecido", spr_item_uranio_235, #9DBB3C,, 4)
-	idr_uranio_empobrecido = def_recurso("Uranio Empobrecido", spr_item_uranio_238, #4F5F32,, 4)
+	idr_piedra_ferrica = def_recurso("Piedra Férrica", spr_item_piedra_hierro, #6B4B3A, 2)
+	idr_piedra_sulfatada = def_recurso("Piedra Sulfatada", spr_item_piedra_azufre, #8E8A6A, 2)
+	idr_compuesto_incendiario = def_recurso("Compuesto Incendiario", spr_item_combustible, #A63D2D, 3)
+	idr_explosivo = def_recurso("Explosivo", spr_item_explosivos, #C7A12E, 3)
+	idr_bateria = def_recurso("Batería", spr_item_bateria, #5B5F3A, 4)
+	idr_plastico = def_recurso("Plástico", spr_item_plastico, #B8C2CC, 3)
+	idr_electronicos = def_recurso("Electrónicos", spr_item_chip, #3F6F5A, 3)
+	idr_uranio_bruto = def_recurso("Uranio Bruto", spr_item_uranio, #6E8F3A, 4)
+	idr_uranio_enriquecido = def_recurso("Uranio Enriquecido", spr_item_uranio_235, #9DBB3C, 4)
+	idr_uranio_empobrecido = def_recurso("Uranio Empobrecido", spr_item_uranio_238, #4F5F32, 4)
 	//20
-	idr_sal = def_recurso("Sal", spr_item_sal, #D8D6CF,, 2)
-	idr_modulos = def_recurso("Módulos", spr_item_modulo, c_red,, 4)
-	idr_bauxita = def_recurso("Bauxita", spr_item_bauxita, #EE8E61,, 2)
-	idr_alumina = def_recurso("Alumina", spr_item_alumina, #ECECEC,, 2)
-	idr_aluminio = def_recurso("Aluminio", spr_item_aluminio, #DCDEE0,, 2)
+	idr_sal = def_recurso("Sal", spr_item_sal, #D8D6CF, 2)
+	idr_modulos = def_recurso("Módulos", spr_item_modulo, c_red, 4)
+	idr_bauxita = def_recurso("Bauxita", spr_item_bauxita, #EE8E61, 2)
+	idr_alumina = def_recurso("Alumina", spr_item_alumina, #ECECEC, 2)
+	idr_aluminio = def_recurso("Aluminio", spr_item_aluminio, #DCDEE0, 2)
 #endregion
 rss_max = array_length(recurso_nombre)
 if rss_max >= 38
 	show_error("OJO CON LOS RSS_MAX", true)
+recurso_combustion = array_create(rss_max, 0)
+recurso_combustion[idr_carbon] = 300
+recurso_combustion[idr_compuesto_incendiario] = 900
 recurso_descripcion = array_create(rss_max, "")
 carga_inicial = array_create(rss_max, 0)
 sort_recursos()
@@ -1180,42 +1189,42 @@ municiones = array_create(0, null_municion)
 	terreno_pared = []
 	terreno_color = []
 #endregion
-function def_terreno(nombre, sprite = spr_piedra, recurso = -1, caminable = true, liquido = false, pared = false, color = c_black){
+function def_terreno(nombre, sprite = spr_piedra, color = c_black, recurso = -1, caminable = true, liquido = false, pared = false){
 	array_push(terreno_nombre, string(nombre))
 	array_push(terreno_sprite, sprite)
+	array_push(terreno_color, color)
 	array_push(terreno_recurso_id, recurso)
 	array_push(terreno_recurso_bool, (recurso >= 0))
 	array_push(terreno_caminable, caminable)
 	array_push(terreno_liquido, liquido)
 	array_push(terreno_pared, pared)
-	array_push(terreno_color, color)
 	return array_length(terreno_nombre) - 1
 }
 #region Definición
-	idt_piedra = def_terreno("Piedra", spr_piedra, idr_piedra,,,, #808080)
-	idt_pasto = def_terreno("Pasto", spr_pasto,,,,, #ACD473)
-	idt_agua = def_terreno("Agua", spr_agua,, false, true,, #5FC8F0)
-	idt_arena = def_terreno("Arena", spr_arena, idr_arena,,,, #F7DFB1)
-	idt_agua_profunda = def_terreno("Agua Profunda", spr_agua_profunda,, false, true,, #238BB2)
-	idt_petroleo = def_terreno("Petróleo", spr_petroleo,, false, true,, #000707)
-	idt_piedra_cuprica = def_terreno("Piedra Cúprica", spr_piedra_cobre, idr_piedra_cuprica,,,, #667F66)
-	idt_piedra_ferrica = def_terreno("Piedra Férrica", spr_piedra_hierro, idr_piedra_ferrica,,,, #806666)
-	idt_basalto_sulfatado = def_terreno("Basalto Sulfatado", spr_basalto_azufre, idr_piedra_sulfatada,,,, #555541)
-	idt_pared_de_piedra = def_terreno("Pared de Piedra", spr_pared_piedra,, false,, true, #707070)
+	idt_piedra = def_terreno("Piedra", spr_piedra, #808080, idr_piedra)
+	idt_pasto = def_terreno("Pasto", spr_pasto, #ACD473)
+	idt_agua = def_terreno("Agua", spr_agua, #5FC8F0,, false, true)
+	idt_arena = def_terreno("Arena", spr_arena, #F7DFB1, idr_arena)
+	idt_agua_profunda = def_terreno("Agua Profunda", spr_agua_profunda, #238BB2,, false, true)
+	idt_petroleo = def_terreno("Petróleo", spr_petroleo, #000707,, false, true)
+	idt_piedra_cuprica = def_terreno("Piedra Cúprica", spr_piedra_cobre, #667F66, idr_piedra_cuprica)
+	idt_piedra_ferrica = def_terreno("Piedra Férrica", spr_piedra_hierro, #806666, idr_piedra_ferrica)
+	idt_basalto_sulfatado = def_terreno("Basalto Sulfatado", spr_basalto_azufre, #555541, idr_piedra_sulfatada)
+	idt_pared_de_piedra = def_terreno("Pared de Piedra", spr_pared_piedra, #707070,, false,, true)
 	//10
-	idt_pared_de_pasto = def_terreno("Pared de Pasto", spr_pared_pasto,, false,, true, #ABA000)
-	idt_pared_de_arena = def_terreno("Pared de Arena", spr_pared_arena,, false,, true, #F7DFB1)
-	idt_nieve = def_terreno("Nieve", spr_nieve,,,,, #E5FFFF)
-	idt_pared_de_nieve = def_terreno("Pared de Nieve", spr_pared_nieve,, false,, true, #CEE5E5)
-	idt_lava = def_terreno("Lava", spr_lava,, false, true,, #FBAF5D)
-	idt_hielo = def_terreno("Hielo", spr_hielo,,,,, #9DD2D5)
-	idt_basalto = def_terreno("Basalto", spr_basalto,,,,, #555555)
-	idt_ceniza = def_terreno("Ceniza", spr_ceniza,,,, true, #191919)
-	idt_agua_salada = def_terreno("Agua Salada", spr_agua_salada,, false, true,, #3F6E85)
-	idt_agua_salada_profunda = def_terreno("Agua Salada Profunda", spr_agua_salada_profunda,, false, true,, #274B5C)
+	idt_pared_de_pasto = def_terreno("Pared de Pasto", spr_pared_pasto, #ABA000,, false,, true)
+	idt_pared_de_arena = def_terreno("Pared de Arena", spr_pared_arena, #F7DFB1,, false,, true)
+	idt_nieve = def_terreno("Nieve", spr_nieve, #E5FFFF)
+	idt_pared_de_nieve = def_terreno("Pared de Nieve", spr_pared_nieve, #CEE5E5,, false,, true)
+	idt_lava = def_terreno("Lava", spr_lava, #FBAF5D,, false, true)
+	idt_hielo = def_terreno("Hielo", spr_hielo, #9DD2D5)
+	idt_basalto = def_terreno("Basalto", spr_basalto, #555555)
+	idt_ceniza = def_terreno("Ceniza", spr_ceniza, #191919,,,, true)
+	idt_agua_salada = def_terreno("Agua Salada", spr_agua_salada, #3F6E85,, false, true)
+	idt_agua_salada_profunda = def_terreno("Agua Salada Profunda", spr_agua_salada_profunda, #274B5C,, false, true)
 	//20
-	idt_salar = def_terreno("Salar", spr_salar, idr_sal,,,, #CFCBC2)
-	idt_bauxita = def_terreno("Bauxita", spr_bauxita, idr_bauxita,,,, #CC6845)
+	idt_salar = def_terreno("Salar", spr_salar, #CFCBC2, idr_sal)
+	idt_bauxita = def_terreno("Bauxita", spr_bauxita, #CC6845, idr_bauxita)
 #endregion
 terreno_max = array_length(terreno_nombre)
 build_ignore = array_create(terreno_max, false)

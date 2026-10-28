@@ -7,12 +7,12 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 		if alc_min = 0{
 			for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
 				temp_complex = edificio.target_chunks[a]
-				temp_array_dron = ds_grid_get(chunk_dron, temp_complex[0], temp_complex[1])
-				for(b = array_length(temp_array_dron) - 1; b >= 0; b--){
-					dron = temp_array_dron[b]
-					if dron.vida <= 0
-						continue
-					if dron.jugador != _jugador{
+				for(c = 0; c < EQUIPOS; c++) if not aliados[# _jugador, c]{
+					temp_array_dron = ds_grid_get(chunk_dron_jugador[c], temp_complex[0], temp_complex[1])
+					for(b = array_length(temp_array_dron) - 1; b >= 0; b--){
+						dron = temp_array_dron[b]
+						if dron.vida <= 0
+							continue
 						temp_dis = point_distance(center_x, center_y, dron.x, dron.y)
 						if temp_dis < dis{
 							dis = temp_dis
@@ -25,12 +25,12 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 		//Mortero
 		else for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
 			temp_complex = edificio.target_chunks[a]
-			temp_array_dron = ds_grid_get(chunk_dron, temp_complex[0], temp_complex[1])
-			for(b = array_length(temp_array_dron) - 1; b >= 0; b--){
-				dron = temp_array_dron[b]
-				if dron.vida < 0
-					continue
-				if dron.jugador != _jugador{
+			for(c = 0; c < EQUIPOS; c++) if not aliados[# _jugador, c]{
+				temp_array_dron = ds_grid_get(chunk_dron_jugador[c], temp_complex[0], temp_complex[1])
+				for(b = array_length(temp_array_dron) - 1; b >= 0; b--){
+					dron = temp_array_dron[b]
+					if dron.vida < 0
+						continue
 					temp_dis = point_distance(center_x, center_y, dron.x, dron.y)
 					if temp_dis < dis and temp_dis > alc_min{
 						dis = temp_dis
@@ -59,7 +59,7 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 		if alc_min = 0{
 			for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
 				temp_complex = edificio.target_chunks[a]
-				for(c = 0; c < EQUIPOS; c++) if c != _jugador{
+				for(c = 0; c < EQUIPOS; c++) if not aliados[# _jugador, c]{
 					temp_array_edificio = ds_grid_get(chunk_edificios_jugador[c], temp_complex[0], temp_complex[1])
 					for(b = array_length(temp_array_edificio) - 1; b >= 0; b--){
 						temp_edificio = temp_array_edificio[b]
@@ -77,7 +77,7 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 		//Mortero
 		else for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
 			temp_complex = edificio.target_chunks[a]
-			for(c = 0; c < EQUIPOS; c++) if c != _jugador{
+			for(c = 0; c < EQUIPOS; c++) if not aliados[# _jugador, c]{
 				temp_array_edificio = ds_grid_get(chunk_edificios_jugador[c], temp_complex[0], temp_complex[1])
 				for(b = array_length(temp_array_edificio) - 1; b >= 0; b--){
 					temp_edificio = temp_array_edificio[b]

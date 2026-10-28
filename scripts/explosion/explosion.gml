@@ -17,7 +17,7 @@ function explosion(_x = 0, _y = 0, edificio = control.null_edificio, radio = 120
 			for(a = mina; a <= maxa; a++)
 				for(b = minb; b <= maxb; b++){
 					//Herir edificios
-					for(c = 0; c < EQUIPOS; c++) if c != _jugador{
+					for(c = 0; c < EQUIPOS; c++) if not aliados[# _jugador, c]{
 						temp_array_edificios = ds_grid_get(chunk_edificios_jugador[c], a, b)
 						for(i = array_length(temp_array_edificios) - 1; i >= 0; i--){
 							edificio = temp_array_edificios[i]
@@ -31,12 +31,10 @@ function explosion(_x = 0, _y = 0, edificio = control.null_edificio, radio = 120
 									edificio.fuego = 300
 								}
 						}
-					}
-					//Herir drones
-					temp_array_dron = ds_grid_get(chunk_dron, a, b)
-					for(i = array_length(temp_array_dron) - 1; i >= 0; i--){
-						dron = temp_array_dron[i]
-						if dron.jugador != _jugador{
+						//Herir drones
+						temp_array_dron = ds_grid_get(chunk_dron_jugador[c], a, b)
+						for(i = array_length(temp_array_dron) - 1; i >= 0; i--){
+							dron = temp_array_dron[i]
 							dis = point_distance(_x, _y, dron.x, dron.y)
 							if dis < radio{
 								if herir_dron(dmg / (10 + dis), dron) and dron = _target_dron
@@ -51,7 +49,7 @@ function explosion(_x = 0, _y = 0, edificio = control.null_edificio, radio = 120
 		else{
 			for(a = mina; a <= maxa; a++)
 				for(b = minb; b <= maxb; b++){
-					for(c = 0; c < EQUIPOS; c++) if c != _jugador{
+					for(c = 0; c < EQUIPOS; c++) if not aliados[# _jugador, c]{
 						temp_array_edificios = ds_grid_get(chunk_edificios_jugador[c], a, b)
 						for(i = array_length(temp_array_edificios) - 1; i >= 0; i--){
 							edificio = temp_array_edificios[i]
@@ -59,12 +57,10 @@ function explosion(_x = 0, _y = 0, edificio = control.null_edificio, radio = 120
 							if dis < radio and herir_edificio(dmg / (10 + dis), edificio)
 								flag = true
 						}
-					}
-					//Herir drones
-					temp_array_dron = ds_grid_get(chunk_dron, a, b)
-					for(i = array_length(temp_array_dron) - 1; i >= 0; i--){
-						dron = temp_array_dron[i]
-						if dron.jugador != _jugador{
+						//Herir drones
+						temp_array_dron = ds_grid_get(chunk_dron_jugador[c], a, b)
+						for(i = array_length(temp_array_dron) - 1; i >= 0; i--){
+							dron = temp_array_dron[i]
 							dis = point_distance(_x, _y, dron.x, dron.y)
 							if dis < radio and herir_dron(dmg / (10 + dis), dron) and dron = _target_dron
 								flag = true

@@ -62,6 +62,7 @@ function menu_blueprint(mx, my){
 		if mouse_check_button_pressed(mb_right){
 			mouse_clear(mb_right)
 			array_resize(blueprint, 0)
+			len = 0
 		}
 		//Rotar
 		if keyboard_check_pressed(CONTROL_ROTAR) or mouse_wheel_up() or mouse_wheel_down(){

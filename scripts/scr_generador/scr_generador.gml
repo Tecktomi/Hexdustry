@@ -10,12 +10,12 @@ function scr_generador(edificio = control.null_edificio){
 			//Encender
 			if carga[idr_carbon] > 0 or carga[idr_compuesto_incendiario] > 0{
 				if carga[idr_compuesto_incendiario] > 0{
-					edificio.fuel = recurso_combustion_time[idr_compuesto_incendiario]
+					edificio.fuel = recurso_combustion[idr_compuesto_incendiario]
 					carga[idr_compuesto_incendiario]--
 					change_energia(floor(edificio_energia_consumo[index] * 1.2), edificio)
 				}
 				else if carga[idr_carbon] > 0{
-					edificio.fuel = recurso_combustion_time[idr_carbon]
+					edificio.fuel = recurso_combustion[idr_carbon]
 					carga[idr_carbon]--
 					change_energia(edificio_energia_consumo[index], edificio)
 				}

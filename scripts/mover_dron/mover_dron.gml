@@ -24,7 +24,7 @@ function mover_dron(dron = control.null_dron, x, y, manual = false){
 		else if tag_drones_de_ataque[index]{
 			if edificio_bool[# aa, bb]{
 				var edificio = edificio_id[# aa, bb]
-				if edificio.jugador != dron.jugador{
+				if not aliados[# edificio.jugador, dron.jugador]{
 					x = edificio.center_x
 					y = edificio.center_y
 					dron.temp_target = edificio

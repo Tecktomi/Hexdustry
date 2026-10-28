@@ -19,8 +19,10 @@
 		save_setting("", "fullscreen", window_get_fullscreen())
 	}
 	prev_get_keyboard_string = get_keyboard_string
+	/*
 	if keyboard_check_pressed(ord("B"))
 		test()
+	*/
 #endregion
 var a, b, c, temp_text, temp_complex, aa = 0, bb = 0, xpos, ypos, temp_array_real, flag, buffer, i, j, temp_complex_2 = array_create(0, 0)
 var _parpadeo = abs(sin(image_index / 20)), len
@@ -98,7 +100,9 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 					draw_sprite_off(planta_quimica_sprite[edificio.select], 0, aa, bb)
 				//Humo
 				if show_humo and tag_generadores_de_humo[index]{
-					if ((tag_generadores_de_humo_combustion[index] and edificio.fuel > 0) or (index = id_generador_geotermico and tag_liquido_agua[edificio.flujo.liquido]) or (index = id_refineria_de_petroleo and edificio.flujo.liquido = idl_petroleo and edificio.red.eficiencia > 0)) and image_index & 3{
+					if image_index & 3 and ((tag_generadores_de_humo_combustion[index] and edificio.fuel > 0) or
+						(index = id_generador_geotermico and (edificio.flujo.liquido != -1 and tag_liquido_agua[edificio.flujo.liquido])) or
+						(index = id_refineria_de_petroleo and edificio.flujo.liquido = idl_petroleo and edificio.red.eficiencia > 0)){
 						dir = viento_dir + random_range(-pi / 4, pi / 4)
 						array_push(humos, add_humo(center_x, center_y, edificio.a, edificio.b, cos(dir) * viento_mag, sin(dir) * viento_mag, irandom_range(70, 100)))
 					}

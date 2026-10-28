@@ -1,7 +1,7 @@
 function draw_flow(){
 	with control{
-		var h = draw_get_halign(), v = draw_get_valign(), a, b, temp_complex, aa, bb, edificio, dir, temp_array_dron, temp_array_dron_2, temp_array_1
-		var temp_array_2, temp_array_3, len, len_2, color, temp_terreno, temp_beta, temp_lago
+		var h = draw_get_halign(), v = draw_get_valign(), a, b, c, temp_complex, aa, bb, edificio, dir, temp_array_dron, temp_array_dron_2, temp_array_1
+		var temp_array_2, temp_array_3, len, len_2, color, temp_terreno, temp_beta, temp_lago, temp_text
 		if flow = 1{
 			draw_set_halign(fa_left)
 			draw_set_valign(fa_top)
@@ -16,13 +16,15 @@ function draw_flow(){
 		else if flow = 2{
 			draw_set_halign(fa_left)
 			draw_set_valign(fa_top)
-			draw_text(0, 0, "chunk_dron")
+			draw_text(0, 0, "chunk_dron_jugador")
 			draw_set_halign(fa_center)
 			draw_set_valign(fa_middle)
 			for(a = min_chunka; a < max_chunka; a++) for(b = min_chunkb; b < max_chunkb; b++){
+				temp_text = array_length(chunk_dron[# a, b])
 				temp_complex = abtoxy(a * CHUNK_WIDTH, b * CHUNK_HEIGHT)
-				temp_array_dron = chunk_dron[# a, b]
-				draw_text_off(temp_complex[0], temp_complex[1], $"{array_length(temp_array_dron)}")
+				for(c = 0; c < EQUIPOS; c++)
+					temp_text += $"\n-{array_length(ds_grid_get(chunk_dron_jugador[c], a, b))}"
+				draw_text_off(temp_complex[0], temp_complex[1], temp_text)
 			}
 		}
 		else if flow = 3{

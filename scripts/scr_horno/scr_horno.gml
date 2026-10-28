@@ -13,11 +13,11 @@ function scr_horno(edificio = control.null_edificio){
 			if edificio.fuel = 0{
 				if (carga[idr_carbon] > 0 or carga[idr_compuesto_incendiario] > 0){
 					if carga[idr_compuesto_incendiario] > 0{
-						edificio.fuel = recurso_combustion_time[idr_compuesto_incendiario]
+						edificio.fuel = recurso_combustion[idr_compuesto_incendiario]
 						carga[idr_compuesto_incendiario]--
 					}
 					else if carga[idr_carbon] > 0{
-						edificio.fuel = recurso_combustion_time[idr_carbon]
+						edificio.fuel = recurso_combustion[idr_carbon]
 						carga[idr_carbon]--
 					}
 					edificio_encender(edificio,, false, false)

@@ -184,7 +184,7 @@ function step(){
 				//Colisión Edificio
 				if edificio_bool[# muna, munb]{
 					edificio = edificio_id[# muna, munb]
-					if _tipo != municion_tipo_perforadora and edificio.jugador != municion.jugador{
+					if _tipo != municion_tipo_perforadora and not aliados[# edificio.jugador, municion.jugador]{
 						municion.dis = 0
 						if _tipo = municion_tipo_fuego{
 							if edificio.fuego = 0

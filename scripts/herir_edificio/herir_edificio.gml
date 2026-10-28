@@ -7,7 +7,7 @@ function herir_edificio(dmg, edificio = control.null_edificio, estadistica = tru
 		}
 	}
 	if estadistica{
-		if edificio.jugador != jugador
+		if not aliados[# edificio.jugador, jugador]
 			dmg_causado += min(edificio.vida, dmg)
 		else
 			dmg_recibido += min(edificio.vida, dmg)

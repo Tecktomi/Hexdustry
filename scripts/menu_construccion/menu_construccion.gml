@@ -206,9 +206,9 @@ function menu_construccion(mx, my, xmouse, ymouse, just_pressed = false, prev_ch
 						temp_text = $"{L.construir_recursos_insuficientes}\n{temp_text}"
 					draw_set_color(ui_boton_rojo)
 					var flag_3 = false
-					for(a = array_length(drones) - 1; a >= 0; a--){
-						var dron = drones[a]
-						if dron.jugador != jugador{
+					for(var c = 0; c < EQUIPOS; c++) if not aliados[# jugador, c]
+						for(a = array_length(drones_jugador[c]) - 1; a >= 0; a--){
+							var dron = drones_jugador[c, a]
 							draw_circle_off(dron.x, dron.y, ENEMIGO_CERCA, true)
 							if not flag_3 and point_distance(mouse_x, mouse_y, dron.x * zoom - camx, dron.y * zoom - camy) < ENEMIGO_CERCA * zoom{
 								temp_text += $"{L.construir_enemigos_cerca}\n"
@@ -216,7 +216,6 @@ function menu_construccion(mx, my, xmouse, ymouse, just_pressed = false, prev_ch
 								flag_3 = true
 							}
 						}
-					}
 					draw_set_color(ui_texto)
 				}
 				draw_set_color(ui_boton_rojo)

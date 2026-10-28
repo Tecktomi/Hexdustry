@@ -33,7 +33,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 				}
 			}
 		}
-		if jugador != _jugador and mision_actual >= 0 and mision.objetivo = idm_destruir_edificio and mision.target_id = index and ++mision_counter >= mision.target_num
+		if not aliados[# _jugador, jugador] and mision_actual >= 0 and mision.objetivo = idm_destruir_edificio and mision.target_id = index and ++mision_counter >= mision.target_num
 			pasar_mision()
 		array_disorder_remove(edificios_jugador[_jugador], edificio, ptre_jugador)
 		array_disorder_remove(edificios_jugador_index[_jugador, index], edificio, ptre_jugador_index)
@@ -53,7 +53,7 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		array_disorder_remove(edificios_totales, edificio, ptre_total)
 		ds_grid_destroy(edificio.coordenadas_dis)
 		if destruccion{
-			if jugador != _jugador
+			if not aliados[# _jugador, jugador]
 				edificios_destruidos++
 			else
 				edificios_perdidos++

@@ -68,9 +68,14 @@ function set_grid_size(){
 		ds_grid_resize(chunk_dron, chunk_xsize, chunk_ysize)
 		ds_grid_resize(chunk_edificios, chunk_xsize, chunk_ysize)
 		for(c = 0; c < EQUIPOS; c++){
-			var temp_grid = ds_grid_create(chunk_xsize, chunk_ysize)
-			ds_grid_clear(temp_grid, array_create(0, null_edificio))
-			chunk_edificios_jugador[c] = temp_grid
+			ds_grid_destroy(chunk_edificios_jugador[c])
+			var temp_grid_edificios = ds_grid_create(chunk_xsize, chunk_ysize)
+			ds_grid_clear(temp_grid_edificios, array_create(0, null_edificio))
+			chunk_edificios_jugador[c] = temp_grid_edificios
+			ds_grid_destroy(chunk_dron_jugador[c])
+			var temp_grid_dron = ds_grid_create(chunk_xsize, chunk_ysize)
+			ds_grid_clear(temp_grid_dron, array_create(0, null_dron))
+			chunk_dron_jugador[c] = temp_grid_dron
 		}
 		ds_grid_resize(chunk_edificios_estatico, chunk_xsize, chunk_ysize)
 		ds_grid_resize(chunk_edificios_dinamico, chunk_xsize, chunk_ysize)
@@ -89,8 +94,10 @@ function set_grid_size(){
 				chunk_edificios_background[# a, b] = spr_hexagono
 				chunk_dron[# a, b] = array_create(0, null_dron)
 				chunk_edificios[# a, b] = array_create(0, null_edificio)
-				for(c = 0; c < EQUIPOS; c++)
+				for(c = 0; c < EQUIPOS; c++){
 					chunk_edificios_jugador[c][# a, b] = array_create(0, null_edificio)
+					chunk_dron_jugador[c][# a, b] = array_create(0, null_dron)
+				}
 				chunk_edificios_estatico[# a, b] = array_create(0, null_edificio)
 				chunk_edificios_dinamico[# a, b] = array_create(0, null_edificio)
 				chunk_edificios_draw[# a, b] = array_create(0, null_edificio)

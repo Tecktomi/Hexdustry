@@ -5,8 +5,8 @@ function panel_enciclopedia_recurso(xpos = 0, ypos = 0, param = {_this_input_lay
 		ypos = draw_text_ypos(xpos + 10, ypos, recurso_nombre[ei])
 		draw_set_font(font_normal)
 		ypos = draw_text_ypos(xpos + 10, ypos, recurso_descripcion[ei])
-		if recurso_combustion[ei]
-			ypos = draw_text_ypos(xpos + 10, ypos, $"{L.enciclopedia_combustible} {recurso_combustion_time[ei] / 60}[s]")
+		if recurso_combustion[ei] > 0
+			ypos = draw_text_ypos(xpos + 10, ypos, $"{L.enciclopedia_combustible} {recurso_combustion[ei] / 60}[s]")
 		ypos = draw_text_ypos(xpos + 10, ypos, L.enciclopedia_usado_en)
 		var a, b, aa
 		for(a = 0; a < edificio_max; a++){

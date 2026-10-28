@@ -25,8 +25,10 @@ function eliminar_jugador(_jugador){
 						desactivar_edificio(edificio)
 						array_disorder_remove(edificios_jugador[_jugador], edificio, ptre_jugador)
 						array_disorder_remove(edificios_jugador_index[_jugador, edificio.index], edificio, ptre_jugador_index)
+						array_disorder_remove(chunk_edificios_jugador[_jugador][# edificio.chunk_x, edificio.chunk_y], edificio, ptre_chunk_jugador)
 						array_disorder_push(edificios_jugador[JUGADOR_SALVAJE], edificio, ptre_jugador)
 						array_disorder_push(edificios_jugador_index[JUGADOR_SALVAJE, edificio.index], edificio, ptre_jugador_index)
+						array_disorder_push(chunk_edificios_jugador[JUGADOR_SALVAJE][# edificio.chunk_x, edificio.chunk_y], edificio, ptre_chunk_jugador)
 					}
 				}
 			}
