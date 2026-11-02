@@ -132,7 +132,7 @@ function calcular_edificios_adyascentes(edificio = control.null_edificio, set_re
 				if not edificio_bool[# aa, bb]
 					continue
 				temp_edificio = edificio_id[# aa, bb]
-				if not aliados[# _jugador, temp_edificio.jugador]
+				if aliados[# _jugador, temp_edificio.jugador]
 					continue
 				temp_a = temp_edificio.a
 				temp_b = temp_edificio.b

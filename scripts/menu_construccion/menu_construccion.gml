@@ -206,7 +206,7 @@ function menu_construccion(mx, my, xmouse, ymouse, just_pressed = false, prev_ch
 						temp_text = $"{L.construir_recursos_insuficientes}\n{temp_text}"
 					draw_set_color(ui_boton_rojo)
 					var flag_3 = false
-					for(var c = 0; c < EQUIPOS; c++) if not aliados[# jugador, c]
+					for(var c = 0; c < EQUIPOS; c++) if aliados[# jugador, c]
 						for(a = array_length(drones_jugador[c]) - 1; a >= 0; a--){
 							var dron = drones_jugador[c, a]
 							draw_circle_off(dron.x, dron.y, ENEMIGO_CERCA, true)

@@ -19,10 +19,8 @@
 		save_setting("", "fullscreen", window_get_fullscreen())
 	}
 	prev_get_keyboard_string = get_keyboard_string
-	/*
-	if keyboard_check_pressed(ord("B"))
-		test()
-	*/
+	//if keyboard_check_pressed(ord("B"))
+		//test()
 #endregion
 var a, b, c, temp_text, temp_complex, aa = 0, bb = 0, xpos, ypos, temp_array_real, flag, buffer, i, j, temp_complex_2 = array_create(0, 0)
 var _parpadeo = abs(sin(image_index / 20)), len

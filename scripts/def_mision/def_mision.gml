@@ -1,4 +1,4 @@
-function def_mision(nombre = "", nombre_idioma = array_create(IDIOMAS, ""), objetivo = 0, target_id = 0, target_num = 0, texto = array_create(0, array_create(IDIOMAS, "")), tiempo_edit = false, tiempo = 0, tiempo_victoria = false, tiempo_show = false, camera_move = false, camera_x = 0, camera_y = 0, switch_oleadas = false){
+function def_mision(nombre = "", nombre_idioma = array_create(IDIOMAS, ""), objetivo = 0, target_id = 0, target_num = 0, texto = array_create(0, array_create(IDIOMAS, "")), tiempo_edit = false, tiempo = 0, tiempo_victoria = false, tiempo_show = false, camera_move = false, camera_x = 0, camera_y = 0, switch_oleadas = false, tiles = array_create(0, 0)){
 	return {
 		nombre : nombre,
 		nombre_idioma : nombre_idioma,
@@ -13,6 +13,7 @@ function def_mision(nombre = "", nombre_idioma = array_create(IDIOMAS, ""), obje
 		camera_x : camera_x,
 		camera_y : camera_y,
 		switch_oleadas : switch_oleadas,
-		texto : texto
+		texto : texto,
+		tiles : tiles
 	}
 }

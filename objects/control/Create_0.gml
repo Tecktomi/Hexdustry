@@ -6,7 +6,7 @@ var a, b, c, flag
 #endregion
 #region MACROS
 	#region VERSION
-		#macro FILE_VERSION 2026_10_16
+		#macro FILE_VERSION 2026_11_02
 		#macro PROCESADOR_VERSION 2026_10_02
 		#macro GRABACION_VERSION 2026_10_16
 	#endregion
@@ -168,9 +168,9 @@ var a, b, c, flag
 	#macro MAX_JUGADORES 9
 	#macro EQUIPOS 11 //MAX_JUGADORES + 2
 	aliados = ds_grid_create(EQUIPOS, EQUIPOS)
-	ds_grid_clear(aliados, false)
+	ds_grid_clear(aliados, true)
 	for(a = 0; a < EQUIPOS; a++)
-		aliados[# a, a] = true
+		aliados[# a, a] = false
 	//Jugadores predeterminados
 	#macro JUGADOR_SALVAJE 0
 	#macro JUGADOR_IA 1
@@ -287,6 +287,23 @@ var arr0 = array_create(0, 0)
 		[1,1,1,-1,1,-3,0,-4,0,-3,-1,-2,-1,0,-1,2,0,3,0,2],
 		[1,-1,0,-2,0,-3,-1,-2,-1,0,-1,2,0,3,0,4,1,3,1,1],
 		[0,-2,0,-1,-1,0,-1,2,0,3,0,4,1,3,1,2,1,0,1,-1]
+	]]
+#endregion
+#region NEXT_TO_CINTA_GRANDE
+	next_to_cinta_grande = [[
+		[0,-1,1,0,1,2,0,3],
+		[1,-1,1,0,1,2,1,3],
+		[-1,-1,0,-2,0,-1,0,1],
+		[1,1,1,-1,0,-2,0,-1],
+		[-1,-1,-1,1,0,-2,0,-1],
+		[1,-1,0,-2,0,-1,0,1]
+	],[//b mod 2 = 0
+		[-1,-1,-1,0,-1,2,-1,3],
+		[0,-1,-1,0,-1,2,0,3],
+		[-1,1,-1,3,0,4,0,3],
+		[0,1,0,3,0,4,1,3],
+		[-1,3,0,4,0,3,0,1],
+		[0,3,0,4,1,3,1,1]
 	]]
 #endregion
 BROWSER = (os_browser = browser_not_a_browser)
@@ -700,6 +717,7 @@ L = {}
 	server_buscando_lan_step = 0
 	EQUIPO_COLOR = [ #bfbfbf, #ff0000, #0000ff, #00ff00, #ffff00, #ff00ff, #00ffff, #ffffff, #000000, #7f0000, #007f00, #00007f, #7f7f00, #7f007f, #007f7f]
 	jugador = 2
+	EQUIPO_LIMIT = 2
 #endregion
 #region UI
 	#macro ui_fondo #282828

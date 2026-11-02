@@ -15,7 +15,7 @@ function scr_onda_choque(edificio = control.null_edificio){
 				center_y = edificio.center_y
 				for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
 					temp_complex = edificio.target_chunks[a]
-					for(c = 0; c < EQUIPOS; c++) if not aliados[# _jugador, c]{
+					for(c = 1; c < EQUIPO_LIMIT; c++) if aliados[# _jugador, c]{
 						temp_array_dron = ds_grid_get(chunk_dron_jugador[c], temp_complex[0], temp_complex[1])
 						for(b = array_length(temp_array_dron) - 1; b >= 0; b--){
 							dron = temp_array_dron[b]
@@ -39,7 +39,7 @@ function scr_onda_choque(edificio = control.null_edificio){
 				center_y = edificio.center_y
 				for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
 					temp_complex = edificio.target_chunks[a]
-					for(c = 0; c < EQUIPOS; c++) if not aliados[# _jugador, c]{
+					for(c = 1; c < EQUIPO_LIMIT; c++) if aliados[# _jugador, c]{
 						temp_array_dron = ds_grid_get(chunk_dron_jugador[c], temp_complex[0], temp_complex[1])
 						for(b = array_length(temp_array_dron) - 1; b >= 0; b--){
 							dron = temp_array_dron[b]

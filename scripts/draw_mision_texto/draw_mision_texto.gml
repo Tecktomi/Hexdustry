@@ -1,5 +1,10 @@
 function draw_mision_texto(minx = 0){
 	with control{
+		var temp_complex
+		for(var a = array_length(mision.tiles) - 1; a >= 1; a -= 2){
+			temp_complex = abtoxy(mision.tiles[a - 1], mision.tiles[a])
+			draw_sprite_off(spr_hexagono, 0, temp_complex[0], temp_complex[1],,,,, abs(sin(image_index / 20)))
+		}
 		if array_length(mision.texto) > 0{
 			if mision_text_hide{
 				if draw_sprite_boton(spr_arriba, 0, room_width - 120, room_height - 50, 40, 40)

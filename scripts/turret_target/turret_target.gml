@@ -7,7 +7,7 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 		if alc_min = 0{
 			for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
 				temp_complex = edificio.target_chunks[a]
-				for(c = 0; c < EQUIPOS; c++) if not aliados[# _jugador, c]{
+				for(c = 1; c < EQUIPO_LIMIT; c++) if aliados[# _jugador, c]{
 					temp_array_dron = ds_grid_get(chunk_dron_jugador[c], temp_complex[0], temp_complex[1])
 					for(b = array_length(temp_array_dron) - 1; b >= 0; b--){
 						dron = temp_array_dron[b]
@@ -25,7 +25,7 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 		//Mortero
 		else for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
 			temp_complex = edificio.target_chunks[a]
-			for(c = 0; c < EQUIPOS; c++) if not aliados[# _jugador, c]{
+			for(c = 1; c < EQUIPO_LIMIT; c++) if aliados[# _jugador, c]{
 				temp_array_dron = ds_grid_get(chunk_dron_jugador[c], temp_complex[0], temp_complex[1])
 				for(b = array_length(temp_array_dron) - 1; b >= 0; b--){
 					dron = temp_array_dron[b]
@@ -59,7 +59,7 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 		if alc_min = 0{
 			for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
 				temp_complex = edificio.target_chunks[a]
-				for(c = 0; c < EQUIPOS; c++) if not aliados[# _jugador, c]{
+				for(c = 0; c < EQUIPO_LIMIT; c++) if aliados[# _jugador, c]{
 					temp_array_edificio = ds_grid_get(chunk_edificios_jugador[c], temp_complex[0], temp_complex[1])
 					for(b = array_length(temp_array_edificio) - 1; b >= 0; b--){
 						temp_edificio = temp_array_edificio[b]
@@ -77,7 +77,7 @@ function turret_target(edificio = control.null_edificio, alc_min = 0){
 		//Mortero
 		else for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
 			temp_complex = edificio.target_chunks[a]
-			for(c = 0; c < EQUIPOS; c++) if not aliados[# _jugador, c]{
+			for(c = 0; c < EQUIPO_LIMIT; c++) if aliados[# _jugador, c]{
 				temp_array_edificio = ds_grid_get(chunk_edificios_jugador[c], temp_complex[0], temp_complex[1])
 				for(b = array_length(temp_array_edificio) - 1; b >= 0; b--){
 					temp_edificio = temp_array_edificio[b]

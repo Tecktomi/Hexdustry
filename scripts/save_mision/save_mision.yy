@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"save_mision",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"save_mision",
+  "parent":{
+    "name":"SAVE",
+    "path":"folders/SCRIPTS/FILE/SAVE.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

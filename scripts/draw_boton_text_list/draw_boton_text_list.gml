@@ -1,7 +1,7 @@
-function draw_boton_text_list(xpos, ypos, variable = 0, array_name = array_create(0, ""), array = array_create(0, 0), max_height = DEVISE ? 25 : 15){
+function draw_boton_text_list(xpos, ypos, variable = 0, array_name = array_create(0, ""), array = array_create(0, 0), max_height = DEVISE ? 25 : 15, _input_layer = input_layer){
 	with control{
 		variable = clamp(variable, 0, array_length(array_name) - 1)
-		if draw_boton(xpos, ypos, array_name[variable],,,, false){
+		if draw_boton(xpos, ypos, array_name[variable],,,, false, _input_layer){
 			get_keyboard_string = draw_boton_text_counter
 			input_layer = 1
 			deslizante[draw_boton_text_counter] = 0
@@ -31,7 +31,7 @@ function draw_boton_text_list(xpos, ypos, variable = 0, array_name = array_creat
 			draw_rectangle(xpos, ypos + item_height, xpos + max_width + item_height, ypos + item_height * (min(max_height, size) + 1), true)
 			draw_set_color(color)
 			ypos += item_height
-			var out = scroll(xpos + 10, ypos, size, max_height, item_height, scroll_draw_boton_text_list, {xpos : xpos + item_height, ypos : ypos, array : array, array_name : array_name, a : a, color : color}, des_index)
+			var out = scroll(xpos + 10, ypos, size, max_height, item_height, scroll_draw_boton_text_list, {xpos : xpos + item_height, ypos : ypos, array : array, array_name : array_name, a : a, color : color}, des_index, _input_layer)
 			text_x = real(a)
 			text_y = real(b)
 			exit_keyboard_input()

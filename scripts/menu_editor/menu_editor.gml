@@ -165,6 +165,11 @@ function menu_editor(){
 					mision.camera_y = draw_boton_text(xpos, ypos, mision.camera_y)
 				}
 				ypos += text_y * 1.2
+				if draw_boton(room_width / 2 + 40, ypos, "Marcar Tiles"){
+					mision_choosing_coord = true
+					mision_choosing_coord_i = i
+					mision_choosing_coord_tipo = 2
+				}
 				if draw_boton(room_width / 2 + 10, room_height - 140, L.editor_eliminar_objetivo, ui_rojo){
 					array_delete(misiones, i, 1)
 					mision_actual = -1
@@ -348,10 +353,24 @@ function menu_editor(){
 				draw_text((room_width + 200) / 2, 100, $"{L.editor_clic} {L.editor_mover_camara}")
 				draw_set_halign(fa_left)
 				if mouse_check_button_pressed(mb_left){
-					temp_complex = abtoxy(mx, my)
-					misiones[mision_choosing_coord_i].camera_x = temp_complex[0]
-					misiones[mision_choosing_coord_i].camera_y = temp_complex[1]
-					mision_choosing_coord = false
+					var _mision = misiones[mision_choosing_coord_i]
+					if mision_choosing_coord_tipo = 1{
+						temp_complex = abtoxy(mx, my)
+						_mision.camera_x = temp_complex[0]
+						_mision.camera_y = temp_complex[1]
+						mision_choosing_coord = false
+					}
+					else if mision_choosing_coord_tipo = 2{
+						var flag = true
+						for(a = array_length(_mision.tiles) - 1; a >= 0; a -= 2)
+							if mx = _mision.tiles[a - 1] and my = _mision.tiles[a]{
+								array_delete(_mision.tiles, a - 1, 2)
+								flag = false
+								break
+							}
+						if flag
+							array_push(_mision.tiles, mx, my)
+					}
 				}
 				if mouse_check_button_pressed(mb_right)
 					mision_choosing_coord = false
@@ -590,7 +609,7 @@ function menu_editor(){
 		ypos += 20
 		var xpos = 10
 		xpos = draw_text_xpos(xpos, ypos, $"{L.editor_ignorar} ")
-		a = draw_boton_text_list(xpos, ypos, 0, array_concat(["..."], terreno_nombre))
+		a = draw_boton_text_list(xpos, ypos, 0, array_concat(["..."], terreno_nombre),,, 0)
 		ypos += text_y
 		if a > 0{
 			build_ignore[a - 1] = not build_ignore[a - 1]

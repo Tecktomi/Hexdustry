@@ -1,7 +1,7 @@
 function cinta_grande_check(a, b, dir, index, _jugador = jugador){
 	with control{
 		var build_size = get_size(a, b, dir, edificio_size[index]), build_arround = get_arround(a, b, dir, edificio_size[index]), inputs = array_create(0, null_edificio), outputs = array_create(0, null_edificio)
-		var c, temp_complex, aa, bb, flag, flag_2, edificio, temp_Array, d, e, aaa, bbb, temp_complex_2, aaaa, bbbb, agua = false, agua_x = -1, agua_y = -1, len = array_length(build_size)
+		var c, temp_complex, aa, bb, flag, flag_2, edificio, d, e, aaa, bbb, aaaa, bbbb, agua = false, agua_x = -1, agua_y = -1, len = array_length(build_size), prev_build
 		//INPUTS
 		for(c = 0; c < array_length(build_arround);){
 			aa = build_arround[c++]
@@ -13,10 +13,9 @@ function cinta_grande_check(a, b, dir, index, _jugador = jugador){
 			if edificio_bool[# aa, bb]{
 				edificio = edificio_id[# aa, bb]
 				if _jugador = edificio.jugador and in(edificio.index, id_fabrica_de_drones, id_cinta_grande) and not array_contains(inputs, edificio){
-					var temp_array = next_to_cinta_grande(edificio.a, edificio.b, edificio.dir)
-					for(d = array_length(temp_array) - 1; d >= 0; d--){
-						aaa = temp_array[d, 0]
-						bbb = temp_array[d, 1]
+					for(d = 0; d < 8;){
+						aaa = edificio.a + next_to_cinta_grande[edificio.b & 1, edificio.dir][d++]
+						bbb = edificio.b + next_to_cinta_grande[edificio.b & 1, edificio.dir][d++]
 						for(e = 0; e < len;){
 							aaaa = build_size[e++]
 							bbbb = build_size[e++]
@@ -38,10 +37,10 @@ function cinta_grande_check(a, b, dir, index, _jugador = jugador){
 		}
 		//OUTPUTS
 		if in(index, id_fabrica_de_drones, id_cinta_grande){
-			var temp_array = next_to_cinta_grande(a, b, dir), prev_build = null_edificio
-			for(c = 0; c < 4; c++){
-				aa = temp_array[c, 0]
-				bb = temp_array[c, 1]
+			prev_build = null_edificio
+			for(c = 0; c < 8;){
+				aa = a + next_to_cinta_grande[b & 1, dir][c++]
+				bb = b + next_to_cinta_grande[b & 1, dir][c++]
 				if aa < 0 or bb < 0 or aa >= xsize or bb >= ysize
 					continue
 				if edificio_bool[# aa, bb]{

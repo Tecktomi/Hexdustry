@@ -6,7 +6,7 @@ function construir(index, dir, mx, my, manual = false, _cheat = control.cheat, _
 			flag = is_comprable(edificio_precio_id[index], edificio_precio_num[index], _jugador)
 		//Detectar enemigos cerca
 		if flag and not _cheat{
-			for(b = 0; b < EQUIPOS; b++) if not aliados[# _jugador, b]{
+			for(b = 1; b < EQUIPO_LIMIT; b++) if aliados[# _jugador, b]{
 				for(a = array_length(drones_jugador[b]) - 1; a >= 0; a--){
 					dron = drones_jugador[b, a]
 					if point_distance(dron.x, dron.y, xx, yy) < ENEMIGO_CERCA{

@@ -96,7 +96,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 								var disi = edificio_alcance[index], x1 = center_x + disi * cos(degtorad(angle) + pi / 6), y1 = center_y - disi * sin(degtorad(angle) + pi / 6)
 								var x2 = center_x + disi * cos(degtorad(angle) - pi / 6), y2 = center_y - disi * sin(degtorad(angle) - pi / 6), total_dmg = tiro_struct.dmg * dmg_factor
 								var c, d, temp_dron, temp_array_dron
-								for(d = 0; d < EQUIPOS; d++) if not aliados[# _jugador, d]{
+								for(d = 1; d < EQUIPO_LIMIT; d++) if aliados[# _jugador, d]{
 									temp_array_dron = ds_grid_get(chunk_dron_jugador[d], dron.chunk_x, dron.chunk_y)
 									for(c = array_length(temp_array_dron) - 1; c >= 0; c--){
 										temp_dron = temp_array_dron[c]

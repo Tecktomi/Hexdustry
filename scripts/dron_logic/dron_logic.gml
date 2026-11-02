@@ -74,7 +74,7 @@ function dron_logic(){
 					vel *= 1.2
 				if edificio_bool[# dron.a, dron.b]{
 					edificio = edificio_id[# dron.a, dron.b]
-					if edificio.index = id_mina and not aliados[# _jugador, edificio.jugador]{
+					if edificio.index = id_mina and aliados[# _jugador, edificio.jugador]{
 						flag = explosion(edificio.center_x, edificio.center_y,, 100, 1000,, edificio.jugador, dron)
 						delete_edificio(edificio, true)
 						if flag
@@ -435,7 +435,7 @@ function dron_logic(){
 							closest_dis = dron_alcance[index]
 							for(u = minu; u <= maxu; u++)
 								for(v = minv; v <= maxv; v++)
-									for(c = 0; c < EQUIPOS; c++) if not aliados[# _jugador, c]{
+									for(c = 1; c < EQUIPO_LIMIT; c++) if aliados[# _jugador, c]{
 										temp_chunk_dron = ds_grid_get(chunk_dron_jugador[c], u, v)
 										for(i = array_length(temp_chunk_dron) - 1; i >= 0; i--){
 											temp_dron = temp_chunk_dron[i]
@@ -469,7 +469,7 @@ function dron_logic(){
 							max_prioridad = 0
 							for(u = minu; u <= maxu; u++)
 								for(v = minv; v <= maxv; v++)
-									for(c = 0; c < EQUIPOS; c++) if not aliados[# _jugador, c]{
+									for(c = 0; c < EQUIPO_LIMIT; c++) if aliados[# _jugador, c]{
 										chunk = ds_grid_get(chunk_edificios_jugador[c], u, v)
 										for(i = array_length(chunk) - 1; i >= 0; i--){
 											edificio = chunk[i]

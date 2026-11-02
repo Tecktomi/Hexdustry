@@ -26,28 +26,7 @@ function save_game_buffer(buffer){
 		buffer_write(buffer, buffer_bool, modo_misiones)
 		var len, a, b, c, _mision, len_2, temp_texto, edificio, dron, red, flujo, i, municion, mask
 		#region Misiones
-			len = array_length(misiones)
-			buffer_write(buffer, buffer_u8, len)
-			for(a = 0; a < len; a++){
-				_mision = misiones[a]
-				buffer_write(buffer, buffer_string, _mision.nombre)
-				buffer_write(buffer, buffer_s8, _mision.objetivo)
-				buffer_write(buffer, buffer_s8, _mision.target_id)
-				buffer_write(buffer, buffer_u16, _mision.target_num)
-				buffer_write(buffer, buffer_u16, _mision.tiempo)
-				buffer_write(buffer, buffer_bool, _mision.tiempo_edit)
-				buffer_write(buffer, buffer_bool, _mision.tiempo_victoria)
-				buffer_write(buffer, buffer_bool, _mision.tiempo_show)
-				len_2 = array_length(_mision.texto)
-				buffer_write(buffer, buffer_u8, len_2)
-				for(b = 0; b < len_2; b++)
-					for(c = 0; c < IDIOMAS; c++)
-						buffer_write(buffer, buffer_string, _mision.texto[b, c])
-				buffer_write(buffer, buffer_bool, _mision.camera_move)
-				buffer_write(buffer, buffer_u16, _mision.camera_x)
-				buffer_write(buffer, buffer_u16, _mision.camera_y)
-				buffer_write(buffer, buffer_bool, _mision.switch_oleadas)
-			}
+			save_mision(buffer)
 			buffer_write(buffer, buffer_u8, min(mision_camara_step, 255))
 			buffer_write(buffer, buffer_f64, mision_camera_x_start)
 			buffer_write(buffer, buffer_f64, mision_camera_y_start)

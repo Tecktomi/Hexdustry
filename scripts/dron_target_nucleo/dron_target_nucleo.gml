@@ -1,7 +1,7 @@
 function dron_target_nucleo(dron = control.null_dron){
 	with control{
 		var i, edificio, _jugador = dron.jugador, dis = infinity, a = clamp(dron.a, 0, xsize - 1), b = clamp(dron.b, 0, ysize - 1), xx = dron.x, yy = dron.y, c
-		for(c = 0; c < EQUIPOS; c++) if not aliados[# _jugador, c]{
+		for(c = 0; c < EQUIPO_LIMIT; c++) if aliados[# _jugador, c]{
 			if tag_dron_marino[dron.index] or dron_aereo[dron.index]{
 				for(i = array_length(edificios_jugador_index[c, id_nucleo]) - 1; i >= 0; i--){
 					edificio = edificios_jugador_index[c][id_nucleo, i]

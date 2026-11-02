@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"next_to_cinta_grande",
+  "%Name":"load_mision",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"next_to_cinta_grande",
+  "name":"load_mision",
   "parent":{
-    "name":"SCRIPTS",
-    "path":"folders/SCRIPTS.yy",
+    "name":"LOAD",
+    "path":"folders/SCRIPTS/FILE/LOAD.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

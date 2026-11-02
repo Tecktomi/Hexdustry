@@ -5,7 +5,7 @@ function dron_set_target(dron = control.null_dron, temp_array){
 			temp_array_edificios = array_shuffle(edificios_index[temp_array[i]])
 			for(j = array_length(temp_array_edificios) - 1; j >= 0; j--){
 				edificio = temp_array_edificios[j]
-				if not aliados[# _jugador, edificio.jugador]{
+				if aliados[# _jugador, edificio.jugador]{
 					flag = true
 					break
 				}
@@ -13,7 +13,7 @@ function dron_set_target(dron = control.null_dron, temp_array){
 			if flag
 				break
 		}
-		dron.target = (aliados[# _jugador, edificio.jugador] ? null_edificio : edificio)
+		dron.target = (aliados[# _jugador, edificio.jugador] ? edificio : null_edificio)
 		dron.modo = DRON_TARGET
 	}
 }

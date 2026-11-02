@@ -32,30 +32,7 @@ function load_game_buffer(buffer){
 		modo_misiones = buffer_read(buffer, buffer_bool)
 		var a, b, c, d, e, _texto
 		#region Misiones
-			var len = buffer_read(buffer, buffer_u8)
-			misiones = array_create(len, null_mision)
-			for(a = 0; a < len; a++){
-				var _nombre = buffer_read(buffer, buffer_string)
-				var _objetivo = buffer_read(buffer, buffer_s8)
-				var _target_id = buffer_read(buffer, buffer_s8)
-				var _target_num = buffer_read(buffer, buffer_u16)
-				var _tiempo = buffer_read(buffer, buffer_u16)
-				var _tiempo_edit = buffer_read(buffer, buffer_bool)
-				var _tiempo_victoria = buffer_read(buffer, buffer_bool)
-				var _tiempo_show = buffer_read(buffer, buffer_bool)
-				var len_2 = buffer_read(buffer, buffer_u8)
-				_texto = array_create(len_2)
-				for(b = 0; b < len_2; b++){
-					_texto[b] = array_create(IDIOMAS, "")
-					for(c = 0; c < IDIOMAS; c++)
-						array_set(_texto[b], c, string(buffer_read(buffer, buffer_string)))
-				}
-				var _camera_move = buffer_read(buffer, buffer_bool)
-				var _camera_x = buffer_read(buffer, buffer_u16)
-				var _camera_y = buffer_read(buffer, buffer_u16)
-				var _switch_oleadas = buffer_read(buffer, buffer_bool)
-				misiones[a] = def_mision(_nombre,, _objetivo, _target_id, _target_num, _texto, _tiempo_edit, _tiempo, _tiempo_victoria, _tiempo_show, _camera_move, _camera_x, _camera_y, _switch_oleadas)
-			}
+			load_mision(buffer)
 			mision_camara_step = buffer_read(buffer, buffer_u8)
 			mision_camera_x_start = buffer_read(buffer, buffer_f64)
 			mision_camera_y_start = buffer_read(buffer, buffer_f64)
@@ -64,7 +41,7 @@ function load_game_buffer(buffer){
 			mision_counter = buffer_read(buffer, buffer_u16)
 			mision_current_tiempo = buffer_read(buffer, buffer_s16)
 			mision_choosing_coord = buffer_read(buffer, buffer_bool)
-			if mision_actual >= 0 and mision_actual < len
+			if mision_actual >= 0 and mision_actual < array_length(misiones)
 				mision = misiones[mision_actual]
 		#endregion
 		for(a = 0; a < rss_max; a++)
