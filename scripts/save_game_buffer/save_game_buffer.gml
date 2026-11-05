@@ -135,6 +135,8 @@ function save_game_buffer(buffer){
 			mask += (dron.move_dis != 0) << c++
 			mask += (dron.move_x != 0) << c++
 			mask += (dron.move_y != 0) << c++
+			mask += (dron.move_a != 0) << c++
+			mask += (dron.move_b != 0) << c++
 			mask += (dron.oleada != 0) << c++
 			mask += (dron.change_pos) << c++
 			mask += (dron.move_dir != 0) << c++
@@ -161,6 +163,8 @@ function save_game_buffer(buffer){
 			if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(dron.move_dis))
 			if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(dron.move_x))
 			if mask & (1 << c++) buffer_write(buffer, buffer_f64, real(dron.move_y))
+			if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(dron.move_a))
+			if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(dron.move_b))
 			if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(dron.oleada))
 			c++
 			if mask & (1 << c++) buffer_write(buffer, buffer_u8, real(dron.move_dir))

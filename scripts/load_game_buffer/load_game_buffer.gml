@@ -30,7 +30,7 @@ function load_game_buffer(buffer){
 		multiplicador_vida_enemigos = buffer_read(buffer, buffer_f64)
 		dificultad = buffer_read(buffer, buffer_s8)
 		modo_misiones = buffer_read(buffer, buffer_bool)
-		var a, b, c, d, e, _texto
+		var a, b, c, d, e, _texto, len
 		#region Misiones
 			load_mision(buffer)
 			mision_camara_step = buffer_read(buffer, buffer_u8)
@@ -58,7 +58,7 @@ function load_game_buffer(buffer){
 		}
 		//Construir edificios
 		len = real(buffer_read(buffer, buffer_u16))
-		var temp_edificios_target = array_create(len, -1)
+		var temp_edificios_target = array_create(len, U16_1)
 		for(var i = 0; i < len; i++){
 			var index = real(buffer_read(buffer, buffer_u8))
 			var dir = real(buffer_read(buffer, buffer_u8))
@@ -76,6 +76,7 @@ function load_game_buffer(buffer){
 			if index = id_procesador
 				load_procesador(buffer, edificio)
 		}
+		check_water_target()
 		//Cargar estado
 		for(a = 0; a < len; a++)
 			temp_edificios_target[a] = load_edificio(buffer, edificios_totales[a])
@@ -102,7 +103,7 @@ function load_game_buffer(buffer){
 		}
 		//Drones
 		len = real(buffer_read(buffer, buffer_u16))
-		var temp_dron_target = array_create(len, -1)
+		var temp_dron_target = array_create(len, U16_1)
 		for(var i = 0; i < len; i++){
 			a = real(buffer_read(buffer, buffer_u16))
 			b = real(buffer_read(buffer, buffer_u16))
@@ -121,7 +122,10 @@ function load_game_buffer(buffer){
 			if mask & (1 << c++) dron.vida_max = real(buffer_read(buffer, buffer_f64))
 			if mask & (1 << c++) herir_dron(dron.vida_max - real(buffer_read(buffer, buffer_f64)), dron)
 			if mask & (1 << c++) dron.target = edificios_totales[real(buffer_read(buffer, buffer_u16))]
-			if mask & (1 << c++) dron.temp_target = edificios_totales[real(buffer_read(buffer, buffer_u16))]
+			if mask & (1 << c++){
+				a = real(buffer_read(buffer, buffer_u16))
+				dron.temp_target = (a = U16_1) ? null_edificio : edificios_totales[a]
+			}
 			if mask & (1 << c++) temp_dron_target[i] = real(buffer_read(buffer, buffer_u16))
 			for(var j = 0; j < rss_max; j++)
 				if mask & (1 << c++){
@@ -139,6 +143,8 @@ function load_game_buffer(buffer){
 			if mask & (1 << c++) dron.move_dis = real(buffer_read(buffer, buffer_f64))
 			if mask & (1 << c++) dron.move_x = real(buffer_read(buffer, buffer_f64))
 			if mask & (1 << c++) dron.move_y = real(buffer_read(buffer, buffer_f64))
+			if mask & (1 << c++) dron.move_a = real(buffer_read(buffer, buffer_u16))
+			if mask & (1 << c++) dron.move_b = real(buffer_read(buffer, buffer_u16))
 			if mask & (1 << c++) dron.oleada = real(buffer_read(buffer, buffer_u8))
 			if mask & (1 << c++) dron.change_pos = true
 			if mask & (1 << c++) dron.move_dir = real(buffer_read(buffer, buffer_u8))
@@ -154,12 +160,12 @@ function load_game_buffer(buffer){
 		dron_counter = buffer_read(buffer, buffer_u32)
 		//Referencias cruzadas dron-dron
 		for(var i = 0; i < len; i++)
-			if temp_dron_target[i] != -1
+			if temp_dron_target[i] != U16_1
 				drones[i].target_dron = drones[temp_dron_target[i]]
 		//Referencias cruzadas edificio-dron
 		len = array_length(temp_edificios_target)
 		for(a = 0; a < len; a++)
-			if temp_edificios_target[a] != -1{
+			if temp_edificios_target[a] != U16_1{
 				var edificio = edificios_totales[a], dron = drones[temp_edificios_target[a]]
 				array_disorder_push(dron.torres, edificio, ptre_torre_dron)
 				edificio.target = dron
@@ -173,7 +179,7 @@ function load_game_buffer(buffer){
 			var vmove = real(buffer_read(buffer, buffer_f64))
 			var mask = real(buffer_read(buffer, buffer_u8))
 			c = 0
-			var tipo = municion_tipo_normal, radio = 2500, humo = false, rastreador = false, _jugador = 2, _target = -1, _target_build = -1
+			var tipo = municion_tipo_normal, radio = 2500, humo = false, rastreador = false, _jugador = 2, _target = U16_1, _target_build = U16_1
 			if mask & (1 << c++) tipo = real(buffer_read(buffer, buffer_u8))
 			var dis = real(buffer_read(buffer, buffer_f64))
 			var dmg = real(buffer_read(buffer, buffer_f64))
@@ -186,9 +192,9 @@ function load_game_buffer(buffer){
 			var municion = add_municion(a, b, hmove, vmove, tipo, dis, dmg, radio,,, humo, rastreador, _jugador)
 			municion.origen_x = a
 			municion.origen_y = b
-			if _target != -1
+			if _target != U16_1
 				municion.target = drones[_target]
-			if _target_build != -1
+			if _target_build != U16_1
 				municion.target_build = edificios_totales[_target_build]
 		}
 		//Frecuencias

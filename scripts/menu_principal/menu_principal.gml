@@ -144,6 +144,8 @@ function menu_principal(){
 					get_file = 0
 					input_layer = 0
 					misiones = array_create(0, null_mision)
+					modo_misiones = false
+					game_mode = GAMEMODE_OLEADAS
 					exit
 				}
 				ypos += text_y * 1.2

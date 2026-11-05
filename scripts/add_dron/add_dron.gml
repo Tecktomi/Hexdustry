@@ -27,6 +27,8 @@ function add_dron(a, b, index, _jugador = jugador){
 			move_dis : 0,
 			move_x : 0,
 			move_y : 0,
+			move_a : 0,
+			move_b : 0,
 			target_a : 0,
 			target_b : 0,
 			last_dir : -1,

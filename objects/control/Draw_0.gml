@@ -137,7 +137,7 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 					draw_set_color(ui_boton_rojo)
 					draw_circle_off(aa, bb + 8, 4, false)
 				}
-				if cheat and  index = id_nucleo and edificio.jugador = JUGADOR_IA{
+				if cheat and IA and index = id_nucleo and edificio.jugador = JUGADOR_IA{
 					temp_text = $"{ia_queue_nombre[ia_queue[ia_queue_count]]}: {ia_queue_count}/{array_length(ia_queue)}\n"+
 						$"construyendo: {edificio_nombre[ia_build_queue[ia_build_pos, 0]]}: {ia_build_pos}/{array_length(ia_build_queue)}\n"
 					for(i = 0; i < rss_max; i++)
@@ -632,13 +632,13 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 			}
 			else if tag_dron_encima[index]{
 				if tag_edificio_fabrica_drones[index] and edificio.select >= 0{
-					temp_text += $"{L.game_creando_dron} {dron_nombre[edificio.select]} ({array_length(drones_propios)}/{8 + 2 * edificios_jugador_index[edificio.jugador, id_nucleo][0].modulo})\n"
+					temp_text += $"{L.game_creando_dron} {dron_nombre[edificio.select]} ({array_length(drones_propios)}/{8 + 2 * nucleos[edificio.jugador].modulo})\n"
 					for(a = 0; a < array_length(dron_precio_id[edificio.select]); a++)
 						temp_text += $"  {recurso_nombre[dron_precio_id[edificio.select, a]]} {edificio.carga[dron_precio_id[edificio.select, a]]}/{dron_precio_num[edificio.select, a]}\n"
 					if edificio.proceso > 0
 						temp_text += $"  {L.game_creando_dron} {floor(100 * edificio.proceso / dron_time[edificio.select])}%\n"
-					else if array_length(drones_propios) = 8 + 2 * edificios_jugador_index[edificio.jugador, id_nucleo][0].modulo
-						temp_text += $"  {L.game_limite_dron} ({array_length(drones_propios)}/{8 + 2 * edificios_jugador_index[edificio.jugador, id_nucleo][0].modulo})\n"
+					else if array_length(drones_propios) = 8 + 2 * nucleos[edificio.jugador].modulo
+						temp_text += $"  {L.game_limite_dron} ({array_length(drones_propios)}/{8 + 2 * nucleos[edificio.jugador].modulo})\n"
 				}
 				else if index = id_planta_de_reciclaje{
 					draw_set_color(ui_color_reciclaje)

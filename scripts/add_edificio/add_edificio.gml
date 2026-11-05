@@ -146,7 +146,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 		else if index = id_memoria
 			edificio.variables = array_create(128)
 		array_push(efectos, add_efecto(size_fx[edificio_size[index] - 1], 0, x, y, 3))
-		if index = id_nucleo and _jugador != JUGADOR_IA{
+		if index = id_nucleo{
 			ds_grid_resize(edificio.coordenadas_dis, xsize, ysize)
 			nucleos[_jugador] = edificio
 		}
@@ -233,7 +233,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			if index = id_torre_reparadora{
 				for(c = array_length(edificios_jugador[_jugador]) - 2; c >= 0; c--){
 					temp_edificio = edificios_jugador[_jugador][c]
-					if point_distance(temp_edificio.center_x, temp_edificio.center_y, x, y) < alc{
+					if point_distance(temp_edificio.center_x, temp_edificio.center_y, center_x, center_y) < alc{
 						array_push(edificio.edificios_cercanos, temp_edificio)
 						array_push(temp_edificio.reparadores_cercanos, edificio)
 						if temp_edificio.vida < edificio_vida[temp_edificio.index]
@@ -243,7 +243,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			}
 			for(c = array_length(edificios_index[id_torre_reparadora]) - 1; c >= 0; c--){
 				temp_edificio = edificios_index[id_torre_reparadora][c]
-				if temp_edificio != edificio and temp_edificio.jugador = _jugador and point_distance(temp_edificio.center_x, temp_edificio.center_y, x, y) < alc{
+				if temp_edificio != edificio and temp_edificio.jugador = _jugador and point_distance(temp_edificio.center_x, temp_edificio.center_y, center_x, center_y) < alc{
 					array_push(temp_edificio.edificios_cercanos, edificio)
 					array_push(edificio.reparadores_cercanos, temp_edificio)
 				}

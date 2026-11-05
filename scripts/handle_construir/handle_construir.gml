@@ -12,7 +12,7 @@ function handle_construir(buffer){
 			data.agua = bool(buffer_read(buffer, buffer_bool))
 			data.agua_x = real(buffer_read(buffer,buffer_u16))
 			data.agua_y = real(buffer_read(buffer,buffer_u16))
-			var len = real(buffer_read(buffer, buffer_u8))
+			var len = 2 * real(buffer_read(buffer, buffer_u8))
 			data.edificios_salida_drones = array_create(len, 0)
 			for(var i = 0; i < len; i++)
 				data.edificios_salida_drones[i] = real(buffer_read(buffer, buffer_u16))

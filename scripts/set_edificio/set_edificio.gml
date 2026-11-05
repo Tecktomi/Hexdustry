@@ -1,4 +1,4 @@
-function set_edificio(mode = false, select = 0, edificio = control.null_edificio, manual = false){
+function set_edificio(mode = false, select = 0, edificio = control.null_edificio, manual = false, force = false){
 	with control{
 		if edificio = null_edificio or edificio.vida <= 0
 			exit
@@ -45,7 +45,7 @@ function set_edificio(mode = false, select = 0, edificio = control.null_edificio
 			}
 		}
 		//Planta química
-		else if index = id_planta_quimica{
+		else if index = id_planta_quimica and (select != edificio.select or force){
 			if select < 0 or select > 2
 				exit
 			change_flujo(0, edificio)
@@ -97,7 +97,7 @@ function set_edificio(mode = false, select = 0, edificio = control.null_edificio
 			mover_in(edificio)
 		}
 		//Fábrica de drones
-		else if tag_edificio_fabrica_drones[index] and edificio.select != select{
+		else if tag_edificio_fabrica_drones[index] and (edificio.select != select or force){
 			if select < 0 or select >= dron_max
 				exit
 			edificio.carga = array_create(rss_max, 0)
@@ -125,7 +125,7 @@ function set_edificio(mode = false, select = 0, edificio = control.null_edificio
 		else if index = id_refineria_de_petroleo
 			edificio.select = clamp(select, 0, 100)
 		//Silo de Misiles
-		else if index = id_silo_de_misiles and edificio.select != select{
+		else if index = id_silo_de_misiles and (edificio.select != select or force){
 			if select < 0 or select >= array_length(misiles_nombre)
 				exit
 			edificio.select = select

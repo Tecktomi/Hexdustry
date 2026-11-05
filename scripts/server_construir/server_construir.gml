@@ -21,7 +21,7 @@ function server_construir(index, dir, a, b, _cheat = control.cheat, _jugador = j
 			}
 		}
 		else if tag_edificio_tuberia[index]
-			buffer_write(buffer, buffer_u8, liquido_choose_array[liquido_choose])
+			buffer_write(buffer, buffer_u8, array_length(liquido_choose_array) = 0 ? U8_1 : liquido_choose_array[liquido_choose])
 		buffer_write(buffer, buffer_u8, real(dir mod 6))
 		buffer_write(buffer, buffer_u16, real(a))
 		buffer_write(buffer, buffer_u16, real(b))

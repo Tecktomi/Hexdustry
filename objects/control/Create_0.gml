@@ -6,7 +6,7 @@ var a, b, c, flag
 #endregion
 #region MACROS
 	#region VERSION
-		#macro FILE_VERSION 2026_11_02
+		#macro FILE_VERSION 2026_11_04
 		#macro PROCESADOR_VERSION 2026_10_02
 		#macro GRABACION_VERSION 2026_10_16
 	#endregion
@@ -142,6 +142,8 @@ var a, b, c, flag
 	#macro TILE_WIDTH 32
 	#macro TILE_HEIGHT 28
 	#macro LOGIC_DT (1 / 60)
+	#macro U8_1 255
+	#macro U16_1 65535
 	SIZE_SIZE = [1, 3, 7, 12, 19, 27, 37]
 	DESFACE_A = [[0, 0, -1, -1, 0, 0], [1, 0, 0, 0, 0, 1]]
 	DESFACE_B = [[-1, -2, -1, 1, 2, 1], [-1, -2, -1, 1, 2, 1]]
@@ -717,7 +719,7 @@ L = {}
 	server_buscando_lan_step = 0
 	EQUIPO_COLOR = [ #bfbfbf, #ff0000, #0000ff, #00ff00, #ffff00, #ff00ff, #00ffff, #ffffff, #000000, #7f0000, #007f00, #00007f, #7f7f00, #7f007f, #007f7f]
 	jugador = 2
-	EQUIPO_LIMIT = 2
+	EQUIPO_LIMIT = 3
 #endregion
 #region UI
 	#macro ui_fondo #282828
@@ -786,7 +788,7 @@ L = {}
 	android_clic = false
 #endregion
 #region IA
-	IA = true
+	IA = false
 	ia_grid_real = ds_grid_create(xsize, ysize)
 	ds_grid_clear(ia_grid_real, infinity)
 	ia_grid_camino = ds_grid_create(xsize, ysize)
@@ -970,6 +972,8 @@ null_dron = {
 	move_dis : 0,
 	move_x : 0,
 	move_y : 0,
+	move_a : 0,
+	move_b : 0,
 	target_a : 0,
 	target_b : 0,
 	last_dir : -1,

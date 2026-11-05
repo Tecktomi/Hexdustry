@@ -11,7 +11,7 @@ function eliminar_jugador(_jugador){
 		server_jugadores_nombre[_jugador] = ""
 		if server_pvp{
 			_jugador = _jugador + 2
-			if EQUIPO_LIMIT = real(_jugador)
+			if EQUIPO_LIMIT = real(_jugador) + 1
 				EQUIPO_LIMIT--
 			if servidor
 				jugador_recursos[_jugador] = array_create(rss_max, 0)

@@ -36,6 +36,8 @@ function game_terminar(motivo, destino = MENU_PRINCIPAL){
 			menu = destino
 			GRABANDO = false
 			REPRODUCIENDO = false
+			if destino = MENU_PRINCIPAL
+				reset_sesion()
 		}
 		return true
 	}

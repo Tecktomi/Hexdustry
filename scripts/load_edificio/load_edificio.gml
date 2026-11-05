@@ -1,16 +1,12 @@
 function load_edificio(buffer, edificio = control.null_edificio){
 	with control{
-		var mask = buffer_read(buffer, buffer_u64), c = 0, temp_target_dron = -1, flag = false, a
-		if mask & (1 << c++){
+		var mask = buffer_read(buffer, buffer_u64), c = 0, temp_target_dron = U16_1, a
+		if mask & (1 << c++)
 			edificio.select = real(buffer_read(buffer, buffer_f64))
-			flag = true
-		}
-		if mask & (1 << c++){
+		if mask & (1 << c++)
 			edificio.mode = true
-			flag = true
-		}
-		if flag and tag_edificio_seteable[edificio.index]
-			set_edificio(edificio.mode, edificio.select, edificio)
+		if tag_edificio_seteable[edificio.index]
+			set_edificio(edificio.mode, edificio.select, edificio,, true)
 		if mask & (1 << c++) edificio.input_index = real(buffer_read(buffer, buffer_u8))
 		if mask & (1 << c++) edificio.output_index = real(buffer_read(buffer, buffer_u8))
 		if mask & (1 << c++) edificio.proceso = real(buffer_read(buffer, buffer_f64))

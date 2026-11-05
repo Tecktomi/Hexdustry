@@ -296,8 +296,32 @@ function dron_logic(){
 					}
 				}
 			}
+			//Seguir instrucciones
+			else if dron.modo = DRON_MOVER{
+				if index = idd_bombardero{
+					if dron.step <= dron_step[index]{
+						dron.dir += 0.02 * angle_difference(point_direction(dron.x, dron.y, dron.move_xmove, dron.move_ymove) + random_range(-0.01, 0.01), dron.dir)
+						vel *= 0.9
+					}
+					else
+						vel *= 1.2
+					dron.x += lengthdir_x(vel, dron.dir)
+					dron.y += lengthdir_y(vel, dron.dir)
+				}
+				else if tag_drones_terrestres[index]
+					dron_move_terrestre(dron)
+				else if tag_dron_marino[index]
+					dron_move_acuatico(dron)
+				else{
+					dron.dir += 0.05 * angle_difference(point_direction(dron_x, dron_y, dron.move_xmove, dron.move_ymove), dron.dir)
+					dron.x += vel * dron.move_xmove
+					dron.y += vel * dron.move_ymove
+					if --dron.move_dis <= 0
+						dron.modo = DRON_IDLE
+				}
+			}
 			//Target edificios y drones
-			else if dron.target != null_edificio{
+			else if dron.target != null_edificio or true{
 				minu = max(0, chunk_x - dron_alcance_chunk_x[index])
 				maxu = min(chunk_xsize - 1, chunk_x + dron_alcance_chunk_x[index])
 				minv = max(0, chunk_y - dron_alcance_chunk_y[index])
@@ -365,7 +389,8 @@ function dron_logic(){
 								}
 								if dir = -1
 									dron.modo = DRON_IDLE
-								dron.move_dir = dir
+								else
+									dron.move_dir = dir
 							}
 							dron.dir += 0.05 * angle_difference(60 * dron.move_dir + 30, dron.dir)
 							dron.x += vel * COS_ANGLE_DIR[dron.move_dir]
@@ -416,7 +441,8 @@ function dron_logic(){
 							}
 							if array_length(_posibles) = 0
 								dron.modo = DRON_IDLE
-							dron.move_dir = array_choose(_posibles)
+							else
+								dron.move_dir = array_choose(_posibles)
 						}
 						dron.dir += 0.05 * angle_difference(60 * dron.move_dir + 30, dron.dir)
 						dron.x += vel * COS_ANGLE_DIR[dron.move_dir]
@@ -502,30 +528,6 @@ function dron_logic(){
 							}
 						}
 					}
-				}
-			}
-			//Seguir instrucciones
-			else if dron.modo = DRON_MOVER{
-				if index = idd_bombardero{
-					if dron.step <= dron_step[index]{
-						dron.dir += 0.02 * angle_difference(point_direction(dron.x, dron.y, dron.move_xmove, dron.move_ymove) + random_range(-0.01, 0.01), dron.dir)
-						vel *= 0.9
-					}
-					else
-						vel *= 1.2
-					dron.x += lengthdir_x(vel, dron.dir)
-					dron.y += lengthdir_y(vel, dron.dir)
-				}
-				else if tag_drones_terrestres[index]
-					dron_move_terrestre(dron)
-				else if tag_dron_marino[index]
-					dron_move_acuatico(dron)
-				else{
-					dron.dir += 0.05 * angle_difference(point_direction(dron_x, dron_y, dron.move_xmove, dron.move_ymove), dron.dir)
-					dron.x += vel * dron.move_xmove
-					dron.y += vel * dron.move_ymove
-					if --dron.move_dis <= 0
-						dron.modo = DRON_IDLE
 				}
 			}
 			//Alejarse de los enemigos cercanos

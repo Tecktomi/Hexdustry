@@ -6,6 +6,6 @@ function handle_jugador_nuevo(buffer){
 		array_push(chat_time, image_index)
 		server_jugadores_nombre[slot] = player_name
 		array_copy(jugador_recursos[slot + 2], 0, carga_inicial, 0, rss_max)
-		EQUIPO_LIMIT = slot + 2
+		EQUIPO_LIMIT = slot + 3
 	}
 }

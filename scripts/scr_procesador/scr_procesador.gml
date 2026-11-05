@@ -47,7 +47,7 @@ function scr_procesador(edificio = control.null_edificio){
 					val = ceil(val2)
 				else if pc[2] = 7 and type2 = "number"
 					val = sqr(val2)
-				else if pc[2] = 8 and type2 = "number"
+				else if pc[2] = 8 and type2 = "number" and val2 >= 0
 					val = sqrt(val2)
 				else if pc[2] = 9
 					val = pi
@@ -269,8 +269,12 @@ function scr_procesador(edificio = control.null_edificio){
 					temp_edificio = edificio.procesador_link[clamp(pc[5], 0, b - 1)]
 				if not (temp_edificio.index = id_memoria or temp_edificio.index = id_procesador or temp_edificio.index = id_antena)
 					continue
-				if pc[2] = 0
-					val = real(edificio.variables[pc[3]])
+				if pc[2] = 0{
+					if is_real(edificio.variables[pc[3]])
+						val = real(edificio.variables[pc[3]])
+					else
+						continue
+				}
 				else
 					val = real(pc[3])
 				if temp_edificio.index = id_memoria

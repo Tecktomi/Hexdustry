@@ -376,7 +376,7 @@ function menu_editor(){
 					mision_choosing_coord = false
 			}
 			//Barril de Pintura
-			if keyboard_check(vk_lcontrol) and editor_herramienta = 0 and build_index < terreno_max{
+			if keyboard_check(vk_lcontrol) and editor_herramienta = 0 and build_index >= 0 and build_index < terreno_max{
 				if mouse_check_button_pressed(mb_left)
 					//Aplicar cambio
 					if mx = last_mx and my = last_my{
@@ -691,8 +691,11 @@ function menu_editor(){
 						flag = true
 					}
 				}
-				if flag
+				if flag{
 					save_escenario_buffer("Scenarios/" + save_file)
+					get_file = 0
+					input_layer = 0
+				}
 			}
 			if draw_boton(120, 120, L.cancelar, ui_rojo,,,, 1) or keyboard_check_pressed(vk_escape){
 				keyboard_clear(vk_escape)

@@ -160,6 +160,7 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 					misiones[0].target_num = 35
 				}
 			}
+			modo_misiones = (game_mode = GAMEMODE_MISIONES)
 			if game_mode = GAMEMODE_INFINITO
 				misiones = array_create(0, null_mision)
 			else if game_mode = GAMEMODE_MISIONES{
