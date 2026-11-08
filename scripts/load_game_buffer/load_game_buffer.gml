@@ -7,6 +7,13 @@ function load_game_buffer(buffer){
 		if mapa = -1{
 			seed = buffer_read(buffer, buffer_u32)
 			biome_seed = buffer_read(buffer, buffer_u8)
+			var _xsize = real(buffer_read(buffer, buffer_u16))
+			var _ysize = real(buffer_read(buffer, buffer_u16))
+			if _xsize != xsize or _ysize != ysize{
+				xsize = _xsize
+				ysize = _ysize
+				set_grid_size()
+			}
 			while not generar_bioma(biome_seed){}
 		}
 		else if mapa < -1{

@@ -32,6 +32,7 @@ function load_edificio(buffer, edificio = control.null_edificio){
 		if mask & (1 << c++) encender_luz(true, edificio)
 		if mask & (1 << c++){
 			var len = real(buffer_read(buffer, buffer_u16))
+			array_resize(edificio.procesador_link, 0)
 			for(a = 0; a < len; a++)
 				array_push(edificio.procesador_link, edificios_totales[real(buffer_read(buffer, buffer_u16))])
 		}

@@ -6,9 +6,9 @@ var a, b, c, flag
 #endregion
 #region MACROS
 	#region VERSION
-		#macro FILE_VERSION 2026_11_04
+		#macro FILE_VERSION 2026_11_07
 		#macro PROCESADOR_VERSION 2026_10_02
-		#macro GRABACION_VERSION 2026_10_16
+		#macro GRABACION_VERSION 2026_11_07
 	#endregion
 	#region RANGE
 		#macro CABLE_RANGE 90
@@ -144,6 +144,8 @@ var a, b, c, flag
 	#macro LOGIC_DT (1 / 60)
 	#macro U8_1 255
 	#macro U16_1 65535
+	#macro CHUNK_WIDTH 4
+	#macro CHUNK_HEIGHT 12
 	SIZE_SIZE = [1, 3, 7, 12, 19, 27, 37]
 	DESFACE_A = [[0, 0, -1, -1, 0, 0], [1, 0, 0, 0, 0, 1]]
 	DESFACE_B = [[-1, -2, -1, 1, 2, 1], [-1, -2, -1, 1, 2, 1]]
@@ -441,8 +443,6 @@ L = {}
 	ysize = 256
 	xsizeplus = xsize + 1
 	ysizeplus = ysize + 1
-	#macro CHUNK_WIDTH 4
-	#macro CHUNK_HEIGHT 12
 	chunk_xsize = ceil(xsize / CHUNK_WIDTH)
 	chunk_ysize = ceil(ysize / CHUNK_HEIGHT)
 	prev_x = 0
@@ -659,7 +659,7 @@ L = {}
 		[6, 1, 1, 0, 1, 0],
 		[7, 0, 0, 1, 1, 1],
 		[8, 0, 0, 0, 1, 1, 1],
-		[9, 1, 1, 1]]
+		[9, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]]
 	procesador_instrucciones_nombre = [
 		"Continuar",
 		"Asignar variable",

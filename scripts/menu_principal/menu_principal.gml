@@ -104,6 +104,8 @@ function menu_principal(){
 					var temp_text = file_format(save_files[a])
 					if draw_sprite_boton(save_files_png[a],, xpos, ypos, 96, 96, 1){
 						tecnologia = true
+						mapa_editado = true
+						GRABANDO = false
 						load_escenario_buffer("Scenarios/" + save_files[a])
 						game_start()
 					}
@@ -277,9 +279,10 @@ function menu_principal(){
 					if draw_boton(xpos, ypos, grabaciones[a],,,,, 1){
 						buffer_delete(buffer_grabacion)
 						buffer_grabacion = buffer_load($"Grabaciones/{grabaciones[a]}")
-						grabacion_read()
-						clear_edificios()
-						game_start()
+						if grabacion_read(){
+							clear_edificios()
+							game_start()
+						}
 					}
 					if draw_sprite_boton(spr_basura,, xpos + text_x, ypos,,, 1){
 						file_delete($"Grabaciones/{grabaciones[a]}")

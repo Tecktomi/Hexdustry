@@ -214,7 +214,7 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 		draw_set_halign(fa_left)
 	}
 }
-//Pausa - Menú
+////Pausa - Menú
 if pausa = 1 and menu_pausa()
 	exit
 //Solo pausa

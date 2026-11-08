@@ -5,5 +5,11 @@ function string_digits_ext(text){
 			output += string_char_at(text, a)
 	if string_digits(output) = ""
 		return ""
+	try{
+		real(output)
+	}
+	catch(_error){
+		return ""
+	}
 	return output
 }

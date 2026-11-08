@@ -8,6 +8,8 @@ function save_game_buffer(buffer){
 			if mapa = -1{
 				buffer_write(buffer, buffer_u32, seed)
 				buffer_write(buffer, buffer_u8, biome_seed)
+				buffer_write(buffer, buffer_u16, xsize)
+				buffer_write(buffer, buffer_u16, ysize)
 			}
 		}
 		buffer_write(buffer, buffer_u32, sim_seed[0])

@@ -49,7 +49,6 @@ function step(){
 							build_agua = bool(cambio.data.agua)
 							build_agua_x = real(cambio.data.agua_x)
 							build_agua_y = real(cambio.data.agua_y)
-							array_copy(edificios_salida_drones, 0, cambio.data.edificios_salida_drones, 0, array_length(cambio.data.edificios_salida_drones))
 						}
 						else if tag_edificio_tuberia[cambio.data.index]{
 							liquido_choose_array = array_create(2, real(cambio.data.liquido))

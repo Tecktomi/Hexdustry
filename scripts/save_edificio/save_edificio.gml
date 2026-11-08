@@ -55,14 +55,10 @@ function save_edificio(buffer, edificio = control.null_edificio){
 		if mask & (1 << c++) buffer_write(buffer, buffer_u16, real(edificio.edificio_index))
 		c++
 		if mask & (1 << c++){
-			len = array_length(edificio.procesador_link)
-			len_2 = 0
-			for(a = 0; a < len; a++){
-				if edificio.procesador_link[a] != null_edificio and edificio.procesador_link[a].punteros[ptre_total] != -1
-					len_2++
-				else
-					array_delete(edificio.procesador_link, a--, 1)
-			}
+			for(a = array_length(edificio.procesador_link) - 1; a >= 0; a--)
+				if edificio.procesador_link[a] = null_edificio or edificio.procesador_link[a].punteros[ptre_total] = -1
+					array_delete(edificio.procesador_link, a, 1)
+			len_2 = array_length(edificio.procesador_link)
 			buffer_write(buffer, buffer_u16, real(len_2))
 			for(a = 0; a < len_2; a++)
 				buffer_write(buffer, buffer_u16, real(edificio.procesador_link[a].punteros[ptre_total]))

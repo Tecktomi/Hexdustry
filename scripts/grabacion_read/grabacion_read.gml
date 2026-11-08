@@ -2,9 +2,9 @@ function grabacion_read(){
 	with control{
 		grabacion_size = buffer_get_size(buffer_grabacion)
 		buffer_seek(buffer_grabacion, buffer_seek_start, 0)
-		if buffer_read(buffer_grabacion, buffer_u32) != GRABACION_VERSION{
+		if grabacion_size < 4 or buffer_read(buffer_grabacion, buffer_u32) != GRABACION_VERSION{
 			show_message(L.archivo_obsoleto)
-			exit
+			return false
 		}
 		REPRODUCIENDO = true
 		GRABANDO = false
@@ -24,5 +24,6 @@ function grabacion_read(){
 		dificultad = buffer_read(buffer_grabacion, buffer_s8)
 		tecnologia = buffer_read(buffer_grabacion, buffer_bool)
 		grabacion_pos = buffer_tell(buffer_grabacion)
+		return true
 	}
 }

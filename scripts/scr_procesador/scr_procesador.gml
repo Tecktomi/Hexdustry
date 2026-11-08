@@ -1,3 +1,6 @@
+function valid_number(val){
+	return is_real(val) and not is_nan(val)
+}
 function scr_procesador(edificio = control.null_edificio){
 	with control{
 		var index = edificio.index
@@ -76,12 +79,12 @@ function scr_procesador(edificio = control.null_edificio){
 				}
 				else if pc[4] = 1 and not(type2 = "string" or type3 = "string")
 					val = val2 - val3
-				else if pc[4] = 2 and not (type2 = "string")
+				else if pc[4] = 2 and not (type2 = "string") and ((val2 > 0 and val2 = floor(val2) and val2 < 256) or type3 != "string")
 					val = val2 * val3
 				else if pc[4] = 3 and not (type2 = "string" or type3 = "string")
 					val = (val3 = 0 ? NaN : val2 / val3)
 				else if pc[4] = 4 and not (type2 = "string" or type3 = "string")
-					val = (val3 = 0 ? NaN : val2 div val3)
+					val = (val3 = 0 ? NaN : (val2 / val3 < 0 ? ceil(val2 / val3) : floor(val2 / val3)))
 				else if pc[4] = 5 and not (type2 = "string" or type3 = "string")
 					val = (val3 = 0 ? NaN : val2 % val3)
 				else if pc[4] = 6 and not (type2 = "string" or type3 = "string")
@@ -124,7 +127,7 @@ function scr_procesador(edificio = control.null_edificio){
 					continue
 				}
 				if pc[6] = 0{
-					if not is_real(edificio.variables[pc[7]])
+					if not valid_number(edificio.variables[pc[7]])
 						continue
 					val3 = clamp(edificio.variables[pc[7]] - 1, 0, array_length(edificio.instruccion) - 1)
 				}
@@ -148,10 +151,10 @@ function scr_procesador(edificio = control.null_edificio){
 				b = array_length(edificio.procesador_link)
 				temp_edificio = null_edificio
 				val = -1
-				if b = 0 or not is_real(pc[6])
+				if b = 0 or not valid_number(pc[6])
 					continue
 				if pc[5] = 0{
-					if not is_real(edificio.variables[pc[6]])
+					if not valid_number(edificio.variables[pc[6]])
 						continue
 					temp_edificio = edificio.procesador_link[clamp(edificio.variables[pc[6]], 0, b - 1)]
 				}
@@ -161,12 +164,12 @@ function scr_procesador(edificio = control.null_edificio){
 				if pc[2] = b++
 					val = real(temp_edificio.punteros[ptre_activo] >= 0)
 				else if pc[2] = b++{
-					if not is_real(pc[4])
+					if not valid_number(pc[4])
 						continue
 					val2 = 0
 					if pc[3] = 0{
 						val2 = edificio.variables[pc[4]]
-						if not is_real(val2)
+						if not valid_number(val2)
 							continue
 					}
 					else
@@ -224,10 +227,10 @@ function scr_procesador(edificio = control.null_edificio){
 				b = array_length(edificio.procesador_link)
 				temp_edificio = null_edificio
 				val = undefined
-				if b = 0 or not is_real(pc[2])
+				if b = 0 or not valid_number(pc[2])
 					continue
 				if pc[1] = 0{
-					if not is_real(edificio.variables[pc[2]])
+					if not valid_number(edificio.variables[pc[2]])
 						continue
 					temp_edificio = edificio.procesador_link[clamp(edificio.variables[pc[2]], 0, b - 1)]
 				}
@@ -237,7 +240,7 @@ function scr_procesador(edificio = control.null_edificio){
 					val = edificio.variables[pc[5]]
 				else
 					val = pc[5]
-				if is_real(val){
+				if valid_number(val){
 					if pc[3] = 0{
 						if bool(val)
 							set_edificio_instruccion(temp_edificio, cambio_activar)
@@ -258,10 +261,10 @@ function scr_procesador(edificio = control.null_edificio){
 				b = array_length(edificio.procesador_link)
 				val = 0
 				temp_edificio = null_edificio
-				if b = 0 or not is_real(pc[3]) or not is_real(pc[5])
+				if b = 0 or not valid_number(pc[3]) or not valid_number(pc[5])
 					continue
 				if pc[4] = 0{
-					if not is_real(edificio.variables[pc[5]])
+					if not valid_number(edificio.variables[pc[5]])
 						continue
 					temp_edificio = edificio.procesador_link[clamp(edificio.variables[pc[5]], 0, b - 1)]
 				}
@@ -270,7 +273,7 @@ function scr_procesador(edificio = control.null_edificio){
 				if not (temp_edificio.index = id_memoria or temp_edificio.index = id_procesador or temp_edificio.index = id_antena)
 					continue
 				if pc[2] = 0{
-					if is_real(edificio.variables[pc[3]])
+					if valid_number(edificio.variables[pc[3]])
 						val = real(edificio.variables[pc[3]])
 					else
 						continue
@@ -293,10 +296,10 @@ function scr_procesador(edificio = control.null_edificio){
 				val = undefined
 				val2 = 0
 				temp_edificio = null_edificio
-				if b = 0 or not is_real(pc[4]) or not is_real(pc[6])
+				if b = 0 or not valid_number(pc[4]) or not valid_number(pc[6])
 					continue
 				if pc[5] = 0{
-					if not is_real(edificio.variables[pc[6]])
+					if not valid_number(edificio.variables[pc[6]])
 						continue
 					temp_edificio = edificio.procesador_link[clamp(edificio.variables[pc[6]], 0, b - 1)]
 				}
@@ -308,7 +311,7 @@ function scr_procesador(edificio = control.null_edificio){
 					val2 = edificio.variables[pc[4]]
 				else
 					val2 = pc[4]
-				if not is_real(val2)
+				if not valid_number(val2)
 					continue
 				if pc[1] = 0
 					val = edificio.variables[pc[2]]
@@ -328,10 +331,10 @@ function scr_procesador(edificio = control.null_edificio){
 				b = array_length(edificio.procesador_link)
 				val = ""
 				temp_edificio = null_edificio
-				if b = 0 or not is_real(pc[2])
+				if b = 0 or not valid_number(pc[2])
 					continue
 				if pc[1] = 0{
-					if not is_real(edificio.variables[pc[2]])
+					if not valid_number(edificio.variables[pc[2]])
 						continue
 					temp_edificio = edificio.procesador_link[clamp(edificio.variables[pc[2]], 0, b - 1)]
 				}
@@ -351,7 +354,7 @@ function scr_procesador(edificio = control.null_edificio){
 					for(i = 0; i < b; i++){
 						j = 0
 						if pc[4 + 2 * i] = 0{
-							if not is_real(pc[5 + 2 * i]){
+							if not valid_number(pc[5 + 2 * i]){
 								flag = false
 								continue
 							}
@@ -359,7 +362,7 @@ function scr_procesador(edificio = control.null_edificio){
 						}
 						else
 							j = pc[5 + 2 * i]
-						if not is_real(j) and pc[3] != 8{
+						if not valid_number(j) and not (pc[3] = 8 and i = 2){
 							flag = false
 							continue
 						}
