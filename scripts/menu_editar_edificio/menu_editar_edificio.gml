@@ -4,7 +4,6 @@ function menu_editar_edificio(){
 		var edificio = show_menu_build, index = edificio.index, a, xpos, ypos, b, size, buffer, flag, temp_text, temp_complex, aa, bb, c, len, temp_array_real
 		if index = id_procesador{
 			draw_boton_text_counter = 0
-			show_smoke = false
 			draw_set_color(ui_color_procesador)
 			draw_roundrect(100, 100, room_width - 100, room_height - 100, false)
 			draw_set_color(ui_texto)
@@ -135,7 +134,6 @@ function menu_editar_edificio(){
 		}
 		else if index = id_memoria{
 			draw_boton_text_counter = 0
-			show_smoke = false
 			draw_set_color(ui_color_procesador)
 			draw_rectangle((room_width - 840) / 2, 100, (room_width + 840) / 2, 480, false)
 			draw_set_color(ui_texto)
@@ -412,7 +410,6 @@ function menu_editar_edificio(){
 		}
 		if mouse_check_button_pressed(mb_right) or keyboard_check_pressed(vk_escape){
 			procesador_link_handle = -1
-			show_smoke = true
 			keyboard_clear(vk_escape)
 			mouse_clear(mb_right)
 			show_menu = false

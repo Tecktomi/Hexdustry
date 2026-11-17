@@ -53,7 +53,7 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 	dibujar_edificios()
 	var show_humo = (grafic_humo and pausa = 0 and enciclopedia = 0 and ((image_index mod 5) = 0))
 	var chunk, edificio, index, aaa, bbb, center_x, center_y, alert_count, _jugador, proceso, d, edificio_2, dir
-	//DIBUJO SECUNDARIO
+	//Dibujo Secundario
 	for(a = min_chunka; a < max_chunka; a++)
 		for(b = min_chunkb; b < max_chunkb; b++){
 			chunk = chunk_edificios_draw[# a, b]
@@ -147,6 +147,108 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 				}
 			}
 		}
+	//Dibujo Drones
+	var cam_center_x = (room_width / 2 + camx) / zoom, cam_center_y = (room_height / 2 + camy) / zoom, dron, angle, cosa, sina
+	for(a = array_length(drones_no_aereos) - 1; a >= 0; a--){
+		dron = drones_no_aereos[a]
+		if dron.a >= mina and dron.b >= minb and dron.a < maxa and dron.b < maxb
+			draw_dron(dron, EQUIPO_COLOR[dron.jugador])
+		else{
+			draw_set_color(EQUIPO_COLOR[dron.jugador])
+			angle = arctan2(cam_center_y - dron.y, cam_center_x - dron.x)
+			cosa = cos(angle)
+			sina = sin(angle)
+			draw_line(room_width / 2 - 60 * cosa, room_height / 2 - 60 * sina, room_width / 2 - 90 * cosa, room_height / 2 - 90 * sina)
+		}
+	}
+	//Munición
+	var municion
+	for(a = array_length(municiones) - 1; a >= 0; a--){
+		municion = municiones[a]
+		if municion.tipo != municion_tipo_fuego{
+			if municion.x >= world_minx and municion.y >= world_miny and municion.x <= world_maxx and municion.y <= world_maxy{
+				draw_set_color(c_black)
+				draw_circle_off(municion.x, municion.y, 2, false)
+				draw_set_color(c_yellow)
+				draw_line_off(municion.origen_x, municion.origen_y, municion.x, municion.y)
+			}
+			if municion.rastreador and (image_index mod 10) < 5{
+				draw_set_color(c_red)
+				draw_set_alpha(0.3)
+				draw_circle_off(municion.x, municion.y, 10, false)
+				draw_set_alpha(1)
+			}
+		}
+	}
+	//Efectos estáticos
+	var efecto
+	for(a = array_length(efectos) - 1; a >= 0; a--){
+		efecto = efectos[a]
+		if efecto.x >= world_minx and efecto.y >= world_miny and efecto.x <= world_maxx and efecto.y <= world_maxy
+			draw_sprite_off(efecto.sprite, efecto.subsprite, efecto.x, efecto.y)
+		efecto.subsprite += efecto.frame_speed
+		if --efecto.tiempo <= 0{
+			efectos[a] = array_last(efectos)
+			array_pop(efectos)
+		}
+	}
+	//Humo
+	var humo
+	for(a = array_length(humos) - 1; a >= 0; a--){
+		humo = humos[a]
+		if humo.a >= mina and humo.b >= minb and humo.a < maxa and humo.b < maxb{
+			draw_sprite_off(spr_blur_32, 0, humo.x, humo.y)
+			humo.x += humo.hmove
+			humo.y += humo.vmove
+			humo.hmove *= 0.99
+			humo.vmove *= 0.99
+		}
+		if --humo.time <= 0{
+			humos[a] = array_last(humos)
+			array_pop(humos)
+		}
+	}
+	//Fuego
+	draw_set_alpha(0.4)
+	var fuego
+	for(a = array_length(fuegos) - 1; a >= 0; a--){
+		fuego = fuegos[a]
+		if fuego.a >= mina and fuego.b >= minb and fuego.a < maxa and fuego.b < maxb{
+			draw_set_color(fuegos_color[fuego.intensidad])
+			draw_circle_off(fuego.x, fuego.y, 10, false)
+			fuego.x += fuego.hmove
+			fuego.y += fuego.vmove
+			fuego.hmove *= 0.9
+			fuego.vmove *= 0.9
+			if random(1) < 0.05 and grafic_humo
+				array_push(humos, add_humo(fuego.x, fuego.y, fuego.a, fuego.b, random_range(-1, 1), random_range(-1, 1), 15))
+		}
+		if --fuego.intensidad <= 0{
+			fuegos[a] = array_last(fuegos)
+			array_pop(fuegos)
+			if grafic_humo and fuego.a >= mina and fuego.b >= minb and fuego.a < maxa and fuego.b < maxb
+				array_push(humos, add_humo(fuego.x, fuego.y, fuego.a, fuego.b, random_range(-1, 1), random_range(-1, 1), 15))
+		}
+	}
+	draw_set_alpha(1)
+	//Drones aereos
+	for(a = array_length(drones_aereos) - 1; a >= 0; a--){
+		dron = drones_aereos[a]
+		if dron.a >= mina and dron.b >= minb and dron.a < maxa and dron.b < maxb
+			draw_dron(dron, EQUIPO_COLOR[dron.jugador])
+		else{
+			draw_set_color(EQUIPO_COLOR[dron.jugador])
+			angle = arctan2(cam_center_y - dron.y, cam_center_x - dron.x)
+			cosa = cos(angle)
+			sina = sin(angle)
+			draw_line(room_width / 2 - 60 * cosa, room_height / 2 - 60 * sina, room_width / 2 - 90 * cosa, room_height / 2 - 90 * sina)
+		}
+	}
+	for(a = array_length(drones) - 1; a >= 0; a--){
+		dron = drones[a]
+		if dron.a >= mina and dron.b >= minb and dron.a < maxa and dron.b < maxb
+			draw_vida(dron.x * zoom - camx, dron.y * zoom - camy, dron.vida, dron.vida_max)
+	}
 	//Reconstruir
 	if keyboard_check(CONTROL_REPARAR)
 		for(a = mina; a < maxa; a++)
@@ -181,6 +283,89 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 			draw_set_alpha(1)
 		}
 	}
+	//Clima
+	if clima_step < clima
+		clima_step += 0.01
+	else if clima_step > clima
+		clima_step -= 0.01
+	if clima_step > 0{
+		if clima_tipo = clima_arena{
+			draw_set_color(#C2B280)
+			draw_set_alpha(0.06 * clima_step)
+			a = 2 * irandom(99)
+			clima_array[a] = irandom(room_width)
+			clima_array[a + 1] = irandom(room_height)
+			clima_array[a + 2] = irandom_range(100, 200)
+			for(a = 0; a < 198; a += 3){
+				clima_array[a] -= 20
+				draw_circle(clima_array[a], clima_array[a + 1], clima_array[a + 2], false)
+			}
+			draw_set_alpha(0.6 * clima_step)
+		}
+		if clima_tipo = clima_nieve{
+			draw_set_color(c_white)
+			draw_set_alpha(0.5 * clima_step)
+			repeat(100){
+				a = irandom(room_width)
+				b = irandom(room_height)
+				c = irandom_range(20, 40)
+				draw_line(a, b, a - sqrt(2) * c * zoom, b + sqrt(2) * c * zoom)
+			}
+			draw_set_alpha(0.03 * clima_step)
+			a = 2 * irandom_range(50, 99)
+			clima_array[a] = irandom(room_width)
+			clima_array[a + 1] = irandom(room_height)
+			clima_array[a + 2] = irandom_range(100, 200)
+			for(a = 100; a < 199; a += 3){
+				clima_array[a] -= 4
+				draw_circle(clima_array[a], clima_array[a + 1], clima_array[a + 2], false)
+			}
+			draw_set_alpha(0.3 * clima_step)
+		}
+		else if clima_tipo = clima_lluvia{
+			draw_set_color(c_blue)
+			draw_set_alpha(1)
+			a = 2 * irandom(49)
+			clima_array[a] = irandom(room_width)
+			clima_array[a + 1] = irandom(room_height)
+			for(a = 0; a < 100; a += 2){
+				clima_array[a] -= 10 * sqrt(2)
+				clima_array[a + 1] += 20
+				draw_line(clima_array[a], clima_array[a + 1], clima_array[a] - 10 * sqrt(2), clima_array[a + 1] + 20)
+			}
+			draw_set_alpha(0.03 * clima_step)
+			draw_set_color(c_gray)
+			a = 2 * irandom_range(50, 99)
+			clima_array[a] = irandom(room_width)
+			clima_array[a + 1] = irandom(room_height)
+			clima_array[a + 2] = irandom_range(100, 200)
+			for(a = 100; a < 199; a += 3){
+				clima_array[a] -= 4
+				draw_circle(clima_array[a], clima_array[a + 1], clima_array[a + 2], false)
+			}
+			draw_set_alpha(0.3 * clima_step)
+			draw_set_color(c_black)
+		}
+		draw_rectangle(0, 0, room_width, room_height, false)
+		draw_set_alpha(clima_step)
+		draw_sprite_stretched(spr_vineta, 0, 0, 0, room_width, room_height)
+		draw_set_alpha(1)
+	}
+	//Refresh background
+	if image_index mod 60 = 0
+		for(a = 0; a < chunk_xsize; a++)
+			for(b = 0; b < chunk_ysize; b++)
+				if background_bool[# a, b] and chunk_last_load[# a, b] < image_index - 60{
+					background_bool[# a, b] = false
+					if background[# a, b] != spr_hexagono
+						sprite_delete(background[# a, b])
+					background[# a, b] = spr_hexagono
+					if chunk_edificios_background[# a, b] != spr_hexagono
+						sprite_delete(chunk_edificios_background[# a, b])
+					chunk_edificios_background[# a, b] = spr_hexagono
+					chunk_edificios_dirty[# a, b] = true
+				}
+	draw_set_color(c_black)
 	draw_set_halign(fa_left)
 	draw_set_valign(fa_top)
 	if mision_actual >= 0 and win = 0
@@ -219,8 +404,6 @@ if pausa = 1 and menu_pausa()
 	exit
 //Solo pausa
 if pausa = 2{
-	for(a = array_length(drones) - 1; a >= 0; a--)
-		draw_dron(drones[a], true)
 	image_index--
 	draw_set_color(ui_texto)
 	draw_set_halign(fa_center)

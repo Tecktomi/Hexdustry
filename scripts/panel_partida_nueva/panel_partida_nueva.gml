@@ -129,7 +129,7 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 				multiplicador_vida_enemigos = 50
 				cheat = false
 				if game_mode = GAMEMODE_OLEADAS{
-					misiones = array_create(1, null_mision)
+					misiones = array_create(1, def_mision())
 					misiones[0].objetivo = idm_sobrevivir_oleadas
 					misiones[0].target_num = 15
 				}
@@ -142,7 +142,7 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 				multiplicador_vida_enemigos = 100
 				cheat = false
 				if game_mode = GAMEMODE_OLEADAS{
-					misiones = array_create(1, null_mision)
+					misiones = array_create(1, def_mision())
 					misiones[0].objetivo = idm_sobrevivir_oleadas
 					misiones[0].target_num = 22
 				}
@@ -155,7 +155,7 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 				multiplicador_vida_enemigos = 160
 				cheat = false
 				if game_mode = GAMEMODE_OLEADAS{
-					misiones = array_create(1, null_mision)
+					misiones = array_create(1, def_mision())
 					misiones[0].objetivo = idm_sobrevivir_oleadas
 					misiones[0].target_num = 35
 				}
@@ -170,7 +170,7 @@ function panel_partida_nueva(xpos = 0, ypos = 0, param = {}){
 				mision_actual = -1
 			}
 			else if game_mode = GAMEMODE_IA{
-				misiones = array_create(1, null_mision)
+				misiones = array_create(1, def_mision())
 				misiones[0].objetivo = idm_destruir_edificio
 				misiones[0].target_id = id_nucleo
 				misiones[0].target_num = 1

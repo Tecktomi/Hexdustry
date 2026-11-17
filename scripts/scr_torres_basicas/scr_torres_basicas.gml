@@ -1,6 +1,6 @@
 function scr_torres_basicas(edificio = control.null_edificio){
 	with control{
-		var index = edificio.index, center_x = edificio.center_x, center_y = edificio.center_y, _jugador = edificio.jugador
+		var index = edificio.index, center_x = edificio.center_x, center_y = edificio.center_y, _jugador = edificio.jugador, alcance = edificio_alcance[index] * clima_vision
 		if index = id_lanzallamas
 			edificio.array_real[5] = 0
 		if edificio_flujo[index]
@@ -63,7 +63,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 			if ++edificio.proceso >= edificio_proceso[index] and abs(angle_difference(angle, edificio.select)) < 0.5{
 				edificio.proceso = 0
 				var dis = point_distance(center_x, center_y, target_x, target_y)
-				if dis > edificio_alcance[index]{
+				if dis > alcance{
 					array_disorder_remove(edificio.target.torres, edificio, ptre_torre_dron)
 					edificio.target = null_dron
 					continue
@@ -93,7 +93,7 @@ function scr_torres_basicas(edificio = control.null_edificio){
 								edificio.sound = sound_play(snd_flame_cont, center_x, center_y, 0.1)
 							}
 							if dron != null_dron{
-								var disi = edificio_alcance[index], x1 = center_x + disi * cos(degtorad(angle) + pi / 6), y1 = center_y - disi * sin(degtorad(angle) + pi / 6)
+								var disi = alcance, x1 = center_x + disi * cos(degtorad(angle) + pi / 6), y1 = center_y - disi * sin(degtorad(angle) + pi / 6)
 								var x2 = center_x + disi * cos(degtorad(angle) - pi / 6), y2 = center_y - disi * sin(degtorad(angle) - pi / 6), total_dmg = tiro_struct.dmg * dmg_factor
 								var c, d, temp_dron, temp_array_dron
 								for(d = 1; d < EQUIPO_LIMIT; d++) if aliados[# _jugador, d]{

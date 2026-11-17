@@ -66,14 +66,6 @@ function server_set_instrucciones(edificio = control.null_edificio, cambio, data
 			buffer_write(buffer, buffer_u16, real(data.desa))
 			buffer_write(buffer, buffer_u16, real(data.desb))
 		}
-		if online{
-			if servidor
-				server_broadcast_buffer(buffer)
-			else
-				network_send_packet(socket, buffer, buffer_tell(buffer))
-		}
-		if GRABANDO
-			grabar_buffer(buffer)
-		buffer_delete(buffer)
+		server_send(buffer)
 	}
 }

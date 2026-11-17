@@ -23,6 +23,7 @@ function grabacion_read(){
 		multiplicador_vida_enemigos = buffer_read(buffer_grabacion, buffer_f64)
 		dificultad = buffer_read(buffer_grabacion, buffer_s8)
 		tecnologia = buffer_read(buffer_grabacion, buffer_bool)
+		clima_change = buffer_read(buffer_grabacion, buffer_u64)
 		grabacion_pos = buffer_tell(buffer_grabacion)
 		return true
 	}

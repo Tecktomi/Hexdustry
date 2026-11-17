@@ -8,7 +8,9 @@ function edificio_curar(edificio = control.null_edificio, vida){
 			var b, temp_edificio
 			for(b = array_length(edificio.reparadores_cercanos) - 1; b >= 0; b--){
 				temp_edificio = edificio.reparadores_cercanos[b]
-				array_remove(temp_edificio.edificios_cercanos_heridos, edificio)
+				var _i = array_get_index(temp_edificio.edificios_cercanos_heridos, edificio)
+				if _i >= 0
+					array_delete(temp_edificio.edificios_cercanos_heridos, _i, 1)
 				if temp_edificio.link = edificio{
 					temp_edificio.link = null_edificio
 					change_energia(0, temp_edificio)

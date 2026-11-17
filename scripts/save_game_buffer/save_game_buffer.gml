@@ -26,6 +26,8 @@ function save_game_buffer(buffer){
 		buffer_write(buffer, buffer_f64, multiplicador_vida_enemigos)
 		buffer_write(buffer, buffer_s8, dificultad)
 		buffer_write(buffer, buffer_bool, modo_misiones)
+		buffer_write(buffer, buffer_u8, clima)
+		buffer_write(buffer, buffer_u64, clima_change)
 		var len, a, b, c, _mision, len_2, temp_texto, edificio, dron, red, flujo, i, municion, mask
 		#region Misiones
 			save_mision(buffer)
@@ -44,11 +46,21 @@ function save_game_buffer(buffer){
 		buffer_write(buffer, buffer_u32, image_index)
 		for(b = 0; b < EQUIPOS; b++){
 			var mask_tecnologia = 0, mask_tecnologia_desbloqueable = 0
-			for(a = 0; a < edificio_max; a++){
+			for(a = 0; a < 64; a++){
 				if edificio_tecnologia[b, a]
 					mask_tecnologia |= 1 << a
 				if edificio_tecnologia_desbloqueable[b, a]
 					mask_tecnologia_desbloqueable |= 1 << a
+			}
+			buffer_write(buffer, buffer_u64, mask_tecnologia)
+			buffer_write(buffer, buffer_u64, mask_tecnologia_desbloqueable)
+			mask_tecnologia = 0
+			mask_tecnologia_desbloqueable = 0
+			for(a = 64; a < edificio_max; a++){
+				if edificio_tecnologia[b, a]
+					mask_tecnologia |= 1 << (a - 64)
+				if edificio_tecnologia_desbloqueable[b, a]
+					mask_tecnologia_desbloqueable |= 1 << (a - 64)
 			}
 			buffer_write(buffer, buffer_u64, mask_tecnologia)
 			buffer_write(buffer, buffer_u64, mask_tecnologia_desbloqueable)

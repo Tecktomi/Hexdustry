@@ -75,6 +75,7 @@ function dibujar_fondo(editor = 0){
 					background_bool[# a, b] = true
 					surface_reset_target()
 				}
+				chunk_last_load[# a, b] = image_index
 				draw_sprite_stretched(background[# a, b], 0, -camx + a * xpos, -camy + b * ypos, xsize2, ysize2)
 			}
 	}

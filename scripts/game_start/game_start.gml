@@ -18,6 +18,7 @@ function game_start(_nucleo = true, mision_cumplida = false){
 			    while not generar_bioma(biome_seed){}
 			}
 		}
+		clima_change = irandom_range(6_000, 12_000)
 		if GRABANDO{
 			if mapa < 0{
 				buffer_write(buffer_grabacion, buffer_u32, seed)
@@ -30,7 +31,15 @@ function game_start(_nucleo = true, mision_cumplida = false){
 			buffer_write(buffer_grabacion, buffer_f64, multiplicador_vida_enemigos)
 			buffer_write(buffer_grabacion, buffer_s8, dificultad)
 			buffer_write(buffer_grabacion, buffer_bool, tecnologia)
+			buffer_write(buffer_grabacion, buffer_u64, clima_change)
 		}
+		if mapa > 0 and DEFAULT_MAPS[mapa] = "Desierto"
+			clima_tipo = 1
+		else if mapa > 0 and DEFAULT_MAPS[mapa] = "Nieve"
+			clima_tipo = 2
+		else
+			clima_tipo = 0
+		clima_vision = 1
 		redo_pathfind()
 		if mision_cumplida
 			oleadas = false
@@ -48,6 +57,8 @@ function game_start(_nucleo = true, mision_cumplida = false){
 		mision_counter = 0
 		oleadas_timer = 0
 		timer = 0
+		clima = 0
+		clima_step = 0
 		win = 0
 		oleada_count = 0
 		edificios_construidos = 0

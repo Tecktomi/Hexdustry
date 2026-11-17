@@ -16,8 +16,14 @@ function mover_dron(dron = control.null_dron, x, y, manual = false){
 		}
 		else if dron.index = idd_minero{
 			if edificio_bool[# aa, bb] and edificio_id[# aa, bb].index = id_almacen{
-				dron.modo = DRON_MINAR
+				dron.modo = DRON_DEJAR_RSS
 				dron.target = edificio_id[# aa, bb]
+				exit
+			}
+			else if ore[# aa, bb] != -1{
+				dron.modo = DRON_MINAR
+				dron.move_x = x
+				dron.move_y = y
 				exit
 			}
 		}

@@ -34,7 +34,6 @@ function handle_construir(buffer){
 				build_agua = bool(data.agua)
 				build_agua_x = real(data.agua_x)
 				build_agua_y = real(data.agua_y)
-				array_copy(edificios_salida_drones, 0, data.edificios_salida_drones, 0, array_length(data.edificios_salida_drones))
 			}
 			else if tag_edificio_tuberia[index]{
 				liquido_choose_array = array_create(2, real(data.liquido))

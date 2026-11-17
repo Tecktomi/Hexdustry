@@ -8,6 +8,7 @@ function menu_first_time(){
 			if draw_boton(room_width / 2, ypos, text_array[a], ui_verde){
 				FIRST_TIME = false
 				idioma = a
+				save_setting("", "Idioma", idioma, true)
 				set_idioma()
 				load_escenario_buffer("mision_1.txt")
 				game_start()

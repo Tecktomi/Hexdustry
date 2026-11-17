@@ -19,6 +19,8 @@ function clear_edificios(){
 				array_resize(drones_jugador_index[a, b], 0)
 		}
 		array_resize(drones, 0)
+		array_resize(drones_aereos, 0)
+		array_resize(drones_no_aereos, 0)
 		for(a = 0; a < chunk_xsize; a++)
 			for(b = 0; b < chunk_ysize; b++){
 				array_resize(chunk_edificios[# a, b], 0)

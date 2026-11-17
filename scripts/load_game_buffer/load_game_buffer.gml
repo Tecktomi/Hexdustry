@@ -37,6 +37,9 @@ function load_game_buffer(buffer){
 		multiplicador_vida_enemigos = buffer_read(buffer, buffer_f64)
 		dificultad = buffer_read(buffer, buffer_s8)
 		modo_misiones = buffer_read(buffer, buffer_bool)
+		clima = buffer_read(buffer, buffer_u8)
+		clima_change = buffer_read(buffer, buffer_u64)
+		clima_vision = (clima_tipo = 1) ? 1 - 0.5 * clima : 1
 		var a, b, c, d, e, _texto, len
 		#region Misiones
 			load_mision(buffer)
@@ -58,9 +61,15 @@ function load_game_buffer(buffer){
 		for(b = 0; b < EQUIPOS; b++){
 			var mask_tecnologia = buffer_read(buffer, buffer_u64)
 			var mask_tecnologia_desbloqueable = buffer_read(buffer, buffer_u64)
-			for(a = 0; a < edificio_max; a++){
-				array_set(edificio_tecnologia[b], a, bool(mask_tecnologia & (1 << a)))
-				array_set(edificio_tecnologia_desbloqueable[b], a, bool(mask_tecnologia_desbloqueable & (1 << a)))
+			for(a = 0; a < 64; a++){
+				array_set(edificio_tecnologia[b], a, (mask_tecnologia & (1 << a)) != 0)
+				array_set(edificio_tecnologia_desbloqueable[b], a, (mask_tecnologia_desbloqueable & (1 << a)) != 0)
+			}
+			mask_tecnologia = buffer_read(buffer, buffer_u64)
+			mask_tecnologia_desbloqueable = buffer_read(buffer, buffer_u64)
+			for(a = 64; a < edificio_max; a++){
+				array_set(edificio_tecnologia[b], a, (mask_tecnologia & (1 << a - 64)) != 0)
+				array_set(edificio_tecnologia_desbloqueable[b], a, (mask_tecnologia_desbloqueable & (1 << a - 64)) != 0)
 			}
 		}
 		//Construir edificios

@@ -2,9 +2,6 @@ function menu_pausa(_juego = true, _input_layer = 0){
 	with control{
 		var a, b, xpos, ypos, buffer, temp_text, temp_sprite, key, char
 		var _show_idioma = true
-		if _juego
-			for(a = array_length(drones) - 1; a >= 0; a--)
-				draw_dron(drones[a], true)
 		image_index--
 		var color = draw_get_color()
 		draw_set_color(c_black)

@@ -14,8 +14,8 @@
   "exportDir":"",
   "name":"snd_lava",
   "parent":{
-    "name":"SOUNDS",
-    "path":"folders/SOUNDS.yy",
+    "name":"Clima",
+    "path":"folders/SOUNDS/Clima.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

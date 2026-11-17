@@ -27,14 +27,6 @@ function server_construir(index, dir, a, b, _cheat = control.cheat, _jugador = j
 		buffer_write(buffer, buffer_u16, real(b))
 		buffer_write(buffer, buffer_bool, bool(_cheat))
 		buffer_write(buffer, buffer_u8, _jugador)
-		if online{
-			if servidor
-				server_broadcast_buffer(buffer)
-			else
-				network_send_packet(socket, buffer, buffer_tell(buffer))
-		}
-		if GRABANDO
-			grabar_buffer(buffer)
-		buffer_delete(buffer)
+		server_send(buffer)
 	}
 }

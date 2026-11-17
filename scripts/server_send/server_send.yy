@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"server_send",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"server_send",
+  "parent":{
+    "name":"SERVER",
+    "path":"folders/SCRIPTS/ONLINE/SERVER.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

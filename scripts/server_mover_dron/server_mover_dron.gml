@@ -9,14 +9,6 @@ function server_mover_dron(x, y, dron = control.null_dron){
 			buffer_write(buffer, buffer_u32, real(dron.dron_counter))
 		else
 			buffer_write(buffer, buffer_u16, real(dron.punteros[ptrd_total]))
-		if online{
-			if servidor
-				server_broadcast_buffer(buffer)
-			else
-				network_send_packet(socket, buffer, buffer_tell(buffer))
-		}
-		if GRABANDO
-			grabar_buffer(buffer)
-		buffer_delete(buffer)
+		server_send(buffer)
 	}
 }

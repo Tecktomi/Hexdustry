@@ -10,7 +10,7 @@
   "compression":0,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":7.308662,
+  "duration":7.3180046,
   "exportDir":"",
   "name":"snd_horno",
   "parent":{

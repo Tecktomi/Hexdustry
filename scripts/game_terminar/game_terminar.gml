@@ -39,6 +39,12 @@ function game_terminar(motivo, destino = MENU_PRINCIPAL){
 			if destino = MENU_PRINCIPAL
 				reset_sesion()
 		}
+		if sonido{
+			for(var a = 0; a < SONIDOS_MAX; a++)
+				audio_pause_sound(sonido_id[a])
+			if clima
+				audio_pause_sound(clima_tipo = clima_lluvia ? snd_rain : snd_wind)
+		}
 		return true
 	}
 }

@@ -1,10 +1,10 @@
 function menu_principal(){
 	with control{
-		if image_index mod 3600 > 1800{
+		if image_index mod 3600 > 1800 and camx < xsize * 48 - room_width and camy < ysize * 14 - room_height{
 			camx += 0.5
 			camy += 0.5
 		}
-		else{
+		else if camx > 0 and camy > 0{
 			camx -= 0.5
 			camy -= 0.5
 		}
@@ -45,7 +45,7 @@ function menu_principal(){
 				oleadas_tiempo = 90
 				multiplicador_vida_enemigos = 50
 				cheat = false
-				misiones = array_create(1, null_mision)
+				misiones = array_create(1, def_mision())
 				mision = misiones[0]
 				mision.objetivo = idm_sobrevivir_oleadas
 				mision.target_num = 15

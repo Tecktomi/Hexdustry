@@ -60,6 +60,7 @@ function add_dron(a, b, index, _jugador = jugador){
 		array_disorder_push(drones, dron, ptrd_total)
 		array_disorder_push(drones_jugador_index[_jugador, index], dron, ptrd_jugador_index)
 		dron_chunk_push(dron)
+		array_disorder_push(dron_aereo[index] ? drones_aereos : drones_no_aereos, dron, ptrd_aereo)
 		return dron
 	}
 }

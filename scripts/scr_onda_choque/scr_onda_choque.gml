@@ -10,7 +10,7 @@ function scr_onda_choque(edificio = control.null_edificio){
 			var dis, center_x, center_y, a, temp_complex, temp_array_dron, b, c, dron, temp_dis, _jugador = edificio.jugador
 			edificio_encender(edificio, false,, false)
 			if edificio.select = 0{
-				dis = edificio_alcance[index]
+				dis = edificio_alcance[index] * clima_vision
 				center_x = edificio.center_x
 				center_y = edificio.center_y
 				for(a = array_length(edificio.target_chunks) - 1; a >= 0; a--){
@@ -33,7 +33,7 @@ function scr_onda_choque(edificio = control.null_edificio){
 			}
 			else if --edificio.select <= 0{
 				edificio.select = 0
-				dis = edificio_alcance[index] + 10
+				dis = edificio_alcance[index] * clima_vision + 10
 				var stun = 30 + 10 * edificio.modulo, total_dmg = 0
 				center_x = edificio.center_x
 				center_y = edificio.center_y

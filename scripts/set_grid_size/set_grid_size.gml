@@ -83,7 +83,9 @@ function set_grid_size(){
 		ds_grid_resize(chunk_edificios_background, chunk_xsize, chunk_ysize)
 		ds_grid_resize(chunk_edificios_dirty, chunk_xsize, chunk_ysize)
 		ds_grid_resize(chunk_explosion, chunk_xsize, chunk_ysize)
+		ds_grid_resize(chunk_last_load, chunk_xsize, chunk_ysize)
 		ds_grid_clear(chunk_edificios_dirty, true)
+		ds_grid_clear(chunk_last_load, 0)
 		for(a = 0; a < chunk_xsize; a++)
 			for(b = 0; b < chunk_ysize; b++){
 				if background[# a, b] != spr_hexagono

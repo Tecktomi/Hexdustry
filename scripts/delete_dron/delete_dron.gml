@@ -1,10 +1,11 @@
 function delete_dron(dron = control.null_dron){
 	with control{
-		var _jugador = dron.jugador, a, edificio, temp_dron
+		var _jugador = dron.jugador, a, edificio, temp_dron, index = dron.index
 		array_disorder_remove(drones, dron, ptrd_total)
 		dron_chunk_remove(dron)
 		array_disorder_remove(drones_jugador[_jugador], dron, ptrd_jugador)
-		array_disorder_remove(drones_jugador_index[_jugador, dron.index], dron, ptrd_jugador_index)
+		array_disorder_remove(drones_jugador_index[_jugador, index], dron, ptrd_jugador_index)
+		array_disorder_remove(dron_aereo[index] ? drones_aereos : drones_no_aereos, dron, ptrd_aereo)
 		//Dron enemigo
 		if _jugador = JUGADOR_IA{
 			enemigos_eliminados++
@@ -52,7 +53,7 @@ function delete_dron(dron = control.null_dron){
 			edificio = edificios_index[id_planta_de_reciclaje][a]
 			if edificio.select = -1 and edificio.jugador = _jugador and point_distance(dron.x, dron.y, edificio.center_x, edificio.center_y) < PLANTA_RECICLAJE_RANGE{
 				edificio.mode = false
-				edificio.select = dron.index
+				edificio.select = index
 				break
 			}
 		}

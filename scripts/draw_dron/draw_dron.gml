@@ -1,5 +1,11 @@
 function draw_dron(dron = control.null_dron, color){
 	var aa = dron.x, bb = dron.y, index = dron.index
+	if dron_aereo[index]{
+		draw_set_alpha(energia_solar / 2)
+		draw_set_color(c_black)
+		draw_circle_off(aa + 20, bb + 20, 10, false)
+		draw_set_alpha(1)
+	}
 	if index = idd_tanque{
 		draw_sprite_off(dron_sprite[index], image_index / 2, aa, bb,,, dron.dir_move)
 		draw_sprite_off(dron_sprite_color[index], 0, aa, bb,,, dron.dir)

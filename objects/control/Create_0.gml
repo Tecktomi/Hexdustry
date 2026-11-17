@@ -6,9 +6,9 @@ var a, b, c, flag
 #endregion
 #region MACROS
 	#region VERSION
-		#macro FILE_VERSION 2026_11_07
+		#macro FILE_VERSION 2026_11_08
 		#macro PROCESADOR_VERSION 2026_10_02
-		#macro GRABACION_VERSION 2026_11_07
+		#macro GRABACION_VERSION 2026_11_08
 	#endregion
 	#region RANGE
 		#macro CABLE_RANGE 90
@@ -138,6 +138,11 @@ var a, b, c, flag
 		#macro cambio_silo_target 14
 		#macro cambio_vaciar_deposito 15
 		#macro cambio_target_drones 16
+	#endregion
+	#region Clima
+		#macro clima_lluvia 0
+		#macro clima_arena 1
+		#macro clima_nieve 2
 	#endregion
 	#macro TILE_WIDTH 32
 	#macro TILE_HEIGHT 28
@@ -531,7 +536,6 @@ L = {}
 		audio_pause_sound(sonido_id[a])
 	}
 	input_layer = 0
-	show_smoke = true
 	oleadas_timer = 0
 	multiplicador_vida_enemigos = 75
 	permitir_nuclear = true
@@ -610,6 +614,15 @@ L = {}
 	pausa_controles = -1
 	game_mode = 0
 	dron_counter = 0
+	clima = 0
+	clima_change = irandom_range(6_000, 12_000)
+	clima_step = 0
+	clima_vision = 1
+	clima_tipo = 0
+	clima_array = array_create(200, 0)
+	fuegos_color = array_create(50)
+	for(a = 0; a < 50; a++)
+		fuegos_color[a] = make_color_hsv(a, 127, 255)
 #endregion
 #region Misiones
 	null_mision = def_mision()
@@ -993,7 +1006,8 @@ null_dron = {
 	#macro ptrd_total 2
 	#macro ptrd_jugador_index 3
 	#macro ptrd_chunk_jugador 4
-	#macro ptrd_MAX 5
+	#macro ptrd_aereo 5
+	#macro ptrd_MAX 6
 #endregion
 null_edificio.target = null_dron
 null_dron.target_dron = null_dron
@@ -1003,6 +1017,8 @@ drones_jugador = array_create(EQUIPOS, array_create(0, null_dron))
 for(a = 0; a < EQUIPOS; a++)
 	drones_jugador[a] = array_create(0, null_dron)
 drones_propios = drones_jugador[jugador]
+drones_aereos = array_create(0, null_dron)
+drones_no_aereos = array_create(0, null_dron)
 null_beta = {
 	recurso : 0,
 	terrenos : array_create(0, 0),
@@ -1109,9 +1125,11 @@ null_explosion_mark = {
 	chunk_edificios_background = ds_grid_create(chunk_xsize, chunk_ysize)
 	chunk_edificios_dirty = ds_grid_create(chunk_xsize, chunk_ysize)
 	chunk_explosion = ds_grid_create(chunk_xsize, chunk_ysize)
+	chunk_last_load = ds_grid_create(chunk_xsize, chunk_ysize)
 	ds_grid_clear(chunk_edificios_dirty, true)
 	ds_grid_clear(background, spr_hexagono)
 	ds_grid_clear(chunk_edificios_background, spr_hexagono)
+	ds_grid_clear(chunk_last_load, 0)
 	for(a = 0; a < chunk_xsize; a++)
 		for(b = 0; b < chunk_ysize; b++){
 			chunk_dron[# a, b] = array_create(0, null_dron)
@@ -1318,7 +1336,7 @@ function def_dron(nombre, sprite = spr_arana, sprite_color = spr_arana_color, vi
 	idd_titan = def_dron("Titán", spr_titan, spr_titan_leg, 1500, 80, 400, [idr_bronce, idr_acero, idr_uranio_bruto, idr_modulos], [30, 40, 75, 5], 3000,, 1.1, 75, 15)
 	idd_bombardero = def_dron("Bombardero", spr_bombardero,, 800, 50, 40, [idr_bronce, idr_aluminio, idr_uranio_bruto, idr_modulos], [30, 40, 50, 5], 6000, true, 3, 80, 12)
 	idd_reconstructor = def_dron("Reconstructor", spr_reconstructor,, 100, 30, 40, [idr_aluminio, idr_bateria, idr_modulos], [30, 20, 1], 100, true, 2, 5)
-	idd_minero = def_dron("Minero", spr_tanque, spr_minero, 200, 50, 250, [idr_hierro, idr_acero, idr_electronicos, idr_modulos], [50, 25, 10, 1], 1200,, 0.7, 60, 5)
+	idd_minero = def_dron("Minero", spr_tanque, spr_minero, 200, 50, 50, [idr_hierro, idr_acero, idr_electronicos, idr_modulos], [50, 25, 10, 1], 1200,, 0.7, 60, 5)
 	idd_barco = def_dron("Barco", spr_barco,, 300, 30, 400, [idr_acero, idr_aluminio, idr_bronce], [30, 20, 30], 800,, 1.8, 15, 3)
 	idd_destructor = def_dron("Destructor", spr_destructor,, 1200, 50, 450, [idr_acero, idr_aluminio, idr_electronicos, idr_uranio_bruto], [150, 100, 50, 50], 1600,, 1.2, 200, 12)
 #endregion
