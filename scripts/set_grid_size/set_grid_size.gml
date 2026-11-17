@@ -88,12 +88,12 @@ function set_grid_size(){
 		ds_grid_clear(chunk_last_load, 0)
 		for(a = 0; a < chunk_xsize; a++)
 			for(b = 0; b < chunk_ysize; b++){
-				if background[# a, b] != spr_hexagono
-					sprite_delete(background[# a, b])
-				background[# a, b] = spr_hexagono
-				if chunk_edificios_background[# a, b] != spr_hexagono
-					sprite_delete(chunk_edificios_background[# a, b])
-				chunk_edificios_background[# a, b] = spr_hexagono
+				if background[# a, b] != null_surface and surface_exists(background[# a, b])
+					surface_free(background[# a, b])
+				background[# a, b] = null_surface
+				if chunk_edificios_background[# a, b] != null_surface and surface_exists(chunk_edificios_background[# a, b])
+					surface_free(chunk_edificios_background[# a, b])
+				chunk_edificios_background[# a, b] = null_surface
 				chunk_dron[# a, b] = array_create(0, null_dron)
 				chunk_edificios[# a, b] = array_create(0, null_edificio)
 				for(c = 0; c < EQUIPOS; c++){

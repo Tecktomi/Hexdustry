@@ -1,6 +1,6 @@
 function menu_first_time(){
 	with control{
-		dibujar_fondo(1)
+		dibujar_fondo()
 		var text_array = ["English", "Español", "Русский"], ypos = 200
 		draw_set_halign(fa_center)
 		draw_set_font(font_titulo)

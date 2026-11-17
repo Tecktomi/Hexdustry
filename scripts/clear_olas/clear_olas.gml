@@ -1,11 +1,12 @@
 function clear_olas(){
 	with control{
-		var a, b, bmod, temp_terreno, c, i, aa, bb
+		var a, b, bmod, temp_terreno, c, i, aa, bb, chunk_b
 		ds_grid_clear(terreno_pared_index, 0)
 		ds_grid_clear(background_bool, false)
 		ds_grid_clear(tile_animado_chunk, 0)
 		for(b = 0; b < ysize; b++){
 			bmod = b & 1
+			chunk_b = floor(b / CHUNK_HEIGHT)
 			for(a = 0; a < xsize; a++){
 				temp_terreno = terreno[# a, b]
 				//Olas en Agua Salada
@@ -20,7 +21,7 @@ function clear_olas(){
 							c += 1 << i
 					}
 					terreno_pared_index[# a, b] = c
-					ds_grid_add(tile_animado_chunk, floor(a / CHUNK_WIDTH), floor(b / CHUNK_HEIGHT), 1)
+					tile_animado_chunk[# floor(a / CHUNK_WIDTH), chunk_b]++
 				}
 				//Paredes
 				else if terreno_pared[temp_terreno]{
@@ -36,7 +37,7 @@ function clear_olas(){
 					terreno_pared_index[# a, b] = 7 - c
 				}
 				else if temp_terreno = idt_lava
-					ds_grid_add(tile_animado_chunk, floor(a / CHUNK_WIDTH), floor(b / CHUNK_HEIGHT), 1)
+					tile_animado_chunk[# floor(a / CHUNK_WIDTH), chunk_b]++
 				//Borrar ores
 				if not terreno_caminable[temp_terreno]{
 					ore[# a, b] = -1

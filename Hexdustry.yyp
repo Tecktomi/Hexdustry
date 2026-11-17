@@ -10,6 +10,7 @@
   },
   "defaultScriptType":1,
   "Folders":[
+    {"$GMFolder":"","%Name":"Fuentes","folderPath":"folders/Fuentes.yy","name":"Fuentes","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"SCRIPTS","folderPath":"folders/SCRIPTS.yy","name":"SCRIPTS","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"CORE","folderPath":"folders/SCRIPTS/CORE.yy","name":"CORE","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"GENERAL","folderPath":"folders/SCRIPTS/CORE/GENERAL.yy","name":"GENERAL","resourceType":"GMFolder","resourceVersion":"2.0",},
@@ -79,7 +80,6 @@
     {"$GMIncludedFile":"","%Name":"Nieve.lang","CopyToMask":-1,"filePath":"datafiles","name":"Nieve.lang","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Nieve.png","CopyToMask":-1,"filePath":"datafiles","name":"Nieve.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Nieve.txt","CopyToMask":-1,"filePath":"datafiles","name":"Nieve.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"o.lang","CopyToMask":-1,"filePath":"datafiles","name":"o.lang","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Pradera.lang","CopyToMask":-1,"filePath":"datafiles","name":"Pradera.lang","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Pradera.png","CopyToMask":-1,"filePath":"datafiles","name":"Pradera.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Pradera.txt","CopyToMask":-1,"filePath":"datafiles","name":"Pradera.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -671,6 +671,7 @@
     {"id":{"name":"spr_mortero_2","path":"sprites/spr_mortero_2/spr_mortero_2.yy",},},
     {"id":{"name":"spr_mortero","path":"sprites/spr_mortero/spr_mortero.yy",},},
     {"id":{"name":"spr_muro_reforzado","path":"sprites/spr_muro_reforzado/spr_muro_reforzado.yy",},},
+    {"id":{"name":"spr_muro","path":"sprites/spr_muro/spr_muro.yy",},},
     {"id":{"name":"spr_nieve","path":"sprites/spr_nieve/spr_nieve.yy",},},
     {"id":{"name":"spr_null_image","path":"sprites/spr_null_image/spr_null_image.yy",},},
     {"id":{"name":"spr_olaje_1","path":"sprites/spr_olaje_1/spr_olaje_1.yy",},},

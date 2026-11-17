@@ -1,57 +1,23 @@
-function dibujar_fondo(editor = 0){
+function dibujar_fondo(){
 	with control{
-		var temp_step, a, b, temp_complex, aa, bb, c, d, surf = undefined, aplus
-		if editor = 1{
-			temp_step = image_index / 10
-			for(a = mina; a < maxa; a++){
-				aplus = a + 1
-				for(b = minb; b < maxb; b++){
-					c = terreno[# a, b]
-					d = ore[# a, b]
-					if terreno_pared[c]
-						draw_sprite_off(terreno_sprite[c], terreno_pared_index[# a, b], pre_abtox[# aplus, b + 1], pre_abtoy[# aplus, b + 1])
-					else
-						draw_sprite_off(terreno_sprite[c], 0, pre_abtox[# aplus, b + 1], pre_abtoy[# aplus, b + 1])
-					if d >= 0
-						draw_sprite_off(ore_sprite[d], round(ore_random[# a, b]) + 2 * (ore_amount[# a, b] < 50), pre_abtox[# aplus, b + 1], pre_abtoy[# aplus, b + 1])
-					if c = idt_lava
-						draw_sprite_off(spr_lava_animacion, temp_step + 16 * ore_random[# a, b], pre_abtox[# aplus, b + 1], pre_abtoy[# aplus, b + 1])
-					else if c = idt_agua_salada
-						draw_sprite_off(olas[terreno_pared_index[# a, b]], temp_step + 16 * ore_random[# a, b], pre_abtox[# aplus, b + 1], pre_abtoy[# aplus, b + 1])
-				}
-			}
-			exit
-		}
-		//Fondos animados
-		if editor = 2{
-			var minc, mind, maxc, maxd
-			temp_step = image_index / 10
-			for(a = min_chunka; a < max_chunka; a++)
-				for(b = min_chunkb; b < max_chunkb; b++)
-					if tile_animado_chunk[# a, b] > 0{
-						maxd = min((b + 1) * CHUNK_HEIGHT, ysize)
-						for(c = a * CHUNK_WIDTH; c < min((a + 1) * CHUNK_WIDTH, xsize); c++)
-							for(d = b * CHUNK_HEIGHT; d < maxd; d++){
-								if terreno[# c, d] = idt_agua_salada
-									draw_sprite_off(olas[terreno_pared_index[# c, d]], temp_step + 16 * ore_random[# c, d], pre_abtox[# c + 1, d + 1], pre_abtoy[# c + 1, d + 1])
-								else if terreno[# c, d] = idt_lava
-									draw_sprite_off(spr_lava_animacion, temp_step + 16 * ore_random[# c, d], pre_abtox[# c + 1, d + 1], pre_abtoy[# c + 1, d + 1])
-							}
-					}
-			exit
-		}
-		var chunkhplus = CHUNK_HEIGHT + 1, xsize2 = (CHUNK_WIDTH * 48 + 8) * zoom, ysize2 = chunkhplus * 14 * zoom, xpos = CHUNK_WIDTH * 48 * zoom, ypos = CHUNK_HEIGHT * 14 * zoom
-		var minc, mind, maxc, maxd, f, des_a, des_b, cplus, e
+		var a, b, c, d, e, f, CHUNK_WIDTH_48 = CHUNK_WIDTH * 48, CHUNK_HEIGHT_14 = CHUNK_HEIGHT * 14
+		var xpos = CHUNK_WIDTH_48 * zoom, ypos = CHUNK_HEIGHT_14 * zoom, maxd, des_a, des_b, cplus, surf, temp_step
 		for(a = min_chunka; a < max_chunka; a++)
 			for(b = min_chunkb; b < max_chunkb; b++){
-				if not background_bool[# a, b]{
-					if not surface_exists(background_surface)
-						background_surface = surface_create((CHUNK_WIDTH * 48 + 8), (CHUNK_HEIGHT + 1) * 14)
-					surface_set_target(background_surface)
+				surf = background[# a, b]
+				if not background_bool[# a, b] or not surface_exists(surf){
+					if not surface_exists(surf){
+						surf = null_surface
+						while array_length(fondo_pool) > 0 and not surface_exists(surf)
+							surf = array_pop(fondo_pool)
+						if not surface_exists(surf)
+							surf = surface_create((CHUNK_WIDTH * 48 + 8), (CHUNK_HEIGHT + 1) * 14)
+					}
+					surface_set_target(surf)
 					draw_clear_alpha(c_black, 0)
 					maxd = min((b + 1) * CHUNK_HEIGHT, ysize)
-					des_a = a * CHUNK_WIDTH * 48
-					des_b = b * CHUNK_HEIGHT * 14
+					des_a = a * CHUNK_WIDTH_48
+					des_b = b * CHUNK_HEIGHT_14
 					for(c = a * CHUNK_WIDTH; c < min((a + 1) * CHUNK_WIDTH, xsize); c++){
 						cplus = c + 1
 						for(d = b * CHUNK_HEIGHT; d < maxd; d++){
@@ -67,16 +33,47 @@ function dibujar_fondo(editor = 0){
 						}
 					}
 					for(c = array_length(chunk_explosion[# a, b]) - 1; c >= 0; c--)
-						draw_sprite_off(spr_explosion_mark, 0, chunk_explosion[# a, b][c].x - des_a, chunk_explosion[# a, b][c].y - des_b,,, chunk_explosion[# a, b][c].rot,, 0.3)
+						draw_sprite_ext(spr_explosion_mark, 0, chunk_explosion[# a, b][c].x - des_a, chunk_explosion[# a, b][c].y - des_b, 1, 1, chunk_explosion[# a, b][c].rot, c_white, 0.3)
 					array_resize(chunk_explosion[# a, b], 0)
-					if background[# a, b] != spr_hexagono
-						sprite_delete(background[# a, b])
-					background[# a, b] = sprite_create_from_surface(background_surface, 0, 0, CHUNK_WIDTH * 48 + 8, chunkhplus * 14, false, false, 0, 0)
 					background_bool[# a, b] = true
+					background[# a, b] = surf
 					surface_reset_target()
 				}
 				chunk_last_load[# a, b] = image_index
-				draw_sprite_stretched(background[# a, b], 0, -camx + a * xpos, -camy + b * ypos, xsize2, ysize2)
+				draw_surface_ext(surf, -camx + a * xpos, -camy + b * ypos, zoom, zoom, 0, c_white, 1)
 			}
+		if grafic_tile_animation and zoom >= 1{
+			temp_step = image_index / 10
+			for(a = min_chunka; a < max_chunka; a++)
+				for(b = min_chunkb; b < max_chunkb; b++)
+					if tile_animado_chunk[# a, b] > 0{
+						maxd = min((b + 1) * CHUNK_HEIGHT, ysize)
+						for(c = a * CHUNK_WIDTH; c < min((a + 1) * CHUNK_WIDTH, xsize); c++)
+							for(d = b * CHUNK_HEIGHT; d < maxd; d++){
+								if terreno[# c, d] = idt_agua_salada
+									draw_sprite_off(olas[terreno_pared_index[# c, d]], temp_step + 16 * ore_random[# c, d], pre_abtox[# c + 1, d + 1], pre_abtoy[# c + 1, d + 1])
+								else if terreno[# c, d] = idt_lava
+									draw_sprite_off(spr_lava_animacion, temp_step + 16 * ore_random[# c, d], pre_abtox[# c + 1, d + 1], pre_abtoy[# c + 1, d + 1])
+							}
+					}
+		}
+		//Refresh background
+		if image_index mod 60 = 0
+			for(a = 0; a < chunk_xsize; a++)
+				for(b = 0; b < chunk_ysize; b++)
+					if surface_exists(background[# a, b]) and chunk_last_load[# a, b] < image_index - 60{
+						background_bool[# a, b] = false
+						if surface_exists(background[# a, b]){
+							if array_length(fondo_pool) < 64
+								array_push(fondo_pool, background[# a, b])
+							else
+								surface_free(background[# a, b])
+						}
+						background[# a, b] = null_surface
+						if surface_exists(chunk_edificios_background[# a, b])
+							surface_free(chunk_edificios_background[# a, b])
+						chunk_edificios_background[# a, b] = null_surface
+						chunk_edificios_dirty[# a, b] = true
+					}
 	}
 }

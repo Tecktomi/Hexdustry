@@ -1,6 +1,6 @@
 function menu_editor(){
 	with control{
-		dibujar_fondo(1)
+		dibujar_fondo()
 		dibujar_edificios()
 		draw_set_halign(fa_left)
 		draw_sprite(spr_vineta, 0, 0, 0)

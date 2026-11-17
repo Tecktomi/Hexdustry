@@ -521,6 +521,10 @@ L = {}
 	minb = 0
 	maxa = 0
 	maxb = 0
+	min_chunka = 0
+	min_chunkb = 0
+	max_chunka = 0
+	max_chunkb = 0
 	world_minx = 0
 	world_maxx = 0
 	world_miny = 0
@@ -607,7 +611,6 @@ L = {}
 	comprable_texto = ""
 	draw_once = true
 	light_surface = surface_create(room_width, room_height)
-	background_surface = surface_create((CHUNK_WIDTH * 48 + 8), (CHUNK_HEIGHT + 1) * 14)
 	spawn_x = 0
 	spawn_y = 0
 	pausa_setting = 0
@@ -623,6 +626,8 @@ L = {}
 	fuegos_color = array_create(50)
 	for(a = 0; a < 50; a++)
 		fuegos_color[a] = make_color_hsv(a, 127, 255)
+	null_surface = -1
+	fondo_pool = array_create(0, null_surface)
 #endregion
 #region Misiones
 	null_mision = def_mision()
@@ -1127,8 +1132,8 @@ null_explosion_mark = {
 	chunk_explosion = ds_grid_create(chunk_xsize, chunk_ysize)
 	chunk_last_load = ds_grid_create(chunk_xsize, chunk_ysize)
 	ds_grid_clear(chunk_edificios_dirty, true)
-	ds_grid_clear(background, spr_hexagono)
-	ds_grid_clear(chunk_edificios_background, spr_hexagono)
+	ds_grid_clear(background, null_surface)
+	ds_grid_clear(chunk_edificios_background, null_surface)
 	ds_grid_clear(chunk_last_load, 0)
 	for(a = 0; a < chunk_xsize; a++)
 		for(b = 0; b < chunk_ysize; b++){
@@ -1508,7 +1513,7 @@ function def_edificio_2(energia = 0, agua = 0, agua_consumo = 0, agua_tipo = arr
 	id_horno_de_lava = def_edificio("Horno de Lava", 2.5, spr_horno_lava, spr_horno_lava_encendido, 400, 70, scr_horno_lava,,,, [idr_acero, idr_concreto], [20, 15], 70, true, false, [idr_cobre, idr_hierro, idr_arena, idr_sal], [10, 10, 10, 10], true, false, [idr_bronce, idr_acero, idr_vidrio]); def_edificio_2(, 10, 45, [idl_lava],,,, 1)
 	id_generador_geotermico = def_edificio("Generador Geotérmico", 2, spr_generador_geotermico,, 200,, scr_generador_geotermico, scr_draw_bomba_par, false,, [idr_cobre, idr_acero, idr_concreto], [50, 20, 20]); def_edificio_2(-90, 10, 30, [idl_agua, idl_agua_salada],,,, 2)
 	id_taladro_de_explosion = def_edificio("Taladro de Explosión", 3, spr_taladro_explosivo,, 300, 300, scr_taladro_explosion,,,, [idr_hierro, idr_acero, idr_concreto], [100, 40, 30], 40, true, false, [idr_explosivo], [10], true, false, [idr_cobre, idr_carbon, idr_hierro, idr_piedra, idr_arena, idr_piedra_cuprica, idr_piedra_ferrica, idr_piedra_sulfatada, idr_uranio_bruto, idr_sal, idr_bauxita]); def_edificio_2(,,,,,,, 1)
-	id_muro = def_edificio("Muro", 1, spr_hexagono,, 500,,,,,, [idr_concreto], [2]); def_edificio_2(,,,,,, true, -1)
+	id_muro = def_edificio("Muro", 1, spr_muro,, 500,,,,,, [idr_concreto], [2]); def_edificio_2(,,,,,, true, -1)
 	id_puerto_de_carga = def_edificio("Puerto de Carga", 2, spr_punto_carga,, 150,,,,,, [idr_cobre, idr_bronce, idr_electronicos], [25, 10, 5]); def_edificio_2(,,,,,,, 1)
 	id_ensambladora = def_edificio("Ensambladora", 2.5, spr_ensambladora,, 250, 240, scr_ensambladora,,,, [idr_hierro, idr_bronce, idr_acero, idr_vidrio], [25, 15, 10, 10], 40, true, false, [idr_cobre, idr_plastico], [10, 10], true, false, [idr_electronicos]); def_edificio_2(70,,,,,,, 1)
 	id_planta_nuclear = def_edificio("Planta Nuclear", 4, spr_planta_nuclear,, 500,, scr_planta_nuclear,,,, [idr_cobre, idr_acero, idr_concreto, idr_electronicos], [400, 80, 50, 20], 10, true, false, [idr_uranio_enriquecido], [10]); def_edificio_2(-500, 150, 200, [idl_agua, idl_agua_salada],,,, 3)

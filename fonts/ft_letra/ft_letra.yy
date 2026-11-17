@@ -470,8 +470,8 @@
   "maintainGms1Font":false,
   "name":"ft_letra",
   "parent":{
-    "name":"Hexdustry",
-    "path":"Hexdustry.yyp",
+    "name":"Fuentes",
+    "path":"folders/Fuentes.yy",
   },
   "pointRounding":0,
   "ranges":[

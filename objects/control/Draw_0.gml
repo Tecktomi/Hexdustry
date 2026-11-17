@@ -42,10 +42,7 @@ if menu = MENU_CAMPANNA{
 }
 //Dibujo
 if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
-	var t = get_timer()
 	dibujar_fondo()
-	if grafic_tile_animation and zoom >= 1
-		dibujar_fondo(2)
 	for(a = min_chunka; a < max_chunka; a++)
 		for(b = min_chunkb; b < max_chunkb; b++)
 			for(c = array_length(chunk_explosion[# a, b]) - 1; c >= 0; c--)
@@ -351,20 +348,6 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 		draw_sprite_stretched(spr_vineta, 0, 0, 0, room_width, room_height)
 		draw_set_alpha(1)
 	}
-	//Refresh background
-	if image_index mod 60 = 0
-		for(a = 0; a < chunk_xsize; a++)
-			for(b = 0; b < chunk_ysize; b++)
-				if background_bool[# a, b] and chunk_last_load[# a, b] < image_index - 60{
-					background_bool[# a, b] = false
-					if background[# a, b] != spr_hexagono
-						sprite_delete(background[# a, b])
-					background[# a, b] = spr_hexagono
-					if chunk_edificios_background[# a, b] != spr_hexagono
-						sprite_delete(chunk_edificios_background[# a, b])
-					chunk_edificios_background[# a, b] = spr_hexagono
-					chunk_edificios_dirty[# a, b] = true
-				}
 	draw_set_color(c_black)
 	draw_set_halign(fa_left)
 	draw_set_valign(fa_top)
