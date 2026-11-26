@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"pvp_revisar_victoria",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"pvp_revisar_victoria",
+  "parent":{
+    "name":"ONLINE",
+    "path":"folders/SCRIPTS/ONLINE.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

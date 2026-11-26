@@ -90,7 +90,7 @@ function step(){
 		}
 		acumulator -= LOGIC_DT
 		//Estadísticas / Guardado automático
-		if win = 0{
+		if win = 0 or online{
 			if (++timer mod 3600) = 0{
 				temp_array_real = array_create(rss_max, 0)
 				array_copy(temp_array_real, 0, recursos_obtenidos_time_temp, 0, rss_max)
@@ -348,6 +348,12 @@ function step(){
 				explosion(temp_explosion.x, temp_explosion.y, temp_explosion.edificio, temp_explosion.radio, temp_explosion.dmg, temp_explosion.incendiario, temp_explosion.jugador)
 			}
 			array_resize(explosion_queue, 0)
+		}
+		//Equipos derrotados en PvP
+		if array_length(equipos_derrotados) > 0{
+			for(a = 0; a < array_length(equipos_derrotados); a++)
+				equipo_abandonar(equipos_derrotados[a])
+			array_resize(equipos_derrotados, 0)
 		}
 		//Explosión nuclear
 		if nuclear_step > 0{

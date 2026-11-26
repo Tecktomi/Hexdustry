@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"equipo_abandonar",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"equipo_abandonar",
+  "parent":{
+    "name":"ONLINE",
+    "path":"folders/SCRIPTS/ONLINE.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

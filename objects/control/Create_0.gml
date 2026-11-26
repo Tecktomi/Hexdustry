@@ -744,6 +744,8 @@ L = {}
 	EQUIPO_COLOR = [ #bfbfbf, #ff0000, #0000ff, #00ff00, #ffff00, #ff00ff, #00ffff, #ffffff, #000000, #7f0000, #007f00, #00007f, #7f7f00, #7f007f, #007f7f]
 	jugador = 2
 	EQUIPO_LIMIT = 3
+	equipos_derrotados = array_create(0, 0)
+	pvp_rivales = false
 #endregion
 #region UI
 	#macro ui_fondo #282828

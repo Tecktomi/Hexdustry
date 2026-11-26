@@ -1067,7 +1067,7 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 		draw_text_background(0, 0, temp_text)
 }
 //Comandar drones
-if array_length(selected_drones) > 0{
+if array_length(selected_drones) > 0 and win = 0{
 	var right_clicked = mouse_check_button_pressed(mb_right)
 	for(a = array_length(selected_drones) - 1; a >= 0; a--){
 		var dron = selected_drones[a]

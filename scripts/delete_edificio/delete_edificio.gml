@@ -363,6 +363,8 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 			surface_free(edificio.imagen)
 		if edificio.fuego > 0
 			array_disorder_remove(edificios_fuego, edificio, ptre_fuego)
+		if index = id_nucleo and online and server_pvp and _jugador >= 2 and array_length(edificios_jugador_index[_jugador, id_nucleo]) = 0 and not array_contains(equipos_derrotados, _jugador)
+			array_push(equipos_derrotados, _jugador)
 		delete(edificio)
 	}
 }

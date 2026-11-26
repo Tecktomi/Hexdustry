@@ -33,6 +33,22 @@ function save_game_buffer(buffer){
 		buffer_write(buffer, buffer_u8, EQUIPO_LIMIT)
 		buffer_write(buffer, buffer_bool, ia_spawn_preparado)
 		var len, a, b, c, _mision, len_2, temp_texto, edificio, dron, red, flujo, i, municion, mask
+		#region Menas
+			for(a = 0; a < xsize; a++)
+				for(b = 0; b < ysize; b++){
+					buffer_write(buffer, buffer_s8, ore[# a, b])
+					if ore[# a, b] >= 0
+						buffer_write(buffer, buffer_u16, ore_amount[# a, b])
+				}
+			len = array_length(betas)
+			buffer_write(buffer, buffer_u16, len)
+			for(a = 0; a < len; a++){
+				len_2 = array_length(betas[a].terrenos)
+				buffer_write(buffer, buffer_u16, len_2)
+				for(b = 0; b < len_2; b++)
+					buffer_write(buffer, buffer_u16, betas[a].terrenos[b])
+			}
+		#endregion
 		#region Misiones
 			save_mision(buffer)
 			buffer_write(buffer, buffer_u8, min(mision_camara_step, 255))

@@ -90,6 +90,8 @@ function game_start(_nucleo = true, mision_cumplida = false){
 		detect_features()
 		EQUIPO_LIMIT = 3
 		ia_spawn_preparado = false
+		pvp_rivales = false
+		array_resize(equipos_derrotados, 0)
 		if game_mode = GAMEMODE_IA and _nucleo{
 			if array_length(edificios_jugador_index[JUGADOR_IA, id_nucleo]) = 0{
 				ia_preparar_spawn()
