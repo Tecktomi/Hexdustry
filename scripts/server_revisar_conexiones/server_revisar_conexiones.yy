@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"server_revisar_conexiones",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"server_revisar_conexiones",
+  "parent":{
+    "name":"ONLINE",
+    "path":"folders/SCRIPTS/ONLINE.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

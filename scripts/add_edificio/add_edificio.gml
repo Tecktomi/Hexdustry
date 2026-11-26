@@ -443,6 +443,8 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			edificio.array_real[1] = -1
 			edificio.array_real[2] = 0
 		}
+		if index = id_pantalla
+			edificio.imagen = surface_create(60, 50)
 		return edificio
 	}
 }

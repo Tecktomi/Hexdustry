@@ -92,7 +92,9 @@ function menu_pausa(_juego = true, _input_layer = 0){
 				pausa_setting = pausa_general
 			}
 			ypos += text_y * 1.2
-			if draw_boton(xpos, ypos, server_pvp ? "PVP" : "COOP", server_pvp ? ui_rojo : ui_verde,,,, _input_layer)
+			if online
+				draw_boton(xpos, ypos, server_pvp ? "PVP" : "COOP", ui_gris,,,, -1)
+			else if draw_boton(xpos, ypos, server_pvp ? "PVP" : "COOP", server_pvp ? ui_rojo : ui_verde,,,, _input_layer)
 				server_pvp = not server_pvp
 			if draw_boton(xpos, room_height - 200, L.volver, ui_rojo,,,, _input_layer) or (not DEVISE and keyboard_check_pressed(vk_backspace)){
 				if not DEVISE

@@ -40,6 +40,12 @@ function load_game_buffer(buffer){
 		clima = buffer_read(buffer, buffer_u8)
 		clima_change = buffer_read(buffer, buffer_u64)
 		clima_vision = (clima_tipo = 1) ? 1 - 0.5 * clima : 1
+		oleadas = bool(buffer_read(buffer, buffer_bool))
+		game_mode = real(buffer_read(buffer, buffer_u8))
+		EQUIPO_LIMIT = real(buffer_read(buffer, buffer_u8))
+		//El terreno se regenera desde la semilla: repetir la preparación del spawn de la IA antes de los edificios
+		if buffer_read(buffer, buffer_bool)
+			ia_preparar_spawn()
 		var a, b, c, d, e, _texto, len
 		#region Misiones
 			load_mision(buffer)
@@ -96,6 +102,10 @@ function load_game_buffer(buffer){
 		//Cargar estado
 		for(a = 0; a < len; a++)
 			temp_edificios_target[a] = load_edificio(buffer, edificios_totales[a])
+		//Identidad de edificios
+		for(a = 0; a < len; a++)
+			edificios_totales[a].edificio_index = real(buffer_read(buffer, buffer_u32))
+		edificio_count = real(buffer_read(buffer, buffer_u32))
 		//Redes
 		len = real(buffer_read(buffer, buffer_u16))
 		for(a = 0; a < len; a++){
@@ -224,6 +234,54 @@ function load_game_buffer(buffer){
 			else
 				frecuencias[c] = string(buffer_read(buffer, buffer_string))
 		}
+		#region IA
+			IA = bool(buffer_read(buffer, buffer_bool))
+			if not IA
+				exit
+			ia_build_pos = real(buffer_read(buffer, buffer_u16))
+			ia_queue_count = real(buffer_read(buffer, buffer_u16))
+			ia_build_rss = real(buffer_read(buffer, buffer_s16))
+			len = real(buffer_read(buffer, buffer_u16))
+			ia_build_queue = array_create(len, 0)
+			var len_2, temp_array
+			for(a = 0; a < len; a++){
+				len_2 = real(buffer_read(buffer, buffer_u8))
+				temp_array = array_create(len_2, 0)
+				for(b = 0; b < len_2; b++)
+					temp_array[b] = real(buffer_read(buffer, buffer_s32))
+				ia_build_queue[a] = temp_array
+			}
+			len = real(buffer_read(buffer, buffer_u16))
+			ia_chunk_construidos_array = array_create(len, 0)
+			for(a = 0; a < len; a++){
+				b = real(buffer_read(buffer, buffer_u16))
+				c = real(buffer_read(buffer, buffer_u16))
+				ia_chunk_construidos_array[a] = [b, c]
+			}
+			for(a = 0; a < chunk_xsize; a++)
+				for(b = 0; b < chunk_ysize; b++){
+					ia_chunk_construidos[# a, b] = bool(buffer_read(buffer, buffer_bool))
+					ia_chunk_defendidos[# a, b] = bool(buffer_read(buffer, buffer_bool))
+				}
+			for(a = 0; a < xsize; a++)
+				for(b = 0; b < ysize; b++){
+					ia_grid_camino[# a, b] = real(buffer_read(buffer, buffer_s16))
+					c = real(buffer_read(buffer, buffer_u16))
+					ia_grid_real[# a, b] = (c = U16_1) ? infinity : c
+				}
+			for(a = 0; a < ore_max; a++){
+				array_resize(ia_ores[a], 0)
+				len = real(buffer_read(buffer, buffer_u16))
+				for(b = 0; b < len; b++){
+					c = real(buffer_read(buffer, buffer_u16))
+					array_push(ia_ores[a], [c, real(buffer_read(buffer, buffer_u16))])
+				}
+			}
+			array_resize(ia_tiles_nucleo, 0)
+			len = real(buffer_read(buffer, buffer_u16))
+			for(a = 0; a < len; a++)
+				array_push(ia_tiles_nucleo, real(buffer_read(buffer, buffer_u16)))
+		#endregion
 		//Debug
 		var temp_text = ""
 		for(a = 0; a < edificio_max; a++)

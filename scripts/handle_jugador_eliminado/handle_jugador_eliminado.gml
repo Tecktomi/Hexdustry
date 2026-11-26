@@ -9,10 +9,13 @@ function handle_jugador_eliminado(buffer){
 			drones_propios = drones_jugador[jugador]
 		}
 		else{
+			var _timer = real(buffer_read(buffer, buffer_u32))
 			var player_name = string(buffer_read(buffer, buffer_string))
+			var pos = real(buffer_read(buffer, buffer_u8))
+			var limite = real(buffer_read(buffer, buffer_u8))
 			array_push(chat, string(L.server_jugador_ido, player_name))
 			array_push(chat_time, image_index)
-			eliminar_jugador(player_name)
+			array_push(cambios, {step : _timer, tipo : cambio_eliminar_jugador, data : {pos : pos, limite : limite}})
 		}
 	}
 }

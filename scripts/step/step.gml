@@ -50,10 +50,8 @@ function step(){
 							build_agua_x = real(cambio.data.agua_x)
 							build_agua_y = real(cambio.data.agua_y)
 						}
-						else if tag_edificio_tuberia[cambio.data.index]{
-							liquido_choose_array = array_create(2, real(cambio.data.liquido))
-							liquido_choose = 0
-						}
+						else if tag_edificio_tuberia[cambio.data.index]
+							set_liquido_construccion(cambio.data.liquido)
 						construir(cambio.data.index, cambio.data.dir, cambio.data.a, cambio.data.b,, cambio.data.cheat, cambio.data.jugador)
 					}
 					else if cambio.tipo = cambio_delete_edificio
@@ -66,10 +64,17 @@ function step(){
 						add_modulo(edificio_id[# cambio.data.a, cambio.data.b],, cambio.data.cheat)
 					else if cambio.tipo = cambio_investigar
 						investigar(cambio.data.index,, cambio.data.cheat, cambio.data.jugador)
-					else if cambio.tipo = cambio_instrucciones
-						set_edificio_instruccion(edificio_id[# cambio.data.a, cambio.data.b], cambio.data.cambio, cambio.data)
+					else if cambio.tipo = cambio_instrucciones{
+						if edificio_bool[# cambio.data.edificio_a, cambio.data.edificio_b]{
+							edificio = edificio_id[# cambio.data.edificio_a, cambio.data.edificio_b]
+							if edificio.edificio_index = cambio.data.edificio_index
+								set_edificio_instruccion(edificio, cambio.data.cambio, cambio.data)
+						}
+					}
 					else if cambio.tipo = cambio_eliminar_jugador
-						eliminar_jugador(cambio.data.pos)
+						eliminar_jugador(cambio.data.pos, cambio.data.limite)
+					else if cambio.tipo = cambio_jugador_unido
+						jugador_unido(cambio.data.slot, cambio.data.limite)
 				}		
 			}
 			if REPRODUCIENDO and grabacion_pos = grabacion_size and array_length(cambios) = 0

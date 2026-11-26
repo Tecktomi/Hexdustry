@@ -33,7 +33,7 @@ function scr_silo_misiles(edificio = control.null_edificio){
 					edificio.array_real[0] -= 4 * flujo_power
 			}
 			//Terminar misil
-			if (edificio.proceso >= tiempo_max and edificio.array_real[0] <= 0) or (cheat and string_ends_with(keyboard_string, "misil")){
+			if (edificio.proceso >= tiempo_max and edificio.array_real[0] <= 0) or (cheat and not online and string_ends_with(keyboard_string, "misil")){
 				keyboard_string = ""
 				edificio.mode = true
 				change_energia(0, edificio)

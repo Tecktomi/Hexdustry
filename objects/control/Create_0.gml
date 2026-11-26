@@ -6,9 +6,9 @@ var a, b, c, flag
 #endregion
 #region MACROS
 	#region VERSION
-		#macro FILE_VERSION 2026_11_08
+		#macro FILE_VERSION 2026_11_26
 		#macro PROCESADOR_VERSION 2026_10_02
-		#macro GRABACION_VERSION 2026_11_08
+		#macro GRABACION_VERSION 2026_11_26
 	#endregion
 	#region RANGE
 		#macro CABLE_RANGE 90
@@ -116,6 +116,7 @@ var a, b, c, flag
 		#macro cambio_investigar 5
 		#macro cambio_instrucciones 6
 		#macro cambio_eliminar_jugador 7
+		#macro cambio_jugador_unido 8
 	#endregion
 	#region EDIFICIO_INSTRUCCION
 		//Instrucciones
@@ -730,6 +731,11 @@ L = {}
 	cambios = array_create(0, null_cambio)
 	server_timer = 0
 	#macro LAG 10
+	#macro TIMEOUT_AVISO 60
+	#macro TIMEOUT_EXPULSION 300
+	#macro TIMEOUT_GRACIA_UNION 600
+	#macro TIMEOUT_CLIENTE 600
+	server_udp = -1
 	server_yendose = false
 	server_sync_counter = 0
 	server_pvp = false
@@ -807,6 +813,7 @@ L = {}
 #endregion
 #region IA
 	IA = false
+	ia_spawn_preparado = false
 	ia_grid_real = ds_grid_create(xsize, ysize)
 	ds_grid_clear(ia_grid_real, infinity)
 	ia_grid_camino = ds_grid_create(xsize, ysize)

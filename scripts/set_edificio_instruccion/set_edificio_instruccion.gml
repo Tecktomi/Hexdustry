@@ -1,5 +1,7 @@
 function set_edificio_instruccion(edificio = control.null_edificio, cambio = 0, data = {}, manual = false){
 	with control{
+		if edificio = null_edificio or edificio.vida <= 0
+			exit
 		if (GRABANDO or online) and manual{
 			server_set_instrucciones(edificio, cambio, data)
 			if online and not servidor

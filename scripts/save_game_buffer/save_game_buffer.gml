@@ -28,6 +28,10 @@ function save_game_buffer(buffer){
 		buffer_write(buffer, buffer_bool, modo_misiones)
 		buffer_write(buffer, buffer_u8, clima)
 		buffer_write(buffer, buffer_u64, clima_change)
+		buffer_write(buffer, buffer_bool, oleadas)
+		buffer_write(buffer, buffer_u8, game_mode)
+		buffer_write(buffer, buffer_u8, EQUIPO_LIMIT)
+		buffer_write(buffer, buffer_bool, ia_spawn_preparado)
 		var len, a, b, c, _mision, len_2, temp_texto, edificio, dron, red, flujo, i, municion, mask
 		#region Misiones
 			save_mision(buffer)
@@ -90,6 +94,9 @@ function save_game_buffer(buffer){
 		//Estado edificios
 		for(a = 0; a < len; a++)
 			save_edificio(buffer, edificios_totales[a])
+		for(a = 0; a < len; a++)
+			buffer_write(buffer, buffer_u32, real(edificios_totales[a].edificio_index))
+		buffer_write(buffer, buffer_u32, real(edificio_count))
 		//Redes
 		len = array_length(redes)
 		buffer_write(buffer, buffer_u16, len)
@@ -239,5 +246,52 @@ function save_game_buffer(buffer){
 					buffer_write(buffer, buffer_string, string(frecuencias[a]))
 				}
 			}
+		#region IA
+			buffer_write(buffer, buffer_bool, IA)
+			if not IA
+				exit
+			buffer_write(buffer, buffer_u16, real(ia_build_pos))
+			buffer_write(buffer, buffer_u16, real(ia_queue_count))
+			buffer_write(buffer, buffer_s16, real(ia_build_rss))
+			len = array_length(ia_build_queue)
+			buffer_write(buffer, buffer_u16, len)
+			var temp_array
+			for(a = 0; a < len; a++){
+				temp_array = ia_build_queue[a]
+				buffer_write(buffer, buffer_u8, array_length(temp_array))
+				for(b = 0; b < array_length(temp_array); b++)
+					buffer_write(buffer, buffer_s32, real(temp_array[b]))
+			}
+			len = array_length(ia_chunk_construidos_array)
+			buffer_write(buffer, buffer_u16, len)
+			for(a = 0; a < len; a++){
+				buffer_write(buffer, buffer_u16, ia_chunk_construidos_array[a, 0])
+				buffer_write(buffer, buffer_u16, ia_chunk_construidos_array[a, 1])
+			}
+			for(a = 0; a < chunk_xsize; a++)
+				for(b = 0; b < chunk_ysize; b++){
+					buffer_write(buffer, buffer_bool, ia_chunk_construidos[# a, b])
+					buffer_write(buffer, buffer_bool, ia_chunk_defendidos[# a, b])
+				}
+			//Grillas
+			for(a = 0; a < xsize; a++)
+				for(b = 0; b < ysize; b++){
+					buffer_write(buffer, buffer_s16, real(ia_grid_camino[# a, b]))
+					buffer_write(buffer, buffer_u16, is_infinity(ia_grid_real[# a, b]) ? U16_1 : real(ia_grid_real[# a, b]))
+				}
+			//Menas disponibles
+			for(a = 0; a < ore_max; a++){
+				len = array_length(ia_ores[a])
+				buffer_write(buffer, buffer_u16, len)
+				for(b = 0; b < len; b++){
+					buffer_write(buffer, buffer_u16, ia_ores[a][b][0])
+					buffer_write(buffer, buffer_u16, ia_ores[a][b][1])
+				}
+			}
+			len = array_length(ia_tiles_nucleo)
+			buffer_write(buffer, buffer_u16, len)
+			for(a = 0; a < len; a++)
+				buffer_write(buffer, buffer_u16, ia_tiles_nucleo[a])
+		#endregion
 	}
 }

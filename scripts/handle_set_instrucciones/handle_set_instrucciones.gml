@@ -3,16 +3,18 @@ function handle_set_instrucciones(buffer){
 		var _timer = real(buffer_read(buffer, buffer_u32))
 		var a = real(buffer_read(buffer, buffer_u16))
 		var b = real(buffer_read(buffer, buffer_u16))
+		var index = real(buffer_read(buffer, buffer_u8))
+		var _edificio_index = real(buffer_read(buffer, buffer_u32))
 		var cambio = real(buffer_read(buffer, buffer_u8))
-		var edificio = edificio_id[# a, b]
 		var new_cambio = {
 			step : _timer,
 			tipo : cambio_instrucciones,
 			data : {}
 		}
 		var data = {
-			a : a,
-			b : b,
+			edificio_a : a,
+			edificio_b : b,
+			edificio_index : _edificio_index,
 			cambio : cambio
 		}
 		if cambio = cambio_activar{}
@@ -21,8 +23,7 @@ function handle_set_instrucciones(buffer){
 			data._x = real(buffer_read(buffer, buffer_f64))
 			data._y = real(buffer_read(buffer, buffer_f64))
 		}
-		else if edificio.index = id_puerto_de_carga{
-			var _jugador = edificio.jugador
+		else if index = id_puerto_de_carga{
 			if cambio = cambio_instrucciones_delete_comando
 				data.instruccion = real(buffer_read(buffer, buffer_u8))
 			else if cambio = cambio_instrucciones_cambio_recurso{
@@ -40,7 +41,7 @@ function handle_set_instrucciones(buffer){
 				data.b = real(buffer_read(buffer, buffer_u16))
 			}
 		}
-		else if edificio.index = id_procesador{
+		else if index = id_procesador{
 			data.instruccion = real(buffer_read(buffer, buffer_u8))
 			if cambio = cambio_vincular{
 				data.desa = real(buffer_read(buffer, buffer_u16))
@@ -62,7 +63,7 @@ function handle_set_instrucciones(buffer){
 					data.valor = string(buffer_read(buffer, buffer_string))
 			}
 		}
-		else if edificio.index = id_memoria{
+		else if index = id_memoria{
 			data.instruccion = real(buffer_read(buffer, buffer_u8))
 			if buffer_read(buffer, buffer_bool)
 				data.valor = real(buffer_read(buffer, buffer_f64))
@@ -74,8 +75,13 @@ function handle_set_instrucciones(buffer){
 			data.desb = real(buffer_read(buffer, buffer_u16))
 		}
 		if servidor{
-			set_edificio_instruccion(edificio, data.cambio, data)
-			server_set_instrucciones(edificio, data.cambio, data)
+			if not edificio_bool[# a, b]
+				exit
+			var edificio = edificio_id[# a, b]
+			if edificio.edificio_index != _edificio_index
+				exit
+			set_edificio_instruccion(edificio, cambio, data)
+			server_set_instrucciones(edificio, cambio, data)
 		}
 		else{
 			new_cambio.data = data

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"buscar_jugador",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"buscar_jugador",
+  "parent":{
+    "name":"ONLINE",
+    "path":"folders/SCRIPTS/ONLINE.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

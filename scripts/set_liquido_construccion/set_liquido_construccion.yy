@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"set_liquido_construccion",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"set_liquido_construccion",
+  "parent":{
+    "name":"EDIFICIOS",
+    "path":"folders/SCRIPTS/EDIFICIOS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

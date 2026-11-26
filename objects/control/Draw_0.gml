@@ -1352,17 +1352,29 @@ if menu = MENU_JUEGO{
 		if online and not servidor{
 			if timer + LAG < server_timer
 				acumulator++
-			if ++server_jugadores_timeout[0] = 599
+			if ++server_jugadores_timeout[0] = TIMEOUT_CLIENTE - 1
 				server_jugador_irse()
-			else if server_jugadores_timeout[0] = 600
+			else if server_jugadores_timeout[0] = TIMEOUT_CLIENTE
 				handle_server_break()
 		}
+		//Timeouts de clientes: entre ticks, igual que las demás acciones del servidor
+		if online and servidor
+			server_revisar_conexiones()
 		draw_once = true
 		for(ticks = 0; (acumulator >= LOGIC_DT and ticks < 5) or ticks = 0; ticks++)
 			step()
 	}
 	if info
 		temp_text_right += $"FPS: {fps}\n"
+	//Aviso de conexión inestable
+	if online{
+		if not servidor and server_jugadores_timeout[0] >= TIMEOUT_AVISO
+			temp_text_right += $"{L.conexion_inestable}\n"
+		else if servidor
+			for(var _slot = 1; _slot < MAX_JUGADORES; _slot++)
+				if server_jugadores[_slot] != -1 and server_jugadores_timeout[_slot] >= TIMEOUT_AVISO
+					temp_text_right += $"{server_jugadores_nombre[_slot]}: {L.conexion_inestable}\n"
+	}
 	if oleadas{
 		if oleadas_timer < 60 * oleadas_tiempo_primera{
 			var temp_time = oleadas_timer / 60
@@ -1416,7 +1428,7 @@ if menu = MENU_JUEGO{
 				keyboard_string = ""
 				cheat = not cheat
 			}
-			if cheat and keyboard_check_pressed(CONTROL_WAVES)
+			if cheat and not online and keyboard_check_pressed(CONTROL_WAVES)
 				oleadas = not oleadas
 			if keyboard_check_pressed(CONTROL_ENCICLOPEDIA){
 				if enciclopedia = 0{
@@ -1428,7 +1440,7 @@ if menu = MENU_JUEGO{
 					input_layer = 0
 				}
 			}
-			if cheat and mision_actual >= 0 and string_ends_with(keyboard_string, "uwu")
+			if cheat and not online and mision_actual >= 0 and string_ends_with(keyboard_string, "uwu")
 				pasar_mision()
 		}
 		//Mostrar redes electricas

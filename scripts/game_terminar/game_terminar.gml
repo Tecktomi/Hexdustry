@@ -17,13 +17,12 @@ function game_terminar(motivo, destino = MENU_PRINCIPAL){
 			server = -1
 			servidor = false
 		}
-		else if online{
+		else if online and not servidor{
 			online = false
-			if servidor
-				server_break()
-			else
-				server_jugador_irse()
+			server_jugador_irse()
 		}
+		if servidor
+			server_cerrar()
 		if motivo != fin_cerrar_juego{
 			if destino != MENU_EDITOR
 				clear_edificios()

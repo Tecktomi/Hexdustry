@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"calcular_equipo_limite",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"calcular_equipo_limite",
+  "parent":{
+    "name":"ONLINE",
+    "path":"folders/SCRIPTS/ONLINE.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

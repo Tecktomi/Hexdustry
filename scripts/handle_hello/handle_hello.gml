@@ -15,26 +15,25 @@ function handle_hello(socket, buffer, slot, player_name){
 					buffer_write(reply, buffer_u8, net_error_server_lleno)
 					network_send_packet(socket, reply, buffer_tell(reply))
 					buffer_delete(reply)
-					server_jugadores[slot] = -1
-					break
+					return false
 				}
 				construir(id_nucleo, 0, new_nucleo_x, new_nucleo_y, true, true, slot + 2)
-				array_copy(jugador_recursos[slot + 2], 0, carga_inicial, 0, rss_max)
 			}
 		#endregion
 		array_push(chat, string(L.server_jugador_unido, player_name))
 		array_push(chat_time, image_index)
 		server_jugadores_nombre[slot] = player_name
-		server_jugadores_timeout[slot] = -120
-		//Informar del nuevo jugador a los otros jugadores
-		if servidor{
-			var buffer_2 = buffer_create(2, buffer_grow, 1)
-			buffer_write(buffer_2, buffer_u8, net_jugador_unido)
-			buffer_write(buffer_2, buffer_string, player_name)
-			buffer_write(buffer_2, buffer_u8, slot)
-			server_broadcast_buffer(buffer_2)
-			buffer_delete(buffer_2)
-		}
+		server_jugadores_timeout[slot] = -TIMEOUT_GRACIA_UNION
+		var limite = calcular_equipo_limite(slot)
+		jugador_unido(slot, limite)
+		var buffer_2 = buffer_create(2, buffer_grow, 1)
+		buffer_write(buffer_2, buffer_u8, net_jugador_unido)
+		buffer_write(buffer_2, buffer_u32, real(timer))
+		buffer_write(buffer_2, buffer_string, player_name)
+		buffer_write(buffer_2, buffer_u8, slot)
+		buffer_write(buffer_2, buffer_u8, limite)
+		server_broadcast_buffer(buffer_2)
+		buffer_delete(buffer_2)
 		#region Reply
 			var reply = buffer_create(1024, buffer_grow, 1)
 			buffer_write(reply, buffer_u8, net_welcome)
@@ -52,5 +51,6 @@ function handle_hello(socket, buffer, slot, player_name){
 			network_send_packet(socket, reply, buffer_tell(reply))
 			buffer_delete(reply)
 		#endregion
+		return true
 	}
 }

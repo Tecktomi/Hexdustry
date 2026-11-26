@@ -1,9 +1,7 @@
 function handle_timeout(buffer){
 	with control{
-		var player_name = string(buffer_read(buffer, buffer_string)), pos
-		for(pos = 0; pos < MAX_JUGADORES; pos++)
-			if player_name = server_jugadores_nombre[pos]
-				break
-		server_jugadores_timeout[pos] = 0
+		var pos = buscar_jugador(string(buffer_read(buffer, buffer_string)))
+		if pos >= 0
+			server_jugadores_timeout[pos] = 0
 	}
 }

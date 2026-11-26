@@ -5,8 +5,8 @@ function scr_draw_pantalla(edificio = control.null_edificio, offset_x = 0, offse
 		if edificio.mode{
 			var d = array_create(0, array_create(1, 0)), color = draw_get_color()
 			draw_set_font(ft_mini)
-			var temp_surf = surface_create(60, 50), size = array_length(edificio.instruccion), c, e
-			surface_set_target(temp_surf)
+			var size = array_length(edificio.instruccion), c, e
+			surface_set_target(edificio.imagen)
 			for(c = 0; c < size; c++){
 				d = edificio.instruccion[c]
 				e = d[0]
@@ -27,16 +27,11 @@ function scr_draw_pantalla(edificio = control.null_edificio, offset_x = 0, offse
 				else if e = 7
 					draw_point(d[1], d[2])
 			}
-			if edificio.imagen != spr_hexagono
-				sprite_delete(edificio.imagen)
-			edificio.imagen = sprite_create_from_surface(temp_surf, 0, 0, 60, 50, false, false, 0, 0)
 			edificio.mode = false
 			surface_reset_target()
-			surface_free(temp_surf)
 			draw_set_font(font_normal)
 			draw_set_color(color)
 		}
-		if edificio.imagen != spr_hexagono
-			draw_sprite_off(edificio.imagen, 0, _x - 30, _y - 25)
+		draw_surface(edificio.imagen, (_x - 30) * zoom - camx, (_y - 25) * zoom - camy)
 	}
 }

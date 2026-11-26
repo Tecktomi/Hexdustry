@@ -18,7 +18,7 @@ function handle_construir(buffer){
 				data.edificios_salida_drones[i] = real(buffer_read(buffer, buffer_u16))
 		}
 		if tag_edificio_tuberia[index]
-			data.liquido = real(buffer_read(buffer, buffer_u8))
+			data.liquido = real(buffer_read(buffer, buffer_s8))
 		var dir = real(buffer_read(buffer, buffer_u8))
 		var a = real(buffer_read(buffer, buffer_u16))
 		var b = real(buffer_read(buffer, buffer_u16))
@@ -35,10 +35,8 @@ function handle_construir(buffer){
 				build_agua_x = real(data.agua_x)
 				build_agua_y = real(data.agua_y)
 			}
-			else if tag_edificio_tuberia[index]{
-				liquido_choose_array = array_create(2, real(data.liquido))
-				liquido_choose = 0
-			}
+			else if tag_edificio_tuberia[index]
+				set_liquido_construccion(data.liquido)
 			if construir(index, dir, a, b,, _cheat, _jugador) != null_edificio
 				server_construir(index, dir, a, b, _cheat, _jugador)
 		}

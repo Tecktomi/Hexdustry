@@ -116,5 +116,7 @@ function set_grid_size(){
 		ds_grid_clear(tile_animado_chunk, 0)
 		ds_grid_resize(ia_grid_real, xsize, ysize)
 		ds_grid_resize(ia_grid_camino, xsize, ysize)
+		ds_grid_resize(ia_chunk_construidos, chunk_xsize, chunk_ysize)
+		ds_grid_resize(ia_chunk_defendidos, chunk_xsize, chunk_ysize)
 	}
 }

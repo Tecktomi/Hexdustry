@@ -1,20 +1,16 @@
-function eliminar_jugador(_jugador){
+function eliminar_jugador(_jugador, limite = -1){
 	with control{
 		//Buscar _jugador
-		if not is_real(_jugador){
-			var pos
-			for(pos = 0; pos < MAX_JUGADORES; pos++)
-				if _jugador = server_jugadores_nombre[pos]
-					break
-			_jugador = pos
-		}
+		if not is_real(_jugador)
+			_jugador = buscar_jugador(_jugador)
+		if _jugador < 0 or _jugador >= MAX_JUGADORES
+			exit
 		server_jugadores_nombre[_jugador] = ""
+		if limite >= 0
+			EQUIPO_LIMIT = limite
 		if server_pvp{
 			_jugador = _jugador + 2
-			if EQUIPO_LIMIT = real(_jugador) + 1
-				EQUIPO_LIMIT--
-			if servidor
-				jugador_recursos[_jugador] = array_create(rss_max, 0)
+			jugador_recursos[_jugador] = array_create(rss_max, 0)
 			//Los edificios pasarán a ser salvajes
 			var len = array_length(edificios_totales) - 1, a, edificio, dron
 			for(a = len; a >= 0; a--){

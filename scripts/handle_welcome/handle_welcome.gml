@@ -24,6 +24,9 @@ function handle_welcome(buffer){
 		for(var a = 0; a < MAX_JUGADORES; a++)
 			server_jugadores_nombre[a] = string(buffer_read(buffer, buffer_string))
 		server_jugadores_nombre[slot] = online_nombre
-		server_jugadores_timeout[slot] = -120
+		server_timer = timer
+		acumulator = 0
+		server_sync_counter = 0
+		server_jugadores_timeout = array_create(MAX_JUGADORES, 0)
 	}
 }

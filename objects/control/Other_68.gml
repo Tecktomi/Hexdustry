@@ -23,10 +23,8 @@ if type = network_type_data{
 				network_send_packet(temp_socket, reply, buffer_tell(reply))
 				buffer_delete(reply)
 			}
-			else{
+			else if handle_hello(temp_socket, buffer, slot, player_name)
 				server_jugadores[slot] = temp_socket
-				handle_hello(temp_socket, buffer, slot, player_name)
-			}
 		}
 	}
 	else if msg = net_welcome
