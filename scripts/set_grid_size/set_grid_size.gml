@@ -24,10 +24,6 @@ function set_grid_size(){
 		ds_grid_resize(pre_abtoxy, xsize + 2, ysize + 2)
 		ds_grid_resize(pre_abtox, xsize + 2, ysize + 2)
 		ds_grid_resize(pre_abtoy, xsize + 2, ysize + 2)
-		ds_grid_resize(repair_id, xsize, ysize)
-		ds_grid_resize(repair_dir, xsize, ysize)
-		ds_grid_resize(repair_mode, xsize, ysize)
-		ds_grid_resize(repair_select, xsize, ysize)
 		for(a = 0; a < xsize; a++){
 			aplus = a + 1
 			pre_abtoxy[# a, 0] = [a * 48 + 40, 0]
@@ -40,10 +36,6 @@ function set_grid_size(){
 				pre_abtox[# aplus, b + 1] = (a + (b & 1) / 2) * 48 + 16
 				pre_abtoy[# aplus, b + 1] = (b + 1) * 14
 				ore_random[# a, b] = random(1)
-				repair_id[# a, b] = array_create(EQUIPOS, -1)
-				repair_dir[# a, b] = array_create(EQUIPOS, 0)
-				repair_mode[# a, b] = array_create(EQUIPOS, false)
-				repair_select[# a, b] = array_create(EQUIPOS, 0)
 			}
 		}
 		for(b = 0; b < ysize; b++){
@@ -107,6 +99,8 @@ function set_grid_size(){
 			}
 		ds_grid_resize(beta_grid, xsize, ysize)
 		ds_grid_clear(beta_grid, null_beta)
+		ds_grid_resize(lago_grid, xsize, ysize)
+		ds_grid_clear(lago_grid, null_lago)
 		for(a = array_length(edificios_index[id_nucleo]) - 1; a >= 0; a--){
 			edificio = edificios_index[id_nucleo][a]
 			ds_grid_resize(edificio.coordenadas_dis, xsize, ysize)

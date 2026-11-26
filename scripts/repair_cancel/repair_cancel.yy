@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"repair_cancel",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"repair_cancel",
+  "parent":{
+    "name":"SCRIPTS",
+    "path":"folders/SCRIPTS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

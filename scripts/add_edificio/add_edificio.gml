@@ -311,12 +311,13 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			}
 		}
 		len = array_length(temp_list_size)
+		var _repair_array = repair_array[jugador]
 		for(c = 0; c < len;){
 			aa = temp_list_size[c++]
 			bb = temp_list_size[c++]
 			edificio_bool[# aa, bb] = true
 			edificio_id[# aa, bb] = edificio
-			repair_id[# aa, bb][_jugador] = -1
+			repair_cancel(aa, bb, _repair_array)
 			if index = id_nucleo
 				edificio.coordenadas_dis[# aa, bb] = 0
 		}

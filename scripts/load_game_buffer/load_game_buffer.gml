@@ -80,6 +80,17 @@ function load_game_buffer(buffer){
 			for(b = 0; b < EQUIPOS; b++)
 				array_set(jugador_recursos[b], a, real(buffer_read(buffer, buffer_u32)))
 		image_index = buffer_read(buffer, buffer_u32)
+		len = buffer_read(buffer, buffer_u64)
+		var _jugador = buffer_read(buffer, buffer_u8)
+		var _repair_array = repair_array[_jugador]
+		for(a = 0; a < len; a += 6){
+			array_push(_repair_array, real(buffer_read(buffer, buffer_u16)))
+			array_push(_repair_array, real(buffer_read(buffer, buffer_u16)))
+			array_push(_repair_array, real(buffer_read(buffer, buffer_u8)))
+			array_push(_repair_array, real(buffer_read(buffer, buffer_u8)))
+			array_push(_repair_array, real(buffer_read(buffer, buffer_bool)))
+			array_push(_repair_array, real(buffer_read(buffer, buffer_f64)))
+		}
 		for(b = 0; b < EQUIPOS; b++){
 			var mask_tecnologia = buffer_read(buffer, buffer_u64)
 			var mask_tecnologia_desbloqueable = buffer_read(buffer, buffer_u64)

@@ -629,6 +629,9 @@ L = {}
 		fuegos_color[a] = make_color_hsv(a, 127, 255)
 	null_surface = -1
 	fondo_pool = array_create(0, null_surface)
+	repair_array = array_create(EQUIPOS)
+	for(a = 0; a < EQUIPOS; a++)
+		repair_array[a] = array_create(0, 0)
 #endregion
 #region Misiones
 	null_mision = def_mision()
@@ -1073,10 +1076,6 @@ null_explosion_mark = {
 	pre_abtoxy = ds_grid_create(xsize + 2, ysize + 2)
 	pre_abtox = ds_grid_create(xsize + 2, ysize + 2)
 	pre_abtoy = ds_grid_create(xsize + 2, ysize + 2)
-	repair_id = ds_grid_create(xsize, ysize)
-	repair_dir = ds_grid_create(xsize, ysize)
-	repair_mode = ds_grid_create(xsize, ysize)
-	repair_select = ds_grid_create(xsize, ysize)
 	var aplus = a + 1
 	for(a = 0; a < xsize; a++){
 		aplus = a + 1
@@ -1090,10 +1089,6 @@ null_explosion_mark = {
 			pre_abtox[# aplus, b + 1] = (a + (b & 1) / 2) * 48 + 16
 			pre_abtoy[# aplus, b + 1] = (b + 1) * 14
 			ore_random[# a, b] = random(1)
-			repair_id[# a, b] = array_create(EQUIPOS, -1)
-			repair_dir[# a, b] = array_create(EQUIPOS, 0)
-			repair_mode[# a, b] = array_create(EQUIPOS, false)
-			repair_select[# a, b] = array_create(EQUIPOS, 0)
 		}
 	}
 	for(b = 0; b < ysize; b++){

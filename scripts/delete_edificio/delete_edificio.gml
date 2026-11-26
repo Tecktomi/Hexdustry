@@ -122,14 +122,8 @@ function delete_edificio(edificio = control.null_edificio, destruccion = false, 
 		}
 		if grafic_luz
 			encender_luz(false, edificio)
-		if destruccion{
-			repair_id[# aa, bb][_jugador] = index
-			repair_dir[# aa, bb][_jugador] = edificio.dir
-			if tag_edificio_seteable[index]{
-				repair_mode[# aa, bb][_jugador] = edificio.mode
-				repair_select[# aa, bb][_jugador] = edificio.select
-			}
-		}
+		if destruccion
+			array_push(repair_array[jugador], aa, bb, index, edificio.dir, edificio.mode, edificio.select)
 		if menu = MENU_JUEGO and index = id_nucleo and array_length(edificios_index[id_nucleo]) > 0
 			for(i = array_length(drones) - 1; i >= 0; i--){
 				dron = drones[i]

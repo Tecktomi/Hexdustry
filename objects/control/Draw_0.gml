@@ -247,11 +247,15 @@ if menu = MENU_JUEGO or menu = MENU_EDITOR_JUEGO{
 			draw_vida(dron.x * zoom - camx, dron.y * zoom - camy, dron.vida, dron.vida_max)
 	}
 	//Reconstruir
-	if keyboard_check(CONTROL_REPARAR)
-		for(a = mina; a < maxa; a++)
-			for(b = minb; b < maxb; b++)
-				if repair_id[# a, b][jugador] >= 0
-					draw_edificio(pre_abtox[# a + 1, b + 1], pre_abtoy[# a + 1, b + 1], repair_id[# a, b][jugador], repair_dir[# a, b][jugador], 0.5)
+	if keyboard_check(CONTROL_REPARAR){
+		var _repair_array = repair_array[jugador]
+		for(a = 0; a < array_length(_repair_array); a += 6){
+			aa = _repair_array[a]
+			bb = _repair_array[a + 1]
+			if aa >= mina and bb >= minb and aa <= maxa and bb <= maxb
+				draw_edificio(pre_abtox[# aa + 1, bb + 1], pre_abtoy[# aa + 1, bb + 1], _repair_array[a + 2], _repair_array[a + 3], 0.5)
+		}
+	}
 	//Luz
 	if energia_solar < 1{
 		var luz_alpha = 0.6 * (1 - energia_solar)
@@ -966,25 +970,26 @@ if pausa != 1 and not outside and not (show_menu and show_menu_build.index = id_
 	}
 	//Reconstruir edificios
 	else if keyboard_check(CONTROL_REPARAR) and input_layer = 0{
-		b = repair_id[# mx, my][jugador]
-		var temp_text_2 = ""
-		if b > 0{
-			var _comprable = true
-			if not cheat
-				_comprable = check_reconstruible(mx, my, b,, jugador)._comprable
-			if not _comprable{
-				temp_complex = abtoxy(mx, my)
-				draw_sprite_off(spr_rojo, 0, temp_complex[0], temp_complex[1],,,,, 0.5)
-				draw_text_background_off(temp_complex[0] + 20, temp_complex[1], temp_text_2)
+		var _repair_array = repair_array[jugador]
+		for(a = 0; a < array_length(_repair_array); a += 6)
+			if _repair_array[a] = mx and _repair_array[a + 1] = my{
+				var temp_text_2 = "", _comprable = true, _index = _repair_array[a + 2]
+				if not cheat
+					_comprable = check_reconstruible(mx, my, _index,, jugador)._comprable
+				if not _comprable{
+					temp_complex = abtoxy(mx, my)
+					draw_sprite_off(spr_rojo, 0, temp_complex[0], temp_complex[1],,,,, 0.5)
+					draw_text_background_off(temp_complex[0] + 20, temp_complex[1], temp_text_2)
+				}
+				else if mouse_check_button(mb_left){
+					var temp_edificio = construir(_index, _repair_array[a + 3], mx, my, true)
+					if tag_edificio_seteable[_index]
+						set_edificio(_repair_array[a + 4], _repair_array[a + 5], temp_edificio, true)
+				}
+				if mouse_check_button(mb_right)
+					repair_cancel(mx, my, _repair_array)
+				break
 			}
-			else if mouse_check_button(mb_left){
-				var temp_edificio = construir(b, repair_dir[# mx, my][jugador], mx, my, true)
-				if tag_edificio_seteable[b]
-					set_edificio(repair_mode[# mx, my][jugador], repair_select[# mx, my][jugador], temp_edificio, true)
-			}
-			if mouse_check_button(mb_right)
-				repair_id[# mx, my][jugador] = -1
-		}
 	}
 	//Seleccionar drones
 	else if DEVISE and mouse_check_button_pressed(mb_left) and build_index = -1 and input_layer = 0{

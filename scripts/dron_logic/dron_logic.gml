@@ -3,7 +3,7 @@ function dron_logic(){
 		var a, b, dron, dron_x, dron_y, index, vel, chunk_x, chunk_y, temp_complex, edificio, i, j
 		var u, v, dis, min_dis, aa, bb, dir, c, d, _comprable, flag, temp_beta, temp_terreno, temp_complex_2
 		var min_puerto, temp_almacenes, minu, minv, maxu, maxv, ataque, min_dis_eu, aaa, bbb, disi, dis_2, _posibles, closest_dis, chunk, max_prioridad
-		var temp_chunk_dron, temp_dron_2, temp_dron_size, temp_array, temp_enemigo, temp_dis, temp_dron, _jugador, dron_a, dron_b, bmod, aereo, alcance
+		var temp_chunk_dron, temp_dron_2, temp_dron_size, temp_array, temp_enemigo, temp_dis, temp_dron, _jugador, dron_a, dron_b, bmod, aereo, alcance, _repair_array, _index
 		for(a = array_length(drones) - 1; a >= 0; a--){
 			if a >= array_length(drones)
 				continue
@@ -176,12 +176,8 @@ function dron_logic(){
 			else if index = idd_reconstructor{
 				//Buscar edificios destruidos
 				if dron.modo = DRON_IDLE{
-					i = irandom(xsize - 1)
-					j = irandom(ysize - 1)
-					if repair_id[# i, j][_jugador] > 0{
-						dron.move_x = i
-						dron.move_y = j
-						temp_complex = abtoxy(i, j)
+					if array_length(repair_array[_jugador]) > 0{
+						temp_complex = abtoxy(repair_array[_jugador, 0], repair_array[_jugador, 1])
 						dron.move_xmove = temp_complex[0]
 						dron.move_ymove = temp_complex[1]
 						dron.modo = DRON_RECONSTRUIR
@@ -198,16 +194,24 @@ function dron_logic(){
 					}
 					//Reconstruir
 					else{
-						i = dron.move_x
-						j = dron.move_y
-						b = repair_id[# i, j][_jugador]
-						_comprable = (b > 0)
-						if _comprable and not cheat
-							_comprable = check_reconstruible(i, j, b, false, _jugador)._comprable
-						if _comprable{
-							edificio = construir(b, repair_dir[# i, j][_jugador], i, j,,, _jugador)
-							if tag_edificio_seteable[b]
-								set_edificio(repair_mode[# i, j][_jugador], repair_select[# i, j][_jugador], edificio)
+						_repair_array = repair_array[_jugador]
+						for(b = 0; b < array_length(_repair_array); b += 6){
+							i = _repair_array[b]
+							j = _repair_array[b + 1]
+							if i = dron.move_x and j = dron.move_y{
+								_index = _repair_array[b + 2]
+								if tag_edificio_construible[_index]{
+									_comprable = true
+									if not cheat
+										_comprable = check_reconstruible(i, j, _index, false, _jugador)._comprable
+									if _comprable{
+										edificio = construir(_index, _repair_array[b + 3], i, j,,, _jugador)
+										if tag_edificio_seteable[_index]
+											set_edificio(_repair_array[b + 4], _repair_array[b + 5], edificio)
+									}
+								}
+								break
+							}
 						}
 						dron.modo = DRON_IDLE
 					}

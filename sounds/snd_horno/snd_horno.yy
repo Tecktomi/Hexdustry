@@ -7,10 +7,10 @@
   },
   "bitDepth":1,
   "channelFormat":0,
-  "compression":0,
+  "compression":3,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":7.3180046,
+  "duration":7.308662,
   "exportDir":"",
   "name":"snd_horno",
   "parent":{

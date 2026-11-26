@@ -32,7 +32,7 @@ function save_game_buffer(buffer){
 		buffer_write(buffer, buffer_u8, game_mode)
 		buffer_write(buffer, buffer_u8, EQUIPO_LIMIT)
 		buffer_write(buffer, buffer_bool, ia_spawn_preparado)
-		var len, a, b, c, _mision, len_2, temp_texto, edificio, dron, red, flujo, i, municion, mask
+		var len, a, b, c, _mision, len_2, temp_texto, edificio, dron, red, flujo, i, municion, mask, _repair_array = repair_array[jugador]
 		#region Menas
 			for(a = 0; a < xsize; a++)
 				for(b = 0; b < ysize; b++){
@@ -64,6 +64,17 @@ function save_game_buffer(buffer){
 			for(b = 0; b < EQUIPOS; b++)
 				buffer_write(buffer, buffer_u32, max(jugador_recursos[b, a], 0))
 		buffer_write(buffer, buffer_u32, image_index)
+		len = array_length(_repair_array)
+		buffer_write(buffer,buffer_u64, len)
+		buffer_write(buffer,buffer_u8, jugador)
+		for(a = 0; a < len; a += 6){
+			buffer_write(buffer, buffer_u16, _repair_array[a])
+			buffer_write(buffer, buffer_u16, _repair_array[a + 1])
+			buffer_write(buffer, buffer_u8, _repair_array[a + 2])
+			buffer_write(buffer, buffer_u8, _repair_array[a + 3])
+			buffer_write(buffer, buffer_bool, _repair_array[a + 4])
+			buffer_write(buffer, buffer_f64, _repair_array[a + 5])
+		}
 		for(b = 0; b < EQUIPOS; b++){
 			var mask_tecnologia = 0, mask_tecnologia_desbloqueable = 0
 			for(a = 0; a < 64; a++){
