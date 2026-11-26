@@ -32,6 +32,6 @@ function scr_draw_pantalla(edificio = control.null_edificio, offset_x = 0, offse
 			draw_set_font(font_normal)
 			draw_set_color(color)
 		}
-		draw_surface(edificio.imagen, (_x - 30) * zoom - camx, (_y - 25) * zoom - camy)
+		draw_surface_ext(edificio.imagen, (_x - 30) * zoom - camx, (_y - 25) * zoom - camy, zoom, zoom, 0, c_white, 1)
 	}
 }

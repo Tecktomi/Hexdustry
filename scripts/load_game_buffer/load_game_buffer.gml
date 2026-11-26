@@ -113,7 +113,7 @@ function load_game_buffer(buffer){
 			var dir = real(buffer_read(buffer, buffer_u8))
 			a = real(buffer_read(buffer, buffer_u16))
 			b = real(buffer_read(buffer, buffer_u16))
-			var _jugador = real(buffer_read(buffer, buffer_u8))
+			_jugador = real(buffer_read(buffer, buffer_u8))
 			if tag_edificio_tuberia[index]{
 				liquido_choose_array = array_create(2, real(buffer_read(buffer, buffer_s8)))
 				liquido_choose = 0
@@ -161,7 +161,7 @@ function load_game_buffer(buffer){
 			a = real(buffer_read(buffer, buffer_u16))
 			b = real(buffer_read(buffer, buffer_u16))
 			var index = real(buffer_read(buffer, buffer_u8))
-			var _jugador = real(buffer_read(buffer, buffer_u8))
+			_jugador = real(buffer_read(buffer, buffer_u8))
 			var dron = add_dron(a, b, index, _jugador)
 		}
 		//Dron - estados
@@ -236,7 +236,8 @@ function load_game_buffer(buffer){
 			var vmove = real(buffer_read(buffer, buffer_f64))
 			var mask = real(buffer_read(buffer, buffer_u8))
 			c = 0
-			var tipo = municion_tipo_normal, radio = 2500, humo = false, rastreador = false, _jugador = 2, _target = U16_1, _target_build = U16_1
+			var tipo = municion_tipo_normal, radio = 2500, humo = false, rastreador = false, _target = U16_1, _target_build = U16_1
+			_jugador = 2
 			if mask & (1 << c++) tipo = real(buffer_read(buffer, buffer_u8))
 			var dis = real(buffer_read(buffer, buffer_f64))
 			var dmg = real(buffer_read(buffer, buffer_f64))

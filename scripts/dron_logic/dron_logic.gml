@@ -176,12 +176,17 @@ function dron_logic(){
 			else if index = idd_reconstructor{
 				//Buscar edificios destruidos
 				if dron.modo = DRON_IDLE{
-					if array_length(repair_array[_jugador]) > 0{
-						temp_complex = abtoxy(repair_array[_jugador, 0], repair_array[_jugador, 1])
-						dron.move_xmove = temp_complex[0]
-						dron.move_ymove = temp_complex[1]
-						dron.modo = DRON_RECONSTRUIR
-					}
+					_repair_array = repair_array[_jugador]
+					for(a = 0; a < array_length(_repair_array); a += 6)
+						if tag_edificio_construible[_repair_array[a + 2]]{
+							dron.move_a = _repair_array[a]
+							dron.move_b = _repair_array[a + 1]
+							temp_complex = abtoxy(dron.move_a, dron.move_b)
+							dron.move_xmove = temp_complex[0]
+							dron.move_ymove = temp_complex[1]
+							dron.modo = DRON_RECONSTRUIR
+							break
+						}
 				}
 				//Reconstruir edificios
 				else if dron.modo = DRON_RECONSTRUIR{
@@ -198,7 +203,7 @@ function dron_logic(){
 						for(b = 0; b < array_length(_repair_array); b += 6){
 							i = _repair_array[b]
 							j = _repair_array[b + 1]
-							if i = dron.move_x and j = dron.move_y{
+							if i = dron.move_a and j = dron.move_b{
 								_index = _repair_array[b + 2]
 								if tag_edificio_construible[_index]{
 									_comprable = true

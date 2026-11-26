@@ -311,7 +311,7 @@ function add_edificio(index, dir, a, b, _jugador = jugador){
 			}
 		}
 		len = array_length(temp_list_size)
-		var _repair_array = repair_array[jugador]
+		var _repair_array = repair_array[_jugador]
 		for(c = 0; c < len;){
 			aa = temp_list_size[c++]
 			bb = temp_list_size[c++]
